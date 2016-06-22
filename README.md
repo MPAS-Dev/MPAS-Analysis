@@ -1,5 +1,5 @@
 # MPAS-Analysis
-Provides analysis for the MPAS components of ACME.
+A repository for the development and maintenance of MPAS analysis tools.
 
-Analysis is stored in a directory for each core component, e.g., `ocean` for
-MPAS-Ocean and shared functionality is contained within `shared`.
+Analysis is stored in a directory corresponding to each core component, e.g., `ocean` for
+MPAS-Ocean. Shared functionality is contained within the `shared` directory.
