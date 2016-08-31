@@ -120,7 +120,7 @@ def preprocess_mpas(ds, yearoffset=1850, onlyvars=None): #{{{
 
 def preprocess_mpas_timeSeriesStats(ds,
         timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',
-        yearoffset=1849, monthoffset=12, dayoffset=31, onlyvars=None): #{{{
+        yearoffset=1849, monthoffset=12, dayoffset=31, onlyvars=None, vertLevel=99999): #{{{
     """
     Builds corret time specification for MPAS timeSeriesStats analysis member fields,
     allowing a date offset because the time must be between 1678 and 2262
@@ -148,6 +148,9 @@ def preprocess_mpas_timeSeriesStats(ds,
     else:
     	daysSinceStart = pd.to_timedelta(daysSinceStart.values,unit='ns')
     	datetimes = [datetime.datetime(yearoffset, monthoffset, dayoffset) + x for x in daysSinceStart]
+
+    if (vertLevel != 99999):
+        ds = ds.sel(nVertLevels = vertLevel)
 
     ds = general_processing(ds, datetimes, yearoffset, onlyvars)
 
