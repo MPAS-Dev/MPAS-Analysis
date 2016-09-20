@@ -1,3 +1,7 @@
+# User defined config files
+/config.analysis.*
+/config.analysis_*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

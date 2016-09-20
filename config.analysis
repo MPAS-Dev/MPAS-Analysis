@@ -3,7 +3,7 @@
 casename = 20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00
 native_res = ne30
 short_term_archive = 0
-casename_model_tocompare = B1850C5_ne30_v0.4
+ref_casename_v0 = B1850C5_ne30_v0.4
 
 [paths]
 # paths to simulation and observational datasets
@@ -15,14 +15,14 @@ log_dir = /global/project/projectdirs/acme/xylar/coupled_diagnostics_20160805v0a
 obs_ocndir = /global/project/projectdirs/acme/observations/Ocean
 obs_sstdir = /global/project/projectdirs/acme/observations/Ocean/SST
 obs_seaicedir = /global/project/projectdirs/acme/observations/SeaIce
-ocndir_model_tocompare = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
-seaicedir_model_tocompare = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
+ref_archive_v0_ocndir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+ref_archive_v0_seaicedir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [data]
 # paths to mesh and mapping files
 mpas_meshfile = /global/project/projectdirs/acme/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc
 mpas_remapfile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
-model_tocompare_remapfile = /global/project/projectdirs/acme/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc
+pop_remapfile = /global/project/projectdirs/acme/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc
 # path to climotology dataset
 mpas_climodir = /global/project/projectdirs/acme/xylar/20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00.test.pp
 
@@ -66,8 +66,8 @@ generate = 1
 generate = 1
 
 [ohc_timeseries]
-# compare to output from another model run?
-compare_with_model = True
+## compare to output from another model run?
+#compare_with_model = True
 # compare to observations?
 compare_with_obs = False
 # list of region indices to plot from the region list below
@@ -77,8 +77,8 @@ regionIndicesToPlot = [6]
 N_movavg = 12
 
 [sst_timeseries]
-# compare to output from another model run?
-compare_with_model = True
+## compare to output from another model run?
+#compare_with_model = True
 # compare to observations?
 compare_with_obs = True
 # list of region indices to plot from the region list below
@@ -88,8 +88,8 @@ regionIndicesToPlot = [6]
 N_movavg = 12
 
 [nino34_timeseries]
-# compare to output from another model run?
-compare_with_model = True
+## compare to output from another model run?
+#compare_with_model = True
 # compare to observations?
 compare_with_obs = True
 # Number of points over which to compute moving average (e.g., for monthly
@@ -97,8 +97,8 @@ compare_with_obs = True
 N_movavg = 12
 
 [mht_timeseries]
-# compare to output from another model run?
-compare_with_model = True
+## compare to output from another model run?
+#compare_with_model = True
 # compare to observations?
 compare_with_obs = True
 # Number of points over which to compute moving average (e.g., for monthly
@@ -106,8 +106,8 @@ compare_with_obs = True
 N_movavg = 12
 
 [moc_timeseries]
-# compare to output from another model run?
-compare_with_model = True
+## compare to output from another model run?
+#compare_with_model = True
 # compare to observations?
 compare_with_obs = True
 # Number of points over which to compute moving average (e.g., for monthly
@@ -115,8 +115,8 @@ compare_with_obs = True
 N_movavg = 12
 
 [seaice_timeseries]
-# compare to output from another model run?
-compare_with_model = True
+## compare to output from another model run?
+#compare_with_model = True
 # compare to observations?
 compare_with_obs = True
 # Number of points over which to compute moving average (e.g., for monthly

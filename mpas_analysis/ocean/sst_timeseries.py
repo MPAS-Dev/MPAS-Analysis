@@ -14,10 +14,9 @@ def sst_timeseries(config):
     infiles = '%s/am.mpas-o.timeSeriesStats.????-??*nc'%indir
 
     casename = config.get('case','casename')
-    casename_model_tocompare = config.get('case','casename_model_tocompare')
-    indir_model_tocompare = config.get('paths','ocndir_model_tocompare')
+    ref_casename_v0 = config.get('case','ref_casename_v0')
+    indir_v0data = config.get('paths','ref_archive_v0_ocndir')
 
-    compare_with_model = config.getboolean('sst_timeseries','compare_with_model')
     compare_with_obs = config.getboolean('sst_timeseries','compare_with_obs')
 
     plots_dir = config.get('paths','plots_dir')
@@ -34,9 +33,7 @@ def sst_timeseries(config):
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                            timeSeriesStats=True, timestr='time_avg_daysSinceStartOfSim',
                            onlyvars=['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']))
-
     ds = remove_repeated_time_index(ds)
-
 
     SSTregions = ds.time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature
 
@@ -46,17 +43,14 @@ def sst_timeseries(config):
     time_end   = datetime.datetime(year_end,12,31)
 
 
-    if compare_with_model:
-        # load in other model run data
-        infiles_model_tocompare = "".join([indir_model_tocompare,'/SST.',casename_model_tocompare,'.year*.nc'])
-        ds_model_tocompare = xr.open_mfdataset(infiles_model_tocompare,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        ds_model_tocompare = remove_repeated_time_index(ds_model_tocompare)
-        ds_model_tocompare_tslice = ds_model_tocompare.sel(Time=slice(time_start,time_end))
+    if ref_casename_v0 != "None":
+        print "  Load in SST for ACMEv0 case..."
+        infiles_v0data = "".join([indir_v0data,'/SST.',ref_casename_v0,'.year*.nc'])
+        ds_v0 = xr.open_mfdataset(infiles_v0data,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+        ds_v0 = remove_repeated_time_index(ds_v0)
+        ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
 
-
-    # Load data and make plot for every region
     print "  Make plots..."
-
     for index in range(len(iregions)):
         iregion = iregions[index]
 
@@ -67,13 +61,12 @@ def sst_timeseries(config):
 
         SST = SSTregions[:,iregion]
 
-        if compare_with_model:
-            # load in other model run data
-            figname = "%s/sst_%s_%s_%s.png" % (plots_dir,regions[iregion],casename,casename_model_tocompare)
-            SST_model_tocompare = ds_model_tocompare_tslice.SST
+        if ref_casename_v0 != "None":
+            figname = "%s/sst_%s_%s_%s.png" % (plots_dir,regions[iregion],casename,ref_casename_v0)
+            SST_v0 = ds_v0_tslice.SST
 
-            title = "%s\n %s (b-)" % (title, casename_model_tocompare)
-            timeseries_analysis_plot(config, [SST,SST_model_tocompare], N_movavg,
+            title = "%s\n %s (b-)" % (title, ref_casename_v0)
+            timeseries_analysis_plot(config, [SST,SST_v0], N_movavg,
                                      title, xlabel, ylabel, figname,
                                      lineStyles = ['r-','b-'],
                                      lineWidths = [1.2,1.2])
@@ -81,6 +74,3 @@ def sst_timeseries(config):
             figname = "%s/sst_%s_%s.png" % (plots_dir,regions[iregion],casename)
             timeseries_analysis_plot(config, [SST], N_movavg, title, xlabel, ylabel, figname,
                                      lineStyles = ['r-'], lineWidths = [1.2])
-
-
-
