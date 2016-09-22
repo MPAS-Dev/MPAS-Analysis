@@ -19,22 +19,15 @@ indir = config.get('paths','archive_dir_ocn')
 if not os.path.isdir(indir):
     raise SystemExit("Model directory %s not found. Exiting..." % indir)
 
-any_compare_with_model = False
-for section in ['ohc_timeseries', 'sst_timeseries', 'nino34_timeseries',
-                'mht_timeseries', 'moc_timeseries', 'seaice_timeseries']:
-    if config.getboolean(section, 'generate') and config.getboolean(section,'compare_with_model'):
-        any_compare_with_model = True
-if config.getboolean('seaice_modelvsobs', 'generate'):
-    any_compare_with_model = True
-
-if any_compare_with_model:
+ref_casename_v0 = config.get('case','ref_casename_v0')
+if ref_casename_v0 != "None":
     # we will need model data.  Make sure it's there
-    indir_model_tocompare = config.get('paths','ocndir_model_tocompare')
-    if not os.path.isdir(indir_model_tocompare):
-        raise SystemExit("ocndir_model_tocompare directory %s not found. Exiting..." % indir_model_tocompare)
-    indir_model_tocompare = config.get('paths','seaicedir_model_tocompare')
-    if not os.path.isdir(indir_model_tocompare):
-        raise SystemExit("seaicedir_model_tocompare directory %s not found. Exiting..." % indir_model_tocompare)
+    indir_v0data = config.get('paths','ref_archive_v0_ocndir')
+    if not os.path.isdir(indir_v0data):
+        raise SystemExit("ref_archive_v0_ocndir directory %s not found. Exiting..." % indir_v0data)
+    indir_v0data = config.get('paths','ref_archive_v0_seaicedir')
+    if not os.path.isdir(indir_v0data):
+        raise SystemExit("ref_archive_v0_seaicedir directory %s not found. Exiting..." % indir_v0data)
 
 if ((config.getboolean('seaice_timeseries', 'generate')
             and config.getboolean('seaice_timeseries', 'compare_with_obs'))

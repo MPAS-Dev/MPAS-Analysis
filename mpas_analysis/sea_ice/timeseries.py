@@ -32,10 +32,9 @@ def seaice_timeseries(config):
     meshfile = config.get('data','mpas_meshfile')
 
     casename = config.get('case','casename')
-    casename_model_tocompare = config.get('case','casename_model_tocompare')
-    indir_model_tocompare = config.get('paths','seaicedir_model_tocompare')
+    ref_casename_v0 = config.get('case','ref_casename_v0')
+    indir_v0data = config.get('paths','ref_archive_v0_seaicedir')
 
-    compare_with_model = config.getboolean('seaice_timeseries','compare_with_model')
     compare_with_obs = config.getboolean('seaice_timeseries','compare_with_obs')
 
     plots_dir = config.get('paths','plots_dir')
@@ -43,7 +42,6 @@ def seaice_timeseries(config):
     yr_offset = config.getint('time','yr_offset')
 
     N_movavg = config.getint('seaice_timeseries','N_movavg')
-
 
     print "  Load sea-ice data..."
     # Load mesh
@@ -65,12 +63,11 @@ def seaice_timeseries(config):
     time_start = datetime.datetime(year_start,1,1)
     time_end   = datetime.datetime(year_end,12,31)
 
-    if compare_with_model:
-        infiles_model_tocompare = "".join([indir_model_tocompare,'/icevol.',casename_model_tocompare,'.year*.nc'])
-        ds_model_tocompare = xr.open_mfdataset(infiles_model_tocompare,
+    if ref_casename_v0 != "None":
+        infiles_v0data = "".join([indir_v0data,'/icevol.',ref_casename_v0,'.year*.nc'])
+        ds_v0 = xr.open_mfdataset(infiles_v0data,
             preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        ds_model_tocompare_tslice = ds_model_tocompare.sel(Time=slice(time_start,time_end))
-
+        ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
 
     # Make Northern and Southern Hemisphere partition:
     areaCell = ds.areaCell
@@ -119,9 +116,9 @@ def seaice_timeseries(config):
 
         xlabel = "Time [years]"
 
-        if compare_with_model:
-            figname_nh = "%s/%sNH_%s_%s.png" % (plots_dir,varname,casename,casename_model_tocompare)
-            figname_sh = "%s/%sSH_%s_%s.png" % (plots_dir,varname,casename,casename_model_tocompare)
+        if ref_casename_v0 != "None":
+            figname_nh = "%s/%sNH_%s_%s.png" % (plots_dir,varname,casename,ref_casename_v0)
+            figname_sh = "%s/%sSH_%s_%s.png" % (plots_dir,varname,casename,ref_casename_v0)
         else:
             figname_nh = "%s/%sNH_%s.png" % (plots_dir,varname,casename)
             figname_sh = "%s/%sSH_%s.png" % (plots_dir,varname,casename)
@@ -137,9 +134,9 @@ def seaice_timeseries(config):
                 title_nh = "%s\nPIOMAS, annual cycle (k)" % title_nh
                 title_sh = "%s\n" % title_sh
 
-        if compare_with_model:
-            title_nh = "%s\n %s (b)" % (title_nh,casename_model_tocompare)
-            title_sh = "%s\n %s (b)" % (title_sh,casename_model_tocompare)
+        if ref_casename_v0 != "None":
+            title_nh = "%s\n %s (b)" % (title_nh,ref_casename_v0)
+            title_sh = "%s\n %s (b)" % (title_sh,ref_casename_v0)
 
 
         if varname == "iceAreaCell":
@@ -157,18 +154,17 @@ def seaice_timeseries(config):
                 var_sh_obs = ds_obs.IceArea
                 var_sh_obs = replicate_cycle(var_sh,var_sh_obs)
 
-            if compare_with_model:
-                infiles_model_tocompare = "".join([indir_model_tocompare,'/icearea.',casename_model_tocompare,'.year*.nc'])
-                ds_model_tocompare = xr.open_mfdataset(infiles_model_tocompare,
+            if ref_casename_v0 != "None":
+                infiles_v0data = "".join([indir_v0data,'/icearea.',ref_casename_v0,'.year*.nc'])
+                ds_v0 = xr.open_mfdataset(infiles_v0data,
                     preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-                ds_model_tocompare_tslice = ds_model_tocompare.sel(Time=slice(time_start,time_end))
-                var_nh_model_tocompare = ds_model_tocompare_tslice.icearea_nh
-                var_sh_model_tocompare = ds_model_tocompare_tslice.icearea_sh
+                ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
+                var_nh_v0 = ds_v0_tslice.icearea_nh
+                var_sh_v0 = ds_v0_tslice.icearea_sh
 
         elif varname == "iceVolumeCell":
 
             if compare_with_obs:
-
                 ds_obs = xr.open_mfdataset(obs_filenameNH,
                     preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
                 ds_obs = remove_repeated_time_index(ds_obs)
@@ -177,36 +173,35 @@ def seaice_timeseries(config):
 
                 var_sh_obs = None
 
-            if compare_with_model:
-
-                infiles_model_tocompare = "".join([indir_model_tocompare,'/icevol.',casename_model_tocompare,'.year*.nc'])
-                ds_model_tocompare = xr.open_mfdataset(infiles_model_tocompare,
+            if ref_casename_v0 != "None":
+                infiles_v0data = "".join([indir_v0data,'/icevol.',ref_casename_v0,'.year*.nc'])
+                ds_v0 = xr.open_mfdataset(infiles_v0data,
                     preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-                ds_model_tocompare_tslice = ds_model_tocompare.sel(Time=slice(time_start,time_end))
-                var_nh_model_tocompare = ds_model_tocompare_tslice.icevolume_nh
-                var_sh_model_tocompare = ds_model_tocompare_tslice.icevolume_sh
+                ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
+                var_nh_v0 = ds_v0_tslice.icevolume_nh
+                var_sh_v0 = ds_v0_tslice.icevolume_sh
 
         if varname in ["iceAreaCell", "iceVolumeCell"]:
             if compare_with_obs:
-                if compare_with_model:
-                    vars_nh = [var_nh, var_nh_obs, var_nh_model_tocompare]
-                    vars_sh = [var_sh, var_sh_obs, var_sh_model_tocompare]
+                if ref_casename_v0 != "None":
+                    vars_nh = [var_nh, var_nh_obs, var_nh_v0]
+                    vars_sh = [var_sh, var_sh_obs, var_sh_v0]
                     lineStyles = ['r-', 'k-', 'b-']
                     lineWidths = [1.2, 1.2, 1.2]
                 else:
-                    # just model and obs
+                    # just v1 model and obs
                     vars_nh = [var_nh, var_nh_obs]
                     vars_sh = [var_sh, var_sh_obs]
                     lineStyles = ['r-', 'k-']
                     lineWidths = [1.2, 1.2]
-            elif compare_with_model:
-                # just
-                    vars_nh = [var_nh, var_nh_model_tocompare]
-                    vars_sh = [var_sh, var_sh_model_tocompare]
-                    lineStyles = ['r-', 'b-']
-                    lineWidths = [1.2, 1.2]
+            elif ref_casename_v0 != "None":
+                # just v1 and v0 models
+                vars_nh = [var_nh, var_nh_v0]
+                vars_sh = [var_sh, var_sh_v0]
+                lineStyles = ['r-', 'b-']
+                lineWidths = [1.2, 1.2]
 
-            if compare_with_obs or compare_with_model:
+            if compare_with_obs or ref_casename_v0 != "None":
                 # separate plots for nothern and southern hemispheres
                 timeseries_analysis_plot(config, vars_nh, N_movavg, title_nh,
                                          xlabel, units, figname_nh,
@@ -228,7 +223,6 @@ def seaice_timeseries(config):
                                          lineWidths=[1.2, 1.2],
                                          title_font_size=title_font_size)
 
-
         elif varname == "iceThickCell":
 
             figname = "%s/%s.%s.png" % (plots_dir,casename,varname)
@@ -241,7 +235,6 @@ def seaice_timeseries(config):
 
         else:
             raise SystemExit("varname variable %s not supported for plotting" % varname)
-
 
 
 def replicate_cycle(ds,ds_toreplicate):
@@ -258,5 +251,3 @@ def replicate_cycle(ds,ds_toreplicate):
     # constrict replicated ds_short to same time dimension as ds_long:
     dsshift = dsshift.sel(Time=ds.Time.values, method='nearest')
     return dsshift
-
-

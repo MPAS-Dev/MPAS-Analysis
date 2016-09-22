@@ -14,10 +14,9 @@ def ohc_timeseries(config):
     indir = config.get('paths','archive_dir_ocn')
     meshfile = config.get('data','mpas_meshfile')
     casename = config.get('case','casename')
-    casename_model_tocompare = config.get('case','casename_model_tocompare')
-    indir_model_tocompare = config.get('paths','ocndir_model_tocompare')
+    ref_casename_v0 = config.get('case','ref_casename_v0')
+    indir_v0data = config.get('paths','ref_archive_v0_ocndir')
 
-    compare_with_model = config.getboolean('ohc_timeseries','compare_with_model')
     compare_with_obs = config.getboolean('ohc_timeseries','compare_with_obs')
 
     plots_dir = config.get('paths','plots_dir')
@@ -77,19 +76,18 @@ def ohc_timeseries(config):
     time_start = datetime.datetime(year_start,1,1)
     time_end   = datetime.datetime(year_end,12,31)
 
-    if compare_with_model:
-        print "  Load OHC for model_to_compare and make plots..."
-        # load in other model run data
-        infiles_model_tocompare = "".join([indir_model_tocompare,'/OHC.',casename_model_tocompare,'.year*.nc'])
-        ds_model_tocompare = xr.open_mfdataset(infiles_model_tocompare,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        ds_model_tocompare = remove_repeated_time_index(ds_model_tocompare)
-        ds_model_tocompare_tslice = ds_model_tocompare.sel(Time=slice(time_start,time_end))
+    if ref_casename_v0 != "None":
+        print "  Load in OHC for ACMEv0 case..."
+        infiles_v0data = "".join([indir_v0data,'/OHC.',ref_casename_v0,'.year*.nc'])
+        ds_v0 = xr.open_mfdataset(infiles_v0data,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+        ds_v0 = remove_repeated_time_index(ds_v0)
+        ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
 
     sumLayerMaskValue = ds.time_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue
     avgLayerArea = ds.time_avg_avgValueWithinOceanLayerRegion_avgLayerArea
     avgLayerThickness = ds.time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness
 
-    print "  Compute OHC..."
+    print "  Compute OHC and make plots..."
     for index in range(len(iregions)):
         iregion = iregions[index]
 
@@ -118,25 +116,22 @@ def ohc_timeseries(config):
         xlabel = "Time [years]"
         ylabel = "[x$10^{22}$ J]"
 
-        if compare_with_model:
-            figname = "%s/ohc_%s_%s_%s.png" % (plots_dir,regions[iregion],casename,casename_model_tocompare)
-            # load in other model run data
-            ohc_model_tocompare_tot = ds_model_tocompare_tslice.ohc_tot
-            ohc_model_tocompare_700m = ds_model_tocompare_tslice.ohc_700m
-            ohc_model_tocompare_2000m = ds_model_tocompare_tslice.ohc_2000m
-            ohc_model_tocompare_btm = ds_model_tocompare_tslice.ohc_btm
-            title = "".join([title," (r), ",casename_model_tocompare," (b)"])
+        if ref_casename_v0 != "None":
+            figname = "%s/ohc_%s_%s_%s.png" % (plots_dir,regions[iregion],casename,ref_casename_v0)
+            ohc_v0_tot = ds_v0_tslice.ohc_tot
+            ohc_v0_700m = ds_v0_tslice.ohc_700m
+            ohc_v0_2000m = ds_v0_tslice.ohc_2000m
+            ohc_v0_btm = ds_v0_tslice.ohc_btm
+            title = "".join([title," (r), ",ref_casename_v0," (b)"])
             timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m, ohc_btm,
-                                              ohc_model_tocompare_tot, ohc_model_tocompare_700m,
-                                              ohc_model_tocompare_2000m, ohc_model_tocompare_btm],
+                                              ohc_v0_tot, ohc_v0_700m, ohc_v0_2000m, ohc_v0_btm],
                                      N_movavg, title, xlabel, ylabel, figname,
                                      lineStyles = ['r-', 'r-', 'r--', 'r-.', 'b-', 'b-', 'b--', 'b-.'],
                                      lineWidths = [2, 1, 1.5, 1.5, 2, 1, 1.5, 1.5])
 
-        if not compare_with_obs and not compare_with_model:
+        if not compare_with_obs and ref_casename_v0 == "None":
             figname = "%s/ohc_%s_%s.png" % (plots_dir,regions[iregion],casename)
             timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m, ohc_btm],
                                      N_movavg, title, xlabel, ylabel, figname,
                                      lineStyles = ['r-', 'r-', 'r--', 'r-.'],
                                      lineWidths = [2, 1, 1.5, 1.5])
-
