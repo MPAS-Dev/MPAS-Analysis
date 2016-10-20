@@ -86,8 +86,14 @@ def analysis(config): #{{{
     if config.getboolean('sst_modelvsobs','generate'):
         print ""
         print "Plotting 2-d maps of SST climatologies..."
-        from mpas_analysis.ocean.sst_modelvsobs import sst_modelvsobs
+        from mpas_analysis.ocean.ocean_modelvsobs import sst_modelvsobs
         sst_modelvsobs(config)
+        
+    if config.getboolean('mld_modelvsobs','generate'):
+        print ""
+        print "Plotting 2-d maps of MLD climatologies..."
+        from mpas_analysis.ocean.ocean_modelvsobs import mld_modelvsobs
+        mld_modelvsobs(config)
 
 
     #GENERATE SEA-ICE DIAGNOSTICS

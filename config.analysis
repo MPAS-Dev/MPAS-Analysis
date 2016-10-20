@@ -1,6 +1,6 @@
 [case]
 # ACME case configuration
-casename = 20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00
+casename = 20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00 
 native_res = ne30
 short_term_archive = 0
 ref_casename_v0 = B1850C5_ne30_v0.4
@@ -57,6 +57,9 @@ generate = 0
 generate = 0
 
 [sst_modelvsobs]
+generate = 1
+
+[mld_modelvsobs]
 generate = 1
 
 [seaice_timeseries]
@@ -143,6 +146,31 @@ cmapIndicesDiff = [0,40,80,120,140,170,210,255]
 clevsModelObs = [-2,0,2,6,10,16,22,26,28,32]
 clevsDiff = [-5,-3,-2,-1,0,1,2,3,5]
 #clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3] # good for RdBu_r
+
+# Times for comparison times (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,JFM,AMJ,JAS,OND,ANN)
+comparisonTimes =  [JFM,JAS,ANN]
+
+[mld_modelvsobs]
+# colormap for model/observations
+cmapModelObs = viridis
+#cmapModelObs = RdYlBu_r
+# colormap for differences
+cmapDiff = RdBu_r
+#cmapDiff = coolwarm
+
+# indices into cmapModelObs for contour color
+cmapIndicesModelObs = [0,40,80,110,140,170,200,230,255]
+# indices into cmapModelObs for contour color
+cmapIndicesDiff = [0,40,80,120,140,170,210,255]
+#cmapIndicesDiff = [0,40,80,127,170,210,255] # good for RdBu_r
+
+# colormap levels/values for contour boundaries
+clevsModelObs = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+clevsDiff = [-175, -125, -75, -25, -10, 10, 25, 75, 125, 175]
+#clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3] # good for RdBu_r
+
+# Times for comparison times (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,JFM,AMJ,JAS,OND,ANN)
+comparisonTimes = [JFM,JAS,ANN]
 
 [seaice_modelvsobs]
 # colormap for model/observations
