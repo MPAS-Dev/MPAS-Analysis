@@ -1,6 +1,6 @@
 [case]
 # ACME case configuration
-casename = 20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00 
+casename = 20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00
 native_res = ne30
 short_term_archive = 0
 ref_casename_v0 = B1850C5_ne30_v0.4
@@ -14,9 +14,10 @@ plots_dir = /global/project/projectdirs/acme/xylar/coupled_diagnostics_20160805v
 log_dir = /global/project/projectdirs/acme/xylar/coupled_diagnostics_20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00-20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01.logs
 obs_ocndir = /global/project/projectdirs/acme/observations/Ocean
 obs_sstdir = /global/project/projectdirs/acme/observations/Ocean/SST
+obs_mlddir = /global/project/projectdirs/acme/observations/Ocean/MLD
 obs_seaicedir = /global/project/projectdirs/acme/observations/SeaIce
 ref_archive_v0_ocndir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
-ref_archive_v0_seaicedir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
+ref_archive_v0_seaicedir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing 
 
 [data]
 # paths to mesh and mapping files
@@ -35,7 +36,7 @@ obs_icevolSH = none
 
 [time]
 # the first year over which to average climotologies
-climo_yr1 = 6
+climo_yr1 = 6 
 # the last year over which to average climotologies
 climo_yr2 = 10
 # the offset year to be added to simulation years
