@@ -57,6 +57,16 @@ class TestCase(unittest.TestCase):
     def assertEqual(self, a1, a2):
         assert a1 == a2 or (a1 != a1 and a2 != a2)
 
+    def assertLessThan(self, a1, a2):
+        assert a1 <= a2 
+        
+    def assertGreaterThan(self, a1, a2):
+        assert a1 >= a2
+        
+    @requires_numpy
+    def assertArrayEqual(self, a1, a2):
+        np.testing.assert_array_equal(a1, a2)
+        
     @requires_numpy
     def assertApproxEqual(self, a1, a2, rtol=1e-5, atol=1e-8):
         assert np.isclose(a1, a2, rtol=rtol, atol=atol)

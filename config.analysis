@@ -17,7 +17,7 @@ obs_sstdir = /global/project/projectdirs/acme/observations/Ocean/SST
 obs_mlddir = /global/project/projectdirs/acme/observations/Ocean/MLD
 obs_seaicedir = /global/project/projectdirs/acme/observations/SeaIce
 ref_archive_v0_ocndir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
-ref_archive_v0_seaicedir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing 
+ref_archive_v0_seaicedir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [data]
 # paths to mesh and mapping files
@@ -36,7 +36,7 @@ obs_icevolSH = none
 
 [time]
 # the first year over which to average climotologies
-climo_yr1 = 6 
+climo_yr1 = 6
 # the last year over which to average climotologies
 climo_yr2 = 10
 # the offset year to be added to simulation years
