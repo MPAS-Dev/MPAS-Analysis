@@ -1,0 +1,72 @@
+<streams>
+<immutable_stream name="mesh"
+                  type="input"
+                  filename_template="mesh.nc"
+                  input_interval="initial_only" />
+
+<immutable_stream name="input"
+                  type="input"
+                  filename_template="init.nc"
+                  input_interval="initial_only" />
+
+<immutable_stream name="restart"
+                  type="input;output"
+                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_interval="output_interval"
+                  reference_time="0000-01-01_00:00:00"
+                  clobber_mode="truncate"
+                  input_interval="initial_only"
+                  output_interval="0100_00:00:00" />
+
+<stream name="output"
+        type="output"
+        filename_template="output/output.$Y-$M-$D_$h.$m.$s.nc"
+        filename_interval="01-00-00_00:00:00"
+        reference_time="0000-01-01_00:00:00"
+        clobber_mode="truncate"
+        output_interval="0001_00:00:00" >
+
+	<stream name="mesh"/>
+	<var_struct name="tracers"/>
+	<var name="velocityZonal"/>
+	<var name="velocityMeridional"/>
+	<var name="density"/>
+	<var name="divergence"/>
+	<var name="displacedDensity"/>
+	<var name="potentialDensity"/>
+	<var name="boundaryLayerDepth"/>
+	<var name="boundaryLayerDepthEdge"/>
+	<var name="indexBoundaryLayerDepth"/>
+	<var name="indexSurfaceLayerDepth"/>
+	<var name="surfaceFrictionVelocity"/>
+	<var name="windStressZonalDiag"/>
+	<var name="windStressMeridionalDiag"/>
+	<var name="surfaceBuoyancyForcing"/>
+	<var name="seaSurfacePressure"/>
+	<var name="layerThickness"/>
+	<var name="ssh"/>
+	<var name="maxLevelEdgeTop"/>
+	<var name="vertCoordMovementWeights"/>
+	<var name="edgeMask"/>
+	<var name="vertexMask"/>
+	<var name="cellMask"/>
+	<var name="refZMid"/>
+	<var name="refLayerThickness"/>
+	<var name="xtime"/>
+	<var name="zMid"/>
+	<var name="zTop"/>
+	<var name="kineticEnergyCell"/>
+	<var name="relativeVorticityCell"/>
+	<var name="areaCellGlobal"/>
+	<var name="areaEdgeGlobal"/>
+	<var name="areaTriangleGlobal"/>
+	<var name="volumeCellGlobal"/>
+	<var name="volumeEdgeGlobal"/>
+	<var name="CFLNumberGlobal"/>
+	<var name="windStressZonal"/>
+	<var name="windStressMeridional"/>
+	<var_struct name="tracersSurfaceRestoringFields"/>
+	<var_struct name="tracersInteriorRestoringFields"/>
+</stream>
+
+</streams>
