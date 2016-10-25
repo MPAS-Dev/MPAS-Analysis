@@ -1,0 +1,34 @@
+# note, some entires are not for illustration and not used in MPAS
+&run_modes
+    config_ocean_run_mode = 'forward'
+/
+&time_management
+    config_do_restart = .false.
+    config_restart_timestamp_name = 'Restart_timestamp'
+    config_start_time = '0000-01-01_00:00:00'
+    config_stop_time = 'none'
+    config_run_duration = '1000_00:00:00'
+    config_calendar_type = 'gregorian_noleap'
+/
+&time_integration
+    config_dt = '00:10:00'
+    config_time_integrator = 'split_explicit'
+/
+&decomposition
+    config_num_halos = 3
+    config_block_decomp_file_prefix = 'graph.info.part.'
+    config_number_of_blocks = 0
+    config_explicit_proc_decomp = .false.
+    config_proc_decomp_file_prefix = 'graph.info.part.'
+/
+&ALE_vertical_grid
+    config_vert_coord_movement = 'uniform_stretching'
+    config_use_min_max_thickness = .false.
+    config_min_thickness = 1.0
+    config_max_thickness_factor = 6.0
+    config_set_restingThickness_to_IC = .true.
+    config_dzdk_positive = .false.
+/
+&debug_checking_NOT_REAL
+    config_test_extra_equals1 = 'a = b'
+    config_test_extra_equals2 = "a = b"
