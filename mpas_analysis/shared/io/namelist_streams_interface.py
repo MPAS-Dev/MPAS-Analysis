@@ -8,9 +8,9 @@
     04/24/2014
 """
 
-from subprocess import check_output, call
 from lxml import etree
 import re
+import os.path
 from ..containers import ReadOnlyDict
 
 def convert_namelist_to_dict(fname, readonly=True):
@@ -88,6 +88,10 @@ class StreamsFile:
         self.fname = fname
         self.xmlfile = etree.parse(fname)
         self.root = self.xmlfile.getroot()
+        # get the absolute path to the directory where the
+        # streams file resides (used to determine absolute paths
+        # to file names referred to in streams)
+        self.absdir = os.path.dirname(os.path.abspath(fname))
 
     def read(self, streamname, attribname):
         """ name is a list of name entries terminanting in some value
@@ -97,5 +101,30 @@ class StreamsFile:
             if stream.get('name') == streamname:
                 return stream.get(attribname)
 
+    def readpath(self, streamname, attribname):
+        """
+        streamname is the name of a stream, attribname is the name
+        of an attribute within that stream.  The resulting entry is
+        converted to an absolute path (if necessary).  Wildcards ($Y,
+        $M,etc.) are replaced with equivalent fnmatch expression
+        wildcards.
+        """
+        path = self.read(streamname, attribname)
+        replacements = {'$Y':'[0-9][0-9][0-9][0-9]',
+                        '$M':'[0-9][0-9]',
+                        '$D':'[0-9][0-9]',
+                        '$S':'[0-9][0-9][0-9][0-9][0-9]',
+                        '$h':'[0-9][0-9]',
+                        '$m':'[0-9][0-9]',
+                        '$s':'[0-9][0-9]'}
+
+        for old in replacements:
+            path = path.replace(old,replacements[old])
+
+        if not os.path.isabs(path):
+            # this is not an absolute path, so make it an absolute path
+            path = '{}/{}'.format(self.absdir, path)
+
+        return path
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

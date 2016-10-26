@@ -1,13 +1,15 @@
 """
-Unit test infrastructure, adapted from approach of xarray.
+Unit test infrastructure for namelist and streams readers, adapted from
+approach of xarray.
 
-Phillip J. Wolfram
-10/07/2016
+Phillip J. Wolfram, Xylar Asay-Davis
+10/26/2016
 """
 
 import pytest
-from mpas_analysis.test import (TestCase, requires_lxml, loaddatadir)
+from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.io import NameList, StreamsFile
+from fnmatch import fnmatch
 
 @pytest.mark.usefixtures("loaddatadir")
 class TestNamelist(TestCase):
@@ -46,5 +48,13 @@ class TestNamelist(TestCase):
         self.assertEqual(self.sf.read('output', 'type'), 'output')
         self.assertEqual(self.sf.read('restart', 'output_interval'),
                          '0100_00:00:00')
+
+        template = self.sf.readpath('output', 'filename_template')
+        self.assertEqual(template,
+                         '{}/output/output.[0-9][0-9][0-9][0-9]-[0-9][0-9]' \
+                         '-[0-9][0-9]_[0-9][0-9].[0-9][0-9].[0-9][0-9].nc' \
+                         .format(self.sf.absdir))
+        self.assertEqual(fnmatch('{}/output/output.0001-01-01_00.00.00.nc' \
+                                 .format(self.sf.absdir), template), True)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
