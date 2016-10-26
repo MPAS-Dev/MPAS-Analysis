@@ -13,9 +13,31 @@ from netCDF4 import Dataset as netcdf_dataset
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 from ..shared.plot.plotting import plot_polar_comparison
 
-def seaice_modelvsobs(config):
+from ..shared.io import StreamsFile
+from ..shared.io.utility import paths
 
-    indir = config.get('paths','archive_dir_ocn')
+def seaice_modelvsobs(config):
+    """
+    Performs analysis of sea-ice properties by comparing with
+    previous model results and/or observations.
+
+    Author: Xylar Asay-Davis, Milena Veneziani
+    Last Modified: 10/27/2016
+    """
+
+    # read parameters from config file
+    indir = config.get('paths', 'archive_dir_ocn')
+
+    streams_filename = config.get('input', 'seaice_streams_filename')
+    streams = StreamsFile('{}/{}'.format(indir, streams_filename))
+
+    # read the file template for timeSeriesStatsMonthlyOutput, convert it to
+    # fnmatch expression and make it an absolute path
+    infiles = streams.readpath('timeSeriesStatsMonthlyOutput',
+                               'filename_template')
+    # find files matching the fnmatch experession
+    infiles = paths(infiles)
+
     plots_dir = config.get('paths','plots_dir')
     obsdir = config.get('paths','obs_seaicedir')
 
@@ -90,7 +112,7 @@ def seaice_modelvsobs(config):
     print "  Load sea-ice data..."
     print indir
 
-    infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.????-*.nc"])
+    #infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.????-*.nc"])
     #infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.001[5-6]-*.nc"])
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                                 timeSeriesStats=True,

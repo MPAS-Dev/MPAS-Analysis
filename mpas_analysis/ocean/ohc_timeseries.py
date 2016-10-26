@@ -8,11 +8,36 @@ from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_ti
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
+from ..shared.io import NameList, StreamsFile
+from ..shared.io.utility import paths
 
 def ohc_timeseries(config):
+    """
+    Performs analysis of ocean heat content (OHC) from time-series output.
+
+    Author: Xylar Asay-Davis, Milena Veneziani
+    Last Modified: 10/26/2016
+    """
+
     # read parameters from config file
-    indir = config.get('paths','archive_dir_ocn')
-    meshfile = config.get('data','mpas_meshfile')
+    indir = config.get('paths', 'archive_dir_ocn')
+
+    namelist_filename = config.get('input', 'ocean_namelist_filename')
+    namelist = NameList('{}/{}'.format(indir, namelist_filename))
+    streams_filename = config.get('input', 'ocean_streams_filename')
+    streams = StreamsFile('{}/{}'.format(indir, streams_filename))
+
+    # Note: input file, not a mesh file because we need dycore specific fields
+    # such as refBottomDepth and namelist fields such as config_density0 that
+    # are not guaranteed to be in the mesh file.
+    inputfile = streams.readpath('input','filename_template')
+
+    # read the file template for timeSeriesStatsOutput, convert it to fnmatch
+    # expression and make it an absolute path
+    infiles = streams.readpath('timeSeriesStatsOutput', 'filename_template')
+    # find files matching the fnmatch experession
+    infiles = paths(infiles)
+
     casename = config.get('case','casename')
     ref_casename_v0 = config.get('case','ref_casename_v0')
     indir_v0data = config.get('paths','ref_archive_v0_ocndir')
@@ -31,10 +56,13 @@ def ohc_timeseries(config):
 
     # Define/read in general variables
     print "  Read in depth and compute specific depth indexes..."
-    f = netcdf_dataset(meshfile,mode='r')
-    depth = f.variables["refBottomDepth"][:] # reference depth [m]
-    cp = f.getncattr("config_specific_heat_sea_water") # specific heat [J/(kg*degC)]
-    rho = f.getncattr("config_density0") # [kg/m3]
+    f = netcdf_dataset(inputfile,mode='r')
+    # reference depth [m]
+    depth = f.variables["refBottomDepth"][:]
+    # specific heat [J/(kg*degC)]
+    cp = namelist.getfloat('config_specific_heat_sea_water')
+    # [kg/m3]
+    rho = namelist.getfloat('config_density0')
     fac = 1e-22*rho*cp;
 
     k700m = np.where(depth>700.)[0][0]-1
@@ -44,7 +72,6 @@ def ohc_timeseries(config):
 
     # Load data
     print "  Load ocean data..."
-    infiles = '%s/am.mpas-o.timeSeriesStats.????-??*nc'%indir
 
     # Load data:
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,

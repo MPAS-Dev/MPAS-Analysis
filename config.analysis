@@ -5,6 +5,13 @@ native_res = ne30
 short_term_archive = 0
 ref_casename_v0 = B1850C5_ne30_v0.4
 
+[input]
+# names of namelist and streams files
+ocean_namelist_filename = mpas-o_in
+ocean_streams_filename = streams.ocean
+seaice_namelist_filename = mpas-cice_in
+seaice_streams_filename = streams.cice
+
 [paths]
 # paths to simulation and observational datasets
 archive_dir = /scratch1/scratchdirs/petercal/ACME_simulations
