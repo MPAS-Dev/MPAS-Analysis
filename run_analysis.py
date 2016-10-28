@@ -41,7 +41,7 @@ def analysis(config): #{{{
     if (use_seaice and seaice_compare_obs) or seaice_modelvsobs:
         # we will need sea-ice observations.  Make sure they're there
         for obsfile in ['obs_iceareaNH', 'obs_iceareaSH', 'obs_icevolNH', 'obs_icevolSH']:
-            path_existence('seaIceData', obsfile, ignorestr='none')
+            path_existence(config, 'seaIceData', obsfile, ignorestr='none')
 
     # choose the right rendering backend, depending on whether we're displaying
     # to the screen
@@ -86,8 +86,14 @@ def analysis(config): #{{{
     if config.getboolean('sst_modelvsobs','generate'):
         print ""
         print "Plotting 2-d maps of SST climatologies..."
-        from mpas_analysis.ocean.sst_modelvsobs import sst_modelvsobs
-        sst_modelvsobs(config)
+        from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
+        ocn_modelvsobs(config, 'sst')
+        
+    if config.getboolean('mld_modelvsobs','generate'):
+        print ""
+        print "Plotting 2-d maps of MLD climatologies..."
+        from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
+        ocn_modelvsobs(config, 'mld')
 
 
     #GENERATE SEA-ICE DIAGNOSTICS
