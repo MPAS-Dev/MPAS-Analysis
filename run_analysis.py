@@ -26,11 +26,33 @@ def path_existence(config, section, option, ignorestr=None): #{{{
         raise SystemExit(errmsg)
     return inpath #}}}
 
+def makedirs(inpath): #{{{
+    if not os.path.exists(inpath):
+      os.makedirs(inpath)
+    return inpath #}}}
+
 def analysis(config): #{{{
 
-    # Checks on directory/files existence:
-    indir = path_existence(config, 'paths', 'archive_dir_ocn')
+    # set default values of start and end dates for climotologies and timeseries
+    if (config.has_option('time', 'climo_yr1') 
+        and config.has_option('time', 'climo_yr2')):
+        startDate = '{:04d}-01-01_00:00:00'.format(config.getint('time', 
+                                                             'climo_yr1'))
+        endDate = '{:04d}-12-31_23:59:59'.format(config.getint('time',
+                                                           'climo_yr2'))
+        config.getWithDefault('time', 'climo_start_date', startDate)
+        config.getWithDefault('time', 'climo_end_date', endDate)
 
+    if (config.has_option('time', 'timeseries_yr1') 
+        and config.has_option('time', 'timeseries_yr2')):
+        startDate = '{:04d}-01-01_00:00:00'.format(config.getint('time',
+                                                             'timeseries_yr1'))
+        endDate = '{:04d}-12-31_23:59:59'.format(config.getint('time',
+                                                           'timeseries_yr2'))
+        config.getWithDefault('time', 'timeseries_start_date', startDate)
+        config.getWithDefault('time', 'timeseries_end_date', endDate)
+
+    # Checks on directory/files existence:
     if config.get('case', 'ref_casename_v0') != 'None':
         path_existence(config, 'paths','ref_archive_v0_ocndir')
         path_existence(config, 'paths','ref_archive_v0_seaicedir')
@@ -42,6 +64,8 @@ def analysis(config): #{{{
         # we will need sea-ice observations.  Make sure they're there
         for obsfile in ['obs_iceareaNH', 'obs_iceareaSH', 'obs_icevolNH', 'obs_icevolSH']:
             path_existence(config, 'seaIceData', obsfile, ignorestr='none')
+
+    makedirs(config.get('paths','plots_dir'))
 
     # choose the right rendering backend, depending on whether we're displaying
     # to the screen
@@ -88,7 +112,7 @@ def analysis(config): #{{{
         print "Plotting 2-d maps of SST climatologies..."
         from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
         ocn_modelvsobs(config, 'sst')
-        
+
     if config.getboolean('mld_modelvsobs','generate'):
         print ""
         print "Plotting 2-d maps of MLD climatologies..."

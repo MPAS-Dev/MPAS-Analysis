@@ -2,6 +2,7 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 import datetime
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 
@@ -22,14 +23,15 @@ def seaice_timeseries(config):
     indir = config.get('paths', 'archive_dir_ocn')
 
     streams_filename = config.get('input', 'seaice_streams_filename')
-    streams = StreamsFile('{}/{}'.format(indir, streams_filename))
+    streams = StreamsFile(streams_filename, streamsdir=indir)
 
-    # read the file template for timeSeriesStatsMonthlyOutput, convert it to
-    # fnmatch expression and make it an absolute path
+    # get a list of timeSeriesStatsMonthly output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'timeseries_start_date')
+    endDate = config.get('time', 'timeseries_end_date')
     infiles = streams.readpath('timeSeriesStatsMonthlyOutput',
-                               'filename_template')
-    # find files matching the fnmatch experession
-    infiles = paths(infiles)
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
 
     varnames=['iceAreaCell','iceVolumeCell']
 
@@ -70,7 +72,6 @@ def seaice_timeseries(config):
     dsmesh = xr.open_dataset(meshfile)
 
     # Load data
-    #infiles = "".join([indir,'/am.mpas-cice.timeSeriesStatsMonthly.????-??-??.nc'])
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                                timeSeriesStats=True,
                                timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',

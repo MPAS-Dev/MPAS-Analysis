@@ -1,13 +1,13 @@
 import xarray as xr
 import pandas as pd
 import datetime
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import StreamsFile
-from ..shared.io.utility import paths
 
 def sst_timeseries(config):
     """
@@ -23,19 +23,20 @@ def sst_timeseries(config):
     indir = config.get('paths', 'archive_dir_ocn')
 
     streams_filename = config.get('input', 'ocean_streams_filename')
-    streams = StreamsFile('{}/{}'.format(indir, streams_filename))
+    streams = StreamsFile(streams_filename, streamsdir=indir)
 
-    # read the file template for timeSeriesStatsOutput, convert it to fnmatch
-    # expression and make it an absolute path
-    infiles = streams.readpath('timeSeriesStatsOutput', 'filename_template')
-    # find files matching the fnmatch experession
-    infiles = paths(infiles)
+    # get a list of timeSeriesStats output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'timeseries_start_date')
+    endDate = config.get('time', 'timeseries_end_date')
+    infiles = streams.readpath('timeSeriesStatsOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
+
 
     casename = config.get('case','casename')
     ref_casename_v0 = config.get('case','ref_casename_v0')
     indir_v0data = config.get('paths','ref_archive_v0_ocndir')
-
-    #compare_with_obs = config.getboolean('sst_timeseries','compare_with_obs')
 
     plots_dir = config.get('paths','plots_dir')
 

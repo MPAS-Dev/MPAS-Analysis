@@ -48,6 +48,9 @@ climo_yr1 = 6
 climo_yr2 = 10
 # the offset year to be added to simulation years
 yr_offset = 1849
+# start and end years for timeseries analysis
+timeseries_yr1 = 1
+timeseries_yr2 = 9999
 
 [ohc_timeseries]
 generate = 1

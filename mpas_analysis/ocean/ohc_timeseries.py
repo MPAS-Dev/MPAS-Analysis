@@ -3,13 +3,13 @@ from netCDF4 import Dataset as netcdf_dataset
 import xarray as xr
 import pandas as pd
 import datetime
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import paths
 
 def ohc_timeseries(config):
     """
@@ -23,20 +23,23 @@ def ohc_timeseries(config):
     indir = config.get('paths', 'archive_dir_ocn')
 
     namelist_filename = config.get('input', 'ocean_namelist_filename')
-    namelist = NameList('{}/{}'.format(indir, namelist_filename))
+    namelist = NameList(namelist_filename, path=indir)
+
     streams_filename = config.get('input', 'ocean_streams_filename')
-    streams = StreamsFile('{}/{}'.format(indir, streams_filename))
+    streams = StreamsFile(streams_filename, streamsdir=indir)
 
     # Note: input file, not a mesh file because we need dycore specific fields
     # such as refBottomDepth and namelist fields such as config_density0 that
     # are not guaranteed to be in the mesh file.
-    inputfile = streams.readpath('input','filename_template')
+    inputfile = streams.readpath('input')[0]
 
-    # read the file template for timeSeriesStatsOutput, convert it to fnmatch
-    # expression and make it an absolute path
-    infiles = streams.readpath('timeSeriesStatsOutput', 'filename_template')
-    # find files matching the fnmatch experession
-    infiles = paths(infiles)
+    # get a list of timeSeriesStats output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'timeseries_start_date')
+    endDate = config.get('time', 'timeseries_end_date')
+    infiles = streams.readpath('timeSeriesStatsOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
 
     casename = config.get('case','casename')
     ref_casename_v0 = config.get('case','ref_casename_v0')
@@ -72,8 +75,6 @@ def ohc_timeseries(config):
 
     # Load data
     print "  Load ocean data..."
-
-    # Load data:
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                          timeSeriesStats=True,
                          timestr='time_avg_daysSinceStartOfSim',

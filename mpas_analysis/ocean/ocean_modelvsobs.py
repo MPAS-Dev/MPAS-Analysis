@@ -14,6 +14,7 @@ import numpy as np
 import xarray as xr
 import datetime
 from netCDF4 import Dataset as netcdf_dataset
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 from ..shared.plot.plotting import plot_global_comparison
@@ -21,7 +22,6 @@ from ..shared.interpolation.interpolate import interp_fields, init_tree
 from ..shared.constants import constants
 
 from ..shared.io import StreamsFile
-from ..shared.io.utility import paths
 
 def ocn_modelvsobs(config, field):
 
@@ -36,13 +36,15 @@ def ocn_modelvsobs(config, field):
     indir = config.get('paths', 'archive_dir_ocn')
 
     streams_filename = config.get('input', 'ocean_streams_filename')
-    streams = StreamsFile('{}/{}'.format(indir, streams_filename))
+    streams = StreamsFile(streams_filename, streamsdir=indir)
 
-    # read the file template for timeSeriesStatsOutput, convert it to fnmatch
-    # expression and make it an absolute path
-    infiles = streams.readpath('timeSeriesStatsOutput', 'filename_template')
-    # find files matching the fnmatch experession
-    infiles = paths(infiles)
+    # get a list of timeSeriesStats output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'climo_start_date')
+    endDate = config.get('time', 'climo_end_date')
+    infiles = streams.readpath('timeSeriesStatsOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
 
     plots_dir = config.get('paths', 'plots_dir')
     obsdir = config.get('paths', 'obs_' + field.lower() + 'dir')
@@ -51,10 +53,6 @@ def ocn_modelvsobs(config, field):
     climo_yr1 = config.getint('time', 'climo_yr1')
     climo_yr2 = config.getint('time', 'climo_yr2')
     yr_offset = config.getint('time', 'yr_offset')
-
-    #Seems like the following line should be a config.get option and not
-    #read every time series file when only a subset is taken
-    #infiles = "".join([indir,"/am.mpas-o.timeSeriesStats.????-*.nc"])
 
     outputTimes = config.getlist(field.lower() + '_modelvsobs', 'comparisonTimes')
 
