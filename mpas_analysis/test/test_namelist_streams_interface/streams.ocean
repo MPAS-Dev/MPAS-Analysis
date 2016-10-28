@@ -11,7 +11,7 @@
 
 <immutable_stream name="restart"
                   type="input;output"
-                  filename_template="restarts/restart.$Y-$M-$D_$h.$m.$s.nc"
+                  filename_template="restarts/restart.$Y-$M-$D_$S.nc"
                   filename_interval="output_interval"
                   reference_time="0000-01-01_00:00:00"
                   clobber_mode="truncate"
