@@ -26,7 +26,7 @@ class MpasAnalysisConfigParser(ConfigParser):
         if isinstance(default, list):
             self.setlist(section, option, default)
         else:
-            return self.get(section, option, str(default))
+            self.set(section, option, str(default))
         return default
 
     def getlist(self, section, option, listType=str):
