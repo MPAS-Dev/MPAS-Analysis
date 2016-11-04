@@ -14,23 +14,38 @@ import numpy as np
 import xarray as xr
 import datetime
 from netCDF4 import Dataset as netcdf_dataset
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 from ..shared.plot.plotting import plot_global_comparison
 from ..shared.interpolation.interpolate import interp_fields, init_tree
 from ..shared.constants import constants
 
+from ..shared.io import StreamsFile
 
 def ocn_modelvsobs(config, field):
 
     """
     Plots a comparison of ACME/MPAS output to SST or MLD observations
 
-    Authors: Luke Van Roekel and Milena Veneziani
-    Modified: 10/24/2016
+    Authors: Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
+    Modified: 10/27/2016
     """
 
+    # read parameters from config file
     indir = config.get('paths', 'archive_dir_ocn')
+
+    streams_filename = config.get('input', 'ocean_streams_filename')
+    streams = StreamsFile(streams_filename, streamsdir=indir)
+
+    # get a list of timeSeriesStats output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'climo_start_date')
+    endDate = config.get('time', 'climo_end_date')
+    infiles = streams.readpath('timeSeriesStatsOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
+
     plots_dir = config.get('paths', 'plots_dir')
     obsdir = config.get('paths', 'obs_' + field.lower() + 'dir')
     casename = config.get('case', 'casename')
@@ -38,10 +53,6 @@ def ocn_modelvsobs(config, field):
     climo_yr1 = config.getint('time', 'climo_yr1')
     climo_yr2 = config.getint('time', 'climo_yr2')
     yr_offset = config.getint('time', 'yr_offset')
-
-    #Seems like the following line should be a config.get option and not
-    #read every time series file when only a subset is taken
-    infiles = "".join([indir,"/am.mpas-o.timeSeriesStats.????-*.nc"])
 
     outputTimes = config.getlist(field.lower() + '_modelvsobs', 'comparisonTimes')
 

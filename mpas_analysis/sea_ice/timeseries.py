@@ -2,12 +2,36 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 import datetime
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 
 from ..shared.plot.plotting  import timeseries_analysis_plot
 
+from ..shared.io import StreamsFile
+from ..shared.io.utility import paths
+
 def seaice_timeseries(config):
+    """
+    Performs analysis of time series of sea-ice properties.
+
+    Author: Xylar Asay-Davis, Milena Veneziani
+    Last Modified: 10/27/2016
+    """
+
+    # read parameters from config file
+    indir = config.get('paths', 'archive_dir_ocn')
+
+    streams_filename = config.get('input', 'seaice_streams_filename')
+    streams = StreamsFile(streams_filename, streamsdir=indir)
+
+    # get a list of timeSeriesStatsMonthly output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'timeseries_start_date')
+    endDate = config.get('time', 'timeseries_end_date')
+    infiles = streams.readpath('timeSeriesStatsMonthlyOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
 
     varnames=['iceAreaCell','iceVolumeCell']
 
@@ -48,7 +72,6 @@ def seaice_timeseries(config):
     dsmesh = xr.open_dataset(meshfile)
 
     # Load data
-    infiles = "".join([indir,'/am.mpas-cice.timeSeriesStatsMonthly.????-??-??.nc'])
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                                timeSeriesStats=True,
                                timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',

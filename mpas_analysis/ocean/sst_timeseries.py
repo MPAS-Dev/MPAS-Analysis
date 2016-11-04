@@ -1,23 +1,42 @@
 import xarray as xr
 import pandas as pd
 import datetime
+import os.path
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-def sst_timeseries(config):
+from ..shared.io import StreamsFile
 
+def sst_timeseries(config):
+    """
+    Performs analysis of the time-series output of sea-surface temperature
+    (SST).
+
+    Author: Xylar Asay-Davis, Milena Veneziani
+    Last Modified: 10/27/2016
+    """
     # Define/read in general variables
     print "  Load SST data..."
-    indir = config.get('paths','archive_dir_ocn')
-    infiles = '%s/am.mpas-o.timeSeriesStats.????-??*nc'%indir
+    # read parameters from config file
+    indir = config.get('paths', 'archive_dir_ocn')
+
+    streams_filename = config.get('input', 'ocean_streams_filename')
+    streams = StreamsFile(streams_filename, streamsdir=indir)
+
+    # get a list of timeSeriesStats output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'timeseries_start_date')
+    endDate = config.get('time', 'timeseries_end_date')
+    infiles = streams.readpath('timeSeriesStatsOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
+
 
     casename = config.get('case','casename')
     ref_casename_v0 = config.get('case','ref_casename_v0')
     indir_v0data = config.get('paths','ref_archive_v0_ocndir')
-
-    compare_with_obs = config.getboolean('sst_timeseries','compare_with_obs')
 
     plots_dir = config.get('paths','plots_dir')
 

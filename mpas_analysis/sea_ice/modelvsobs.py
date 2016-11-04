@@ -1,4 +1,5 @@
 import os
+import os.path
 import subprocess
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
@@ -13,9 +14,32 @@ from netCDF4 import Dataset as netcdf_dataset
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
 from ..shared.plot.plotting import plot_polar_comparison
 
-def seaice_modelvsobs(config):
+from ..shared.io import StreamsFile
+from ..shared.io.utility import paths
 
-    indir = config.get('paths','archive_dir_ocn')
+def seaice_modelvsobs(config):
+    """
+    Performs analysis of sea-ice properties by comparing with
+    previous model results and/or observations.
+
+    Author: Xylar Asay-Davis, Milena Veneziani
+    Last Modified: 10/27/2016
+    """
+
+    # read parameters from config file
+    indir = config.get('paths', 'archive_dir_ocn')
+
+    streams_filename = config.get('input', 'seaice_streams_filename')
+    streams = StreamsFile(streams_filename, streamsdir=indir)
+
+    # get a list of timeSeriesStatsMonthly output files from the streams file,
+    # reading only those that are between the start and end dates
+    startDate = config.get('time', 'climo_start_date')
+    endDate = config.get('time', 'climo_end_date')
+    infiles = streams.readpath('timeSeriesStatsMonthlyOutput',
+                               startDate=startDate, endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
+
     plots_dir = config.get('paths','plots_dir')
     obsdir = config.get('paths','obs_seaicedir')
 
@@ -88,10 +112,6 @@ def seaice_modelvsobs(config):
 
     # Load data
     print "  Load sea-ice data..."
-    print indir
-
-    infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.????-*.nc"])
-    #infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.001[5-6]-*.nc"])
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                                 timeSeriesStats=True,
                                 timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',
