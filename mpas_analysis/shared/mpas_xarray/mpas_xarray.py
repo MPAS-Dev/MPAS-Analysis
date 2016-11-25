@@ -129,7 +129,7 @@ def time_series_stat_time(timestr, daysSinceStart):  # {{{
 
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
                     timeSeriesStats=False, timestr=None,
-                    yearoffset=1849, monthoffset=12, dayoffset=31):  # {{{
+                    yearoffset=1849):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset because
     the time must be between 1678 and 2262 based on the xarray library.
@@ -139,8 +139,7 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     constant over the entire model simulation. Typical time-slice experiments
     are run with 1850 (pre-industrial) conditions and 2000 (present-day)
     conditions. Hence, a default date offset is chosen to be yearoffset=1849,
-    monthoffset=12, dayoffset=31 (day 1 of an 1850 run will be seen as
-    Jan 1st, 1850).
+    (year 0001 of an 1850 run will correspond with Jan 1st, 1850).
 
     Note, for use with the timeSeriesStats analysis member fields set
     timeSeriesStats=True and assign timestr.
@@ -159,8 +158,8 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
                                                 'nCells': cellIDs}
     selvals is a dictionary, e.g., selvals = {'cellLon': 180.0}
 
-    Phillip J. Wolfram, Milena Veneziani, and Luke van Roekel
-    09/13/2016
+    Phillip J. Wolfram, Milena Veneziani, Luke van Roekel and Xylar Asay-Davis
+    11/25/2016
     """
 
     # ensure timestr is specified used when timeSeriesStats=True
@@ -173,14 +172,10 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
 
         # compute shifted datetimes
         daysSinceStart = ds[timestr]
-        datetimes = [datetime.datetime(yearoffset, monthoffset, dayoffset) + x
+        datetimes = [datetime.datetime(yearoffset+1, 1, 1) + x
                      for x in time_series_stat_time(timestr, daysSinceStart)]
     else:
         time = np.array([''.join(atime).strip() for atime in ds.xtime.values])
-        # note the one year difference here (e.g., 12-31 of 1849 is essentially
-        # 1850) breaks previous convention used if timeSeriesStats=False
-        # yearoffset=1849 instead of prior 1950
-        # comments above can be cleaned up on transition to v1.0
         datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]),
                                        int(x[8:10]), int(x[11:13]),
                                        int(x[14:16]), int(x[17:19]))
