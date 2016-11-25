@@ -72,11 +72,11 @@ def seaice_timeseries(config):
     dsmesh = xr.open_dataset(meshfile)
 
     # Load data
-    ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-                               timeSeriesStats=True,
-                               timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',
-                               onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',
-                                         'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
+    ds = xr.open_mfdataset(infiles, preprocess=lambda x: 
+                           preprocess_mpas(x, yearoffset=yr_offset,
+                                           timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',
+                                           onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',
+                                                     'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
     ds = remove_repeated_time_index(ds)
 
     ds = ds.merge(dsmesh)
@@ -88,8 +88,8 @@ def seaice_timeseries(config):
 
     if ref_casename_v0 != "None":
         infiles_v0data = "".join([indir_v0data,'/icevol.',ref_casename_v0,'.year*.nc'])
-        ds_v0 = xr.open_mfdataset(infiles_v0data,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+        ds_v0 = xr.open_mfdataset(infiles_v0data, preprocess=lambda x: 
+                                  preprocess_mpas(x, yearoffset=yr_offset))
         ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
 
     # Make Northern and Southern Hemisphere partition:
@@ -165,22 +165,22 @@ def seaice_timeseries(config):
         if varname == "iceAreaCell":
 
             if compare_with_obs:
-                ds_obs = xr.open_mfdataset(obs_filenameNH,
-                    preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+                ds_obs = xr.open_mfdataset(obs_filenameNH, preprocess=lambda x: 
+                                           preprocess_mpas(x, yearoffset=yr_offset))
                 ds_obs = remove_repeated_time_index(ds_obs)
                 var_nh_obs = ds_obs.IceArea
                 var_nh_obs = replicate_cycle(var_nh,var_nh_obs)
 
-                ds_obs = xr.open_mfdataset(obs_filenameSH,
-                    preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+                ds_obs = xr.open_mfdataset(obs_filenameSH, preprocess=lambda x: 
+                                           preprocess_mpas(x, yearoffset=yr_offset))
                 ds_obs = remove_repeated_time_index(ds_obs)
                 var_sh_obs = ds_obs.IceArea
                 var_sh_obs = replicate_cycle(var_sh,var_sh_obs)
 
             if ref_casename_v0 != "None":
                 infiles_v0data = "".join([indir_v0data,'/icearea.',ref_casename_v0,'.year*.nc'])
-                ds_v0 = xr.open_mfdataset(infiles_v0data,
-                    preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+                ds_v0 = xr.open_mfdataset(infiles_v0data, preprocess=lambda x: 
+                                          preprocess_mpas(x, yearoffset=yr_offset))
                 ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
                 var_nh_v0 = ds_v0_tslice.icearea_nh
                 var_sh_v0 = ds_v0_tslice.icearea_sh
@@ -188,8 +188,8 @@ def seaice_timeseries(config):
         elif varname == "iceVolumeCell":
 
             if compare_with_obs:
-                ds_obs = xr.open_mfdataset(obs_filenameNH,
-                    preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+                ds_obs = xr.open_mfdataset(obs_filenameNH, preprocess=lambda x: 
+                                           preprocess_mpas(x, yearoffset=yr_offset))
                 ds_obs = remove_repeated_time_index(ds_obs)
                 var_nh_obs = ds_obs.IceVol
                 var_nh_obs = replicate_cycle(var_nh,var_nh_obs)
@@ -198,8 +198,8 @@ def seaice_timeseries(config):
 
             if ref_casename_v0 != "None":
                 infiles_v0data = "".join([indir_v0data,'/icevol.',ref_casename_v0,'.year*.nc'])
-                ds_v0 = xr.open_mfdataset(infiles_v0data,
-                    preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+                ds_v0 = xr.open_mfdataset(infiles_v0data, preprocess=lambda x: 
+                                          preprocess_mpas(x, yearoffset=yr_offset))
                 ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
                 var_nh_v0 = ds_v0_tslice.icevolume_nh
                 var_sh_v0 = ds_v0_tslice.icevolume_sh

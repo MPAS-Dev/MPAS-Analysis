@@ -63,10 +63,10 @@ def ocn_modelvsobs(config, field):
     if field.lower() == 'mld':
         obs_filename = "%s/holtetalley_mld_climatology.nc" % obsdir
 
-        ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-					   timeSeriesStats=True,
-                               timestr='time_avg_daysSinceStartOfSim',
-                               onlyvars=['time_avg_dThreshMLD']))
+        ds = xr.open_mfdataset(infiles, preprocess=lambda x: 
+                               preprocess_mpas(x, yearoffset=yr_offset,
+                                               timestr=['xtime_start', 'xtime_end'],
+                                               onlyvars=['time_avg_dThreshMLD']))
         ds = remove_repeated_time_index(ds)
         ds.rename({'time_avg_dThreshMLD':'mpasData'}, inplace = True)
 
@@ -93,11 +93,11 @@ def ocn_modelvsobs(config, field):
 
     elif field.lower() == 'sst':
 
-        ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-		                    timeSeriesStats=True,
-		                    timestr='time_avg_daysSinceStartOfSim',
-		                    onlyvars=['time_avg_activeTracers_temperature'],
-		                    selvals={'nVertLevels':1}))
+        ds = xr.open_mfdataset(infiles, preprocess=lambda x: 
+                               preprocess_mpas(x, yearoffset=yr_offset,
+                                               timestr=['xtime_start', 'xtime_end'],
+		                               onlyvars=['time_avg_activeTracers_temperature'],
+		                               selvals={'nVertLevels':1}))
         ds = remove_repeated_time_index(ds)
         ds.rename({'time_avg_activeTracers_temperature':'mpasData'}, inplace = True)
 

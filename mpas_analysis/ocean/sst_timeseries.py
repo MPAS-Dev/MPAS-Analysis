@@ -49,9 +49,10 @@ def sst_timeseries(config):
     iregions = config.getlist('sst_timeseries','regionIndicesToPlot',listType=int)
 
     # Load data:
-    ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-                           timeSeriesStats=True, timestr='time_avg_daysSinceStartOfSim',
-                           onlyvars=['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']))
+    ds = xr.open_mfdataset(infiles, preprocess=lambda x: 
+                           preprocess_mpas(x, yearoffset=yr_offset,
+                                           timestr=['xtime_start', 'xtime_end'],
+                                           onlyvars=['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']))
     ds = remove_repeated_time_index(ds)
 
     SSTregions = ds.time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature
@@ -65,7 +66,8 @@ def sst_timeseries(config):
     if ref_casename_v0 != "None":
         print "  Load in SST for ACMEv0 case..."
         infiles_v0data = "".join([indir_v0data,'/SST.',ref_casename_v0,'.year*.nc'])
-        ds_v0 = xr.open_mfdataset(infiles_v0data,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+        ds_v0 = xr.open_mfdataset(infiles_v0data,preprocess=lambda x: 
+                                  preprocess_mpas(x, yearoffset=yr_offset))
         ds_v0 = remove_repeated_time_index(ds_v0)
         ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
 

@@ -5,12 +5,18 @@ mpas_xarray.py
 Wrapper to handle importing MPAS files into xarray.
 
  Module:
- 1. converts MPAS "xtime" to xarray time.  Time dimension is assigned via
-    `preprocess_mpas(..., timeSeriestats=False, ...)`.
- 2. converts MPAS "timeSinceStartOfSim" to xarray time for MPAS fields coming
-    from the timeSeriesStatsAM.  Time dimension is assigned via
-    `preprocess_mpas(..., timeSeriesStats=True, ...)`.
- 3. provides capability to remove redundant time entries from reading of
+ 1. converts MPAS time in various formats to xarray time.  The MPAS time
+    variable is provided via
+    `preprocess_mpas(..., timestr='xtime', ...)`.
+    `timestr` can either be a single variable name or a pair of variable
+    names.  In the latter case, each time variable is converted to an
+    xarray time and the mean of the two times is used as the final xarray
+    time.  Each variable name in `timestr` can refer either to a float
+    array containing the the number of days since the start of the
+    simulation (e.g. `daysSinceStartOfSim`) or a string variable with the
+    date and time (e.g. `xtime`) in the usual MPAS format:
+    YYYY-MM-DD_hh:mm:ss
+ 2. provides capability to remove redundant time entries from reading of
     multiple netCDF datasets via `remove_repeated_time_index`.
 
  Example Usage:
@@ -21,7 +27,7 @@ Wrapper to handle importing MPAS files into xarray.
 >>> ds = remove_repeated_time_index(ds)
 
 Phillip J. Wolfram, Xylar Asay-Davis
-Last modified: 11/25/2016
+Last modified: 12/01/2016
 """
 
 import datetime
@@ -110,26 +116,60 @@ def ensure_list(alist):  # {{{
     return alist  # }}}
 
 
-def time_series_stat_time(timestr, daysSinceStart):  # {{{
+def get_datetimes(ds, timestr, yearoffset):  # {{{
     """
-    Modifies daysSinceStart for uniformity based on between differences
-    between MPAS-O and MPAS-Seaice.
+    Computes a list of datetimes from the time variable in the dataset ds with
+    variable name (or a list of 2 names) given by timestr, typically one of
+    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
 
-    Phillip J. Wolfram
-    09/09/2016
+    The variable(s) pointed to by timestr should contain time information as a
+    date string, a floating-point number of days or a number of days
+    represented as a pandas timedelta (in ns).  The result is a list of
+    datetimes corresponding to the input dates offset as appropriate by the
+    yearoffset.
+
+    Xylar Asay-Davis
+    Last modified: 12/05/2016
     """
 
-    if (timestr == 'timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'):
-        return [datetime.timedelta(x) for x in daysSinceStart.values]
+    if isinstance(timestr, (tuple, list)):
+        # we want to average the two
+        assert(len(timestr) == 2)
+        starts = get_datetimes(ds, timestr[0], yearoffset)
+        ends = get_datetimes(ds, timestr[1], yearoffset)
+        datetimes = [starts[i] + (ends[i] - starts[i])/2
+                     for i in range(len(starts))]
+        return datetimes
+
+    time_var = ds[timestr]
+
+    if time_var.dtype == '|S64':
+        # this is a variable like date strings like 'xtime'
+        time = [''.join(atime).strip() for atime in time_var.values]
+        datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]),
+                                       int(x[8:10]), int(x[11:13]),
+                                       int(x[14:16]), int(x[17:19]))
+                     for x in time]
+    elif time_var.dtype == 'float64':
+        # this array contains floating-point days like 'daysSinceStartOfSim'
+        start = datetime.datetime(year=yearoffset+1, month=1, day=1)
+        datetimes = [start + datetime.timedelta(x)
+                     for x in time_var.values]
+    elif time_var.dtype == 'timedelta64[ns]':
+        # this array contains a variable like 'daysSinceStartOfSim' as a
+        # timedelta64
+        start = datetime.datetime(year=yearoffset+1, month=1, day=1)
+        datetimes = [start + x for x in
+                     pd.to_timedelta(time_var.values, unit='ns')]
     else:
-        return pd.to_timedelta(daysSinceStart.values, unit='ns')
+        raise TypeError("time_var of unsupported type {}".format(
+            time_var.dtype))
 
-    # }}}
+    return datetimes  # }}}
 
 
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
-                    timeSeriesStats=False, timestr=None,
-                    yearoffset=1849):  # {{{
+                    timestr='xtime', yearoffset=1849):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset because
     the time must be between 1678 and 2262 based on the xarray library.
@@ -141,50 +181,29 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     conditions. Hence, a default date offset is chosen to be yearoffset=1849,
     (year 0001 of an 1850 run will correspond with Jan 1st, 1850).
 
-    Note, for use with the timeSeriesStats analysis member fields set
-    timeSeriesStats=True and assign timestr.
-
-    The timestr variable designates the appropriate variable to be used as the
-    unlimited dimension for xarray concatenation.  For MPAS-O
-    timestr='time_avg_daysSinceStartOfSim' and for MPAS-Seaice
-    timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'.
+    The data set is assumed to have an array of date strings with variable
+    name (or list of 2 names) given by timestr, typically one of
+    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
 
     The onlyvars option reduces the dataset to only include variables in the
     onlyvars list. If onlyvars=None, include all dataset variables.
 
     iselvals and selvals provide index and value-based slicing operations for
     individual datasets prior to their merge via xarray.
-    iselvals is a dictionary, e.g., iselvals = {'nVertLevels': slice(0,3),
-                                                'nCells': cellIDs}
-    selvals is a dictionary, e.g., selvals = {'cellLon': 180.0}
+    iselvals is a dictionary, e.g. iselvals = {'nVertLevels': slice(0, 3),
+                                               'nCells': cellIDs}
+    selvals is a dictionary, e.g. selvals = {'cellLon': 180.0}
 
     Phillip J. Wolfram, Milena Veneziani, Luke van Roekel and Xylar Asay-Davis
-    11/25/2016
+    Last modified: 12/05/2016
     """
 
-    # ensure timestr is specified used when timeSeriesStats=True
-    if timeSeriesStats:
-        if timestr is None:
-            assert False, 'A value for timestr is required, e.g., ' + \
-                    'for MPAS-O: time_avg_daysSinceStartOfSim, and ' + \
-                    'for MPAS-Seaice: ' + \
-                    'timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'
-
-        # compute shifted datetimes
-        daysSinceStart = ds[timestr]
-        datetimes = [datetime.datetime(yearoffset+1, 1, 1) + x
-                     for x in time_series_stat_time(timestr, daysSinceStart)]
-    else:
-        time = np.array([''.join(atime).strip() for atime in ds.xtime.values])
-        datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]),
-                                       int(x[8:10]), int(x[11:13]),
-                                       int(x[14:16]), int(x[17:19]))
-                     for x in time]
+    datetimes = get_datetimes(ds, timestr, yearoffset)
 
     assert_valid_datetimes(datetimes, yearoffset)
 
     # append the corret time information
-    ds.coords['Time'] = pd.to_datetime(datetimes)
+    ds.coords['Time'] = datetimes
     # record the yroffset
     ds.attrs.__setitem__('time_yearoffset', str(yearoffset))
 
