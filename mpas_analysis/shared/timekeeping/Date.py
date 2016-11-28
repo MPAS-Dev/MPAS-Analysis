@@ -7,6 +7,7 @@
 
 import functools
 import numpy
+import datetime
 
 @functools.total_ordering
 class Date(object):
@@ -75,6 +76,50 @@ class Date(object):
             self.seconds = numpy.int64(seconds)
             self._setTotalSeconds()
 
+    def to_datetime(self, yearOffset=0):
+        """
+        Converts the date object to a datetime object.
+        The yearOffset is added to this date's year, and
+        the resulting date is clamped to the range supported by
+        numpy's datetime64[ns], used internally by xarray an
+        pandas
+
+        Last modified: 11/28/2016
+        Author: Xylar Asay-Davis
+        """
+        if self.isInterval:
+            raise ValueError("self.isInterval == True. Use to_timedelta "
+                             "instead of to_datetime")
+
+        year = numpy.maximum(datetime.MINYEAR,
+                             numpy.minimum(datetime.MAXYEAR,
+                                           self.years+yearOffset))
+        outDate =  datetime.datetime(year=year, month=self.months+1,
+                                     day=self.days+1, hour=self.hours,
+                                     minute=self.minutes, second=self.seconds)
+
+        minDate = datetime.datetime(year=1678, month=1, day=1,
+                                    hour=0, minute=0, second=0)
+        maxDate = datetime.datetime(year=2262, month=1, day=1,
+                                    hour=0, minute=0, second=0)
+        outDate = max(minDate, min(maxDate, outDate))
+        return outDate
+
+    def to_timedelta(self):
+        """
+        Converts the date object to a timedelta object
+
+        Last modified: 11/28/2016
+        Author: Xylar Asay-Davis
+        """
+        if not self.isInterval:
+            raise ValueError("self.isInterval == False. Use to_datetime "
+                             "instead of to_timedelta")
+
+        days = 365*self.years + self._monthsToDays(self.months) + self.days
+        return datetime.timedelta(days=self.days, hours=self.hours,
+                                  minutes=self.minutes, seconds=self.seconds)
+
     def __lt__(self, other):
         if self.isInterval != other.isInterval:
             raise ValueError('Comparing interval with non-interval Date '
@@ -130,24 +175,22 @@ class Date(object):
         return Date(isInterval=isInterval, years=years, months=months,
                     days=days, hours=hours, minutes=minutes, seconds=seconds)
 
-
     def __str__(self):
         if self.isInterval:
             offset = 0
         else:
             offset = 1
-        return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}' \
-                    .format(self.years, self.months+offset, self.days+offset,
-                            self.hours, self.minutes, self.seconds)
+        return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(
+            self.years, self.months+offset, self.days+offset,
+            self.hours, self.minutes, self.seconds)
 
     def _diffSeconds(self, other):
         return
 
     def _setTotalSeconds(self):
         days = self.years*365 + self._monthsToDays(self.months) + self.days
-        self.totalSeconds = (((days*24 + self.hours)*60 + self.minutes)*60
-                             + self.seconds)
-
+        self.totalSeconds = (((days*24 + self.hours)*60 + self.minutes)*60 +
+                             self.seconds)
 
     def _monthsToDays(self, months):
         daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -182,7 +225,7 @@ class Date(object):
     def _parseDate(self, dateString):
         """
         parses a dateString in one of the following formats into
-        a datetime object:
+        a Date object:
         YYYY-MM-DD_hh:mm:ss
         YYYY-MM-DD_hh.mm.ss
         YYYY-MM-DD_SSSSS
@@ -213,7 +256,7 @@ class Date(object):
                 hms = dateString
 
         if '.' in hms:
-            hms = hms.replace('.',':')
+            hms = hms.replace('.', ':')
 
         if '-' in ymd:
             (self.years, self.months, self.days) \

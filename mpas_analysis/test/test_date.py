@@ -6,6 +6,7 @@ Xylar Asay-Davis
 """
 
 import pytest
+import datetime
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.timekeeping.Date import Date
 
@@ -118,5 +119,37 @@ class TestDate(TestCase):
         diff = date1-date2
         self.assertEqual(diff, Date(dateString='1995-12-26', isInterval=False))
 
+        date = Date(dateString='1996-01-15', isInterval=False)
+        datetime1 = date.to_datetime(yearOffset=0)
+        datetime2 = datetime.datetime(year=1996, month=1, day=15)
+        self.assertEqual(datetime1, datetime2)
+
+        date = Date(dateString='0000-00-20', isInterval=True)
+        timedelta1 = date.to_timedelta()
+        timedelta2 = datetime.timedelta(days=20)
+        self.assertEqual(timedelta1, timedelta2)
+
+        # since pandas and xarray use the numpy type 'datetime[ns]`, which
+        # has a limited range of dates, the date 0001-01-01 gets increased to
+        # the minimum allowed year boundary, 1678-01-01 to avoid invalid
+        # dates.
+        date = Date(dateString='0001-01-01', isInterval=False)
+        datetime1 = date.to_datetime(yearOffset=0)
+        datetime2 = datetime.datetime(year=1678, month=1, day=1)
+        self.assertEqual(datetime1, datetime2)
+
+        date = Date(dateString='0001-01-01', isInterval=False)
+        datetime1 = date.to_datetime(yearOffset=1849)
+        datetime2 = datetime.datetime(year=1850, month=1, day=1)
+        self.assertEqual(datetime1, datetime2)
+
+        # since pandas and xarray use the numpy type 'datetime[ns]`, which
+        # has a limited range of dates, the date 9999-01-01 gets decreased to
+        # the maximum allowed year boundary, 2262-01-01 to avoid invalid
+        # dates.
+        date = Date(dateString='9999-01-01', isInterval=False)
+        datetime1 = date.to_datetime(yearOffset=0)
+        datetime2 = datetime.datetime(year=2262, month=1, day=1)
+        self.assertEqual(datetime1, datetime2)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
