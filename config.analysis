@@ -148,18 +148,18 @@ cmapModelObs = RdYlBu_r
 cmapDiff = coolwarm
 
 # indices into cmapModelObs for contour color
-cmapIndicesModelObs = [0,40,80,110,140,170,200,230,255]
+cmapIndicesModelObs = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # indices into cmapModelObs for contour color
-cmapIndicesDiff = [0,40,80,120,140,170,210,255]
-#cmapIndicesDiff = [0,40,80,127,170,210,255] # good for RdBu_r
+cmapIndicesDiff = [0, 40, 80, 120, 140, 170, 210, 255]
+#cmapIndicesDiff = [0, 40, 80, 127, 170, 210, 255] # good for RdBu_r
 
 # colormap levels/values for contour boundaries
-clevsModelObs = [-2,0,2,6,10,16,22,26,28,32]
-clevsDiff = [-5,-3,-2,-1,0,1,2,3,5]
-#clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3] # good for RdBu_r
+clevsModelObs = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
+clevsDiff = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
+#clevsDiff = [-3, -2, -1, -0.5, 0.5, 1, 2, 3] # good for RdBu_r
 
-# Times for comparison times (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,JFM,AMJ,JAS,OND,ANN)
-comparisonTimes =  [JFM,JAS,ANN]
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
 [mld_modelvsobs]
 # colormap for model/observations
@@ -170,18 +170,17 @@ cmapDiff = RdBu_r
 #cmapDiff = coolwarm
 
 # indices into cmapModelObs for contour color
-cmapIndicesModelObs = [0,40,80,110,140,170,200,230,255]
+cmapIndicesModelObs = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # indices into cmapModelObs for contour color
-cmapIndicesDiff = [0,40,80,120,140,170,210,255]
-#cmapIndicesDiff = [0,40,80,127,170,210,255] # good for RdBu_r
+cmapIndicesDiff = [0, 40, 80, 120, 140, 170, 210, 255]
+#cmapIndicesDiff = [0, 40, 80, 127, 170, 210, 255] # good for RdBu_r
 
 # colormap levels/values for contour boundaries
 clevsModelObs = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
 clevsDiff = [-175, -125, -75, -25, -10, 10, 25, 75, 125, 175]
-#clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3] # good for RdBu_r
 
-# Times for comparison times (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,JFM,AMJ,JAS,OND,ANN)
-comparisonTimes = [JFM,JAS,ANN]
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes = ['JFM', 'JAS', 'ANN']
 
 [seaice_modelvsobs]
 # colormap for model/observations
@@ -190,25 +189,25 @@ cmapModelObs = inferno
 cmapDiff = RdBu_r
 
 # indices into cmapModelObs for contour color
-cmapIndicesModelObs = [20,80,110,140,170,200,230,255]
+cmapIndicesModelObs = [20, 80, 110, 140, 170, 200, 230, 255]
 # indices into cmapModelObs for contour color
-cmapIndicesDiff = [0,40,80,127,127,170,210,255]
+cmapIndicesDiff = [0, 40, 80, 127, 127, 170, 210, 255]
 
 # colormap levels/values for contour boundaries (ice conncentration winter)
-clevsModelObs_conc_win = [0.15,0.4,0.7,0.9,0.94,0.96,0.98,0.99,1]
-clevsDiff_conc_win = [-0.8,-0.6,-0.4,-0.2,0,0.2,0.4,0.6,0.8]
+clevsModelObs_conc_win = [0.15, 0.4, 0.7, 0.9, 0.94, 0.96, 0.98, 0.99, 1]
+clevsDiff_conc_win = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
 
 # colormap levels/values for contour boundaries (ice conncentration summer)
-clevsModelObs_conc_sum = [0.15,0.3,0.5,0.7,0.8,0.85,0.9,0.95,1]
-clevsDiff_conc_sum = [-0.8,-0.6,-0.4,-0.2,0,0.2,0.4,0.6,0.8]
+clevsModelObs_conc_sum = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+clevsDiff_conc_sum = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
 
 # colormap levels/values for contour boundaries (ice thickness NH)
-clevsModelObs_thick_NH = [0,0.25,0.5,1,1.5,2,2.5,3,3.5]
-clevsDiff_thick_NH = [-2.5,-2,-0.5,-0.1,0,0.1,0.5,2,2.5]
+clevsModelObs_thick_NH = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+clevsDiff_thick_NH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
 
 # colormap levels/values for contour boundaries (ice thickness SH)
-clevsModelObs_thick_SH = [0,0.2,0.4,0.6,0.8,1,1.5,2,2.5]
-clevsDiff_thick_SH = [-2.5,-2,-0.5,-0.1,0,0.1,0.5,2,2.5]
+clevsModelObs_thick_SH = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+clevsDiff_thick_SH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
 
 # reference lat/lon for sea ice plots in the NH
 latmin_NH = 50
@@ -220,10 +219,10 @@ lon0_SH = 180
 [regions]
 # list of region names (needs to be in the same order as region indices in
 # time-series stats)
-regions = [arctic, equatorial, so, nino3, nino4, nino3.4, global]
+regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
 # list of plot titles (needs to be in the same order as region indices in
 # time-series stats)
-plot_titles = [Arctic, Equatorial (15S-15N), Southern Ocean, Nino 3, Nino 4, Nino 3.4, Global Ocean]
+plot_titles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3', 'Nino 4', 'Nino 3.4', 'Global Ocean']
 
 [plot]
 # set to true if you want plots to be displayed, rather than just written out
