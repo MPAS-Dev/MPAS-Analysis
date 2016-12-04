@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-    Module of classes / routines to manipulate fortran namelist and streams
-    files.
+Module of classes / routines to manipulate fortran namelist and streams
+files.
 
-    Phillip Wolfram, Xylar Asay-Davis
-    Last modified: 11/02/2016
+Phillip Wolfram, Xylar Asay-Davis
+Last modified: 12/05/2016
 """
 
 from lxml import etree
@@ -14,6 +14,7 @@ import os.path
 from ..containers import ReadOnlyDict
 from .utility import paths
 from ..timekeeping.Date import Date
+
 
 def convert_namelist_to_dict(fname, readonly=True):
     """
@@ -72,7 +73,8 @@ class NameList:
 
     # provide accessor for dictionary notation (returns string)
     def __getitem__(self, key):
-        """ Accessor for bracket noation, e.g., nml['field'], returns string """
+        """ Accessor for bracket noation, e.g., nml['field'], returns string
+        """
         return self.nml[key]
 
     # provide accessors for get, getint, getfloat, getbool with appropriate
@@ -91,7 +93,7 @@ class NameList:
             return True
         else:
             return False
-    #}}}
+    # }}}
 
 
 class StreamsFile:
@@ -144,17 +146,20 @@ class StreamsFile:
         on or before the endDate are included in the file list.
         """
         template = self.read(streamName, 'filename_template')
-        replacements = {'$Y':'[0-9][0-9][0-9][0-9]',
-                        '$M':'[0-9][0-9]',
-                        '$D':'[0-9][0-9]',
-                        '$S':'[0-9][0-9][0-9][0-9][0-9]',
-                        '$h':'[0-9][0-9]',
-                        '$m':'[0-9][0-9]',
-                        '$s':'[0-9][0-9]'}
+        if template is None:
+            raise ValueError('Stream {} not found in streams file {}.'.format(
+                streamName, self.fname))
+        replacements = {'$Y': '[0-9][0-9][0-9][0-9]',
+                        '$M': '[0-9][0-9]',
+                        '$D': '[0-9][0-9]',
+                        '$S': '[0-9][0-9][0-9][0-9][0-9]',
+                        '$h': '[0-9][0-9]',
+                        '$m': '[0-9][0-9]',
+                        '$s': '[0-9][0-9]'}
 
         path = template
         for old in replacements:
-            path = path.replace(old,replacements[old])
+            path = path.replace(old, replacements[old])
 
         if not os.path.isabs(path):
             # this is not an absolute path, so make it an absolute path
@@ -205,5 +210,35 @@ class StreamsFile:
                 outFileList.append(fileName)
 
         return outFileList
+
+    def has_stream(self, streamName):
+        """
+        Returns True if the streams file has a stream with the given
+        streamName, otherwise returns False.
+
+        Xylar Asay-Davis
+        Last modified: 12/04/2016
+        """
+        for stream in self.root:
+            # assumes streamname is unique in XML
+            if stream.get('name') == streamName:
+                return True
+        return False
+
+    def find_stream(self, possibleStreams):
+        """
+        If one (or more) of the names in possibleStreams is a stream in this
+        streams file, returns the first match.  If no match is found, raises
+        a ValueError.
+
+        Xylar Asay-Davis
+        Last modified: 12/07/2016
+        """
+        for streamName in possibleStreams:
+            if self.has_stream(streamName):
+                return streamName
+                
+        raise ValueError('Stream {} not found in streams file {}.'.format(
+            streamName, self.fname))
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
