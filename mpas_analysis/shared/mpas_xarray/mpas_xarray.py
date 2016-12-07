@@ -27,7 +27,7 @@ Wrapper to handle importing MPAS files into xarray.
 >>> ds = remove_repeated_time_index(ds)
 
 Phillip J. Wolfram, Xylar Asay-Davis
-Last modified: 12/01/2016
+Last modified: 12/07/2016
 """
 
 import datetime
@@ -80,23 +80,35 @@ def assert_valid_datetimes(datetimes, yearoffset):  # {{{
     return  # }}}
 
 
-def assert_valid_selections(selvals, iselvals):  # {{{
+def assert_valid_selections(ds, selvals, iselvals):  # {{{
     """
     Ensure that dataset selections are compatable.
 
     It is possible selVals and iselVals may conflict, e.g., selVals restricts
     the dataset to a point where iselvals is unable to be satisfied, hence a
     check is needed to make sure that keys in selvals and iselvals are unique.
+    Additionally, keys for selvals and iselvals are tested to make sure they
+    are dataset dimensions that can be used for selection.
 
     Phillip J. Wolfram
-    09/13/2016
+    Last modified: 12/07/2016
     """
 
     if (selvals is not None) and (iselvals is not None):
         duplicatedkeys = len(np.intersect1d(selvals.keys(), iselvals.keys()))
         assert len(duplicatedkeys) == 0, \
-            'Duplicated selection of variables {} was found!  ' + \
+            'Duplicated selection of variables {} was found!  ' \
             'Selection is ambiguous.'.format(duplicatedkeys)
+
+    def test_vals_in_ds(vals, dims):
+        if vals is not None:
+            for val in vals.keys():
+                assert val in dims, \
+                    '{} is not a dimension in the dataset ' \
+                    'that can be used for selection.'.format(val)
+
+    test_vals_in_ds(selvals, ds.dims)
+    test_vals_in_ds(iselvals, ds.dims)
 
     return  # }}}
 
@@ -210,7 +222,7 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     if onlyvars is not None:
         ds = subset_variables(ds, ensure_list(onlyvars))
 
-    assert_valid_selections(selvals, iselvals)
+    assert_valid_selections(ds, selvals, iselvals)
 
     if selvals is not None:
         ds = ds.sel(**selvals)

@@ -1,8 +1,8 @@
 """
 Unit test infrastructure for mpas_xarray.
 
-Xylar Asay-Davis
-12/06/2016
+Xylar Asay-Davis, Phillip J. Wolfram
+12/07/2016
 """
 
 import pytest
@@ -87,26 +87,47 @@ class TestNamelist(TestCase):
         self.assertEqual(date, pd.Timestamp('1855-01-13 12:24:14'))
 
 
-#    def test_selvals(self):
-#        fileName = str(self.datadir.join('example_jan.nc'))
-#        timestr = 'time_avg_daysSinceStartOfSim'
-#        varList = \
-#            ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
-#             'refBottomDepth']
-#
-#        selvals = {'refBottomDepth': 8.77999997138977}
-#        ds = xr.open_mfdataset(
-#            fileName,
-#            preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
-#                                                             timestr=timestr,
-#                                                             onlyvars=varList,
-#                                                             selvals=selvals,
-#                                                             yearoffset=1850))
-#        self.assertEqual(ds.data_vars.keys(), varList)
-#        self.assertEqual(ds[varList[0]].shape, (1, 7, 1))
-#        self.assertEqual(ds['refBottomDepth'].shape, (1,))
-#        self.assertApproxEqual(ds['refBottomDepth'][0],
-#                               selvals['refBottomDepth'])
+    def test_bad_selvals(self):
+        fileName = str(self.datadir.join('example_jan.nc'))
+        timestr = 'time_avg_daysSinceStartOfSim'
+        varList = \
+            ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
+             'refBottomDepth']
+
+        selvals = {'refBottomDepth': 8.77999997138977}
+        with self.assertRaisesRegexp(AssertionError,
+                'not a dimension in the dataset that '
+                'can be used for selection'):
+            ds = xr.open_mfdataset(
+                fileName,
+                preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
+                                                                 timestr=timestr,
+                                                                 onlyvars=varList,
+                                                                 selvals=selvals,
+                                                                 yearoffset=1850))
+
+
+    def test_selvals(self):
+        fileName = str(self.datadir.join('example_jan.nc'))
+        timestr = 'time_avg_daysSinceStartOfSim'
+        varList = \
+            ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
+             'refBottomDepth']
+
+        selvals = {'nVertLevels': 0}
+        ds = xr.open_mfdataset(
+            fileName,
+            preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
+                                                             timestr=timestr,
+                                                             onlyvars=varList,
+                                                             selvals=selvals,
+                                                             yearoffset=1850))
+        self.assertEqual(ds.data_vars.keys(), varList)
+        self.assertEqual(ds[varList[0]].shape, (1, 7))
+        self.assertEqual(ds['nVertLevels'].shape, ())
+        self.assertApproxEqual(ds['nVertLevels'],
+                               selvals['nVertLevels'])
+
 
     def test_remove_repeated_time_index(self):
         fileName = str(self.datadir.join('example_jan*.nc'))
