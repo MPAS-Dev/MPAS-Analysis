@@ -112,11 +112,11 @@ def seaice_modelvsobs(config):
 
     # Load data
     print "  Load sea-ice data..."
-    ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-                                timeSeriesStats=True,
-                                timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',
-                                onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',
-                                          'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
+    ds = xr.open_mfdataset(infiles, preprocess=lambda x: 
+                           preprocess_mpas(x, yearoffset=yr_offset,
+                                           timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',
+                                           onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',
+                                                     'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
     ds = remove_repeated_time_index(ds)
 
     # Compute climatologies (first motnhly and then seasonally)

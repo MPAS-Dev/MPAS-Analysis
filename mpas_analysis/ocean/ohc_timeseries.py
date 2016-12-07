@@ -16,7 +16,7 @@ def ohc_timeseries(config):
     Performs analysis of ocean heat content (OHC) from time-series output.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 10/26/2016
+    Last Modified: 11/25/2016
     """
 
     # read parameters from config file
@@ -50,6 +50,8 @@ def ohc_timeseries(config):
     plots_dir = config.get('paths','plots_dir')
 
     yr_offset = config.getint('time','yr_offset')
+    timeseries_yr1 = yr_offset + config.getint('time', 'timeseries_yr1')
+    timeseries_yr2 = yr_offset + config.getint('time', 'timeseries_yr2')
 
     N_movavg = config.getint('ohc_timeseries','N_movavg')
 
@@ -75,20 +77,27 @@ def ohc_timeseries(config):
 
     # Load data
     print "  Load ocean data..."
-    ds = xr.open_mfdataset(infiles, preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-                         timeSeriesStats=True,
-                         timestr='time_avg_daysSinceStartOfSim',
-                         onlyvars=['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
-                                   'time_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue',
-                                   'time_avg_avgValueWithinOceanLayerRegion_avgLayerArea',
-                                   'time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness']))
-
+    varList = ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
+               'time_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue',
+               'time_avg_avgValueWithinOceanLayerRegion_avgLayerArea',
+               'time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness']
+    ds = xr.open_mfdataset(infiles,
+                           preprocess=lambda x:
+                           preprocess_mpas(x,
+                                           yearoffset=yr_offset,
+                                           timestr=['xtime_start','xtime_end'],
+                                           onlyvars=varList))
 
     ds = remove_repeated_time_index(ds)
 
+    # select only the data in the specified range of years
+    # time_start = datetime.datetime(timeseries_yr1, 1, 1)
+    # time_end = datetime.datetime(timeseries_yr2, 12, 31)
+    # ds = ds.sel(Time=slice(time_start, time_end))
+
     # Select year-1 data and average it (for later computing anomalies)
-    time_start = datetime.datetime(yr_offset+1,1,1)
-    time_end = datetime.datetime(yr_offset+1,12,31)
+    time_start = datetime.datetime(timeseries_yr1, 1, 1)
+    time_end = datetime.datetime(timeseries_yr1, 12, 31)
     ds_yr1 = ds.sel(Time=slice(time_start,time_end))
     mean_yr1 = ds_yr1.mean('Time')
 
@@ -107,7 +116,8 @@ def ohc_timeseries(config):
     if ref_casename_v0 != "None":
         print "  Load in OHC for ACMEv0 case..."
         infiles_v0data = "".join([indir_v0data,'/OHC.',ref_casename_v0,'.year*.nc'])
-        ds_v0 = xr.open_mfdataset(infiles_v0data,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+        ds_v0 = xr.open_mfdataset(infiles_v0data, preprocess=lambda x:
+                                  preprocess_mpas(x, yearoffset=yr_offset))
         ds_v0 = remove_repeated_time_index(ds_v0)
         ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
 
