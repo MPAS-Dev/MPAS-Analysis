@@ -28,7 +28,7 @@ class TestNamelist(TestCase):
                                                              timestr=timestr,
                                                              yearoffset=1850))
         ds = mpas_xarray.subset_variables(ds, varList)
-        self.assertEqual(ds.data_vars.keys(), varList)
+        self.assertEqual(sorted(ds.data_vars.keys()), sorted(varList))
         self.assertEqual(pd.Timestamp(ds.Time.values[0]),
                          pd.Timestamp('1855-01-16 12:22:30'))
 
@@ -56,7 +56,7 @@ class TestNamelist(TestCase):
                                                              onlyvars=varList,
                                                              iselvals=iselvals,
                                                              yearoffset=1850))
-        self.assertEqual(ds.data_vars.keys(), varList)
+        self.assertEqual(sorted(ds.data_vars.keys()), sorted(varList))
         self.assertEqual(ds[varList[0]].shape, (1, 7, 3))
         self.assertEqual(ds['refBottomDepth'].shape, (3,))
         self.assertApproxEqual(ds['refBottomDepth'][-1],
@@ -65,7 +65,6 @@ class TestNamelist(TestCase):
         # round to nearest second
         date = pd.Timestamp(long(round(date.value, -9)))
         self.assertEqual(date, pd.Timestamp('1855-01-13 12:24:14'))
-
 
     def test_no_units(self):
         fileName = str(self.datadir.join('example_no_units_jan.nc'))
@@ -80,7 +79,7 @@ class TestNamelist(TestCase):
                                                              timestr=timestr,
                                                              onlyvars=varList,
                                                              yearoffset=1850))
-        self.assertEqual(ds.data_vars.keys(), varList)
+        self.assertEqual(sorted(ds.data_vars.keys()), sorted(varList))
         date = pd.Timestamp(ds.Time.values[0])
         # round to nearest second
         date = pd.Timestamp(long(round(date.value, -9)))
@@ -141,11 +140,45 @@ class TestNamelist(TestCase):
                                                              onlyvars=varList,
                                                              yearoffset=1850))
 
-        self.assertEqual(ds.data_vars.keys(), varList)
+        self.assertEqual(sorted(ds.data_vars.keys()), sorted(varList))
         self.assertEqual(len(ds.Time.values), 3)
 
         ds = mpas_xarray.remove_repeated_time_index(ds)
         self.assertEqual(len(ds.Time.values), 2)
 
+    def test_variable_map(self):
+        fileName = str(self.datadir.join('example_jan.nc'))
+        varMap = {
+            'avgSurfaceTemperature':
+                ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature',
+                 'other_string',
+                 'yet_another_string'],
+            'daysSinceStartOfSim':
+                ['time_avg_daysSinceStartOfSim',
+                 'xtime',
+                 'something_else'],
+            'avgLayerTemperature':
+                ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
+                 'test1',
+                 'test2'],
+            'Time': [['xtime_start', 'xtime_end'],
+                     'time_avg_daysSinceStartOfSim']}
+
+        varList = ['avgSurfaceTemperature', 'avgLayerTemperature',
+                   'refBottomDepth', 'daysSinceStartOfSim']
+
+        # preprocess_mpas will use varMap to map the variable names from their
+        # values in the file to the desired values in varList
+        ds = xr.open_mfdataset(
+            fileName,
+            preprocess=lambda x: mpas_xarray.preprocess_mpas(
+                x,
+                timestr='Time',
+                onlyvars=varList,
+                yearoffset=1850,
+                variable_map=varMap))
+
+        # make sure the remapping happened as expected
+        self.assertEqual(sorted(ds.data_vars.keys()), sorted(varList))
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
