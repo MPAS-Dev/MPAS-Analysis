@@ -102,7 +102,8 @@ def analysis(config):  # {{{
         print ""
         print "Plotting SST time series..."
         from mpas_analysis.ocean.sst_timeseries import sst_timeseries
-        sst_timeseries(config)
+        sst_timeseries(config, streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
     if config.getboolean('nino34_timeseries', 'generate'):
         print ""

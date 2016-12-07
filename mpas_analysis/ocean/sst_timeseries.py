@@ -1,9 +1,9 @@
 import xarray as xr
 import pandas as pd
 import datetime
-import os.path
 
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, remove_repeated_time_index
+from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
+    remove_repeated_time_index
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
@@ -11,14 +11,22 @@ from ..shared.io import StreamsFile
 
 from ..shared.timekeeping.Date import Date
 
-def sst_timeseries(config):
+
+def sst_timeseries(config, streamMap=None, variableMap=None):
     """
     Performs analysis of the time-series output of sea-surface temperature
     (SST).
 
+    If present, streamMap is a dictionary of MPAS-O stream names that map to
+    their mpas_analysis counterparts.
+
+    If present, variableMap is a dictionary of MPAS-O variable names that map
+    to their mpas_analysis counterparts.
+
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 11/28/2016
+    Last Modified: 12/05/2016
     """
+
     # Define/read in general variables
     print "  Load SST data..."
     # read parameters from config file
@@ -31,30 +39,33 @@ def sst_timeseries(config):
     # reading only those that are between the start and end dates
     startDate = config.get('time', 'timeseries_start_date')
     endDate = config.get('time', 'timeseries_end_date')
-    infiles = streams.readpath('timeSeriesStatsOutput',
-                               startDate=startDate, endDate=endDate)
-    print 'Reading files {} through {}'.format(infiles[0],infiles[-1])
+    streamName = streams.find_stream(streamMap['timeSeriesStats'])
+    infiles = streams.readpath(streamName, startDate=startDate,
+                               endDate=endDate)
+    print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
 
+    casename = config.get('case', 'casename')
+    ref_casename_v0 = config.get('case', 'ref_casename_v0')
+    indir_v0data = config.get('paths', 'ref_archive_v0_ocndir')
 
-    casename = config.get('case','casename')
-    ref_casename_v0 = config.get('case','ref_casename_v0')
-    indir_v0data = config.get('paths','ref_archive_v0_ocndir')
+    plots_dir = config.get('paths', 'plots_dir')
 
-    plots_dir = config.get('paths','plots_dir')
+    yr_offset = config.getint('time', 'yr_offset')
 
-    yr_offset = config.getint('time','yr_offset')
-
-    N_movavg = config.getint('sst_timeseries','N_movavg')
+    N_movavg = config.getint('sst_timeseries', 'N_movavg')
 
     regions = config.getExpression('regions', 'regions')
     plot_titles = config.getExpression('regions', 'plot_titles')
     iregions = config.getExpression('sst_timeseries', 'regionIndicesToPlot')
 
     # Load data:
-    ds = xr.open_mfdataset(infiles, preprocess=lambda x: 
-                           preprocess_mpas(x, yearoffset=yr_offset,
-                                           timestr=['xtime_start', 'xtime_end'],
-                                           onlyvars=['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']))
+    varList = ['avgSurfaceTemperature']
+    ds = xr.open_mfdataset(
+        infiles,
+        preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
+                                             timestr='Time',
+                                             onlyvars=varList,
+                                             variable_map=variableMap))
     ds = remove_repeated_time_index(ds)
 
     # convert the start and end dates to datetime objects using
@@ -65,21 +76,22 @@ def sst_timeseries(config):
     # select only the data in the specified range of years
     ds = ds.sel(Time=slice(time_start, time_end))
 
-    SSTregions = ds.time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature
+    SSTregions = ds.avgSurfaceTemperature
 
     year_start = (pd.to_datetime(ds.Time.min().values)).year
-    year_end   = (pd.to_datetime(ds.Time.max().values)).year
-    time_start = datetime.datetime(year_start,1,1)
-    time_end   = datetime.datetime(year_end,12,31)
-
+    year_end = (pd.to_datetime(ds.Time.max().values)).year
+    time_start = datetime.datetime(year_start, 1, 1)
+    time_end = datetime.datetime(year_end, 12, 31)
 
     if ref_casename_v0 != "None":
         print "  Load in SST for ACMEv0 case..."
-        infiles_v0data = "".join([indir_v0data,'/SST.',ref_casename_v0,'.year*.nc'])
-        ds_v0 = xr.open_mfdataset(infiles_v0data,preprocess=lambda x: 
-                                  preprocess_mpas(x, yearoffset=yr_offset))
+        infiles_v0data = "{}/SST.{}.year*.nc".format(indir_v0data,
+                                                     ref_casename_v0)
+        ds_v0 = xr.open_mfdataset(
+            infiles_v0data,
+            preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
         ds_v0 = remove_repeated_time_index(ds_v0)
-        ds_v0_tslice = ds_v0.sel(Time=slice(time_start,time_end))
+        ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
 
     print "  Make plots..."
     for index in range(len(iregions)):
@@ -90,18 +102,21 @@ def sst_timeseries(config):
         xlabel = "Time [years]"
         ylabel = "[$^\circ$ C]"
 
-        SST = SSTregions[:,iregion]
+        SST = SSTregions[:, iregion]
 
         if ref_casename_v0 != "None":
-            figname = "%s/sst_%s_%s_%s.png" % (plots_dir,regions[iregion],casename,ref_casename_v0)
+            figname = "{}/sst_{}_{}_{}.png".format(plots_dir, regions[iregion],
+                                                   casename, ref_casename_v0)
             SST_v0 = ds_v0_tslice.SST
 
-            title = "%s\n %s (b-)" % (title, ref_casename_v0)
-            timeseries_analysis_plot(config, [SST,SST_v0], N_movavg,
+            title = "{}\n {} (b-)".format(title, ref_casename_v0)
+            timeseries_analysis_plot(config, [SST, SST_v0], N_movavg,
                                      title, xlabel, ylabel, figname,
-                                     lineStyles = ['r-','b-'],
-                                     lineWidths = [1.2,1.2])
+                                     lineStyles=['r-', 'b-'],
+                                     lineWidths=[1.2, 1.2])
         else:
-            figname = "%s/sst_%s_%s.png" % (plots_dir,regions[iregion],casename)
-            timeseries_analysis_plot(config, [SST], N_movavg, title, xlabel, ylabel, figname,
-                                     lineStyles = ['r-'], lineWidths = [1.2])
+            figname = "{}/sst_{}_{}.png".format(plots_dir, regions[iregion],
+                                                casename)
+            timeseries_analysis_plot(config, [SST], N_movavg, title, xlabel,
+                                     ylabel, figname, lineStyles=['r-'],
+                                     lineWidths=[1.2])
