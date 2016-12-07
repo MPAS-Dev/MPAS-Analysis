@@ -15,6 +15,12 @@ import matplotlib as mpl
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
 
+from mpas_analysis.ocean.variable_stream_map import oceanStreamMap, \
+    oceanVariableMap
+
+# from mpas_analysis.sea_ice.variable_stream_map import seaIceStreamMap, \
+#     seaIceVariableMap
+
 
 def path_existence(config, section, option, ignorestr=None):  # {{{
     inpath = config.get(section, option)
@@ -89,7 +95,8 @@ def analysis(config):  # {{{
         print ""
         print "Plotting OHC time series..."
         from mpas_analysis.ocean.ohc_timeseries import ohc_timeseries
-        ohc_timeseries(config)
+        ohc_timeseries(config, streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
     if config.getboolean('sst_timeseries', 'generate'):
         print ""
