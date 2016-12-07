@@ -44,9 +44,9 @@ def sst_timeseries(config):
 
     N_movavg = config.getint('sst_timeseries','N_movavg')
 
-    regions = config.getlist('regions','regions',listType=str)
-    plot_titles = config.getlist('regions','plot_titles',listType=str)
-    iregions = config.getlist('sst_timeseries','regionIndicesToPlot',listType=int)
+    regions = config.getExpression('regions', 'regions')
+    plot_titles = config.getExpression('regions', 'plot_titles')
+    iregions = config.getExpression('sst_timeseries', 'regionIndicesToPlot')
 
     # Load data:
     ds = xr.open_mfdataset(infiles, preprocess=lambda x: 

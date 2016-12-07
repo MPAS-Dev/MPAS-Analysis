@@ -172,14 +172,19 @@ def seaice_modelvsobs(config):
         else:
             plotProjection = 'spstere'
 
-        clevsModelObs = config.getlist('seaice_modelvsobs','clevsModelObs_conc_%s'%season,listType=float)
+        clevsModelObs = config.getExpression('seaice_modelvsobs',
+                                             'clevsModelObs_conc_{}'.format(
+                                                 season))
         cmap = plt.get_cmap(config.get('seaice_modelvsobs','cmapModelObs'))
-        cmapIndices = config.getlist('seaice_modelvsobs','cmapIndicesModelObs',listType=int)
+        cmapIndices = config.getExpression('seaice_modelvsobs',
+                                           'cmapIndicesModelObs')
         cmapModelObs = cols.ListedColormap(cmap(cmapIndices),"cmapModelObs")
 
-        clevsDiff = config.getlist('seaice_modelvsobs','clevsDiff_conc_%s'%season,listType=float)
+        clevsDiff = config.getExpression('seaice_modelvsobs',
+                                         'clevsDiff_conc_{}'.format(season))
         cmap = plt.get_cmap(config.get('seaice_modelvsobs','cmapDiff'))
-        cmapIndices = config.getlist('seaice_modelvsobs','cmapIndicesDiff',listType=int)
+        cmapIndices = config.getExpression('seaice_modelvsobs',
+                                           'cmapIndicesDiff')
         cmapDiff = cols.ListedColormap(cmap(cmapIndices),"cmapDiff")
 
         lon0 = config.getfloat('seaice_modelvsobs','lon0_%s'%hemisphere)
@@ -259,14 +264,20 @@ def seaice_modelvsobs(config):
             #  ...and observations
             # ice concentrations from NASATeam (or Bootstrap) algorithm
 
-            clevsModelObs = config.getlist('seaice_modelvsobs','clevsModelObs_thick_%s'%hemisphere,listType=float)
+            clevsModelObs = config.getExpression(
+                'seaice_modelvsobs',
+                'clevsModelObs_thick_{}'.format(hemisphere))
             cmap = plt.get_cmap(config.get('seaice_modelvsobs','cmapModelObs'))
-            cmapIndices = config.getlist('seaice_modelvsobs','cmapIndicesModelObs',listType=int)
+            cmapIndices = config.getExpression('seaice_modelvsobs',
+                                               'cmapIndicesModelObs')
             cmapModelObs = cols.ListedColormap(cmap(cmapIndices),"cmapModelObs")
 
-            clevsDiff = config.getlist('seaice_modelvsobs','clevsDiff_thick_%s'%hemisphere,listType=float)
+            clevsDiff = config.getExpression(
+                'seaice_modelvsobs',
+                'clevsDiff_thick_{}'.format(hemisphere))
             cmap = plt.get_cmap(config.get('seaice_modelvsobs','cmapDiff'))
-            cmapIndices = config.getlist('seaice_modelvsobs','cmapIndicesDiff',listType=int)
+            cmapIndices = config.getExpression('seaice_modelvsobs',
+                                               'cmapIndicesDiff')
             cmapDiff = cols.ListedColormap(cmap(cmapIndices),"cmapDiff")
 
             lon0 = config.getfloat('seaice_modelvsobs','lon0_%s'%hemisphere)

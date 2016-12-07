@@ -54,7 +54,8 @@ def ocn_modelvsobs(config, field):
     climo_yr2 = config.getint('time', 'climo_yr2')
     yr_offset = config.getint('time', 'yr_offset')
 
-    outputTimes = config.getlist(field.lower() + '_modelvsobs', 'comparisonTimes')
+    outputTimes = config.getExpression(field.lower() + '_modelvsobs',
+                                       'comparisonTimes')
 
     f = netcdf_dataset(meshfile,mode='r')
     lonCell = f.variables["lonCell"][:]
@@ -177,13 +178,18 @@ def ocn_modelvsobs(config, field):
     for i in range(len(outputTimes)):
         bias[i, :, :] = modelOutput[i, :, :] - observations[i, :, :]
 
-    clevsModelObs = config.getlist(field.lower() + '_modelvsobs', 'clevsModelObs', listType=float)
-    cmap = plt.get_cmap(config.get(field.lower() + '_modelvsobs', 'cmapModelObs'))
-    cmapIndices = config.getlist(field.lower() + '_modelvsobs', 'cmapIndicesModelObs', listType=int)
+    clevsModelObs = config.getExpression(field.lower() + '_modelvsobs',
+                                         'clevsModelObs')
+    cmap = plt.get_cmap(config.get(field.lower() + '_modelvsobs',
+                                   'cmapModelObs'))
+    cmapIndices = config.getExpression(field.lower() + '_modelvsobs',
+                                       'cmapIndicesModelObs')
     cmapModelObs = cols.ListedColormap(cmap(cmapIndices), "cmapModelObs")
-    clevsDiff = config.getlist(field.lower() + '_modelvsobs', 'clevsDiff', listType=float)
+    clevsDiff = config.getExpression(field.lower() + '_modelvsobs',
+                                     'clevsDiff')
     cmap = plt.get_cmap(config.get(field.lower() + '_modelvsobs', 'cmapDiff'))
-    cmapIndices = config.getlist(field.lower() + '_modelvsobs', 'cmapIndicesDiff', listType=int)
+    cmapIndices = config.getExpression(field.lower() + '_modelvsobs',
+                                       'cmapIndicesDiff')
     cmapDiff = cols.ListedColormap(cmap(cmapIndices), "cmapDiff")
 
     for i in range(len(outputTimes)):
