@@ -18,8 +18,8 @@ from mpas_analysis.configuration.MpasAnalysisConfigParser \
 from mpas_analysis.ocean.variable_stream_map import oceanStreamMap, \
     oceanVariableMap
 
-# from mpas_analysis.sea_ice.variable_stream_map import seaIceStreamMap, \
-#     seaIceVariableMap
+from mpas_analysis.sea_ice.variable_stream_map import seaIceStreamMap, \
+    seaIceVariableMap
 
 
 def path_existence(config, section, option, ignorestr=None):  # {{{
@@ -142,14 +142,16 @@ def analysis(config):  # {{{
         print ""
         print "Plotting sea-ice area and volume time series..."
         from mpas_analysis.sea_ice.timeseries import seaice_timeseries
-        seaice_timeseries(config)
+        seaice_timeseries(config, streamMap=seaIceStreamMap,
+                          variableMap=seaIceVariableMap)
 
     if config.getboolean('seaice_modelvsobs', 'generate'):
         print ""
         print "Plotting 2-d maps of sea-ice concentration and thickness " \
             "climatologies..."
         from mpas_analysis.sea_ice.modelvsobs import seaice_modelvsobs
-        seaice_modelvsobs(config)
+        seaice_modelvsobs(config, streamMap=seaIceStreamMap,
+                          variableMap=seaIceVariableMap)
 
     # GENERATE LAND-ICE DIAGNOSTICS
 
