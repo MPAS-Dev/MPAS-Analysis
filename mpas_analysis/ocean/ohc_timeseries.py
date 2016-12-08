@@ -20,6 +20,9 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     config is an instance of an MpasAnalysisConfigParser containing
     configuration options.
 
+    config is an instance of MpasAnalysisConfigParser containing configuration
+    options.
+
     If present, streamMap is a dictionary of MPAS-O stream names that map to
     their mpas_analysis counterparts.
 

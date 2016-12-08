@@ -23,6 +23,15 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     Performs analysis of sea-ice properties by comparing with
     previous model results and/or observations.
 
+    config is an instance of MpasAnalysisConfigParser containing configuration
+    options.
+
+    If present, streamMap is a dictionary of MPAS-O stream names that map to
+    their mpas_analysis counterparts.
+
+    If present, variableMap is a dictionary of MPAS-O variable names that map
+    to their mpas_analysis counterparts.
+
     Author: Xylar Asay-Davis, Milena Veneziani
     Last Modified: 12/07/2016
     """

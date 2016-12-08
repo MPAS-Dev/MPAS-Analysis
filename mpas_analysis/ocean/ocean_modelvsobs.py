@@ -29,6 +29,12 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     """
     Plots a comparison of ACME/MPAS output to SST or MLD observations
 
+    config is an instance of MpasAnalysisConfigParser containing configuration
+    options.
+
+    field is the name of a field to be analyize (currently one of 'mld' or
+    'sst')
+
     If present, streamMap is a dictionary of MPAS-O stream names that map to
     their mpas_analysis counterparts.
 
@@ -36,10 +42,8 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Authors: Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
-    Modified: 12/07/2016
+    Modified: 12/08/2016
     """
-
-    field = field.lower()
 
     # read parameters from config file
     indir = config.get('paths', 'archive_dir_ocn')
@@ -57,14 +61,14 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
 
     plots_dir = config.get('paths', 'plots_dir')
-    obsdir = config.get('paths', 'obs_' + field.lower() + 'dir')
+    obsdir = config.get('paths', 'obs_' + field + 'dir')
     casename = config.get('case', 'casename')
     meshfile = config.get('data', 'mpas_meshfile')
     climo_yr1 = config.getint('time', 'climo_yr1')
     climo_yr2 = config.getint('time', 'climo_yr2')
     yr_offset = config.getint('time', 'yr_offset')
 
-    outputTimes = config.getExpression(field.lower() + '_modelvsobs',
+    outputTimes = config.getExpression(field + '_modelvsobs',
                                        'comparisonTimes')
 
     f = netcdf_dataset(meshfile, mode='r')
@@ -187,14 +191,14 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
             obsdata = dsData.sel(month=monthsvalue)[obsFieldName].values
         else:
 
-            modeldata = np.sum(
+            modeldata = (np.sum(
                 constants.dinmonth[monthsvalue-1] *
-                monthly_clim.sel(month=monthsvalue)[field].values.T,
-                axis=1) / np.sum(constants.dinmonth[monthsvalue-1])
-            obsdata = np.nansum(
+                monthly_clim.sel(month=monthsvalue)[field].values.T, axis=1) /
+                np.sum(constants.dinmonth[monthsvalue-1]))
+            obsdata = (np.nansum(
                 daysarray[monthsvalue-1, :, :] *
-                dsData.sel(month=monthsvalue)[obsFieldName].values,
-                axis=0) / np.nansum(daysarray[monthsvalue-1, :, :], axis=0)
+                dsData.sel(month=monthsvalue)[obsFieldName].values, axis=0) /
+                np.nansum(daysarray[monthsvalue-1, :, :], axis=0))
 
         modelOutput[i, :, :] = interp_fields(modeldata, d2, inds2, lonTarg)
         observations[i, :, :] = interp_fields(obsdata.flatten(), d, inds,

@@ -17,6 +17,9 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     Performs analysis of the time-series output of sea-surface temperature
     (SST).
 
+    config is an instance of MpasAnalysisConfigParser containing configuration
+    options.
+
     If present, streamMap is a dictionary of MPAS-O stream names that map to
     their mpas_analysis counterparts.
 

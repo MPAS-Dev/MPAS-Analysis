@@ -17,6 +17,15 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     """
     Performs analysis of time series of sea-ice properties.
 
+    config is an instance of MpasAnalysisConfigParser containing configuration
+    options.
+
+    If present, streamMap is a dictionary of MPAS-O stream names that map to
+    their mpas_analysis counterparts.
+
+    If present, variableMap is a dictionary of MPAS-O variable names that map
+    to their mpas_analysis counterparts.
+
     Author: Xylar Asay-Davis, Milena Veneziani
     Last Modified: 12/07/2016
     """
