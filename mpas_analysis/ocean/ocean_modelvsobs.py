@@ -139,7 +139,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
                                              timestr='Time',
                                              onlyvars=varList,
                                              selvals=selvals,
-                                             variable_map=variableMap))
+                                             varmap=variableMap))
     ds = remove_repeated_time_index(ds)
 
     time_start = datetime.datetime(yr_offset+climo_yr1, 1, 1)

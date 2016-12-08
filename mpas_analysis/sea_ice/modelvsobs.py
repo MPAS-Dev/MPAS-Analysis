@@ -155,7 +155,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
                                              timestr='Time',
                                              onlyvars=['iceAreaCell',
                                                        'iceVolumeCell'],
-                                             variable_map=variableMap))
+                                             varmap=variableMap))
     ds = remove_repeated_time_index(ds)
 
     # Compute climatologies (first motnhly and then seasonally)

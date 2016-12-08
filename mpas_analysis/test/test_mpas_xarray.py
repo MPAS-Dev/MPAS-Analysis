@@ -176,7 +176,7 @@ class TestNamelist(TestCase):
                 timestr='Time',
                 onlyvars=varList,
                 yearoffset=1850,
-                variable_map=varMap))
+                varmap=varMap))
 
         # make sure the remapping happened as expected
         self.assertEqual(sorted(ds.data_vars.keys()), sorted(varList))

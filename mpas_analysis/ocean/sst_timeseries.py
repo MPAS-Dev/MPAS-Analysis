@@ -68,7 +68,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
         preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
                                              timestr='Time',
                                              onlyvars=varList,
-                                             variable_map=variableMap))
+                                             varmap=variableMap))
     ds = remove_repeated_time_index(ds)
 
     # convert the start and end dates to datetime objects using

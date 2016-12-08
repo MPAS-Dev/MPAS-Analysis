@@ -91,7 +91,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                              timestr='Time',
                                              onlyvars=['iceAreaCell',
                                                        'iceVolumeCell'],
-                                             variable_map=variableMap))
+                                             varmap=variableMap))
     ds = remove_repeated_time_index(ds)
 
     # convert the start and end dates to datetime objects using

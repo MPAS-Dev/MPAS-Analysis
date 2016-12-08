@@ -100,7 +100,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                              yearoffset=yr_offset,
                                              timestr='Time',
                                              onlyvars=varList,
-                                             variable_map=variableMap))
+                                             varmap=variableMap))
 
     ds = remove_repeated_time_index(ds)
 
