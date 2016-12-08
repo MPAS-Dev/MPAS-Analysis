@@ -98,7 +98,7 @@ def ocn_modelvsobs(config, field):
                                preprocess_mpas(x, yearoffset=yr_offset,
                                                timestr=['xtime_start', 'xtime_end'],
 		                               onlyvars=['time_avg_activeTracers_temperature'],
-		                               selvals={'nVertLevels':1}))
+		                               selvals={'nVertLevels':0}))
         ds = remove_repeated_time_index(ds)
         ds.rename({'time_avg_activeTracers_temperature':'mpasData'}, inplace = True)
 
