@@ -8,7 +8,7 @@ the capabilities to get an option including a default value
 that are lists, tuples, dicts, etc (`getExpression(section, option)`).
 
 Author: Xylar Asay-Davis
-Last Modified: 12/03/2016
+Last Modified: 12/07/2016
 """
 
 from ConfigParser import ConfigParser
@@ -44,15 +44,29 @@ class MpasAnalysisConfigParser(ConfigParser):
         self.set(section, option, str(default))
         return default
 
-    def getExpression(self, section, option):
+    def getExpression(self, section, option, elementType=None):
         """
         Get an option as an expression (typically a list, though tuples and
         dicts should also work).  `section` and `option` work as in `get(...)`.
         The expression is required to have valid python syntax, so that
         string entries are required to be in single or double quotes.
 
+        If `elementType` is supplied, each element in a list or tuple, or each
+        value in a dictionary are cast to this type.  This is likely most
+        useful for ensuring that all elements in a list of numbers are of type
+        float, rather than int, when the distinction is important.
+
         Author: Xylar Asay-Davis
-        Last Modified: 12/03/2016
+        Last Modified: 12/0y/2016
         """
         expressionString = self.get(section, option)
-        return ast.literal_eval(expressionString)
+        result =  ast.literal_eval(expressionString)
+
+        if elementType is not None:
+            if isinstance(result, (list, tuple)):
+                result = [elementType(element) for element in result]
+            elif isinstance(result, dict):
+                for key in result:
+                    result[key] = elementType(result[key])
+
+        return result

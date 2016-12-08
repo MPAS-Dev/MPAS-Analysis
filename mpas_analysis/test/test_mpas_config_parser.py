@@ -26,21 +26,24 @@ class TestMPASAnalysisConfigParser(TestCase):
     def test_read_config(self):
         self.setup_config()
 
-        # check config.get(...)
         colorMapName = self.config.get('sst_modelvsobs', 'cmapDiff')
         self.assertEqual(colorMapName, 'coolwarm')
 
-        # check config.getint(...), config.getfloat(...),
-        # config.getboolean(...)
         self.assertEqual(self.config.getint('Test', 'testInt'), 15)
         self.assertEqual(self.config.getfloat('Test', 'testFloat'), 18.)
         self.assertEqual(self.config.getboolean('Test', 'testBool'), True)
 
-        # check config.getExpression(...) for various types
         testList = self.config.getExpression('sst_modelvsobs',
                                              'cmapIndicesModelObs')
         self.check_container(testList, list, int)
         self.assertEqual(testList, [0, 40, 80, 110, 140, 170, 200, 230, 255])
+
+        testList = self.config.getExpression('sst_modelvsobs',
+                                             'cmapIndicesModelObs',
+                                             elementType=float)
+        self.check_container(testList, list, float)
+        self.assertEqual(testList, [0., 40., 80., 110., 140., 170., 200.,
+                                    230., 255.])
 
         testList = self.config.getExpression('sst_modelvsobs',
                                              'comparisonTimes')
