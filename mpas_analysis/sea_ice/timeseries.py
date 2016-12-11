@@ -11,12 +11,14 @@ from ..shared.plot.plotting  import timeseries_analysis_plot
 from ..shared.io import StreamsFile
 from ..shared.io.utility import paths
 
+from ..shared.timekeeping.Date import Date
+
 def seaice_timeseries(config):
     """
     Performs analysis of time series of sea-ice properties.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 10/27/2016
+    Last Modified: 11/28/2016
     """
 
     # read parameters from config file
@@ -78,6 +80,14 @@ def seaice_timeseries(config):
                                            onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',
                                                      'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
     ds = remove_repeated_time_index(ds)
+
+    # convert the start and end dates to datetime objects using
+    # the Date class, which ensures the results are within the
+    # supported range
+    time_start = Date(startDate).to_datetime(yr_offset)
+    time_end = Date(endDate).to_datetime(yr_offset)
+    # select only the data in the specified range of years
+    ds = ds.sel(Time=slice(time_start, time_end))
 
     ds = ds.merge(dsmesh)
 
