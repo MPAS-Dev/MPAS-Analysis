@@ -137,6 +137,14 @@ def analysis(config):  # {{{
         ocn_modelvsobs(config, 'mld', streamMap=oceanStreamMap,
                        variableMap=oceanVariableMap)
 
+    if config.getboolean('sss_modelvsobs', 'generate'):
+        print ""
+        print "Plotting 2-d maps of SSS climatologies..."
+        from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
+        ocn_modelvsobs(config, 'sss', streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
+
+
     # GENERATE SEA-ICE DIAGNOSTICS
     if config.getboolean('seaice_timeseries', 'generate'):
         print ""

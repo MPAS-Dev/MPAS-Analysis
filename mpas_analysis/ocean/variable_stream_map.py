@@ -20,7 +20,7 @@ oceanVariableMap['avgSurfaceTemperature'] = \
 oceanVariableMap['avgLayerTemperature'] = \
     ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
      'time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature_1',
-    'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature']
+     'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature']
 oceanVariableMap['sumLayerMaskValue'] = \
     ['time_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue',
      'time_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue_1',
@@ -44,3 +44,8 @@ oceanVariableMap['sst'] = \
     ['time_avg_activeTracers_temperature',
      'time_avg_activeTracers_temperature_1',
      'timeMonthly_avg_activeTracers_temperature']
+
+oceanVariableMap['sss'] = \
+    ['time_avg_activeTracers_salinity',
+     'time_avg_activeTracers_salinity_1',
+     'timeMonthly_avg_activeTracers_salinity']

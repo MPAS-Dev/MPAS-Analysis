@@ -133,6 +133,35 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
         fileOutLabel = "sstHADOI"
         unitsLabel = r'$^o$C'
 
+    elif field == 'sss':
+
+        selvals = {'nVertLevels': 0}
+
+        obs_filename = "{}/Aquarius_V3_SSS_Monthly.nc".format(obsdir)
+        dsData = xr.open_mfdataset(obs_filename)
+
+        time_start = datetime.datetime(2011, 8, 1)
+        time_end = datetime.datetime(2014, 12, 31)
+
+        ds_tslice = dsData.sel(time=slice(time_start, time_end))
+
+        # The following line converts from DASK to numpy to supress an odd
+        # warning that doesn't influence the figure output
+        ds_tslice.SSS.values
+
+        monthly_clim_data = ds_tslice.groupby('time.month').mean('time')
+
+        # Rename the observation data for code compactness
+        dsData = monthly_clim_data.transpose('month', 'lon', 'lat')
+        obsFieldName = 'SSS'
+
+        # Set appropriate figure labels for SSS
+        preIndustrial_txt = "2011-2014"
+
+        obsTitleLabel = "Observations (Aquarius, {})".format(preIndustrial_txt)
+        fileOutLabel = 'sssAquarius'
+        unitsLabel = 'PSU'
+
     ds = xr.open_mfdataset(
         infiles,
         preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
