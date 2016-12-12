@@ -15,6 +15,12 @@ import matplotlib as mpl
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
 
+from mpas_analysis.ocean.variable_stream_map import oceanStreamMap, \
+    oceanVariableMap
+
+from mpas_analysis.sea_ice.variable_stream_map import seaIceStreamMap, \
+    seaIceVariableMap
+
 
 def path_existence(config, section, option, ignorestr=None):  # {{{
     inpath = config.get(section, option)
@@ -89,13 +95,15 @@ def analysis(config):  # {{{
         print ""
         print "Plotting OHC time series..."
         from mpas_analysis.ocean.ohc_timeseries import ohc_timeseries
-        ohc_timeseries(config)
+        ohc_timeseries(config, streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
     if config.getboolean('sst_timeseries', 'generate'):
         print ""
         print "Plotting SST time series..."
         from mpas_analysis.ocean.sst_timeseries import sst_timeseries
-        sst_timeseries(config)
+        sst_timeseries(config, streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
     if config.getboolean('nino34_timeseries', 'generate'):
         print ""
@@ -119,27 +127,31 @@ def analysis(config):  # {{{
         print ""
         print "Plotting 2-d maps of SST climatologies..."
         from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
-        ocn_modelvsobs(config, 'sst')
+        ocn_modelvsobs(config, 'sst', streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
     if config.getboolean('mld_modelvsobs', 'generate'):
         print ""
         print "Plotting 2-d maps of MLD climatologies..."
         from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
-        ocn_modelvsobs(config, 'mld')
+        ocn_modelvsobs(config, 'mld', streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
     # GENERATE SEA-ICE DIAGNOSTICS
     if config.getboolean('seaice_timeseries', 'generate'):
         print ""
         print "Plotting sea-ice area and volume time series..."
         from mpas_analysis.sea_ice.timeseries import seaice_timeseries
-        seaice_timeseries(config)
+        seaice_timeseries(config, streamMap=seaIceStreamMap,
+                          variableMap=seaIceVariableMap)
 
     if config.getboolean('seaice_modelvsobs', 'generate'):
         print ""
         print "Plotting 2-d maps of sea-ice concentration and thickness " \
             "climatologies..."
         from mpas_analysis.sea_ice.modelvsobs import seaice_modelvsobs
-        seaice_modelvsobs(config)
+        seaice_modelvsobs(config, streamMap=seaIceStreamMap,
+                          variableMap=seaIceVariableMap)
 
     # GENERATE LAND-ICE DIAGNOSTICS
 

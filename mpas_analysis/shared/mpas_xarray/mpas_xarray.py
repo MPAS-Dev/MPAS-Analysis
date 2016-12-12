@@ -18,6 +18,13 @@ Wrapper to handle importing MPAS files into xarray.
     YYYY-MM-DD_hh:mm:ss
  2. provides capability to remove redundant time entries from reading of
     multiple netCDF datasets via `remove_repeated_time_index`.
+ 3. provides capability to build a variable map between MPAS dycore variable
+    names and those used in mpas_analysis.  This aids in supporting multiple
+    versions of MPAS dycores.  The function `map_variable(...)` can be used
+    to find the associated MPAS dycore variable name in a dataset given a
+    variable name as used in mpas_analysis.  The function
+    `rename_variables(...)` can be used to rename all variables in a variable
+    map from their MPAS dycore names to the corresponding mpas_analysis names.
 
  Example Usage:
 
@@ -180,8 +187,84 @@ def get_datetimes(ds, timestr, yearoffset):  # {{{
     return datetimes  # }}}
 
 
+def map_variable(variable_name, ds, varmap):
+    """
+    Find the variable (or list of variables) in dataset ds that map to the
+    mpas_analysis variable given by variable_name.
+
+    varmap is a dictionary with keys that are variable names used by
+    MPAS-Analysis and values that are lists of possible names for the same
+    variable in the MPAS dycore that produced the data set (which may differ
+    between versions).
+
+    Xylar Asay-Davis
+    12/04/2016
+    """
+    possible_variables = varmap[variable_name]
+    for var in possible_variables:
+        if isinstance(var, (list, tuple)):
+            allFound = True
+            for subvar in var:
+                if subvar not in ds.data_vars.keys():
+                    allFound = False
+                    break
+            if allFound:
+                return var
+
+        elif var in ds.data_vars.keys():
+            return var
+
+    raise ValueError('Variable {} could not be mapped. None of the '
+                     'possible mapping variables {}\n match any of the '
+                     'variables in {}.'.format(
+                         variable_name, possible_variables,
+                         ds.data_vars.keys()))
+
+
+def rename_variables(ds, varmap, timestr):
+    """
+    Rename all variables in ds based on which are found in varmap.
+
+    varmap is a dictionary with keys that are variable names used by
+    MPAS-Analysis and values that are lists of possible names for the same
+    variable in the MPAS dycore that produced the data set (which may differ
+    between versions).
+
+    timestr is points to the time variable(s), which are treated as a special
+    case since they may need to be averaged.
+
+    Returns a new timestr after mapping in timestr is in varmap, otherwise
+    returns timestr unchanged.
+
+    Xylar Asay-Davis
+    12/08/2016
+    """
+
+    submap = varmap
+    if timestr in varmap:
+        # make a copy of varmap and remove timestr
+        submap = varmap.copy()
+        submap.pop(timestr, None)
+
+    rename_dict = {}
+    for ds_var in ds.data_vars:
+        for map_var in submap:
+            rename_list = varmap[map_var]
+            if ds_var in rename_list:
+                rename_dict[ds_var] = map_var
+                break
+
+    ds.rename(rename_dict, inplace=True)
+
+    if timestr in varmap:
+        timestr = map_variable(timestr, ds, varmap)
+
+    return timestr
+
+
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
-                    timestr='xtime', yearoffset=1849):  # {{{
+                    timestr='xtime', yearoffset=1849,
+                    varmap=None):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset because
     the time must be between 1678 and 2262 based on the xarray library.
@@ -206,9 +289,21 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
                                                'nCells': cellIDs}
     selvals is a dictionary, e.g. selvals = {'cellLon': 180.0}
 
+    varmap is an optional dictionary that can be used to rename
+    variables in the data set to standard names expected by mpas_analysis.
+    If timestr is present in varmap, the values of varmap[timestr]
+    will be used to determine the associated time variable in ds. However, the
+    variable(s) associated with timestr in ds will not be renamed.  This is
+    because there may be more than one variable in ds that maps to timestr
+    (e.g. xtime_start and xtime_end), so that a one-to-one mapping is not
+    possible for this variable.
+
     Phillip J. Wolfram, Milena Veneziani, Luke van Roekel and Xylar Asay-Davis
     Last modified: 12/05/2016
     """
+
+    if varmap is not None:
+        timestr = rename_variables(ds, varmap, timestr)
 
     datetimes = get_datetimes(ds, timestr, yearoffset)
 
@@ -259,6 +354,7 @@ def remove_repeated_time_index(ds):  # {{{
     ds = ds.isel(Time=index)
 
     return ds  # }}}
+
 
 
 def test_load_mpas_xarray_datasets(path):  # {{{
