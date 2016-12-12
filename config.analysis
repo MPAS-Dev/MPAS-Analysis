@@ -21,6 +21,7 @@ plots_dir = /global/project/projectdirs/acme/xylar/coupled_diagnostics_20160805v
 log_dir = /global/project/projectdirs/acme/xylar/coupled_diagnostics_20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00-20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01.logs
 obs_ocndir = /global/project/projectdirs/acme/observations/Ocean
 obs_sstdir = /global/project/projectdirs/acme/observations/Ocean/SST
+obs_sssdir = /global/project/projectdirs/acme/observations/Ocean/SSS
 obs_mlddir = /global/project/projectdirs/acme/observations/Ocean/MLD
 obs_seaicedir = /global/project/projectdirs/acme/observations/SeaIce
 ref_archive_v0_ocndir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
@@ -68,6 +69,9 @@ generate = 0
 generate = 0
 
 [sst_modelvsobs]
+generate = 1
+
+[sss_modelvsobs]
 generate = 1
 
 [mld_modelvsobs]
@@ -160,6 +164,28 @@ clevsDiff = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
+
+[sss_modelvsobs]
+# colormap for model/observations
+#cmapModelObs = viridis
+cmapModelObs = RdYlBu_r
+# colormap for differences
+#cmapDiff = RdBu_r
+cmapDiff = coolwarm
+
+# indices into cmapModelObs for contour color
+cmapIndicesModelObs = [0,40,80,110,140,170,200,230,255]
+# indices into cmapModelObs for contour color
+cmapIndicesDiff = [0,40,80,120,140,170,210,255]
+#cmapIndicesDiff = [0,40,80,127,170,210,255] # good for RdBu_r
+
+# colormap levels/values for contour boundaries
+clevsModelObs = [28,29,30,31,32,33,34,35,36,38]
+clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3]
+#clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3] # good for RdBu_r
+
+# Times for comparison times (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec,JFM,AMJ,JAS,OND,ANN)
+comparisonTimes =  ['JFM','JAS','ANN']
 
 [mld_modelvsobs]
 # colormap for model/observations

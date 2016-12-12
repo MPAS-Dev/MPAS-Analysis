@@ -44,3 +44,8 @@ oceanVariableMap['sst'] = \
     ['time_avg_activeTracers_temperature',
      'time_avg_activeTracers_temperature_1',
      'timeMonthly_avg_activeTracers_temperature']
+
+oceanVariableMap['sss'] = \
+    ['time_avg_activeTracers_salinity',
+     'time_avg_activeTracers_salinity_1',
+     'timeMonthly_avg_activeTracers_salinity']
