@@ -306,12 +306,14 @@ def replicate_cycle(ds, ds_toreplicate):
     dsshift = ds_toreplicate.copy()
     shiftT = ((dsshift.Time.max() - dsshift.Time.min()) +
               (dsshift.Time.isel(Time=1) - dsshift.Time.isel(Time=0)))
-    nT = np.ceil((ds.Time.max() - ds.Time.min())/shiftT)
+    startIndex = int(np.floor((ds.Time.min()-ds_toreplicate.Time.min())/shiftT))
+    endIndex = int(np.ceil((ds.Time.max()-ds_toreplicate.Time.min())/shiftT))
+    dsshift['Time'] = dsshift['Time'] + startIndex*shiftT
 
     # replicate cycle:
-    for i in np.arange(nT):
+    for cycleIndex in range(startIndex, endIndex):
         dsnew = ds_toreplicate.copy()
-        dsnew['Time'] = dsnew.Time + (i+1)*shiftT
+        dsnew['Time'] = dsnew['Time'] + (cycleIndex+1)*shiftT
         dsshift = xr.concat([dsshift, dsnew], dim='Time')
     # constrict replicated ds_short to same time dimension as ds_long:
     dsshift = dsshift.sel(Time=ds.Time.values, method='nearest')
