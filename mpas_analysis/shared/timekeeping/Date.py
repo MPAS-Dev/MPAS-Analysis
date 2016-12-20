@@ -235,6 +235,7 @@ class Date(object):
         hh.mm.ss
         hh:mm:ss
         YYYY-MM-DD
+        YYYY-MM
         SSSSS
         """
         if self.isInterval:
@@ -247,6 +248,10 @@ class Date(object):
         else:
             if '-' in dateString:
                 ymd = dateString
+                # error can result if dateString = '1990-01'
+                # assume this means '1990-01-01'
+                if len(ymd.split('-')) == 2:
+                    ymd += '-01'
                 hms = '00:00:00'
             else:
                 if self.isInterval:
