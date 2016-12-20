@@ -82,7 +82,7 @@ def assert_valid_datetimes(datetimes, yearoffset):  # {{{
         ' must be large enough to ensure datetimes larger than year 1678'
     assert datetimes[-1].year < 2262, \
         'ERROR: yearoffset={}'.format(yearoffset) + \
-        ' must be large enough to ensure datetimes larger than year 2262'
+        ' must be small enough to ensure datetimes smaller than year 2262'
 
     return  # }}}
 
