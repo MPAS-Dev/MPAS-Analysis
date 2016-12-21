@@ -4,13 +4,27 @@ mpas_xarray.py
 ==============================================================
 Wrapper to handle importing MPAS files into xarray.
 
- Module does
- 1. Converts MPAS "xtime" to xarray time.  Time dimension is assigned via
-    `preprocess_mpas`.
- 2. Converts MPAS "timeSinceStartOfSim" to xarray time for MPAS fields coming from the
-    timeSeriesStatsAM.  Time dimension is assigned via `preprocess_mpas(..., timeSeriesStats=True)`.
- 3. Provides capability to remove redundant time entries from reading of multiple netCDF
-    datasets via `remove_repeated_time_index`.
+ Module:
+ 1. converts MPAS time in various formats to xarray time.  The MPAS time
+    variable is provided via
+    `preprocess_mpas(..., timestr='xtime', ...)`.
+    `timestr` can either be a single variable name or a pair of variable
+    names.  In the latter case, each time variable is converted to an
+    xarray time and the mean of the two times is used as the final xarray
+    time.  Each variable name in `timestr` can refer either to a float
+    array containing the the number of days since the start of the
+    simulation (e.g. `daysSinceStartOfSim`) or a string variable with the
+    date and time (e.g. `xtime`) in the usual MPAS format:
+    YYYY-MM-DD_hh:mm:ss
+ 2. provides capability to remove redundant time entries from reading of
+    multiple netCDF datasets via `remove_repeated_time_index`.
+ 3. provides capability to build a variable map between MPAS dycore variable
+    names and those used in mpas_analysis.  This aids in supporting multiple
+    versions of MPAS dycores.  The function `map_variable(...)` can be used
+    to find the associated MPAS dycore variable name in a dataset given a
+    variable name as used in mpas_analysis.  The function
+    `rename_variables(...)` can be used to rename all variables in a variable
+    map from their MPAS dycore names to the corresponding mpas_analysis names.
 
  Example Usage:
 
@@ -19,8 +33,8 @@ Wrapper to handle importing MPAS files into xarray.
 >>> ds = xarray.open_mfdataset('globalStats*nc', preprocess=preprocess_mpas)
 >>> ds = remove_repeated_time_index(ds)
 
-Phillip J. Wolfram
-12/01/2015
+Phillip J. Wolfram, Xylar Asay-Davis
+Last modified: 12/07/2016
 """
 
 import datetime
@@ -29,7 +43,8 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-def subset_variables(ds, vlist): #{{{
+
+def subset_variables(ds, vlist):  # {{{
     """
     Reduces an xarray dataset ds to only contain the variables in vlist.
 
@@ -52,43 +67,60 @@ def subset_variables(ds, vlist): #{{{
     # drop spurious coordinates
     ds = ds.drop(dropcoords)
 
-    return ds #}}}
+    return ds  # }}}
 
-def assert_valid_datetimes(datetimes, yearoffset): #{{{
+
+def assert_valid_datetimes(datetimes, yearoffset):  # {{{
     """
     Ensure that datatimes are compatable with xarray
 
     Phillip J. Wolfram
     04/20/2016
     """
-    assert datetimes[0].year > 1678, 'ERROR: yearoffset=%s'%(yearoffset) + \
-            ' must be large enough to ensure datetimes larger than year 1678'
-    assert datetimes[-1].year < 2262, 'ERROR: yearoffset=%s'%(yearoffset) + \
-            ' must be large enough to ensure datetimes larger than year 2262'
+    assert datetimes[0].year > 1678, \
+        'ERROR: yearoffset={}'.format(yearoffset) + \
+        ' must be large enough to ensure datetimes larger than year 1678'
+    assert datetimes[-1].year < 2262, \
+        'ERROR: yearoffset={}'.format(yearoffset) + \
+        ' must be small enough to ensure datetimes smaller than year 2262'
 
-    return #}}}
+    return  # }}}
 
-def assert_valid_selections(selvals, iselvals): #{{{
+
+def assert_valid_selections(ds, selvals, iselvals):  # {{{
     """
     Ensure that dataset selections are compatable.
 
     It is possible selVals and iselVals may conflict, e.g., selVals restricts
     the dataset to a point where iselvals is unable to be satisfied, hence a
     check is needed to make sure that keys in selvals and iselvals are unique.
+    Additionally, keys for selvals and iselvals are tested to make sure they
+    are dataset dimensions that can be used for selection.
 
     Phillip J. Wolfram
-    09/13/2016
+    Last modified: 12/07/2016
     """
 
     if (selvals is not None) and (iselvals is not None):
         duplicatedkeys = len(np.intersect1d(selvals.keys(), iselvals.keys()))
         assert len(duplicatedkeys) == 0, \
-                'Duplicated selection of variables %s was found!  ' + \
-                'Selection is ambiguous.'%(duplicatedkeys)
+            'Duplicated selection of variables {} was found!  ' \
+            'Selection is ambiguous.'.format(duplicatedkeys)
 
-    return #}}}
+    def test_vals_in_ds(vals, dims):
+        if vals is not None:
+            for val in vals.keys():
+                assert val in dims, \
+                    '{} is not a dimension in the dataset ' \
+                    'that can be used for selection.'.format(val)
 
-def ensure_list(alist): #{{{
+    test_vals_in_ds(selvals, ds.dims)
+    test_vals_in_ds(iselvals, ds.dims)
+
+    return  # }}}
+
+
+def ensure_list(alist):  # {{{
     """
     Ensure that variables used as a list are actually lists.
 
@@ -97,30 +129,142 @@ def ensure_list(alist): #{{{
     """
 
     if isinstance(alist, str):
-        #print 'Warning, converting %s to a list'%(alist)
+        # print 'Warning, converting %s to a list'%(alist)
         alist = [alist]
 
-    return alist #}}}
+    return alist  # }}}
 
-def time_series_stat_time(timestr, daysSinceStart): #{{{
+
+def get_datetimes(ds, timestr, yearoffset):  # {{{
     """
-    Modifies daysSinceStart for uniformity based on between differences
-    between MPAS-O and MPAS-Seaice.
+    Computes a list of datetimes from the time variable in the dataset ds with
+    variable name (or a list of 2 names) given by timestr, typically one of
+    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
 
-    Phillip J. Wolfram
-    09/09/2016
+    The variable(s) pointed to by timestr should contain time information as a
+    date string, a floating-point number of days or a number of days
+    represented as a pandas timedelta (in ns).  The result is a list of
+    datetimes corresponding to the input dates offset as appropriate by the
+    yearoffset.
+
+    Xylar Asay-Davis
+    Last modified: 12/05/2016
     """
 
-    if (timestr == 'timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'):
-        return [datetime.timedelta(x) for x in daysSinceStart.values]
+    if isinstance(timestr, (tuple, list)):
+        # we want to average the two
+        assert(len(timestr) == 2)
+        starts = get_datetimes(ds, timestr[0], yearoffset)
+        ends = get_datetimes(ds, timestr[1], yearoffset)
+        datetimes = [starts[i] + (ends[i] - starts[i])/2
+                     for i in range(len(starts))]
+        return datetimes
+
+    time_var = ds[timestr]
+
+    if time_var.dtype == '|S64':
+        # this is a variable like date strings like 'xtime'
+        time = [''.join(atime).strip() for atime in time_var.values]
+        datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]),
+                                       int(x[8:10]), int(x[11:13]),
+                                       int(x[14:16]), int(x[17:19]))
+                     for x in time]
+    elif time_var.dtype == 'float64':
+        # this array contains floating-point days like 'daysSinceStartOfSim'
+        start = datetime.datetime(year=yearoffset+1, month=1, day=1)
+        datetimes = [start + datetime.timedelta(x)
+                     for x in time_var.values]
+    elif time_var.dtype == 'timedelta64[ns]':
+        # this array contains a variable like 'daysSinceStartOfSim' as a
+        # timedelta64
+        start = datetime.datetime(year=yearoffset+1, month=1, day=1)
+        datetimes = [start + x for x in
+                     pd.to_timedelta(time_var.values, unit='ns')]
     else:
-        return pd.to_timedelta(daysSinceStart.values, unit='ns')
+        raise TypeError("time_var of unsupported type {}".format(
+            time_var.dtype))
 
-    #}}}
+    return datetimes  # }}}
+
+
+def map_variable(variable_name, ds, varmap):
+    """
+    Find the variable (or list of variables) in dataset ds that map to the
+    mpas_analysis variable given by variable_name.
+
+    varmap is a dictionary with keys that are variable names used by
+    MPAS-Analysis and values that are lists of possible names for the same
+    variable in the MPAS dycore that produced the data set (which may differ
+    between versions).
+
+    Xylar Asay-Davis
+    12/04/2016
+    """
+    possible_variables = varmap[variable_name]
+    for var in possible_variables:
+        if isinstance(var, (list, tuple)):
+            allFound = True
+            for subvar in var:
+                if subvar not in ds.data_vars.keys():
+                    allFound = False
+                    break
+            if allFound:
+                return var
+
+        elif var in ds.data_vars.keys():
+            return var
+
+    raise ValueError('Variable {} could not be mapped. None of the '
+                     'possible mapping variables {}\n match any of the '
+                     'variables in {}.'.format(
+                         variable_name, possible_variables,
+                         ds.data_vars.keys()))
+
+
+def rename_variables(ds, varmap, timestr):
+    """
+    Rename all variables in ds based on which are found in varmap.
+
+    varmap is a dictionary with keys that are variable names used by
+    MPAS-Analysis and values that are lists of possible names for the same
+    variable in the MPAS dycore that produced the data set (which may differ
+    between versions).
+
+    timestr is points to the time variable(s), which are treated as a special
+    case since they may need to be averaged.
+
+    Returns a new timestr after mapping in timestr is in varmap, otherwise
+    returns timestr unchanged.
+
+    Xylar Asay-Davis
+    12/08/2016
+    """
+
+    submap = varmap
+    if timestr in varmap:
+        # make a copy of varmap and remove timestr
+        submap = varmap.copy()
+        submap.pop(timestr, None)
+
+    rename_dict = {}
+    for ds_var in ds.data_vars:
+        for map_var in submap:
+            rename_list = varmap[map_var]
+            if ds_var in rename_list:
+                rename_dict[ds_var] = map_var
+                break
+
+    ds.rename(rename_dict, inplace=True)
+
+    if timestr in varmap:
+        timestr = map_variable(timestr, ds, varmap)
+
+    return timestr
+
 
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
-        timeSeriesStats=False, timestr=None,
-        yearoffset=1849, monthoffset=12, dayoffset=31): #{{{
+                    timestr='xtime', yearoffset=1849,
+                    varmap=None):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset because
     the time must be between 1678 and 2262 based on the xarray library.
@@ -130,60 +274,50 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     constant over the entire model simulation. Typical time-slice experiments
     are run with 1850 (pre-industrial) conditions and 2000 (present-day)
     conditions. Hence, a default date offset is chosen to be yearoffset=1849,
-    monthoffset=12, dayoffset=31 (day 1 of an 1850 run will be seen as
-    Jan 1st, 1850).
+    (year 0001 of an 1850 run will correspond with Jan 1st, 1850).
 
-    Note, for use with the timeSeriesStats analysis member fields set
-    timeSeriesStats=True and assign timestr.
+    The data set is assumed to have an array of date strings with variable
+    name (or list of 2 names) given by timestr, typically one of
+    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
 
-    The timestr variable designates the appropriate variable to be used as the
-    unlimited dimension for xarray concatenation.  For MPAS-O
-    timestr='time_avg_daysSinceStartOfSim' and for MPAS-Seaice
-    timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'.
+    The onlyvars option reduces the dataset to only include variables in the
+    onlyvars list. If onlyvars=None, include all dataset variables.
 
-    The onlyvars option reduces the dataset to only include variables in the onlyvars list.
-    If onlyvars=None, include all dataset variables.
+    iselvals and selvals provide index and value-based slicing operations for
+    individual datasets prior to their merge via xarray.
+    iselvals is a dictionary, e.g. iselvals = {'nVertLevels': slice(0, 3),
+                                               'nCells': cellIDs}
+    selvals is a dictionary, e.g. selvals = {'cellLon': 180.0}
 
-    iselvals and selvals provide index and value-based slicing operations for individual datasets
-    prior to their merge via xarray.
-    iselvals is a dictionary, e.g., iselvals = {'nVertLevels': slice(0,3), 'nCells': cellIDs}
-    selvals is a dictionary, e.g., selvals = {'cellLon': 180.0}
+    varmap is an optional dictionary that can be used to rename
+    variables in the data set to standard names expected by mpas_analysis.
+    If timestr is present in varmap, the values of varmap[timestr]
+    will be used to determine the associated time variable in ds. However, the
+    variable(s) associated with timestr in ds will not be renamed.  This is
+    because there may be more than one variable in ds that maps to timestr
+    (e.g. xtime_start and xtime_end), so that a one-to-one mapping is not
+    possible for this variable.
 
-    Phillip J. Wolfram, Milena Veneziani, and Luke van Roekel
-    09/13/2016
+    Phillip J. Wolfram, Milena Veneziani, Luke van Roekel and Xylar Asay-Davis
+    Last modified: 12/05/2016
     """
 
-    # ensure timestr is specified used when timeSeriesStats=True
-    if timeSeriesStats:
-        if timestr is None:
-            assert False, 'A value for timestr is required, e.g., ' + \
-                    'for MPAS-O: time_avg_daysSinceStartOfSim, and ' + \
-                    'for MPAS-Seaice: timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'
+    if varmap is not None:
+        timestr = rename_variables(ds, varmap, timestr)
 
-        # compute shifted datetimes
-        daysSinceStart = ds[timestr]
-        datetimes = [datetime.datetime(yearoffset, monthoffset, dayoffset) + x
-                     for x in time_series_stat_time(timestr, daysSinceStart)]
-    else:
-        time = np.array([''.join(atime).strip() for atime in ds.xtime.values])
-        # note the one year difference here (e.g., 12-31 of 1849 is essentially
-        # 1850) breaks previous convention used if timeSeriesStats=False
-        # yearoffset=1849 instead of prior 1950
-        # comments above can be cleaned up on transition to v1.0
-        datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]), \
-                int(x[8:10]), int(x[11:13]), int(x[14:16]), int(x[17:19])) for x in time]
+    datetimes = get_datetimes(ds, timestr, yearoffset)
 
     assert_valid_datetimes(datetimes, yearoffset)
 
     # append the corret time information
-    ds.coords['Time'] = pd.to_datetime(datetimes)
+    ds.coords['Time'] = datetimes
     # record the yroffset
     ds.attrs.__setitem__('time_yearoffset', str(yearoffset))
 
     if onlyvars is not None:
         ds = subset_variables(ds, ensure_list(onlyvars))
 
-    assert_valid_selections(selvals, iselvals)
+    assert_valid_selections(ds, selvals, iselvals)
 
     if selvals is not None:
         ds = ds.sel(**selvals)
@@ -191,9 +325,10 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     if iselvals is not None:
         ds = ds.isel(**iselvals)
 
-    return ds #}}}
+    return ds  # }}}
 
-def remove_repeated_time_index(ds): #{{{
+
+def remove_repeated_time_index(ds):  # {{{
     """
     Remove repeated times from xarray dataset.
 
@@ -218,23 +353,31 @@ def remove_repeated_time_index(ds): #{{{
     # remove repeated indices
     ds = ds.isel(Time=index)
 
-    return ds #}}}
+    return ds  # }}}
 
-def test_load_mpas_xarray_datasets(path): #{{{
-    ds = xr.open_mfdataset(path, preprocess=lambda x: preprocess_mpas(x, yearoffset=1850))
+
+
+def test_load_mpas_xarray_datasets(path):  # {{{
+    ds = xr.open_mfdataset(path, preprocess=lambda x:
+                           preprocess_mpas(x, yearoffset=1850))
     ds = remove_repeated_time_index(ds)
 
     # make a simple plot from the data
     ds.Time.plot()
     plt.show()
 
-    return #}}}
+    return  # }}}
 
-def test_load_mpas_xarray_timeSeriesStats_datasets(path): #{{{
-    ds = xr.open_mfdataset(path, preprocess=lambda x: preprocess_mpas(x,
-        timeSeriesStats=True, timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'))
+
+def test_load_mpas_xarray_timeSeriesStats_datasets(path):  # {{{
+    timestr = 'timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1'
+    ds = xr.open_mfdataset(path, preprocess=lambda x:
+                           preprocess_mpas(x,
+                                           timeSeriesStats=True,
+                                           timestr=timestr))
     ds = remove_repeated_time_index(ds)
-    ds2 = xr.open_mfdataset(path, preprocess=lambda x: preprocess_mpas(x, yearoffset=1850))
+    ds2 = xr.open_mfdataset(path, preprocess=lambda x:
+                            preprocess_mpas(x, yearoffset=1850))
     ds2 = remove_repeated_time_index(ds2)
 
     # make a simple plot from the data
@@ -244,11 +387,11 @@ def test_load_mpas_xarray_timeSeriesStats_datasets(path): #{{{
 
     plot_data(ds)
     plot_data(ds2)
-    plt.title("Curve centered around right times (b) \n "+\
+    plt.title("Curve centered around right times (b) \n " +
               "Curve shifted towards end of avg period (g)")
     plt.show()
 
-    return #}}}
+    return  # }}}
 
 
 if __name__ == "__main__":
@@ -256,15 +399,17 @@ if __name__ == "__main__":
 
     parser = OptionParser()
     parser.add_option("-f", "--file", dest="inputfilename",
-                      help="files to be opened with xarray, could be of form 'output*.nc'", \
+                      help="files to be opened with xarray, could be of form "
+                      "'output*.nc'",
                       metavar="FILE")
     parser.add_option("--istimeavg", dest="istimeavg",
-                      help="option to use the preprocess for timeSeriesStatsAM fields")
+                      help="option to use the preprocess for "
+                      "timeSeriesStatsAM fields")
 
     options, args = parser.parse_args()
     if not options.inputfilename:
-        parser.error("Input filename or expression ('-f') is a required input..."+\
-                " e.g., -f 'output*.npz'")
+        parser.error("Input filename or expression ('-f') is a required"
+                     "input, e.g. -f 'output*.npz'")
 
     if not options.istimeavg:
         test_load_mpas_xarray_datasets(options.inputfilename)

@@ -1,12 +1,13 @@
 """
-Unit test infrastructure, adapted from approach of xarray.
+Unit test infrastructure for namelist and streams readers, adapted from
+approach of xarray.
 
-Phillip J. Wolfram
-10/07/2016
+Phillip J. Wolfram, Xylar Asay-Davis
+10/26/2016
 """
 
 import pytest
-from mpas_analysis.test import (TestCase, requires_lxml, loaddatadir)
+from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.io import NameList, StreamsFile
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -46,5 +47,57 @@ class TestNamelist(TestCase):
         self.assertEqual(self.sf.read('output', 'type'), 'output')
         self.assertEqual(self.sf.read('restart', 'output_interval'),
                          '0100_00:00:00')
+
+        files = self.sf.readpath('output')
+        expectedFiles = []
+        for date in ['0001-01-01','0001-01-02','0001-02-01','0002-01-01']:
+            expectedFiles.append('{}/output/output.{}_00.00.00.nc'
+                                 .format(self.sf.streamsdir, date))
+        self.assertEqual(files, expectedFiles)
+
+        files = self.sf.readpath('output',
+                                    startDate='0001-01-03',
+                                    endDate='0001-12-30')
+        expectedFiles = []
+        for date in ['0001-01-02','0001-02-01']:
+            expectedFiles.append('{}/output/output.{}_00.00.00.nc'
+                                 .format(self.sf.streamsdir, date))
+        self.assertEqual(files, expectedFiles)
+
+        files = self.sf.readpath('output',
+                                    startDate='0001-01-03')
+        expectedFiles = []
+        for date in ['0001-01-02','0001-02-01','0002-01-01']:
+            expectedFiles.append('{}/output/output.{}_00.00.00.nc'
+                                 .format(self.sf.streamsdir, date))
+        self.assertEqual(files, expectedFiles)
+
+        files = self.sf.readpath('output',
+                                    endDate='0001-12-30')
+        expectedFiles = []
+        for date in ['0001-01-01','0001-01-02','0001-02-01']:
+            expectedFiles.append('{}/output/output.{}_00.00.00.nc'
+                                 .format(self.sf.streamsdir, date))
+        self.assertEqual(files, expectedFiles)
+
+        files = self.sf.readpath('restart',
+                                    startDate='0001-01-01',
+                                    endDate='0001-12-31')
+        expectedFiles = []
+        for seconds in ['00010','00020']:
+            expectedFiles.append('{}/restarts/restart.0001-01-01_{}.nc'
+                                 .format(self.sf.streamsdir, seconds))
+        self.assertEqual(files, expectedFiles)
+
+        files = self.sf.readpath('mesh')
+        expectedFiles = ['{}/mesh.nc'.format(self.sf.streamsdir)]
+        self.assertEqual(files, expectedFiles)
+
+
+        files = self.sf.readpath('mesh',
+                                    startDate='0001-01-01',
+                                    endDate='0001-12-31')
+        expectedFiles = ['{}/mesh.nc'.format(self.sf.streamsdir)]
+        self.assertEqual(files, expectedFiles)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
