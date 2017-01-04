@@ -167,6 +167,10 @@ class StreamsFile:
 
         fileList = paths(path)
 
+        if len(fileList) == 0:
+            raise ValueError("Path {} in streams file {} for '{}' not found.".format(
+                path, self.fname, streamName))
+
         if (startDate is None) and (endDate is None):
             return fileList
 
