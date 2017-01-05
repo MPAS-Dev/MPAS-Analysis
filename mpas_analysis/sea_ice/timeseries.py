@@ -102,6 +102,9 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     # select only the data in the specified range of years
     ds = ds.sel(Time=slice(time_start, time_end))
 
+    # handle the case where the "mesh" file has a spurious time dimension
+    if 'Time' in dsmesh.keys():
+      dsmesh = dsmesh.drop('Time')
     ds = ds.merge(dsmesh)
 
     year_start = (pd.to_datetime(ds.Time.min().values)).year
