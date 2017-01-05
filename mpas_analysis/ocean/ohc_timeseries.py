@@ -45,7 +45,14 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     # Note: input file, not a mesh file because we need dycore specific fields
     # such as refBottomDepth and namelist fields such as config_density0 that
     # are not guaranteed to be in the mesh file.
-    inputfile = streams.readpath('input')[0]
+    # attempt to find fields in path-local restart file but default to input
+    # file if restart is unavailable.  This is done to make analysis robust
+    # to being run once the run directory is moved to a new machine.
+    try:
+      inputfile = streams.readpath('restart')[0]
+    except ValueError, e:
+      print e, ' Trying to get mesh from input file.'
+      inputfile = streams.readpath('input')[0]
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
