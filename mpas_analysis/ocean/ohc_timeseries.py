@@ -34,6 +34,22 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     """
 
     # read parameters from config file
+    casename = config.get('case', 'casename')
+    ref_casename_v0 = config.get('case', 'ref_casename_v0')
+    indir_v0data = config.get('paths', 'ref_archive_v0_ocndir')
+
+    compare_with_obs = config.getboolean('ohc_timeseries', 'compare_with_obs')
+
+    plots_dir = config.get('paths', 'plots_dir')
+
+    yr_offset = config.getint('time', 'yr_offset')
+
+    N_movavg = config.getint('ohc_timeseries', 'N_movavg')
+
+    regions = config.getExpression('regions', 'regions')
+    plot_titles = config.getExpression('regions', 'plot_titles')
+    iregions = config.getExpression('ohc_timeseries', 'regionIndicesToPlot')
+
     indir = config.get('paths', 'archive_dir_ocn')
 
     namelist_filename = config.get('input', 'ocean_namelist_filename')
@@ -56,31 +72,17 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
-    startDate = config.get('time', 'timeseries_start_date')
+    #startDate = config.get('time', 'timeseries_start_date')
+    startDate = '0001-01-01_00:00:00'
     endDate = config.get('time', 'timeseries_end_date')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
     infiles = streams.readpath(streamName, startDate=startDate,
                                endDate=endDate)
     print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
-
-    casename = config.get('case', 'casename')
-    ref_casename_v0 = config.get('case', 'ref_casename_v0')
-    indir_v0data = config.get('paths', 'ref_archive_v0_ocndir')
-
-    compare_with_obs = config.getboolean('ohc_timeseries', 'compare_with_obs')
-
-    plots_dir = config.get('paths', 'plots_dir')
-
-    yr_offset = config.getint('time', 'yr_offset')
-
-    N_movavg = config.getint('ohc_timeseries', 'N_movavg')
-
-    regions = config.getExpression('regions', 'regions')
-    plot_titles = config.getExpression('regions', 'plot_titles')
-    iregions = config.getExpression('ohc_timeseries', 'regionIndicesToPlot')
+    print '  Warning: OHC time series always start from simulation year 1'
 
     # Define/read in general variables
-    print "  Read in depth and compute specific depth indexes..."
+    print '  Read in depth and compute specific depth indexes...'
     f = netcdf_dataset(inputfile, mode='r')
     # reference depth [m]
     depth = f.variables["refBottomDepth"][:]
@@ -96,7 +98,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     kbtm = len(depth)-1
 
     # Load data
-    print "  Load ocean data..."
+    print '  Load ocean data...'
     varList = ['avgLayerTemperature',
                'sumLayerMaskValue',
                'avgLayerArea',
@@ -125,7 +127,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     ds_yr1 = ds.sel(Time=slice(time_start, time_end))
     mean_yr1 = ds_yr1.mean('Time')
 
-    print "  Compute temperature anomalies..."
+    print '  Compute temperature anomalies...'
     avgLayerTemperature = ds.avgLayerTemperature
     avgLayerTemperature_yr1 = mean_yr1.avgLayerTemperature
 
@@ -136,21 +138,26 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     time_start = datetime.datetime(year_start, 1, 1)
     time_end = datetime.datetime(year_end, 12, 31)
 
-    if ref_casename_v0 != "None":
-        print "  Load in OHC for ACMEv0 case..."
+    if ref_casename_v0 != 'None':
+        print '  Load in OHC for ACMEv0 case...'
         infiles_v0data = "{}/OHC.{}.year*.nc".format(
             indir_v0data, ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
             preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
         ds_v0 = remove_repeated_time_index(ds_v0)
-        ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+    	year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
+	if year_start <= year_end_v0:
+       	    ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+	else:
+            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
+	    ref_casename_v0 = 'None'
 
     sumLayerMaskValue = ds.sumLayerMaskValue
     avgLayerArea = ds.avgLayerArea
     avgLayerThickness = ds.avgLayerThickness
 
-    print "  Compute OHC and make plots..."
+    print '  Compute OHC and make plots...'
     for index in range(len(iregions)):
         iregion = iregions[index]
 
@@ -181,7 +188,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         xlabel = "Time [years]"
         ylabel = "[x$10^{22}$ J]"
 
-        if ref_casename_v0 != "None":
+        if ref_casename_v0 != 'None':
             figname = "{}/ohc_{}_{}_{}.png".format(plots_dir,
                                                    regions[iregion],
                                                    casename,
@@ -200,7 +207,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                      lineWidths=[2, 1, 1.5, 1.5, 2, 1, 1.5,
                                                  1.5])
 
-        if not compare_with_obs and ref_casename_v0 == "None":
+        if not compare_with_obs and ref_casename_v0 == 'None':
             figname = "{}/ohc_{}_{}.png".format(plots_dir, regions[iregion],
                                                 casename)
             timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m,

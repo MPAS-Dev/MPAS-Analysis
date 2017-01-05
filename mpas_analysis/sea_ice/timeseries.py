@@ -80,7 +80,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
     N_movavg = config.getint('seaice_timeseries', 'N_movavg')
 
-    print "  Load sea-ice data..."
+    print '  Load sea-ice data...'
     # Load mesh
     dsmesh = xr.open_dataset(meshfile)
 
@@ -112,13 +112,18 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     time_start = datetime.datetime(year_start, 1, 1)
     time_end = datetime.datetime(year_end, 12, 31)
 
-    if ref_casename_v0 != "None":
+    if ref_casename_v0 != 'None':
         infiles_v0data = "{}/icevol.{}.year*.nc".format(indir_v0data,
                                                         ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
             preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+        year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
+        if year_start <= year_end_v0:
+            ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+        else:
+            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
+            ref_casename_v0 = 'None'
 
     # Make Northern and Southern Hemisphere partition:
     areaCell = ds.areaCell
@@ -133,7 +138,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         plot_title = plot_titles[varname]
         units = units_dict[varname]
 
-        print "  Compute NH and SH time series of {}...".format(varname)
+        print '  Compute NH and SH time series of {}...'.format(varname)
         if varname == "iceThickCell":
             varnamefull = "iceVolumeCell"
         else:
@@ -163,11 +168,11 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
             var_nh = var_nh.mean('nCells')/areaCell_nh.mean('nCells')
             var_sh = var_sh.mean('nCells')/areaCell_sh.mean('nCells')
 
-        print "  Make plots..."
+        print '  Make plots...'
 
         xlabel = "Time [years]"
 
-        if ref_casename_v0 != "None":
+        if ref_casename_v0 != 'None':
             figname_nh = "{}/{}NH_{}_{}.png".format(plots_dir, varname,
                                                     casename, ref_casename_v0)
             figname_sh = "{}/{}SH_{}_{}.png".format(plots_dir, varname,
@@ -189,7 +194,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 title_nh = "{}\nPIOMAS, annual cycle (k)".format(title_nh)
                 title_sh = "{}\n".format(title_sh)
 
-        if ref_casename_v0 != "None":
+        if ref_casename_v0 != 'None':
             title_nh = "{}\n {} (b)".format(title_nh, ref_casename_v0)
             title_sh = "{}\n {} (b)".format(title_sh, ref_casename_v0)
 
@@ -212,7 +217,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 var_sh_obs = ds_obs.IceArea
                 var_sh_obs = replicate_cycle(var_sh, var_sh_obs)
 
-            if ref_casename_v0 != "None":
+            if ref_casename_v0 != 'None':
                 infiles_v0data = "{}/icearea.{}.year*.nc".format(
                     indir_v0data, ref_casename_v0)
                 ds_v0 = xr.open_mfdataset(
@@ -236,7 +241,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
                 var_sh_obs = None
 
-            if ref_casename_v0 != "None":
+            if ref_casename_v0 != 'None':
                 infiles_v0data = "{}/icevol.{}.year*.nc".format(
                     indir_v0data, ref_casename_v0)
                 ds_v0 = xr.open_mfdataset(
@@ -249,7 +254,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
         if varname in ["iceAreaCell", "iceVolumeCell"]:
             if compare_with_obs:
-                if ref_casename_v0 != "None":
+                if ref_casename_v0 != 'None':
                     vars_nh = [var_nh, var_nh_obs, var_nh_v0]
                     vars_sh = [var_sh, var_sh_obs, var_sh_v0]
                     lineStyles = ['r-', 'k-', 'b-']
@@ -260,14 +265,14 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                     vars_sh = [var_sh, var_sh_obs]
                     lineStyles = ['r-', 'k-']
                     lineWidths = [1.2, 1.2]
-            elif ref_casename_v0 != "None":
+            elif ref_casename_v0 != 'None':
                 # just v1 and v0 models
                 vars_nh = [var_nh, var_nh_v0]
                 vars_sh = [var_sh, var_sh_v0]
                 lineStyles = ['r-', 'b-']
                 lineWidths = [1.2, 1.2]
 
-            if compare_with_obs or ref_casename_v0 != "None":
+            if compare_with_obs or ref_casename_v0 != 'None':
                 # separate plots for nothern and southern hemispheres
                 timeseries_analysis_plot(config, vars_nh, N_movavg, title_nh,
                                          xlabel, units, figname_nh,
