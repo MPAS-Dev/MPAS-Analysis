@@ -63,9 +63,9 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     # such as refBottomDepth and namelist fields such as config_density0, as
     # well as simulationStartTime, that are not guaranteed to be in the mesh file.
     try:
-       inputfile = streams.readpath('restart')[0]
-    except ValueError, e:
-       raise ValueError("No MPAS-O restart file found: need at least one rst file for OHC calculation")
+        inputfile = streams.readpath('restart')[0]
+    except ValueError:
+        raise IOError('No MPAS-O restart file found: need at least one restart file for OHC calculation')
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
@@ -80,9 +80,9 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     print '  Read in depth and compute specific depth indexes...'
     f = netcdf_dataset(inputfile, mode='r')
     # reference depth [m]
-    depth = f.variables["refBottomDepth"][:]
+    depth = f.variables['refBottomDepth'][:]
     # simulation start time
-    simStartTime = netCDF4.chartostring(f.variables["simulationStartTime"][:])
+    simStartTime = netCDF4.chartostring(f.variables['simulationStartTime'][:])
     simStartTime = str(simStartTime)
     f.close()
     # specific heat [J/(kg*degC)]
@@ -124,7 +124,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     time_start_yr1 = Date(simStartTime).to_datetime(yr_offset)
     if time_start_yr1 < time_start:
         startDate_yr1 = simStartTime
-        endDate_yr1 = startDate_yr1[0:5]+"12-31"+startDate_yr1[10:]
+        endDate_yr1 = startDate_yr1[0:5]+'12-31'+startDate_yr1[10:]
         infiles_yr1 = streams.readpath(streamName, startDate=startDate_yr1,
                                        endDate=endDate_yr1)
         ds_yr1 = xr.open_mfdataset(
@@ -155,7 +155,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     if ref_casename_v0 != 'None':
         print '  Load in OHC for ACMEv0 case...'
-        infiles_v0data = "{}/OHC.{}.year*.nc".format(
+        infiles_v0data = '{}/OHC.{}.year*.nc'.format(
             indir_v0data, ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
@@ -198,13 +198,13 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         ohc_btm = fac*ohc_btm
 
         title = 'OHC, {}, 0-bottom (thick-), 0-700m (thin-), 700-2000m (--),' \
-            ' 2000m-bottom (-.) \n {}'.format(plot_titles[iregion], casename)
+                ' 2000m-bottom (-.) \n {}'.format(plot_titles[iregion], casename)
 
-        xlabel = "Time [years]"
-        ylabel = "[x$10^{22}$ J]"
+        xlabel = 'Time [years]'
+        ylabel = '[x$10^{22}$ J]'
 
         if ref_casename_v0 != 'None':
-            figname = "{}/ohc_{}_{}_{}.png".format(plots_dir,
+            figname = '{}/ohc_{}_{}_{}.png'.format(plots_dir,
                                                    regions[iregion],
                                                    casename,
                                                    ref_casename_v0)
@@ -212,7 +212,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
             ohc_v0_700m = ds_v0_tslice.ohc_700m
             ohc_v0_2000m = ds_v0_tslice.ohc_2000m
             ohc_v0_btm = ds_v0_tslice.ohc_btm
-            title = "{} (r), {} (b)".format(title, ref_casename_v0)
+            title = '{} (r), {} (b)'.format(title, ref_casename_v0)
             timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m,
                                               ohc_btm, ohc_v0_tot, ohc_v0_700m,
                                               ohc_v0_2000m, ohc_v0_btm],
@@ -223,7 +223,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                                  1.5])
 
         if not compare_with_obs and ref_casename_v0 == 'None':
-            figname = "{}/ohc_{}_{}.png".format(plots_dir, regions[iregion],
+            figname = '{}/ohc_{}_{}.png'.format(plots_dir, regions[iregion],
                                                 casename)
             timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m,
                                               ohc_btm],

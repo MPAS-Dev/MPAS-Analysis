@@ -113,7 +113,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     time_end = datetime.datetime(year_end, 12, 31)
 
     if ref_casename_v0 != 'None':
-        infiles_v0data = "{}/icevol.{}.year*.nc".format(indir_v0data,
+        infiles_v0data = '{}/icevol.{}.year*.nc'.format(indir_v0data,
                                                         ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
@@ -139,8 +139,8 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         units = units_dict[varname]
 
         print '  Compute NH and SH time series of {}...'.format(varname)
-        if varname == "iceThickCell":
-            varnamefull = "iceVolumeCell"
+        if varname == 'iceThickCell':
+            varnamefull = 'iceVolumeCell'
         else:
             varnamefull = varname
         var = ds[varnamefull]
@@ -152,14 +152,14 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         var_nh_iceext = var_nh.where(ind_iceext)
         var_sh_iceext = var_sh.where(ind_iceext)
 
-        if varname == "iceAreaCell":
+        if varname == 'iceAreaCell':
             var_nh = var_nh.sum('nCells')
             var_sh = var_sh.sum('nCells')
             var_nh = 1e-6*var_nh  # m^2 to km^2
             var_sh = 1e-6*var_sh  # m^2 to km^2
             var_nh_iceext = 1e-6*var_nh_iceext.sum('nCells')
             var_sh_iceext = 1e-6*var_sh_iceext.sum('nCells')
-        elif varname == "iceVolumeCell":
+        elif varname == 'iceVolumeCell':
             var_nh = var_nh.sum('nCells')
             var_sh = var_sh.sum('nCells')
             var_nh = 1e-3*1e-9*var_nh  # m^3 to 10^3 km^3
@@ -170,35 +170,35 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
         print '  Make plots...'
 
-        xlabel = "Time [years]"
+        xlabel = 'Time [years]'
 
         if ref_casename_v0 != 'None':
-            figname_nh = "{}/{}NH_{}_{}.png".format(plots_dir, varname,
+            figname_nh = '{}/{}NH_{}_{}.png'.format(plots_dir, varname,
                                                     casename, ref_casename_v0)
-            figname_sh = "{}/{}SH_{}_{}.png".format(plots_dir, varname,
+            figname_sh = '{}/{}SH_{}_{}.png'.format(plots_dir, varname,
                                                     casename, ref_casename_v0)
         else:
-            figname_nh = "{}/{}NH_{}.png".format(plots_dir, varname, casename)
-            figname_sh = "{}/{}SH_{}.png".format(plots_dir, varname, casename)
+            figname_nh = '{}/{}NH_{}.png'.format(plots_dir, varname, casename)
+            figname_sh = '{}/{}SH_{}.png'.format(plots_dir, varname, casename)
 
-        title_nh = "{} (NH), {} (r)".format(plot_title, casename)
-        title_sh = "{} (SH), {} (r)".format(plot_title, casename)
+        title_nh = '{} (NH), {} (r)'.format(plot_title, casename)
+        title_sh = '{} (SH), {} (r)'.format(plot_title, casename)
 
         if compare_with_obs:
-            if varname == "iceAreaCell":
+            if varname == 'iceAreaCell':
                 title_nh = \
-                    "{}\nSSM/I observations, annual cycle (k)".format(title_nh)
+                    '{}\nSSM/I observations, annual cycle (k)'.format(title_nh)
                 title_sh = \
-                    "{}\nSSM/I observations, annual cycle (k)".format(title_sh)
-            elif varname == "iceVolumeCell":
-                title_nh = "{}\nPIOMAS, annual cycle (k)".format(title_nh)
-                title_sh = "{}\n".format(title_sh)
+                    '{}\nSSM/I observations, annual cycle (k)'.format(title_sh)
+            elif varname == 'iceVolumeCell':
+                title_nh = '{}\nPIOMAS, annual cycle (k)'.format(title_nh)
+                title_sh = '{}\n'.format(title_sh)
 
         if ref_casename_v0 != 'None':
-            title_nh = "{}\n {} (b)".format(title_nh, ref_casename_v0)
-            title_sh = "{}\n {} (b)".format(title_sh, ref_casename_v0)
+            title_nh = '{}\n {} (b)'.format(title_nh, ref_casename_v0)
+            title_sh = '{}\n {} (b)'.format(title_sh, ref_casename_v0)
 
-        if varname == "iceAreaCell":
+        if varname == 'iceAreaCell':
 
             if compare_with_obs:
                 ds_obs = xr.open_mfdataset(
@@ -218,7 +218,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 var_sh_obs = replicate_cycle(var_sh, var_sh_obs)
 
             if ref_casename_v0 != 'None':
-                infiles_v0data = "{}/icearea.{}.year*.nc".format(
+                infiles_v0data = '{}/icearea.{}.year*.nc'.format(
                     indir_v0data, ref_casename_v0)
                 ds_v0 = xr.open_mfdataset(
                     infiles_v0data,
@@ -228,7 +228,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 var_nh_v0 = ds_v0_tslice.icearea_nh
                 var_sh_v0 = ds_v0_tslice.icearea_sh
 
-        elif varname == "iceVolumeCell":
+        elif varname == 'iceVolumeCell':
 
             if compare_with_obs:
                 ds_obs = xr.open_mfdataset(
@@ -242,7 +242,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 var_sh_obs = None
 
             if ref_casename_v0 != 'None':
-                infiles_v0data = "{}/icevol.{}.year*.nc".format(
+                infiles_v0data = '{}/icevol.{}.year*.nc'.format(
                     indir_v0data, ref_casename_v0)
                 ds_v0 = xr.open_mfdataset(
                     infiles_v0data,
@@ -252,7 +252,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 var_nh_v0 = ds_v0_tslice.icevolume_nh
                 var_sh_v0 = ds_v0_tslice.icevolume_sh
 
-        if varname in ["iceAreaCell", "iceVolumeCell"]:
+        if varname in ['iceAreaCell', 'iceVolumeCell']:
             if compare_with_obs:
                 if ref_casename_v0 != 'None':
                     vars_nh = [var_nh, var_nh_obs, var_nh_v0]
@@ -286,18 +286,18 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                          title_font_size=title_font_size)
             else:
                 # we will combine north and south onto a single graph
-                figname = "{}/{}.{}.png".format(plots_dir, casename, varname)
-                title = "{}, NH (r), SH (k)\n{}".format(plot_title, casename)
+                figname = '{}/{}.{}.png'.format(plots_dir, casename, varname)
+                title = '{}, NH (r), SH (k)\n{}'.format(plot_title, casename)
                 timeseries_analysis_plot(config, [var_nh, var_sh], N_movavg,
                                          title, xlabel, units, figname,
                                          lineStyles=['r-', 'k-'],
                                          lineWidths=[1.2, 1.2],
                                          title_font_size=title_font_size)
 
-        elif varname == "iceThickCell":
+        elif varname == 'iceThickCell':
 
-            figname = "{}/{}.{}.png".format(plots_dir, casename, varname)
-            title = "{} NH (r), SH (k)\n{}".format(plot_title, casename)
+            figname = '{}/{}.{}.png'.format(plots_dir, casename, varname)
+            title = '{} NH (r), SH (k)\n{}'.format(plot_title, casename)
             timeseries_analysis_plot(config, [var_nh, var_sh], N_movavg, title,
                                      xlabel, units, figname,
                                      lineStyles=['r-', 'k-'],
@@ -306,7 +306,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
         else:
             raise ValueError(
-                "varname variable {} not supported for plotting".format(
+                'varname variable {} not supported for plotting'.format(
                     varname))
 
 

@@ -88,7 +88,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
     if ref_casename_v0 != 'None':
         print '  Load in SST for ACMEv0 case...'
-        infiles_v0data = "{}/SST.{}.year*.nc".format(indir_v0data,
+        infiles_v0data = '{}/SST.{}.year*.nc'.format(indir_v0data,
                                                      ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
@@ -106,24 +106,24 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
         iregion = iregions[index]
 
         title = plot_titles[iregion]
-        title = "SST, %s, %s (r-)" % (title, casename)
-        xlabel = "Time [years]"
-        ylabel = "[$^\circ$ C]"
+        title = 'SST, %s, %s (r-)' % (title, casename)
+        xlabel = 'Time [years]'
+        ylabel = '[$^\circ$ C]'
 
         SST = SSTregions[:, iregion]
 
         if ref_casename_v0 != 'None':
-            figname = "{}/sst_{}_{}_{}.png".format(plots_dir, regions[iregion],
+            figname = '{}/sst_{}_{}_{}.png'.format(plots_dir, regions[iregion],
                                                    casename, ref_casename_v0)
             SST_v0 = ds_v0_tslice.SST
 
-            title = "{}\n {} (b-)".format(title, ref_casename_v0)
+            title = '{}\n {} (b-)'.format(title, ref_casename_v0)
             timeseries_analysis_plot(config, [SST, SST_v0], N_movavg,
                                      title, xlabel, ylabel, figname,
                                      lineStyles=['r-', 'b-'],
                                      lineWidths=[1.2, 1.2])
         else:
-            figname = "{}/sst_{}_{}.png".format(plots_dir, regions[iregion],
+            figname = '{}/sst_{}_{}.png'.format(plots_dir, regions[iregion],
                                                 casename)
             timeseries_analysis_plot(config, [SST], N_movavg, title, xlabel,
                                      ylabel, figname, lineStyles=['r-'],
