@@ -31,7 +31,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 12/04/2016
+    Last Modified: 01/07/2017
     """
 
     # read parameters from config file
@@ -60,16 +60,12 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     streams = StreamsFile(streams_filename, streamsdir=indir)
 
     # Note: input file, not a mesh file because we need dycore specific fields
-    # such as refBottomDepth and namelist fields such as config_density0 that
-    # are not guaranteed to be in the mesh file.
-    # attempt to find fields in path-local restart file but default to input
-    # file if restart is unavailable.  This is done to make analysis robust
-    # to being run once the run directory is moved to a new machine.
+    # such as refBottomDepth and namelist fields such as config_density0, as
+    # well as simulationStartTime, that are not guaranteed to be in the mesh file.
     try:
-      inputfile = streams.readpath('restart')[0]
+       inputfile = streams.readpath('restart')[0]
     except ValueError, e:
-      print e, ' Trying to get mesh from input file.'
-      inputfile = streams.readpath('input')[0]
+       raise ValueError("No MPAS-O restart file found: need at least one rst file for OHC calculation")
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
