@@ -1,4 +1,5 @@
 import numpy as np
+import netCDF4
 from netCDF4 import Dataset as netcdf_dataset
 import xarray as xr
 import pandas as pd
@@ -72,20 +73,22 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
-    #startDate = config.get('time', 'timeseries_start_date')
-    startDate = '0001-01-01_00:00:00'
+    startDate = config.get('time', 'timeseries_start_date')
     endDate = config.get('time', 'timeseries_end_date')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
     infiles = streams.readpath(streamName, startDate=startDate,
                                endDate=endDate)
     print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
-    print '  Warning: OHC time series always start from simulation year 1'
 
     # Define/read in general variables
     print '  Read in depth and compute specific depth indexes...'
     f = netcdf_dataset(inputfile, mode='r')
     # reference depth [m]
     depth = f.variables["refBottomDepth"][:]
+    # simulation start time
+    simStartTime = netCDF4.chartostring(f.variables["simulationStartTime"][:])
+    simStartTime = str(simStartTime)
+    f.close()
     # specific heat [J/(kg*degC)]
     cp = namelist.getfloat('config_specific_heat_sea_water')
     # [kg/m3]
@@ -122,9 +125,25 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     ds = ds.sel(Time=slice(time_start, time_end))
 
     # Select year-1 data and average it (for later computing anomalies)
-    time_start = datetime.datetime(time_start.year, 1, 1)
-    time_end = datetime.datetime(time_start.year, 12, 31)
-    ds_yr1 = ds.sel(Time=slice(time_start, time_end))
+    time_start_yr1 = Date(simStartTime).to_datetime(yr_offset)
+    if time_start_yr1 < time_start:
+        startDate_yr1 = simStartTime
+        endDate_yr1 = startDate_yr1[0:5]+"12-31"+startDate_yr1[10:]
+        infiles_yr1 = streams.readpath(streamName, startDate=startDate_yr1,
+                                       endDate=endDate_yr1)
+        ds_yr1 = xr.open_mfdataset(
+                infiles_yr1,
+                preprocess=lambda x: preprocess_mpas(x,
+                                                     yearoffset=yr_offset,
+                                                     timestr='Time',
+                                                     onlyvars=varList,
+                                                     varmap=variableMap))
+
+        ds_yr1 = remove_repeated_time_index(ds_yr1)
+    else:
+        time_start = datetime.datetime(time_start.year, 1, 1)
+        time_end = datetime.datetime(time_start.year, 12, 31)
+        ds_yr1 = ds.sel(Time=slice(time_start, time_end))
     mean_yr1 = ds_yr1.mean('Time')
 
     print '  Compute temperature anomalies...'
