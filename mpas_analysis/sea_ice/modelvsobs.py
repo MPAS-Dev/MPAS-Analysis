@@ -286,7 +286,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
                 modelTitle=casename,
                 obsTitle="Observations (SSM/I {})".format(obsName),
                 diffTitle="Model-Observations",
-                cbarlabel="%")
+                cbarlabel="fraction")
 
     print "  Make ice thickness plots..."
     # Plot Northern Hemisphere FM sea-ice thickness
