@@ -41,6 +41,15 @@ class TestNamelist(TestCase):
                                                              yearoffset=1850))
         self.assertEqual(ds.data_vars.keys(), varList)
 
+        with self.assertRaisesRegexp(AssertionError, 'Empty dataset is returned.'):
+            missingvars = ['foo', 'bar']
+            ds = xr.open_mfdataset(
+                fileName,
+                preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
+                                                                 timestr=timestr,
+                                                                 onlyvars=missingvars,
+                                                                 yearoffset=1850))
+
     def test_iselvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
         timestr = 'time_avg_daysSinceStartOfSim'
