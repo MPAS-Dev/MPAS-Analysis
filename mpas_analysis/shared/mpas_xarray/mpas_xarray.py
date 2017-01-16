@@ -49,11 +49,13 @@ def subset_variables(ds, vlist):  # {{{
     Reduces an xarray dataset ds to only contain the variables in vlist.
 
     Phillip J. Wolfram
-    05/05/2016
+    01/10/2017
     """
 
+    allvars = ds.data_vars.keys()
+
     # get set of variables to drop (all ds variables not in vlist)
-    dropvars = set(ds.data_vars.keys()) - set(vlist)
+    dropvars = set(allvars) - set(vlist)
 
     # drop spurious variables
     ds = ds.drop(dropvars)
@@ -66,6 +68,10 @@ def subset_variables(ds, vlist):  # {{{
 
     # drop spurious coordinates
     ds = ds.drop(dropcoords)
+
+    assert len(ds.variables.keys()) > 0, 'MPAS_XARRAY ERROR: Empty dataset is returned.\n'\
+                                         'Variables {}\nare not found within the dataset variables: {}.'\
+                                         .format(vlist, allvars)
 
     return ds  # }}}
 
