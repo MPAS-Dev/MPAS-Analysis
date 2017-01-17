@@ -7,10 +7,9 @@ Xylar Asay-Davis
 
 import pytest
 import datetime
-from mpas_analysis.test import TestCase, loaddatadir
+from mpas_analysis.test import TestCase
 from mpas_analysis.shared.timekeeping.Date import Date
 
-@pytest.mark.usefixtures("loaddatadir")
 class TestDate(TestCase):
     def test_date(self):
 
