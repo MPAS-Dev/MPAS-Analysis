@@ -63,7 +63,13 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     plots_dir = config.get('paths', 'plots_dir')
     obsdir = config.get('paths', 'obs_' + field + 'dir')
     casename = config.get('case', 'casename')
-    meshfile = config.get('data', 'mpas_meshfile')
+
+    try:
+        inputfile = streams.readpath('restart')[0]
+    except ValueError:
+        raise IOError('No MPAS-O restart file found: need at least one '
+                      'restart file for ocn_modelvsobs calculation')
+
     climo_yr1 = config.getint('time', 'climo_yr1')
     climo_yr2 = config.getint('time', 'climo_yr2')
     yr_offset = config.getint('time', 'yr_offset')
@@ -71,7 +77,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     outputTimes = config.getExpression(field + '_modelvsobs',
                                        'comparisonTimes')
 
-    f = netcdf_dataset(meshfile, mode='r')
+    f = netcdf_dataset(inputfile, mode='r')
     lonCell = f.variables["lonCell"][:]
     latCell = f.variables["latCell"][:]
 

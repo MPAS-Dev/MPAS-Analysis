@@ -4,7 +4,7 @@ import pandas as pd
 import datetime
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
+    remove_repeated_time_index, subset_variables
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
@@ -32,6 +32,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
     # read parameters from config file
     indir = config.get('paths', 'archive_dir_ocn')
+
 
     streams_filename = config.get('input', 'seaice_streams_filename')
     streams = StreamsFile(streams_filename, streamsdir=indir)
@@ -64,9 +65,6 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     # Some plotting rules
     title_font_size = config.get('seaice_timeseries', 'title_font_size')
 
-    indir = config.get('paths', 'archive_dir_ocn')
-    meshfile = config.get('data', 'mpas_meshfile')
-
     casename = config.get('case', 'casename')
     ref_casename_v0 = config.get('case', 'ref_casename_v0')
     indir_v0data = config.get('paths', 'ref_archive_v0_seaicedir')
@@ -80,9 +78,24 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
     N_movavg = config.getint('seaice_timeseries', 'N_movavg')
 
+    # first, check for a sea-ice restart file
+    try:
+        inputfile = streams.readpath('restart')[0]
+    except ValueError:
+        # get an ocean restart file, since no sea-ice restart exists
+        ocean_streams_filename = config.get('input', 'ocean_streams_filename')
+        ocean_streams = StreamsFile(ocean_streams_filename, streamsdir=indir)
+        try:
+            inputfile = ocean_streams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
+                          'at least one restart file for seaice_timeseries '
+                          'calculation')
+
     print '  Load sea-ice data...'
     # Load mesh
-    dsmesh = xr.open_dataset(meshfile)
+    dsmesh = xr.open_dataset(inputfile)
+    dsmesh = subset_variables(dsmesh, vlist=['lonCell', 'latCell', 'areaCell'])
 
     # Load data
     ds = xr.open_mfdataset(
