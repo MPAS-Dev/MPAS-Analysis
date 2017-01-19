@@ -6,8 +6,10 @@ date: 10-24-2016
 """
 
 import numpy as np
-from mpas_analysis.shared.interpolation.interpolate import interp_fields, init_tree, lon_lat_to_cartesian
+from mpas_analysis.shared.interpolation.interpolate import interp_fields, \
+    init_tree, lon_lat_to_cartesian
 from mpas_analysis.test import TestCase
+
 
 class TestInterp(TestCase):
     def test_lat_to_cartesian(self):
@@ -19,7 +21,8 @@ class TestInterp(TestCase):
         """
 
         lat_input = np.deg2rad(np.array([-90, 90, 0, 0, 0, 0, 45, 45, 45, 45]))
-        lon_input = np.deg2rad(np.array([0, 0, 0, 90, 180, 270, 0, 90, 180, 270]))
+        lon_input = np.deg2rad(np.array([0, 0, 0, 90, 180, 270, 0, 90, 180,
+                                         270]))
 
         x_input = np.cos(lat_input) * np.cos(lon_input)
         y_input = np.cos(lat_input) * np.sin(lon_input)
@@ -49,8 +52,9 @@ class TestInterp(TestCase):
         dLon = 30
         dLat = 30
 
-        d, inds, lonTarg, latTarg = init_tree(lon_input, lat_input, lon_min, lon_max,
-                                              lat_min, lat_max, dLon, dLat)
+        d, inds, lonTarg, latTarg = init_tree(lon_input, lat_input, lon_min,
+                                              lon_max, lat_min, lat_max,
+                                              dLon, dLat)
 
         nLonExpected = (lon_max - lon_min) / dLon
         nLatExpected = (lat_max - lat_min) / dLat
@@ -83,8 +87,9 @@ class TestInterp(TestCase):
         dLon = 20
         dLat = 20
 
-        d, inds, lonTarg, latTarg = init_tree(lon_input, lat_input, lon_min, lon_max,
-                                              lat_min, lat_max, dLon, dLat)
+        d, inds, lonTarg, latTarg = init_tree(lon_input, lat_input, lon_min,
+                                              lon_max, lat_min, lat_max,
+                                              dLon, dLat)
 
         # LonTarg should respect bounds defined by user
         self.assertLessThan(lonTarg.max(), lon_max)
@@ -111,13 +116,14 @@ class TestInterp(TestCase):
         dLon = 30
         dLat = 30
 
-        d, inds, lonTarg, latTarg = init_tree(lon_input, lat_input, lon_min, lon_max,
-                                              lat_min, lat_max, dLon, dLat)
+        d, inds, lonTarg, latTarg = init_tree(lon_input, lat_input, lon_min,
+                                              lon_max, lat_min, lat_max,
+                                              dLon, dLat)
 
         vals_output = interp_fields(vals_input, d, inds, lonTarg)
 
-        #Test a few ramdom spots for nearest neighbor
-        #One exact spot
+        # Test a few ramdom spots for nearest neighbor
+        # One exact spot
         self.assertEqual(vals_output[0, 0], vals_input[0])
 
         # Close point to val_input(0)
@@ -126,9 +132,8 @@ class TestInterp(TestCase):
         # Close to point val_input(1)
         self.assertEqual(vals_output[4, 0], vals_input[1])
 
-        #Close to val_input(2)
+        # Close to val_input(2)
         self.assertEqual(vals_output[2, 2], vals_input[2])
 
-        #Close to val_input(3)
+        # Close to val_input(3)
         self.assertEqual(vals_output[4, 2], vals_input[3])
-

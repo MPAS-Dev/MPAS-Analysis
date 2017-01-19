@@ -10,6 +10,7 @@ import datetime
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.timekeeping.Date import Date
 
+
 class TestDate(TestCase):
     def test_date(self):
 
@@ -92,7 +93,6 @@ class TestDate(TestCase):
         date2 = Date(years=0, months=0, days=0, hours=0, minutes=0, seconds=5,
                      isInterval=True)
         self.assertEqual(date1, date2)
-
 
         # test operators
         date1 = Date(dateString='1992-02-01', isInterval=False)
