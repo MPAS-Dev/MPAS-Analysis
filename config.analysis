@@ -29,7 +29,6 @@ ref_archive_v0_seaicedir = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C
 
 [data]
 # paths to mesh and mapping files
-mpas_meshfile = /global/project/projectdirs/acme/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc
 mpas_remapfile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
 pop_remapfile = /global/project/projectdirs/acme/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc
 # path to climotology dataset
