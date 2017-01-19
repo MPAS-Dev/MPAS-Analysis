@@ -31,7 +31,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     """
 
     # Define/read in general variables
-    print "  Load SST data..."
+    print '  Load SST data...'
     # read parameters from config file
     indir = config.get('paths', 'archive_dir_ocn')
 
@@ -86,39 +86,44 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     time_start = datetime.datetime(year_start, 1, 1)
     time_end = datetime.datetime(year_end, 12, 31)
 
-    if ref_casename_v0 != "None":
-        print "  Load in SST for ACMEv0 case..."
-        infiles_v0data = "{}/SST.{}.year*.nc".format(indir_v0data,
+    if ref_casename_v0 != 'None':
+        print '  Load in SST for ACMEv0 case...'
+        infiles_v0data = '{}/SST.{}.year*.nc'.format(indir_v0data,
                                                      ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
             preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
         ds_v0 = remove_repeated_time_index(ds_v0)
-        ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+        year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
+        if year_start <= year_end_v0:
+            ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+        else:
+            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
+            ref_casename_v0 = 'None'
 
-    print "  Make plots..."
+    print '  Make plots...'
     for index in range(len(iregions)):
         iregion = iregions[index]
 
         title = plot_titles[iregion]
-        title = "SST, %s, %s (r-)" % (title, casename)
-        xlabel = "Time [years]"
-        ylabel = "[$^\circ$ C]"
+        title = 'SST, %s, %s (r-)' % (title, casename)
+        xlabel = 'Time [years]'
+        ylabel = '[$^\circ$ C]'
 
         SST = SSTregions[:, iregion]
 
-        if ref_casename_v0 != "None":
-            figname = "{}/sst_{}_{}_{}.png".format(plots_dir, regions[iregion],
+        if ref_casename_v0 != 'None':
+            figname = '{}/sst_{}_{}_{}.png'.format(plots_dir, regions[iregion],
                                                    casename, ref_casename_v0)
             SST_v0 = ds_v0_tslice.SST
 
-            title = "{}\n {} (b-)".format(title, ref_casename_v0)
+            title = '{}\n {} (b-)'.format(title, ref_casename_v0)
             timeseries_analysis_plot(config, [SST, SST_v0], N_movavg,
                                      title, xlabel, ylabel, figname,
                                      lineStyles=['r-', 'b-'],
                                      lineWidths=[1.2, 1.2])
         else:
-            figname = "{}/sst_{}_{}.png".format(plots_dir, regions[iregion],
+            figname = '{}/sst_{}_{}.png'.format(plots_dir, regions[iregion],
                                                 casename)
             timeseries_analysis_plot(config, [SST], N_movavg, title, xlabel,
                                      ylabel, figname, lineStyles=['r-'],
