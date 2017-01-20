@@ -41,14 +41,16 @@ class TestNamelist(TestCase):
                                                              yearoffset=1850))
         self.assertEqual(ds.data_vars.keys(), varList)
 
-        with self.assertRaisesRegexp(AssertionError, 'Empty dataset is returned.'):
+        with self.assertRaisesRegexp(AssertionError,
+                                     'Empty dataset is returned.'):
             missingvars = ['foo', 'bar']
             ds = xr.open_mfdataset(
                 fileName,
-                preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
-                                                                 timestr=timestr,
-                                                                 onlyvars=missingvars,
-                                                                 yearoffset=1850))
+                preprocess=lambda x:
+                    mpas_xarray.preprocess_mpas(x,
+                                                timestr=timestr,
+                                                onlyvars=missingvars,
+                                                yearoffset=1850))
 
     def test_iselvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
@@ -94,7 +96,6 @@ class TestNamelist(TestCase):
         date = pd.Timestamp(long(round(date.value, -9)))
         self.assertEqual(date, pd.Timestamp('1855-01-13 12:24:14'))
 
-
     def test_bad_selvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
         timestr = 'time_avg_daysSinceStartOfSim'
@@ -104,16 +105,16 @@ class TestNamelist(TestCase):
 
         selvals = {'refBottomDepth': 8.77999997138977}
         with self.assertRaisesRegexp(AssertionError,
-                'not a dimension in the dataset that '
-                'can be used for selection'):
+                                     'not a dimension in the dataset that '
+                                     'can be used for selection'):
             ds = xr.open_mfdataset(
                 fileName,
-                preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
-                                                                 timestr=timestr,
-                                                                 onlyvars=varList,
-                                                                 selvals=selvals,
-                                                                 yearoffset=1850))
-
+                preprocess=lambda x:
+                    mpas_xarray.preprocess_mpas(x,
+                                                timestr=timestr,
+                                                onlyvars=varList,
+                                                selvals=selvals,
+                                                yearoffset=1850))
 
     def test_selvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
@@ -135,7 +136,6 @@ class TestNamelist(TestCase):
         self.assertEqual(ds['nVertLevels'].shape, ())
         self.assertApproxEqual(ds['nVertLevels'],
                                selvals['nVertLevels'])
-
 
     def test_remove_repeated_time_index(self):
         fileName = str(self.datadir.join('example_jan*.nc'))
