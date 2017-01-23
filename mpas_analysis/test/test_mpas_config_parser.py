@@ -1,14 +1,15 @@
 """
 Unit test infrastructure for MpasAnalysisConfigParser
 
-Xylar Asay-Davis
-12/05/2016
+Xylar Asay-Davis, Phillip J. Wolfram
+01/31/2017
 """
 
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
+from . import requires_numpy
 
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -64,5 +65,15 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key2': -12,
                                     'key3': False})
 
+    @requires_numpy
+    def test_read_config_numpy(self):
+        self.setup_config()
+
+        # tests numpy evaluation capability
+        import numpy as np
+        result = np.arange(0, 1, 10)
+        for testNumpy in ['testNumpy1', 'testNumpy2']:
+            self.assertArrayEqual(self.config.getExpression('TestNumpy',
+                                              testNumpy, usenumpy=True), result)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
