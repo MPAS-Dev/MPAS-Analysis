@@ -202,3 +202,35 @@ def plot_global_comparison(
 
     if not config.getboolean('plot','displayToScreen'):
         plt.close()
+
+def plot_moc(config, mocLat,
+             refTopDepth,
+             mocTop,
+             fileout = 'moc' + '.png',
+             figsize=(8, 4.5),
+             dpi=300): #{{{
+
+    contourLines = config.getExpression('moc_postprocess', 'contourLines', usenumpy=True)
+
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    X, Y = np.meshgrid(mocLat,refTopDepth) # change to zMid
+
+    contourSet = plt.contourf(X,Y,mocTop.T,levels=contourLines)
+    contourSet2 = plt.contour(X,Y,mocTop.T,levels=contourLines[::2],colors='k',hold='on')
+
+    plt.xlabel('latitude')
+    plt.ylabel('depth, m')
+    plt.title('MPAS-Ocean Atlantic MOC, Sv')
+    plt.gca().invert_yaxis()
+    #plt.clabel(contourSet, fontsize=10)
+    # Make a colorbar for the ContourSet returned by the contourf call.
+    cbar = plt.colorbar(contourSet)
+    cbar.add_lines(contourSet2)
+
+    if (fileout is not None):
+        plt.savefig(fileout,dpi=dpi,bbox_inches='tight',pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+    return #}}}
