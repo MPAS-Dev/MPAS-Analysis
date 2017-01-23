@@ -321,46 +321,56 @@ def plot_polar_comparison(
         fig.suptitle(title, y=0.95, **title_font)
     axis_font = {'size':config.get('plot', 'axisFontSize')}
 
-    m = Basemap(projection=plotProjection,boundinglat=latmin,lon_0=lon0,resolution='l')
-    x, y = m(Lons, Lats) # compute map proj coordinates
+    m = Basemap(projection=plotProjection, boundinglat=latmin,
+                lon_0=lon0, resolution='l')
+    x, y = m(Lons, Lats)  # compute map proj coordinates
 
     normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3,1,1)
+    plt.subplot(3, 1, 1)
     plt.title(modelTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,81.,10.))
-    m.drawmeridians(np.arange(-180.,181.,20.),labels=[True,True,True,True])
-    cs = m.contourf(x,y,modelArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs)
-    cbar = m.colorbar(cs,location='right',pad="15%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 81., 10.))
+    m.drawmeridians(np.arange(-180., 181., 20.),
+                    labels=[True, True, True, True])
+    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs)
+    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,2)
+    plt.subplot(3, 1, 2)
     plt.title(obsTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,81.,10.))
-    m.drawmeridians(np.arange(-180.,181.,20.),labels=[True,True,True,True])
-    cs = m.contourf(x,y,obsArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs)
-    cbar = m.colorbar(cs,location='right',pad="15%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 81., 10.))
+    m.drawmeridians(np.arange(-180., 181., 20.),
+                    labels=[True, True, True, True])
+    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs)
+    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,3)
+    plt.subplot(3, 1, 3)
     plt.title(diffTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,81.,10.))
-    m.drawmeridians(np.arange(-180.,181.,20.),labels=[True,True,True,True])
-    cs = m.contourf(x,y,diffArray,cmap=cmapDiff,norm=normDiff,spacing='uniform',levels=clevsDiff)
-    cbar = m.colorbar(cs,location='right',pad="15%",spacing='uniform',ticks=clevsDiff,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 81., 10.))
+    m.drawmeridians(np.arange(-180., 181., 20.),
+                    labels=[True, True, True, True])
+    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
+                    spacing='uniform', levels=clevsDiff)
+    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
+                      ticks=clevsDiff, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
     if (fileout is not None):
-        plt.savefig(fileout,dpi=dpi,bbox_inches='tight',pad_inches=0.1)
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot','displayToScreen'):
+    if not config.getboolean('plot', 'displayToScreen'):
         plt.close()
 
 def plot_global_comparison(
@@ -381,7 +391,7 @@ def plot_global_comparison(
     diffTitle = "Model-Observations",
     cbarlabel = "units",
     titleFontSize = None,
-    figsize = (8,12),
+    figsize = (8, 12),
     dpi = 300):
 
     """
@@ -436,46 +446,59 @@ def plot_global_comparison(
         fig.suptitle(title, y=0.95, **title_font)
     axis_font = {'size':config.get('plot', 'axisFontSize')}
 
-    m = Basemap(projection='cyl',llcrnrlat=-85,urcrnrlat=86,llcrnrlon=-180,urcrnrlon=181,resolution='l')
-    x, y = m(Lons, Lats) # compute map proj coordinates
+    m = Basemap(projection='cyl', llcrnrlat=-85, urcrnrlat=86, llcrnrlon=-180,
+                urcrnrlon=181, resolution='l')
+    x, y = m(Lons, Lats)  # compute map proj coordinates
 
     normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3,1,1)
+    plt.subplot(3, 1, 1)
     plt.title(modelTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,80.,20.),labels=[True,False,False,False])
-    m.drawmeridians(np.arange(-180.,180.,60.),labels=[False,False,False,True])
-    cs = m.contourf(x,y,modelArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs,extend='both')
-    cbar = m.colorbar(cs,location='right',pad="5%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 80., 20.),
+                    labels=[True, False, False, False])
+    m.drawmeridians(np.arange(-180., 180., 60.),
+                    labels=[False, False, False, True])
+    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs, extend='both')
+    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,2)
+    plt.subplot(3, 1, 2)
     plt.title(obsTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,80.,20.),labels=[True,False,False,False])
-    m.drawmeridians(np.arange(-180.,180.,40.),labels=[False,False,False,True])
-    cs = m.contourf(x,y,obsArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs,extend='both')
-    cbar = m.colorbar(cs,location='right',pad="5%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 80., 20.),
+                    labels=[True, False, False, False])
+    m.drawmeridians(np.arange(-180., 180., 40.),
+                    labels=[False, False, False, True])
+    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs, extend='both')
+    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,3)
+    plt.subplot(3, 1, 3)
     plt.title(diffTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,80.,20.),labels=[True,False,False,False])
-    m.drawmeridians(np.arange(-180.,180.,40.),labels=[False,False,False,True])
-    cs = m.contourf(x,y,diffArray,cmap=cmapDiff,norm=normDiff,spacing='uniform',levels=clevsDiff,extend='both')
-    cbar = m.colorbar(cs,location='right',pad="5%",spacing='uniform',ticks=clevsDiff,boundaries=clevsDiff)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 80., 20.),
+                    labels=[True, False, False, False])
+    m.drawmeridians(np.arange(-180., 180., 40.),
+                    labels=[False, False, False, True])
+    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
+                    spacing='uniform', levels=clevsDiff, extend='both')
+    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                      ticks=clevsDiff, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
     if (fileout is not None):
-        plt.savefig(fileout,dpi=dpi,bbox_inches='tight',pad_inches=0.1)
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot','displayToScreen'):
+    if not config.getboolean('plot', 'displayToScreen'):
         plt.close()
 
 
@@ -486,3 +509,37 @@ def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
         return '{:04d}-{:02d}'.format(date.year, date.month)
     else:
         return '{:04d}'.format(date.year)
+
+
+def plot_moc(config, mocLat,
+             refTopDepth,
+             mocTop,
+             fileout = 'moc' + '.png',
+             figsize=(8, 4.5),
+             dpi=300): #{{{
+
+    contourLines = config.getExpression('moc_postprocess', 'contourLines', usenumpy=True)
+
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    X, Y = np.meshgrid(mocLat, refTopDepth) # change to zMid
+
+    contourSet = plt.contourf(X, Y, mocTop.T, levels=contourLines)
+    contourSet2 = plt.contour(X, Y, mocTop.T, levels=contourLines[::2],
+                              colors='k', hold='on')
+
+    plt.xlabel('latitude')
+    plt.ylabel('depth, m')
+    plt.title('MPAS-Ocean Atlantic MOC, Sv')
+    plt.gca().invert_yaxis()
+    #plt.clabel(contourSet, fontsize=10)
+    # Make a colorbar for the ContourSet returned by the contourf call.
+    cbar = plt.colorbar(contourSet)
+    cbar.add_lines(contourSet2)
+
+    if (fileout is not None):
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+    return #}}}

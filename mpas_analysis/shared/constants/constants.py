@@ -27,4 +27,6 @@ daysInMonth = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
 abrevMonthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 
+m3ps_to_Sv = 1e-6; # m^3/sec flux to Sverdrups
+
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
