@@ -22,9 +22,10 @@ This analysis repository presumes that the following python packages are availab
  * xarray
  * dask
  * bottleneck
+ * basemap
 
 You can easily install them via the conda command:
 
 ```
-conda install -c scitools  -c https://conda.anaconda.org/opengeostat numpy scipy matplotlib ipython notebook netCDF4 progressbar vtk cartopy xarray dask bottleneck pyevtk numexpr
+conda install -c scitools  -c https://conda.anaconda.org/opengeostat numpy scipy matplotlib ipython notebook netCDF4 progressbar vtk cartopy xarray dask bottleneck pyevtk numexpr basemap
 ```
