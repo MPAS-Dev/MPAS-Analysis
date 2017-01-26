@@ -34,14 +34,13 @@ Wrapper to handle importing MPAS files into xarray.
 >>> ds = remove_repeated_time_index(ds)
 
 Phillip J. Wolfram, Xylar Asay-Davis
-Last modified: 12/07/2016
+Last modified: 01/26/2017
 """
 
-import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import xarray as xr
+import netcdftime
 
 
 def subset_variables(ds, vlist):  # {{{
@@ -142,56 +141,111 @@ def ensure_list(alist):  # {{{
     return alist  # }}}
 
 
-def get_datetimes(ds, timestr, yearoffset):  # {{{
+def parse_time(ds, inTimeVarName, inReferenceDate, outTimeVarName,
+               outReferenceDate):  # {{{
     """
-    Computes a list of datetimes from the time variable in the dataset ds with
-    variable name (or a list of 2 names) given by timestr, typically one of
-    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
+    Converts MPAS times to `netcdftime.DatetimeNoLeap` objects consistent with
+    MPAS's 365-day calendar.
 
-    The variable(s) pointed to by timestr should contain time information as a
-    date string, a floating-point number of days or a number of days
-    represented as a pandas timedelta (in ns).  The result is a list of
-    datetimes corresponding to the input dates offset as appropriate by the
-    yearoffset.
+    `ds` is an xarray data set where the time array will be added or modified.
+
+    `inTimeVarName` is the name (or a list of 2 names) of the MPAS time
+    variable in `ds` to use, typically one of 'daysSinceStartOfSim', 'xtime',
+    or ['xtime_start', 'xtime_end'].
+
+    The variable(s) pointed to by `inTimeVarName` should contain time
+    information as a date string or a floating-point number of days since
+    `inReferenceDate`.
+
+    `inReferenceDate` is the reference date for the start of the simulation as
+    used internally in MPAS, taking one of the following forms:
+        0001-01-01
+
+        0001-01-01 00:00:00
+
+    The result is a new data array with the name given in `outTimeVarName`
+    containing `netcdftime.DatetimeNoLeap` objects.
+
+    `outReferenceDate` is the reference date for the start of the simulation
+    as used in the analysis.  This year may contain an offset relative to the
+    input reference date (e.g. converting from 0001 to 1850).  The reference
+    date should take one the following form:
+        1850-01-01
+
+        1850-01-01 00:00:00
+
 
     Xylar Asay-Davis
-    Last modified: 12/05/2016
+
+    Last modified: 01/26/2017
     """
 
-    if isinstance(timestr, (tuple, list)):
+    calendar = '365_day'  # same as 'no_leap'
+
+    if isinstance(inTimeVarName, (tuple, list)):
         # we want to average the two
-        assert(len(timestr) == 2)
-        starts = get_datetimes(ds, timestr[0], yearoffset)
-        ends = get_datetimes(ds, timestr[1], yearoffset)
-        datetimes = [starts[i] + (ends[i] - starts[i])/2
-                     for i in range(len(starts))]
-        return datetimes
+        assert(len(inTimeVarName) == 2)
+        ds_start = parse_time(ds, inTimeVarName[0], inReferenceDate,
+                              outTimeVarName, outReferenceDate)
+        ds_end = parse_time(ds, inTimeVarName[1], inReferenceDate,
+                            outTimeVarName, outReferenceDate)
+        starts = ds_start[outTimeVarName].values
+        ends = ds_end[outTimeVarName].values
+        print 'averaging'
+        print starts, ends
+        print 'diff'
+        print [(ends[i] - starts[i])/2 for i in range(len(starts))]
+        # replace the time in starts with the mean of starts and ends
+        ds_start[outTimeVarName] = [starts[i] + (ends[i] - starts[i])/2
+                  for i in range(len(starts))]
 
-    time_var = ds[timestr]
+        print 'result'
+        print ds_start[outTimeVarName]
+        print 'done'
+        return ds_start
 
-    if time_var.dtype == '|S64':
-        # this is a variable like date strings like 'xtime'
-        time = [''.join(atime).strip() for atime in time_var.values]
-        datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]),
-                                       int(x[8:10]), int(x[11:13]),
-                                       int(x[14:16]), int(x[17:19]))
-                     for x in time]
-    elif time_var.dtype == 'float64':
+    timeVar = ds[inTimeVarName]
+
+    if timeVar.dtype == '|S64':
+        # this is an array of date strings like 'xtime'
+        inCDFTime = netcdftime.utime(
+            'days since {}'.format(inReferenceDate),
+            calendar='365_day')
+        outCDFTime = netcdftime.utime(
+            'days since {}'.format(outReferenceDate),
+            calendar='365_day')
+        cfTimes = []
+        for xtime in timeVar.values:
+            # convert to string
+            timeString = ''.join(xtime).strip()
+            # convert to DatetimeNoLeap
+            date = netcdftime.DatetimeNoLeap(year=int(timeString[0:4]),
+                                             month=int(timeString[5:7]),
+                                             day=int(timeString[8:10]),
+                                             hour=int(timeString[11:13]),
+                                             minute=int(timeString[14:16]),
+                                             second=int(timeString[17:19]))
+            # convert reference date from inReferenceDate to outReferenceDate
+            date = outCDFTime.num2date(inCDFTime.date2num(date))
+            cfTimes.append(date)
+
+    elif timeVar.dtype == 'float64':
         # this array contains floating-point days like 'daysSinceStartOfSim'
-        start = datetime.datetime(year=yearoffset+1, month=1, day=1)
-        datetimes = [start + datetime.timedelta(x)
-                     for x in time_var.values]
-    elif time_var.dtype == 'timedelta64[ns]':
-        # this array contains a variable like 'daysSinceStartOfSim' as a
-        # timedelta64
-        start = datetime.datetime(year=yearoffset+1, month=1, day=1)
-        datetimes = [start + x for x in
-                     pd.to_timedelta(time_var.values, unit='ns')]
+        cfTimes = outCDFTime.num2date(timeVar.values)
+    elif timeVar.dtype == 'timedelta64[ns]':
+        raise TypeError("timeVar of unsupported type {}.  This is likely "
+                        "because xarray.open_dataset was called with "
+                        "decode_times=True.".format(timeVar.dtype))
     else:
-        raise TypeError("time_var of unsupported type {}".format(
-            time_var.dtype))
+        raise TypeError("timeVar of unsupported type {}".format(
+            timeVar.dtype))
 
-    return datetimes  # }}}
+    outDataSet = ds.copy()
+    print cfTimes
+    outDataSet[outTimeVarName] = cfTimes
+    print outDataSet[outTimeVarName]
+
+    return outDataSet  # }}}
 
 
 def map_variable(variable_name, ds, varmap):  # {{{
@@ -238,10 +292,10 @@ def rename_variables(ds, varmap, timestr):  # {{{
     variable in the MPAS dycore that produced the data set (which may differ
     between versions).
 
-    timestr is points to the time variable(s), which are treated as a special
+    timestr points to the time variable(s), which are treated as a special
     case since they may need to be averaged.
 
-    Returns a new timestr after mapping in timestr is in varmap, otherwise
+    Returns a new timestr after mapping if timestr is in varmap, otherwise
     returns timestr unchanged.
 
     Xylar Asay-Davis
@@ -271,22 +325,11 @@ def rename_variables(ds, varmap, timestr):  # {{{
 
 
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
-                    timestr='xtime', yearoffset=1849,
-                    varmap=None):  # {{{
+                    timestr='Time', inrefdate='0001-01-01',
+                    outrefdate='1850-01-01', varmap=None):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset because
     the time must be between 1678 and 2262 based on the xarray library.
-
-    The time specification is relevant for so-called time-slice model
-    experiments, in which CO2 and greenhouse gas conditions are kept
-    constant over the entire model simulation. Typical time-slice experiments
-    are run with 1850 (pre-industrial) conditions and 2000 (present-day)
-    conditions. Hence, a default date offset is chosen to be yearoffset=1849,
-    (year 0001 of an 1850 run will correspond with Jan 1st, 1850).
-
-    The data set is assumed to have an array of date strings with variable
-    name (or list of 2 names) given by timestr, typically one of
-    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
 
     The onlyvars option reduces the dataset to only include variables in the
     onlyvars list. If onlyvars=None, include all dataset variables.
@@ -296,6 +339,24 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     iselvals is a dictionary, e.g. iselvals = {'nVertLevels': slice(0, 3),
                                                'nCells': cellIDs}
     selvals is a dictionary, e.g. selvals = {'cellLon': 180.0}
+
+    The data set is assumed to have an array of date strings with variable
+    name (or list of 2 names) given by timestr, typically one of
+    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
+
+    inrefdate is the date (and optionally time) of the start of the MPAS or
+    ACME simulation being analysized.  MPAS and ACME simulations may start from
+    a non-calendar date (typically the year 0001).  The date should be formated
+    as a string of the form:
+        0001-01-01
+        0001-01-01 00:00:00
+
+    outrefdate is the corresponding start date for the analysis.  This may
+    be the same as inrefdate if the simulation starts from a calendar date
+    (e.g. 1850) but may be offset from the MPAS or ACME date if inrefdate
+    is a non-calendar date (e.g. 0001-01-01).  Dates from the input data set
+    will be offset by the difference between outrefdate and inrefdate. The
+    format of outrefdate is the same as for inrefdate.
 
     varmap is an optional dictionary that can be used to rename
     variables in the data set to standard names expected by mpas_analysis.
@@ -307,20 +368,18 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     possible for this variable.
 
     Phillip J. Wolfram, Milena Veneziani, Luke van Roekel and Xylar Asay-Davis
-    Last modified: 12/05/2016
+    Last modified: 01/26/2017
     """
 
     if varmap is not None:
         timestr = rename_variables(ds, varmap, timestr)
 
-    datetimes = get_datetimes(ds, timestr, yearoffset)
+    ds = parse_time(ds, inTimeVarName=timestr, inReferenceDate=inrefdate,
+                    outTimeVarName='Time', outReferenceDate=outrefdate)
 
-    assert_valid_datetimes(datetimes, yearoffset)
-
-    # append the corret time information
-    ds.coords['Time'] = datetimes
-    # record the yroffset
-    ds.attrs.__setitem__('time_yearoffset', str(yearoffset))
+    # record the inrefdate and outrefdate
+    ds.attrs.__setitem__('input_reference_date', inrefdate)
+    ds.attrs.__setitem__('output_reference_date', outrefdate)
 
     if onlyvars is not None:
         ds = subset_variables(ds, ensure_list(onlyvars))

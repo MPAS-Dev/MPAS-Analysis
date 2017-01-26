@@ -1,6 +1,7 @@
 import xarray as xr
 import pandas as pd
 import datetime
+from netCDF4 import Dataset as netcdf_dataset
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
     remove_repeated_time_index
@@ -17,17 +18,18 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     Performs analysis of the time-series output of sea-surface temperature
     (SST).
 
-    config is an instance of MpasAnalysisConfigParser containing configuration
-    options.
+    config is an instance of `MpasAnalysisConfigParser` containing
+    configuration options.
 
-    If present, streamMap is a dictionary of MPAS-O stream names that map to
+    If present, `streamMap` is a dictionary of MPAS-O stream names that map to
     their mpas_analysis counterparts.
 
-    If present, variableMap is a dictionary of MPAS-O variable names that map
+    If present, `variableMap` is a dictionary of MPAS-O variable names that map
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 12/05/2016
+
+    Last Modified: 01/26/2017
     """
 
     # Define/read in general variables
@@ -37,6 +39,23 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
     streams_filename = config.get('input', 'ocean_streams_filename')
     streams = StreamsFile(streams_filename, streamsdir=indir)
+
+    try:
+        restartFile = streams.readpath('restart')[0]
+    except ValueError:
+        raise IOError('No MPAS-O restart file found: need at least one '
+                      'restart file for ocn_modelvsobs calculation')
+
+    f = netcdf_dataset(restartFile, mode='r')
+    inRefDate = ''.join(f.variables["simulationStartTime"][:]).strip()
+    # convert the MPAs date to a CF-compliant date
+    inRefDate = inRefDate.replace('_', ' ')
+    simStartYear = int(inRefDate[0:4])
+
+    yr_offset = config.getint('time', 'yr_offset')
+    outRefDate = '{:04d}-01-01 00:00:00'.format(yr_offset+simStartYear)
+
+    print inRefDate, outRefDate
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
@@ -53,8 +72,6 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
     plots_dir = config.get('paths', 'plots_dir')
 
-    yr_offset = config.getint('time', 'yr_offset')
-
     N_movavg = config.getint('sst_timeseries', 'N_movavg')
 
     regions = config.getExpression('regions', 'regions')
@@ -65,10 +82,12 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     varList = ['avgSurfaceTemperature']
     ds = xr.open_mfdataset(
         infiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
+        preprocess=lambda x: preprocess_mpas(x, inrefdate=inRefDate,
+                                             outrefdate=outRefDate,
                                              timestr='Time',
                                              onlyvars=varList,
-                                             varmap=variableMap))
+                                             varmap=variableMap),
+        decode_times=False)
     ds = remove_repeated_time_index(ds)
 
     # convert the start and end dates to datetime objects using
@@ -88,17 +107,22 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
     if ref_casename_v0 != 'None':
         print '  Load in SST for ACMEv0 case...'
+        inRefDate = '0001-01-01 00:00:00'
+
         infiles_v0data = '{}/SST.{}.year*.nc'.format(indir_v0data,
                                                      ref_casename_v0)
         ds_v0 = xr.open_mfdataset(
             infiles_v0data,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
+            preprocess=lambda x: preprocess_mpas(x, inrefdate=inRefDate,
+                                                 outrefdate=outRefDate),
+            decode_times=False)
         ds_v0 = remove_repeated_time_index(ds_v0)
         year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
         if year_start <= year_end_v0:
             ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
         else:
-            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
+            print '   Warning: v0 time series lies outside current bounds ' \
+                'of v1 time series. Skipping it.'
             ref_casename_v0 = 'None'
 
     print '  Make plots...'
