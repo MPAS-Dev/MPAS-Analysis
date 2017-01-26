@@ -12,7 +12,7 @@ import datetime
 from netCDF4 import Dataset as netcdf_dataset
 
 from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
+    remove_repeated_time_index, check_year
 from ..shared.plot.plotting import plot_polar_comparison
 
 from ..shared.io import StreamsFile
@@ -160,8 +160,8 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     # Compute climatologies (first motnhly and then seasonally)
     print "  Compute seasonal climatologies..."
-    time_start = datetime.datetime(yr_offset+climo_yr1, 1, 1)
-    time_end = datetime.datetime(yr_offset+climo_yr2, 12, 31)
+    time_start = datetime.datetime(check_year(climo_yr1, yr_offset), 1, 1)
+    time_end = datetime.datetime(check_year(climo_yr2, yr_offset), 12, 31)
     ds_tslice = ds.sel(Time=slice(time_start, time_end))
     # check that each year has 24 months (?)
     monthly_clim = ds_tslice.groupby('Time.month').mean('Time')

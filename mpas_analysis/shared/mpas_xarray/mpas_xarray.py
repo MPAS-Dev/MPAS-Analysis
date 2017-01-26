@@ -44,6 +44,19 @@ import pandas as pd
 import xarray as xr
 
 
+
+def check_year(year, yearoffset): #{{{
+    """
+    Ensures that year requires a `yearoffset` before applying it.
+
+    Phillip J. Wolfram
+    Last Modified: 01/26/2017
+    """
+    if not (1678 < year and year < 2262):
+        year += yearoffset
+    return year #}}}
+
+
 def subset_variables(ds, vlist):  # {{{
     """
     Reduces an xarray dataset ds to only contain the variables in vlist.
@@ -81,14 +94,16 @@ def assert_valid_datetimes(datetimes, yearoffset):  # {{{
     Ensure that datatimes are compatable with xarray
 
     Phillip J. Wolfram
-    04/20/2016
+    Last modified: 01/26/2017
     """
     assert datetimes[0].year > 1678, \
         'ERROR: yearoffset={}'.format(yearoffset) + \
-        ' must be large enough to ensure datetimes larger than year 1678'
+        ' must be large enough to ensure datetimes larger than year 1678' + \
+        ' for year {}'.format(datetimes[0].year)
     assert datetimes[-1].year < 2262, \
         'ERROR: yearoffset={}'.format(yearoffset) + \
-        ' must be small enough to ensure datetimes smaller than year 2262'
+        ' must be small enough to ensure datetimes smaller than year 2262' + \
+        ' for year {}'.format(datetimes[0].year)
 
     return  # }}}
 
@@ -153,8 +168,8 @@ def get_datetimes(ds, timestr, yearoffset):  # {{{
     datetimes corresponding to the input dates offset as appropriate by the
     yearoffset.
 
-    Xylar Asay-Davis
-    Last modified: 12/05/2016
+    Xylar Asay-Davis, Phillip J. Wolfram
+    Last modified: 01/26/2017
     """
 
     if isinstance(timestr, (tuple, list)):
@@ -170,8 +185,10 @@ def get_datetimes(ds, timestr, yearoffset):  # {{{
 
     if time_var.dtype == '|S64':
         # this is a variable like date strings like 'xtime'
+
         time = [''.join(atime).strip() for atime in time_var.values]
-        datetimes = [datetime.datetime(yearoffset + int(x[:4]), int(x[5:7]),
+        datetimes = [datetime.datetime(check_year(int(x[:4]), yearoffset),
+                                       int(x[5:7]),
                                        int(x[8:10]), int(x[11:13]),
                                        int(x[14:16]), int(x[17:19]))
                      for x in time]

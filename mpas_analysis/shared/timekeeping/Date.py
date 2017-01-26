@@ -8,6 +8,7 @@
 import functools
 import numpy
 import datetime
+from ..mpas_xarray.mpas_xarray import check_year
 
 @functools.total_ordering
 class Date(object):
@@ -93,7 +94,7 @@ class Date(object):
 
         year = numpy.maximum(datetime.MINYEAR,
                              numpy.minimum(datetime.MAXYEAR,
-                                           self.years+yearOffset))
+                                           check_year(self.years, yearOffset)))
         outDate =  datetime.datetime(year=year, month=self.months+1,
                                      day=self.days+1, hour=self.hours,
                                      minute=self.minutes, second=self.seconds)
