@@ -90,11 +90,13 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
         decode_times=False)
     ds = remove_repeated_time_index(ds)
 
-    # convert the start and end dates to datetime objects using
-    # the Date class, which ensures the results are within the
-    # supported range
-    time_start = Date(startDate).to_datetime(yr_offset)
-    time_end = Date(endDate).to_datetime(yr_offset)
+    # convert the start and end dates to netcdftime.datetime objects using
+    # the Date class and adding the yr_offset
+    offset = Date(dateString='{:04d}-00-00'.format(yr_offset), isInterval=True)
+    offset = offset.to_timedelta()
+    time_start = Date(startDate).to_netcdftime() + offset
+    time_end = Date(endDate).to_netcdftime() + offset
+
     # select only the data in the specified range of years
     ds = ds.sel(Time=slice(time_start, time_end))
 
