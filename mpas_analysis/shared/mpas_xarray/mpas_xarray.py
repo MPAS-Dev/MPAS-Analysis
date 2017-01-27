@@ -41,6 +41,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 import netcdftime
+import datetime
 
 
 def subset_variables(ds, vlist):  # {{{
@@ -142,10 +143,10 @@ def ensure_list(alist):  # {{{
 
 
 def parse_time(ds, inTimeVarName, inReferenceDate, outTimeVarName,
-               outReferenceDate):  # {{{
+               outReferenceDate, calendar):  # {{{
     """
-    Converts MPAS times to `netcdftime.DatetimeNoLeap` objects consistent with
-    MPAS's 365-day calendar.
+    Converts MPAS times to `netcdftime.datetime` objects consistent with
+    MPAS's calendar (typically '365_day').
 
     `ds` is an xarray data set where the time array will be added or modified.
 
@@ -174,21 +175,22 @@ def parse_time(ds, inTimeVarName, inReferenceDate, outTimeVarName,
 
         1850-01-01 00:00:00
 
+    `calendar` is one of the calendars supported by `netcdftime`:
+        'standard', 'gregorian', 'proleptic_gregorian',
+        'noleap', 'julian', 'all_leap', '365_day', '366_day', '360_day'
 
     Xylar Asay-Davis
 
-    Last modified: 01/26/2017
+    Last modified: 01/27/2017
     """
-
-    calendar = '365_day'  # same as 'no_leap'
 
     if isinstance(inTimeVarName, (tuple, list)):
         # we want to average the two
         assert(len(inTimeVarName) == 2)
         ds_start = parse_time(ds, inTimeVarName[0], inReferenceDate,
-                              outTimeVarName, outReferenceDate)
+                              outTimeVarName, outReferenceDate, calendar)
         ds_end = parse_time(ds, inTimeVarName[1], inReferenceDate,
-                            outTimeVarName, outReferenceDate)
+                            outTimeVarName, outReferenceDate, calendar)
         starts = ds_start[outTimeVarName].values
         ends = ds_end[outTimeVarName].values
         print 'averaging'
@@ -197,7 +199,7 @@ def parse_time(ds, inTimeVarName, inReferenceDate, outTimeVarName,
         print [(ends[i] - starts[i])/2 for i in range(len(starts))]
         # replace the time in starts with the mean of starts and ends
         ds_start[outTimeVarName] = [starts[i] + (ends[i] - starts[i])/2
-                  for i in range(len(starts))]
+                                    for i in range(len(starts))]
 
         print 'result'
         print ds_start[outTimeVarName]
@@ -206,27 +208,43 @@ def parse_time(ds, inTimeVarName, inReferenceDate, outTimeVarName,
 
     timeVar = ds[inTimeVarName]
 
+    NetCDFDatetimes = {
+        'standard': datetime.datetime,
+        'gregorian': datetime.datetime,
+        'proleptic_gregorian': netcdftime.DatetimeProlepticGregorian,
+        'noleap': netcdftime.DatetimeNoLeap,
+        'julian': netcdftime.DatetimeJulian,
+        'all_leap': netcdftime.DatetimeAllLeap,
+        '365_day': netcdftime.DatetimeNoLeap,
+        '366_day': netcdftime.DatetimeAllLeap,
+        '360_day': netcdftime.Datetime360Day}
+
+    NetCDFDatetime = NetCDFDatetimes[calendar]
+
+    inCDFTime = netcdftime.utime(
+        'days since {}'.format(inReferenceDate),
+        calendar=calendar)
+    outCDFTime = netcdftime.utime(
+        'days since {}'.format(outReferenceDate),
+        calendar=calendar)
+
+    inOutDelta = outCDFTime.num2date(0.) - inCDFTime.num2date(0.)
+
     if timeVar.dtype == '|S64':
         # this is an array of date strings like 'xtime'
-        inCDFTime = netcdftime.utime(
-            'days since {}'.format(inReferenceDate),
-            calendar='365_day')
-        outCDFTime = netcdftime.utime(
-            'days since {}'.format(outReferenceDate),
-            calendar='365_day')
         cfTimes = []
         for xtime in timeVar.values:
             # convert to string
             timeString = ''.join(xtime).strip()
             # convert to DatetimeNoLeap
-            date = netcdftime.DatetimeNoLeap(year=int(timeString[0:4]),
-                                             month=int(timeString[5:7]),
-                                             day=int(timeString[8:10]),
-                                             hour=int(timeString[11:13]),
-                                             minute=int(timeString[14:16]),
-                                             second=int(timeString[17:19]))
+            date = NetCDFDatetime(year=int(timeString[0:4]),
+                                  month=int(timeString[5:7]),
+                                  day=int(timeString[8:10]),
+                                  hour=int(timeString[11:13]),
+                                  minute=int(timeString[14:16]),
+                                  second=int(timeString[17:19]))
             # convert reference date from inReferenceDate to outReferenceDate
-            date = outCDFTime.num2date(inCDFTime.date2num(date))
+            date += inOutDelta
             cfTimes.append(date)
 
     elif timeVar.dtype == 'float64':
@@ -326,37 +344,51 @@ def rename_variables(ds, varmap, timestr):  # {{{
 
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
                     timestr='Time', inrefdate='0001-01-01',
-                    outrefdate='1850-01-01', varmap=None):  # {{{
+                    outrefdate='1850-01-01', calendar='365_day',
+                    varmap=None):  # {{{
     """
-    Builds correct time specification for MPAS, allowing a date offset because
-    the time must be between 1678 and 2262 based on the xarray library.
+    Builds allows the user to select a subset of the dataset variables,
+    constructs a 'Time' array that is consistent with the desired calendar,
+    and maps variable names to common names, allowing for backward
+    compatibility with earlier MPAS versions.
 
     The onlyvars option reduces the dataset to only include variables in the
     onlyvars list. If onlyvars=None, include all dataset variables.
 
     iselvals and selvals provide index and value-based slicing operations for
     individual datasets prior to their merge via xarray.
-    iselvals is a dictionary, e.g. iselvals = {'nVertLevels': slice(0, 3),
-                                               'nCells': cellIDs}
-    selvals is a dictionary, e.g. selvals = {'cellLon': 180.0}
+    iselvals is a dictionary, e.g.
+        iselvals = {'nVertLevels': slice(0, 3),'nCells': cellIDs}
 
-    The data set is assumed to have an array of date strings with variable
-    name (or list of 2 names) given by timestr, typically one of
-    'daysSinceStartOfSim', 'xtime', or ['xtime_start', 'xtime_end'].
+    selvals is a dictionary, e.g.
+        selvals = {'cellLon': 180.0}
+
+    timestr gives the name of a time array (or a list of two to be
+    averaged) containg either a date string (e.g. 'xtime' or
+    ['xtime_start', 'xtime_end']) or the number of days since the start
+    of the simulation (e.g. 'daysSinceStartOfSim').
 
     inrefdate is the date (and optionally time) of the start of the MPAS or
-    ACME simulation being analysized.  MPAS and ACME simulations may start from
-    a non-calendar date (typically the year 0001).  The date should be formated
-    as a string of the form:
+    ACME simulation being analysized.  MPAS and ACME simulations often start
+    from a year (typically the year 0001) that does not correspond with the
+    calendar year this start date is intended to correspond to.  The date
+    should be formatted as a string of the form:
         0001-01-01
+
         0001-01-01 00:00:00
 
-    outrefdate is the corresponding start date for the analysis.  This may
-    be the same as inrefdate if the simulation starts from a calendar date
-    (e.g. 1850) but may be offset from the MPAS or ACME date if inrefdate
-    is a non-calendar date (e.g. 0001-01-01).  Dates from the input data set
-    will be offset by the difference between outrefdate and inrefdate. The
-    format of outrefdate is the same as for inrefdate.
+    outrefdate is the corresponding start date for the analysis (the calendar
+    date).  This may be the same as inrefdate if the simulation starts from a
+    calendar date (e.g. 1850).  In many cases, outrefdate will be offset from
+    the MPAS or ACME date (e.g. when the simulation starts from 0001-01-01).
+    Dates from the input data set will be offset by the difference between
+    outrefdate and inrefdate. The format of outrefdate is the same as for
+    inrefdate.
+
+    calendar is one of the calendars supported by `netcdftime`:
+        'standard', 'gregorian', 'proleptic_gregorian',
+        'noleap', 'julian', 'all_leap', '365_day', '366_day', '360_day'
+    It is used to decode the
 
     varmap is an optional dictionary that can be used to rename
     variables in the data set to standard names expected by mpas_analysis.
@@ -368,14 +400,16 @@ def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
     possible for this variable.
 
     Phillip J. Wolfram, Milena Veneziani, Luke van Roekel and Xylar Asay-Davis
-    Last modified: 01/26/2017
+
+    Last modified: 01/27/2017
     """
 
     if varmap is not None:
         timestr = rename_variables(ds, varmap, timestr)
 
     ds = parse_time(ds, inTimeVarName=timestr, inReferenceDate=inrefdate,
-                    outTimeVarName='Time', outReferenceDate=outrefdate)
+                    outTimeVarName='Time', outReferenceDate=outrefdate,
+                    calendar=calendar)
 
     # record the inrefdate and outrefdate
     ds.attrs.__setitem__('input_reference_date', inrefdate)
