@@ -50,6 +50,8 @@ def analysis(config):  # {{{
             config.getint('time', 'climo_yr1'))
         endDate = '{:04d}-12-31_23:59:59'.format(
             config.getint('time', 'climo_yr2'))
+        # use 'getWithDefaults' to set start and end dates without replacing
+        # them if they already exist
         config.getWithDefault('time', 'climo_start_date', startDate)
         config.getWithDefault('time', 'climo_end_date', endDate)
 
@@ -59,6 +61,8 @@ def analysis(config):  # {{{
             config.getint('time', 'timeseries_yr1'))
         endDate = '{:04d}-12-31_23:59:59'.format(
             config.getint('time', 'timeseries_yr2'))
+        # use 'getWithDefaults' to set start and end dates without replacing
+        # them if they already exist
         config.getWithDefault('time', 'timeseries_start_date', startDate)
         config.getWithDefault('time', 'timeseries_end_date', endDate)
 
