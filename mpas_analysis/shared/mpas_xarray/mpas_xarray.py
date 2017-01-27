@@ -69,9 +69,10 @@ def subset_variables(ds, vlist):  # {{{
     # drop spurious coordinates
     ds = ds.drop(dropcoords)
 
-    assert len(ds.variables.keys()) > 0, 'MPAS_XARRAY ERROR: Empty dataset is returned.\n'\
-                                         'Variables {}\nare not found within the dataset variables: {}.'\
-                                         .format(vlist, allvars)
+    assert len(ds.variables.keys()) > 0, \
+        'MPAS_XARRAY ERROR: Empty dataset is returned.\n' \
+        'Variables {}\nare not found within the dataset ' \
+        'variables: {}.'.format(vlist, allvars)
 
     return ds  # }}}
 
@@ -193,7 +194,7 @@ def get_datetimes(ds, timestr, yearoffset):  # {{{
     return datetimes  # }}}
 
 
-def map_variable(variable_name, ds, varmap): # {{{
+def map_variable(variable_name, ds, varmap):  # {{{
     """
     Find the variable (or list of variables) in dataset ds that map to the
     mpas_analysis variable given by variable_name.
@@ -228,7 +229,7 @@ def map_variable(variable_name, ds, varmap): # {{{
     # }}}
 
 
-def rename_variables(ds, varmap, timestr): # {{{
+def rename_variables(ds, varmap, timestr):  # {{{
     """
     Rename all variables in ds based on which are found in varmap.
 
@@ -266,7 +267,7 @@ def rename_variables(ds, varmap, timestr): # {{{
     if timestr in varmap:
         timestr = map_variable(timestr, ds, varmap)
 
-    return timestr # }}}
+    return timestr  # }}}
 
 
 def preprocess_mpas(ds, onlyvars=None, selvals=None, iselvals=None,
@@ -361,7 +362,6 @@ def remove_repeated_time_index(ds):  # {{{
     ds = ds.isel(Time=index)
 
     return ds  # }}}
-
 
 
 def test_load_mpas_xarray_datasets(path):  # {{{
