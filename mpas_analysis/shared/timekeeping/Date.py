@@ -8,6 +8,8 @@
 import functools
 import numpy
 import datetime
+import netcdftime
+
 
 @functools.total_ordering
 class Date(object):
@@ -81,10 +83,10 @@ class Date(object):
         Converts the date object to a datetime object.
         The yearOffset is added to this date's year, and
         the resulting date is clamped to the range supported by
-        numpy's datetime64[ns], used internally by xarray an
-        pandas
+        datetime
 
-        Last modified: 11/28/2016
+        Last modified: 01/27/2017
+
         Author: Xylar Asay-Davis
         """
         if self.isInterval:
@@ -94,15 +96,44 @@ class Date(object):
         year = numpy.maximum(datetime.MINYEAR,
                              numpy.minimum(datetime.MAXYEAR,
                                            self.years+yearOffset))
-        outDate =  datetime.datetime(year=year, month=self.months+1,
-                                     day=self.days+1, hour=self.hours,
-                                     minute=self.minutes, second=self.seconds)
+        outDate = datetime.datetime(year=year, month=self.months+1,
+                                    day=self.days+1, hour=self.hours,
+                                    minute=self.minutes, second=self.seconds)
+        return outDate
 
-        minDate = datetime.datetime(year=1678, month=1, day=1,
-                                    hour=0, minute=0, second=0)
-        maxDate = datetime.datetime(year=2262, month=1, day=1,
-                                    hour=0, minute=0, second=0)
-        outDate = max(minDate, min(maxDate, outDate))
+    def to_netcdftime(self, calendar='365_day'):
+        """
+        Converts the date object to one of the subclasses of
+        netcdftime.datetime (depending on calendar).
+
+        `calendar` is one of the calendars supported by `netcdftime`:
+            'standard', 'gregorian', 'proleptic_gregorian',
+            'noleap', 'julian', 'all_leap', '365_day', '366_day', '360_day'
+
+        Last modified: 01/27/2017
+
+        Author: Xylar Asay-Davis
+        """
+        if self.isInterval:
+            raise ValueError("self.isInterval == True. Use to_timedelta "
+                             "instead of to_datetime")
+
+        NetCDFDatetimes = {
+            'standard': datetime.datetime,
+            'gregorian': datetime.datetime,
+            'proleptic_gregorian': netcdftime.DatetimeProlepticGregorian,
+            'noleap': netcdftime.DatetimeNoLeap,
+            'julian': netcdftime.DatetimeJulian,
+            'all_leap': netcdftime.DatetimeAllLeap,
+            '365_day': netcdftime.DatetimeNoLeap,
+            '366_day': netcdftime.DatetimeAllLeap,
+            '360_day': netcdftime.Datetime360Day}
+
+        NetCDFDatetime = NetCDFDatetimes[calendar]
+
+        outDate = NetCDFDatetime(year=self.years, month=self.months+1,
+                                 day=self.days+1, hour=self.hours,
+                                 minute=self.minutes, second=self.seconds)
         return outDate
 
     def to_timedelta(self):
@@ -117,7 +148,7 @@ class Date(object):
                              "instead of to_timedelta")
 
         days = 365*self.years + self._monthsToDays(self.months) + self.days
-        return datetime.timedelta(days=self.days, hours=self.hours,
+        return datetime.timedelta(days=days, hours=self.hours,
                                   minutes=self.minutes, seconds=self.seconds)
 
     def __lt__(self, other):
