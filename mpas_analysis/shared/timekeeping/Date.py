@@ -9,6 +9,7 @@ import functools
 import numpy
 import datetime
 
+
 @functools.total_ordering
 class Date(object):
     """
@@ -94,9 +95,9 @@ class Date(object):
         year = numpy.maximum(datetime.MINYEAR,
                              numpy.minimum(datetime.MAXYEAR,
                                            self.years+yearOffset))
-        outDate =  datetime.datetime(year=year, month=self.months+1,
-                                     day=self.days+1, hour=self.hours,
-                                     minute=self.minutes, second=self.seconds)
+        outDate = datetime.datetime(year=year, month=self.months+1,
+                                    day=self.days+1, hour=self.hours,
+                                    minute=self.minutes, second=self.seconds)
 
         minDate = datetime.datetime(year=1678, month=1, day=1,
                                     hour=0, minute=0, second=0)
@@ -117,7 +118,7 @@ class Date(object):
                              "instead of to_timedelta")
 
         days = 365*self.years + self._monthsToDays(self.months) + self.days
-        return datetime.timedelta(days=self.days, hours=self.hours,
+        return datetime.timedelta(days=days, hours=self.hours,
                                   minutes=self.minutes, seconds=self.seconds)
 
     def __lt__(self, other):

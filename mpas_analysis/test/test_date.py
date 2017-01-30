@@ -128,6 +128,11 @@ class TestDate(TestCase):
         timedelta2 = datetime.timedelta(days=20)
         self.assertEqual(timedelta1, timedelta2)
 
+        date = Date(dateString='0001-01-20', isInterval=True)
+        timedelta1 = date.to_timedelta()
+        timedelta2 = datetime.timedelta(days=(365+31+20))
+        self.assertEqual(timedelta1, timedelta2)
+
         # since pandas and xarray use the numpy type 'datetime[ns]`, which
         # has a limited range of dates, the date 0001-01-01 gets increased to
         # the minimum allowed year boundary, 1678-01-01 to avoid invalid
