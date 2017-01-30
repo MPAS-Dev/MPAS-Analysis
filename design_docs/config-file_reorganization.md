@@ -26,7 +26,7 @@ Date last modified: 2017/01/29 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-To the extent possible, ACME-specific config options such as `casename` and `ref_casename_v0` should be eliminated in favor of something more general.
+To the extent possible, ACME-specific config options such as `casename` and `ref_casename_v0` should be generalized in a way that is also appropriate for MPAS-only runs.
 
 <h2> Requirement: optional reference dates for each model run or set of observations<br>
 Date last modified: 2017/01/29 <br>
@@ -80,16 +80,7 @@ Date last modified: 2017/01/29 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-This item needs some discussion.  in #86, I have moved the `casename` and `ref_casename_v0` options to an `ACME` section.  These names are used for file names and figure titles (essentially legends).  It would be useful to discuss what the relevant equivalents would be fore standalone MPAS runs.
-
-<h2> Implementation: optional reference dates for each model run or set of observations<br>
-Date last modified: 2017/01/29 <br>
-Contributors: Xylar Asay-Davis
-</h2>
-
-My current proposed solution in #86 is to remove `yr_offset` in favor of `input_ref_date` and `analysis_ref_date` for each set of model runs and observations.  Note that `input_ref_date` for the current run would be read in from a restart file (`simulationStartTime`) rather than being given by the config file.  As I said above, discussion is needed if these reference dates are actually needed once we find a more generalized calendar (e.g. `netcdftime`).
-
-PR #86 also suggests that the bounds of time-series and climatology analyses be given by dates used in the analysis itself, not the input data (e.g. 1855 to 1859, not 6 to 10).  Again, these concepts may no longer be necessary once we switch to a more flexible calendar.
+This item needs some discussion.  in #86, I would like to renamed `ref_casename_v0` to simply `ref_casename`.  `casename` and `ref_casename_v0` are used for file names and figure titles (essentially legends).  It would be useful to discuss what the relevant equivalents would be fore standalone MPAS runs.
 
 <h1> Testing </h1>
 
@@ -115,10 +106,3 @@ Contributors: Xylar Asay-Davis
 </h2>
 
 The analysis will be tested on both MPAS and ACME runs to make sure the resulting image files have useful file names and titles (legends).  
-
-<h2> Testing and Validation: optional reference dates for each model run or set of observations<br>
-Date last modified: 2017/01/29 <br>
-Contributors: Xylar Asay-Davis
-</h2>
-
-Tests will be made with MPAS runs that start at both `0001` and a calendar date such as `1959`.  In both cases, the analysis should work correctly and be able to be compared with observations using real calendar dates within the analysis. (The details of these tests depend somewhat on the implementation, which is subject to further discussion.)
