@@ -15,25 +15,18 @@ Contributors: Xylar Asay-Davis
 There should be a simple, intuitive method for turning on and off individual analysis modules (e.g. `ocean/ohc_timeseries`).  This should replace the current approach of having a boolean `generate` flag for each analysis module in a separate config section.  Preferably, there should be an equivalent method for turning on and off analysis modules from the command line that overrides that in the config file.
 
 <h2> Requirement: there should be a simplified template for config files <br>
-Date last modified: 2017/01/29 <br>
+Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-The current example config file is specific to a run on Edison and should be made into a general template.  Simplifications should be made to the template so that it can more easily and intuitively be modified for several analyses.  Example config files should also be added for analyzing several existing runs on several different machines.
+The current example config file should be made into a general template.  Simplifications should be made to the template so that it can more easily and intuitively be modified for several analyses.  Example config files should also be added for analyzing several existing runs on several different machines.
 
 <h2> Requirement: removal of ACME specific config options <br>
-Date last modified: 2017/01/29 <br>
+Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-To the extent possible, ACME-specific config options such as `casename` and `ref_casename_v0` should be generalized in a way that is also appropriate for MPAS-only runs.
-
-<h2> Requirement: optional reference dates for each model run or set of observations<br>
-Date last modified: 2017/01/29 <br>
-Contributors: Xylar Asay-Davis
-</h2>
-
-Currently, there is an option `yr_offset` that is intended to apply to all dates and observations.  This option should be removed and possibly be replaced by an input and output reference date for each model run and observational data set.  Discussion is needed if these reference dates are actually needed once we find a more generalized calendar (e.g. `netcdftime`).
+To the extent possible, ACME-specific config options such as `casename` and `ref_casename_v0` should be generalized in a way that is also appropriate not just ACME runs but also any other runs involving the MPAS components we support.
 
 <h1> Design and Implementation </h1>
 
@@ -44,7 +37,7 @@ Contributors: Xylar Asay-Davis
 
 The following comment describes the planned implementation in the config file.
 ```
-# a list of which analyses to generate.  Valid names are:
+# a list of analyses to generate.  Valid names are:
 #   'ohc_timeseries', 'sst_timeseries', 'sst_modelvsobs', 'sss_modelvsobs',
 #   'mld_modelvsobs', 'seaice_timeseries', 'seaice_modelvsobs'
 # the following shortcuts exist:
@@ -76,22 +69,20 @@ Contributors: Xylar Asay-Davis
 Such a template has been implemented in #86.  A subdirectory `configs` will be added with several examples from runs on LANL IC and on Edison at NERSC.  Other examples can be added as appropriate and useful.
 
 <h2> Implementation: removal of ACME specific config options <br>
-Date last modified: 2017/01/29 <br>
+Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-This item needs some discussion.  in #86, I would like to renamed `ref_casename_v0` to simply `ref_casename`.  `casename` and `ref_casename_v0` are used for file names and figure titles (essentially legends).  It would be useful to discuss what the relevant equivalents would be fore standalone MPAS runs.
+`casename` will be renamed `mainRunName`, `referenceRunName` will be added for comparison with reference runs that have not been preprocessed (not yet supported), and `ref_casename_v0` will be renamed `preprocessedReferenceRunName`.
 
 <h1> Testing </h1>
 
 <h2> Testing and Validation: a simple way of turning on and off individual analysis modules <br>
-Date last modified: 2017/01/29 <br>
+Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-This will be difficult to test with CI since we currently don't have CI that can perform tests with `run_analysis.py`.
-
-Instead, I will manually test a variety of combinations of `generate` lists (both in the config file and on the command line).  I will list the tests I perform in #86.
+CI will be added to make sure that the function to parse the generate list (`run_analysis.check_generate`) behaves as expected.
 
 <h2> Testing and Validation: there should be a simplified template for config files <br>
 Date last modified: 2017/01/29 <br>
@@ -105,4 +96,4 @@ Date last modified: 2017/01/29 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-The analysis will be tested on both MPAS and ACME runs to make sure the resulting image files have useful file names and titles (legends).  
+For now, the plan is just to rename the appropriate config options, so the test is simply to ensure that existing test cases run as before with the new option names.
