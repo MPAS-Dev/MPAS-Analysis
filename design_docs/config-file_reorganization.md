@@ -39,35 +39,42 @@ A consistent convention of capitalization and underscores should be used through
 <h1> Design and Implementation </h1>
 
 <h2> Implementation: a simple way of turning on and off individual analysis modules <br>
-Date last modified: 2017/01/29 <br>
+Date last modified: 2017/02/02 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
 The following comment describes the planned implementation in the config file.
 ```
 # a list of analyses to generate.  Valid names are:
-#   'ohc_timeseries', 'sst_timeseries', 'sst_modelvsobs', 'sss_modelvsobs',
-#   'mld_modelvsobs', 'seaice_timeseries', 'seaice_modelvsobs'
+#   'plotTimeSeriesOHC', 'plotTimeSeriesSST', 'plotRegriddedSST', 
+#   'plotRegriddedSSS', 'plotRegriddedMLD', 'plotTimeSeriesSeaIce', 
+#   'plotRegriddedSeaIce'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
-#   'all_timeseries' -- all time-series analyses will be run
-#   'all_modelvsobs' -- all analyses comparing model climatologies with
-#                       observations will be run
+#   'all_plotTimeSeries' -- all time-series analyses will be run
+#   'all_plotRegriddedHorizontal' -- all analyses involving regridded horizontal
+    #                                fields will be run
 #   'all_ocean' -- all ocean analyses will be run
-#   'all_seaice' -- all sea-ice analyses will be run
-#   'no_ohc_timeseries' -- skip the 'ohc_timeseries' (and similarly with the other analyses).
-#   'no_ocean', 'no_timeseries', etc. -- in analogy to 'all_*', skip the given category of analysis
+#   'all_seaIce' -- all sea-ice analyses will be run
+#   'no_plotTimeSeriesOHC' -- skip 'plotTimeSeriesOHC' (and similarly with the
+#                             other analyses).
+#   'no_ocean', 'no_plotTimeSeries', etc. -- in analogy to 'all_*', skip the 
+#                                            given category of analysis
+# an equivalent syntax can be used on the command line to override this
+# option:
+#    ./run_analysis.py config.analysis --generate \
+#         all,no_ocean,all_plotTimeSeries
 generate = ['all']
 ```
-Where there are conflicts between items in the `generate` list, successive items will override earlier items.  For example, `generate = ['all', 'no_ohc_timeseries']` will generate all analyses except `ohc_timeseries`.  As another example, `generate = ['all', 'no_ocean', 'all_timeseries']` would generate all diagnostics except those comparing ocean model results with observations (and previous model results).  (Note that a more efficient and intuitive way to do the same would be `generate = ['all_seaice', 'all_timeseries']`.)
+Where there are conflicts between items in the `generate` list, successive items will override earlier items.  For example, `generate = ['all', 'no_plotTimeSeriesOHC']` will generate all analyses except `plotTimeSeriesOHC`.  As another example, `generate = ['all', 'no_ocean', 'all_plotTimeSeries']` would generate all diagnostics except those comparing ocean model results with observations (and previous model results).  (Note that a more efficient and intuitive way to do the same would be `generate = ['all_seaIce', 'all_plotTimeSeries']`.)
 
 An analogous approach will also be added at the command line, for example:
 ```
-./run_analysis.py config.analysis --generate all,no_ocean,all_timeseries
+./run_analysis.py config.analysis --generate all,no_ocean,all_plotTimeSeries
 ```
-(I am open to other syntax.)  If the --generate flag is used on the command line, it will replace the generate option in the config file.
+(I am open to other syntax.)  If the `--generate` flag is used on the command line, it will replace the generate option in the config file.
 
-As an aside, I note that it is not clear if future analysis modules will fit neatly into categories like "time series" and "model vs. observations", and these categories are not meant to be all-encompassing.
+As an aside, I note that it is not clear if future analysis modules will fit neatly into categories like "time series" and "regridded horizontal" fields, and these categories are not meant to be all-encompassing.
 
 <h2> Implementation: there should be a simplified template for config files <br>
 Date last modified: 2017/01/29 <br>
