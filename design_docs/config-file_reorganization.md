@@ -28,6 +28,14 @@ Contributors: Xylar Asay-Davis
 
 To the extent possible, ACME-specific config options such as `casename` and `ref_casename_v0` should be generalized in a way that is also appropriate not just ACME runs but also any other runs involving the MPAS components we support.
 
+<h2> Requirement: consistent section and option names <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h2>
+
+A consistent convention of capitalization and underscores should be used throughout the config file.
+
+
 <h1> Design and Implementation </h1>
 
 <h2> Implementation: a simple way of turning on and off individual analysis modules <br>
@@ -75,6 +83,14 @@ Contributors: Xylar Asay-Davis
 
 `casename` will be renamed `mainRunName`, `referenceRunName` will be added for comparison with reference runs that have not been preprocessed (not yet supported), and `ref_casename_v0` will be renamed `preprocessedReferenceRunName`.
 
+<h2> Implementation: consistent section and option names <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h2>
+
+"[CamelCase](https://en.wikipedia.org/wiki/Camel_case)" will be used for all sections and options.  The first word will be lowercase and subsequent words will begin with an uppercase latter.  Underscores will be avoided where possible.
+
+
 <h1> Testing </h1>
 
 <h2> Testing and Validation: a simple way of turning on and off individual analysis modules <br>
@@ -96,4 +112,14 @@ Date last modified: 2017/01/29 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-For now, the plan is just to rename the appropriate config options, so the test is simply to ensure that existing test cases run as before with the new option names.
+For now, the plan is just to rename the appropriate config options, so the test is simply to ensure that analysis runs correctly and produces bit-for-bit identical images to those produced by the current `MPAS-Analysis/develop`.
+
+
+<h2> Testing and Validation: consistent section and option names <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h2>
+
+As above, the test is simply to ensure that analysis runs correctly and produces bit-for-bit identical images to those produced by the current `MPAS-Analysis/develop`.
+
+
