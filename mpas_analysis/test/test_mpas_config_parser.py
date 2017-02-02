@@ -79,5 +79,7 @@ class TestMPASAnalysisConfigParser(TestCase):
                                   np.linspace(0, 1, 10))
         for testNumpy in ['testNumpypi' + str(ii) for ii in np.arange(3)] + ['testNumpyPi']:
             self.assertEqual(self.config.getExpression('TestNumpy', testNumpy, usenumpyfunc=True), np.pi)
+        with self.assertRaisesRegexp(AssertionError, "'__' is not allowed in .* for `usenumpyfunc=True`"):
+            self.config.getExpression('TestNumpy', 'testBadStr', usenumpyfunc=True),
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
