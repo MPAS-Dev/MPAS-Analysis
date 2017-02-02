@@ -123,19 +123,27 @@ class TestNamelist(TestCase):
             ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
              'refBottomDepth']
 
-        selvals = {'nVertLevels': 0}
-        ds = xr.open_mfdataset(
+        dsRef = xr.open_mfdataset(
             fileName,
             preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
                                                              timestr=timestr,
                                                              onlyvars=varList,
-                                                             selvals=selvals,
+                                                             selvals=None,
                                                              yearoffset=1850))
-        self.assertEqual(ds.data_vars.keys(), varList)
-        self.assertEqual(ds[varList[0]].shape, (1, 7))
-        self.assertEqual(ds['nVertLevels'].shape, ())
-        self.assertApproxEqual(ds['nVertLevels'],
-                               selvals['nVertLevels'])
+
+        for vertIndex in range(0, 11):
+            selvals = {'nVertLevels': vertIndex}
+            ds = xr.open_mfdataset(
+                fileName,
+                preprocess=lambda x: mpas_xarray.preprocess_mpas(x,
+                                                                 timestr=timestr,
+                                                                 onlyvars=varList,
+                                                                 selvals=selvals,
+                                                                 yearoffset=1850))
+            self.assertEqual(ds.data_vars.keys(), varList)
+            self.assertEqual(ds[varList[0]].shape, (1, 7))
+            self.assertEqual(ds['refBottomDepth'],
+                             dsRef['refBottomDepth'][vertIndex])
 
     def test_remove_repeated_time_index(self):
         fileName = str(self.datadir.join('example_jan*.nc'))
