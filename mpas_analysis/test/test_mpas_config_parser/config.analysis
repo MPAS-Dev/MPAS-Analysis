@@ -43,3 +43,4 @@ testNumpypi0 = pi
 testNumpypi1 = np.pi
 testNumpypi2 = numpy.pi
 testNumpyPi = Pi
+testBadStr = __bad_string__
