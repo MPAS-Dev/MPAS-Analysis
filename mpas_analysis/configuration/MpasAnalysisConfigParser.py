@@ -1,18 +1,20 @@
-import numbers
-import ast
-
 """
 A configuratin parser class for MPAS analysis.  MpasAnalysisConfigParser adds
 the capabilities to get an option including a default value
 (`getWithDefault(section, option, default, ...)`) and to get options
 that are lists, tuples, dicts, etc (`getExpression(section, option)`).
 
-Author: Xylar Asay-Davis
-Last Modified: 12/07/2016
+Author: Xylar Asay-Davis, Phillip J. Wolfram
+Last Modified: 01/31/2017
 """
 
+import numbers
+import ast
+import numpy as np
 from ConfigParser import ConfigParser
 
+npallow = dict(linspace=np.linspace, xrange=xrange, range=range, arange=np.arange,
+               pi=np.pi, Pi=np.pi, __builtins__=None)
 
 class MpasAnalysisConfigParser(ConfigParser):
 
@@ -44,7 +46,7 @@ class MpasAnalysisConfigParser(ConfigParser):
         self.set(section, option, str(default))
         return default
 
-    def getExpression(self, section, option, elementType=None):
+    def getExpression(self, section, option, elementType=None, usenumpyfunc=False):
         """
         Get an option as an expression (typically a list, though tuples and
         dicts should also work).  `section` and `option` work as in `get(...)`.
@@ -56,11 +58,18 @@ class MpasAnalysisConfigParser(ConfigParser):
         useful for ensuring that all elements in a list of numbers are of type
         float, rather than int, when the distinction is important.
 
-        Author: Xylar Asay-Davis
-        Last Modified: 12/0y/2016
+        If `usenumpyfunc` is True, expression is evaluated within the context of
+        having selected numpy and / or np functionality available.
+
+        Author: Xylar Asay-Davis, Phillip J. Wolfram
+        Last Modified: 01/31/2017
         """
         expressionString = self.get(section, option)
-        result =  ast.literal_eval(expressionString)
+        if usenumpyfunc:
+            sanitizedstr = expressionString.replace('np.', '').replace('numpy.','')
+            result = eval(sanitizedstr, npallow)
+        else:
+            result =  ast.literal_eval(expressionString)
 
         if elementType is not None:
             if isinstance(result, (list, tuple)):
