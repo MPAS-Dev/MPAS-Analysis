@@ -82,6 +82,9 @@ generate = 1
 [seaice_modelvsobs]
 generate = 1
 
+[moc_postprocess]
+generate = 0
+
 [ohc_timeseries]
 ## compare to output from another model run?
 #compare_with_model = True
@@ -130,6 +133,18 @@ compare_with_obs = True
 # Number of points over which to compute moving average (e.g., for monthly
 # output, N_movavg=12 corresponds to a 12-month moving average window)
 N_movavg = 12
+
+
+[moc_postprocess]
+filename  = ../mpaso.hist.am.timeSeriesStats.yr100-119.avg.nc
+filenamemesh = ../mpaso.rst.0002-01-01_00000.nc
+filenamemask = ../EC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+timeIndex = 0
+horVelName = time_avg_normalVelocity
+vertVelName = time_avg_vertVelocityTop
+contourLines = np.arange(-8,20.1,2)
+# This is specific to Atlantic MOC:
+mocLat = np.arange(-34.5,70.1,0.5)
 
 [seaice_timeseries]
 ## compare to output from another model run?

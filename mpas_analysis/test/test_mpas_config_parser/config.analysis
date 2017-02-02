@@ -32,3 +32,6 @@ testDict = {'key1': 'string',
             'key2': -12,
             'key3': False}
 
+[TestNumpy]
+testNumpy1 = numpy.arange(0, 1, 10)
+testNumpy2 = np.arange(0, 1, 10)

@@ -22,4 +22,5 @@ monthdictionary={'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 
 
 dinmonth = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
+m3ps_to_Sv = 1e-6; # m^3/sec flux to Sverdrups
 

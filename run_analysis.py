@@ -148,6 +148,12 @@ def analysis(config):  # {{{
         ocn_modelvsobs(config, 'sss', streamMap=oceanStreamMap,
                        variableMap=oceanVariableMap)
 
+    if config.getboolean('moc_postprocess', 'generate'):
+        print ""
+        print "Plotting post-process computed meridional overturning circulation..."
+        from mpas_analysis.ocean.meridional_overturning_circulation import moc_postprocess
+        moc_postprocess(config, streamMap=oceanStreamMap,
+                          variableMap=oceanVariableMap)
 
     # GENERATE SEA-ICE DIAGNOSTICS
     if config.getboolean('seaice_timeseries', 'generate'):
