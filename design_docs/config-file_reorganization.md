@@ -43,7 +43,7 @@ Date last modified: 2017/02/02 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-Implementation of the `config.template` file can be found [here](https://github.com/xylar/MPAS-Analysis/blob/2ce570b44865364f2435144c1d929842c5f0b463/config.template).
+Implementation of the `config.template` file can be found [here](https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template).
 
 
 The following comment describes the planned implementation in the config file.
@@ -84,7 +84,7 @@ Date last modified: 2017/01/29 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-The required `config.template` has been implemented in #86, specifically [here](https://github.com/xylar/MPAS-Analysis/blob/2ce570b44865364f2435144c1d929842c5f0b463/config.template).  A subdirectory `configs` will be added with several examples from runs on LANL IC and on Edison at NERSC.  Other examples can be added as appropriate and useful.
+The required `config.template` has been implemented in #86, specifically [here](https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template).  A subdirectory `configs` will be added with several examples from runs on LANL IC and on Edison at NERSC.  Other examples can be added as appropriate and useful.
 
 <h2> Implementation: removal of ACME specific config options <br>
 Date last modified: 2017/02/01 <br>
@@ -93,14 +93,14 @@ Contributors: Xylar Asay-Davis
 
 `casename` has been renamed `mainRunName`, `referenceRunName` has been added for comparison with reference runs that have not been preprocessed (not yet supported), and `ref_casename_v0` has been renamed `preprocessedReferenceRunName`.
 
-See #86, specifically [config.template](https://github.com/xylar/MPAS-Analysis/blob/2ce570b44865364f2435144c1d929842c5f0b463/config.template).
+See #86, specifically [config.template](https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template).
 
 <h2> Implementation: consistent section and option names <br>
 Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
 </h2>
 
-In [config.template](https://github.com/xylar/MPAS-Analysis/blob/2ce570b44865364f2435144c1d929842c5f0b463/config.template) in #86, "[CamelCase](https://en.wikipedia.org/wiki/Camel_case)" has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes `all_` and `no_` make splitting and comparison simpler in the implementation.
+In [config.template](https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template) in #86, "[CamelCase](https://en.wikipedia.org/wiki/Camel_case)" has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes `all_` and `no_` make splitting and comparison simpler in the implementation.
 
 
 <h1> Testing </h1>
