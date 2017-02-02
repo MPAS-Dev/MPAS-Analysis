@@ -97,6 +97,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
         # Rename the time dimension to be consistent with the SST dataset
         dsData.rename({'month': 'calmonth'}, inplace=True)
         dsData.rename({'iMONTH': 'month'}, inplace=True)
+        dsData.coords['month'] = dsData['calmonth']
 
         obsFieldName = 'mld_dt_mean'
 
