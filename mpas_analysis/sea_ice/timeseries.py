@@ -8,10 +8,11 @@ from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.io import StreamsFile
+from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
 
-from ..shared.timekeeping.Date import Date
+from ..shared.timekeeping.utility import stringToDatetime, \
+    clampToNumpyDatetime64
 
 
 def seaice_timeseries(config, streamMap=None, variableMap=None):
@@ -34,8 +35,13 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     # read parameters from config file
     inDirectory = config.get('input', 'baseDirectory')
 
+    namelistFileName = config.get('input', 'seaIceNamelistFileName')
+    namelist = NameList(namelistFileName, path=inDirectory)
+
     streamsFileName = config.get('input', 'seaIceStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
+
+    calendar = namelist.get('config_calendar_type')
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
@@ -43,7 +49,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
     inFiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate)
+                               endDate=endDate,  calendar=calendar)
     print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
 
     variableNames = ['iceAreaCell', 'iceVolumeCell']
@@ -113,11 +119,8 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                              varmap=variableMap))
     ds = remove_repeated_time_index(ds)
 
-    # convert the start and end dates to datetime objects using
-    # the Date class, which ensures the results are within the
-    # supported range
-    timeStart = Date(startDate).to_datetime(yearOffset)
-    timeEnd = Date(endDate).to_datetime(yearOffset)
+    timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
+    timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
     # select only the data in the specified range of years
     ds = ds.sel(Time=slice(timeStart, timeEnd))
 

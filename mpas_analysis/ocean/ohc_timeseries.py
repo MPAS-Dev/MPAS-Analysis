@@ -13,7 +13,8 @@ from ..shared.plot.plotting import timeseries_analysis_plot
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
 
-from ..shared.timekeeping.Date import Date
+from ..shared.timekeeping.utility import stringToDatetime, \
+    clampToNumpyDatetime64
 
 
 def ohc_timeseries(config, streamMap=None, variableMap=None):
@@ -34,6 +35,16 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     Author: Xylar Asay-Davis, Milena Veneziani
     Last Modified: 02/02/2017
     """
+
+    inDirectory = config.get('input', 'baseDirectory')
+
+    namelistFileName = config.get('input', 'oceanNamelistFileName')
+    namelist = NameList(namelistFileName, path=inDirectory)
+
+    streamsFileName = config.get('input', 'oceanStreamsFileName')
+    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
+
+    calendar = namelist.get('config_calendar_type')
 
     # read parameters from config file
     mainRunName = config.get('runs', 'mainRunName')
@@ -56,14 +67,6 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     regionIndicesToPlot = config.getExpression('timeSeriesOHC',
                                                'regionIndicesToPlot')
 
-    inDirectory = config.get('input', 'baseDirectory')
-
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    streamsFileName = config.get('input', 'oceanStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
-
     # Note: input file, not a mesh file because we need dycore specific fields
     # such as refBottomDepth and namelist fields such as config_density0, as
     # well as simulationStartTime, that are not guaranteed to be in the mesh
@@ -80,7 +83,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
     inFiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate)
+                               endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
 
     # Define/read in general variables
@@ -91,7 +94,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     # simulation start time
     simulationStartTime = netCDF4.chartostring(
         ncFile.variables['simulationStartTime'][:])
-    simulationStartTime = str(simulationStartTime)
+    simulationStartTime = str(simulationStartTime).strip()
     ncFile.close()
     # specific heat [J/(kg*degC)]
     cp = namelist.getfloat('config_specific_heat_sea_water')
@@ -120,22 +123,21 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     ds = remove_repeated_time_index(ds)
 
-    # convert the start and end dates to datetime objects using
-    # the Date class, which ensures the results are within the
-    # supported range
-    timeStart = Date(startDate).to_datetime(yearOffset)
-    timeEnd = Date(endDate).to_datetime(yearOffset)
+    timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
+    timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
     # select only the data in the specified range of years
     ds = ds.sel(Time=slice(timeStart, timeEnd))
 
     # Select year-1 data and average it (for later computing anomalies)
-    timeStartFirstYear = Date(simulationStartTime).to_datetime(yearOffset)
+    timeStartFirstYear = clampToNumpyDatetime64(
+        stringToDatetime(simulationStartTime), yearOffset)
     if timeStartFirstYear < timeStart:
         startDateFirstYear = simulationStartTime
         endDateFirstYear = '{}-12-31_23:59:59'.format(startDateFirstYear[0:4])
         filesFirstYear = streams.readpath(streamName,
                                           startDate=startDateFirstYear,
-                                          endDate=endDateFirstYear)
+                                          endDate=endDateFirstYear,
+                                          calendar=calendar)
         dsFirstYear = xr.open_mfdataset(
             filesFirstYear,
             preprocess=lambda x: preprocess_mpas(x,
