@@ -11,7 +11,7 @@ Last Modified
 """
 
 import datetime
-from dateutil.relativedelta import relativedelta
+from .MpasRelativeDelta import MpasRelativeDelta
 
 
 def stringToDatetime(dateString):  # {{{
@@ -62,10 +62,10 @@ def stringToDatetime(dateString):  # {{{
                              minute=minute, second=second)  # }}}
 
 
-def stringToRelativedelta(dateString, calendar='gregorian'):  # {{{
+def stringToRelativeDelta(dateString, calendar='gregorian'):  # {{{
     """
     Given a date string and a calendar, returns an instance of
-    `dateutil.relativedelta.relativedelta`
+    `MpasRelativeDelta`
 
     Parameters
     ----------
@@ -91,7 +91,7 @@ def stringToRelativedelta(dateString, calendar='gregorian'):  # {{{
 
     Returns
     -------
-    relativedelta : A `dateutil.relativedelta.relativedelta` object
+    relativedelta : An `MpasRelativeDelta` object
 
     Raises
     ------
@@ -110,15 +110,9 @@ def stringToRelativedelta(dateString, calendar='gregorian'):  # {{{
     (years, months, days, hours, minutes, seconds) = \
         _parseDateString(dateString, isInterval=True)
 
-    if calendar == 'gregorian':
-        leapdays = True
-    elif calendar == 'gregorian_noleap':
-        leapdays = False
-    else:
-        raise ValueError('Unsupported calendar {}'.format(calendar))
-
-    return relativedelta(years=years, months=months, days=days, hours=hours,
-                         minutes=minutes, seconds=seconds, leapdays=leapdays)
+    return MpasRelativeDelta(years=years, months=months, days=days,
+                             hours=hours, minutes=minutes, seconds=seconds,
+                             calendar=calendar)
     # }}}
 
 

@@ -18,7 +18,7 @@ import os.path
 
 from ..containers import ReadOnlyDict
 from .utility import paths
-from ..timekeeping.utility import stringToDatetime, stringToRelativedelta
+from ..timekeeping.utility import stringToDatetime, stringToRelativeDelta
 
 
 def convert_namelist_to_dict(fname, readonly=True):
@@ -225,10 +225,10 @@ class StreamsFile:
         if output_interval is None:
             # There's no file interval, so hard to know what to do
             # let's put a buffer of a year on each side to be safe
-            offsetDate = stringToRelativedelta(dateString='0001-00-00',
+            offsetDate = stringToRelativeDelta(dateString='0001-00-00',
                                                calendar=calendar)
         else:
-            offsetDate = stringToRelativedelta(dateString=output_interval,
+            offsetDate = stringToRelativeDelta(dateString=output_interval,
                                                calendar=calendar)
 
         if startDate is not None:
