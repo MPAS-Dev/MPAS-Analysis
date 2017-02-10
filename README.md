@@ -29,3 +29,8 @@ You can easily install them via the conda command:
 ```
 conda install -c scitools  -c https://conda.anaconda.org/opengeostat numpy scipy matplotlib ipython notebook netCDF4 progressbar vtk cartopy xarray dask bottleneck pyevtk numexpr basemap
 ```
+
+## Running the analysis
+  1. create a configuration file by copying and modifying `config.template` or one of the example files in `configs`
+  2. run: `./run_analysis.py config.myrun`, where `config.myrun` is the config file you created
+  3. If you want to run a subset of the analysis, you can either modify the `generate` option under `[output]` in the config file or use the `--generate` flag on the command line.  See `config.template` for more details.

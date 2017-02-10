@@ -8,6 +8,7 @@ from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import StreamsFile
+from ..shared.io.utility import buildConfigFullPath
 
 from ..shared.timekeeping.Date import Date
 
@@ -27,45 +28,48 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 12/05/2016
+    Last Modified: 02/02/2017
     """
 
     # Define/read in general variables
     print '  Load SST data...'
     # read parameters from config file
-    indir = config.get('paths', 'archive_dir_ocn')
+    inDirectory = config.get('input', 'baseDirectory')
 
-    streams_filename = config.get('input', 'ocean_streams_filename')
-    streams = StreamsFile(streams_filename, streamsdir=indir)
+    streamsFileName = config.get('input', 'oceanStreamsFileName')
+    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
-    startDate = config.get('time', 'timeseries_start_date')
-    endDate = config.get('time', 'timeseries_end_date')
+    startDate = config.get('timeSeries', 'startDate')
+    endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    infiles = streams.readpath(streamName, startDate=startDate,
+    inFiles = streams.readpath(streamName, startDate=startDate,
                                endDate=endDate)
-    print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
+    print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
 
-    casename = config.get('case', 'casename')
-    ref_casename_v0 = config.get('case', 'ref_casename_v0')
-    indir_v0data = config.get('paths', 'ref_archive_v0_ocndir')
+    mainRunName = config.get('runs', 'mainRunName')
+    preprocessedReferenceRunName = config.get('runs',
+                                              'preprocessedReferenceRunName')
+    preprocessedInputDirectory = config.get('oceanPreprocessedReference',
+                                            'baseDirectory')
 
-    plots_dir = config.get('paths', 'plots_dir')
+    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
-    yr_offset = config.getint('time', 'yr_offset')
+    yearOffset = config.getint('time', 'yearOffset')
 
-    N_movavg = config.getint('sst_timeseries', 'N_movavg')
+    movingAveragePoints = config.getint('timeSeriesSST', 'movingAveragePoints')
 
     regions = config.getExpression('regions', 'regions')
-    plot_titles = config.getExpression('regions', 'plot_titles')
-    iregions = config.getExpression('sst_timeseries', 'regionIndicesToPlot')
+    plotTitles = config.getExpression('regions', 'plotTitles')
+    regionIndicesToPlot = config.getExpression('timeSeriesSST',
+                                               'regionIndicesToPlot')
 
     # Load data:
     varList = ['avgSurfaceTemperature']
     ds = xr.open_mfdataset(
-        infiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
+        inFiles,
+        preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset,
                                              timestr='Time',
                                              onlyvars=varList,
                                              varmap=variableMap))
@@ -74,57 +78,63 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     # convert the start and end dates to datetime objects using
     # the Date class, which ensures the results are within the
     # supported range
-    time_start = Date(startDate).to_datetime(yr_offset)
-    time_end = Date(endDate).to_datetime(yr_offset)
+    timeStart = Date(startDate).to_datetime(yearOffset)
+    timeEnd = Date(endDate).to_datetime(yearOffset)
     # select only the data in the specified range of years
-    ds = ds.sel(Time=slice(time_start, time_end))
+    ds = ds.sel(Time=slice(timeStart, timeEnd))
 
     SSTregions = ds.avgSurfaceTemperature
 
-    year_start = (pd.to_datetime(ds.Time.min().values)).year
-    year_end = (pd.to_datetime(ds.Time.max().values)).year
-    time_start = datetime.datetime(year_start, 1, 1)
-    time_end = datetime.datetime(year_end, 12, 31)
+    yearStart = (pd.to_datetime(ds.Time.min().values)).year
+    yearEnd = (pd.to_datetime(ds.Time.max().values)).year
+    timeStart = datetime.datetime(yearStart, 1, 1)
+    timeEnd = datetime.datetime(yearEnd, 12, 31)
 
-    if ref_casename_v0 != 'None':
-        print '  Load in SST for ACMEv0 case...'
-        infiles_v0data = '{}/SST.{}.year*.nc'.format(indir_v0data,
-                                                     ref_casename_v0)
-        ds_v0 = xr.open_mfdataset(
-            infiles_v0data,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        ds_v0 = remove_repeated_time_index(ds_v0)
-        year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
-        if year_start <= year_end_v0:
-            ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+    if preprocessedReferenceRunName != 'None':
+        print '  Load in SST for a preprocesses reference run...'
+        inFilesPreprocessed = '{}/SST.{}.year*.nc'.format(
+            preprocessedInputDirectory, preprocessedReferenceRunName)
+        dsPreprocessed = xr.open_mfdataset(
+            inFilesPreprocessed,
+            preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset))
+        dsPreprocessed = remove_repeated_time_index(dsPreprocessed)
+        yearEndPreprocessed = \
+            (pd.to_datetime(dsPreprocessed.Time.max().values)).year
+        if yearStart <= yearEndPreprocessed:
+            dsPreprocessedTimeSlice = \
+                dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
         else:
-            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
-            ref_casename_v0 = 'None'
+            print '   Warning: Preprocessed time series ends before the ' \
+                'timeSeries startYear and will not be plotted.'
+            preprocessedReferenceRunName = 'None'
 
     print '  Make plots...'
-    for index in range(len(iregions)):
-        iregion = iregions[index]
+    for index in range(len(regionIndicesToPlot)):
+        regionIndex = regionIndicesToPlot[index]
 
-        title = plot_titles[iregion]
-        title = 'SST, %s, %s (r-)' % (title, casename)
-        xlabel = 'Time [years]'
-        ylabel = '[$^\circ$ C]'
+        title = plotTitles[regionIndex]
+        title = 'SST, %s, %s (r-)' % (title, mainRunName)
+        xLabel = 'Time [years]'
+        yLabel = '[$^\circ$ C]'
 
-        SST = SSTregions[:, iregion]
+        SST = SSTregions[:, regionIndex]
 
-        if ref_casename_v0 != 'None':
-            figname = '{}/sst_{}_{}_{}.png'.format(plots_dir, regions[iregion],
-                                                   casename, ref_casename_v0)
-            SST_v0 = ds_v0_tslice.SST
+        if preprocessedReferenceRunName != 'None':
+            figureName = '{}/sst_{}_{}_{}.png'.format(
+                plotsDirectory, regions[regionIndex], mainRunName,
+                preprocessedReferenceRunName)
+            SST_v0 = dsPreprocessedTimeSlice.SST
 
-            title = '{}\n {} (b-)'.format(title, ref_casename_v0)
-            timeseries_analysis_plot(config, [SST, SST_v0], N_movavg,
-                                     title, xlabel, ylabel, figname,
+            title = '{}\n {} (b-)'.format(title, preprocessedReferenceRunName)
+            timeseries_analysis_plot(config, [SST, SST_v0],
+                                     movingAveragePoints,
+                                     title, xLabel, yLabel, figureName,
                                      lineStyles=['r-', 'b-'],
                                      lineWidths=[1.2, 1.2])
         else:
-            figname = '{}/sst_{}_{}.png'.format(plots_dir, regions[iregion],
-                                                casename)
-            timeseries_analysis_plot(config, [SST], N_movavg, title, xlabel,
-                                     ylabel, figname, lineStyles=['r-'],
-                                     lineWidths=[1.2])
+            figureName = '{}/sst_{}_{}.png'.format(plotsDirectory,
+                                                   regions[regionIndex],
+                                                   mainRunName)
+            timeseries_analysis_plot(config, [SST], movingAveragePoints, title,
+                                     xLabel, yLabel, figureName,
+                                     lineStyles=['r-'], lineWidths=[1.2])

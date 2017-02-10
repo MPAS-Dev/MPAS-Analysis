@@ -9,6 +9,7 @@ from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import StreamsFile
+from ..shared.io.utility import buildConfigFullPath
 
 from ..shared.timekeeping.Date import Date
 
@@ -27,66 +28,71 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 12/07/2016
+    Last Modified: 02/02/2017
     """
 
     # read parameters from config file
-    indir = config.get('paths', 'archive_dir_ocn')
+    inDirectory = config.get('input', 'baseDirectory')
 
-
-    streams_filename = config.get('input', 'seaice_streams_filename')
-    streams = StreamsFile(streams_filename, streamsdir=indir)
+    streamsFileName = config.get('input', 'seaIceStreamsFileName')
+    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
-    startDate = config.get('time', 'timeseries_start_date')
-    endDate = config.get('time', 'timeseries_end_date')
+    startDate = config.get('timeSeries', 'startDate')
+    endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    infiles = streams.readpath(streamName, startDate=startDate,
+    inFiles = streams.readpath(streamName, startDate=startDate,
                                endDate=endDate)
-    print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
+    print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
 
-    varnames = ['iceAreaCell', 'iceVolumeCell']
+    variableNames = ['iceAreaCell', 'iceVolumeCell']
 
-    plot_titles = {'iceAreaCell': 'Sea-ice area',
-                   'iceVolumeCell': 'Sea-ice volume',
-                   'iceThickness': 'Sea-ice thickness'}
+    plotTitles = {'iceAreaCell': 'Sea-ice area',
+                  'iceVolumeCell': 'Sea-ice volume',
+                  'iceThickness': 'Sea-ice thickness'}
 
-    units_dict = {'iceAreaCell': '[km$^2$]',
-                  'iceVolumeCell': '[10$^3$ km$^3$]',
-                  'iceThickness': '[m]'}
+    unitsDictionary = {'iceAreaCell': '[km$^2$]',
+                       'iceVolumeCell': '[10$^3$ km$^3$]',
+                       'iceThickness': '[m]'}
 
-    obs_filenames = {
-        'iceAreaCell': [config.get('seaIceData', 'obs_iceareaNH'),
-                        config.get('seaIceData', 'obs_iceareaSH')],
-        'iceVolumeCell': [config.get('seaIceData', 'obs_icevolNH'),
-                          config.get('seaIceData', 'obs_icevolSH')]}
+    obsFileNames = {
+        'iceAreaCell': [buildConfigFullPath(config, 'seaIceObservations',
+                                            subdir)
+                        for subdir in ['areaNH', 'areaSH']],
+        'iceVolumeCell': [buildConfigFullPath(config, 'seaIceObservations',
+                                              subdir)
+                          for subdir in ['volNH', 'volSH']]}
 
     # Some plotting rules
-    title_font_size = config.get('seaice_timeseries', 'title_font_size')
+    titleFontSize = config.get('timeSeriesSeaIceAreaVol', 'titleFontSize')
 
-    casename = config.get('case', 'casename')
-    ref_casename_v0 = config.get('case', 'ref_casename_v0')
-    indir_v0data = config.get('paths', 'ref_archive_v0_seaicedir')
+    mainRunName = config.get('runs', 'mainRunName')
+    preprocessedReferenceRunName = config.get('runs',
+                                              'preprocessedReferenceRunName')
+    preprocessedReferenceDirectory = config.get('seaIcePreprocessedReference',
+                                                'baseDirectory')
 
-    compare_with_obs = config.getboolean('seaice_timeseries',
-                                         'compare_with_obs')
+    compareWithObservations = config.getboolean('timeSeriesSeaIceAreaVol',
+                                                'compareWithObservations')
 
-    plots_dir = config.get('paths', 'plots_dir')
+    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
-    yr_offset = config.getint('time', 'yr_offset')
+    yearOffset = config.getint('time', 'yearOffset')
 
-    N_movavg = config.getint('seaice_timeseries', 'N_movavg')
+    movingAveragePoints = config.getint('timeSeriesSeaIceAreaVol',
+                                        'movingAveragePoints')
 
     # first, check for a sea-ice restart file
     try:
-        inputfile = streams.readpath('restart')[0]
+        restartFile = streams.readpath('restart')[0]
     except ValueError:
         # get an ocean restart file, since no sea-ice restart exists
-        ocean_streams_filename = config.get('input', 'ocean_streams_filename')
-        ocean_streams = StreamsFile(ocean_streams_filename, streamsdir=indir)
+        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+        oceanStreams = StreamsFile(oceanStreamsFileName,
+                                   streamsdir=inDirectory)
         try:
-            inputfile = ocean_streams.readpath('restart')[0]
+            restartFile = oceanStreams.readpath('restart')[0]
         except ValueError:
             raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
                           'at least one restart file for seaice_timeseries '
@@ -94,13 +100,13 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
     print '  Load sea-ice data...'
     # Load mesh
-    dsmesh = xr.open_dataset(inputfile)
-    dsmesh = subset_variables(dsmesh, vlist=['lonCell', 'latCell', 'areaCell'])
+    dsMesh = xr.open_dataset(restartFile)
+    dsMesh = subset_variables(dsMesh, vlist=['lonCell', 'latCell', 'areaCell'])
 
     # Load data
     ds = xr.open_mfdataset(
-        infiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
+        inFiles,
+        preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset,
                                              timestr='Time',
                                              onlyvars=['iceAreaCell',
                                                        'iceVolumeCell'],
@@ -110,232 +116,254 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     # convert the start and end dates to datetime objects using
     # the Date class, which ensures the results are within the
     # supported range
-    time_start = Date(startDate).to_datetime(yr_offset)
-    time_end = Date(endDate).to_datetime(yr_offset)
+    timeStart = Date(startDate).to_datetime(yearOffset)
+    timeEnd = Date(endDate).to_datetime(yearOffset)
     # select only the data in the specified range of years
-    ds = ds.sel(Time=slice(time_start, time_end))
+    ds = ds.sel(Time=slice(timeStart, timeEnd))
 
     # handle the case where the "mesh" file has a spurious time dimension
-    if 'Time' in dsmesh.keys():
-      dsmesh = dsmesh.drop('Time')
-    ds = ds.merge(dsmesh)
+    if 'Time' in dsMesh.keys():
+        dsMesh = dsMesh.drop('Time')
+    ds = ds.merge(dsMesh)
 
-    year_start = (pd.to_datetime(ds.Time.min().values)).year
-    year_end = (pd.to_datetime(ds.Time.max().values)).year
-    time_start = datetime.datetime(year_start, 1, 1)
-    time_end = datetime.datetime(year_end, 12, 31)
+    yearStart = (pd.to_datetime(ds.Time.min().values)).year
+    yearEnd = (pd.to_datetime(ds.Time.max().values)).year
+    timeStart = datetime.datetime(yearStart, 1, 1)
+    timeEnd = datetime.datetime(yearEnd, 12, 31)
 
-    if ref_casename_v0 != 'None':
-        infiles_v0data = '{}/icevol.{}.year*.nc'.format(indir_v0data,
-                                                        ref_casename_v0)
-        ds_v0 = xr.open_mfdataset(
-            infiles_v0data,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
-        if year_start <= year_end_v0:
-            ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
+    if preprocessedReferenceRunName != 'None':
+        inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
+            preprocessedReferenceDirectory, preprocessedReferenceRunName)
+        dsPreprocessed = xr.open_mfdataset(
+            inFilesPreprocessed,
+            preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset))
+        preprocessedYearEnd = (pd.to_datetime(
+            dsPreprocessed.Time.max().values)).year
+        if yearStart <= preprocessedYearEnd:
+            dsPreprocessedTimeSlice = dsPreprocessed.sel(Time=slice(timeStart,
+                                                                    timeEnd))
         else:
-            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
-            ref_casename_v0 = 'None'
+            print '   Warning: Preprocessed time series ends before the ' \
+                'timeSeries startYear and will not be plotted.'
+            preprocessedReferenceRunName = 'None'
 
     # Make Northern and Southern Hemisphere partition:
     areaCell = ds.areaCell
-    ind_nh = ds.latCell > 0
-    ind_sh = ds.latCell < 0
-    areaCell_nh = areaCell.where(ind_nh)
-    areaCell_sh = areaCell.where(ind_sh)
+    maskNH = ds.latCell > 0
+    maskSH = ds.latCell < 0
+    areaCellNH = areaCell.where(maskNH)
+    areaCellSH = areaCell.where(maskSH)
 
-    for varname in varnames:
-        obs_filenameNH = obs_filenames[varname][0]
-        obs_filenameSH = obs_filenames[varname][1]
-        plot_title = plot_titles[varname]
-        units = units_dict[varname]
+    for variableName in variableNames:
+        obsFileNameNH = obsFileNames[variableName][0]
+        obsFileNameSH = obsFileNames[variableName][1]
+        plotTitle = plotTitles[variableName]
+        units = unitsDictionary[variableName]
 
-        print '  Compute NH and SH time series of {}...'.format(varname)
-        if varname == 'iceThickCell':
-            varnamefull = 'iceVolumeCell'
+        print '  Compute NH and SH time series of {}...'.format(variableName)
+        if variableName == 'iceThickCell':
+            variableNamefull = 'iceVolumeCell'
         else:
-            varnamefull = varname
-        var = ds[varnamefull]
+            variableNamefull = variableName
+        var = ds[variableNamefull]
 
-        var_nh = var.where(ind_nh)*areaCell_nh
-        var_sh = var.where(ind_sh)*areaCell_sh
+        varNH = var.where(maskNH)*areaCellNH
+        varSH = var.where(maskSH)*areaCellSH
 
-        ind_iceext = var > 0.15
-        var_nh_iceext = var_nh.where(ind_iceext)
-        var_sh_iceext = var_sh.where(ind_iceext)
+        maskIceExtent = var > 0.15
+        varNHIceExtent = varNH.where(maskIceExtent)
+        varSHIceExtent = varSH.where(maskIceExtent)
 
-        if varname == 'iceAreaCell':
-            var_nh = var_nh.sum('nCells')
-            var_sh = var_sh.sum('nCells')
-            var_nh = 1e-6*var_nh  # m^2 to km^2
-            var_sh = 1e-6*var_sh  # m^2 to km^2
-            var_nh_iceext = 1e-6*var_nh_iceext.sum('nCells')
-            var_sh_iceext = 1e-6*var_sh_iceext.sum('nCells')
-        elif varname == 'iceVolumeCell':
-            var_nh = var_nh.sum('nCells')
-            var_sh = var_sh.sum('nCells')
-            var_nh = 1e-3*1e-9*var_nh  # m^3 to 10^3 km^3
-            var_sh = 1e-3*1e-9*var_sh  # m^3 to 10^3 km^3
+        if variableName == 'iceAreaCell':
+            varNH = varNH.sum('nCells')
+            varSH = varSH.sum('nCells')
+            varNH = 1e-6*varNH  # m^2 to km^2
+            varSH = 1e-6*varSH  # m^2 to km^2
+            varNHIceExtent = 1e-6*varNHIceExtent.sum('nCells')
+            varSHIceExtent = 1e-6*varSHIceExtent.sum('nCells')
+        elif variableName == 'iceVolumeCell':
+            varNH = varNH.sum('nCells')
+            varSH = varSH.sum('nCells')
+            varNH = 1e-3*1e-9*varNH  # m^3 to 10^3 km^3
+            varSH = 1e-3*1e-9*varSH  # m^3 to 10^3 km^3
         else:
-            var_nh = var_nh.mean('nCells')/areaCell_nh.mean('nCells')
-            var_sh = var_sh.mean('nCells')/areaCell_sh.mean('nCells')
+            varNH = varNH.mean('nCells')/areaCellNH.mean('nCells')
+            varSH = varSH.mean('nCells')/areaCellSH.mean('nCells')
 
         print '  Make plots...'
 
-        xlabel = 'Time [years]'
+        xLabel = 'Time [years]'
 
-        if ref_casename_v0 != 'None':
-            figname_nh = '{}/{}NH_{}_{}.png'.format(plots_dir, varname,
-                                                    casename, ref_casename_v0)
-            figname_sh = '{}/{}SH_{}_{}.png'.format(plots_dir, varname,
-                                                    casename, ref_casename_v0)
+        if preprocessedReferenceRunName != 'None':
+            figureNameNH = '{}/{}NH_{}_{}.png'.format(
+                plotsDirectory, variableName, mainRunName,
+                preprocessedReferenceRunName)
+            figureNameSH = '{}/{}SH_{}_{}.png'.format(
+                plotsDirectory, variableName, mainRunName,
+                preprocessedReferenceRunName)
         else:
-            figname_nh = '{}/{}NH_{}.png'.format(plots_dir, varname, casename)
-            figname_sh = '{}/{}SH_{}.png'.format(plots_dir, varname, casename)
+            figureNameNH = '{}/{}NH_{}.png'.format(plotsDirectory,
+                                                   variableName,
+                                                   mainRunName)
+            figureNameSH = '{}/{}SH_{}.png'.format(plotsDirectory,
+                                                   variableName,
+                                                   mainRunName)
 
-        title_nh = '{} (NH), {} (r)'.format(plot_title, casename)
-        title_sh = '{} (SH), {} (r)'.format(plot_title, casename)
+        titleNH = '{} (NH), {} (r)'.format(plotTitle, mainRunName)
+        titleSH = '{} (SH), {} (r)'.format(plotTitle, mainRunName)
 
-        if compare_with_obs:
-            if varname == 'iceAreaCell':
-                title_nh = \
-                    '{}\nSSM/I observations, annual cycle (k)'.format(title_nh)
-                title_sh = \
-                    '{}\nSSM/I observations, annual cycle (k)'.format(title_sh)
-            elif varname == 'iceVolumeCell':
-                title_nh = '{}\nPIOMAS, annual cycle (k)'.format(title_nh)
-                title_sh = '{}\n'.format(title_sh)
+        if compareWithObservations:
+            if variableName == 'iceAreaCell':
+                titleNH = \
+                    '{}\nSSM/I observations, annual cycle (k)'.format(titleNH)
+                titleSH = \
+                    '{}\nSSM/I observations, annual cycle (k)'.format(titleSH)
+            elif variableName == 'iceVolumeCell':
+                titleNH = '{}\nPIOMAS, annual cycle (k)'.format(titleNH)
+                titleSH = '{}\n'.format(titleSH)
 
-        if ref_casename_v0 != 'None':
-            title_nh = '{}\n {} (b)'.format(title_nh, ref_casename_v0)
-            title_sh = '{}\n {} (b)'.format(title_sh, ref_casename_v0)
+        if preprocessedReferenceRunName != 'None':
+            titleNH = '{}\n {} (b)'.format(titleNH,
+                                           preprocessedReferenceRunName)
+            titleSH = '{}\n {} (b)'.format(titleSH,
+                                           preprocessedReferenceRunName)
 
-        if varname == 'iceAreaCell':
+        if variableName == 'iceAreaCell':
 
-            if compare_with_obs:
-                ds_obs = xr.open_mfdataset(
-                    obs_filenameNH,
-                    preprocess=lambda x: preprocess_mpas(x,
-                                                         yearoffset=yr_offset))
-                ds_obs = remove_repeated_time_index(ds_obs)
-                var_nh_obs = ds_obs.IceArea
-                var_nh_obs = replicate_cycle(var_nh, var_nh_obs)
+            if compareWithObservations:
+                dsObs = xr.open_mfdataset(
+                    obsFileNameNH,
+                    preprocess=lambda x: preprocess_mpas(
+                        x, yearoffset=yearOffset))
+                dsObs = remove_repeated_time_index(dsObs)
+                varNHObs = dsObs.IceArea
+                varNHObs = replicate_cycle(varNH, varNHObs)
 
-                ds_obs = xr.open_mfdataset(
-                    obs_filenameSH,
-                    preprocess=lambda x: preprocess_mpas(x,
-                                                         yearoffset=yr_offset))
-                ds_obs = remove_repeated_time_index(ds_obs)
-                var_sh_obs = ds_obs.IceArea
-                var_sh_obs = replicate_cycle(var_sh, var_sh_obs)
+                dsObs = xr.open_mfdataset(
+                    obsFileNameSH,
+                    preprocess=lambda x: preprocess_mpas(
+                        x, yearoffset=yearOffset))
+                dsObs = remove_repeated_time_index(dsObs)
+                varSHObs = dsObs.IceArea
+                varSHObs = replicate_cycle(varSH, varSHObs)
 
-            if ref_casename_v0 != 'None':
-                infiles_v0data = '{}/icearea.{}.year*.nc'.format(
-                    indir_v0data, ref_casename_v0)
-                ds_v0 = xr.open_mfdataset(
-                    infiles_v0data,
-                    preprocess=lambda x: preprocess_mpas(x,
-                                                         yearoffset=yr_offset))
-                ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
-                var_nh_v0 = ds_v0_tslice.icearea_nh
-                var_sh_v0 = ds_v0_tslice.icearea_sh
+            if preprocessedReferenceRunName != 'None':
+                inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
+                    preprocessedReferenceDirectory,
+                    preprocessedReferenceRunName)
+                dsPreprocessed = xr.open_mfdataset(
+                    inFilesPreprocessed,
+                    preprocess=lambda x: preprocess_mpas(
+                        x, yearoffset=yearOffset))
+                dsPreprocessedTimeSlice = dsPreprocessed.sel(
+                    Time=slice(timeStart, timeEnd))
+                varNHPreprocessed = dsPreprocessedTimeSlice.icearea_nh
+                varSHPreprocessed = dsPreprocessedTimeSlice.icearea_sh
 
-        elif varname == 'iceVolumeCell':
+        elif variableName == 'iceVolumeCell':
 
-            if compare_with_obs:
-                ds_obs = xr.open_mfdataset(
-                    obs_filenameNH,
-                    preprocess=lambda x: preprocess_mpas(x,
-                                                         yearoffset=yr_offset))
-                ds_obs = remove_repeated_time_index(ds_obs)
-                var_nh_obs = ds_obs.IceVol
-                var_nh_obs = replicate_cycle(var_nh, var_nh_obs)
+            if compareWithObservations:
+                dsObs = xr.open_mfdataset(
+                    obsFileNameNH,
+                    preprocess=lambda x: preprocess_mpas(
+                        x, yearoffset=yearOffset))
+                dsObs = remove_repeated_time_index(dsObs)
+                varNHObs = dsObs.IceVol
+                varNHObs = replicate_cycle(varNH, varNHObs)
 
-                var_sh_obs = None
+                varSHObs = None
 
-            if ref_casename_v0 != 'None':
-                infiles_v0data = '{}/icevol.{}.year*.nc'.format(
-                    indir_v0data, ref_casename_v0)
-                ds_v0 = xr.open_mfdataset(
-                    infiles_v0data,
-                    preprocess=lambda x: preprocess_mpas(x,
-                                                         yearoffset=yr_offset))
-                ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
-                var_nh_v0 = ds_v0_tslice.icevolume_nh
-                var_sh_v0 = ds_v0_tslice.icevolume_sh
+            if preprocessedReferenceRunName != 'None':
+                inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
+                    preprocessedReferenceDirectory,
+                    preprocessedReferenceRunName)
+                dsPreprocessed = xr.open_mfdataset(
+                    inFilesPreprocessed,
+                    preprocess=lambda x: preprocess_mpas(
+                        x, yearoffset=yearOffset))
+                dsPreprocessedTimeSlice = dsPreprocessed.sel(
+                    Time=slice(timeStart, timeEnd))
+                varNHPreprocessed = dsPreprocessedTimeSlice.icevolume_nh
+                varSHPreprocessed = dsPreprocessedTimeSlice.icevolume_sh
 
-        if varname in ['iceAreaCell', 'iceVolumeCell']:
-            if compare_with_obs:
-                if ref_casename_v0 != 'None':
-                    vars_nh = [var_nh, var_nh_obs, var_nh_v0]
-                    vars_sh = [var_sh, var_sh_obs, var_sh_v0]
+        if variableName in ['iceAreaCell', 'iceVolumeCell']:
+            if compareWithObservations:
+                if preprocessedReferenceRunName != 'None':
+                    varsNH = [varNH, varNHObs, varNHPreprocessed]
+                    varsSH = [varSH, varSHObs, varSHPreprocessed]
                     lineStyles = ['r-', 'k-', 'b-']
                     lineWidths = [1.2, 1.2, 1.2]
                 else:
                     # just v1 model and obs
-                    vars_nh = [var_nh, var_nh_obs]
-                    vars_sh = [var_sh, var_sh_obs]
+                    varsNH = [varNH, varNHObs]
+                    varsSH = [varSH, varSHObs]
                     lineStyles = ['r-', 'k-']
                     lineWidths = [1.2, 1.2]
-            elif ref_casename_v0 != 'None':
+            elif preprocessedReferenceRunName != 'None':
                 # just v1 and v0 models
-                vars_nh = [var_nh, var_nh_v0]
-                vars_sh = [var_sh, var_sh_v0]
+                varsNH = [varNH, varNHPreprocessed]
+                varsSH = [varSH, varSHPreprocessed]
                 lineStyles = ['r-', 'b-']
                 lineWidths = [1.2, 1.2]
 
-            if compare_with_obs or ref_casename_v0 != 'None':
+            if (compareWithObservations or
+                    preprocessedReferenceRunName != 'None'):
                 # separate plots for nothern and southern hemispheres
-                timeseries_analysis_plot(config, vars_nh, N_movavg, title_nh,
-                                         xlabel, units, figname_nh,
+                timeseries_analysis_plot(config, varsNH, movingAveragePoints,
+                                         titleNH,
+                                         xLabel, units, figureNameNH,
                                          lineStyles=lineStyles,
                                          lineWidths=lineWidths,
-                                         title_font_size=title_font_size)
-                timeseries_analysis_plot(config, vars_sh, N_movavg, title_sh,
-                                         xlabel, units, figname_sh,
+                                         titleFontSize=titleFontSize)
+                timeseries_analysis_plot(config, varsSH, movingAveragePoints,
+                                         titleSH,
+                                         xLabel, units, figureNameSH,
                                          lineStyles=lineStyles,
                                          lineWidths=lineWidths,
-                                         title_font_size=title_font_size)
+                                         titleFontSize=titleFontSize)
             else:
                 # we will combine north and south onto a single graph
-                figname = '{}/{}.{}.png'.format(plots_dir, casename, varname)
-                title = '{}, NH (r), SH (k)\n{}'.format(plot_title, casename)
-                timeseries_analysis_plot(config, [var_nh, var_sh], N_movavg,
-                                         title, xlabel, units, figname,
+                figureName = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
+                                                   variableName)
+                title = '{}, NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
+                timeseries_analysis_plot(config, [varNH, varSH],
+                                         movingAveragePoints,
+                                         title, xLabel, units, figureName,
                                          lineStyles=['r-', 'k-'],
                                          lineWidths=[1.2, 1.2],
-                                         title_font_size=title_font_size)
+                                         titleFontSize=titleFontSize)
 
-        elif varname == 'iceThickCell':
+        elif variableName == 'iceThickCell':
 
-            figname = '{}/{}.{}.png'.format(plots_dir, casename, varname)
-            title = '{} NH (r), SH (k)\n{}'.format(plot_title, casename)
-            timeseries_analysis_plot(config, [var_nh, var_sh], N_movavg, title,
-                                     xlabel, units, figname,
+            figureName = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
+                                               variableName)
+            title = '{} NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
+            timeseries_analysis_plot(config, [varNH, varSH],
+                                     movingAveragePoints, title,
+                                     xLabel, units, figureName,
                                      lineStyles=['r-', 'k-'],
                                      lineWidths=[1.2, 1.2],
-                                     title_font_size=title_font_size)
+                                     titleFontSize=titleFontSize)
 
         else:
             raise ValueError(
-                'varname variable {} not supported for plotting'.format(
-                    varname))
+                'variableName variable {} not supported for plotting'.format(
+                    variableName))
 
 
-def replicate_cycle(ds, ds_toreplicate):
-    dsshift = ds_toreplicate.copy()
-    shiftT = ((dsshift.Time.max() - dsshift.Time.min()) +
-              (dsshift.Time.isel(Time=1) - dsshift.Time.isel(Time=0)))
-    startIndex = int(np.floor((ds.Time.min()-ds_toreplicate.Time.min())/shiftT))
-    endIndex = int(np.ceil((ds.Time.max()-ds_toreplicate.Time.min())/shiftT))
-    dsshift['Time'] = dsshift['Time'] + startIndex*shiftT
+def replicate_cycle(ds, dsToReplicate):
+    dsShift = dsToReplicate.copy()
+    shiftT = ((dsShift.Time.max() - dsShift.Time.min()) +
+              (dsShift.Time.isel(Time=1) - dsShift.Time.isel(Time=0)))
+    startIndex = int(np.floor((ds.Time.min()-dsToReplicate.Time.min())/shiftT))
+    endIndex = int(np.ceil((ds.Time.max()-dsToReplicate.Time.min())/shiftT))
+    dsShift['Time'] = dsShift['Time'] + startIndex*shiftT
 
     # replicate cycle:
     for cycleIndex in range(startIndex, endIndex):
-        dsnew = ds_toreplicate.copy()
-        dsnew['Time'] = dsnew['Time'] + (cycleIndex+1)*shiftT
-        dsshift = xr.concat([dsshift, dsnew], dim='Time')
-    # constrict replicated ds_short to same time dimension as ds_long:
-    dsshift = dsshift.sel(Time=ds.Time.values, method='nearest')
-    return dsshift
+        dsNew = dsToReplicate.copy()
+        dsNew['Time'] = dsNew['Time'] + (cycleIndex+1)*shiftT
+        dsShift = xr.concat([dsShift, dsNew], dim='Time')
+    # constrict replicated dsSHort to same time dimension as ds_long:
+    dsShift = dsShift.sel(Time=ds.Time.values, method='nearest')
+    return dsShift
