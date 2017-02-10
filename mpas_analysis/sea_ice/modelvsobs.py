@@ -106,39 +106,20 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     # Obs filenames
     obsIceConcFileNames = {}
-    obsIceConcFileNames['winNH_NASATeam'] = \
-        "{}/SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_" \
-        "jfm.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['sumNH_NASATeam'] = \
-        "{}/SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_" \
-        "jas.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['winSH_NASATeam'] = \
-        "{}/SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_" \
-        "djf.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['sumSH_NASATeam'] = \
-        "{}/SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_" \
-        "jja.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['winNH_Bootstrap'] = \
-        "{}/SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_" \
-        "NH_jfm.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['sumNH_Bootstrap'] = \
-        "{}/SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_" \
-        "NH_jas.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['winSH_Bootstrap'] = \
-        "{}/SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_" \
-        "SH_djf.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceConcFileNames['sumSH_Bootstrap'] = \
-        "{}/SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_" \
-        "SH_jja.interp0.5x0.5.nc".format(obsDirectory)
+    obsIceConcFileNames['winNH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations', 'concNASATeamWinNH')
+    obsIceConcFileNames['sumNH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations', 'concNASATeamSumNH')
+    obsIceConcFileNames['winSH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations', 'concNASATeamWinSH')
+    obsIceConcFileNames['sumSH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations', 'concNASATeamSumSH')
+    obsIceConcFileNames['winNH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations', 'concBootstrpWinNH')
+    obsIceConcFileNames['sumNH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations', 'concBootstrpSumNH')
+    obsIceConcFileNames['winSH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations', 'concBootstrpWinSH')
+    obsIceConcFileNames['sumSH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations', 'concBootstrpSumSH')
+
     obsIceThickFileNames = {}
-    obsIceThickFileNames['onNH'] = "{}/ICESat/ICESat_gridded_mean_" \
-        "thickness_NH_on.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceThickFileNames['fmNH'] = "{}/ICESat/ICESat_gridded_mean_" \
-        "thickness_NH_fm.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceThickFileNames['onSH'] = "{}/ICESat/ICESat_gridded_mean_" \
-        "thickness_SH_on.interp0.5x0.5.nc".format(obsDirectory)
-    obsIceThickFileNames['fmSH'] = "{}/ICESat/ICESat_gridded_mean_" \
-        "thickness_SH_fm.interp0.5x0.5.nc".format(obsDirectory)
+    obsIceThickFileNames['onNH'] = buildConfigFullPath(config, 'seaIceObservations', 'thickonNH')
+    obsIceThickFileNames['fmNH'] = buildConfigFullPath(config, 'seaIceObservations', 'thickfmNH')
+    obsIceThickFileNames['onSH'] = buildConfigFullPath(config, 'seaIceObservations', 'thickonSH')
+    obsIceThickFileNames['fmSH'] = buildConfigFullPath(config, 'seaIceObservations', 'thickfmSH')
 
     # Checks on directory/files existence:
     for climName in obsIceConcFileNames:
