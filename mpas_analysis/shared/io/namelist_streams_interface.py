@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 """
-Module of classes / routines to manipulate fortran namelist and streams
+Module of classes/routines to manipulate fortran namelist and streams
 files.
 
+Authors
+-------
 Phillip Wolfram, Xylar Asay-Davis
-Last modified: 12/05/2016
+
+Last modified
+-------------
+02/06/2017
 """
 
 from lxml import etree
@@ -13,7 +18,7 @@ import os.path
 
 from ..containers import ReadOnlyDict
 from .utility import paths
-from ..timekeeping.Date import Date
+from ..timekeeping.utility import stringToDatetime, stringToRelativeDelta
 
 
 def convert_namelist_to_dict(fname, readonly=True):
@@ -44,8 +49,13 @@ class NameList:
     Class for fortran manipulation of namelist files, provides
     read and write functionality
 
+    Authors
+    -------
     Phillip Wolfram, Xylar Asay-Davis
-    Last modified: 11/02/2016
+
+    Last modified
+    -------------
+    02/06/2017
     """
 
     # constructor
@@ -138,12 +148,48 @@ class StreamsFile:
                 return stream.get(attribname)
         return None
 
-    def readpath(self, streamName, startDate=None, endDate=None):
+    def readpath(self, streamName, startDate=None, endDate=None,
+                 calendar=None):
         """
-        Returns a list of files that match the file template in the
-        stream streamName with attribute attribName.  If the startDate
-        and/or endDate are supplied, only files on or after the starDate and/or
-        on or before the endDate are included in the file list.
+        Given the name of a stream and optionally start and end dates and a
+        calendar type, returns a list of files that match the file template in
+        the stream.
+
+        Parameters
+        ----------
+        streamName : string
+            The name of a stream that produced the files
+
+        startDate, endDate : string or datetime.datetime, optional
+            String or datetime.datetime objects identifying the beginning
+            and end dates to be found.
+
+            Note: a buffer of one output interval is subtracted from startDate
+            and added to endDate because the file date might be the first
+            or last date contained in the file (or anything in between).
+
+        calendar: {'gregorian', 'gregorian_noleap'}, optional
+            The name of one of the calendars supported by MPAS cores, and is
+            required if startDate and/or endDate are supplied
+
+        Returns
+        -------
+        fileList : list
+            A list of file names produced by the stream that fall between
+            the startDate and endDate (if supplied)
+
+        Raises
+        ------
+        ValueError
+            If no files from the stream are found.
+
+        Author
+        ------
+        Xylar Asay-Davis
+
+        Last modified
+        -------------
+        02/04/2017
         """
         template = self.read(streamName, 'filename_template')
         if template is None:
@@ -168,8 +214,9 @@ class StreamsFile:
         fileList = paths(path)
 
         if len(fileList) == 0:
-            raise ValueError("Path {} in streams file {} for '{}' not found.".format(
-                path, self.fname, streamName))
+            raise ValueError(
+                "Path {} in streams file {} for '{}' not found.".format(
+                    path, self.fname, streamName))
 
         if (startDate is None) and (endDate is None):
             return fileList
@@ -178,16 +225,33 @@ class StreamsFile:
         if output_interval is None:
             # There's no file interval, so hard to know what to do
             # let's put a buffer of a year on each side to be safe
-            offsetDate = Date(dateString='0001-00-00', isInterval=True)
+            offsetDate = stringToRelativeDelta(dateString='0001-00-00',
+                                               calendar=calendar)
         else:
-            offsetDate = Date(dateString=output_interval, isInterval=True)
+            offsetDate = stringToRelativeDelta(dateString=output_interval,
+                                               calendar=calendar)
 
         if startDate is not None:
             # read one extra file before the start date to be on the safe side
-            startDate = Date(startDate) - offsetDate
+            if isinstance(startDate, str):
+                startDate = stringToDatetime(startDate)
+            try:
+                startDate -= offsetDate
+            except (ValueError, OverflowError):
+                # if the startDate would be out of range after subtracting
+                # the offset, we'll stick with the starDate as it is
+                pass
+
         if endDate is not None:
             # read one extra file after the end date to be on the safe side
-            endDate = Date(endDate) + offsetDate
+            if isinstance(endDate, str):
+                endDate = stringToDatetime(endDate)
+            try:
+                endDate += offsetDate
+            except (ValueError, OverflowError):
+                # if the endDate would be out of range after adding
+                # the offset, we'll stick with the endDate as it is
+                pass
 
         # remove any path that's part of the template
         template = os.path.basename(template)
@@ -204,7 +268,7 @@ class StreamsFile:
             baseName = os.path.basename(fileName)
             dateEndIndex = len(baseName) - dateEndOffset
             fileDateString = baseName[dateStartIndex:dateEndIndex]
-            fileDate = Date(fileDateString)
+            fileDate = stringToDatetime(fileDateString)
             add = True
             if startDate is not None and startDate > fileDate:
                 add = False
@@ -241,7 +305,7 @@ class StreamsFile:
         for streamName in possibleStreams:
             if self.has_stream(streamName):
                 return streamName
-                
+
         raise ValueError('Stream {} not found in streams file {}.'.format(
             streamName, self.fname))
 

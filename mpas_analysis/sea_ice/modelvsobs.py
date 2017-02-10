@@ -15,7 +15,7 @@ from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
     remove_repeated_time_index
 from ..shared.plot.plotting import plot_polar_comparison
 
-from ..shared.io import StreamsFile
+from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
 
 
@@ -40,8 +40,13 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     # read parameters from config file
     inDirectory = config.get('input', 'baseDirectory')
 
+    namelistFileName = config.get('input', 'seaIceNamelistFileName')
+    namelist = NameList(namelistFileName, path=inDirectory)
+
     streamsFileName = config.get('input', 'seaIceStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
+
+    calendar = namelist.get('config_calendar_type')
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
@@ -49,7 +54,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     endDate = config.get('climatology', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
     infiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate)
+                               endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
 
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')

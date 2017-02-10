@@ -22,7 +22,7 @@ from ..shared.plot.plotting import plot_global_comparison
 from ..shared.interpolation.interpolate import interp_fields, init_tree
 from ..shared.constants import constants
 
-from ..shared.io import StreamsFile
+from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
 
 
@@ -50,8 +50,13 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     # read parameters from config file
     inDirectory = config.get('input', 'baseDirectory')
 
+    namelistFileName = config.get('input', 'oceanNamelistFileName')
+    namelist = NameList(namelistFileName, path=inDirectory)
+
     streamsFileName = config.get('input', 'oceanStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
+
+    calendar = namelist.get('config_calendar_type')
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
@@ -59,7 +64,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     endDate = config.get('climatology', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
     inputFiles = streams.readpath(streamName, startDate=startDate,
-                                  endDate=endDate)
+                                  endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(inputFiles[0], inputFiles[-1])
 
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
