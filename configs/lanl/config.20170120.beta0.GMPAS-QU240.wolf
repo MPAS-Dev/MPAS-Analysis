@@ -148,7 +148,7 @@ yearOffset = 1849
 ## options related to horizontal remapping
 
 # paths to mapping files (which will hopefully be eliminated soon)
-mpasRemapFile = /usr/projects/climate/milena/mapping_files/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
+mpasRemapFile = /usr/projects/climate/milena/mapping_files/rmp_QU240_to_0.5x0.5_conserve.nc
 
 [timeSeriesOHC]
 ## options related to plotting time series of ocean heat content (OHC)
