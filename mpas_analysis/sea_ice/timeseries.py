@@ -3,9 +3,6 @@ import xarray as xr
 import pandas as pd
 import datetime
 
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index, subset_variables
-
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import NameList, StreamsFile
@@ -13,6 +10,10 @@ from ..shared.io.utility import buildConfigFullPath
 
 from ..shared.timekeeping.utility import stringToDatetime, \
     clampToNumpyDatetime64
+
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
+from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 
 def seaice_timeseries(config, streamMap=None, variableMap=None):
@@ -48,9 +49,9 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     startDate = config.get('timeSeries', 'startDate')
     endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    inFiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate,  calendar=calendar)
-    print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
+    fileNames = streams.readpath(streamName, startDate=startDate,
+                                 endDate=endDate,  calendar=calendar)
+    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     variableNames = ['iceAreaCell', 'iceVolumeCell']
 
@@ -107,17 +108,19 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     print '  Load sea-ice data...'
     # Load mesh
     dsMesh = xr.open_dataset(restartFile)
-    dsMesh = subset_variables(dsMesh, vlist=['lonCell', 'latCell', 'areaCell'])
+    dsMesh = subset_variables(dsMesh,
+                              variableList=['lonCell', 'latCell', 'areaCell'])
 
     # Load data
-    ds = xr.open_mfdataset(
-        inFiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset,
-                                             timestr='Time',
-                                             onlyvars=['iceAreaCell',
-                                                       'iceVolumeCell'],
-                                             varmap=variableMap))
-    ds = remove_repeated_time_index(ds)
+    ds = open_multifile_dataset(fileNames=fileNames,
+                                calendar=calendar,
+                                timeVariableName='Time',
+                                variableList=['iceAreaCell',
+                                              'iceVolumeCell'],
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate,
+                                yearOffset=yearOffset)
 
     timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
     timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
@@ -137,9 +140,10 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     if preprocessedReferenceRunName != 'None':
         inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
             preprocessedReferenceDirectory, preprocessedReferenceRunName)
-        dsPreprocessed = xr.open_mfdataset(
-            inFilesPreprocessed,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset))
+        dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
+                                                calendar=calendar,
+                                                timeVariableName='xtime',
+                                                yearOffset=yearOffset)
         preprocessedYearEnd = (pd.to_datetime(
             dsPreprocessed.Time.max().values)).year
         if yearStart <= preprocessedYearEnd:
@@ -234,19 +238,17 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         if variableName == 'iceAreaCell':
 
             if compareWithObservations:
-                dsObs = xr.open_mfdataset(
-                    obsFileNameNH,
-                    preprocess=lambda x: preprocess_mpas(
-                        x, yearoffset=yearOffset))
-                dsObs = remove_repeated_time_index(dsObs)
+                dsObs = open_multifile_dataset(fileNames=obsFileNameNH,
+                                               calendar=calendar,
+                                               timeVariableName='xtime',
+                                               yearOffset=yearOffset)
                 varNHObs = dsObs.IceArea
                 varNHObs = replicate_cycle(varNH, varNHObs)
 
-                dsObs = xr.open_mfdataset(
-                    obsFileNameSH,
-                    preprocess=lambda x: preprocess_mpas(
-                        x, yearoffset=yearOffset))
-                dsObs = remove_repeated_time_index(dsObs)
+                dsObs = open_multifile_dataset(fileNames=obsFileNameSH,
+                                               calendar=calendar,
+                                               timeVariableName='xtime',
+                                               yearOffset=yearOffset)
                 varSHObs = dsObs.IceArea
                 varSHObs = replicate_cycle(varSH, varSHObs)
 
@@ -254,10 +256,11 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
                     preprocessedReferenceDirectory,
                     preprocessedReferenceRunName)
-                dsPreprocessed = xr.open_mfdataset(
-                    inFilesPreprocessed,
-                    preprocess=lambda x: preprocess_mpas(
-                        x, yearoffset=yearOffset))
+                dsPreprocessed = open_multifile_dataset(
+                    fileNames=inFilesPreprocessed,
+                    calendar=calendar,
+                    timeVariableName='xtime',
+                    yearOffset=yearOffset)
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
                 varNHPreprocessed = dsPreprocessedTimeSlice.icearea_nh
@@ -266,11 +269,10 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         elif variableName == 'iceVolumeCell':
 
             if compareWithObservations:
-                dsObs = xr.open_mfdataset(
-                    obsFileNameNH,
-                    preprocess=lambda x: preprocess_mpas(
-                        x, yearoffset=yearOffset))
-                dsObs = remove_repeated_time_index(dsObs)
+                dsObs = open_multifile_dataset(fileNames=obsFileNameNH,
+                                               calendar=calendar,
+                                               timeVariableName='xtime',
+                                               yearOffset=yearOffset)
                 varNHObs = dsObs.IceVol
                 varNHObs = replicate_cycle(varNH, varNHObs)
 
@@ -280,10 +282,11 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
                     preprocessedReferenceDirectory,
                     preprocessedReferenceRunName)
-                dsPreprocessed = xr.open_mfdataset(
-                    inFilesPreprocessed,
-                    preprocess=lambda x: preprocess_mpas(
-                        x, yearoffset=yearOffset))
+                dsPreprocessed = open_multifile_dataset(
+                    fileNames=inFilesPreprocessed,
+                    calendar=calendar,
+                    timeVariableName='xtime',
+                    yearOffset=yearOffset)
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
                 varNHPreprocessed = dsPreprocessedTimeSlice.icevolume_nh

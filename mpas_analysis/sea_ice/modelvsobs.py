@@ -6,17 +6,17 @@ import matplotlib.colors as cols
 
 import numpy as np
 import numpy.ma as ma
-import xarray as xr
 import datetime
 
-from netCDF4 import Dataset as netcdf_dataset
+import netCDF4
 
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
 from ..shared.plot.plotting import plot_polar_comparison
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
+
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
 
 
 def seaice_modelvsobs(config, streamMap=None, variableMap=None):
@@ -53,9 +53,9 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     startDate = config.get('climatology', 'startDate')
     endDate = config.get('climatology', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    infiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate, calendar=calendar)
-    print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
+    fileNames = streams.readpath(streamName, startDate=startDate,
+                                 endDate=endDate, calendar=calendar)
+    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
@@ -158,14 +158,15 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     # Load data
     print "  Load sea-ice data..."
-    ds = xr.open_mfdataset(
-        infiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset,
-                                             timestr='Time',
-                                             onlyvars=['iceAreaCell',
-                                                       'iceVolumeCell'],
-                                             varmap=variableMap))
-    ds = remove_repeated_time_index(ds)
+    ds = open_multifile_dataset(fileNames=fileNames,
+                                calendar=calendar,
+                                timeVariableName='Time',
+                                variableList=['iceAreaCell',
+                                              'iceVolumeCell'],
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate,
+                                yearOffset=yearOffset)
 
     # Compute climatologies (first motnhly and then seasonally)
     print "  Compute seasonal climatologies..."
@@ -254,7 +255,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
             # ice concentrations
             fileName = "{}/{}".format(climatologyRegriddedDirectory,
                                       climatologyFiles[climName])
-            ncFile = netcdf_dataset(fileName, mode='r')
+            ncFile = netCDF4.Dataset(fileName, mode='r')
             iceConcentration = ncFile.variables["iceAreaCell"][:]
             if(first):
                 lons = ncFile.variables["lon"][:]
@@ -271,7 +272,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
                 fileName = obsIceConcFileNames[
                     '{}_{}'.format(climName, obsName)]
-                ncFile = netcdf_dataset(fileName, mode='r')
+                ncFile = netCDF4.Dataset(fileName, mode='r')
                 obsIceConcentration = ncFile.variables["AICE"][:]
                 ncFile.close()
 
@@ -319,7 +320,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
         # ice concentrations
         fileName = "{}/{}".format(climatologyRegriddedDirectory,
                                   climatologyFiles[climName])
-        ncFile = netcdf_dataset(fileName, mode='r')
+        ncFile = netCDF4.Dataset(fileName, mode='r')
         iceThickness = ncFile.variables["iceVolumeCell"][:]
         ncFile.close()
 
@@ -362,7 +363,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
             fileName = obsIceThickFileNames['{}{}'.format(climName,
                                                           hemisphere)]
-            ncFile = netcdf_dataset(fileName, mode='r')
+            ncFile = netCDF4.Dataset(fileName, mode='r')
             obsIceThickness = ncFile.variables["HI"][:]
             ncFile.close()
             # Mask thickness fields

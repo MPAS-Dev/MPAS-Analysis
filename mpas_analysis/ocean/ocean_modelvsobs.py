@@ -11,19 +11,20 @@ Last Modified: 02/02/2017
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 
-import numpy as np
 import xarray as xr
+import numpy as np
 import datetime
-from netCDF4 import Dataset as netcdf_dataset
+import netCDF4
 
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
 from ..shared.plot.plotting import plot_global_comparison
 from ..shared.interpolation.interpolate import interp_fields, init_tree
 from ..shared.constants import constants
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
+
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
 
 
 def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
@@ -85,7 +86,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     sectionName = 'regridded{}'.format(field.upper())
     outputTimes = config.getExpression(sectionName, 'comparisonTimes')
 
-    ncFile = netcdf_dataset(restartFile, mode='r')
+    ncFile = netCDF4.Dataset(restartFile, mode='r')
     lonCell = ncFile.variables["lonCell"][:]
     latCell = ncFile.variables["latCell"][:]
     ncFile.close()
@@ -94,7 +95,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
     if field == 'mld':
 
-        selvals = None
+        iselvals = None
 
         # Load MLD observational data
         obsFileName = "{}/holtetalley_mld_climatology.nc".format(
@@ -122,7 +123,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
     elif field == 'sst':
 
-        selvals = {'nVertLevels': 0}
+        iselvals = {'nVertLevels': 0}
 
         obsFileName = \
             "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
@@ -154,7 +155,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
     elif field == 'sss':
 
-        selvals = {'nVertLevels': 0}
+        iselvals = {'nVertLevels': 0}
 
         obsFileName = "{}/Aquarius_V3_SSS_Monthly.nc".format(
                 observationsDirectory)
@@ -183,14 +184,15 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
         outFileLabel = 'sssAquarius'
         unitsLabel = 'PSU'
 
-    ds = xr.open_mfdataset(
-        inputFiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset,
-                                             timestr='Time',
-                                             onlyvars=varList,
-                                             selvals=selvals,
-                                             varmap=variableMap))
-    ds = remove_repeated_time_index(ds)
+    ds = open_multifile_dataset(fileNames=inputFiles,
+                                calendar=calendar,
+                                timeVariableName='Time',
+                                variableList=varList,
+                                iselValues=iselvals,
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate,
+                                yearOffset=yearOffset)
 
     timeStart = datetime.datetime(yearOffset+startYear, 1, 1)
     timeEnd = datetime.datetime(yearOffset+endYear, 12, 31)
