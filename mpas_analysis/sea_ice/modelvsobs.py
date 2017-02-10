@@ -105,31 +105,43 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     # Obs filenames
     obsIceConcFileNames = {}
-    obsIceConcFileNames['winNH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations', 
+    obsIceConcFileNames['winNH_NASATeam'] = buildConfigFullPath(
+                                             config, 'seaIceObservations',
                                              'concentrationNASATeamNH_JFM')
-    obsIceConcFileNames['sumNH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['sumNH_NASATeam'] = buildConfigFullPath(
+                                             config, 'seaIceObservations',
                                              'concentrationNASATeamNH_JAS')
-    obsIceConcFileNames['winSH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['winSH_NASATeam'] = buildConfigFullPath(
+                                             config, 'seaIceObservations',
                                              'concentrationNASATeamSH_DJF')
-    obsIceConcFileNames['sumSH_NASATeam'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['sumSH_NASATeam'] = buildConfigFullPath(
+                                             config, 'seaIceObservations',
                                              'concentrationNASATeamSH_JJA')
-    obsIceConcFileNames['winNH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['winNH_Bootstrap'] = buildConfigFullPath(
+                                              config, 'seaIceObservations',
                                               'concentrationBootstrapNH_JFM')
-    obsIceConcFileNames['sumNH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['sumNH_Bootstrap'] = buildConfigFullPath(
+                                              config, 'seaIceObservations',
                                               'concentrationBootstrapNH_JAS')
-    obsIceConcFileNames['winSH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['winSH_Bootstrap'] = buildConfigFullPath(
+                                              config, 'seaIceObservations',
                                               'concentrationBootstrapSH_DJF')
-    obsIceConcFileNames['sumSH_Bootstrap'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceConcFileNames['sumSH_Bootstrap'] = buildConfigFullPath(
+                                              config, 'seaIceObservations',
                                               'concentrationBootstrapSH_JJA')
 
     obsIceThickFileNames = {}
-    obsIceThickFileNames['onNH'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceThickFileNames['onNH'] = buildConfigFullPath(
+                                    config, 'seaIceObservations',
                                     'thicknessNH_ON')
-    obsIceThickFileNames['fmNH'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceThickFileNames['fmNH'] = buildConfigFullPath(
+                                    config, 'seaIceObservations',
                                     'thicknessNH_FM')
-    obsIceThickFileNames['onSH'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceThickFileNames['onSH'] = buildConfigFullPath(
+                                    config, 'seaIceObservations',
                                     'thicknessSH_ON')
-    obsIceThickFileNames['fmSH'] = buildConfigFullPath(config, 'seaIceObservations',
+    obsIceThickFileNames['fmSH'] = buildConfigFullPath(
+                                    config, 'seaIceObservations',
                                     'thicknessSH_FM')
 
     # Checks on directory/files existence:
