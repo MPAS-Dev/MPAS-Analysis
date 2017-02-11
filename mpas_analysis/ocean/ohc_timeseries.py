@@ -133,7 +133,8 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         stringToDatetime(simulationStartTime), yearOffset)
     if timeStartFirstYear < timeStart:
         startDateFirstYear = simulationStartTime
-        endDateFirstYear = '{}-12-31_23:59:59'.format(startDateFirstYear[0:4])
+        firstYear = int(startDateFirstYear[0:4])
+        endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
         filesFirstYear = streams.readpath(streamName,
                                           startDate=startDateFirstYear,
                                           endDate=endDateFirstYear,
@@ -147,10 +148,16 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                                  varmap=variableMap))
 
         dsFirstYear = remove_repeated_time_index(dsFirstYear)
+        firstYear += yearOffset
     else:
-        timeStart = datetime.datetime(timeStart.year, 1, 1)
-        timeEnd = datetime.datetime(timeStart.year, 12, 31)
-        dsFirstYear = ds.sel(Time=slice(timeStart, timeEnd))
+        dsFirstYear = ds
+        firstYear = timeStart.year
+
+    timeStartFirstYear = datetime.datetime(firstYear, 1, 1)
+    timeEndFirstYear = datetime.datetime(firstYear, 12, 31)
+    dsFirstYear = dsFirstYear.sel(Time=slice(timeStartFirstYear,
+                                             timeEndFirstYear))
+
     meanFirstYear = dsFirstYear.mean('Time')
 
     print '  Compute temperature anomalies...'
