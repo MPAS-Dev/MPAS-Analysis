@@ -121,6 +121,18 @@ areaNH = IceArea_timeseries/iceAreaNH_climo.nc
 areaSH = IceArea_timeseries/iceAreaSH_climo.nc
 volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
 volSH = none
+concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
+concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
+thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
+thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
+thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
 [seaIceReference]
 ## options related to sea ice reference run with which the results will be
