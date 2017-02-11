@@ -58,7 +58,7 @@ climatologySubdirectory = clim
 # option:
 #    ./run_analysis.py config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_regriddedSeaIceConcThick']
+generate = ['all']
 
 # alternative examples that would perform all analysis except
 #   'timeSeriesOHC'
