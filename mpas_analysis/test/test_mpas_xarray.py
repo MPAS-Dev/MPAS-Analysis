@@ -8,7 +8,8 @@ Xylar Asay-Davis, Phillip J. Wolfram
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
-import pandas as pd
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime, \
+    string_to_datetime
 
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -16,6 +17,7 @@ class TestMpasXarray(TestCase):
 
     def test_subset_variables(self):
         fileName = str(self.datadir.join('example_jan.nc'))
+        calendar = 'gregorian_noleap'
         timestr = ['xtime_start', 'xtime_end']
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
@@ -23,71 +25,84 @@ class TestMpasXarray(TestCase):
         # first, test loading the whole data set and then calling
         # subset_variables explicitly
         ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                                timeVariableName=timestr,
-                                                yearOffset=1850)
+                                                calendar=calendar,
+                                                timeVariableName=timestr)
         ds = mpas_xarray.subset_variables(ds, variableList)
         self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
-        self.assertEqual(pd.Timestamp(ds.Time.values[0]),
-                         pd.Timestamp('1855-01-16 12:22:30'))
-
+        self.assertEqual(days_to_datetime(days=ds.Time.values,
+                                          referenceDate='0001-01-01',
+                                          calendar=calendar),
+                         string_to_datetime('0005-01-16 12:22:30'))
         # next, test the same with the onlyvars argument
         ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
+                                                calendar=calendar,
                                                 timeVariableName=timestr,
-                                                variableList=variableList,
-                                                yearOffset=1850)
+                                                variableList=variableList)
         self.assertEqual(ds.data_vars.keys(), variableList)
 
         with self.assertRaisesRegexp(ValueError,
                                      'Empty dataset is returned.'):
             missingvars = ['foo', 'bar']
             ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
+                                                    calendar=calendar,
                                                     timeVariableName=timestr,
-                                                    variableList=missingvars,
-                                                    yearOffset=1850)
+                                                    variableList=missingvars)
 
     def test_iselvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
+        calendar = 'gregorian_noleap'
+        simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
             ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
              'refBottomDepth']
 
         iselvals = {'nVertLevels': slice(0, 3)}
-        ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                                timeVariableName=timestr,
-                                                variableList=variableList,
-                                                iselValues=iselvals,
-                                                yearOffset=1850)
+        ds = mpas_xarray.open_multifile_dataset(
+            fileNames=fileName,
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            timeVariableName=timestr,
+            variableList=variableList,
+            iselValues=iselvals)
 
         self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
         self.assertEqual(ds[variableList[0]].shape, (1, 7, 3))
         self.assertEqual(ds['refBottomDepth'].shape, (3,))
         self.assertApproxEqual(ds['refBottomDepth'][-1],
                                4.882000207901)
-        date = pd.Timestamp(ds.Time.values[0])
-        # round to nearest second
-        date = pd.Timestamp(long(round(date.value, -9)))
-        self.assertEqual(date, pd.Timestamp('1855-01-13 12:24:14'))
+
+        self.assertEqual(days_to_datetime(days=ds.Time.values[0],
+                                          referenceDate='0001-01-01',
+                                          calendar=calendar),
+                         string_to_datetime('0005-01-14 12:24:14'))
 
     def test_no_units(self):
         fileName = str(self.datadir.join('example_no_units_jan.nc'))
+        calendar = 'gregorian_noleap'
+        simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
             ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
              'refBottomDepth']
 
-        ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                                timeVariableName=timestr,
-                                                variableList=variableList,
-                                                yearOffset=1850)
+        ds = mpas_xarray.open_multifile_dataset(
+            fileNames=fileName,
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            timeVariableName=timestr,
+            variableList=variableList)
         self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
-        date = pd.Timestamp(ds.Time.values[0])
-        # round to nearest second
-        date = pd.Timestamp(long(round(date.value, -9)))
-        self.assertEqual(date, pd.Timestamp('1855-01-13 12:24:14'))
+
+        self.assertEqual(days_to_datetime(days=ds.Time.values[0],
+                                          referenceDate='0001-01-01',
+                                          calendar=calendar),
+                         string_to_datetime('0005-01-14 12:24:14'))
 
     def test_bad_selvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
+        calendar = 'gregorian_noleap'
+        simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
             ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
@@ -97,32 +112,40 @@ class TestMpasXarray(TestCase):
         with self.assertRaisesRegexp(AssertionError,
                                      'not a dimension in the dataset that '
                                      'can be used for selection'):
-            mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                               timeVariableName=timestr,
-                                               variableList=variableList,
-                                               selValues=selvals,
-                                               yearOffset=1850)
+            mpas_xarray.open_multifile_dataset(
+                fileNames=fileName,
+                calendar=calendar,
+                simulationStartTime=simulationStartTime,
+                timeVariableName=timestr,
+                variableList=variableList,
+                selValues=selvals)
 
     def test_selvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
+        calendar = 'gregorian_noleap'
+        simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
             ['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',
              'refBottomDepth']
 
-        dsRef = mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                                   timeVariableName=timestr,
-                                                   variableList=variableList,
-                                                   selValues=None,
-                                                   yearOffset=1850)
+        dsRef = mpas_xarray.open_multifile_dataset(
+            fileNames=fileName,
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            timeVariableName=timestr,
+            variableList=variableList,
+            selValues=None)
 
         for vertIndex in range(0, 11):
             selvals = {'nVertLevels': vertIndex}
-            ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                                    timeVariableName=timestr,
-                                                    variableList=variableList,
-                                                    selValues=selvals,
-                                                    yearOffset=1850)
+            ds = mpas_xarray.open_multifile_dataset(
+                fileNames=fileName,
+                calendar=calendar,
+                simulationStartTime=simulationStartTime,
+                timeVariableName=timestr,
+                variableList=variableList,
+                selValues=selvals)
 
             self.assertEqual(ds.data_vars.keys(), variableList)
             self.assertEqual(ds[variableList[0]].shape, (1, 7))
@@ -131,15 +154,17 @@ class TestMpasXarray(TestCase):
 
     def test_remove_repeated_time_index(self):
         fileName = str(self.datadir.join('example_jan*.nc'))
+        calendar = 'gregorian_noleap'
         timestr = ['xtime_start', 'xtime_end']
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
         # repeat time indices are removed in openMultifileDataSet
-        ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
-                                                timeVariableName=timestr,
-                                                variableList=variableList,
-                                                yearOffset=1850)
+        ds = mpas_xarray.open_multifile_dataset(
+            fileNames=fileName,
+            calendar=calendar,
+            timeVariableName=timestr,
+            variableList=variableList)
 
         self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
         # There would be 3 time indices if repeat indices had not been removed.

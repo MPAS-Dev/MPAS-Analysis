@@ -5,7 +5,7 @@ sea surface temperature (sst), sea surface salinity (sss) and mixed layer
 depth (mld)
 
 Author: Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
-Last Modified: 02/02/2017
+Last Modified: 02/11/2017
 """
 
 import matplotlib.pyplot as plt
@@ -25,6 +25,9 @@ from ..shared.io.utility import buildConfigFullPath
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
+
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    days_to_datetime
 
 
 def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
@@ -58,6 +61,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
     calendar = namelist.get('config_calendar_type')
+    simulationStartTime = get_simulation_start_time(streams)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
@@ -81,7 +85,6 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
-    yearOffset = config.getint('time', 'yearOffset')
 
     sectionName = 'regridded{}'.format(field.upper())
     outputTimes = config.getExpression(sectionName, 'comparisonTimes')
@@ -129,27 +132,30 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
             "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
                     observationsDirectory)
         dsObs = xr.open_mfdataset(obsFileName)
-        # Select years for averaging (pre-industrial or present-day)
-        # This seems fragile as definitions can change
-        if yearOffset < 1900:
-            timeStart = datetime.datetime(1870, 1, 1)
-            timeEnd = datetime.datetime(1900, 12, 31)
-            preindustrialText = "pre-industrial 1870-1900"
+
+        climStartYear = config.getint('oceanObservations',
+                                      'sstClimatologyStartYear')
+        climEndYear = config.getint('oceanObservations',
+                                    'sstClimatologyEndYear')
+        timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
+        timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
+
+        if climStartYear < 1925:
+            period = 'pre-industrial'
         else:
-            timeStart = datetime.datetime(1990, 1, 1)
-            timeEnd = datetime.datetime(2011, 12, 31)
-            preindustrialText = "present-day 1990-2011"
+            period = 'present-day'
 
         dsTimeSlice = dsObs.sel(time=slice(timeStart, timeEnd))
         monthlyClimatology = dsTimeSlice.groupby('time.month').mean('time')
 
-        # Rename the observation data for code compactness
         dsObs = monthlyClimatology.transpose('month', 'lon', 'lat')
         obsFieldName = 'SST'
 
         # Set appropriate figure labels for SST
         observationTitleLabel = \
-            "Observations (Hadley/OI, {})".format(preindustrialText)
+            "Observations (Hadley/OI, {} {:04d}-{:04d})".format(period,
+                                                                climStartYear,
+                                                                climEndYear)
         outFileLabel = "sstHADOI"
         unitsLabel = r'$^o$C'
 
@@ -176,28 +182,28 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
         dsObs = monthlyClimatology.transpose('month', 'lon', 'lat')
         obsFieldName = 'SSS'
 
-        # Set appropriate figure labels for SSS
-        preindustrialText = "2011-2014"
-
-        observationTitleLabel = "Observations (Aquarius, {})".format(
-                preindustrialText)
+        observationTitleLabel = "Observations (Aquarius, 2011-2014)"
         outFileLabel = 'sssAquarius'
         unitsLabel = 'PSU'
 
     ds = open_multifile_dataset(fileNames=inputFiles,
                                 calendar=calendar,
+                                simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=varList,
                                 iselValues=iselvals,
                                 variableMap=variableMap,
                                 startDate=startDate,
-                                endDate=endDate,
-                                yearOffset=yearOffset)
+                                endDate=endDate)
 
-    timeStart = datetime.datetime(yearOffset+startYear, 1, 1)
-    timeEnd = datetime.datetime(yearOffset+endYear, 12, 31)
-    dsTimeSlice = ds.sel(Time=slice(timeStart, timeEnd))
-    monthlyClimatology = dsTimeSlice.groupby('Time.month').mean('Time')
+    # replace Time in days with its datetime.datetime equivalent so we can
+    # compute a climatology
+
+    months = [date.month for date in days_to_datetime(ds.Time,
+                                                      calendar=calendar)]
+
+    ds.coords['month'] = ('Time', months)
+    monthlyClimatology = ds.groupby('month').mean('Time')
 
     latData, lonData = np.meshgrid(dsObs.lat.values,
                                    dsObs.lon.values)
@@ -243,8 +249,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
         if isinstance(monthsValue, (int, long)):
             modelData = monthlyClimatology.sel(month=monthsValue)[field].values
-            obsData = dsObs.sel(
-                    month=monthsValue)[obsFieldName].values
+            obsData = dsObs.sel(month=monthsValue)[obsFieldName].values
         else:
 
             modelData = (np.sum(

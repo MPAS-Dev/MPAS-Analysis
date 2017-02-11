@@ -8,3 +8,6 @@ dependencies:
   - xarray
   - matplotlib
   - dask
+  - netcdf4
+  - hdf5
+  - hdf4

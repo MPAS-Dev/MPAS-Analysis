@@ -97,6 +97,15 @@ sstSubdirectory = global/project/projectdirs/acme/observations/Ocean/SST
 sssSubdirectory = global/homes/l/lvroekel
 mldSubdirectory = /global/project/projectdirs/acme/observations/Ocean/MLD
 
+# first and last year of SST observational climatology (preferably one of the
+# two ranges given below)
+# values for preindustrial
+sstClimatologyStartYear = 1870
+sstClimatologyEndYear = 1900
+# alternative values for present day
+#sstClimatologyStartYear = 1990
+#sstClimatologyEndYear = 2011
+
 [oceanReference]
 ## options related to ocean reference run with which the results will be
 ## compared
@@ -147,14 +156,6 @@ baseDirectory = /dir/to/seaice/reference
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[time]
-## options related to dates and times for all runs (main, reference and
-## preprocessed)
-
-# the offset in years to be added to simulation years to prevent xarray
-# calendar problems.  (Hopefully, this will be removed soon.)
-yearOffset = 1849
 
 [remapping]
 ## options related to horizontal remapping

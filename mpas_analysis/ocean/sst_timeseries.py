@@ -1,6 +1,3 @@
-import pandas as pd
-import datetime
-
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import NameList, StreamsFile
@@ -9,8 +6,8 @@ from ..shared.io.utility import buildConfigFullPath
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import stringToDatetime, \
-    clampToNumpyDatetime64
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    date_to_days, days_to_datetime
 
 
 def sst_timeseries(config, streamMap=None, variableMap=None):
@@ -28,7 +25,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/02/2017
+    Last Modified: 02/11/2017
     """
 
     # Define/read in general variables
@@ -43,6 +40,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     namelist = NameList(namelistFileName, path=inDirectory)
 
     calendar = namelist.get('config_calendar_type')
+    simulationStartTime = get_simulation_start_time(streams)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
@@ -61,8 +59,6 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
-    yearOffset = config.getint('time', 'yearOffset')
-
     movingAveragePoints = config.getint('timeSeriesSST', 'movingAveragePoints')
 
     regions = config.getExpression('regions', 'regions')
@@ -74,35 +70,33 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     varList = ['avgSurfaceTemperature']
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=varList,
                                 variableMap=variableMap,
                                 startDate=startDate,
-                                endDate=endDate,
-                                yearOffset=yearOffset)
-
-    timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
-    timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
-    # select only the data in the specified range of years
-    ds = ds.sel(Time=slice(timeStart, timeEnd))
+                                endDate=endDate)
 
     SSTregions = ds.avgSurfaceTemperature
 
-    yearStart = (pd.to_datetime(ds.Time.min().values)).year
-    yearEnd = (pd.to_datetime(ds.Time.max().values)).year
-    timeStart = datetime.datetime(yearStart, 1, 1)
-    timeEnd = datetime.datetime(yearEnd, 12, 31)
+    yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
+    yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+    timeStart = date_to_days(year=yearStart, month=1, day=1,
+                             calendar=calendar)
+    timeEnd = date_to_days(year=yearEnd, month=12, day=31,
+                           calendar=calendar)
 
     if preprocessedReferenceRunName != 'None':
         print '  Load in SST for a preprocesses reference run...'
         inFilesPreprocessed = '{}/SST.{}.year*.nc'.format(
             preprocessedInputDirectory, preprocessedReferenceRunName)
-        dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
-                                                calendar=calendar,
-                                                timeVariableName='xtime',
-                                                yearOffset=yearOffset)
-        yearEndPreprocessed = \
-            (pd.to_datetime(dsPreprocessed.Time.max().values)).year
+        dsPreprocessed = open_multifile_dataset(
+            fileNames=inFilesPreprocessed,
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            timeVariableName='xtime')
+        yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
+                                               calendar=calendar).year
         if yearStart <= yearEndPreprocessed:
             dsPreprocessedTimeSlice = \
                 dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
