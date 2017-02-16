@@ -1,14 +1,13 @@
-import xarray as xr
 import pandas as pd
 import datetime
-
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
+
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
 
 from ..shared.timekeeping.utility import stringToDatetime, \
     clampToNumpyDatetime64
@@ -50,9 +49,9 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     startDate = config.get('timeSeries', 'startDate')
     endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    inFiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate,  calendar=calendar)
-    print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
+    fileNames = streams.readpath(streamName, startDate=startDate,
+                                 endDate=endDate,  calendar=calendar)
+    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     mainRunName = config.get('runs', 'mainRunName')
     preprocessedReferenceRunName = config.get('runs',
@@ -73,13 +72,14 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
     # Load data:
     varList = ['avgSurfaceTemperature']
-    ds = xr.open_mfdataset(
-        inFiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset,
-                                             timestr='Time',
-                                             onlyvars=varList,
-                                             varmap=variableMap))
-    ds = remove_repeated_time_index(ds)
+    ds = open_multifile_dataset(fileNames=fileNames,
+                                calendar=calendar,
+                                timeVariableName='Time',
+                                variableList=varList,
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate,
+                                yearOffset=yearOffset)
 
     timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
     timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
@@ -97,10 +97,10 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
         print '  Load in SST for a preprocesses reference run...'
         inFilesPreprocessed = '{}/SST.{}.year*.nc'.format(
             preprocessedInputDirectory, preprocessedReferenceRunName)
-        dsPreprocessed = xr.open_mfdataset(
-            inFilesPreprocessed,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset))
-        dsPreprocessed = remove_repeated_time_index(dsPreprocessed)
+        dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
+                                                calendar=calendar,
+                                                timeVariableName='xtime',
+                                                yearOffset=yearOffset)
         yearEndPreprocessed = \
             (pd.to_datetime(dsPreprocessed.Time.max().values)).year
         if yearStart <= yearEndPreprocessed:

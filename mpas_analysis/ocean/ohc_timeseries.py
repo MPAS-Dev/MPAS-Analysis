@@ -1,17 +1,15 @@
 import numpy as np
 import netCDF4
-from netCDF4 import Dataset as netcdf_dataset
-import xarray as xr
 import pandas as pd
 import datetime
-
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
+
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
 
 from ..shared.timekeeping.utility import stringToDatetime, \
     clampToNumpyDatetime64
@@ -33,7 +31,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/02/2017
+    Last Modified: 02/08/2017
     """
 
     inDirectory = config.get('input', 'baseDirectory')
@@ -82,13 +80,13 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     startDate = config.get('timeSeries', 'startDate')
     endDate = config.get('timeSeries', 'endDate')
     streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    inFiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate, calendar=calendar)
-    print 'Reading files {} through {}'.format(inFiles[0], inFiles[-1])
+    fileNames = streams.readpath(streamName, startDate=startDate,
+                                 endDate=endDate, calendar=calendar)
+    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     # Define/read in general variables
     print '  Read in depth and compute specific depth indexes...'
-    ncFile = netcdf_dataset(restartFile, mode='r')
+    ncFile = netCDF4.Dataset(restartFile, mode='r')
     # reference depth [m]
     depth = ncFile.variables['refBottomDepth'][:]
     # simulation start time
@@ -113,20 +111,17 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                     'sumLayerMaskValue',
                     'avgLayerArea',
                     'avgLayerThickness']
-    ds = xr.open_mfdataset(
-        inFiles,
-        preprocess=lambda x: preprocess_mpas(x,
-                                             yearoffset=yearOffset,
-                                             timestr='Time',
-                                             onlyvars=variableList,
-                                             varmap=variableMap))
-
-    ds = remove_repeated_time_index(ds)
+    ds = open_multifile_dataset(fileNames=fileNames,
+                                calendar=calendar,
+                                timeVariableName='Time',
+                                variableList=variableList,
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate,
+                                yearOffset=yearOffset)
 
     timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
     timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
-    # select only the data in the specified range of years
-    ds = ds.sel(Time=slice(timeStart, timeEnd))
 
     # Select year-1 data and average it (for later computing anomalies)
     timeStartFirstYear = clampToNumpyDatetime64(
@@ -139,15 +134,14 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                           startDate=startDateFirstYear,
                                           endDate=endDateFirstYear,
                                           calendar=calendar)
-        dsFirstYear = xr.open_mfdataset(
-            filesFirstYear,
-            preprocess=lambda x: preprocess_mpas(x,
-                                                 yearoffset=yearOffset,
-                                                 timestr='Time',
-                                                 onlyvars=variableList,
-                                                 varmap=variableMap))
-
-        dsFirstYear = remove_repeated_time_index(dsFirstYear)
+        dsFirstYear = open_multifile_dataset(fileNames=filesFirstYear,
+                                             calendar=calendar,
+                                             timeVariableName='Time',
+                                             variableList=variableList,
+                                             variableMap=variableMap,
+                                             startDate=startDateFirstYear,
+                                             endDate=endDateFirstYear,
+                                             yearOffset=yearOffset)
         firstYear += yearOffset
     else:
         dsFirstYear = ds
@@ -174,12 +168,12 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     if preprocessedReferenceRunName != 'None':
         print '  Load in OHC from preprocessed reference run...'
-        inFilesPreprocesses = '{}/OHC.{}.year*.nc'.format(
+        inFilesPreprocessed = '{}/OHC.{}.year*.nc'.format(
             preprocessedInputDirectory, preprocessedReferenceRunName)
-        dsPreprocessed = xr.open_mfdataset(
-            inFilesPreprocesses,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yearOffset))
-        dsPreprocessed = remove_repeated_time_index(dsPreprocessed)
+        dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
+                                                calendar=calendar,
+                                                timeVariableName='xtime',
+                                                yearOffset=yearOffset)
         yearEndPreprocessed = \
             (pd.to_datetime(dsPreprocessed.Time.max().values)).year
         if yearStart <= yearEndPreprocessed:
