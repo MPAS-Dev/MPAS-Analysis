@@ -1,8 +1,9 @@
-import datetime
 import numpy as np
-import pandas as pd
 import xarray
 from functools import partial
+
+from ..timekeeping.utility import string_to_days_since_date, \
+    string_to_datetime, days_to_datetime, datetime_to_days
 
 """
 Utility functions for importing MPAS files into xarray.
@@ -18,13 +19,15 @@ Phillip J. Wolfram, Xylar Asay-Davis
 
 Last modified
 -------------
-02/16/2017
+02/22/2017
 """
 
 
-def open_multifile_dataset(fileNames, timeVariableName='Time',
+def open_multifile_dataset(fileNames, calendar,
+                           simulationStartTime=None,
+                           timeVariableName='xtime',
                            variableList=None, selValues=None,
-                           iselValues=None, yearOffset=0):  # {{{
+                           iselValues=None):  # {{{
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -33,6 +36,22 @@ def open_multifile_dataset(fileNames, timeVariableName='Time',
     ----------
     fileNames : list of strings
         A lsit of file paths to read
+
+    calendar : {'gregorian', 'gregorian_noleap'}, optional
+        The name of one of the calendars supported by MPAS cores
+
+    simulationStartTime : string, optional
+        The start date of the simulation, used to convert from time variables
+        expressed as days since the start of the simulation to days since the
+        reference date. `simulationStartTime` takes one of the following
+        forms:
+            0001-01-01
+
+            0001-01-01 00:00:00
+
+        simulationStartTime is only required if the MPAS time variable
+        (identified by timeVariableName) is a number of days since the
+        start of the simulation.
 
     timeVariableName : string, optional
         The name of the time variable (typically 'Time' if using a variableMap
@@ -44,22 +63,17 @@ def open_multifile_dataset(fileNames, timeVariableName='Time',
     selectCorrdValues : dict, optional
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
-        xarray.DataSet.sel() for details on how this dictonary is used.
+        xarray.dataset.sel() for details on how this dictonary is used.
         An example:
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict, optional
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
-        xarray.DataSet.isel() for details on how this dictonary is used.
+        xarray.dataset.isel() for details on how this dictonary is used.
         An example:
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
-
-    yearOffset : float, optional
-        An offset used to convert an MPAS date to a date in the range supported
-        by xarray (numpy.datetime64).  Resulting dates must be between 1678
-        and 2622.
 
     Returns
     -------
@@ -68,12 +82,13 @@ def open_multifile_dataset(fileNames, timeVariableName='Time',
     Raises
     ------
     TypeError
-        If the time variable has an unsupported type (not a date string,
-        a floating-pont number of days since the start of the simulation
-        or a numpy.datatime64 object).
+        If the time variable has an unsupported type (not a date string or
+        a floating-pont number of days since the start of the simulation).
 
     ValueError
-        If the time variable is not found in the data set.
+        If the time variable is not found in the data set or if the time
+        variable is a number of days since the start of the simulation but
+        simulationStartTime is None.
 
     Author
     ------
@@ -81,15 +96,16 @@ def open_multifile_dataset(fileNames, timeVariableName='Time',
 
     Last modified
     -------------
-    02/16/2017
+    02/17/2017
     """
 
     preprocess_partial = partial(preprocess,
+                                 calendar=calendar,
+                                 simulationStartTime=simulationStartTime,
                                  timeVariableName=timeVariableName,
                                  variableList=variableList,
                                  selValues=selValues,
-                                 iselValues=iselValues,
-                                 yearOffset=yearOffset)
+                                 iselValues=iselValues)
 
     ds = xarray.open_mfdataset(fileNames,
                                preprocess=preprocess_partial,
@@ -160,8 +176,8 @@ def subset_variables(ds, variableList):  # {{{
     return ds  # }}}
 
 
-def preprocess(ds, timeVariableName, variableList, selValues,
-               iselValues, yearOffset):  # {{{
+def preprocess(ds, calendar, simulationStartTime, timeVariableName,
+               variableList, selValues, iselValues):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset
     because the time must be between 1678 and 2262 based on the xarray
@@ -174,6 +190,22 @@ def preprocess(ds, timeVariableName, variableList, selValues,
     ds : xarray.DataSet object
         The data set containing an MPAS time variable to be used to build
         an xarray time coordinate.
+
+    calendar : {'gregorian', 'gregorian_noleap'}
+        The name of one of the calendars supported by MPAS cores
+
+    simulationStartTime : string, optinal
+        The start date of the simulation, used to convert from time
+        variables expressed as days since the start of the simulation to
+        days since the reference date. `simulationStartTime` takes one
+        of the following forms:
+            0001-01-01
+
+            0001-01-01 00:00:00
+
+        simulationStartTime is only required if the MPAS time variable
+        (identified by timeVariableName) is a number of days since the
+        start of the simulation.
 
     timeVariableName : string
         The name of the time variable (typically 'Time' if using a variableMap
@@ -197,11 +229,6 @@ def preprocess(ds, timeVariableName, variableList, selValues,
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
 
-    yearOffset : float
-        An offset used to convert an MPAS date to a date in the range supported
-        by xarray (numpy.datetime64).  Resulting dates must be between 1678
-        and 2622.
-
     Returns
     -------
     ds : xarray.DataSet object
@@ -215,18 +242,15 @@ def preprocess(ds, timeVariableName, variableList, selValues,
 
     Last modified
     -------------
-    02/16/2017
+    02/17/2017
     """
 
-    datetimes = _get_datetimes(ds, timeVariableName,
-                               yearOffset)
-
-    _assert_valid_datetimes(datetimes, yearOffset)
-
-    # append the corret time information
-    ds.coords['Time'] = datetimes
-    # record the yroffset
-    ds.attrs.__setitem__('time_yearoffset', str(yearOffset))
+    ds = _parse_dataset_time(ds=ds,
+                             inTimeVariableName=timeVariableName,
+                             calendar=calendar,
+                             simulationStartTime=simulationStartTime,
+                             outTimeVariableName='Time',
+                             referenceDate='0001-01-01')
 
     if variableList is not None:
         ds = subset_variables(ds,
@@ -264,7 +288,7 @@ def remove_repeated_time_index(ds):  # {{{
 
     Last modified
     -------------
-    02/10/2017
+    02/11/2017
     """
     # get repeated indices
     times = ds.Time.values
@@ -286,28 +310,6 @@ def remove_repeated_time_index(ds):  # {{{
     ds = ds.isel(Time=indices)
 
     return ds  # }}}
-
-
-def _assert_valid_datetimes(datetimes, yearOffset):  # {{{
-    """
-    Ensure that datatimes are compatable with xarray
-
-    Authors
-    -------
-    Phillip J. Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/16/2017
-    """
-    assert datetimes[0].year > 1678, \
-        'ERROR: yearOffset={}'.format(yearOffset) + \
-        ' must be large enough to ensure datetimes larger than year 1678'
-    assert datetimes[-1].year < 2262, \
-        'ERROR: yearOffset={}'.format(yearOffset) + \
-        ' must be small enough to ensure datetimes smaller than year 2262'
-
-    return  # }}}
 
 
 def _assert_valid_selections(ds, selvals, iselvals):  # {{{
@@ -369,11 +371,14 @@ def _ensure_list(alist):  # {{{
     return alist  # }}}
 
 
-def _get_datetimes(ds, timeVariableName, yearOffset):  # {{{
+def _parse_dataset_time(ds, inTimeVariableName, calendar,
+                        simulationStartTime, outTimeVariableName,
+                        referenceDate):  # {{{
     """
     A helper function for computing a time coordinate from an MPAS time
     variable.  Given a data set and a time variable name (or tuple of 2
-    time names), returns a list of objects representing the time coordinate
+    time names), returns a new data set with time coordinate
+    `outTimeVariableName` filled with days since `referenceDate`
 
     Parameters
     ----------
@@ -381,35 +386,59 @@ def _get_datetimes(ds, timeVariableName, yearOffset):  # {{{
         The data set containing an MPAS time variable to be used to build
         an xarray time coordinate.
 
-    timeVariableName : string or tuple or list of strings, optional
+    inTimeVariableName : string or tuple or list of strings
         The name of the time variable in the MPAS data set that will be
         used to build the 'Time' coordinate.  The array(s) named by
-        timeVariableName should contain date strings or the number of
+        inTimeVariableName should contain date strings or the number of
         days since the start of the simulation. Typically,
-        timeVariableName is one of {'daysSinceStartOfSim','xtime'}.
+        inTimeVariableName is one of {'daysSinceStartOfSim','xtime'}.
         If a list of two variable
         names is provided, times from the two are averaged together to
         determine the value of the time coordinate.  In such cases,
-        timeVariableName is typically {['xtime_start', 'xtime_end']}.
+        inTimeVariableName is typically {['xtime_start', 'xtime_end']}.
 
-    yearOffset : int, optional
-        An offset to be added to all years in the resulting array of dates.
-        This offset is typically required to convert MPAS dates
-        starting with year 0001 into dates in the range supported by xarray
-        (1678 <= year <= 2262).
+    calendar : {'gregorian', 'gregorian_noleap'}
+        The name of one of the calendars supported by MPAS cores
+
+
+    simulationStartTime : string
+        The start date of the simulation, used to convert from time variables
+        expressed as days since the start of the simulation to days since the
+        reference date. `simulationStartTime` takes one of the following
+        forms:
+            0001-01-01
+
+            0001-01-01 00:00:00
+
+        simulationStartTime is only required if the MPAS time variable
+        (identified by timeVariableName) is a number of days since the
+        start of the simulation.
+
+    outTimeVariableName : string
+        The name of the coordinate to assign times to, typically 'Time'.
+
+    referenceDate : string
+        The reference date for the time variable, typically '0001-01-01',
+        taking one of the following forms:
+            0001-01-01
+
+            0001-01-01 00:00:00
 
     Returns
     -------
-    datetimes : list of datetime.datetime objects
-        An array that represents the xarray time coordinate for the
-        data set, based on the given MPAs time variable name.
+    dataset : xarray.dataset object
+        A copy of the input data set with the `outTimeVariableName`
+        coordinate containing the time coordinate parsed from
+        `inTimeVariableName`.
 
     Raises
     ------
     TypeError
-        If the time variable has an unsupported type (not a date string,
-        a floating-pont number of days since the start of the simulation
-        or a numpy.datatime64 object).
+        If the time variable has an unsupported type (not a date string
+        or a floating-pont number of days since the start of the simulatio).
+    ValueError
+        If  the time variable is a number of days since the start of the
+        simulation but simulationStartTime is None.
 
     Authors
     -------
@@ -420,41 +449,83 @@ def _get_datetimes(ds, timeVariableName, yearOffset):  # {{{
     02/16/2017
     """
 
-    if isinstance(timeVariableName, (tuple, list)):
+    if isinstance(inTimeVariableName, (tuple, list)):
         # we want to average the two
-        assert(len(timeVariableName) == 2)
-        starts = _get_datetimes(ds, timeVariableName[0], yearOffset)
-        ends = _get_datetimes(ds, timeVariableName[1], yearOffset)
-        datetimes = [starts[i] + (ends[i] - starts[i])/2
-                     for i in range(len(starts))]
-        return datetimes
+        assert(len(inTimeVariableName) == 2)
 
-    timeVariable = ds[timeVariableName]
+        dsStart = _parse_dataset_time(
+            ds=ds,
+            inTimeVariableName=inTimeVariableName[0],
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            outTimeVariableName=outTimeVariableName,
+            referenceDate=referenceDate)
+        dsEnd = _parse_dataset_time(
+            ds=ds,
+            inTimeVariableName=inTimeVariableName[1],
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            outTimeVariableName=outTimeVariableName,
+            referenceDate=referenceDate)
+        starts = dsStart[outTimeVariableName].values
+        ends = dsEnd[outTimeVariableName].values
 
-    if timeVariable.dtype == '|S64':
-        # this is a variable like date strings like 'xtime'
-        time = [''.join(atime).strip() for atime in timeVariable.values]
-        datetimes = [datetime.datetime(yearOffset + int(x[:4]),
-                                       int(x[5:7]), int(x[8:10]),
-                                       int(x[11:13]), int(x[14:16]),
-                                       int(x[17:19]))
-                     for x in time]
-    elif timeVariable.dtype == 'float64':
-        # this array contains floating-point days like
-        # 'daysSinceStartOfSim'
-        start = datetime.datetime(year=yearOffset+1, month=1, day=1)
-        datetimes = [start + datetime.timedelta(x)
-                     for x in timeVariable.values]
-    elif timeVariable.dtype == 'timedelta64[ns]':
-        # this array contains a variable like 'daysSinceStartOfSim' as a
-        # timedelta64
-        start = datetime.datetime(year=yearOffset+1, month=1, day=1)
-        datetimes = [start + x for x in
-                     pd.to_timedelta(timeVariable.values, unit='ns')]
+        # replace the time in starts with the mean of starts and ends
+        dsStart[outTimeVariableName] = [starts[i] +
+                                        (ends[i] - starts[i])/2
+                                        for i in range(len(starts))]
+
+        return dsStart
+
+    # The remainder of the function is for cases when there is just one time
+    # variable (either because we're recursively calling the function or
+    # because we're not averaging).  The contents of the time variable is
+    # expected to be either a string (|S64) or a float (meaning days since
+    # start of the simulation).
+
+    timeVar = ds[inTimeVariableName]
+
+    if timeVar.dtype == '|S64':
+        # this is an array of date strings like 'xtime'
+        # convert to string
+        timeStrings = [''.join(xtime).strip() for xtime in timeVar.values]
+        days = string_to_days_since_date(dateString=timeStrings,
+                                         referenceDate=referenceDate,
+                                         calendar=calendar)
+
+    elif timeVar.dtype == 'float64':
+        # this array contains floating-point days like 'daysSinceStartOfSim'
+
+        if simulationStartTime is None:
+            raise ValueError('MPAS time variable {} appears to be a number of '
+                             'days since start of sim but '
+                             'simulationStartTime was not '
+                             'supplied.'.format(inTimeVariableName))
+
+        if (string_to_datetime(referenceDate) == 
+                string_to_datetime(simulationStartTime)):
+            days = timeVar.values
+        else:
+            # a conversion may be required
+            dates = days_to_datetime(days=timeVar.values,
+                                     referenceDate=simulationStartTime,
+                                     calendar=calendar)
+            days = datetime_to_days(dates=dates,
+                                    referenceDate=referenceDate,
+                                    calendar=calendar)
+
+    elif timeVar.dtype == 'timedelta64[ns]':
+        raise TypeError("timeVar of unsupported type {}.  This is likely "
+                        "because xarray.open_dataset was called with "
+                        "decode_times=True.".format(timeVar.dtype))
     else:
-        raise TypeError("timeVariable of unsupported type {}".format(
-            timeVariable.dtype))
+        raise TypeError("timeVar of unsupported type {}".format(
+            timeVar.dtype))
 
-    return datetimes  # }}}
+    dsOut = ds.copy()
+    dsOut.coords[outTimeVariableName] = (outTimeVariableName, days)
+
+    return dsOut  # }}}
+
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

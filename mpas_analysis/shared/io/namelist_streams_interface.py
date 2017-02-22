@@ -18,7 +18,7 @@ import os.path
 
 from ..containers import ReadOnlyDict
 from .utility import paths
-from ..timekeeping.utility import stringToDatetime, stringToRelativeDelta
+from ..timekeeping.utility import string_to_datetime, string_to_relative_delta
 
 
 def convert_namelist_to_dict(fname, readonly=True):
@@ -225,16 +225,16 @@ class StreamsFile:
         if output_interval is None:
             # There's no file interval, so hard to know what to do
             # let's put a buffer of a year on each side to be safe
-            offsetDate = stringToRelativeDelta(dateString='0001-00-00',
-                                               calendar=calendar)
+            offsetDate = string_to_relative_delta(dateString='0001-00-00',
+                                                  calendar=calendar)
         else:
-            offsetDate = stringToRelativeDelta(dateString=output_interval,
-                                               calendar=calendar)
+            offsetDate = string_to_relative_delta(dateString=output_interval,
+                                                  calendar=calendar)
 
         if startDate is not None:
             # read one extra file before the start date to be on the safe side
             if isinstance(startDate, str):
-                startDate = stringToDatetime(startDate)
+                startDate = string_to_datetime(startDate)
             try:
                 startDate -= offsetDate
             except (ValueError, OverflowError):
@@ -245,7 +245,7 @@ class StreamsFile:
         if endDate is not None:
             # read one extra file after the end date to be on the safe side
             if isinstance(endDate, str):
-                endDate = stringToDatetime(endDate)
+                endDate = string_to_datetime(endDate)
             try:
                 endDate += offsetDate
             except (ValueError, OverflowError):
@@ -268,7 +268,7 @@ class StreamsFile:
             baseName = os.path.basename(fileName)
             dateEndIndex = len(baseName) - dateEndOffset
             fileDateString = baseName[dateStartIndex:dateEndIndex]
-            fileDate = stringToDatetime(fileDateString)
+            fileDate = string_to_datetime(fileDateString)
             add = True
             if startDate is not None and startDate > fileDate:
                 add = False

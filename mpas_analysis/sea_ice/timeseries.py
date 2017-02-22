@@ -1,15 +1,13 @@
-import numpy as np
 import xarray as xr
-import pandas as pd
-import datetime
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
 
-from ..shared.timekeeping.utility import stringToDatetime, \
-    clampToNumpyDatetime64
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    date_to_days, days_to_datetime, datetime_to_days
+from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -42,7 +40,15 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     streamsFileName = config.get('input', 'seaIceStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
+    oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+    oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
+
     calendar = namelist.get('config_calendar_type')
+    try:
+        simulationStartTime = get_simulation_start_time(streams)
+    except IOError:
+        # try the ocean stream instead
+        simulationStartTime = get_simulation_start_time(oceanStreams)
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
@@ -85,8 +91,6 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
-    yearOffset = config.getint('time', 'yearOffset')
-
     movingAveragePoints = config.getint('timeSeriesSeaIceAreaVol',
                                         'movingAveragePoints')
 
@@ -95,9 +99,6 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         restartFile = streams.readpath('restart')[0]
     except ValueError:
         # get an ocean restart file, since no sea-ice restart exists
-        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-        oceanStreams = StreamsFile(oceanStreamsFileName,
-                                   streamsdir=inDirectory)
         try:
             restartFile = oceanStreams.readpath('restart')[0]
         except ValueError:
@@ -114,38 +115,34 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     # Load data
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=['iceAreaCell',
                                               'iceVolumeCell'],
                                 variableMap=variableMap,
                                 startDate=startDate,
-                                endDate=endDate,
-                                yearOffset=yearOffset)
-
-    timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
-    timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
-    # select only the data in the specified range of years
-    ds = ds.sel(Time=slice(timeStart, timeEnd))
+                                endDate=endDate)
 
     # handle the case where the "mesh" file has a spurious time dimension
     if 'Time' in dsMesh.keys():
         dsMesh = dsMesh.drop('Time')
     ds = ds.merge(dsMesh)
 
-    yearStart = (pd.to_datetime(ds.Time.min().values)).year
-    yearEnd = (pd.to_datetime(ds.Time.max().values)).year
-    timeStart = datetime.datetime(yearStart, 1, 1)
-    timeEnd = datetime.datetime(yearEnd, 12, 31)
+    yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
+    yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+    timeStart = date_to_days(year=yearStart, month=1, day=1,
+                             calendar=calendar)
+    timeEnd = date_to_days(year=yearEnd, month=12, day=31,
+                           calendar=calendar)
 
     if preprocessedReferenceRunName != 'None':
         inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
             preprocessedReferenceDirectory, preprocessedReferenceRunName)
         dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
                                                 calendar=calendar,
-                                                timeVariableName='xtime',
-                                                yearOffset=yearOffset)
-        preprocessedYearEnd = (pd.to_datetime(
-            dsPreprocessed.Time.max().values)).year
+                                                timeVariableName='xtime')
+        preprocessedYearEnd = days_to_datetime(dsPreprocessed.Time.max(),
+                                               calendar=calendar).year
         if yearStart <= preprocessedYearEnd:
             dsPreprocessedTimeSlice = dsPreprocessed.sel(Time=slice(timeStart,
                                                                     timeEnd))
@@ -240,17 +237,15 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
             if compareWithObservations:
                 dsObs = open_multifile_dataset(fileNames=obsFileNameNH,
                                                calendar=calendar,
-                                               timeVariableName='xtime',
-                                               yearOffset=yearOffset)
+                                               timeVariableName='xtime')
                 varNHObs = dsObs.IceArea
-                varNHObs = replicate_cycle(varNH, varNHObs)
+                varNHObs = replicate_cycle(varNH, varNHObs, calendar)
 
                 dsObs = open_multifile_dataset(fileNames=obsFileNameSH,
                                                calendar=calendar,
-                                               timeVariableName='xtime',
-                                               yearOffset=yearOffset)
+                                               timeVariableName='xtime')
                 varSHObs = dsObs.IceArea
-                varSHObs = replicate_cycle(varSH, varSHObs)
+                varSHObs = replicate_cycle(varSH, varSHObs, calendar)
 
             if preprocessedReferenceRunName != 'None':
                 inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
@@ -259,8 +254,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 dsPreprocessed = open_multifile_dataset(
                     fileNames=inFilesPreprocessed,
                     calendar=calendar,
-                    timeVariableName='xtime',
-                    yearOffset=yearOffset)
+                    timeVariableName='xtime')
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
                 varNHPreprocessed = dsPreprocessedTimeSlice.icearea_nh
@@ -271,10 +265,9 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
             if compareWithObservations:
                 dsObs = open_multifile_dataset(fileNames=obsFileNameNH,
                                                calendar=calendar,
-                                               timeVariableName='xtime',
-                                               yearOffset=yearOffset)
+                                               timeVariableName='xtime')
                 varNHObs = dsObs.IceVol
-                varNHObs = replicate_cycle(varNH, varNHObs)
+                varNHObs = replicate_cycle(varNH, varNHObs, calendar)
 
                 varSHObs = None
 
@@ -285,8 +278,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 dsPreprocessed = open_multifile_dataset(
                     fileNames=inFilesPreprocessed,
                     calendar=calendar,
-                    timeVariableName='xtime',
-                    yearOffset=yearOffset)
+                    timeVariableName='xtime')
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
                 varNHPreprocessed = dsPreprocessedTimeSlice.icevolume_nh
@@ -357,19 +349,68 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                     variableName))
 
 
-def replicate_cycle(ds, dsToReplicate):
-    dsShift = dsToReplicate.copy()
-    shiftT = ((dsShift.Time.max() - dsShift.Time.min()) +
-              (dsShift.Time.isel(Time=1) - dsShift.Time.isel(Time=0)))
-    startIndex = int(np.floor((ds.Time.min()-dsToReplicate.Time.min())/shiftT))
-    endIndex = int(np.ceil((ds.Time.max()-dsToReplicate.Time.min())/shiftT))
-    dsShift['Time'] = dsShift['Time'] + startIndex*shiftT
+def replicate_cycle(ds, dsToReplicate, calendar):
+    """
+    Replicates a periodic time series `dsToReplicate` to cover the timeframe
+    of the dataset `ds`.
 
+    Parameters
+    ----------
+    ds : dataset used to find the start and end time of the replicated cycle
+
+    dsToReplicate : dataset to replicate.  The period of the cycle is the
+        length of dsToReplicate plus the time between the first two time
+        values (typically one year total).
+
+    calendar : {'gregorian', 'gregorian_noleap'}
+        The name of one of the calendars supported by MPAS cores
+
+    Returns:
+    --------
+    dsShift : a cyclicly repeated version of `dsToReplicte` covering the range
+        of time of `ds`.
+
+    Authors
+    -------
+    Xylar Asay-Davis, Milena Veneziani
+
+    Last Modified
+    -------------
+    02/22/2017
+    """
+    dsStartTime = days_to_datetime(ds.Time.min(), calendar=calendar)
+    dsEndTime = days_to_datetime(ds.Time.max(), calendar=calendar)
+    repStartTime = days_to_datetime(dsToReplicate.Time.min(),
+                                    calendar=calendar)
+    repEndTime = days_to_datetime(dsToReplicate.Time.max(),
+                                  calendar=calendar)
+
+    repSecondTime = days_to_datetime(dsToReplicate.Time.isel(Time=1),
+                                     calendar=calendar)
+
+    period = (MpasRelativeDelta(repEndTime, repStartTime) +
+              MpasRelativeDelta(repSecondTime, repStartTime))
+
+    startIndex = 0
+    while(dsStartTime > repStartTime + (startIndex+1)*period):
+        startIndex += 1
+
+    endIndex = 0
+    while(dsEndTime > repEndTime + endIndex*period):
+        endIndex += 1
+
+    dsShift = dsToReplicate.copy()
+
+    times = days_to_datetime(dsShift.Time, calendar=calendar)
+    dsShift.coords['Time'] = ('Time',
+                              datetime_to_days(times + startIndex*period,
+                                               calendar=calendar))
     # replicate cycle:
     for cycleIndex in range(startIndex, endIndex):
         dsNew = dsToReplicate.copy()
-        dsNew['Time'] = dsNew['Time'] + (cycleIndex+1)*shiftT
+        dsNew.coords['Time'] = ('Time',
+                                datetime_to_days(times + (cycleIndex+1)*period,
+                                                 calendar=calendar))
         dsShift = xr.concat([dsShift, dsNew], dim='Time')
-    # constrict replicated dsSHort to same time dimension as ds_long:
-    dsShift = dsShift.sel(Time=ds.Time.values, method='nearest')
+
     return dsShift

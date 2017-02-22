@@ -6,7 +6,6 @@ import matplotlib.colors as cols
 
 import numpy as np
 import numpy.ma as ma
-import datetime
 
 import netCDF4
 
@@ -17,6 +16,9 @@ from ..shared.io.utility import buildConfigFullPath
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
+
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    days_to_datetime
 
 
 def seaice_modelvsobs(config, streamMap=None, variableMap=None):
@@ -46,8 +48,15 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     streamsFileName = config.get('input', 'seaIceStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
-    calendar = namelist.get('config_calendar_type')
+    oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+    oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
 
+    calendar = namelist.get('config_calendar_type')
+    try:
+        simulationStartTime = get_simulation_start_time(streams)
+    except IOError:
+        # try the ocean stream instead
+        simulationStartTime = get_simulation_start_time(oceanStreams)
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('climatology', 'startDate')
@@ -67,7 +76,6 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
-    yearOffset = config.getint('time', 'yearOffset')
 
     # climatologyDirectory = "{}/{}".format(climatologyDirectory, mainRunName)
     climatologyRegriddedDirectory = "{}/mpas_regridded".format(
@@ -160,21 +168,23 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     print "  Load sea-ice data..."
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=['iceAreaCell',
                                               'iceVolumeCell'],
                                 variableMap=variableMap,
                                 startDate=startDate,
-                                endDate=endDate,
-                                yearOffset=yearOffset)
+                                endDate=endDate)
 
     # Compute climatologies (first motnhly and then seasonally)
     print "  Compute seasonal climatologies..."
-    timeStart = datetime.datetime(yearOffset+startYear, 1, 1)
-    timeEnd = datetime.datetime(yearOffset+endYear, 12, 31)
-    dsTimeSlice = ds.sel(Time=slice(timeStart, timeEnd))
-    # check that each year has 24 months (?)
-    monthlyClimotology = dsTimeSlice.groupby('Time.month').mean('Time')
+
+    months = [date.month for date in days_to_datetime(ds.Time,
+                                                      calendar=calendar)]
+
+    ds.coords['month'] = ('Time', months)
+    monthlyClimatology = ds.groupby('month').mean('Time')
+
     daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     monthLetters = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 
@@ -183,11 +193,11 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
         months = monthsInClim[climName]
         month = months[0]
         days = daysInMonth[month-1]
-        climatology = days*monthlyClimotology.sel(month=month)
+        climatology = days*monthlyClimatology.sel(month=month)
         totalDays = days
         for month in months[1:]:
             days = daysInMonth[month-1]
-            climatology += days*monthlyClimotology.sel(month=month)
+            climatology += days*monthlyClimatology.sel(month=month)
             totalDays += days
         climatology /= totalDays
 

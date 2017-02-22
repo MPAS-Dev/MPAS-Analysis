@@ -1,7 +1,5 @@
 import numpy as np
 import netCDF4
-import pandas as pd
-import datetime
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
@@ -11,8 +9,8 @@ from ..shared.io.utility import buildConfigFullPath
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import stringToDatetime, \
-    clampToNumpyDatetime64
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    date_to_days, days_to_datetime, string_to_datetime
 
 
 def ohc_timeseries(config, streamMap=None, variableMap=None):
@@ -31,7 +29,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/08/2017
+    Last Modified: 02/11/2017
     """
 
     inDirectory = config.get('input', 'baseDirectory')
@@ -43,6 +41,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
     calendar = namelist.get('config_calendar_type')
+    simulationStartTime = get_simulation_start_time(streams)
 
     # read parameters from config file
     mainRunName = config.get('runs', 'mainRunName')
@@ -55,8 +54,6 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                                 'compareWithObservations')
 
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
-
-    yearOffset = config.getint('time', 'yearOffset')
 
     movingAveragePoints = config.getint('timeSeriesOHC', 'movingAveragePoints')
 
@@ -89,10 +86,6 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     ncFile = netCDF4.Dataset(restartFile, mode='r')
     # reference depth [m]
     depth = ncFile.variables['refBottomDepth'][:]
-    # simulation start time
-    simulationStartTime = netCDF4.chartostring(
-        ncFile.variables['simulationStartTime'][:])
-    simulationStartTime = str(simulationStartTime).strip()
     ncFile.close()
     # specific heat [J/(kg*degC)]
     cp = namelist.getfloat('config_specific_heat_sea_water')
@@ -113,19 +106,18 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                     'avgLayerThickness']
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=variableList,
                                 variableMap=variableMap,
                                 startDate=startDate,
-                                endDate=endDate,
-                                yearOffset=yearOffset)
+                                endDate=endDate)
 
-    timeStart = clampToNumpyDatetime64(stringToDatetime(startDate), yearOffset)
-    timeEnd = clampToNumpyDatetime64(stringToDatetime(endDate), yearOffset)
+    timeStart = string_to_datetime(startDate)
+    timeEnd = string_to_datetime(endDate)
 
     # Select year-1 data and average it (for later computing anomalies)
-    timeStartFirstYear = clampToNumpyDatetime64(
-        stringToDatetime(simulationStartTime), yearOffset)
+    timeStartFirstYear = string_to_datetime(simulationStartTime)
     if timeStartFirstYear < timeStart:
         startDateFirstYear = simulationStartTime
         firstYear = int(startDateFirstYear[0:4])
@@ -134,21 +126,25 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                           startDate=startDateFirstYear,
                                           endDate=endDateFirstYear,
                                           calendar=calendar)
-        dsFirstYear = open_multifile_dataset(fileNames=filesFirstYear,
-                                             calendar=calendar,
-                                             timeVariableName='Time',
-                                             variableList=variableList,
-                                             variableMap=variableMap,
-                                             startDate=startDateFirstYear,
-                                             endDate=endDateFirstYear,
-                                             yearOffset=yearOffset)
-        firstYear += yearOffset
+        dsFirstYear = open_multifile_dataset(
+            fileNames=filesFirstYear,
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            timeVariableName='Time',
+            variableList=variableList,
+            variableMap=variableMap,
+            startDate=startDateFirstYear,
+            endDate=endDateFirstYear)
     else:
         dsFirstYear = ds
         firstYear = timeStart.year
 
-    timeStartFirstYear = datetime.datetime(firstYear, 1, 1)
-    timeEndFirstYear = datetime.datetime(firstYear, 12, 31)
+    timeStartFirstYear = date_to_days(year=firstYear, month=1, day=1,
+                                      calendar=calendar)
+    timeEndFirstYear = date_to_days(year=firstYear, month=12, day=31,
+                                    hour=23, minute=59, second=59,
+                                    calendar=calendar)
+
     dsFirstYear = dsFirstYear.sel(Time=slice(timeStartFirstYear,
                                              timeEndFirstYear))
 
@@ -161,21 +157,24 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     avgLayTemperatureAnomaly = (avgLayerTemperature -
                                 avgLayerTemperatureFirstYear)
 
-    yearStart = (pd.to_datetime(ds.Time.min().values)).year
-    yearEnd = (pd.to_datetime(ds.Time.max().values)).year
-    timeStart = datetime.datetime(yearStart, 1, 1)
-    timeEnd = datetime.datetime(yearEnd, 12, 31)
+    yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
+    yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+    timeStart = date_to_days(year=yearStart, month=1, day=1,
+                             calendar=calendar)
+    timeEnd = date_to_days(year=yearEnd, month=12, day=31,
+                           calendar=calendar)
 
     if preprocessedReferenceRunName != 'None':
         print '  Load in OHC from preprocessed reference run...'
         inFilesPreprocessed = '{}/OHC.{}.year*.nc'.format(
             preprocessedInputDirectory, preprocessedReferenceRunName)
-        dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
-                                                calendar=calendar,
-                                                timeVariableName='xtime',
-                                                yearOffset=yearOffset)
-        yearEndPreprocessed = \
-            (pd.to_datetime(dsPreprocessed.Time.max().values)).year
+        dsPreprocessed = open_multifile_dataset(
+            fileNames=inFilesPreprocessed,
+            calendar=calendar,
+            simulationStartTime=simulationStartTime,
+            timeVariableName='xtime')
+        yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
+                                               calendar=calendar).year
         if yearStart <= yearEndPreprocessed:
             dsPreprocessedTimeSlice = dsPreprocessed.sel(Time=slice(timeStart,
                                                                     timeEnd))

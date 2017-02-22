@@ -14,21 +14,21 @@ Xylar Asay-Davis
 
 Last modified
 -------------
-02/16/2017
+02/17/2017
 """
 
 import xarray
 from functools import partial
 
 from ..mpas_xarray import mpas_xarray
-from ..timekeeping.utility import stringToDatetime, clampToNumpyDatetime64
+from ..timekeeping.utility import string_to_days_since_date
 
 
-def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
+def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
+                           timeVariableName='Time',
                            variableList=None, selValues=None,
                            iselValues=None, variableMap=None,
-                           startDate=None, endDate=None,
-                           yearOffset=0):  # {{{
+                           startDate=None, endDate=None):  # {{{
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -40,6 +40,19 @@ def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
 
     calendar : {'gregorian', 'gregorian_noleap'}, optional
         The name of one of the calendars supported by MPAS cores
+
+    simulationStartTime : string, optional
+        The start date of the simulation, used to convert from time variables
+        expressed as days since the start of the simulation to days since the
+        reference date. `simulationStartTime` takes one of the following
+        forms:
+            0001-01-01
+
+            0001-01-01 00:00:00
+
+        simulationStartTime is only required if the MPAS time variable
+        (identified by time_variable_name) is a number of days since the
+        start of the simulation.
 
     timeVariableName : string, optional
         The name of the time variable (typically 'Time' if using a variableMap
@@ -73,11 +86,6 @@ def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
-    yearOffset : float, optional
-        An offset used to convert an MPAS date to a date in the range supported
-        by xarray (numpy.datetime64).  Resulting dates must be between 1678
-        and 2622.
-
     Returns
     -------
     ds : An xarray data set.
@@ -90,7 +98,9 @@ def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
         or a numpy.datatime64 object).
 
     ValueError
-        If the time variable is not found in the data set.
+        If the time variable is not found in the data set or if the time
+        variable is a number of days since the start of the simulation but
+        simulationStartTime is None.
 
     Author
     ------
@@ -98,19 +108,18 @@ def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
 
     Last modified
     -------------
-    02/16/2017
+    02/17/2017
     """
-
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
+                                 simulationStartTime=simulationStartTime,
                                  timeVariableName=timeVariableName,
                                  variableList=variableList,
                                  selValues=selValues,
                                  iselValues=iselValues,
                                  variableMap=variableMap,
                                  startDate=startDate,
-                                 endDate=endDate,
-                                 yearOffset=yearOffset)
+                                 endDate=endDate)
 
     ds = xarray.open_mfdataset(fileNames,
                                preprocess=preprocess_partial,
@@ -120,11 +129,11 @@ def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
 
     if startDate is not None and endDate is not None:
         if isinstance(startDate, str):
-            startDate = clampToNumpyDatetime64(stringToDatetime(
-                startDate), yearOffset)
+            startDate = string_to_days_since_date(dateString=startDate,
+                                                  calendar=calendar)
         if isinstance(endDate, str):
-            endDate = clampToNumpyDatetime64(stringToDatetime(
-                endDate), yearOffset)
+            endDate = string_to_days_since_date(dateString=endDate,
+                                                calendar=calendar)
 
     # select only the data in the specified range of dates
     ds = ds.sel(Time=slice(startDate, endDate))
@@ -132,9 +141,9 @@ def open_multifile_dataset(fileNames, calendar, timeVariableName='Time',
     return ds  # }}}
 
 
-def _preprocess(ds, calendar, timeVariableName, variableList, selValues,
-                iselValues, variableMap, startDate, endDate,
-                yearOffset):  # {{{
+def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
+                variableList, selValues, iselValues, variableMap,
+                startDate, endDate):  # {{{
     """
     Performs variable remapping, then calls mpas_xarray.preprocess, to
     perform the remainder of preprocessing.
@@ -146,12 +155,28 @@ def _preprocess(ds, calendar, timeVariableName, variableList, selValues,
         an xarray time coordinate and with variable names to be
         substituted.
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'gregorian_noleap'}
         The name of one of the calendars supported by MPAS cores
 
-    timeVariableName : string
         The name of the time variable (typically 'Time' if using a variableMap
         or 'xtime' if not using a variableMap)
+
+    simulationStartTime : string
+        The start date of the simulation, used to convert from time variables
+        expressed as days since the start of the simulation to days since the
+        reference date. `simulationStartTime` takes one of the following
+        forms:
+            0001-01-01
+
+            0001-01-01 00:00:00
+
+        simulationStartTime is only required if the MPAS time variable
+        (identified by time_variable_name) is a number of days since the
+        start of the simulation.
+
+    timeVariableName : string
+        The name of the time variable (typically 'Time' if using a variable_map
+        or 'xtime' if not using a variable_map)
 
     variableList : list of strings
         If present, a list of variables to be included in the data set
@@ -181,11 +206,6 @@ def _preprocess(ds, calendar, timeVariableName, variableList, selValues,
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
-    yearOffset : float
-        An offset used to convert an MPAS date to a date in the range supported
-        by xarray (numpy.datetime64).  Resulting dates must be between 1678
-        and 2622.
-
     Returns
     -------
     ds : xarray.DataSet object
@@ -198,7 +218,7 @@ def _preprocess(ds, calendar, timeVariableName, variableList, selValues,
 
     Last modified
     -------------
-    02/16/2017
+    02/17/2017
     """
 
     submap = variableMap
@@ -222,11 +242,12 @@ def _preprocess(ds, calendar, timeVariableName, variableList, selValues,
     # now that the variables are mapped, do the normal preprocessing in
     # mpas_xarray
     ds = mpas_xarray.preprocess(ds,
+                                calendar=calendar,
+                                simulationStartTime=simulationStartTime,
                                 timeVariableName=timeVariableName,
                                 variableList=variableList,
                                 selValues=selValues,
-                                iselValues=iselValues,
-                                yearOffset=yearOffset)
+                                iselValues=iselValues)
 
     return ds  # }}}
 

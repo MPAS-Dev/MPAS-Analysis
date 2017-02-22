@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import xarray as xr
 from mpl_toolkits.basemap import Basemap
 import matplotlib.colors as cols
+import matplotlib.dates as mdates
 import numpy as np
 
 """
@@ -11,12 +13,13 @@ Plotting utilities, including routine for plotting:
 
 Author: Xylar Asay-Davis
 
-Last Modified: 02/02/2017
+Last Modified: 02/11/2017
 """
 
-def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel, fileout,
-                             lineStyles, lineWidths, titleFontSize=None,
-                             figsize=(15,6), dpi=300):
+
+def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
+                             fileout, lineStyles, lineWidths,
+                             titleFontSize=None, figsize=(15, 6), dpi=300):
 
     """
     Plots the list of time series data sets and stores the result in an image
@@ -44,35 +47,48 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel, fileout
 
     Author: Xylar Asay-Davis
 
-    Last Modified: 02/02/2017
+    Last Modified: 02/11/2017
     """
-    plt.figure(figsize=figsize, dpi=dpi)
+    fig = plt.figure(figsize=figsize, dpi=dpi)
 
     for dsIndex in range(len(dsvalues)):
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
             continue
         mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
-        mean.plot(style=lineStyles[dsIndex], lw=lineWidths[dsIndex])
+        mean = xr.DataArray.from_series(mean)
+        plt.plot_date(mean['Time'], mean,
+                      fmt=lineStyles[dsIndex],
+                      xdate=True,
+                      ydate=False,
+                      linewidth=lineWidths[dsIndex])
+
+    ax = plt.gca()
+    # TODO: it would be good to change labels to include months if the plot is
+    # shorter than a couple of years
+    ax.xaxis.set_major_locator(mdates.YearLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    ax.xaxis.set_minor_locator(mdates.MonthLocator())
+    fig.autofmt_xdate()
 
     if titleFontSize is None:
         titleFontSize = config.get('plot', 'titleFontSize')
 
-    axis_font = {'size':config.get('plot', 'axisFontSize')}
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
     title_font = {'size': titleFontSize,
-                  'color':config.get('plot', 'titleFontColor'),
-                  'weight':config.get('plot', 'titleFontWeight')}
-    if (title != None):
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
         plt.title(title, **title_font)
-    if (xlabel != None):
+    if xlabel is not None:
         plt.xlabel(xlabel, **axis_font)
-    if (ylabel != None):
+    if ylabel is not None:
         plt.ylabel(ylabel, **axis_font)
-    if (fileout is not None):
-        plt.savefig(fileout,dpi=dpi,bbox_inches='tight',pad_inches=0.1)
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot','displayToScreen'):
-      plt.close()
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
 
 
 def plot_polar_comparison(

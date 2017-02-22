@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20170120.beta0.GMPAS-QU240.wolf
+mainRunName = MPAS-SeaIce.QU60km_polar
 # referenceRunName is the name of a reference run to compare against (or None
 # to turn off comparison with a reference, e.g. if no reference case is
 # available)
@@ -19,11 +19,11 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lustre/scratch2/turquoise/xylar/ACME/cases/GMPAS-QU240/run
+baseDirectory = /net/scratch2/akt/MPAS/rundirs/rundir_QU60km_polar
 # names of namelist and streams files.  If not in baseDirectory, give full path
-oceanNamelistFileName = mpas-o_in
+oceanNamelistFileName = namelist.ocean
 oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
+seaIceNamelistFileName = namelist.cice
 seaIceStreamsFileName = streams.cice
 
 [output]
@@ -58,7 +58,7 @@ climatologySubdirectory = clim
 # option:
 #    ./run_analysis.py config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all']
+generate = ['timeSeriesSeaIceAreaVol']
 
 # alternative examples that would perform all analysis except
 #   'timeSeriesOHC'
@@ -74,9 +74,9 @@ generate = ['all']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 1
+startYear = 1960
 # the last year over which to average climatalogies
-endYear = 3
+endYear = 1961
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -85,8 +85,8 @@ endYear = 3
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
-startYear = 1
-endYear = 3
+startYear = 1960
+endYear = 1961
 
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
@@ -130,18 +130,6 @@ areaNH = IceArea_timeseries/iceAreaNH_climo.nc
 areaSH = IceArea_timeseries/iceAreaSH_climo.nc
 volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
 volSH = none
-concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
-concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
-concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
-concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
-concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
-concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
-thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
-thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
-thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
-thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
 [seaIceReference]
 ## options related to sea ice reference run with which the results will be
@@ -161,7 +149,7 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_
 ## options related to horizontal remapping
 
 # paths to mapping files (which will hopefully be eliminated soon)
-mpasRemapFile = /usr/projects/climate/milena/mapping_files/rmp_QU240_to_0.5x0.5_conserve.nc
+mpasRemapFile = None
 
 [timeSeriesOHC]
 ## options related to plotting time series of ocean heat content (OHC)
