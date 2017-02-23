@@ -40,15 +40,15 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     streamsFileName = config.get('input', 'seaIceStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
-    oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-    oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
-
     calendar = namelist.get('config_calendar_type')
     try:
         simulationStartTime = get_simulation_start_time(streams)
     except IOError:
         # try the ocean stream instead
+        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+        oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
         simulationStartTime = get_simulation_start_time(oceanStreams)
+        oceanStreams.close()
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
@@ -100,7 +100,10 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     except ValueError:
         # get an ocean restart file, since no sea-ice restart exists
         try:
+            oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+            oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
             restartFile = oceanStreams.readpath('restart')[0]
+            oceanStreams.close()
         except ValueError:
             raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
                           'at least one restart file for seaice_timeseries '
