@@ -48,15 +48,15 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     streamsFileName = config.get('input', 'seaIceStreamsFileName')
     streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
 
-    oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-    oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
-
     calendar = namelist.get('config_calendar_type')
     try:
         simulationStartTime = get_simulation_start_time(streams)
     except IOError:
         # try the ocean stream instead
+        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+        oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
         simulationStartTime = get_simulation_start_time(oceanStreams)
+        oceanStreams.close()
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('climatology', 'startDate')
