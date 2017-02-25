@@ -5,19 +5,16 @@ sea surface temperature (sst), sea surface salinity (sss) and mixed layer
 depth (mld)
 
 Author: Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
-Last Modified: 02/11/2017
+Last Modified: 02/25/2017
 """
 
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 
 import xarray as xr
-import numpy as np
 import datetime
-import netCDF4
 
 from ..shared.plot.plotting import plot_global_comparison
-from ..shared.interpolation.interpolate import interp_fields, init_tree
 from ..shared.constants import constants
 
 from ..shared.io import NameList, StreamsFile
@@ -26,8 +23,9 @@ from ..shared.io.utility import buildConfigFullPath
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    days_to_datetime
+from ..shared.timekeeping.utility import get_simulation_start_time
+
+from ..shared.climatology import climatology
 
 
 def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
@@ -88,11 +86,6 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
     sectionName = 'regridded{}'.format(field.upper())
     outputTimes = config.getExpression(sectionName, 'comparisonTimes')
-
-    ncFile = netCDF4.Dataset(restartFile, mode='r')
-    lonCell = ncFile.variables["lonCell"][:]
-    latCell = ncFile.variables["latCell"][:]
-    ncFile.close()
 
     varList = [field]
 
@@ -196,82 +189,12 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
                                 startDate=startDate,
                                 endDate=endDate)
 
-    # replace Time in days with its datetime.datetime equivalent so we can
-    # compute a climatology
+    monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
 
-    months = [date.month for date in days_to_datetime(ds.Time,
-                                                      calendar=calendar)]
-
-    ds.coords['month'] = ('Time', months)
-    monthlyClimatology = ds.groupby('month').mean('Time')
-
-    latData, lonData = np.meshgrid(dsObs.lat.values,
-                                   dsObs.lon.values)
-    latData = latData.flatten()
-    lonData = lonData.flatten()
-
-    daysarray = np.ones((12,
-                         dsObs[obsFieldName].values.shape[1],
-                         dsObs[obsFieldName].values.shape[2]))
-
-    for monthIndex, dval in enumerate(constants.dinmonth):
-        daysarray[monthIndex, :, :] = dval
-        inds = np.where(np.isnan(
-                dsObs[obsFieldName][monthIndex, :, :].values))
-        daysarray[monthIndex, inds[0], inds[1]] = np.NaN
-
-    # initialize interpolation variables
-    d2, inds2, lonTarg, latTarg = init_tree(np.rad2deg(lonCell),
-                                            np.rad2deg(latCell),
-                                            constants.lonmin,
-                                            constants.lonmax,
-                                            constants.latmin,
-                                            constants.latmax,
-                                            constants.dLongitude,
-                                            constants.dLatitude)
-    d, inds, lonTargD, latTargD = init_tree(lonData, latData,
-                                            constants.lonmin,
-                                            constants.lonmax,
-                                            constants.latmin,
-                                            constants.latmax,
-                                            constants.dLongitude,
-                                            constants.dLatitude)
-    nLon = lonTarg.shape[0]
-    nLat = lonTarg.shape[1]
-
-    modelOutput = np.zeros((len(outputTimes), nLon, nLat))
-    observations = np.zeros((len(outputTimes), nLon, nLat))
-    bias = np.zeros((len(outputTimes), nLon, nLat))
-
-    # Interpolate and compute biases
-    for timeIndex, timestring in enumerate(outputTimes):
-        monthsValue = constants.monthdictionary[timestring]
-
-        if isinstance(monthsValue, (int, long)):
-            modelData = monthlyClimatology.sel(month=monthsValue)[field].values
-            obsData = dsObs.sel(month=monthsValue)[obsFieldName].values
-        else:
-
-            modelData = (np.sum(
-                constants.dinmonth[monthsValue-1] *
-                monthlyClimatology.sel(month=monthsValue)[field].values.T,
-                axis=1) /
-                np.sum(constants.dinmonth[monthsValue-1]))
-            obsData = \
-                (np.nansum(
-                        daysarray[monthsValue-1, :, :] *
-                        dsObs.sel(month=monthsValue)[obsFieldName].values,
-                        axis=0) /
-                 np.nansum(daysarray[monthsValue-1, :, :], axis=0))
-
-        modelOutput[timeIndex, :, :] = interp_fields(modelData, d2, inds2,
-                                                     lonTarg)
-        observations[timeIndex, :, :] = interp_fields(obsData.flatten(), d,
-                                                      inds, lonTargD)
-
-    for timeIndex in range(len(outputTimes)):
-        bias[timeIndex, :, :] = (modelOutput[timeIndex, :, :] -
-                                 observations[timeIndex, :, :])
+    mpasInterolationData = climatology.init_model_interpolation(restartFile)
+    lonTarg = mpasInterolationData[2]
+    latTarg = mpasInterolationData[3]
+    obsInterolationData = climatology.init_observations_interpolation(dsObs)
 
     resultContourValues = config.getExpression(sectionName,
                                                'resultContourValues')
@@ -290,7 +213,17 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
             differenceColormap(differenceColormapIndices),
             "differenceColormap")
 
-    for timeIndex in range(len(outputTimes)):
+    # Interpolate and compute biases
+    for timeIndex, timestring in enumerate(outputTimes):
+        monthsValue = constants.monthDictionary[timestring]
+
+        modelOutput = climatology.interpolate_model_climatology(
+            mpasInterolationData, monthlyClimatology, field, monthsValue)
+        observations = climatology.interpolate_observation_climatology(
+            obsInterolationData, dsObs, obsFieldName, monthsValue)
+
+        bias = modelOutput - observations
+
         outFileName = "{}/{}_{}_{}_years{:04d}-{:04d}.png".format(
                 plotsDirectory, outFileLabel, mainRunName,
                 outputTimes[timeIndex], startYear, endYear)
@@ -299,9 +232,9 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
         plot_global_comparison(config,
                                lonTarg,
                                latTarg,
-                               modelOutput[timeIndex, :, :],
-                               observations[timeIndex, :, :],
-                               bias[timeIndex, :, :],
+                               modelOutput,
+                               observations,
+                               bias,
                                resultColormap,
                                resultContourValues,
                                differenceColormap,
@@ -312,3 +245,5 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
                                obsTitle=observationTitleLabel,
                                diffTitle="Model-Observations",
                                cbarlabel=unitsLabel)
+
+# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
