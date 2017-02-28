@@ -12,22 +12,17 @@ This analysis repository presumes that the following python packages are availab
  * numpy
  * scipy
  * matplotlib
- * numexpr
- * ipython-notebook
  * netCDF4
- * progressbar
- * vtk
- * pyevtk with `conda install -c https://conda.anaconda.org/opengeostat pyevtk`
- * cartopy with `conda install -c scitools cartopy`
  * xarray
  * dask
  * bottleneck
  * basemap
+ * nco with `conda install -c conda-forge nco`
 
 You can easily install them via the conda command:
 
 ```
-conda install -c scitools  -c https://conda.anaconda.org/opengeostat numpy scipy matplotlib ipython notebook netCDF4 progressbar vtk cartopy xarray dask bottleneck pyevtk numexpr basemap
+conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap nco
 ```
 
 ## Running the analysis

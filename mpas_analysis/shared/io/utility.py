@@ -4,10 +4,11 @@ IO utility functions
 
 Phillip J. Wolfram, Xylar Asay-Davis
 
-Last Modified: 02/02/2017
+Last Modified: 03/03/2017
 """
 
 import glob
+import os
 
 
 def paths(*args):
@@ -24,7 +25,8 @@ def paths(*args):
     return paths
 
 
-def buildConfigFullPath(config, section, relativePathOption):
+def buildConfigFullPath(config, section, relativePathOption,
+                        relativePathSection=None):
     """
     Returns a full path from a base directory and a relative path
 
@@ -38,9 +40,17 @@ def buildConfigFullPath(config, section, relativePathOption):
 
     Xylar Asay-Davis
 
-    Last Modified: 02/02/2017
+    Last Modified: 03/03/2017
     """
-    return '{}/{}'.format(config.get(section, 'baseDirectory'),
-                          config.get(section, relativePathOption))
+    if relativePathSection is None:
+        relativePathSection = section
+
+    subDirectory = config.get(relativePathSection, relativePathOption)
+    if os.path.isabs(subDirectory):
+        fullPath = subDirectory
+    else:
+        fullPath = '{}/{}'.format(config.get(section, 'baseDirectory'),
+                                  subDirectory)
+    return fullPath
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
