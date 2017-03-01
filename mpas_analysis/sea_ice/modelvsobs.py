@@ -63,9 +63,9 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     except IOError:
         # try the ocean stream instead
         oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-        oceanStreams = StreamsFile(oceanStreamsFileName, streamsdir=inDirectory)
+        oceanStreams = StreamsFile(oceanStreamsFileName,
+                                   streamsdir=inDirectory)
         simulationStartTime = get_simulation_start_time(oceanStreams)
-        oceanStreams.close()
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('climatology', 'startDate')
@@ -78,8 +78,16 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     try:
         restartFileName = streams.readpath('restart')[0]
     except ValueError:
-        raise IOError('No MPAS-Sea Ice restart file found: need at least one '
-                      'restart file for modelvsobs calculation')
+        # get an ocean restart file, since no sea-ice restart exists
+        try:
+            oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+            oceanStreams = StreamsFile(oceanStreamsFileName,
+                                       streamsdir=inDirectory)
+            restartFileName = oceanStreams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
+                          'at least one restart file for seaice_timeseries '
+                          'calculation')
 
     # Load data
     print "  Load sea-ice data..."
