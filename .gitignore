@@ -1,6 +1,6 @@
 # User defined config files
 /config.*
-!/config.template
+!/config.default
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
