@@ -502,7 +502,7 @@ def compute_annual_climatology(ds, calendar):
     02/28/2017
     """
     monthlyClimatology = compute_monthly_climatology(ds, calendar)
-    annualClimatology = monthlyClimatology.mean('Time')
+    annualClimatology = monthlyClimatology.mean('month')
     return annualClimatology
 
 

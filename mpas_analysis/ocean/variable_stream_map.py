@@ -34,6 +34,16 @@ oceanVariableMap['avgLayerThickness'] = \
      'time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness_1',
      'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerThickness']
 
+# MOC
+oceanVariableMap['avgNormalVelocity'] = \
+    ['time_avg_normalVelocity',
+     'time_avg_normalVelocity_1',
+     'timeMonthly_avg_normalVelocity']
+oceanVariableMap['avgVertVelocityTop'] = \
+    ['time_avg_vertVelocityTop',
+     'time_avg_vertVelocityTop_1',
+     'timeMonthly_avg_vertVelocityTop']
+
 # model vs. obs.
 oceanVariableMap['mld'] = \
     ['time_avg_dThreshMLD',

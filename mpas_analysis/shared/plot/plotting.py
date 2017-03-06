@@ -511,30 +511,39 @@ def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
         return '{:04d}'.format(date.year)
 
 
-def plot_moc(config, mocLat,
-             refTopDepth,
-             mocTop,
-             fileout = 'moc' + '.png',
-             figsize=(8, 4.5),
-             dpi=300): #{{{
+def plot_moc(
+    config,
+    Lats,
+    Depths,
+    mocArray,
+    fileout = 'moc.png',
+    title = None,
+    figsize = (8, 4.5),
+    dpi = 300): #{{{
 
-    contourLines = config.getExpression('moc_postprocess', 'contourLines', usenumpy=True)
+    contourLines = config.getExpression('streamfunctionMOC', 'contourLines', usenumpy=True)
+    clevsModelObs = config.getExpression('streamfunctionMOC', 'resultContourValues')
+    cmapModelObs = config.getExpression('streamfunctionMOC', 'resultColormap')
+    normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
 
     fig = plt.figure(figsize=figsize, dpi=dpi)
-    X, Y = np.meshgrid(mocLat, refTopDepth) # change to zMid
+    x, y = np.meshgrid(Lats, Depths) # change to zMid
 
-    contourSet = plt.contourf(X, Y, mocTop.T, levels=contourLines)
-    contourSet2 = plt.contour(X, Y, mocTop.T, levels=contourLines[::2],
-                              colors='k', hold='on')
+    cs = plt.contourf(x, y, mocArray.T, cmap=cmapModelObs, norm=normModelObs,
+                      spacing='uniform', levels=clevsModelObs, extend='both')
+    cs2 = plt.contour(x, y, mocArray.T, levels=contourLines[::2],
+                      colors='k', hold='on')
 
     plt.xlabel('latitude')
     plt.ylabel('depth, m')
-    plt.title('MPAS-Ocean Atlantic MOC, Sv')
+    if (title is not None):
+      plt.title(title)
     plt.gca().invert_yaxis()
     #plt.clabel(contourSet, fontsize=10)
     # Make a colorbar for the ContourSet returned by the contourf call.
-    cbar = plt.colorbar(contourSet)
-    cbar.add_lines(contourSet2)
+    cbar = plt.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                        ticks=clevsModelObs, boundaries=clevsModelObs)
+    #cbar.add_lines(cs2)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
