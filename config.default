@@ -33,6 +33,16 @@ referenceRunName = None
 # MPAS-Analysis)
 preprocessedReferenceRunName = None
 
+[execute]
+## options related to executing parallel tasks
+
+# the number of parallel tasks (1 means tasks run in serial, the default)
+parallelTaskCount = 1
+
+# Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
+# Default is no prefix (run_analysis.py is executed directly)
+commandPrefix = 
+
 [input]
 ## options related to reading in the results to be analyzed
 

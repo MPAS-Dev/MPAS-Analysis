@@ -15,9 +15,13 @@ import argparse
 import traceback
 import sys
 import warnings
+import subprocess
 
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
+
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
 
 def update_generate(config, generate):  # {{{
@@ -35,6 +39,124 @@ def update_generate(config, generate):  # {{{
                                 for element in generateList])
     generateString = '[{}]'.format(generateString)
     config.set('output', 'generate', generateString)  # }}}
+
+
+def run_parallel_tasks(config, analyses, configFiles, taskCount):
+    # {{{
+    """
+    Run this script once each for several parallel tasks.
+
+    Author
+    ------
+    Xylar Asay-Davis
+    """
+
+    taskNames = [analysisTask.taskName for analysisTask in analyses]
+
+    taskCount = min(taskCount, len(taskNames))
+
+    (processes, logs) = launch_tasks(taskNames[0:taskCount], config,
+                                     configFiles)
+    remainingTasks = taskNames[taskCount:]
+    while len(processes) > 0:
+        (taskName, process) = wait_for_task(processes)
+        if process.returncode == 0:
+            print "Task {} has finished successfully.".format(taskName)
+        else:
+            print "ERROR in task {}.  See log file {} for details".format(
+                taskName, logs[taskName].name)
+        logs[taskName].close()
+        # remove the process from the process dictionary (no need to bother)
+        processes.pop(taskName)
+
+        if len(remainingTasks) > 0:
+            (process, log) = launch_tasks(remainingTasks[0:1], config,
+                                          configFiles)
+            # merge the new process and log into these dictionaries
+            processes.update(process)
+            logs.update(log)
+            remainingTasks = remainingTasks[1:]
+    # }}}
+
+
+def launch_tasks(taskNames, config, configFiles):  # {{{
+    """
+    Launch one or more tasks
+
+    Author: Xylar Asay-Davis
+    Last Modified: 03/08/2017
+    """
+    thisFile = os.path.realpath(__file__)
+
+    logsDirectory = build_config_full_path(config, 'output',
+                                           'logsSubdirectory')
+    make_directories(logsDirectory)
+
+    commandPrefix = config.getWithDefault('execute', 'commandPrefix',
+                                          default='')
+    if commandPrefix == '':
+        commandPrefix = []
+    else:
+        commandPrefix = commandPrefix.split(' ')
+
+    processes = {}
+    logs = {}
+    for taskName in taskNames:
+        args = commandPrefix + [thisFile, '--generate', taskName] + configFiles
+
+        logFileName = '{}/{}.log'.format(logsDirectory, taskName)
+
+        # write the command to the log file
+        logFile = open(logFileName, 'w')
+        logFile.write('Command: {}\n'.format(' '.join(args)))
+        # make sure the command gets written before the rest of the log
+        logFile.flush()
+        print 'Running {}'.format(taskName)
+        process = subprocess.Popen(args, stdout=logFile,
+                                   stderr=subprocess.STDOUT)
+        processes[taskName] = process
+        logs[taskName] = logFile
+
+    return (processes, logs)  # }}}
+
+
+def wait_for_task(processes):  # {{{
+    """
+    Wait for the next process to finish and check its status.  Returns both the
+    task name and the process that finished.
+
+    Author: Xylar Asay-Davis
+    Last Modified: 03/08/2017
+    """
+
+    # first, check if any process has already finished
+    for taskName, process in processes.iteritems():  # python 2.7!
+        if(not is_running(process)):
+            return (taskName, process)
+
+    # No process has already finished, so wait for the next one
+    (pid, status) = os.waitpid(-1, 0)
+    for taskName, process in processes.iteritems():
+        if pid == process.pid:
+            process.returncode = status
+            # since we used waitpid, this won't happen automatically
+            return (taskName, process)  # }}}
+
+
+def is_running(process):  # {{{
+    """
+    Returns whether a given process is currently running
+
+    Author: Xylar Asay-Davis
+    Last Modified: 03/08/2017
+    """
+
+    try:
+        os.kill(process.pid, 0)
+    except OSError:
+        return False
+    else:
+        return True  # }}}
 
 
 def build_analysis_list(config):  # {{{
@@ -144,6 +266,12 @@ if __name__ == "__main__":
 
     analyses = build_analysis_list(config)
 
-    run_analysis(config, analyses)
+    parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
+                                              default=1)
+
+    if parallelTaskCount <= 1 or len(analyses) == 1:
+        run_analysis(config, analyses)
+    else:
+        run_parallel_tasks(config, analyses, configFiles, parallelTaskCount)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
