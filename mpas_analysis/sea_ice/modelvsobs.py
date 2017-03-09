@@ -2,8 +2,13 @@
 General comparison of 2-d model fields against data.  Currently only supports
 sea ice concentration (sic) and sea ice thickness (sit)
 
-Author: Xylar Asay-Davis, Milena Veneziani
-Last Modified: 02/26/2017
+Authors
+-------
+Xylar Asay-Davis, Milena Veneziani
+
+Last Modified
+-------------
+03/03/2017
 """
 
 import os
@@ -12,10 +17,13 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 
 import numpy.ma as ma
+import numpy as np
 
 import netCDF4
 
 from ..shared.constants import constants
+
+from ..shared.interpolation import interpolate
 
 from ..shared.climatology import climatology
 
@@ -35,17 +43,27 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     Performs analysis of sea-ice properties by comparing with
     previous model results and/or observations.
 
-    config is an instance of MpasAnalysisConfigParser containing configuration
-    options.
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
 
-    If present, streamMap is a dictionary of MPAS-O stream names that map to
-    their mpas_analysis counterparts.
+    field : {'sst', 'sss', 'mld'}
+        The name of a field to be analyized
 
-    If present, variableMap is a dictionary of MPAS-O variable names that map
-    to their mpas_analysis counterparts.
+    streamMap : dict, optional
+        A dictionary of MPAS-O stream names that map to their mpas_analysis
+        counterparts.
 
-    Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/26/2017
+    variableMap : dict, optional
+        A dictionary of MPAS-O variable names that map to their mpas_analysis
+        counterparts.
+
+    Authors
+    -------
+    Xylar Asay-Davis, Milena Veneziani
+
+    Last Modified
+    -------------
+    03/03/2017
     """
 
     # read parameters from config file
@@ -106,18 +124,18 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
 
-    mpasInterolationData = \
-        climatology.init_model_interpolation(restartFileName)
+    mpasMappingFileName = climatology.write_mpas_mapping_file(
+        config=config, meshFileName=restartFileName)
 
     _compute_and_plot_concentration(config, monthlyClimatology,
-                                    mpasInterolationData)
+                                    mpasMappingFileName)
 
     _compute_and_plot_thickness(config, monthlyClimatology,
-                                mpasInterolationData)
+                                mpasMappingFileName)
 
 
 def _compute_and_plot_concentration(config, monthlyClimatology,
-                                    mpasInterolationData):
+                                    mpasMappingFileName):
     """
     Given a config file, monthly climatology on the mpas grid, and the data
     necessary to perform horizontal interpolation to a comparison grid,
@@ -130,9 +148,8 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
 
     monthlyClimatology : an xarray data set containing a monthly climatology
 
-    mpasInterolationData : a tuple returned by init_model_interpolation that
-        contains the information needed to interpolate from the MPAS mesh
-        to the comparison grid
+    mpasMappingFileName : The name of a mapping file used to perform
+        interpolation of MPAS model results
 
     Authors
     -------
@@ -140,7 +157,7 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
 
     Last Modified
     -------------
-    02/26/2017
+    03/03/2017
     """
 
     print "  Make ice concentration plots..."
@@ -149,6 +166,11 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
     mainRunName = config.get('runs', 'mainRunName')
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
+    overwriteMpasClimatology = config.getWithDefault(
+        'climatology', 'overwriteMpasClimatology', False)
+
+    overwriteObsClimatology = config.getWithDefault(
+        'seaIceObservations', 'overwriteObsClimatology', False)
 
     subtitle = "Ice concentration"
 
@@ -157,16 +179,68 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
                          'DJF': ('SH', 'Winter'),
                          'JJA': ('SH', 'Summer')}
 
-    lonTarg = mpasInterolationData[2]
-    latTarg = mpasInterolationData[3]
+    obsFileNames = {}
+    regriddedObsFileNames = {}
+
+    buildObsClimatologies = overwriteObsClimatology
+    for months in hemisphereSeasons:
+        hemisphere, season = hemisphereSeasons[months]
+        climFieldName = 'iceConcentration'
+        for obsName in ['NASATeam', 'Bootstrap']:
+            key = (months, obsName)
+            obsFileName = buildConfigFullPath(
+                config, 'seaIceObservations',
+                'concentration{}{}_{}'.format(obsName, hemisphere, months))
+            obsFieldName = '{}_{}_{}'.format(climFieldName, hemisphere,
+                                             obsName)
+
+            if not os.path.isfile(obsFileName):
+                raise OSError("Obs file {} not found.".format(
+                    obsFileName))
+
+            (climatologyFileName, regriddedFileName) = \
+                climatology.get_observation_climatology_file_names(
+                    config=config, fieldName=obsFieldName, monthNames=months,
+                    componentName='seaIce', gridFileName=obsFileName,
+                    latVarName='t_lat', lonVarName='t_lon')
+
+            obsFileNames[key] = obsFileName
+            regriddedObsFileNames[key] = regriddedFileName
+
+            if not os.path.exists(regriddedFileName):
+                buildObsClimatologies = True
 
     for months in hemisphereSeasons:
         hemisphere, season = hemisphereSeasons[months]
-        monthsValue = constants.monthDictionary[months]
+        monthValues = constants.monthDictionary[months]
+        field = 'iceAreaCell'
+        climFieldName = 'iceConcentration'
 
-        iceConcentration = climatology.interpolate_model_climatology(
-            mpasInterolationData, monthlyClimatology, "iceAreaCell",
-            monthsValue)
+        # interpolate the model results
+        (climatologyFileName, regriddedFileName) = \
+            climatology.get_mpas_climatology_file_names(
+                    config=config, fieldName=climFieldName,
+                    monthNames=months)
+
+        if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
+            seasonalClimatology = climatology.compute_seasonal_climatology(
+                monthlyClimatology, monthValues, field)
+            # write out the climatology so we can interpolate it with
+            # interpolate.remap
+            seasonalClimatology.to_netcdf(climatologyFileName)
+
+        interpolate.remap(inFileName=climatologyFileName,
+                          outFileName=regriddedFileName,
+                          inWeightFileName=mpasMappingFileName,
+                          sourceFileType='mpas',
+                          overwrite=overwriteMpasClimatology)
+
+        ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
+        iceConcentration = ncFile.variables[field][:]
+        lons = ncFile.variables["lon"][:]
+        lats = ncFile.variables["lat"][:]
+        ncFile.close()
+        lonTarg, latTarg = np.meshgrid(lons, lats)
 
         if hemisphere == 'NH':
             plotProjection = 'npstere'
@@ -204,16 +278,31 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
         # ice concentrations from NASATeam (or Bootstrap) algorithm
         for obsName in ['NASATeam', 'Bootstrap']:
 
-            obsFileNames = buildConfigFullPath(
-                config, 'seaIceObservations',
-                'concentration{}{}_{}'.format(obsName, hemisphere, months))
+            key = (months, obsName)
+            regriddedFileName = regriddedObsFileNames[key]
 
-            if not os.path.isfile(obsFileNames):
-                raise SystemExit("Obs file {} not found. Exiting...".format(
-                    obsFileNames))
+            if buildObsClimatologies:
+                obsFileName = obsFileNames[key]
+                obsMappingFileName = \
+                    climatology.write_observations_mapping_file(
+                        config=config, componentName='seaIce',
+                        fieldName='seaIce', gridFileName=obsFileName,
+                        latVarName='t_lat', lonVarName='t_lon')
 
-            ncFile = netCDF4.Dataset(obsFileNames, mode='r')
-            obsIceConcentration = ncFile.variables["AICE"][:].T
+                if obsMappingFileName is None:
+                    regriddedFileName = obsFileName
+                else:
+                    interpolate.remap(inFileName=obsFileName,
+                                      outFileName=regriddedFileName,
+                                      inWeightFileName=obsMappingFileName,
+                                      sourceFileType='latlon',
+                                      sourceLatVarName='t_lat',
+                                      sourceLonVarName='t_lon',
+                                      overwrite=overwriteObsClimatology)
+
+            # read in the results from the remapped files
+            ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
+            obsIceConcentration = ncFile.variables["AICE"][:]
             ncFile.close()
 
             difference = iceConcentration - obsIceConcentration
@@ -246,7 +335,7 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
 
 
 def _compute_and_plot_thickness(config, monthlyClimatology,
-                                mpasInterolationData):
+                                mpasMappingFileName):
     """
     Given a config file, monthly climatology on the mpas grid, and the data
     necessary to perform horizontal interpolation to a comparison grid,
@@ -259,9 +348,8 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
 
     monthlyClimatology : an xarray data set containing a monthly climatology
 
-    mpasInterolationData : a tuple returned by init_model_interpolation that
-        contains the information needed to interpolate from the MPAS mesh
-        to the comparison grid
+    mpasMappingFileName : The name of a mapping file used to perform
+        interpolation of MPAS model results
 
     Authors
     -------
@@ -269,7 +357,7 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
 
     Last Modified
     -------------
-    02/26/2017
+    03/03/2017
     """
 
     print "  Make ice thickness plots..."
@@ -280,15 +368,72 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
     mainRunName = config.get('runs', 'mainRunName')
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
+    overwriteMpasClimatology = config.getWithDefault(
+        'climatology', 'overwriteMpasClimatology', False)
 
-    lonTarg = mpasInterolationData[2]
-    latTarg = mpasInterolationData[3]
+    overwriteObsClimatology = config.getWithDefault(
+        'seaIceObservations', 'overwriteObsClimatology', False)
+
+    obsFileNames = {}
+    regriddedObsFileNames = {}
+
+    # build a list of regridded observations files
+    buildObsClimatologies = overwriteObsClimatology
+    for months in ['FM', 'ON']:
+        climFieldName = 'iceThickness'
+        for hemisphere in ['NH', 'SH']:
+            key = (months, hemisphere)
+            obsFileName = buildConfigFullPath(
+                config, 'seaIceObservations',
+                'thickness{}_{}'.format(hemisphere, months))
+            if not os.path.isfile(obsFileName):
+                raise OSError("Obs file {} not found.".format(
+                    obsFileName))
+
+            obsFieldName = '{}_{}'.format(climFieldName, hemisphere)
+            (climatologyFileName, regriddedFileName) = \
+                climatology.get_observation_climatology_file_names(
+                    config=config, fieldName=obsFieldName, monthNames=months,
+                    componentName='seaIce', gridFileName=obsFileName,
+                    latVarName='t_lat', lonVarName='t_lon')
+
+            obsFileNames[key] = obsFileName
+            regriddedObsFileNames[key] = regriddedFileName
+
+            if not os.path.exists(regriddedFileName):
+                buildObsClimatologies = True
 
     for months in ['FM', 'ON']:
-        monthsValue = constants.monthDictionary[months]
-        iceThickness = climatology.interpolate_model_climatology(
-            mpasInterolationData, monthlyClimatology, "iceVolumeCell",
-            monthsValue)
+        monthValues = constants.monthDictionary[months]
+        field = 'iceVolumeCell'
+        climFieldName = 'iceThickness'
+
+        # interpolate the model results
+        (climatologyFileName, regriddedFileName) = \
+            climatology.get_mpas_climatology_file_names(
+                    config=config, fieldName=climFieldName,
+                    monthNames=months)
+
+        if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
+            seasonalClimatology = climatology.compute_seasonal_climatology(
+                monthlyClimatology, monthValues, field)
+            # write out the climatology so we can interpolate it with
+            # interpolate.remap.  Set _FillValue so ncremap doesn't produce
+            # an error
+            seasonalClimatology.to_netcdf(climatologyFileName)
+
+        interpolate.remap(inFileName=climatologyFileName,
+                          outFileName=regriddedFileName,
+                          inWeightFileName=mpasMappingFileName,
+                          sourceFileType='mpas',
+                          overwrite=overwriteMpasClimatology)
+
+        ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
+        iceThickness = ncFile.variables[field][:]
+        lons = ncFile.variables["lon"][:]
+        lats = ncFile.variables["lat"][:]
+        ncFile.close()
+        lonTarg, latTarg = np.meshgrid(lons, lats)
 
         for hemisphere in ['NH', 'SH']:
 
@@ -320,19 +465,36 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
                 'regriddedSeaIceConcThick',
                 'minimumLatitude{}'.format(hemisphere))
 
-            obsFileNames = buildConfigFullPath(
-                config, 'seaIceObservations',
-                'thickness{}_{}'.format(hemisphere, months))
-            if not os.path.isfile(obsFileNames):
-                raise SystemExit("Obs file {} not found. Exiting...".format(
-                    obsFileNames))
+            # now the observations
+            key = (months, hemisphere)
+            regriddedFileName = regriddedObsFileNames[key]
 
-            ncFile = netCDF4.Dataset(obsFileNames, mode='r')
-            obsIceThickness = ncFile.variables["HI"][:].T
+            if buildObsClimatologies:
+                obsFileName = obsFileNames[key]
+                obsMappingFileName = \
+                    climatology.write_observations_mapping_file(
+                        config=config, componentName='seaIce',
+                        fieldName='seaIce', gridFileName=obsFileName,
+                        latVarName='t_lat', lonVarName='t_lon')
+
+                if obsMappingFileName is None:
+                    regriddedFileName = obsFileName
+                else:
+                    interpolate.remap(inFileName=obsFileName,
+                                      outFileName=regriddedFileName,
+                                      inWeightFileName=obsMappingFileName,
+                                      sourceFileType='latlon',
+                                      sourceLatVarName='t_lat',
+                                      sourceLonVarName='t_lon',
+                                      overwrite=overwriteObsClimatology)
+
+            # read in the results from the remapped files
+            ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
+            obsIceThickness = ncFile.variables["HI"][:]
             ncFile.close()
 
             # Mask thickness fields
-            iceThickness[iceThickness == 0] = ma.masked
+            iceThickness = ma.masked_values(iceThickness, 0)
             obsIceThickness = ma.masked_values(obsIceThickness, 0)
             if hemisphere == 'NH':
                 # Obs thickness should be nan above 86 (ICESat data)

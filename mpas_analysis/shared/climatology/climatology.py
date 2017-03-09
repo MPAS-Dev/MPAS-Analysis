@@ -7,16 +7,382 @@ Xylar Asay-Davis
 
 Last Modified
 -------------
-02/26/2017
+03/04/2017
 """
 
-import numpy as np
+import xarray as xr
+import os
+import numpy
 import netCDF4
 
-from ..interpolation.interpolate import interp_fields, init_tree
+from ..mpas_xarray import mpas_xarray
 from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
+
+from ..io.utility import buildConfigFullPath
+
+from ..interpolation import interpolate
+
+
+def write_mpas_mapping_file(config, meshFileName):
+    """
+    Given config options, the name of the component being analyzed and an
+    MPAS mesh file, either finds an existing MPAS-to-comparison-grid mapping
+    file or creates a new mapping file.
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    meshFileName : str
+        The path of the file containing the source MPAS mesh
+
+    Returns
+    -------
+    mpasMappingFileName : str
+        The absolute path to an existing mapping file or the location
+        at which one was created.  The mapping file can be used to
+        interpolate between MPAS meshes and the climatology comparison grid
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/04/2017
+    """
+
+    climSection = 'climatology'
+
+    method = config.getWithDefault(climSection, 'mpasInterpolationMethod',
+                                   'bilinear')
+
+    comparisonLatRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLatitude)
+    comparisonLonRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLongitude)
+
+    (lat, lon) = _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes)
+
+    overwriteMapping = config.getWithDefault(climSection,
+                                             'overwriteMapping',
+                                             False)
+
+    mappingFileOption = 'mpasMappingFile'
+    if config.has_option(climSection, mappingFileOption):
+        # a mapping file was supplied, so we'll use that name
+        mpasMappingFileName = config.get(climSection, mappingFileOption)
+    else:
+        # we need to build the path to the mapping file and an appropriate
+        # file name
+        mappingSubdirectory = buildConfigFullPath(config, 'output',
+                                                  'mappingSubdirectory')
+        try:
+            os.makedirs(mappingSubdirectory)
+        except OSError:
+            pass
+
+        meshName = config.get('input', 'mpasMeshName')
+
+        mpasMappingFileName = '{}/map_{}_to_{}x{}degree_{}.nc'.format(
+            mappingSubdirectory, meshName, comparisonLatRes, comparisonLonRes,
+            method)
+
+        config.set(climSection, mappingFileOption, mpasMappingFileName)
+
+    interpolate.build_remap_weights(sourceFileName=meshFileName,
+                                    outWeightFileName=mpasMappingFileName,
+                                    sourceFileType='mpas',
+                                    destinationLat=lat,
+                                    destinationLon=lon,
+                                    desitnationUnits='degrees',
+                                    method=method,
+                                    overwrite=overwriteMapping)
+
+    return mpasMappingFileName
+
+
+def write_observations_mapping_file(config, componentName, fieldName,
+                                    gridFileName, latVarName='lat',
+                                    lonVarName='lon'):
+    """
+    Given config options, the name of the component being analyzed and a
+    grid file containing 1D lat and lon arrays, either finds an existing
+    obs-grid-to-comparison-grid mapping file or creates a new mapping file.
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    componentName : {'ocean', 'seaIce'}
+        Name of the component, used to look up climatology and observation
+        options
+
+    fieldName : str
+        Name of the field being mapped, used to give each set of
+        observation weights a unique name.
+
+    gridFileName : str
+        The path of the file containing the source lat-lon grid
+
+    latVarName, lonVarName : str, optional
+        The name of the latitude and longitude variables in the source grid
+        file
+
+    Returns
+    -------
+    obsMappingFileName : str
+        The absolute path to a mapping file (or the location
+        at which to create one) for interpolation between MPAS meshes and
+        the climatology comparison grid
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/04/2017
+    """
+
+    mappingFileOption = '{}ClimatologyMappingFile'.format(fieldName)
+    climSection = 'climatology'
+    obsSection = '{}Observations'.format(componentName)
+
+    comparisonLatRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLatitude)
+    comparisonLonRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLongitude)
+
+    (outLat, outLon) = _get_comparison_lat_lon(comparisonLatRes,
+                                               comparisonLonRes)
+
+    method = config.getWithDefault(obsSection, 'interpolationMethod',
+                                   'bilinear')
+
+    overwriteMapping = config.getWithDefault(climSection,
+                                             'overwriteMapping',
+                                             False)
+
+    if config.has_option(obsSection, mappingFileOption):
+        obsMappingFileName = config.get(obsSection, mappingFileOption)
+    else:
+
+        (gridName, matchesComparison) = _get_grid_name(gridFileName,
+                                                       latVarName,
+                                                       lonVarName,
+                                                       comparisonLatRes,
+                                                       comparisonLonRes)
+
+        if matchesComparison:
+            # no need to remap the observations
+            obsMappingFileName = None
+        else:
+            mappingSubdirectory = buildConfigFullPath(config, 'output',
+                                                      'mappingSubdirectory')
+
+            try:
+                os.makedirs(mappingSubdirectory)
+            except OSError:
+                pass
+
+            obsMappingFileName = \
+                '{}/map_obs_{}_{}_to_{}x{}degree_{}.nc'.format(
+                    mappingSubdirectory, fieldName, gridName,
+                    comparisonLatRes, comparisonLonRes, method)
+
+            config.set(obsSection, mappingFileOption, obsMappingFileName)
+
+    if obsMappingFileName is not None:
+        interpolate.build_remap_weights(
+            sourceFileName=gridFileName,
+            outWeightFileName=obsMappingFileName,
+            sourceFileType='latlon',
+            sourceLatVarName=latVarName,
+            sourceLonVarName=lonVarName,
+            destinationLat=outLat,
+            destinationLon=outLon,
+            desitnationUnits='degrees',
+            method=method,
+            overwrite=overwriteMapping)
+
+    return obsMappingFileName
+
+
+def get_mpas_climatology_file_names(config, fieldName, monthNames):
+    """
+    Given config options, the name of a field and a string identifying the
+    months in a seasonal climatology, returns the full path for MPAS
+    climatology files before and after regridding.
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    fieldName : str
+        Name of the field being mapped, used as a prefix for the climatology
+        file name.
+
+    monthNames : str
+        A string identifying the months in a seasonal climatology (e.g. 'JFM')
+
+    Returns
+    -------
+    climatologyFileName : str
+        The absolute path to a file where the climatology should be stored
+        before regridding.
+
+    regriddedFileName : str
+        The absolute path to a file where the climatology should be stored
+        after regridding.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/03/2017
+    """
+
+    climSection = 'climatology'
+    startYear = config.getint(climSection, 'startYear')
+    endYear = config.getint(climSection, 'endYear')
+
+    meshName = config.get('input', 'mpasMeshName')
+
+    comparisonLatRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLatitude)
+    comparisonLonRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLongitude)
+
+    climatologyDirectory = buildConfigFullPath(config, 'output',
+                                               'mpasClimatologySubdirectory')
+
+    regriddedDirectory = buildConfigFullPath(config, 'output',
+                                             'mpasRegriddedClimSubdirectory')
+    try:
+        os.makedirs(regriddedDirectory)
+    except OSError:
+        pass
+    try:
+        os.makedirs(climatologyDirectory)
+    except OSError:
+        pass
+
+    climatologyFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.nc'.format(
+        climatologyDirectory, fieldName, meshName, monthNames, startYear,
+        endYear)
+    regriddedFileName = \
+        '{}/{}_{}_to_{}x{}degree_{}_years{:04d}-{:04d}.nc'.format(
+            regriddedDirectory, fieldName, meshName, comparisonLatRes,
+            comparisonLonRes, monthNames, startYear, endYear)
+
+    return (climatologyFileName, regriddedFileName)
+
+
+def get_observation_climatology_file_names(config, fieldName, monthNames,
+                                           componentName, gridFileName,
+                                           latVarName='lat', lonVarName='lon'):
+    """
+    Given config options, the name of a field and a string identifying the
+    months in a seasonal climatology, returns the full path for observation
+    climatology files before and after regridding.
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    fieldName : str
+        Name of the field being mapped, used as a prefix for the climatology
+        file name.
+
+    monthNames : str
+        A string identifying the months in a seasonal climatology (e.g. 'JFM')
+
+    gridFileName : str
+        The path of the file containing the source lat-lon grid
+
+    latVarName, lonVarName : str, optional
+        The name of the latitude and longitude variables in the source grid
+        file
+
+    Returns
+    -------
+    climatologyFileName : str
+        The absolute path to a file where the climatology should be stored
+        before regridding.
+
+    regriddedFileName : str
+        The absolute path to a file where the climatology should be stored
+        after regridding.
+
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/03/2017
+    """
+
+    climSection = 'climatology'
+    obsSection = '{}Observations'.format(componentName)
+
+    comparisonLatRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLatitude)
+    comparisonLonRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLongitude)
+
+    climatologyDirectory = buildConfigFullPath(
+        config=config, section='output',
+        relativePathOption='climatologySubdirectory',
+        relativePathSection=obsSection)
+
+    regriddedDirectory = buildConfigFullPath(
+        config=config, section='output',
+        relativePathOption='regriddedClimSubdirectory',
+        relativePathSection=obsSection)
+
+    (gridName, matchesComparison) = _get_grid_name(gridFileName,
+                                                   latVarName,
+                                                   lonVarName,
+                                                   comparisonLatRes,
+                                                   comparisonLonRes)
+
+    climatologyFileName = '{}/{}_{}_{}.nc'.format(
+        climatologyDirectory, fieldName, gridName, monthNames)
+    regriddedFileName = '{}/{}_{}_to_{}x{}degree_{}.nc'.format(
+        regriddedDirectory, fieldName, gridName, comparisonLatRes,
+        comparisonLonRes, monthNames)
+
+    try:
+        os.makedirs(climatologyDirectory)
+    except OSError:
+        pass
+
+    if not matchesComparison:
+        try:
+            os.makedirs(regriddedDirectory)
+        except OSError:
+            pass
+
+    return (climatologyFileName, regriddedFileName)
 
 
 def compute_monthly_climatology(ds, calendar):
@@ -26,7 +392,8 @@ def compute_monthly_climatology(ds, calendar):
 
     Parameters
     ----------
-    ds : an xarray data set with a 'Time' coordinate expressed as days since
+    ds : instance of xarray.DataSet
+        A data set with a 'Time' coordinate expressed as days since
         0001-01-01
 
     calendar: {'gregorian', 'gregorian_noleap'}
@@ -34,12 +401,13 @@ def compute_monthly_climatology(ds, calendar):
 
     Returns
     -------
-    monthlyClimatology : an xarray data set with a new 'month' coordinate,
+    monthlyClimatology : instance of xarray.DataSet
+        A data set with a new 'month' coordinate,
         containing monthly climatologies of all variables in ds
 
     Authors
     -------
-    Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
+    Xylar Asay-Davis
 
     Last Modified
     -------------
@@ -53,26 +421,25 @@ def compute_monthly_climatology(ds, calendar):
     return monthlyClimatology
 
 
-def init_model_interpolation(mpasMeshFileName):
+def compute_seasonal_climatology(monthlyClimatology, monthValues,
+                                 variableName):
     """
-    Given an MPAS mesh file, computes weight information needed to perform
-    climatology interpolation to a comparison grid.  The resolution of the
-    comparison grid is determined via the constants module.
+    Given a monthly climatology, compute a seasonal climatology weighted by
+    the number of days in each month (on the no-leap-year calendar).
 
     Parameters
     ----------
-    mpasMeshFileName : an MPAS file contining mesh information
+    monthlyClimatology : instance of xarray.DataSet
+        A data set containing a monthly climatology
+
+    monthValues : int or array-like of ints
+        A single month or an array of months to be averaged together
+        before interpolation.
 
     Returns
     -------
-    d : the distance to the nearest MPAS cell center from a given comparison
-        grid point
-
-    inds : the index of the nearest MPAS cell center to a given comparison
-        grid point
-
-    lonTarg, latTarg : the longitude and latitude coordinates (as 2D arrays)
-        of points on the default comparison grid
+    seasonalClimatology : instance of xarray.DataSet
+        A data set containing the seasonal climatology
 
     Authors
     -------
@@ -80,195 +447,75 @@ def init_model_interpolation(mpasMeshFileName):
 
     Last Modified
     -------------
-    02/26/2017
+    02/27/2017
     """
 
-    ncFile = netCDF4.Dataset(mpasMeshFileName, mode='r')
-    lonCell = ncFile.variables["lonCell"][:]
-    latCell = ncFile.variables["latCell"][:]
-    ncFile.close()
+    # select only the desired field from the obs. data set
+    monthlyClimatology = mpas_xarray.subset_variables(
+        monthlyClimatology, variableList=[variableName])
 
-    return init_tree(np.rad2deg(lonCell),
-                     np.rad2deg(latCell),
-                     constants.lonmin,
-                     constants.lonmax,
-                     constants.latmin,
-                     constants.latmax,
-                     constants.dLongitude,
-                     constants.dLatitude)
+    # Make a DataArray with the number of days in each month
+    daysInMonth = xr.DataArray(numpy.array(constants.daysInMonth, float),
+                               coords=[monthlyClimatology.month],
+                               name='daysInMonth')
 
+    daysInMonth = daysInMonth.sel(month=monthValues)
+    monthlyClimatology = monthlyClimatology.sel(month=monthValues)
 
-def init_observations_interpolation(dsObs):
-    """
-    Given monthly climatology from observations on a lat/lon grid, interpolates
-    the desired field over the desired months to a the default comparison grid.
+    varArray = monthlyClimatology[variableName]
+    mask = xr.DataArray(~numpy.isnan(varArray.values),
+                        coords=varArray.coords,
+                        name='mask')
+    seasonalClimatology = (monthlyClimatology * daysInMonth).sum(
+        dim='month', keep_attrs=True)
 
-    Parameters
-    ----------
-    dsObs : an xarray data set containing longitude and latitude information
-        for the observations
+    days = (mask * daysInMonth).sum(dim='month')
+    seasonalClimatology /= days.where(days > 0.)
 
-    Returns
-    -------
-    d : the distance to the nearest MPAS cell center from a given comparison
-        grid point
-
-    inds : the index of the nearest MPAS cell center to a given comparison
-        grid point
-
-    lonTarg, latTarg : the longitude and latitude coordinates (as 2D arrays)
-        of points on the default comparison grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    02/26/2017
-    """
-
-    latData, lonData = np.meshgrid(dsObs.lat.values,
-                                   dsObs.lon.values)
-    latData = latData.flatten()
-    lonData = lonData.flatten()
-
-    # initialize interpolation variables
-    return init_tree(lonData, latData,
-                     constants.lonmin,
-                     constants.lonmax,
-                     constants.latmin,
-                     constants.latmax,
-                     constants.dLongitude,
-                     constants.dLatitude)
+    return seasonalClimatology
 
 
-def interpolate_model_climatology(interpolationData, monthlyClimatology, field,
-                                  monthsValue):
-    """
-    Given a monthly climatology on the mpas grid, together with corresponding
-    interpolation weighting data, interpolates desired field over the desired
-    months to a the default comparison grid.
+def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):
+    '''
+    Returns the lat and lon arrays defining the corners of the comparison
+    grid.
+    '''
+    nLat = int((constants.latmax-constants.latmin)/comparisonLatRes)+1
+    nLon = int((constants.lonmax-constants.lonmin)/comparisonLonRes)+1
+    lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
+    lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 
-    Parameters
-    ----------
-    interpolationData : a tuple returned by init_model_interpolation that
-        contains the information needed to interpolate from the MPAS mesh
-        to the comparison grid
+    return (lat, lon)
 
-    monthlyClimatology : an xarray data set containing a monthly climatology
 
-    field : the name of a field in monthlyClimatology to be interpolated
+def _get_grid_name(gridFileName, latVarName, lonVarName, comparisonLatRes,
+                   comparisonLonRes):
+    '''
+    Given a grid file with given lat and lon variable names, finds the
+    resolution of the grid and generates a grid name.  Given comparison
+    lat and lon resolution, determines if the grid matches the comparison grid.
+    '''
+    inFile = netCDF4.Dataset(gridFileName, 'r')
 
-    monthsValue : a single month or an array of months to be averaged together
-        before interpolation
-
-    Returns
-    -------
-    modelOutput : a numpy array containing the field interpolated to the
-        default comparison grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    02/26/2017
-    """
-
-    d, inds, lonTarg, latTarg = interpolationData
-
-    nLon = lonTarg.shape[0]
-    nLat = lonTarg.shape[1]
-
-    modelOutput = np.zeros((nLon, nLat))
-
-    if isinstance(monthsValue, (int, long)):
-        modelData = monthlyClimatology.sel(month=monthsValue)[field].values
+    # Get info from input file
+    inLat = numpy.array(inFile.variables[latVarName][:], float)
+    inLon = numpy.array(inFile.variables[lonVarName][:], float)
+    inDLat = inLat[1]-inLat[0]
+    inDLon = inLon[1]-inLon[0]
+    if 'degree' in inFile.variables[latVarName].units:
+        inUnits = 'degree'
     else:
+        inUnits = 'radian'
+    inFile.close()
+    gridName = '{}x{}{}'.format(abs(inDLat), abs(inDLon), inUnits)
 
-        modelData = (np.sum(
-            constants.daysInMonth[monthsValue-1] *
-            monthlyClimatology.sel(month=monthsValue)[field].values.T,
-            axis=1) /
-            np.sum(constants.daysInMonth[monthsValue-1]))
+    matchesComparison = ((inUnits == 'degree') and
+                         (comparisonLatRes == inDLat) and
+                         (comparisonLonRes == inDLon) and
+                         (inLat[0]-0.5*inDLat == constants.latmin) and
+                         (inLon[0]-0.5*inDLon == constants.lonmin))
 
-    modelOutput = interp_fields(modelData, d, inds, lonTarg)
+    return (gridName, matchesComparison)
 
-    return modelOutput
-
-
-def interpolate_observation_climatology(interpolationData, dsObs,
-                                        obsFieldName, monthsValue):
-    """
-    Given monthly climatology from observations on a lat/lon grid, interpolates
-    the desired field over the desired months to a the default comparison grid.
-
-    Parameters
-    ----------
-    interpolationData : a tuple returned by init_observations_interpolation
-        that contains the information needed to interpolate from the
-        observation grid to the comparison grid
-
-    dsObs : an xarray data set containing a monthly climatology from
-        observations
-
-    obsFieldName : the name of a field in dsObs to be interpolated
-
-    monthsValue : a single month or an array of months to be averaged together
-        before interpolation
-
-    Returns
-    -------
-    observations : a numpy array containing the field interpolated to the
-        default comparison grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    02/26/2017
-    """
-
-    latData, lonData = np.meshgrid(dsObs.lat.values,
-                                   dsObs.lon.values)
-    latData = latData.flatten()
-    lonData = lonData.flatten()
-
-    daysarray = np.ones((12,
-                         dsObs[obsFieldName].values.shape[1],
-                         dsObs[obsFieldName].values.shape[2]))
-
-    for monthIndex, dval in enumerate(constants.daysInMonth):
-        daysarray[monthIndex, :, :] = dval
-        inds = np.where(np.isnan(
-                dsObs[obsFieldName][monthIndex, :, :].values))
-        daysarray[monthIndex, inds[0], inds[1]] = np.NaN
-
-    d, inds, lonTarg, latTarg = interpolationData
-
-    nLon = lonTarg.shape[0]
-    nLat = latTarg.shape[1]
-
-    observations = np.zeros((nLon, nLat))
-
-    # Interpolate and compute biases
-
-    if isinstance(monthsValue, (int, long)):
-        obsData = dsObs.sel(month=monthsValue)[obsFieldName].values
-    else:
-        obsData = \
-            (np.nansum(
-                    daysarray[monthsValue-1, :, :] *
-                    dsObs.sel(month=monthsValue)[obsFieldName].values,
-                    axis=0) /
-             np.nansum(daysarray[monthsValue-1, :, :], axis=0))
-
-    observations = interp_fields(obsData.flatten(), d, inds, lonTarg)
-
-    return observations
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

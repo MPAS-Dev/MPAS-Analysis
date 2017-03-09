@@ -5,7 +5,7 @@ Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
 specifying analysis options.
 
 Author: Xylar Asay-Davis, Phillip J. Wolfram
-Last Modified: 02/02/2017
+Last Modified: 03/03/2017
 """
 
 import os
@@ -86,27 +86,15 @@ def checkGenerate(config, analysisName, mpasCore, analysisCategory=None):
 def analysis(config):  # {{{
     # set default values of start and end dates for climotologies and
     # timeseries
-    if config.has_option('climatology', 'startYear') and \
-            config.has_option('climatology', 'endYear'):
+    for section in ['climatology', 'timeSeries']:
         startDate = '{:04d}-01-01_00:00:00'.format(
-            config.getint('climatology', 'startYear'))
+            config.getint(section, 'startYear'))
+        if not config.has_option(section, 'startDate'):
+            config.set(section, 'startDate', startDate)
         endDate = '{:04d}-12-31_23:59:59'.format(
-            config.getint('climatology', 'endYear'))
-        # use 'getWithDefaults' to set start and end dates without replacing
-        # them if they already exist
-        config.getWithDefault('climatology', 'startDate', startDate)
-        config.getWithDefault('climatology', 'endDate', endDate)
-
-    if config.has_option('timeSeries', 'startYear') and \
-            config.has_option('timeSeries', 'endYear'):
-        startDate = '{:04d}-01-01_00:00:00'.format(
-            config.getint('timeSeries', 'startYear'))
-        endDate = '{:04d}-12-31_23:59:59'.format(
-            config.getint('timeSeries', 'endYear'))
-        # use 'getWithDefaults' to set start and end dates without replacing
-        # them if they already timeseries
-        config.getWithDefault('timeSeries', 'startDate', startDate)
-        config.getWithDefault('timeSeries', 'endDate', endDate)
+            config.getint(section, 'endYear'))
+        if not config.has_option(section, 'endDate'):
+            config.set(section, 'endDate', endDate)
 
     # Checks on directory/files existence:
     if config.get('runs', 'preprocessedReferenceRunName') != 'None':

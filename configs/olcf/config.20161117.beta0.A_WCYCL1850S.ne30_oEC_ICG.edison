@@ -11,8 +11,8 @@ referenceRunName = None
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
-# performed with MPAS components (so they cannot be easily ingested by 
-# MPAS-Analysis) 
+# performed with MPAS components (so they cannot be easily ingested by
+# MPAS-Analysis)
 preprocessedReferenceRunName = B1850C5_ne30_v0.4
 
 [input]
@@ -26,6 +26,9 @@ oceanStreamsFileName = streams.ocean
 seaIceNamelistFileName = mpas-cice_in
 seaIceStreamsFileName = streams.cice
 
+# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+mpasMeshName = EC60to30
+
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
@@ -37,11 +40,13 @@ baseDirectory = /dir/to/analysis/output
 scratchSubdirectory = scratch
 plotsSubdirectory = plots
 logsSubdirectory = logs
-climatologySubdirectory = clim
+mpasClimatologySubdirectory = clim/mpas
+mpasRegriddedClimSubdirectory = clim/mpas/regridded
+mappingSubdirectory = mapping
 
 # a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST', 
-#   'regriddedSSS', 'regriddedMLD', 'timeSeriesSeaIceAreaVol', 
+#   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
+#   'regriddedSSS', 'regriddedMLD', 'timeSeriesSeaIceAreaVol',
 #   'regriddedSeaIceConcThick'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -52,7 +57,7 @@ climatologySubdirectory = clim
 #   'all_seaIce' -- all sea-ice analyses will be run
 #   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
 #                             other analyses).
-#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the 
+#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
 #                                            given category of analysis
 # an equivalent syntax can be used on the command line to override this
 # option:
@@ -77,6 +82,25 @@ generate = ['all']
 startYear = 131
 # the last year over which to average climatalogies
 endYear = 140
+
+# The comparison grid resolution in degrees
+comparisonLatResolution = 0.5
+comparisonLonResolution = 0.5
+
+# The names of the mapping file used for interpolation.  If a mapping file has
+# already been generated, supplying the absolute path can save the time of
+# generating a new one.  If nothing is supplied, the file name is automatically
+# generated based on the MPAS mesh name, the comparison grid resolution, and
+# the interpolation method
+mpasMappingFile = /lustre/atlas/proj-shared/cli115/milena/mapping_files/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
+
+# overwrite files when building climatologies?
+overwriteMapping = False
+overwriteMpasClimatology = False
+
+# interpolation order for model and observation results. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+mpasInterpolationMethod = bilinear
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -105,6 +129,32 @@ sstClimatologyEndYear = 1900
 # alternative values for present day
 #sstClimatologyStartYear = 1990
 #sstClimatologyEndYear = 2011
+
+# The name of mapping files used for interpolating observations to the
+# comparison grid.  Interpolation is only performed if the observation grid has
+# a different resolution from the comparison grid. If nothing is supplied, the
+# file name is automatically generated based on the MPAS mesh name, the
+# comparison grid resolution, and the interpolation method
+# sstClimatologyMappingFile = /path/to/mapping/file
+# sssClimatologyMappingFile = /path/to/mapping/file
+# mldClimatologyMappingFile = /path/to/mapping/file
+
+
+# interpolation order for observations. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+interpolationMethod = bilinear
+
+# The directories where observation climatologies will be stored if they need
+# to be computed.  If a relative path is supplied, it is relative to the output
+# base directory.  If an absolute path is supplied, this should point to
+# cached climatology files on the desired comparison grid, in which case
+# overwriteObsClimatology should be False.  If cached regridded files are
+# supplied, there is no need to provide cached files before regridding.
+climatologySubdirectory = clim/obs
+regriddedClimSubdirectory = clim/obs/regridded
+
+# overwrite files when building climatologies?
+overwriteObsClimatology = False
 
 [oceanReference]
 ## options related to ocean reference run with which the results will be
@@ -143,25 +193,42 @@ thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
 thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
 thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
+# The name of mapping files used for interpolating observations to the
+# comparison grid.  Interpolation is only performed if the observation grid has
+# a different resolution from the comparison grid. If nothing is supplied, the
+# file name is automatically generated based on the MPAS mesh name, the
+# comparison grid resolution, and the interpolation method
+# seaIceClimatologyMappingFile = /path/to/mapping/file
+
+# interpolation order for observations. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+interpolationMethod = bilinear
+
+# The directories where observation climatologies will be stored if they need
+# to be computed.  If a relative path is supplied, it is relative to the output
+# base directory.  If an absolute path is supplied, this should point to
+# cached climatology files on the desired comparison grid, in which case
+# overwriteObsClimatology should be False.  If cached regridded files are
+# supplied, there is no need to provide cached files before regridding.
+climatologySubdirectory = clim/obs
+regriddedClimSubdirectory = clim/obs/regridded
+
+# overwrite files when building climatologies?
+overwriteObsClimatology = False
+
 [seaIceReference]
 ## options related to sea ice reference run with which the results will be
 ## compared
 
 # directory where sea ice reference simulation results are stored
-baseDirectory = /dir/to/seaice/reference
+baseDirectory = /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[remapping]
-## options related to horizontal remapping
-
-# paths to mapping files (which will hopefully be eliminated soon)
-mpasRemapFile = /lustre/atlas/proj-shared/cli115/milena/mapping_files/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
+baseDirectory =  /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [timeSeriesOHC]
 ## options related to plotting time series of ocean heat content (OHC)
@@ -173,7 +240,7 @@ compareWithObservations = False
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average 
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 12
 
@@ -187,7 +254,7 @@ compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average 
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 12
 
@@ -201,7 +268,7 @@ compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average 
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 12
 
@@ -215,12 +282,12 @@ compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average 
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 12
 
 [timeSeriesMOC]
-## options related to plotting time series of meridional overturning 
+## options related to plotting time series of meridional overturning
 ## circulation (MOC)
 
 ## compare to output from another model run?
@@ -230,7 +297,7 @@ compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average 
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 12
 
@@ -244,7 +311,7 @@ compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average 
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 1
 # title font properties

@@ -7,7 +7,7 @@ Luke Van Roekel, Xylar Asay-Davis
 02/26/2017
 """
 
-# set parameters for interpolated grid
+# set parameters for default climatology comparison grid
 dLongitude = 0.5
 dLatitude = 0.5
 lonmin = -180.
