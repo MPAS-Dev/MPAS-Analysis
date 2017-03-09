@@ -227,6 +227,15 @@ def run_analysis(config, analyses):  # {{{
             print "ERROR: analysis module {} failed during run".format(
                 analysisTask.taskName)
 
+        # write out a copy of the configuration to document the run
+        logsDirectory = build_config_full_path(config, 'output',
+                                               'logsSubdirectory')
+        configFileName = '{}/config.{}'.format(logsDirectory,
+                                               analysisTask.taskName)
+        configFile = open(configFileName, 'w')
+        config.write(configFile)
+        configFile.close()
+
     if config.getboolean('plot', 'displayToScreen'):
         import matplotlib.pyplot as plt
         plt.show()
