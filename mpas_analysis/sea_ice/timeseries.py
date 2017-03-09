@@ -416,4 +416,9 @@ def replicate_cycle(ds, dsToReplicate, calendar):
                                                  calendar=calendar))
         dsShift = xr.concat([dsShift, dsNew], dim='Time')
 
+    # clip dsShift to the range of ds
+    dsStartTime = dsShift.Time.sel(Time=ds.Time.min(), method='nearest').values
+    dsEndTime = dsShift.Time.sel(Time=ds.Time.max(), method='nearest').values
+    dsShift = dsShift.sel(Time=slice(dsStartTime, dsEndTime))
+
     return dsShift
