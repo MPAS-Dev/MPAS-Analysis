@@ -232,8 +232,19 @@ if __name__ == "__main__":
                         type=str, nargs='+', help='config file')
     args = parser.parse_args()
 
+    # add config.default to cover default not included in the config files
+    # provided on the command line
+    defaultConfig = '{}/config.default'.format(
+        os.path.dirname(os.path.realpath(__file__)))
+    if os.path.exists(defaultConfig):
+        configFiles = [defaultConfig] + args.configFiles
+    else:
+        print 'WARNING: Did not find config.default.  Assuming other config ' \
+            'file(s) contain a\nfull set of configuration options.'
+        configFiles = args.configFiles
+
     config = MpasAnalysisConfigParser()
-    config.read(args.configFiles)
+    config.read(configFiles)
 
     if args.generate:
         # overwrite the 'generate' in config with a string that parses to
