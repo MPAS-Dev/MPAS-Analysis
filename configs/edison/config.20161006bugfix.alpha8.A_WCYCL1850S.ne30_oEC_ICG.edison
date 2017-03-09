@@ -95,17 +95,17 @@ endYear = 51
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /
-sstSubdirectory = global/project/projectdirs/acme/observations/Ocean/SST
-sssSubdirectory = global/homes/l/lvroekel
-mldSubdirectory = /global/project/projectdirs/acme/observations/Ocean/MLD
+baseDirectory = /global/project/projectdirs/acme/observations/Ocean/
+sstSubdirectory = SST
+sssSubdirectory = SSS
+mldSubdirectory = MLD
 
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
