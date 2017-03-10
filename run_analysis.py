@@ -88,10 +88,6 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     """
     thisFile = os.path.realpath(__file__)
 
-    logsDirectory = build_config_full_path(config, 'output',
-                                           'logsSubdirectory')
-    make_directories(logsDirectory)
-
     commandPrefix = config.getWithDefault('execute', 'commandPrefix',
                                           default='')
     if commandPrefix == '':
@@ -217,15 +213,17 @@ def build_analysis_list(config):  # {{{
 def run_analysis(config, analyses):  # {{{
 
     # run each analysis task
+    lastException = None
     for analysisTask in analyses:
         try:
             analysisTask.run()
-        except Exception as e:
+        except (Exception, BaseException) as e:
             if isinstance(e, KeyboardInterrupt):
                 raise e
             traceback.print_exc(file=sys.stdout)
             print "ERROR: analysis module {} failed during run".format(
                 analysisTask.taskName)
+            lastException = e
 
         # write out a copy of the configuration to document the run
         logsDirectory = build_config_full_path(config, 'output',
@@ -239,6 +237,10 @@ def run_analysis(config, analyses):  # {{{
     if config.getboolean('plot', 'displayToScreen'):
         import matplotlib.pyplot as plt
         plt.show()
+
+    # raise the last exception so the process exits with an error
+    if lastException is not None:
+        raise lastException
 
     return  # }}}
 
@@ -272,6 +274,10 @@ if __name__ == "__main__":
 
     if args.generate:
         update_generate(config, args.generate)
+
+    logsDirectory = build_config_full_path(config, 'output',
+                                           'logsSubdirectory')
+    make_directories(logsDirectory)
 
     analyses = build_analysis_list(config)
 
