@@ -25,6 +25,7 @@ import numpy
 from scipy.sparse import csr_matrix
 import xarray as xr
 import sys
+import fasteners
 
 from ..grid import MpasMeshDescriptor, LatLonGridDescriptor, \
     ProjectionGridDescriptor
@@ -171,7 +172,16 @@ class Remapper(object):
         if additionalArgs is not None:
             args.extend(additionalArgs)
 
-        subprocess.check_call(args)
+        # lock the weights file in case it is being written by another process
+        with fasteners.InterProcessLock(_get_lock_path(self.mappingFileName)):
+            # make sure another process didn't already create the mapping file
+            # in the meantime
+            if not os.path.exists(self.mappingFileName):
+                # make sure any output is flushed before we add output from the
+                # subprocess
+                sys.stdout.flush()
+                sys.stderr.flush()
+                subprocess.check_call(args)
 
         # remove the temporary SCRIP files
         os.remove(self.sourceDescriptor.scripFileName)
@@ -266,6 +276,11 @@ class Remapper(object):
 
         if variableList is not None:
             args.extend(['-v', ','.join(variableList)])
+
+        # make sure any output is flushed before we add output from the
+        # subprocess
+        sys.stdout.flush()
+        sys.stderr.flush()
 
         subprocess.check_call(args)  # }}}
 
@@ -569,6 +584,16 @@ class Remapper(object):
         outField = numpy.transpose(outField, axes=unpermuteAxes)
 
         return outField  # }}}
+
+
+def _get_lock_path(fileName):  # {{{
+    '''Returns the name of a temporary lock file unique to a given file name'''
+    directory = '{}/.locks/'.format(os.path.dirname(fileName))
+    try:
+        os.makedirs(directory)
+    except OSError:
+        pass
+    return '{}/{}.lock'.format(directory, os.path.basename(fileName))  # }}}
 
 
 def _get_temp_path():  # {{{

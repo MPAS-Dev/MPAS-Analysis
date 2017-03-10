@@ -154,7 +154,6 @@ comparisonLonResolution = 0.5
 # mpasMappingFile = /path/to/mapping/file
 
 # overwrite files when building climatologies?
-overwriteMapping = False
 overwriteMpasClimatology = False
 
 # interpolation order for model and observation results. Likely values are

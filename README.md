@@ -20,12 +20,14 @@ This analysis repository presumes that the following python packages are availab
  * lxml
  * nco
  * pyproj
+ * fasteners
 
 You can easily install them via the conda command:
 
 ```
 conda config --add channels conda-forge
-conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap lxml nco pyproj
+conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
+    lxml nco pyproj fasteners
 ```
 
 ## Running the analysis
