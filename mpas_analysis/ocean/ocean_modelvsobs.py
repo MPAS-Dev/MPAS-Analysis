@@ -253,22 +253,10 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     else:
         obsMappingFileName = None
 
-    resultContourValues = config.getExpression(sectionName,
-                                               'resultContourValues')
-    resultColormap = plt.get_cmap(config.get(sectionName, 'resultColormap'))
-    resultColormapIndices = config.getExpression(sectionName,
-                                                 'resultColormapIndices')
-    resultColormap = cols.ListedColormap(resultColormap(resultColormapIndices),
-                                         "resultColormap")
-    differenceContourValues = config.getExpression(sectionName,
-                                                   'differenceContourValues')
-    differenceColormap = plt.get_cmap(config.get(sectionName,
-                                                 'differenceColormap'))
-    differenceColormapIndices = config.getExpression(
-            sectionName, 'differenceColormapIndices')
-    differenceColormap = cols.ListedColormap(
-            differenceColormap(differenceColormapIndices),
-            "differenceColormap")
+    (resultColormap, resultContourValues) = _setup_colormap(
+        config, sectionName, prefix='result')
+    (differenceColormap, differenceContourValues) = _setup_colormap(
+        config, sectionName, prefix='difference')
 
     # Interpolate and compute biases
     for months in outputTimes:
@@ -355,5 +343,31 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
                                obsTitle=observationTitleLabel,
                                diffTitle="Model-Observations",
                                cbarlabel=unitsLabel)
+
+
+def _setup_colormap(config, sectionName, prefix):
+
+    '''set up a colormap from the registry'''
+
+    contourValues = config.getExpression(sectionName,
+                                         '{}ContourValues'.format(prefix))
+    colormap = plt.get_cmap(config.get(sectionName,
+                                       '{}Colormap'.format(prefix)))
+    indices = config.getExpression(sectionName,
+                                   '{}ColormapIndices'.format(prefix))
+
+    # set under/over values based on the first/last indices in the colormap
+    underColor = colormap(indices[0])
+    overColor = colormap(indices[-1])
+    if len(contourValues)+1 == len(indices):
+        # we have 2 extra values for the under/over so make the colormap
+        # without these values
+        indices = indices[1:-1]
+    colormap = cols.ListedColormap(colormap(indices),
+                                   '{}Colormap'.format(prefix))
+    colormap.set_under(underColor)
+    colormap.set_over(overColor)
+    return (colormap, contourValues)
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
