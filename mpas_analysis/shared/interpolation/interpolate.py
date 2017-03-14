@@ -14,12 +14,13 @@ Xylar Asay-Davis
 
 Last Modified
 -------------
-02/25/2017
+03/14/2017
 """
 
 import subprocess
 import tempfile
 import os
+from distutils.spawn import find_executable
 
 from .scrip import mpas_file_to_scrip, lat_lon_file_to_scrip, \
     lat_lon_array_to_scrip
@@ -82,18 +83,27 @@ def build_remap_weights(sourceFileName, outWeightFileName,
         does nothing and returns immediately, potentially saving a costly
         re-computaiton of the mapping file.
 
+    Raises
+    ------
+    OSError
+        If `ESMF_RegridWeightGen` is not in the system path.
+
     Author
     ------
     Xylar Asay-Davis
 
     Last Modified
     -------------
-    02/25/2017
+    03/14/2017
     """
 
     if not overwrite and os.path.exists(outWeightFileName):
         # a valid weight file already exists, so nothing to do
         return
+
+    if find_executable('ESMF_RegridWeightGen') is None:
+        raise OSError('ESMF_RegridWeightGen not found. Make sure esmf package '
+                      'is installed via\nlatest nco: \n    conda install nco')
 
     # two temporary SCRIP files, one for the MPAS mesh and one for the dest
     # grid
@@ -174,18 +184,27 @@ def remap(inFileName, outFileName, inWeightFileName, sourceFileType='mpas',
         exists. If `False`, and the destination file is already present, the
         function does nothing and returns immediately
 
+    Raises
+    ------
+    OSError
+        If `ncremap` is not in the system path.
+
     Author
     ------
     Xylar Asay-Davis
 
     Last Modified
     -------------
-    02/23/2017
+    03/14/2017
     """
 
     if not overwrite and os.path.exists(outFileName):
         # a valid weight file already exists, so nothing to do
         return
+
+    if find_executable('ncremap') is None:
+        raise OSError('ncremap not found. Make sure the latest nco package '
+                      'is installed: \n    conda install nco')
 
     args = ['ncremap',
             '-R', '--rgr lat_nm={} --rgr lon_nm={}'.format(sourceLatVarName,
