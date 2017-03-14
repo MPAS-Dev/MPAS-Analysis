@@ -315,13 +315,15 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                          xLabel, units, figureNameNH,
                                          lineStyles=lineStyles,
                                          lineWidths=lineWidths,
-                                         titleFontSize=titleFontSize)
+                                         titleFontSize=titleFontSize,
+                                         calendar=calendar)
                 timeseries_analysis_plot(config, varsSH, movingAveragePoints,
                                          titleSH,
                                          xLabel, units, figureNameSH,
                                          lineStyles=lineStyles,
                                          lineWidths=lineWidths,
-                                         titleFontSize=titleFontSize)
+                                         titleFontSize=titleFontSize,
+                                         calendar=calendar)
             else:
                 # we will combine north and south onto a single graph
                 figureName = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
@@ -332,7 +334,8 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                          title, xLabel, units, figureName,
                                          lineStyles=['r-', 'k-'],
                                          lineWidths=[1.2, 1.2],
-                                         titleFontSize=titleFontSize)
+                                         titleFontSize=titleFontSize,
+                                         calendar=calendar)
 
         elif variableName == 'iceThickCell':
 
@@ -344,7 +347,8 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                      xLabel, units, figureName,
                                      lineStyles=['r-', 'k-'],
                                      lineWidths=[1.2, 1.2],
-                                     titleFontSize=titleFontSize)
+                                     titleFontSize=titleFontSize,
+                                     calendar=calendar)
 
         else:
             raise ValueError(

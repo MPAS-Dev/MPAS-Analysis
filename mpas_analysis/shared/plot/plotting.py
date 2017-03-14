@@ -1,75 +1,125 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import xarray as xr
-from mpl_toolkits.basemap import Basemap
-import matplotlib.colors as cols
-import matplotlib.dates as mdates
-import numpy as np
-
 """
 Plotting utilities, including routine for plotting:
     * time series (and comparing with reference data sets)
     * regridded horizontal fields (and comparing with reference data sets)
 
-Author: Xylar Asay-Davis
+Authors
+-------
+Xylar Asay-Davis
 
-Last Modified: 02/11/2017
+Last Modified
+-------------
+03/14/2017
 """
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import xarray as xr
+from mpl_toolkits.basemap import Basemap
+import matplotlib.colors as cols
+from matplotlib.ticker import FuncFormatter, FixedLocator
+import numpy as np
+from functools import partial
+
+from ..timekeeping.utility import days_to_datetime, date_to_days
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
-                             fileout, lineStyles, lineWidths,
-                             titleFontSize=None, figsize=(15, 6), dpi=300):
+                             fileout, lineStyles, lineWidths, calendar,
+                             titleFontSize=None, figsize=(15, 6), dpi=300,
+                             maxXTicks=20):
 
     """
     Plots the list of time series data sets and stores the result in an image
     file.
 
-    config is an instance of ConfigParser
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
 
-    dsvalues is a list of xarray DataSets to be plotted
+    dsvalues : list of xarray DataSets
+        the data set(s) to be plotted
 
-    N is the numer of time points over which to perform a moving average
+    N : int
+        the numer of time points over which to perform a moving average
 
-    title is a string with the title of the plot
+    title : str
+        the title of the plot
 
-    xlabel and ylabel are strings with axes labels
+    xlabel, ylabel : str
+        axis labels
 
-    fileout is the file name to be written
+    fileout : str
+        the file name to be written
 
-    lineStyles and lineWidths are lists of strings controling line style/width
+    lineStyles, lineWidths : list of str
+        control line style/width
 
-    titleFontSize is the size of the title font
+    titleFontSize : int, optional
+        the size of the title font
 
-    figsize is the size of the figure in inches
+    figsize : tuple of float, optional
+        the size of the figure in inches
 
-    dpi is the number of dots per inch of the figure
+    dpi : int, optional
+        the number of dots per inch of the figure
 
-    Author: Xylar Asay-Davis
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.
 
-    Last Modified: 02/11/2017
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/14/2017
     """
-    fig = plt.figure(figsize=figsize, dpi=dpi)
+    plt.figure(figsize=figsize, dpi=dpi)
 
+    minDays = []
+    maxDays = []
     for dsIndex in range(len(dsvalues)):
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
             continue
         mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
         mean = xr.DataArray.from_series(mean)
-        plt.plot_date(mean['Time'], mean,
-                      fmt=lineStyles[dsIndex],
-                      xdate=True,
-                      ydate=False,
-                      linewidth=lineWidths[dsIndex])
+        minDays.append(mean.Time.min())
+        maxDays.append(mean.Time.max())
+        plt.plot(mean['Time'], mean,
+                 lineStyles[dsIndex],
+                 linewidth=lineWidths[dsIndex])
+
+    start = days_to_datetime(np.amin(minDays), calendar=calendar)
+    end = days_to_datetime(np.amax(maxDays), calendar=calendar)
+
+    if (end.year - start.year > maxXTicks/2):
+        major = [date_to_days(year=year, calendar=calendar)
+                 for year in np.arange(start.year, end.year+1)]
+        formatterFun = partial(_date_tick, calendar=calendar,
+                               includeMonth=False)
+    else:
+        # add ticks for months
+        major = []
+        for year in range(start.year, end.year+1):
+            for month in range(1, 13):
+                major.append(date_to_days(year=year, month=month,
+                                          calendar=calendar))
+        formatterFun = partial(_date_tick, calendar=calendar,
+                               includeMonth=True)
 
     ax = plt.gca()
-    # TODO: it would be good to change labels to include months if the plot is
-    # shorter than a couple of years
-    ax.xaxis.set_major_locator(mdates.YearLocator())
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-    ax.xaxis.set_minor_locator(mdates.MonthLocator())
-    fig.autofmt_xdate()
+    ax.xaxis.set_major_locator(FixedLocator(major, maxXTicks))
+    ax.xaxis.set_major_formatter(FuncFormatter(formatterFun))
+
+    plt.setp(ax.get_xticklabels(), rotation=30)
+
+    plt.autoscale(enable=True, axis='x', tight=True)
 
     if titleFontSize is None:
         titleFontSize = config.get('plot', 'titleFontSize')
@@ -326,3 +376,12 @@ def plot_global_comparison(
 
     if not config.getboolean('plot','displayToScreen'):
         plt.close()
+
+
+def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
+    days = np.maximum(days, 0.)
+    date = days_to_datetime(days, calendar)
+    if includeMonth:
+        return '{:04d}-{:02d}'.format(date.year, date.month)
+    else:
+        return '{:04d}'.format(date.year)
