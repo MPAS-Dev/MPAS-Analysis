@@ -107,3 +107,9 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations/SeaIce
 # directory where ocean reference simulation results are stored
 baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning 
+## circulation (MOC)
+
+# Mask file for ocean basin regional computation
+regionMaskFiles = /usr/projects/climate/mpeterse/analysis_input_files/EC60to30v1/EC60to30v1_SingleRegionAtlanticWTransportTransects_masks.nc

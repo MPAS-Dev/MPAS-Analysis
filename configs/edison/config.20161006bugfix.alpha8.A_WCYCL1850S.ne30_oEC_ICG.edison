@@ -121,3 +121,9 @@ baseDirectory = /global/project/projectdirs/acme/observations/SeaIce
 # directory where ocean reference simulation results are stored
 baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning 
+## circulation (MOC)
+
+# Mask file for ocean basin regional computation
+regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/EC60to30v1_SingleRegionAtlanticWTransportTransects_masks.nc

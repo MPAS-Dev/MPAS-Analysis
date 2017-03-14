@@ -304,6 +304,25 @@ regionIndicesToPlot = [6]
 # window)
 movingAveragePoints = 12
 
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning 
+## circulation (MOC)
+
+# Mask file for post-processing regional MOC computation
+regionMaskFiles = /path/to/MOCregional/mapping/file
+
+# colormap for model/observations
+colormapName = RdYlBu_r
+# colormap indices for contour color
+colormapIndices = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+globalColorbarLevels = [-25, -15, -10, -5, 0, 5, 10, 20, 30, 40]
+atlanticColorbarLevels = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+globalContourLevels = np.arange(-25.1,35.1,10)
+atlanticContourLevels = np.arange(-8,20.1,2)
+#atlanticContourLevels = [-10,0,16]
+
 [timeSeriesMOC]
 ## options related to plotting time series of meridional overturning
 ## circulation (MOC)
@@ -312,8 +331,6 @@ movingAveragePoints = 12
 #compareWithModel = True
 # compare to observations?
 compareWithObservations = True
-# list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
