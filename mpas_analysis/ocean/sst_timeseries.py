@@ -127,11 +127,13 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
                                      movingAveragePoints,
                                      title, xLabel, yLabel, figureName,
                                      lineStyles=['r-', 'b-'],
-                                     lineWidths=[1.2, 1.2])
+                                     lineWidths=[1.2, 1.2],
+                                     calendar=calendar)
         else:
             figureName = '{}/sst_{}_{}.png'.format(plotsDirectory,
                                                    regions[regionIndex],
                                                    mainRunName)
             timeseries_analysis_plot(config, [SST], movingAveragePoints, title,
                                      xLabel, yLabel, figureName,
-                                     lineStyles=['r-'], lineWidths=[1.2])
+                                     lineStyles=['r-'], lineWidths=[1.2],
+                                     calendar=calendar)

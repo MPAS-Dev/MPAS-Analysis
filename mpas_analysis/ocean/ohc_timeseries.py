@@ -241,7 +241,8 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                      lineStyles=['r-', 'r-', 'r--', 'r-.',
                                                  'b-', 'b-', 'b--', 'b-.'],
                                      lineWidths=[2, 1, 1.5, 1.5, 2, 1, 1.5,
-                                                 1.5])
+                                                 1.5],
+                                     calendar=calendar)
 
         if (not compareWithObservations and
                 preprocessedReferenceRunName == 'None'):
@@ -253,4 +254,5 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                      movingAveragePoints, title,
                                      xLabel, yLabel, figureName,
                                      lineStyles=['r-', 'r-', 'r--', 'r-.'],
-                                     lineWidths=[2, 1, 1.5, 1.5])
+                                     lineWidths=[2, 1, 1.5, 1.5],
+                                     calendar=calendar)
