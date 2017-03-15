@@ -3,8 +3,13 @@ import numpy as np
 """
 Constants that are common to all analysis tasks
 
-Luke Van Roekel, Xylar Asay-Davis
-02/26/2017
+Authors
+-------
+Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
+Last modified
+-------------
+03/15/2017
 """
 
 # set parameters for default climatology comparison grid
@@ -27,6 +32,13 @@ daysInMonth = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
 abrevMonthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 
-m3ps_to_Sv = 1e-6; # m^3/sec flux to Sverdrups
+# conversion factor from m^3/s to Sverdrups
+m3ps_to_Sv = 1e-6
+
+# conversion factor from radians to degrees
+rad_to_deg = 180./np.pi
+
+# conversion factor from degrees to radians
+deg_to_rad = np.pi/180.
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

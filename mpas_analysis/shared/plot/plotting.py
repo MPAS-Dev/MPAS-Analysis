@@ -98,6 +98,15 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex])
 
+    ax = plt.gca()
+
+    # Add a y=0 line if y ranges between positive and negative values
+    yaxLimits = ax.get_ylim()
+    if yaxLimits[0]*yaxLimits[1] < 0:
+        indgood = np.where(np.logical_not(np.isnan(mean)))
+        x = mean['Time'][indgood]
+        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2)
+
     start = days_to_datetime(np.amin(minDays), calendar=calendar)
     end = days_to_datetime(np.amax(maxDays), calendar=calendar)
 
@@ -116,7 +125,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         formatterFun = partial(_date_tick, calendar=calendar,
                                includeMonth=True)
 
-    ax = plt.gca()
     ax.xaxis.set_major_locator(FixedLocator(major, maxXTicks))
     ax.xaxis.set_major_formatter(FuncFormatter(formatterFun))
 
@@ -144,10 +152,10 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         plt.close()
 
 
-
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
-                                   fileout, lineStyles, lineWidths, calendar,
-                                   titleFontSize=None, figsize=(15, 6), dpi=300):
+                                   fileout, lineStyles, lineWidths,
+                                   calendar, titleFontSize=None,
+                                   figsize=(15, 6), dpi=300):
 
     """
     Plots the list of time series data sets on a polar plot and stores
@@ -273,42 +281,60 @@ def plot_polar_comparison(
 
     Parameters
     ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
 
-    Lons, Lats : longitude and latitude arrays
+    Lons, Lats : float arrays
+        longitude and latitude arrays
 
-    modelArray, obsArray : model and observational data sets
+    modelArray, obsArray : float arrays
+        model and observational data sets
 
-    diffArray : difference between modelArray and obsArray
+    diffArray : float array
+        difference between modelArray and obsArray
 
-    cmapModelObs : colormap of model and observations panel
+    cmapModelObs : str
+        colormap of model and observations panel
 
-    clevsModelObs : colorbar values for model and observations panel
+    clevsModelObs : int array
+        colorbar values for model and observations panel
 
-    cmapDiff : colormap of difference (bias) panel
+    cmapDiff : str
+        colormap of difference (bias) panel
 
-    clevsDiff : colorbar values for difference (bias) panel
+    clevsDiff : int array
+        colorbar values for difference (bias) panel
 
-    fileout : file name to be written
+    fileout : str
+        the file name to be written
 
-    title : string with the subtitle of the plot
+    title : str, optional
+        the subtitle of the plot
 
-    plotProjection : Basemap projection for the plot
+    plotProjection : str, optional
+        Basemap projection for the plot
 
-    modelTitle : title of the model panel
+    modelTitle : str, optional
+        title of the model panel
 
-    obsTitle : title of the observations panel
+    obsTitle : str, optional
+        title of the observations panel
 
-    diffTitle : title of the difference (bias) panel
+    diffTitle : str, optional
+        title of the difference (bias) panel
 
-    cbarlabel : label on the colorbar
+    cbarlabel : str, optional
+        label on the colorbar
 
-    titleFontSize : size of the title font
+    titleFontSize : int, optional
+        size of the title font
 
-    figsize : size of the figure in inches
+    figsize : tuple of float, optional
+        the size of the figure in inches
 
-    dpi : number of dots per inch of the figure
+    dpi : int, optional
+        the number of dots per inch of the figure
 
     Authors
     -------
@@ -316,7 +342,7 @@ def plot_polar_comparison(
 
     Last Modified
     -------------
-    03/13/2017
+    03/17/2017
     """
 
     # set up figure
@@ -409,40 +435,57 @@ def plot_global_comparison(
 
     Parameters
     ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
 
-    Lons, Lats : longitude and latitude arrays
+    Lons, Lats : float arrays
+        longitude and latitude arrays
 
-    modelArray, obsArray : model and observational data sets
+    modelArray, obsArray : float arrays
+        model and observational data sets
 
-    diffArray : difference between modelArray and obsArray
+    diffArray : float array
+        difference between modelArray and obsArray
 
-    cmapModelObs : colormap of model and observations panel
+    cmapModelObs : str
+        colormap of model and observations panel
 
-    clevsModelObs : colorbar values for model and observations panel
+    clevsModelObs : int array
+        colorbar values for model and observations panel
 
-    cmapDiff : colormap of difference (bias) panel
+    cmapDiff : str
+        colormap of difference (bias) panel
 
-    clevsDiff : colorbar values for difference (bias) panel
+    clevsDiff : int array
+        colorbar values for difference (bias) panel
 
-    fileout : file name to be written
+    fileout : str
+        the file name to be written
 
-    title : string with the subtitle of the plot
+    title : str, optional
+        the subtitle of the plot
 
-    modelTitle : title of the model panel
+    modelTitle : str, optional
+        title of the model panel
 
-    obsTitle : title of the observations panel
+    obsTitle : str, optional
+        title of the observations panel
 
-    diffTitle : title of the difference (bias) panel
+    diffTitle : str, optional
+        title of the difference (bias) panel
 
-    cbarlabel : label on the colorbar
+    cbarlabel : str, optional
+        label on the colorbar
 
-    titleFontSize : size of the title font
+    titleFontSize : int, optional
+        size of the title font
 
-    figsize : size of the figure in inches
+    figsize : tuple of float, optional
+        the size of the figure in inches
 
-    dpi : number of dots per inch of the figure
+    dpi : int, optional
+        the number of dots per inch of the figure
 
     Authors
     -------
@@ -537,9 +580,10 @@ def plot_vertical_section(
     colormapName,
     colorbarLevels,
     contourLevels,
-    colorbarLabel,
+    colorbarLabel=None,
     title=None,
     xlabel=None,
+    ylabel=None,
     fileout='moc.png',
     figsize=(10, 4),
     dpi=300):  # {{{
@@ -550,32 +594,45 @@ def plot_vertical_section(
 
     Parameters
     ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
 
-    xArray : x array (latitude, longitude, or spherical distance)
+    xArray : float array
+        x array (latitude, longitude, or spherical distance)
 
-    depthArray : depth array [m]
+    depthArray : float array
+        depth array [m]
 
-    fieldArray : field array to plot
+    fieldArray : float array
+        field array to plot
 
-    colormapName : colormap of plot
+    colormapName : str
+        colormap of plot
 
-    colorbarLevels :  colorbar levels of plot
+    colorbarLevels : int array
+        colorbar levels of plot
 
-    contourLevels : levels of contours to be drawn
+    contourLevels : int levels
+        levels of contours to be drawn
 
-    colorbarLabel : label of the colorbar
+    colorbarLabel : str, optional
+        label of the colorbar
 
-    title : title of plot
+    title : str, optional
+        title of plot
 
-    xlabel : label of x-axis
+    xlabel, ylabel : str, optional
+        label of x- and y-axis
 
-    fileout : file name to be written
+    fileout : str, optional
+        the file name to be written
 
-    figsize : size of the figure in inches
+    figsize : tuple of float, optional
+        size of the figure in inches
 
-    dpi : number of dots per inch of the figure
+    dpi : int, optional
+        number of dots per inch of the figure
 
     Authors
     -------
@@ -599,7 +656,8 @@ def plot_vertical_section(
 
     cbar = plt.colorbar(cs, orientation='vertical', spacing='uniform',
                         ticks=colorbarLevels, boundaries=colorbarLevels)
-    cbar.set_label(colorbarLabel)
+    if colorbarLabel is not None:
+        cbar.set_label(colorbarLabel)
 
     axis_font = {'size': config.get('plot', 'axisFontSize')}
     title_font = {'size': config.get('plot', 'titleFontSize'),
@@ -609,7 +667,8 @@ def plot_vertical_section(
         plt.title(title, **title_font)
     if xlabel is not None:
         plt.xlabel(xlabel, **axis_font)
-    plt.ylabel('depth [m]', **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
 
     plt.gca().invert_yaxis()
 
@@ -620,5 +679,60 @@ def plot_vertical_section(
         plt.close()
 
     return  # }}}
+
+
+def setup_colormap(config, configSectionName, suffix=''):
+
+    '''
+    Set up a colormap from the registry
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    configSectionName : str
+        name of config section
+
+    suffix: str, optional
+        suffix of colormap related options
+
+    Returns
+    -------
+    colormap : srt
+        new colormap
+
+    colorbarLevels : int array
+        colorbar levels
+
+    Authors
+    -------
+    Xylar Asay-Davis, Milena Veneziani
+
+    Last modified
+    -------------
+    03/17/2017
+    '''
+
+    colormap = plt.get_cmap(config.get(configSectionName,
+                                       'colormapName{}'.format(suffix)))
+    indices = config.getExpression(configSectionName,
+                                   'colormapIndices{}'.format(suffix))
+    colorbarLevels = config.getExpression(configSectionName,
+                                          'colorbarLevels{}'.format(suffix))
+
+    # set under/over values based on the first/last indices in the colormap
+    underColor = colormap(indices[0])
+    overColor = colormap(indices[-1])
+    if len(colorbarLevels)+1 == len(indices):
+        # we have 2 extra values for the under/over so make the colormap
+        # without these values
+        indices = indices[1:-1]
+    colormap = cols.ListedColormap(colormap(indices),
+                                   'colormapName{}'.format(suffix))
+    colormap.set_under(underColor)
+    colormap.set_over(overColor)
+    return (colormap, colorbarLevels)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

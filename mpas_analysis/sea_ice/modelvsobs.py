@@ -27,7 +27,8 @@ from ..shared.interpolation import interpolate
 
 from ..shared.climatology import climatology
 
-from ..shared.plot.plotting import plot_polar_comparison
+from ..shared.plot.plotting import plot_polar_comparison, \
+    setup_colormap
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath
@@ -247,26 +248,12 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
         else:
             plotProjection = 'spstere'
 
-        resultConcContourValues = config.getExpression(
+        (colormapResult, colorbarLevelsResult) = setup_colormap(config,
             'regriddedSeaIceConcThick',
-            'resultConc{}ContourValues'.format(season))
-        resultColormap = plt.get_cmap(config.get(
-            'regriddedSeaIceConcThick', 'resultColormap'))
-        resultColormapIndices = config.getExpression(
-            'regriddedSeaIceConcThick', 'resultColormapIndices')
-        resultColormap = cols.ListedColormap(
-            resultColormap(resultColormapIndices), "resultColormap")
-
-        differenceConcContourValues = config.getExpression(
+            suffix='ConcResult{}'.format(season))
+        (colormapDifference, colorbarLevelsDifference) = setup_colormap(config,
             'regriddedSeaIceConcThick',
-            'differenceConc{}ContourValues'.format(season))
-        differenceColormap = plt.get_cmap(config.get(
-            'regriddedSeaIceConcThick', 'differenceColormap'))
-        differenceColormapIndices = config.getExpression(
-            'regriddedSeaIceConcThick', 'differenceColormapIndices')
-        differenceColormap = cols.ListedColormap(
-            differenceColormap(differenceColormapIndices),
-            "differenceColormap")
+            suffix='ConcDifference{}'.format(season))
 
         referenceLongitude = config.getfloat(
             'regriddedSeaIceConcThick',
@@ -319,10 +306,10 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
                 iceConcentration,
                 obsIceConcentration,
                 difference,
-                resultColormap,
-                resultConcContourValues,
-                differenceColormap,
-                differenceConcContourValues,
+                colormapResult,
+                colorbarLevelsResult,
+                colormapDifference,
+                colorbarLevelsDifference,
                 title=title,
                 fileout=fileout,
                 plotProjection=plotProjection,
@@ -437,26 +424,12 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
 
         for hemisphere in ['NH', 'SH']:
 
-            resultThickContourValues = config.getExpression(
+            (colormapResult, colorbarLevelsResult) = setup_colormap(config,
                 'regriddedSeaIceConcThick',
-                'resultThick{}ContourValues'.format(hemisphere))
-            resultColormap = plt.get_cmap(config.get(
-                'regriddedSeaIceConcThick', 'resultColormap'))
-            resultColormapIndices = config.getExpression(
-                'regriddedSeaIceConcThick', 'resultColormapIndices')
-            resultColormap = cols.ListedColormap(
-                resultColormap(resultColormapIndices), "resultColormap")
-
-            differenceThickContourValues = config.getExpression(
+                suffix='ThickResult{}'.format(hemisphere))
+            (colormapDifference, colorbarLevelsDifference) = setup_colormap(config,
                 'regriddedSeaIceConcThick',
-                'differenceThick{}ContourValues'.format(hemisphere))
-            differenceColormap = plt.get_cmap(config.get(
-                'regriddedSeaIceConcThick', 'differenceColormap'))
-            differenceColormapIndices = config.getExpression(
-                'regriddedSeaIceConcThick', 'differenceColormapIndices')
-            differenceColormap = cols.ListedColormap(
-                differenceColormap(differenceColormapIndices),
-                "differenceColormap")
+                suffix='ThickDifference{}'.format(hemisphere))
 
             referenceLongitude = config.getfloat(
                 'regriddedSeaIceConcThick',
@@ -517,10 +490,10 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
                 iceThickness,
                 obsIceThickness,
                 difference,
-                resultColormap,
-                resultThickContourValues,
-                differenceColormap,
-                differenceThickContourValues,
+                colormapResult,
+                colorbarLevelsResult,
+                colormapDifference,
+                colorbarLevelsDifference,
                 title=title,
                 fileout=fileout,
                 plotProjection=plotProjection,
