@@ -20,7 +20,6 @@ import matplotlib.colors as cols
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
-import math
 
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
@@ -202,7 +201,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
-        plt.polar((mean['Time']/365.0)*math.pi*2.0, mean,
+        plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex])
 
@@ -212,13 +211,13 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     majorTickLocs = np.zeros(12)
     minorTickLocs = np.zeros(12)
     majorTickLocs[0] = 0.0
-    minorTickLocs[0]= (constants.daysInMonth[0] * math.pi) / 365.0
+    minorTickLocs[0]= (constants.daysInMonth[0] * np.pi) / 365.0
     for month in range(1, 12):
         majorTickLocs[month] = majorTickLocs[month-1] + \
-            ((constants.daysInMonth[month-1] * math.pi * 2.0) / 365.0)
+            ((constants.daysInMonth[month-1] * np.pi * 2.0) / 365.0)
         minorTickLocs[month] = minorTickLocs[month-1] + \
             (((constants.daysInMonth[month-1] + \
-               constants.daysInMonth[month]) * math.pi) / 365.0)
+               constants.daysInMonth[month]) * np.pi) / 365.0)
 
     ax.set_xticks(majorTickLocs)
     ax.set_xticklabels([])

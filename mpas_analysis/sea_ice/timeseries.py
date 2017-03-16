@@ -204,17 +204,29 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         xLabel = 'Time [years]'
 
         if preprocessedReferenceRunName != 'None':
-            figureNameNH = '{}/{}NH_{}_{}.png'.format(
+            figureNameStdNH = '{}/{}NH_{}_{}.png'.format(
                 plotsDirectory, variableName, mainRunName,
                 preprocessedReferenceRunName)
-            figureNameSH = '{}/{}SH_{}_{}.png'.format(
+            figureNameStdSH = '{}/{}SH_{}_{}.png'.format(
+                plotsDirectory, variableName, mainRunName,
+                preprocessedReferenceRunName)
+            figureNamePolarNH = '{}/{}NH_{}_{}_polar.png'.format(
+                plotsDirectory, variableName, mainRunName,
+                preprocessedReferenceRunName)
+            figureNamePolarSH = '{}/{}SH_{}_{}_polar.png'.format(
                 plotsDirectory, variableName, mainRunName,
                 preprocessedReferenceRunName)
         else:
-            figureNameNH = '{}/{}NH_{}.png'.format(plotsDirectory,
+            figureNameStdNH = '{}/{}NH_{}.png'.format(plotsDirectory,
                                                    variableName,
                                                    mainRunName)
-            figureNameSH = '{}/{}SH_{}.png'.format(plotsDirectory,
+            figureNameStdSH = '{}/{}SH_{}.png'.format(plotsDirectory,
+                                                   variableName,
+                                                   mainRunName)
+            figureNamePolarNH = '{}/{}NH_{}_polar.png'.format(plotsDirectory,
+                                                   variableName,
+                                                   mainRunName)
+            figureNamePolarSH = '{}/{}SH_{}_polar.png'.format(plotsDirectory,
                                                    variableName,
                                                    mainRunName)
 
@@ -312,79 +324,80 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
             if (compareWithObservations or
                     preprocessedReferenceRunName != 'None'):
                 # separate plots for nothern and southern hemispheres
+                timeseries_analysis_plot(config, varsNH, movingAveragePoints,
+                                         titleNH,
+                                         xLabel, units, figureNameStdNH,
+                                         lineStyles=lineStyles,
+                                         lineWidths=lineWidths,
+                                         titleFontSize=titleFontSize,
+                                         calendar=calendar)
+                timeseries_analysis_plot(config, varsSH, movingAveragePoints,
+                                         titleSH,
+                                         xLabel, units, figureNameStdSH,
+                                         lineStyles=lineStyles,
+                                         lineWidths=lineWidths,
+                                         titleFontSize=titleFontSize,
+                                         calendar=calendar)
                 if (polarPlot):
                     timeseries_analysis_plot_polar(config, varsNH, movingAveragePoints,
                                                    titleNH,
-                                                   figureNameNH,
+                                                   figureNamePolarNH,
                                                    lineStyles=lineStyles,
                                                    lineWidths=lineWidths,
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
                     timeseries_analysis_plot_polar(config, varsSH, movingAveragePoints,
                                                    titleSH,
-                                                   figureNameSH,
+                                                   figureNamePolarSH,
                                                    lineStyles=lineStyles,
                                                    lineWidths=lineWidths,
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
-                else:
-                    timeseries_analysis_plot(config, varsNH, movingAveragePoints,
-                                             titleNH,
-                                             xLabel, units, figureNameNH,
-                                             lineStyles=lineStyles,
-                                             lineWidths=lineWidths,
-                                             titleFontSize=titleFontSize,
-                                             calendar=calendar)
-                    timeseries_analysis_plot(config, varsSH, movingAveragePoints,
-                                             titleSH,
-                                             xLabel, units, figureNameSH,
-                                             lineStyles=lineStyles,
-                                             lineWidths=lineWidths,
-                                             titleFontSize=titleFontSize,
-                                             calendar=calendar)
             else:
                 # we will combine north and south onto a single graph
-                figureName = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
+                figureNameStd = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
+                                                   variableName)
+                figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory, mainRunName,
                                                    variableName)
                 title = '{}, NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
-                if (polarPlot):
-                    timeseries_analysis_plot_polar(config, [varNH, varSH],
-                                                   movingAveragePoints,
-                                                   title, figureName,
-                                                   lineStyles=['r-', 'k-'],
-                                                   lineWidths=[1.2, 1.2],
-                                                   titleFontSize=titleFontSize,
-                                                   calendar=calendar)
-                else:
-                    timeseries_analysis_plot(config, [varNH, varSH],
-                                             movingAveragePoints,
-                                             title, xLabel, units, figureName,
-                                             lineStyles=['r-', 'k-'],
-                                             lineWidths=[1.2, 1.2],
-                                             titleFontSize=titleFontSize,
-                                             calendar=calendar)
-
-        elif variableName == 'iceThickCell':
-
-            figureName = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
-                                               variableName)
-            title = '{} NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
-            if (polarPlot):
-                timeseries_analysis_plot_polar(config, [varNH, varSH],
-                                               movingAveragePoints, title,
-                                               figureName,
-                                               lineStyles=['r-', 'k-'],
-                                               lineWidths=[1.2, 1.2],
-                                               titleFontSize=titleFontSize,
-                                               calendar=calendar)
-            else:
                 timeseries_analysis_plot(config, [varNH, varSH],
-                                         movingAveragePoints, title,
-                                         xLabel, units, figureName,
+                                         movingAveragePoints,
+                                         title, xLabel, units, figureNameStd,
                                          lineStyles=['r-', 'k-'],
                                          lineWidths=[1.2, 1.2],
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
+                if (polarPlot):
+                    timeseries_analysis_plot_polar(config, [varNH, varSH],
+                                                   movingAveragePoints,
+                                                   title, figureNamePolar,
+                                                   lineStyles=['r-', 'k-'],
+                                                   lineWidths=[1.2, 1.2],
+                                                   titleFontSize=titleFontSize,
+                                                   calendar=calendar)
+
+        elif variableName == 'iceThickCell':
+
+            figureNameStd = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
+                                               variableName)
+            figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory, mainRunName,
+                                               variableName)
+            title = '{} NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
+            timeseries_analysis_plot(config, [varNH, varSH],
+                                     movingAveragePoints, title,
+                                     xLabel, units, figureNameStd,
+                                     lineStyles=['r-', 'k-'],
+                                     lineWidths=[1.2, 1.2],
+                                     titleFontSize=titleFontSize,
+                                     calendar=calendar)
+            if (polarPlot):
+                timeseries_analysis_plot_polar(config, [varNH, varSH],
+                                               movingAveragePoints, title,
+                                               figureNamePolar,
+                                               lineStyles=['r-', 'k-'],
+                                               lineWidths=[1.2, 1.2],
+                                               titleFontSize=titleFontSize,
+                                               calendar=calendar)
 
         else:
             raise ValueError(
