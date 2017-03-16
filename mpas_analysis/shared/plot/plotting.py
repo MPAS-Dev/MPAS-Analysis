@@ -23,6 +23,7 @@ from functools import partial
 
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
+from ..constants import constants
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, calendar,
@@ -134,6 +135,106 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         plt.xlabel(xlabel, **axis_font)
     if ylabel is not None:
         plt.ylabel(ylabel, **axis_font)
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+
+
+def timeseries_analysis_plot_polar(config, dsvalues, N, title,
+                                   fileout, lineStyles, lineWidths, calendar,
+                                   titleFontSize=None, figsize=(15, 6), dpi=300):
+
+    """
+    Plots the list of time series data sets on a polar plot and stores
+    the result in an image file.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    dsvalues : list of xarray DataSets
+        the data set(s) to be plotted
+
+    N : int
+        the numer of time points over which to perform a moving average
+
+    title : str
+        the title of the plot
+
+    fileout : str
+        the file name to be written
+
+    lineStyles, lineWidths : list of str
+        control line style/width
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure
+
+    Authors
+    -------
+    Adrian K. Turner
+
+    Last Modified
+    -------------
+    03/15/2017
+    """
+    plt.figure(figsize=figsize, dpi=dpi)
+
+    minDays = []
+    maxDays = []
+    for dsIndex in range(len(dsvalues)):
+        dsvalue = dsvalues[dsIndex]
+        if dsvalue is None:
+            continue
+        mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
+        mean = xr.DataArray.from_series(mean)
+        minDays.append(mean.Time.min())
+        maxDays.append(mean.Time.max())
+        plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
+                 lineStyles[dsIndex],
+                 linewidth=lineWidths[dsIndex])
+
+    ax = plt.gca()
+
+    # set azimuthal axis formatting
+    majorTickLocs = np.zeros(12)
+    minorTickLocs = np.zeros(12)
+    majorTickLocs[0] = 0.0
+    minorTickLocs[0]= (constants.daysInMonth[0] * np.pi) / 365.0
+    for month in range(1, 12):
+        majorTickLocs[month] = majorTickLocs[month-1] + \
+            ((constants.daysInMonth[month-1] * np.pi * 2.0) / 365.0)
+        minorTickLocs[month] = minorTickLocs[month-1] + \
+            (((constants.daysInMonth[month-1] + \
+               constants.daysInMonth[month]) * np.pi) / 365.0)
+
+    ax.set_xticks(majorTickLocs)
+    ax.set_xticklabels([])
+
+    ax.set_xticks(minorTickLocs, minor=True)
+    ax.set_xticklabels(constants.abrevMonthNames, minor=True)
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+
     if fileout is not None:
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
