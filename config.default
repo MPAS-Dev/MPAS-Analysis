@@ -334,6 +334,8 @@ regionIndicesToPlot = [6]
 movingAveragePoints = 1
 # title font properties
 titleFontSize = 18
+# plot on polar plot
+polarPlot = False
 
 [regriddedSST]
 ## options related to plotting horizontally regridded sea surface temperature
