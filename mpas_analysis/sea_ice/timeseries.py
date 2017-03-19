@@ -1,6 +1,7 @@
 import xarray as xr
 
-from ..shared.plot.plotting import timeseries_analysis_plot, timeseries_analysis_plot_polar
+from ..shared.plot.plotting import timeseries_analysis_plot, \
+    timeseries_analysis_plot_polar
 
 from ..shared.io import NameList, StreamsFile
 from ..shared.io.utility import buildConfigFullPath

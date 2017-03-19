@@ -475,6 +475,37 @@ def compute_seasonal_climatology(monthlyClimatology, monthValues,
     return seasonalClimatology
 
 
+def compute_annual_climatology(ds, calendar):
+    """
+    Compute an annual climatology data set from a data set with Time expressed
+    as days since 0001-01-01 with the given calendar.
+
+    Parameters
+    ----------
+    ds : an xarray data set with a 'Time' coordinate expressed as days since
+        0001-01-01
+
+    calendar: {'gregorian', 'gregorian_noleap'}
+        The name of one of the calendars supported by MPAS cores
+
+    Returns
+    -------
+    annualClimatology : an xarray data set containing annual climatologies 
+        of all variables in ds (time coordinate is squashed)
+
+    Authors
+    -------
+    Milena Veneziani
+
+    Last Modified
+    -------------
+    02/28/2017
+    """
+    monthlyClimatology = compute_monthly_climatology(ds, calendar)
+    annualClimatology = monthlyClimatology.mean('month')
+    return annualClimatology
+
+
 def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):
     '''
     Returns the lat and lon arrays defining the corners of the comparison

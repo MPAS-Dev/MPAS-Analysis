@@ -23,7 +23,8 @@ import os
 
 from ..shared.interpolation import interpolate
 
-from ..shared.plot.plotting import plot_global_comparison
+from ..shared.plot.plotting import plot_global_comparison, \
+    setup_colormap
 from ..shared.constants import constants
 
 from ..shared.io import NameList, StreamsFile
@@ -114,7 +115,6 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     # get a list of regridded observations files and check if they exist.  If
     # they are all there, we don't have to do anything else with the
     # observations
-
     obsFileNames = \
         {'mld': "{}/holtetalley_mld_climatology.nc".format(
                 observationsDirectory),
@@ -253,10 +253,10 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     else:
         obsMappingFileName = None
 
-    (resultColormap, resultContourValues) = _setup_colormap(
-        config, sectionName, prefix='result')
-    (differenceColormap, differenceContourValues) = _setup_colormap(
-        config, sectionName, prefix='difference')
+    (colormapResult, colorbarLevelsResult) = setup_colormap(
+        config, sectionName, suffix='Result')
+    (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+        config, sectionName, suffix='Difference')
 
     # Interpolate and compute biases
     for months in outputTimes:
@@ -333,41 +333,16 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
                                modelOutput,
                                observations,
                                bias,
-                               resultColormap,
-                               resultContourValues,
-                               differenceColormap,
-                               differenceContourValues,
+                               colormapResult,
+                               colorbarLevelsResult,
+                               colormapDifference,
+                               colorbarLevelsDifference,
                                fileout=outFileName,
                                title=title,
                                modelTitle="{}".format(mainRunName),
                                obsTitle=observationTitleLabel,
                                diffTitle="Model-Observations",
                                cbarlabel=unitsLabel)
-
-
-def _setup_colormap(config, sectionName, prefix):
-
-    '''set up a colormap from the registry'''
-
-    contourValues = config.getExpression(sectionName,
-                                         '{}ContourValues'.format(prefix))
-    colormap = plt.get_cmap(config.get(sectionName,
-                                       '{}Colormap'.format(prefix)))
-    indices = config.getExpression(sectionName,
-                                   '{}ColormapIndices'.format(prefix))
-
-    # set under/over values based on the first/last indices in the colormap
-    underColor = colormap(indices[0])
-    overColor = colormap(indices[-1])
-    if len(contourValues)+1 == len(indices):
-        # we have 2 extra values for the under/over so make the colormap
-        # without these values
-        indices = indices[1:-1]
-    colormap = cols.ListedColormap(colormap(indices),
-                                   '{}Colormap'.format(prefix))
-    colormap.set_under(underColor)
-    colormap.set_over(overColor)
-    return (colormap, contourValues)
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

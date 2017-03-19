@@ -1,11 +1,12 @@
 """
-Plotting utilities, including routine for plotting:
+Plotting utilities, including routines for plotting:
     * time series (and comparing with reference data sets)
     * regridded horizontal fields (and comparing with reference data sets)
+    * vertical sections on native grid
 
 Authors
 -------
-Xylar Asay-Davis
+Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
@@ -13,8 +14,9 @@ Last Modified
 """
 
 import matplotlib.pyplot as plt
-import pandas as pd
+import matplotlib.colors as cols
 import xarray as xr
+import pandas as pd
 from mpl_toolkits.basemap import Basemap
 import matplotlib.colors as cols
 from matplotlib.ticker import FuncFormatter, FixedLocator
@@ -74,7 +76,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     Authors
     -------
-    Xylar Asay-Davis
+    Xylar Asay-Davis, Milena Veneziani
 
     Last Modified
     -------------
@@ -96,6 +98,15 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex])
 
+    ax = plt.gca()
+
+    # Add a y=0 line if y ranges between positive and negative values
+    yaxLimits = ax.get_ylim()
+    if yaxLimits[0]*yaxLimits[1] < 0:
+        indgood = np.where(np.logical_not(np.isnan(mean)))
+        x = mean['Time'][indgood]
+        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2)
+
     start = days_to_datetime(np.amin(minDays), calendar=calendar)
     end = days_to_datetime(np.amax(maxDays), calendar=calendar)
 
@@ -114,7 +125,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         formatterFun = partial(_date_tick, calendar=calendar,
                                includeMonth=True)
 
-    ax = plt.gca()
     ax.xaxis.set_major_locator(FixedLocator(major, maxXTicks))
     ax.xaxis.set_major_formatter(FuncFormatter(formatterFun))
 
@@ -142,10 +152,10 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         plt.close()
 
 
-
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
-                                   fileout, lineStyles, lineWidths, calendar,
-                                   titleFontSize=None, figsize=(15, 6), dpi=300):
+                                   fileout, lineStyles, lineWidths,
+                                   calendar, titleFontSize=None,
+                                   figsize=(15, 6), dpi=300):
 
     """
     Plots the list of time series data sets on a polar plot and stores
@@ -254,60 +264,85 @@ def plot_polar_comparison(
     cmapDiff,
     clevsDiff,
     fileout,
-    title = None,
-    plotProjection = "npstere",
-    latmin =  50.0,
-    lon0 = 0,
-    modelTitle = "Model",
-    obsTitle = "Observations",
-    diffTitle = "Model-Observations",
-    cbarlabel = "units",
-    titleFontSize = None,
-    figsize = (8,22),
-    dpi = 300):
+    title=None,
+    plotProjection='npstere',
+    latmin=50.0,
+    lon0=0,
+    modelTitle='Model',
+    obsTitle='Observations',
+    diffTitle='Model-Observations',
+    cbarlabel='units',
+    titleFontSize=None,
+    figsize=(8, 22),
+    dpi=300):
 
     """
     Plots a data set around either the north or south pole.
 
-    config is an instance of ConfigParser
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
 
-    Lons and Lats are the longitude and latitude arrays
+    Lons, Lats : float arrays
+        longitude and latitude arrays
 
-    modelArray and obsArray are the model and observational data sets
+    modelArray, obsArray : float arrays
+        model and observational data sets
 
-    diffArray is the difference between modelArray and obsArray
+    diffArray : float array
+        difference between modelArray and obsArray
 
-    cmapModelObs is the colormap of model and observations
+    cmapModelObs : str
+        colormap of model and observations panel
 
-    clevsModleObs are contour values for model and observations
+    clevsModelObs : int array
+        colorbar values for model and observations panel
 
-    cmapDiff is the colormap of difference
+    cmapDiff : str
+        colormap of difference (bias) panel
 
-    clevsDiff are contour values fordifference
+    clevsDiff : int array
+        colorbar values for difference (bias) panel
 
-    fileout is the file name to be written
+    fileout : str
+        the file name to be written
 
-    title is a string with the subtitle of the plot
+    title : str, optional
+        the subtitle of the plot
 
-    plotProjection is a Basemap projection for the plot
+    plotProjection : str, optional
+        Basemap projection for the plot
 
-    modelTitle is the title of the model plot
+    modelTitle : str, optional
+        title of the model panel
 
-    obsTitle is the title of the observations plot
+    obsTitle : str, optional
+        title of the observations panel
 
-    diffTitle is the title of the difference plot
+    diffTitle : str, optional
+        title of the difference (bias) panel
 
-    cbarlabel is the label on the colorbar
+    cbarlabel : str, optional
+        label on the colorbar
 
-    titleFontSize is the size of the title font
+    titleFontSize : int, optional
+        size of the title font
 
-    figsize is the size of the figure in inches
+    figsize : tuple of float, optional
+        the size of the figure in inches
 
-    dpi is the number of dots per inch of the figure
+    dpi : int, optional
+        the number of dots per inch of the figure
 
-    Author: Xylar Asay-Davis
+    Authors
+    -------
+    Xylar Asay-Davis, Milena Veneziani
 
-    Last Modified: 02/02/2017
+    Last Modified
+    -------------
+    03/17/2017
     """
 
     # set up figure
@@ -316,52 +351,63 @@ def plot_polar_comparison(
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
         title_font = {'size': titleFontSize,
-                      'color':config.get('plot', 'titleFontColor'),
-                      'weight':config.get('plot', 'titleFontWeight')}
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
-    axis_font = {'size':config.get('plot', 'axisFontSize')}
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
 
-    m = Basemap(projection=plotProjection,boundinglat=latmin,lon_0=lon0,resolution='l')
-    x, y = m(Lons, Lats) # compute map proj coordinates
+    m = Basemap(projection=plotProjection, boundinglat=latmin,
+                lon_0=lon0, resolution='l')
+    x, y = m(Lons, Lats)  # compute map proj coordinates
 
     normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3,1,1)
+    plt.subplot(3, 1, 1)
     plt.title(modelTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,81.,10.))
-    m.drawmeridians(np.arange(-180.,181.,20.),labels=[True,True,True,True])
-    cs = m.contourf(x,y,modelArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs)
-    cbar = m.colorbar(cs,location='right',pad="15%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 81., 10.))
+    m.drawmeridians(np.arange(-180., 181., 20.),
+                    labels=[True, True, True, True])
+    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs)
+    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,2)
+    plt.subplot(3, 1, 2)
     plt.title(obsTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,81.,10.))
-    m.drawmeridians(np.arange(-180.,181.,20.),labels=[True,True,True,True])
-    cs = m.contourf(x,y,obsArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs)
-    cbar = m.colorbar(cs,location='right',pad="15%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 81., 10.))
+    m.drawmeridians(np.arange(-180., 181., 20.),
+                    labels=[True, True, True, True])
+    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs)
+    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,3)
+    plt.subplot(3, 1, 3)
     plt.title(diffTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,81.,10.))
-    m.drawmeridians(np.arange(-180.,181.,20.),labels=[True,True,True,True])
-    cs = m.contourf(x,y,diffArray,cmap=cmapDiff,norm=normDiff,spacing='uniform',levels=clevsDiff)
-    cbar = m.colorbar(cs,location='right',pad="15%",spacing='uniform',ticks=clevsDiff,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 81., 10.))
+    m.drawmeridians(np.arange(-180., 181., 20.),
+                    labels=[True, True, True, True])
+    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
+                    spacing='uniform', levels=clevsDiff)
+    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
+                      ticks=clevsDiff, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
     if (fileout is not None):
-        plt.savefig(fileout,dpi=dpi,bbox_inches='tight',pad_inches=0.1)
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot','displayToScreen'):
+    if not config.getboolean('plot', 'displayToScreen'):
         plt.close()
+
 
 def plot_global_comparison(
     config,
@@ -375,107 +421,145 @@ def plot_global_comparison(
     cmapDiff,
     clevsDiff,
     fileout,
-    title = None,
-    modelTitle = "Model",
-    obsTitle = "Observations",
-    diffTitle = "Model-Observations",
-    cbarlabel = "units",
-    titleFontSize = None,
-    figsize = (8,12),
-    dpi = 300):
+    title=None,
+    modelTitle='Model',
+    obsTitle='Observations',
+    diffTitle='Model-Observations',
+    cbarlabel='units',
+    titleFontSize=None,
+    figsize=(8, 12),
+    dpi=300):
 
     """
     Plots a data set as a longitude/latitude map.
 
-    config is an instance of ConfigParser
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
 
-    Lons and Lats are the longitude and latitude arrays
+    Lons, Lats : float arrays
+        longitude and latitude arrays
 
-    modelArray and obsArray are the model and observational data sets
+    modelArray, obsArray : float arrays
+        model and observational data sets
 
-    diffArray is the difference between modelArray and obsArray
+    diffArray : float array
+        difference between modelArray and obsArray
 
-    cmapModelObs is the colormap of model and observations
+    cmapModelObs : str
+        colormap of model and observations panel
 
-    clevsModleObs are contour values for model and observations
+    clevsModelObs : int array
+        colorbar values for model and observations panel
 
-    cmapDiff is the colormap of difference
+    cmapDiff : str
+        colormap of difference (bias) panel
 
-    clevsDiff are contour values fordifference
+    clevsDiff : int array
+        colorbar values for difference (bias) panel
 
-    fileout is the file name to be written
+    fileout : str
+        the file name to be written
 
-    title is a string with the subtitle of the plot
+    title : str, optional
+        the subtitle of the plot
 
-    modelTitle is the title of the model plot
+    modelTitle : str, optional
+        title of the model panel
 
-    obsTitle is the title of the observations plot
+    obsTitle : str, optional
+        title of the observations panel
 
-    diffTitle is the title of the difference plot
+    diffTitle : str, optional
+        title of the difference (bias) panel
 
-    cbarlabel is the label on the colorbar
+    cbarlabel : str, optional
+        label on the colorbar
 
-    titleFontSize is the size of the title font
+    titleFontSize : int, optional
+        size of the title font
 
-    figsize is the size of the figure in inches
+    figsize : tuple of float, optional
+        the size of the figure in inches
 
-    dpi is the number of dots per inch of the figure
+    dpi : int, optional
+        the number of dots per inch of the figure
 
-    Author: Xylar Asay-Davis
+    Authors
+    -------
+    Xylar Asay-Davis, Milena Veneziani
 
-    Last Modified: 03/09/2017
+    Last Modified
+    -------------
+    03/13/2017
     """
+
     # set up figure
     fig = plt.figure(figsize=figsize, dpi=dpi)
     if (title is not None):
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
         title_font = {'size': titleFontSize,
-                      'color':config.get('plot', 'titleFontColor'),
-                      'weight':config.get('plot', 'titleFontWeight')}
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
-    axis_font = {'size':config.get('plot', 'axisFontSize')}
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
 
-    m = Basemap(projection='cyl',llcrnrlat=-85,urcrnrlat=86,llcrnrlon=-180,urcrnrlon=181,resolution='l')
-    x, y = m(Lons, Lats) # compute map proj coordinates
+    m = Basemap(projection='cyl', llcrnrlat=-85, urcrnrlat=86, llcrnrlon=-180,
+                urcrnrlon=181, resolution='l')
+    x, y = m(Lons, Lats)  # compute map proj coordinates
 
     normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3,1,1)
+    plt.subplot(3, 1, 1)
     plt.title(modelTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,80.,20.),labels=[True,False,False,False])
-    m.drawmeridians(np.arange(-180.,180.,60.),labels=[False,False,False,True])
-    cs = m.contourf(x,y,modelArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs,extend='both')
-    cbar = m.colorbar(cs,location='right',pad="5%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 80., 20.),
+                    labels=[True, False, False, False])
+    m.drawmeridians(np.arange(-180., 180., 60.),
+                    labels=[False, False, False, True])
+    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs, extend='both')
+    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,2)
+    plt.subplot(3, 1, 2)
     plt.title(obsTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,80.,20.),labels=[True,False,False,False])
-    m.drawmeridians(np.arange(-180.,180.,40.),labels=[False,False,False,True])
-    cs = m.contourf(x,y,obsArray,cmap=cmapModelObs,norm=normModelObs,spacing='uniform',levels=clevsModelObs,extend='both')
-    cbar = m.colorbar(cs,location='right',pad="5%",spacing='uniform',ticks=clevsModelObs,boundaries=clevsModelObs)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 80., 20.),
+                    labels=[True, False, False, False])
+    m.drawmeridians(np.arange(-180., 180., 40.),
+                    labels=[False, False, False, True])
+    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
+                    spacing='uniform', levels=clevsModelObs, extend='both')
+    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                      ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3,1,3)
+    plt.subplot(3, 1, 3)
     plt.title(diffTitle, y=1.06, **axis_font)
     m.drawcoastlines()
-    m.fillcontinents(color='grey',lake_color='white')
-    m.drawparallels(np.arange(-80.,80.,20.),labels=[True,False,False,False])
-    m.drawmeridians(np.arange(-180.,180.,40.),labels=[False,False,False,True])
-    cs = m.contourf(x,y,diffArray,cmap=cmapDiff,norm=normDiff,spacing='uniform',levels=clevsDiff,extend='both')
-    cbar = m.colorbar(cs,location='right',pad="5%",spacing='uniform',ticks=clevsDiff,boundaries=clevsDiff)
+    m.fillcontinents(color='grey', lake_color='white')
+    m.drawparallels(np.arange(-80., 80., 20.),
+                    labels=[True, False, False, False])
+    m.drawmeridians(np.arange(-180., 180., 40.),
+                    labels=[False, False, False, True])
+    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
+                    spacing='uniform', levels=clevsDiff, extend='both')
+    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                      ticks=clevsDiff, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
 
     if (fileout is not None):
-        plt.savefig(fileout,dpi=dpi,bbox_inches='tight',pad_inches=0.1)
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot','displayToScreen'):
+    if not config.getboolean('plot', 'displayToScreen'):
         plt.close()
 
 
@@ -486,3 +570,169 @@ def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
         return '{:04d}-{:02d}'.format(date.year, date.month)
     else:
         return '{:04d}'.format(date.year)
+
+
+def plot_vertical_section(
+    config,
+    xArray,
+    depthArray,
+    fieldArray,
+    colormapName,
+    colorbarLevels,
+    contourLevels,
+    colorbarLabel=None,
+    title=None,
+    xlabel=None,
+    ylabel=None,
+    fileout='moc.png',
+    figsize=(10, 4),
+    dpi=300):  # {{{
+
+    """
+    Plots a data set as a x distance (latitude, longitude,
+    or spherical distance) vs depth map (vertical section).
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    xArray : float array
+        x array (latitude, longitude, or spherical distance)
+
+    depthArray : float array
+        depth array [m]
+
+    fieldArray : float array
+        field array to plot
+
+    colormapName : str
+        colormap of plot
+
+    colorbarLevels : int array
+        colorbar levels of plot
+
+    contourLevels : int levels
+        levels of contours to be drawn
+
+    colorbarLabel : str, optional
+        label of the colorbar
+
+    title : str, optional
+        title of plot
+
+    xlabel, ylabel : str, optional
+        label of x- and y-axis
+
+    fileout : str, optional
+        the file name to be written
+
+    figsize : tuple of float, optional
+        size of the figure in inches
+
+    dpi : int, optional
+        number of dots per inch of the figure
+
+    Authors
+    -------
+    Milena Veneziani, Mark Petersen
+
+    Last Modified
+    -------------
+    03/13/2017
+    """
+
+    # set up figure
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+
+    x, y = np.meshgrid(xArray, depthArray)  # change to zMid
+
+    normModelObs = cols.BoundaryNorm(colorbarLevels, colormapName.N)
+
+    cs = plt.contourf(x, y, fieldArray, cmap=colormapName, norm=normModelObs,
+                      spacing='uniform', levels=colorbarLevels, extend='both')
+    plt.contour(x, y, fieldArray, levels=contourLevels[::2], colors='k')
+
+    cbar = plt.colorbar(cs, orientation='vertical', spacing='uniform',
+                        ticks=colorbarLevels, boundaries=colorbarLevels)
+    if colorbarLabel is not None:
+        cbar.set_label(colorbarLabel)
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': config.get('plot', 'titleFontSize'),
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+
+    plt.gca().invert_yaxis()
+
+    if (fileout is not None):
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+    return  # }}}
+
+
+def setup_colormap(config, configSectionName, suffix=''):
+
+    '''
+    Set up a colormap from the registry
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    configSectionName : str
+        name of config section
+
+    suffix: str, optional
+        suffix of colormap related options
+
+    Returns
+    -------
+    colormap : srt
+        new colormap
+
+    colorbarLevels : int array
+        colorbar levels
+
+    Authors
+    -------
+    Xylar Asay-Davis, Milena Veneziani
+
+    Last modified
+    -------------
+    03/17/2017
+    '''
+
+    colormap = plt.get_cmap(config.get(configSectionName,
+                                       'colormapName{}'.format(suffix)))
+    indices = config.getExpression(configSectionName,
+                                   'colormapIndices{}'.format(suffix))
+    colorbarLevels = config.getExpression(configSectionName,
+                                          'colorbarLevels{}'.format(suffix))
+
+    # set under/over values based on the first/last indices in the colormap
+    underColor = colormap(indices[0])
+    overColor = colormap(indices[-1])
+    if len(colorbarLevels)+1 == len(indices):
+        # we have 2 extra values for the under/over so make the colormap
+        # without these values
+        indices = indices[1:-1]
+    colormap = cols.ListedColormap(colormap(indices),
+                                   'colormapName{}'.format(suffix))
+    colormap.set_under(underColor)
+    colormap.set_over(overColor)
+    return (colormap, colorbarLevels)
+
+# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -163,13 +163,6 @@ def analysis(config):  # {{{
 #        from mpas_analysis.ocean.mht_timeseries import mht_timeseries
 #        mht_timeseries(config)
 
-#    if checkGenerate(config, analysisName='timeSeriesMOC', mpasCore='ocean',
-#                     analysisCategory='timeSeries'):
-#        print ""
-#        print "Plotting Meridional Overturning Circulation (MOC)..."
-#        from mpas_analysis.ocean.moc_timeseries import moc_timeseries
-#        moc_timeseries(config)
-
     if checkGenerate(config, analysisName='regriddedSST', mpasCore='ocean',
                      analysisCategory='regriddedHorizontal'):
         print ""
@@ -193,6 +186,14 @@ def analysis(config):  # {{{
         from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
         ocn_modelvsobs(config, 'sss', streamMap=oceanStreamMap,
                        variableMap=oceanVariableMap)
+
+    if checkGenerate(config, analysisName='streamfunctionMOC', mpasCore='ocean',
+                     analysisCategory='streamfunctionMOC'):
+        print ""
+        print "Plotting streamfunction of Meridional Overturning Circulation (MOC)..."
+        from mpas_analysis.ocean.meridional_overturning_circulation import moc_streamfunction
+        moc_streamfunction(config, streamMap=oceanStreamMap,
+                        variableMap=oceanVariableMap)
 
     # GENERATE SEA-ICE DIAGNOSTICS
     if checkGenerate(config, analysisName='timeSeriesSeaIceAreaVol',
