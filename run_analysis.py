@@ -149,12 +149,13 @@ def analysis(config):  # {{{
         sst_timeseries(config, streamMap=oceanStreamMap,
                        variableMap=oceanVariableMap)
 
-#     if checkGenerate(config, analysisName='timeSeriesNino34',
-#                     mpasCore='ocean', analysisCategory='timeSeries'):
-#         print ""
-#         print "Plotting Nino3.4 time series..."
-#         from mpas_analysis.ocean.nino34_timeseries import nino34_timeseries
-#         nino34_timeseries(config)
+    if checkGenerate(config, analysisName='timeSeriesNino34',
+                     mpasCore='ocean', analysisCategory='timeSeries'):
+         print ""
+         print "Plotting Nino3.4 time series..."
+         from mpas_analysis.ocean.nino34_timeseries import nino34_timeseries
+         nino34_timeseries(config, streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
 #    if checkGenerate(config, analysisName='timeSeriesMHT', mpasCore='ocean',
 #                     analysisCategory='timeSeries'):

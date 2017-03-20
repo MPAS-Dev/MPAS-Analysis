@@ -27,6 +27,115 @@ from ..timekeeping.utility import days_to_datetime, date_to_days
 
 from ..constants import constants
 
+def nino34_timeseries_plot(config, nino34Index, timeVals, title, xlabel, ylabel, 
+                           fileout, linewidths, calendar, 
+                           titleFontSize=None, figsize=(15, 6), dpi=300,
+                           maxXTicks=20):
+    """ 
+    Plots the nino34 time series and power spectra in an image file
+     Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    nino34 : nino34 timeseries to plot
+
+    title : str
+        the title of the plot
+
+    xlabelTimeSeries, ylabelTimeSeries, xlabelSpectra, ylabelSpectra : str
+        axis labels
+
+    fileout : str
+        the file name to be written
+
+    lineStyles, lineWidths : list of str
+        control line style/width
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.
+        
+    Author: Luke Van Roekel
+    Last Modified: 03/20/2017
+    """
+    plt.figure(figsize=figsize, dpi=dpi)
+    
+    nino34Index = xr.DataArray.from_series(nino34Index)
+    y1 = nino34Index[2:-3]
+    nt = np.size(nino34Index[2:-3])
+    
+
+    minDays = nino34Index.Time[2].values
+    maxDays = nino34Index.Time[-3].values
+    y2 = np.zeros(nt)
+    
+    print nt
+    print y1
+    print y2
+    plt.plot(nino34Index.Time[2:-3].values, 0.4*np.ones(nt), '--k', linewidth=linewidths)
+    plt.plot(nino34Index.Time[2:-3].values, -0.4*np.ones(nt), '--k', linewidth=linewidths)
+    plt.fill_between(nino34Index.Time[2:-3].values, y1, y2, where = y1>y2, 
+                     facecolor='red', linewidth=0)
+    plt.fill_between(nino34Index.Time[2:-3].values, y1, y2, where = y1<y2, 
+                     facecolor='blue', linewidth=0)
+    
+    ax = plt.gca()
+    start = days_to_datetime(np.amin(minDays), calendar=calendar)
+    end = days_to_datetime(np.amax(maxDays), calendar=calendar)
+
+    if (end.year - start.year > maxXTicks/2):
+        major = [date_to_days(year=year, calendar=calendar)
+                 for year in np.arange(start.year, end.year+1)]
+        formatterFun = partial(_date_tick, calendar=calendar,
+                               includeMonth=False)
+    else:
+        # add ticks for months
+        major = []
+        for year in range(start.year, end.year+1):
+            for month in range(1, 13):
+                major.append(date_to_days(year=year, month=month,
+                                          calendar=calendar))
+        formatterFun = partial(_date_tick, calendar=calendar,
+                               includeMonth=True)
+
+    ax.xaxis.set_major_locator(FixedLocator(major, maxXTicks))
+    ax.xaxis.set_major_formatter(FuncFormatter(formatterFun))
+
+    plt.setp(ax.get_xticklabels(), rotation=30)
+
+    plt.autoscale(enable=True, axis='x', tight=True)
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+        
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, calendar,
                              titleFontSize=None, figsize=(15, 6), dpi=300,

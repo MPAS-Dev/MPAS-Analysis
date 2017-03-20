@@ -21,7 +21,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = runName
+mainRunName = JwolfeTest
 # referenceRunName is the name of a reference run to compare against (or None
 # to turn off comparison with a reference, e.g. if no reference case is
 # available)
@@ -37,7 +37,7 @@ preprocessedReferenceRunName = None
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /dir/to/model/output
+baseDirectory = /Volumes/HDD1/Jwolfe_new_case
 # names of namelist and streams files.  If not in baseDirectory, give full path
 oceanNamelistFileName = mpas-o_in
 oceanStreamsFileName = streams.ocean
@@ -52,7 +52,7 @@ mpasMeshName = mesh
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /dir/to/analysis/output
+baseDirectory = /Users/lvanroekel/NINOTest
 
 # subdirectories within baseDirectory for analysis output
 scratchSubdirectory = scratch
@@ -82,7 +82,7 @@ timeSeriesSubdirectory = timeseries
 # option:
 #    ./run_analysis.py config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all']
+generate = ['timeSeriesNino34']
 
 # alternative examples that would perform all analysis except
 #   'timeSeriesOHC'
@@ -129,8 +129,8 @@ mpasInterpolationMethod = bilinear
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
-startYear = 1
-endYear = 9999
+startYear = 9 
+endYear = 10 
 
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
@@ -286,11 +286,11 @@ movingAveragePoints = 12
 # compare to observations?
 compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
+regionIndex = 5
 # Number of points over which to compute moving average (e.g., for monthly
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 12
+movingAveragePoints = 5
 
 [timeSeriesMHT]
 ## options related to plotting time series of meridional heat transport (MHT)
