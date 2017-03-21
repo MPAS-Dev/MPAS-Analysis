@@ -18,6 +18,7 @@ from mpas_analysis.shared.generalized_reader.generalized_reader \
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import climatology
+from mpas_analysis.shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 from mpas_analysis.shared.constants import constants
 
 
@@ -66,46 +67,58 @@ class TestClimatology(TestCase):
 
         return config
 
-    def test_write_mpas_mapping_file(self):
+    def test_get_mpas_remapper(self):
         config = self.setup_config()
         mpasMeshFileName = '{}/mpasMesh.nc'.format(self.datadir)
-        climatology.write_mpas_mapping_file(config, mpasMeshFileName)
+        remapper = climatology.get_mpas_remapper(config, mpasMeshFileName)
 
         mappingFileName = '{}/map_QU240_to_0.5x0.5degree_' \
                           'bilinear.nc'.format(self.test_dir)
+        assert (os.path.abspath(mappingFileName) ==
+                os.path.abspath(remapper.mappingFileName))
         assert os.path.exists(mappingFileName)
 
         mappingFileName = '{}/mapping.nc'.format(self.test_dir)
         config.set('climatology', 'mpasMappingFile', mappingFileName)
-        climatology.write_mpas_mapping_file(config, mpasMeshFileName)
+        remapper = climatology.get_mpas_remapper(config, mpasMeshFileName)
+        assert (os.path.abspath(mappingFileName) ==
+                os.path.abspath(remapper.mappingFileName))
         assert os.path.exists(mappingFileName)
+        assert isinstance(remapper.sourceDescriptor, MpasMeshDescriptor)
+        assert isinstance(remapper.destinationDescriptor, LatLonGridDescriptor)
 
-    def test_write_observations_mapping_file(self):
+    def test_get_observations_remapper(self):
         config = self.setup_config()
         gridFileName = '{}/obsGrid.nc'.format(self.datadir)
         componentName = 'ocean'
         fieldName = 'sst'
-        climatology.write_observations_mapping_file(config,
-                                                    componentName,
-                                                    fieldName,
-                                                    gridFileName,
-                                                    latVarName='lat',
-                                                    lonVarName='lon')
+        remapper = climatology.get_observations_remapper(config,
+                                                         componentName,
+                                                         fieldName,
+                                                         gridFileName,
+                                                         latVarName='lat',
+                                                         lonVarName='lon')
 
         mappingFileName = '{}/map_obs_{}_1.0x1.0degree_to_0.5x0.5degree_' \
                           'bilinear.nc'.format(self.test_dir, fieldName)
+        assert (os.path.abspath(mappingFileName) ==
+                os.path.abspath(remapper.mappingFileName))
         assert os.path.exists(mappingFileName)
 
         mappingFileName = '{}/mapping.nc'.format(self.test_dir)
         config.set('oceanObservations', 'sstClimatologyMappingFile',
                    mappingFileName)
-        climatology.write_observations_mapping_file(config,
-                                                    componentName,
-                                                    fieldName,
-                                                    gridFileName,
-                                                    latVarName='lat',
-                                                    lonVarName='lon')
+        remapper = climatology.get_observations_remapper(config,
+                                                         componentName,
+                                                         fieldName,
+                                                         gridFileName,
+                                                         latVarName='lat',
+                                                         lonVarName='lon')
+        assert (os.path.abspath(mappingFileName) ==
+                os.path.abspath(remapper.mappingFileName))
         assert os.path.exists(mappingFileName)
+        assert isinstance(remapper.sourceDescriptor, LatLonGridDescriptor)
+        assert isinstance(remapper.destinationDescriptor, LatLonGridDescriptor)
 
     def test_get_mpas_climatology_file_names(self):
         config = self.setup_config()
