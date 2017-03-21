@@ -3,14 +3,15 @@ Plotting utilities, including routines for plotting:
     * time series (and comparing with reference data sets)
     * regridded horizontal fields (and comparing with reference data sets)
     * vertical sections on native grid
+    * NINO34 time series and spectra
 
 Authors
 -------
-Xylar Asay-Davis, Milena Veneziani
+Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
 
 Last Modified
 -------------
-03/14/2017
+03/21/2017
 """
 
 import matplotlib.pyplot as plt
@@ -27,11 +28,84 @@ from ..timekeeping.utility import days_to_datetime, date_to_days
 
 from ..constants import constants
 
-def nino34_timeseries_plot(config, nino34Index, timeVals, title, xlabel, ylabel, 
-                           fileout, linewidths, calendar, 
+
+def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
+			redNoiseSpectra, title, xlabel, ylabel,
+                        fileout, linewidths, titleFontSize=None,
+			figsize=(15, 6), dpi=300):
+    """
+    Plots the nino34 time series and power spectra in an image file
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+	f : frequencies to plot on x-axis
+
+    ninoSpectra : nino34 power spectra
+
+    confidence95 : 95% confidence level based on chi squared test
+
+    confidence99 : 99% confidence level based on chi squared test
+
+    redNoiseSpectra : red noise fit to the ninoSpectra
+
+    title : str
+        the title of the plot
+
+    xlabelTimeSeries, ylabelTimeSeries, xlabelSpectra, ylabelSpectra : str
+        axis labels
+
+    fileout : str
+        the file name to be written
+
+    linewidths : control line width
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure
+
+    Author: Luke Van Roekel
+    Last Modified: 03/21/2017
+    """
+
+    plt.plot(f[2:-3], ninoSpectra[2:-3], 'k', linewidth=linewidths)
+    plt.plot(f[2:-3], redNoiseSpectra[2:-3], 'r', linewidth=linewidths)
+    plt.plot(f[2:-3], confidence95[2:-3], 'b', linewidth=linewidths)
+    plt.plot(f[2:-3], confidence99[2:-3], 'g', linewidth=linewidths)
+    plt.xlim(15, 1)
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+
+def nino34_timeseries_plot(config, nino34Index, title, xlabel, ylabel,
+                           fileout, linewidths, calendar,
                            titleFontSize=None, figsize=(15, 6), dpi=300,
                            maxXTicks=20):
-    """ 
+    """
     Plots the nino34 time series and power spectra in an image file
      Parameters
     ----------
@@ -66,31 +140,29 @@ def nino34_timeseries_plot(config, nino34Index, timeVals, title, xlabel, ylabel,
         the maximum number of tick marks that will be allowed along the x axis.
         This may need to be adjusted depending on the figure size and aspect
         ratio.
-        
+
     Author: Luke Van Roekel
-    Last Modified: 03/20/2017
+    Last Modified: 03/21/2017
     """
     plt.figure(figsize=figsize, dpi=dpi)
-    
+
     nino34Index = xr.DataArray.from_series(nino34Index)
     y1 = nino34Index[2:-3]
     nt = np.size(nino34Index[2:-3])
-    
 
     minDays = nino34Index.Time[2].values
     maxDays = nino34Index.Time[-3].values
     y2 = np.zeros(nt)
-    
-    print nt
-    print y1
-    print y2
-    plt.plot(nino34Index.Time[2:-3].values, 0.4*np.ones(nt), '--k', linewidth=linewidths)
-    plt.plot(nino34Index.Time[2:-3].values, -0.4*np.ones(nt), '--k', linewidth=linewidths)
-    plt.fill_between(nino34Index.Time[2:-3].values, y1, y2, where = y1>y2, 
+
+    plt.plot(nino34Index.Time[2:-3].values, 0.4*np.ones(nt), '--k',
+	     linewidth=linewidths)
+    plt.plot(nino34Index.Time[2:-3].values, -0.4*np.ones(nt), '--k',
+             linewidth=linewidths)
+    plt.fill_between(nino34Index.Time[2:-3].values, y1, y2, where=y1>y2,
                      facecolor='red', linewidth=0)
-    plt.fill_between(nino34Index.Time[2:-3].values, y1, y2, where = y1<y2, 
+    plt.fill_between(nino34Index.Time[2:-3].values, y1, y2, where=y1<y2,
                      facecolor='blue', linewidth=0)
-    
+
     ax = plt.gca()
     start = days_to_datetime(np.amin(minDays), calendar=calendar)
     end = days_to_datetime(np.amax(maxDays), calendar=calendar)
@@ -135,7 +207,8 @@ def nino34_timeseries_plot(config, nino34Index, timeVals, title, xlabel, ylabel,
 
     if not config.getboolean('plot', 'displayToScreen'):
         plt.close()
-        
+
+
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, calendar,
                              titleFontSize=None, figsize=(15, 6), dpi=300,
