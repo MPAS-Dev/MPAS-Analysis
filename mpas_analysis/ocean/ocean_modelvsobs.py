@@ -1,4 +1,4 @@
-"""
+'''
 General comparison of 2-d model fields against data.  Currently only supports
 sea surface temperature (sst), sea surface salinity (sss) and mixed layer
 depth (mld)
@@ -10,16 +10,13 @@ Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 Last Modified
 -------------
 04/08/2017
-"""
+'''
 
 import xarray as xr
 import datetime
 import numpy as np
-import netCDF4
 import os
 import warnings
-
-from ..shared.interpolation import interpolate
 
 from ..shared.plot.plotting import plot_global_comparison, \
     setup_colormap
@@ -41,7 +38,7 @@ from ..shared.mpas_xarray import mpas_xarray
 
 def ocn_modelvsobs(config, field):
 
-    """
+    '''
     Plots a comparison of ACME/MPAS output to SST or MLD observations
 
     Parameters
@@ -59,7 +56,7 @@ def ocn_modelvsobs(config, field):
     Last Modified
     -------------
     04/08/2017
-    """
+    '''
 
     # perform common setup for the task
     namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
@@ -102,11 +99,11 @@ def ocn_modelvsobs(config, field):
     # they are all there, we don't have to do anything else with the
     # observations
     obsFileNames = \
-        {'mld': "{}/holtetalley_mld_climatology.nc".format(
+        {'mld': '{}/holtetalley_mld_climatology.nc'.format(
                 observationsDirectory),
-         'sst': "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
+         'sst': '{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc'.format(
                 observationsDirectory),
-         'sss': "{}/Aquarius_V3_SSS_Monthly.nc".format(
+         'sss': '{}/Aquarius_V3_SSS_Monthly.nc'.format(
                 observationsDirectory)}
 
     obsFileName = obsFileNames[field]
@@ -136,29 +133,28 @@ def ocn_modelvsobs(config, field):
 
             # Increment month value to be consistent with the model output
             dsObs.iMONTH.values += 1
-
             # Rename the dimensions to be consistent with other obs. data sets
             dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
                           'lon': 'lonCoord'}, inplace=True)
             dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'},
                          inplace=True)
+
             # set the coordinates now that the dimensions have the same names
             dsObs.coords['lat'] = dsObs['latCoord']
             dsObs.coords['lon'] = dsObs['lonCoord']
             dsObs.coords['Time'] = dsObs['calmonth']
             dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
+
             # no meaningful year since this is already a climatology
             dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
 
             dsObs = mpas_xarray.subset_variables(dsObs, [obsFieldName,
                                                          'month'])
-            # Reorder dataset for consistence with other obs. data sets
-            dsObs = dsObs.transpose('Time', 'lat', 'lon')
 
         # Set appropriate MLD figure labels
         observationTitleLabel = \
-            "Observations (HolteTalley density threshold MLD)"
-        outFileLabel = "mldHolteTalleyARGO"
+            'Observations (HolteTalley density threshold MLD)'
+        outFileLabel = 'mldHolteTalleyARGO'
         unitsLabel = 'm'
 
     elif field == 'sst':
@@ -189,10 +185,10 @@ def ocn_modelvsobs(config, field):
 
         # Set appropriate figure labels for SST
         observationTitleLabel = \
-            "Observations (Hadley/OI, {} {:04d}-{:04d})".format(period,
+            'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(period,
                                                                 climStartYear,
                                                                 climEndYear)
-        outFileLabel = "sstHADOI"
+        outFileLabel = 'sstHADOI'
         unitsLabel = r'$^o$C'
 
     elif field == 'sss':
@@ -212,7 +208,7 @@ def ocn_modelvsobs(config, field):
 
         obsFieldName = 'SSS'
 
-        observationTitleLabel = "Observations (Aquarius, 2011-2014)"
+        observationTitleLabel = 'Observations (Aquarius, 2011-2014)'
         outFileLabel = 'sssAquarius'
         unitsLabel = 'PSU'
 
@@ -230,16 +226,16 @@ def ocn_modelvsobs(config, field):
     changed, startYear, endYear = \
         climatology.update_start_end_year(ds, config, calendar)
 
-    mpasMappingFileName = climatology.write_mpas_mapping_file(
+    mpasRemapper = climatology.get_mpas_remapper(
         config=config, meshFileName=restartFileName)
 
     if buildObsClimatologies:
-        obsMappingFileName = \
-            climatology.write_observations_mapping_file(
+        obsRemapper = \
+            climatology.get_observations_remapper(
                 config=config, componentName='ocean', fieldName=field,
                 gridFileName=obsFileName, latVarName='lat',  lonVarName='lon')
     else:
-        obsMappingFileName = None
+        obsRemapper = None
 
     (colormapResult, colorbarLevelsResult) = setup_colormap(
         config, sectionName, suffix='Result')
@@ -255,7 +251,7 @@ def ocn_modelvsobs(config, field):
                                                         fieldName=field,
                                                         monthNames=months)
 
-        if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
+        if overwriteMpasClimatology or not os.path.exists(regriddedFileName):
             seasonalClimatology = climatology.cache_climatologies(
                 ds, monthValues, config, climatologyPrefix, calendar,
                 printProgress=True)
@@ -267,18 +263,19 @@ def ocn_modelvsobs(config, field):
                     field, months))
                 continue
 
-        interpolate.remap(inFileName=climatologyFileName,
-                          outFileName=regriddedFileName,
-                          inWeightFileName=mpasMappingFileName,
-                          sourceFileType='mpas',
-                          overwrite=overwriteMpasClimatology)
+            remappedClimatology = climatology.remap_and_write_climatology(
+                config, seasonalClimatology, climatologyFileName,
+                regriddedFileName, mpasRemapper)
 
-        ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
-        modelOutput = ncFile.variables[field][:]
-        lons = ncFile.variables["lon"][:]
-        lats = ncFile.variables["lat"][:]
-        ncFile.close()
-        lonTarg, latTarg = np.meshgrid(lons, lats)
+        else:
+
+            remappedClimatology = xr.open_dataset(regriddedFileName)
+
+        modelOutput = remappedClimatology[field].values
+        lon = remappedClimatology['lon'].values
+        lat = remappedClimatology['lat'].values
+
+        lonTarg, latTarg = np.meshgrid(lon, lat)
 
         # now the observations
         (climatologyFileName, regriddedFileName) = \
@@ -289,36 +286,32 @@ def ocn_modelvsobs(config, field):
 
         if buildObsClimatologies:
             if (overwriteObsClimatology or
-                    (not os.path.exists(climatologyFileName) and
-                     not os.path.exists(regriddedFileName))):
+                    not os.path.exists(regriddedFileName)):
+
                 seasonalClimatology = climatology.compute_climatology(
                     dsObs, monthValues, maskVaries=True)
-                # Either we want to overwite files or neither the climatology
-                # nor its regridded counterpart exist. Write out the
-                # climatology so we can interpolate it with interpolate.remap
-                seasonalClimatology.to_netcdf(climatologyFileName)
 
-            if obsMappingFileName is None:
-                # no remapping is needed
-                regriddedFileName = climatologyFileName
-            else:
-                interpolate.remap(inFileName=climatologyFileName,
-                                  outFileName=regriddedFileName,
-                                  inWeightFileName=obsMappingFileName,
-                                  sourceFileType='latlon',
-                                  overwrite=overwriteObsClimatology)
+                if obsRemapper is None:
+                    # no need to remap because the observations are on the
+                    # comparison grid already
+                    remappedClimatology = seasonalClimatology
+                else:
+                    remappedClimatology = \
+                        climatology.remap_and_write_climatology(
+                            config, seasonalClimatology, climatologyFileName,
+                            regriddedFileName, obsRemapper)
 
-        # read in the results from the remapped files
-        ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
-        observations = ncFile.variables[obsFieldName][:]
-        ncFile.close()
+        else:
+
+            remappedClimatology = xr.open_dataset(regriddedFileName)
+        observations = remappedClimatology[obsFieldName].values
 
         bias = modelOutput - observations
 
-        outFileName = "{}/{}_{}_{}_years{:04d}-{:04d}.png".format(
+        outFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
                 plotsDirectory, outFileLabel, mainRunName,
                 months, startYear, endYear)
-        title = "{} ({}, years {:04d}-{:04d})".format(
+        title = '{} ({}, years {:04d}-{:04d})'.format(
                 field.upper(), months, startYear, endYear)
         plot_global_comparison(config,
                                lonTarg,
@@ -332,9 +325,9 @@ def ocn_modelvsobs(config, field):
                                colorbarLevelsDifference,
                                fileout=outFileName,
                                title=title,
-                               modelTitle="{}".format(mainRunName),
+                               modelTitle='{}'.format(mainRunName),
                                obsTitle=observationTitleLabel,
-                               diffTitle="Model-Observations",
+                               diffTitle='Model-Observations',
                                cbarlabel=unitsLabel)
 
 
