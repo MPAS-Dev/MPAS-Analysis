@@ -22,18 +22,22 @@ from ..timekeeping.utility import days_to_datetime
 
 from ..io.utility import build_config_full_path, make_directories
 
-from ..interpolation import interpolate
+from ..interpolation import Remapper
+from ..grid import MpasMeshDescriptor, LatLonGridDescriptor
 
 
-def write_mpas_mapping_file(config, meshFileName):
+def get_mpas_remapper(config, meshFileName):  # {{{
     """
-    Given config options, the name of the component being analyzed and an
-    MPAS mesh file, either finds an existing MPAS-to-comparison-grid mapping
-    file or creates a new mapping file.
+    Given config options and the name of an MPAS mesh file, returns a
+    ``Remapper`` object that can be used to remap from MPAS files or data sets
+    to corresponding data sets on the comparison grid.
+
+    If necessary, creates the mapping file containing weights and indices
+    needed to perform remapping.
 
     Parameters
     ----------
-    config :  instance of MpasAnalysisConfigParser
+    config :  instance of ``MpasAnalysisConfigParser``
         Contains configuration options
 
     meshFileName : str
@@ -41,10 +45,9 @@ def write_mpas_mapping_file(config, meshFileName):
 
     Returns
     -------
-    mpasMappingFileName : str
-        The absolute path to an existing mapping file or the location
-        at which one was created.  The mapping file can be used to
-        interpolate between MPAS meshes and the climatology comparison grid
+    remapper : ``Remapper`` object
+        A remapper that can be used to remap files or data sets from the MPAS
+        mesh to the comparison grid.
 
     Authors
     -------
@@ -52,7 +55,7 @@ def write_mpas_mapping_file(config, meshFileName):
 
     Last Modified
     -------------
-    03/04/2017
+    04/06/2017
     """
 
     climSection = 'climatology'
@@ -60,18 +63,8 @@ def write_mpas_mapping_file(config, meshFileName):
     method = config.getWithDefault(climSection, 'mpasInterpolationMethod',
                                    'bilinear')
 
-    comparisonLatRes = config.getWithDefault(climSection,
-                                             'comparisonLatResolution',
-                                             constants.dLatitude)
-    comparisonLonRes = config.getWithDefault(climSection,
-                                             'comparisonLatResolution',
-                                             constants.dLongitude)
-
-    (lat, lon) = _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes)
-
-    overwriteMapping = config.getWithDefault(climSection,
-                                             'overwriteMapping',
-                                             False)
+    lat, lon, comparisonLatRes, comparisonLonRes = \
+        _get_comparison_grid(config)
 
     mappingFileOption = 'mpasMappingFile'
     if config.has_option(climSection, mappingFileOption):
@@ -93,32 +86,39 @@ def write_mpas_mapping_file(config, meshFileName):
 
         config.set(climSection, mappingFileOption, mpasMappingFileName)
 
-    interpolate.build_remap_weights(sourceFileName=meshFileName,
-                                    outWeightFileName=mpasMappingFileName,
-                                    sourceFileType='mpas',
-                                    destinationLat=lat,
-                                    destinationLon=lon,
-                                    desitnationUnits='degrees',
-                                    method=method,
-                                    overwrite=overwriteMapping)
+    sourceDescriptor = MpasMeshDescriptor(meshFileName)
+    destinationDescriptor = LatLonGridDescriptor()
+    destinationDescriptor.create(lat, lon, units='degrees')
 
-    return mpasMappingFileName
+    remapper = Remapper(sourceDescriptor, destinationDescriptor,
+                        mpasMappingFileName)
+
+    remapper.build_mapping_file(method=method)
+
+    return remapper  # }}}
 
 
-def write_observations_mapping_file(config, componentName, fieldName,
-                                    gridFileName, latVarName='lat',
-                                    lonVarName='lon'):
+def get_observations_remapper(config, componentName, fieldName,
+                              gridFileName, latVarName='lat',
+                              lonVarName='lon'):  # {{{
     """
     Given config options, the name of the component being analyzed and a
-    grid file containing 1D lat and lon arrays, either finds an existing
-    obs-grid-to-comparison-grid mapping file or creates a new mapping file.
+    grid file containing 1D lat and lon arrays, returns a ``Remapper`` object
+    that can be used to remap from observations files or data sets to
+    corresponding data sets on the comparison grid.
+
+    If necessary, creates the mapping file containing weights and indices
+    needed to perform remapping.
+
+    If no remapping is needed, returns ``None``
+
 
     Parameters
     ----------
-    config :  instance of MpasAnalysisConfigParser
+    config :  instance of ``MpasAnalysisConfigParser``
         Contains configuration options
 
-    componentName : {'ocean', 'seaIce'}
+    componentName : ``{'ocean', 'seaIce'}``
         Name of the component, used to look up climatology and observation
         options
 
@@ -135,10 +135,10 @@ def write_observations_mapping_file(config, componentName, fieldName,
 
     Returns
     -------
-    obsMappingFileName : str
-        The absolute path to a mapping file (or the location
-        at which to create one) for interpolation between MPAS meshes and
-        the climatology comparison grid
+    remapper : ``Remapper`` object
+        A remapper that can be used to remap files or data sets from the
+        observations grid to the comparison grid.  Returns ``None`` if no
+        mapping is required.
 
     Authors
     -------
@@ -146,29 +146,17 @@ def write_observations_mapping_file(config, componentName, fieldName,
 
     Last Modified
     -------------
-    03/04/2017
+    04/06/2017
     """
 
     mappingFileOption = '{}ClimatologyMappingFile'.format(fieldName)
-    climSection = 'climatology'
     obsSection = '{}Observations'.format(componentName)
 
-    comparisonLatRes = config.getWithDefault(climSection,
-                                             'comparisonLatResolution',
-                                             constants.dLatitude)
-    comparisonLonRes = config.getWithDefault(climSection,
-                                             'comparisonLatResolution',
-                                             constants.dLongitude)
-
-    (outLat, outLon) = _get_comparison_lat_lon(comparisonLatRes,
-                                               comparisonLonRes)
+    outLat, outLon, comparisonLatRes, comparisonLonRes = \
+        _get_comparison_grid(config)
 
     method = config.getWithDefault(obsSection, 'interpolationMethod',
                                    'bilinear')
-
-    overwriteMapping = config.getWithDefault(climSection,
-                                             'overwriteMapping',
-                                             False)
 
     if config.has_option(obsSection, mappingFileOption):
         obsMappingFileName = config.get(obsSection, mappingFileOption)
@@ -196,23 +184,23 @@ def write_observations_mapping_file(config, componentName, fieldName,
 
             config.set(obsSection, mappingFileOption, obsMappingFileName)
 
-    if obsMappingFileName is not None:
-        interpolate.build_remap_weights(
-            sourceFileName=gridFileName,
-            outWeightFileName=obsMappingFileName,
-            sourceFileType='latlon',
-            sourceLatVarName=latVarName,
-            sourceLonVarName=lonVarName,
-            destinationLat=outLat,
-            destinationLon=outLon,
-            desitnationUnits='degrees',
-            method=method,
-            overwrite=overwriteMapping)
+    if obsMappingFileName is None:
+        remapper = None
+    else:
+        sourceDescriptor = LatLonGridDescriptor()
+        sourceDescriptor.read(gridFileName, latVarName=latVarName,
+                              lonVarName=lonVarName)
+        destinationDescriptor = LatLonGridDescriptor()
+        destinationDescriptor.create(outLat, outLon, units='degrees')
 
-    return obsMappingFileName
+        remapper = Remapper(sourceDescriptor, destinationDescriptor,
+                            obsMappingFileName)
+        remapper.build_mapping_file(method=method)
+
+    return remapper  # }}}
 
 
-def get_mpas_climatology_file_names(config, fieldName, monthNames):
+def get_mpas_climatology_file_names(config, fieldName, monthNames):  # {{{
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for MPAS
@@ -285,12 +273,13 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames):
             regriddedDirectory, fieldName, meshName, comparisonLatRes,
             comparisonLonRes, monthNames, fileSuffix)
 
-    return (climatologyFileName, climatologyPrefix, regriddedFileName)
+    return (climatologyFileName, climatologyPrefix, regriddedFileName)  # }}}
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,
                                            componentName, gridFileName,
-                                           latVarName='lat', lonVarName='lon'):
+                                           latVarName='lat',
+                                           lonVarName='lon'):  # {{{
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for observation
@@ -372,10 +361,10 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     if not matchesComparison:
         make_directories(regriddedDirectory)
 
-    return (climatologyFileName, regriddedFileName)
+    return (climatologyFileName, regriddedFileName)  # }}}
 
 
-def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
+def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
     """
     Compute monthly climatologies from a data set.  The mean is weighted but
     the number of days in each month of the data set, ignoring values masked
@@ -425,10 +414,11 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
     monthlyClimatology = \
         ds.groupby('month').apply(compute_one_month_climatology)
 
-    return monthlyClimatology
+    return monthlyClimatology  # }}}
 
 
-def compute_climatology(ds, monthValues, calendar=None, maskVaries=True):
+def compute_climatology(ds, monthValues, calendar=None,
+                        maskVaries=True):  # {{{
     """
     Compute a monthly, seasonal or annual climatology data set from a data
     set.  The mean is weighted but the number of days in each month of
@@ -484,7 +474,7 @@ def compute_climatology(ds, monthValues, calendar=None, maskVaries=True):
 
     climatology = _compute_masked_mean(climatologyMonths, maskVaries)
 
-    return climatology
+    return climatology  # }}}
 
 
 def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
@@ -570,7 +560,7 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
     return climatology  # }}}
 
 
-def update_start_end_year(ds, config, calendar):
+def update_start_end_year(ds, config, calendar):  # {{{
     """
     Given a monthly climatology, compute a seasonal climatology weighted by
     the number of days in each month (on the no-leap-year calendar).
@@ -621,7 +611,7 @@ def update_start_end_year(ds, config, calendar):
         config.set('climatology', 'endYear', str(endYear))
         changed = True
 
-    return changed, startYear, endYear
+    return changed, startYear, endYear  # }}}
 
 
 def add_years_months_days_in_month(ds, calendar=None):  # {{{
@@ -694,7 +684,76 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
     return ds  # }}}
 
 
-def _compute_masked_mean(ds, maskVaries):
+def remap_and_write_climatology(config, climatologyDataSet,
+                                climatologyFileName, regriddedFileName,
+                                remapper):  # {{{
+    """
+    Given a field in a climatology data set, use the ``remapper`` to regrid
+    horizontal dimensions of all fields, write the results to an output file,
+    and return the regridded data set.
+
+    Note that ``climatologyFileName`` and ``regriddedFileName`` will be
+    overwritten if they exist, so if this behavior is not desired, the calling
+    code should skip this call if the files exist and simply load the contents
+    of ``regriddedFileName``.
+
+    Parameters
+    ----------
+    config :  instance of ``MpasAnalysisConfigParser``
+        Contains configuration options
+
+    climatologyDataSet : ``xarray.DataSet`` or ``xarray.DataArray`` object
+        A data set containing a climatology
+
+    fieldName : str
+        A field within the climatology to be remapped
+
+    climatologyFileName : str
+        The name of the output file to which the data set should be written
+        before regridding (if using ncremap).
+
+    regriddedFileName : str
+        The name of the output file to which the regridded data set should
+        be written.
+
+    remapper : ``Remapper`` object
+        A remapper that can be used to remap files or data sets from the
+        observations grid to the comparison grid.  Returns ``None`` if no
+        mapping is required.
+
+    Returns
+    -------
+    remappedClimatology : ``xarray.DataSet`` or ``xarray.DataArray`` object
+        A data set containing the remapped climatology
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/06/2017
+    """
+    useNcremap = config.getboolean('climatology', 'useNcremap')
+
+    if useNcremap:
+        useNcremap = config.getboolean('climatology', 'useNcremap')
+        if not os.path.exists(climatologyFileName):
+            climatologyDataSet.to_netcdf(climatologyFileName)
+        remapper.remap_file(inFileName=climatologyFileName,
+                            outFileName=regriddedFileName,
+                            overwrite=True)
+        remappedClimatology = xr.open_dataset(regriddedFileName)
+    else:
+        renormalizationThreshold = config.getfloat('climatology',
+                                                   'renormalizationThreshold')
+
+        remappedClimatology = remapper.remap(climatologyDataSet,
+                                             renormalizationThreshold)
+    return remappedClimatology  # }}}
+
+
+def _compute_masked_mean(ds, maskVaries):  # {{{
     '''
     Compute the time average of data set, masked out where the variables in ds
     are NaN and, if ``maskVaries == True``, weighting by the number of days
@@ -745,13 +804,22 @@ def _compute_masked_mean(ds, maskVaries):
         timeMean = dsWeightedSum / days.where(days > 0.)
         timeMean.compute()
 
-    return timeMean
+    return timeMean  # }}}
 
 
-def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):
+def _get_comparison_grid(config):  # {{{
     '''
-    Returns the lat and lon arrays defining the corners of the comparison
-    grid.
+    Returns the latitude and longitude arrays defining the comparison grid
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    Returns
+    -------
+    lon, lat : 1D numpy arrays
+        latitude and longitude arrays defining the comparison grid
 
     Authors
     -------
@@ -761,16 +829,26 @@ def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):
     -------------
     04/08/2017
     '''
+
+    climSection = 'climatology'
+
+    comparisonLatRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLatitude)
+    comparisonLonRes = config.getWithDefault(climSection,
+                                             'comparisonLatResolution',
+                                             constants.dLongitude)
+
     nLat = int((constants.latmax-constants.latmin)/comparisonLatRes)+1
     nLon = int((constants.lonmax-constants.lonmin)/comparisonLonRes)+1
     lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
     lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 
-    return (lat, lon)
+    return (lat, lon, comparisonLatRes, comparisonLonRes)  # }}}
 
 
 def _get_grid_name(gridFileName, latVarName, lonVarName, comparisonLatRes,
-                   comparisonLonRes):
+                   comparisonLonRes):  # {{{
     '''
     Given a grid file with given lat and lon variable names, finds the
     resolution of the grid and generates a grid name.  Given comparison
@@ -804,7 +882,7 @@ def _get_grid_name(gridFileName, latVarName, lonVarName, comparisonLatRes,
                          (inLat[0]-0.5*inDLat == constants.latmin) and
                          (inLon[0]-0.5*inDLon == constants.lonmin))
 
-    return (gridName, matchesComparison)
+    return (gridName, matchesComparison)  # }}}
 
 
 def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
@@ -992,6 +1070,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
         climatology.attrs['totalDays'] = totalDays
         climatology.attrs['totalMonths'] = totalMonths
 
+        print 'DEBUG:', outputFileClimo
         climatology.to_netcdf(outputFileClimo)
 
     return climatology  # }}}

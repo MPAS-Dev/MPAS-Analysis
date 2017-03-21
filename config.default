@@ -158,6 +158,14 @@ mpasInterpolationMethod = bilinear
 # computing the MOC.
 yearsPerCacheFile = 1
 
+# should remapping be performed with ncremap or with the Remapper class
+# directly in MPAS-Analysis
+useNcremap = False
+
+# The minimum weight of a destination cell after remapping. Any cell with 
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
 [timeSeries]
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs
@@ -333,7 +341,7 @@ regionIndicesToPlot = 5
 # Data source to read for comparison.  There are three options
 # 1 - ERS SSTv4 -- Updated version of previous -- 1854 - 2016
 # 2 - HADIsst -- Hadley center analysis -- 1870 - 2016
-observationData = HADIsst 
+observationData = HADIsst
 
 [meridionalHeatTransport]
 ## options related to plotting meridional heat transport (MHT)
