@@ -13,8 +13,6 @@ Last Modified
 
 import os
 import os.path
-import matplotlib.pyplot as plt
-import matplotlib.colors as cols
 
 import numpy.ma as ma
 import numpy as np
@@ -36,7 +34,8 @@ from ..shared.io.utility import buildConfigFullPath
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    days_to_datetime
 
 
 def seaice_modelvsobs(config, streamMap=None, variableMap=None):
@@ -122,6 +121,11 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     # Compute climatologies (first motnhly and then seasonally)
     print "  Compute seasonal climatologies..."
+
+    startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
+    endYear = days_to_datetime(ds.Time.max().values, calendar=calendar).year
+    config.set('climatology', 'startYear', str(startYear))
+    config.set('climatology', 'endYear', str(endYear))
 
     monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
 
@@ -248,10 +252,12 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
         else:
             plotProjection = 'spstere'
 
-        (colormapResult, colorbarLevelsResult) = setup_colormap(config,
+        (colormapResult, colorbarLevelsResult) = setup_colormap(
+            config,
             'regriddedSeaIceConcThick',
             suffix='ConcResult{}'.format(season))
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(config,
+        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+            config,
             'regriddedSeaIceConcThick',
             suffix='ConcDifference{}'.format(season))
 
@@ -424,10 +430,12 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
 
         for hemisphere in ['NH', 'SH']:
 
-            (colormapResult, colorbarLevelsResult) = setup_colormap(config,
+            (colormapResult, colorbarLevelsResult) = setup_colormap(
+                config,
                 'regriddedSeaIceConcThick',
                 suffix='ThickResult{}'.format(hemisphere))
-            (colormapDifference, colorbarLevelsDifference) = setup_colormap(config,
+            (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+                config,
                 'regriddedSeaIceConcThick',
                 suffix='ThickDifference{}'.format(hemisphere))
 

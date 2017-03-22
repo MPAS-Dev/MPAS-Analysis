@@ -12,9 +12,6 @@ Last Modified
 03/03/2017
 """
 
-import matplotlib.pyplot as plt
-import matplotlib.colors as cols
-
 import xarray as xr
 import datetime
 import numpy as np
@@ -33,7 +30,8 @@ from ..shared.io.utility import buildConfigFullPath
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    days_to_datetime
 
 from ..shared.climatology import climatology
 
@@ -105,9 +103,6 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     except ValueError:
         raise IOError('No MPAS-O restart file found: need at least one '
                       'restart file for ocn_modelvsobs calculation')
-
-    startYear = config.getint('climatology', 'startYear')
-    endYear = config.getint('climatology', 'endYear')
 
     sectionName = 'regridded{}'.format(field.upper())
     outputTimes = config.getExpression(sectionName, 'comparisonTimes')
@@ -239,6 +234,11 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
                                 variableMap=variableMap,
                                 startDate=startDate,
                                 endDate=endDate)
+
+    startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
+    endYear = days_to_datetime(ds.Time.max().values, calendar=calendar).year
+    config.set('climatology', 'startYear', str(startYear))
+    config.set('climatology', 'endYear', str(endYear))
 
     monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
 
