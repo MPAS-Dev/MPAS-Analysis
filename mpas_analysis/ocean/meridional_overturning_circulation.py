@@ -226,10 +226,14 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
     for region in regionNames:
         print '\n  Reading region and transect mask for {}...'.format(region)
         ncFileRegional = netCDF4.Dataset(regionMaskFiles, mode='r')
-        maxEdgesInTransect = ncFileRegional.dimensions['maxEdgesInTransect'].size
-        transectEdgeMaskSigns = ncFileRegional.variables['transectEdgeMaskSigns'][:, iRegion]
-        transectEdgeGlobalIDs = ncFileRegional.variables['transectEdgeGlobalIDs'][iRegion, :]
-        regionCellMask = ncFileRegional.variables['regionCellMasks'][:, iRegion]
+        maxEdgesInTransect = \
+            ncFileRegional.dimensions['maxEdgesInTransect'].size
+        transectEdgeMaskSigns = \
+            ncFileRegional.variables['transectEdgeMaskSigns'][:, iRegion]
+        transectEdgeGlobalIDs = \
+            ncFileRegional.variables['transectEdgeGlobalIDs'][iRegion, :]
+        regionCellMask = \
+            ncFileRegional.variables['regionCellMasks'][:, iRegion]
         ncFileRegional.close()
         iRegion += 1
 
@@ -290,9 +294,12 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
             if region == 'Global':
                 transportZ = np.zeros(nVertLevels)
             else:
-                maxEdgesInTransect = dictRegion['maxEdgesInTransect{}'.format(region)]
-                transectEdgeGlobalIDs = dictRegion['transectEdgeGlobalIDs{}'.format(region)]
-                transectEdgeMaskSigns = dictRegion['transectEdgeMaskSigns{}'.format(region)]
+                maxEdgesInTransect = \
+                    dictRegion['maxEdgesInTransect{}'.format(region)]
+                transectEdgeGlobalIDs = \
+                    dictRegion['transectEdgeGlobalIDs{}'.format(region)]
+                transectEdgeMaskSigns = \
+                    dictRegion['transectEdgeMaskSigns{}'.format(region)]
                 transportZ = _compute_transport(maxEdgesInTransect,
                                                 transectEdgeGlobalIDs,
                                                 transectEdgeMaskSigns,
@@ -450,7 +457,8 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
                   ' from file...'
             ncFile = netCDF4.Dataset(outputFileTseries, mode='r')
             Time[ncount-12:ncount] = ncFile.variables['Time'][:]
-            mocAtlantic26[ncount-12:ncount] = ncFile.variables['mocRapidArrayMax'][:]
+            mocAtlantic26[ncount-12:ncount] = \
+                ncFile.variables['mocRapidArrayMax'][:]
             ncFile.close()
 
     # Store max Atlantic MOC at 26.5 to dictionary
