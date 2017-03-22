@@ -33,8 +33,6 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology import climatology
-
 
 def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
     """
@@ -134,9 +132,12 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
         # (mocDictClimo, mocDictTseries) = _compute_moc_analysismember(config,
         #     streams, calendar, sectionName, dictClimo, dictTseries)
     else:
-        (mocDictClimo, mocDictTseries) = _compute_moc_postprocess(
+        mocDictClimo, dictRegion = _compute_moc_climo_postprocess(
             config, streams, variableMap, calendar, sectionName, regionNames,
             dictClimo, dictTseries)
+        mocDictTseries = _compute_moc_time_series_postprocess(
+            config, streams, variableMap, calendar, sectionName, regionNames,
+            dictClimo, dictTseries, mocDictClimo, dictRegion)
 
     # **** Plot MOC ****
     # Define plotting variables
@@ -181,16 +182,10 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
                              xLabel, yLabel, figureName,
                              lineStyles=['k-'], lineWidths=[1.5],
                              calendar=calendar)
+    # }}}
 
-    return  # }}}
 
-
-def _compute_moc_postprocess(config, streams, variableMap, calendar,
-                             sectionName, regionNames, dictClimo,
-                             dictTseries):
-
-    '''compute MOC streamfunction at postprocessing'''
-
+def _load_mesh(streams):  # {{{
     # Load mesh related variables
     try:
         restartFile = streams.readpath('restart')[0]
@@ -204,7 +199,6 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
     latCell = ncFile.variables['latCell'][:]
     latCell = latCell * rad_to_deg  # convert to degree
     ncFile.close()
-
     nVertLevels = len(refBottomDepth)
     refTopDepth = np.zeros(nVertLevels+1)
     refTopDepth[1:nVertLevels+1] = refBottomDepth[0:nVertLevels]
@@ -212,6 +206,19 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
     refLayerThickness[0] = refBottomDepth[0]
     refLayerThickness[1:nVertLevels] = (refBottomDepth[1:nVertLevels] -
                                         refBottomDepth[0:nVertLevels-1])
+
+    return dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
+        refTopDepth, refLayerThickness  # }}}
+
+
+def _compute_moc_climo_postprocess(config, streams, variableMap, calendar,
+                                   sectionName, regionNames, dictClimo,
+                                   dictTseries):  # {{{
+
+    '''compute mean MOC streamfunction as a post-process'''
+
+    dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
+        refTopDepth, refLayerThickness = _load_mesh(streams)
 
     variableList = ['avgNormalVelocity',
                     'avgVertVelocityTop']
@@ -275,15 +282,14 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
             endDate=dictClimo['endDateClimo'])
 
         # Compute annual climatology
-        annualClimatology = climatology.compute_annual_climatology(
-                            ds, calendar)
+        annualClimatology = ds.mean('Time')
 
-        horizontalVel = annualClimatology.avgNormalVelocity
-        verticalVel = annualClimatology.avgVertVelocityTop
-        # Convert to numpy
-        horizontalVel = horizontalVel.values
-        verticalVel = verticalVel.values
+        # Convert to numpy arrays
+        horizontalVel = annualClimatology.avgNormalVelocity.values
+        verticalVel = annualClimatology.avgVertVelocityTop.values
         velArea = verticalVel * areaCell[:, np.newaxis]
+
+        print 'velArea finished'
 
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
@@ -369,11 +375,28 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
             mocDictClimo['moc{}'.format(region)] = {
                 'dims': ('nz', 'nx{}'.format(region)), 'data': mocTop}
         ncFile.close()
+    return mocDictClimo, dictRegion  # }}}
+
+
+def _compute_moc_time_series_postprocess(config, streams, variableMap,
+                                         calendar, sectionName, regionNames,
+                                         dictClimo, dictTseries, mocDictClimo,
+                                         dictRegion):  # {{{
+
+    '''compute MOC time series as a post-process'''
 
     # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
     print '\n  Compute and/or plot post-processed Atlantic MOC '\
           'time series...'
     print '   Load data...'
+
+    simulationStartTime = get_simulation_start_time(streams)
+    variableList = ['avgNormalVelocity',
+                    'avgVertVelocityTop']
+
+    dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
+        refTopDepth, refLayerThickness = _load_mesh(streams)
+
     ds = open_multifile_dataset(fileNames=dictTseries['inputFilesTseries'],
                                 calendar=calendar,
                                 simulationStartTime=simulationStartTime,
@@ -466,7 +489,7 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
                       'mocRapidArrayMax': {'dims': ('Time'),
                                            'data': mocAtlantic26}}
 
-    return (mocDictClimo, mocDictTseries)
+    return mocDictTseries  # }}}
 
 
 # def _compute_moc_analysismember(config):
@@ -476,7 +499,7 @@ def _compute_moc_postprocess(config, streams, variableMap, calendar,
 
 def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
                        transectEdgeMaskSigns, nz, dvEdge, refLayerThickness,
-                       horizontalVel):
+                       horizontalVel):  # {{{
 
     '''compute mass transport across southern transect of ocean basin'''
 
@@ -491,10 +514,11 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
             dvEdge[iEdge, np.newaxis] * \
             refLayerThickness[np.newaxis, :]
         transportZ = transportZEdge.sum(axis=1)
-    return transportZ
+    return transportZ  # }}}
 
 
-def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ, velArea):
+def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
+                 velArea):  # {{{
 
     '''compute meridionally integrated MOC streamfunction'''
 
@@ -508,6 +532,6 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ, velArea):
     # convert m^3/s to Sverdrup
     mocTop = mocTop * m3ps_to_Sv
     mocTop = mocTop.T
-    return mocTop
+    return mocTop  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
