@@ -41,4 +41,13 @@ rad_to_deg = 180./np.pi
 # conversion factor from degrees to radians
 deg_to_rad = np.pi/180.
 
+# seconds in a year
+sec_per_year = 86400. * 365.
+
+# seconds per month (approximate)
+sec_per_month = 86400. * 30.
+
+# small value to prevent division by zero
+eps = 1.E-10
+
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
