@@ -513,7 +513,7 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
             transectEdgeMaskSigns[iEdge, np.newaxis] * \
             dvEdge[iEdge, np.newaxis] * \
             refLayerThickness[np.newaxis, :]
-        transportZ = transportZEdge.sum(axis=1)
+    transportZ = transportZEdge.sum(axis=1)
     return transportZ  # }}}
 
 
