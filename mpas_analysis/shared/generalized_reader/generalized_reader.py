@@ -28,7 +28,7 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
                            timeVariableName='Time',
                            variableList=None, selValues=None,
                            iselValues=None, variableMap=None,
-                           startDate=None, endDate=None):  # {{{
+                           startDate=None, endDate=None, **kwargs):  # {{{
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -86,6 +86,9 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
+    kwargs : dict of keyword arguments
+        Keyword arguments passed to `xarray.open_mfdataset`
+
     Returns
     -------
     ds : An xarray data set.
@@ -123,7 +126,7 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
 
     ds = xarray.open_mfdataset(fileNames,
                                preprocess=preprocess_partial,
-                               decode_times=False, concat_dim='Time')
+                               decode_times=False, concat_dim='Time', **kwargs)
 
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
