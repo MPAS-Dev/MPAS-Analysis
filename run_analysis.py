@@ -85,8 +85,8 @@ def checkGenerate(config, analysisName, mpasCore, analysisCategory=None):
 
 def analysis(config):  # {{{
     # set default values of start and end dates for climotologies and
-    # timeseries
-    for section in ['climatology', 'timeSeries']:
+    # timeseries and indices
+    for section in ['climatology', 'timeSeries','index']:
         startDate = '{:04d}-01-01_00:00:00'.format(
             config.getint(section, 'startYear'))
         if not config.has_option(section, 'startDate'):
@@ -149,12 +149,13 @@ def analysis(config):  # {{{
         sst_timeseries(config, streamMap=oceanStreamMap,
                        variableMap=oceanVariableMap)
 
-#     if checkGenerate(config, analysisName='timeSeriesNino34',
-#                     mpasCore='ocean', analysisCategory='timeSeries'):
-#         print ""
-#         print "Plotting Nino3.4 time series..."
-#         from mpas_analysis.ocean.nino34_timeseries import nino34_timeseries
-#         nino34_timeseries(config)
+    if checkGenerate(config, analysisName='indexNino34',
+                     mpasCore='ocean', analysisCategory='index'):
+         print ""
+         print "Plotting Nino3.4 time series and power spectrum...."
+         from mpas_analysis.ocean.nino34_index import nino34_index
+         nino34_index(config, streamMap=oceanStreamMap,
+                       variableMap=oceanVariableMap)
 
 #    if checkGenerate(config, analysisName='timeSeriesMHT', mpasCore='ocean',
 #                     analysisCategory='timeSeries'):

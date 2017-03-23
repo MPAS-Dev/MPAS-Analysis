@@ -3,14 +3,15 @@ Plotting utilities, including routines for plotting:
     * time series (and comparing with reference data sets)
     * regridded horizontal fields (and comparing with reference data sets)
     * vertical sections on native grid
+    * NINO34 time series and spectra
 
 Authors
 -------
-Xylar Asay-Davis, Milena Veneziani
+Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
 
 Last Modified
 -------------
-03/14/2017
+03/21/2017
 """
 
 import matplotlib.pyplot as plt
@@ -26,6 +27,205 @@ from functools import partial
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
 from ..constants import constants
+
+
+def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
+                        redNoiseSpectra, title, fileout, linewidths,
+                        xlabel='Period (years)', ylabel='Power Spectrum',
+                        titleFontSize=None, figsize=(15, 6), dpi=300):
+    """
+    Plots the nino34 time series and power spectra in an image file
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    f : numpy.array
+        periods to plot on x-axis
+
+    ninoSpectra : xarray.dataArray object
+        nino34 power spectra
+
+    confidence95 : numpy.array
+        95% confidence level based on chi squared test
+
+    confidence99 : numpy.array
+        99% confidence level based on chi squared test
+
+    redNoiseSpectra : numpy.array
+        red noise fit to the ninoSpectra
+
+    title : str
+        the title of the plot
+
+    xLabel, yLabel : str
+        axis labels
+
+    fileout : str
+        the file name to be written
+
+    linewidths : control line width
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure
+
+    Author
+    ------
+    Luke Van Roekel
+
+    Last Modified
+    -------------
+    03/22/2017
+    """
+
+    fig, ax = plt.subplots()
+
+    ax.plot(f[2:-3], ninoSpectra[2:-3], 'k', linewidth=linewidths)
+    ax.plot(f[2:-3], redNoiseSpectra[2:-3], 'r', linewidth=linewidths)
+    ax.plot(f[2:-3], confidence95[2:-3], 'b', linewidth=linewidths)
+    ax.plot(f[2:-3], confidence99[2:-3], 'g', linewidth=linewidths)
+    ax.set_xlim(15, 1)
+
+    # add legend
+    ax.legend(['Nino34 index spectra', 'Red noise fit',
+               '95% confidence threshold', '99% confidence threshold'],
+               loc='upper right')
+
+    # automatically size y-axis
+    xmin = ax.get_xlim()[0]
+    xmax = ax.get_xlim()[1]
+
+    # find period/frequency bounds for chosen xmin/xmax
+    minIndex = np.abs(f-xmin).argmin()
+    maxIndex = np.abs(f-xmax).argmin()
+
+    # find maximum value of three curves plotted
+    # The confidence95 curve is by definition less than confidence99
+    maxValueNinoSpectra = ninoSpectra[minIndex:maxIndex].values.max()
+    maxValueRedNoise = redNoiseSpectra[minIndex:maxIndex].max()
+    maxValueConf99 = confidence99[minIndex:maxIndex].max()
+    # Set ylim max to be 1.1*max(maxValueNino,maxRed,maxCon)
+    ax.set_ylim(0,0.9*max(maxValueNinoSpectra, maxValueRedNoise,
+                          maxValueConf99))
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        ax.set_title(title, **title_font)
+    if xlabel is not None:
+        ax.set_xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        ax.set_ylabel(ylabel, **axis_font)
+    if fileout is not None:
+        fig.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+
+def nino34_timeseries_plot(config, nino34Index, title, fileout, linewidths,
+                           calendar, xlabel='Time [years]', ylabel='[$^\circ$C]',
+                           titleFontSize=None, figsize=(15, 6), dpi=300,
+                           maxXTicks=20):
+    """
+    Plots the nino34 time series and power spectra in an image file
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    nino34Index : xarray.dataArray
+        nino34 timeseries to plot
+
+    title : str
+        the title of the plot
+
+    xLabel, yLabel : str
+        axis labels
+
+    fileout : str
+        the file name to be written
+
+    lineWidths : list of str
+        control line width
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.
+
+    Author
+    ------
+    Luke Van Roekel
+
+    Last Modified
+    -------------
+    03/22/2017
+    """
+    plt.figure(figsize=figsize, dpi=dpi)
+
+    nino34Index = nino34Index[2:-3]
+    y1 = nino34Index.values
+    nt = np.size(nino34Index)
+    time = nino34Index.Time.values
+
+    minDays = nino34Index.Time.values.min()
+    maxDays = nino34Index.Time.values.max()
+    y2 = np.zeros(nt)
+
+    plt.plot(time, 0.4*np.ones(nt), '--k',
+             linewidth=linewidths)
+    plt.plot(time, -0.4*np.ones(nt), '--k',
+             linewidth=linewidths)
+    plt.fill_between(time, y1, y2, where=y1 > y2,
+                     facecolor='red', interpolate=True, linewidth=0)
+    plt.fill_between(time, y1, y2, where=y1 < y2,
+                     facecolor='blue', interpolate=True, linewidth=0)
+
+    _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, calendar,
@@ -97,40 +297,15 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         plt.plot(mean['Time'], mean,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex])
-
     ax = plt.gca()
-
     # Add a y=0 line if y ranges between positive and negative values
     yaxLimits = ax.get_ylim()
     if yaxLimits[0]*yaxLimits[1] < 0:
         indgood = np.where(np.logical_not(np.isnan(mean)))
-        x = mean['Time'][indgood]
+        x  = mean['Time'][indgood]
         plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2)
 
-    start = days_to_datetime(np.amin(minDays), calendar=calendar)
-    end = days_to_datetime(np.amax(maxDays), calendar=calendar)
-
-    if (end.year - start.year > maxXTicks/2):
-        major = [date_to_days(year=year, calendar=calendar)
-                 for year in np.arange(start.year, end.year+1)]
-        formatterFun = partial(_date_tick, calendar=calendar,
-                               includeMonth=False)
-    else:
-        # add ticks for months
-        major = []
-        for year in range(start.year, end.year+1):
-            for month in range(1, 13):
-                major.append(date_to_days(year=year, month=month,
-                                          calendar=calendar))
-        formatterFun = partial(_date_tick, calendar=calendar,
-                               includeMonth=True)
-
-    ax.xaxis.set_major_locator(FixedLocator(major, maxXTicks))
-    ax.xaxis.set_major_formatter(FuncFormatter(formatterFun))
-
-    plt.setp(ax.get_xticklabels(), rotation=30)
-
-    plt.autoscale(enable=True, axis='x', tight=True)
+    _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
     if titleFontSize is None:
         titleFontSize = config.get('plot', 'titleFontSize')
@@ -212,8 +387,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
         plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
-                 lineStyles[dsIndex],
-                 linewidth=lineWidths[dsIndex])
+                   lineStyles[dsIndex],
+                   linewidth=lineWidths[dsIndex])
 
     ax = plt.gca()
 
@@ -734,5 +909,52 @@ def setup_colormap(config, configSectionName, suffix=''):
     colormap.set_under(underColor)
     colormap.set_over(overColor)
     return (colormap, colorbarLevels)
+
+def _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
+    '''
+    Formats tick labels and positions along the x-axis for time series 
+    / index plots
+
+    Parameters
+    ----------
+    plt : plt handle on which to change ticks
+
+    calendar : specified calendar for the plot
+
+    minDays : start time for labels
+
+    maxDays : end time for labels
+
+    Author
+    ------
+    Xylar Asay-Davis
+
+    '''
+    ax = plt.gca()
+
+    start = days_to_datetime(np.amin(minDays), calendar=calendar)
+    end = days_to_datetime(np.amax(maxDays), calendar=calendar)
+
+    if (end.year - start.year > maxXTicks/2):
+        major = [date_to_days(year=year, calendar=calendar)
+                 for year in np.arange(start.year, end.year+1)]
+        formatterFun = partial(_date_tick, calendar=calendar,
+                               includeMonth=False)
+    else:
+        # add ticks for months
+        major = []
+        for year in range(start.year, end.year+1):
+            for month in range(1, 13):
+                major.append(date_to_days(year=year, month=month,
+                                          calendar=calendar))
+        formatterFun = partial(_date_tick, calendar=calendar,
+                               includeMonth=True)
+
+    ax.xaxis.set_major_locator(FixedLocator(major, maxXTicks))
+    ax.xaxis.set_major_formatter(FuncFormatter(formatterFun))
+
+    plt.setp(ax.get_xticklabels(), rotation=30)
+
+    plt.autoscale(enable=True, axis='x', tight=True)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

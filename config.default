@@ -132,6 +132,16 @@ mpasInterpolationMethod = bilinear
 startYear = 1
 endYear = 9999
 
+[index]
+## options related to producing nino index.
+
+# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
+#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
+#   of years, and is a good way of insuring that all values are used.
+# For valid statistics, index times should include at least 30 years
+startYear = 1 
+endYear = 9999
+
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
 
@@ -278,19 +288,13 @@ regionIndicesToPlot = [6]
 # window)
 movingAveragePoints = 12
 
-[timeSeriesNino34]
+[indexNino34]
 ## options related to plotting time series of the El Nino 3.4 index
 
-## compare to output from another model run?
-#compareWithModel = True
-# compare to observations?
-compareWithObservations = True
-# list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
-# Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
-# window)
-movingAveragePoints = 12
+# Specified region for the Nino Index, 5 = Nino34, 3 = Nino3, 4 = Nino4
+# The indexNino34 routine only accepts one value at a time, 
+# regionIndicesToPlot should be an integer
+regionIndicesToPlot = 5
 
 [timeSeriesMHT]
 ## options related to plotting time series of meridional heat transport (MHT)
