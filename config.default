@@ -52,6 +52,7 @@ mpasMeshName = mesh
 ## etc.
 
 # directory where analysis should be written
+# NOTE: This directory path must be specific to each test case.
 baseDirectory = /dir/to/analysis/output
 
 # subdirectories within baseDirectory for analysis output
