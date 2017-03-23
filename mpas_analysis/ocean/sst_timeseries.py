@@ -70,6 +70,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     varList = ['avgSurfaceTemperature']
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=varList,
@@ -93,6 +94,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
         dsPreprocessed = open_multifile_dataset(
             fileNames=inFilesPreprocessed,
             calendar=calendar,
+            config=config,
             simulationStartTime=simulationStartTime,
             timeVariableName='xtime')
         yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),

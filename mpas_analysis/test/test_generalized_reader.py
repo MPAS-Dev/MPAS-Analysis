@@ -9,10 +9,18 @@ import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
+from mpas_analysis.configuration.MpasAnalysisConfigParser \
+    import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures("loaddatadir")
 class TestGeneralizedReader(TestCase):
+
+    def setup_config(self):
+        config = MpasAnalysisConfigParser()
+        config.add_section('input')
+        config.set('input', 'autocloseFileLimitFraction', '0.5')
+        return config
 
     def test_variableMap(self):
         fileName = str(self.datadir.join('example_jan.nc'))
@@ -36,6 +44,7 @@ class TestGeneralizedReader(TestCase):
         variableList = ['avgSurfaceTemperature', 'avgLayerTemperature',
                         'refBottomDepth', 'daysSinceStartOfSim']
 
+        config = self.setup_config()
         for calendar in ['gregorian', 'gregorian_noleap']:
             # preprocess_mpas will use variableMap to map the variable names
             # from their values in the file to the desired values in
@@ -43,6 +52,7 @@ class TestGeneralizedReader(TestCase):
             ds = open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
+                config=config,
                 simulationStartTime=simulationStartTime,
                 timeVariableName='Time',
                 variableList=variableList,
@@ -57,10 +67,12 @@ class TestGeneralizedReader(TestCase):
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
+        config = self.setup_config()
         for calendar in ['gregorian', 'gregorian_noleap']:
             ds = open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
+                config=config,
                 timeVariableName=timestr,
                 variableList=variableList)
             self.assertEqual(ds.data_vars.keys(), variableList)
@@ -71,11 +83,13 @@ class TestGeneralizedReader(TestCase):
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
+        config = self.setup_config()
         for calendar in ['gregorian', 'gregorian_noleap']:
             # all dates
             ds = open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
+                config=config,
                 timeVariableName=timestr,
                 variableList=variableList,
                 startDate='0001-01-01',
@@ -86,6 +100,7 @@ class TestGeneralizedReader(TestCase):
             ds = open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
+                config=config,
                 timeVariableName=timestr,
                 variableList=variableList,
                 startDate='0005-01-01',
@@ -96,6 +111,7 @@ class TestGeneralizedReader(TestCase):
             ds = open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
+                config=config,
                 timeVariableName=timestr,
                 variableList=variableList,
                 startDate='0005-02-01',

@@ -22,8 +22,7 @@ from ..shared.constants import constants
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    date_to_days, days_to_datetime
+from ..shared.timekeeping.utility import get_simulation_start_time
 
 
 def nino34_index(config, streamMap=None, variableMap=None):
@@ -80,7 +79,6 @@ def nino34_index(config, streamMap=None, variableMap=None):
     mainRunName = config.get('runs', 'mainRunName')
     plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
-    plotTitles = config.getExpression('regions', 'plotTitles')
     # regionIndex should correspond to NINO34 in surface weighted Average AM
     regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
 
@@ -88,6 +86,7 @@ def nino34_index(config, streamMap=None, variableMap=None):
     varList = ['avgSurfaceTemperature']
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=varList,
@@ -100,10 +99,8 @@ def nino34_index(config, streamMap=None, variableMap=None):
     nino34 = compute_nino34_index(SSTregions[:, regionIndex], config)
 
     print ' Computing NINO3.4 power spectra...'
-    f, spectra, conf99, conf95, redNoise = compute_nino34_spectra(nino34, config)
-
-    start = days_to_datetime(np.amin(ds.Time.min()), calendar=calendar)
-    end = days_to_datetime(np.amax(ds.Time.max()), calendar=calendar)
+    f, spectra, conf99, conf95, redNoise = compute_nino34_spectra(nino34,
+                                                                  config)
 
     # Convert frequencies to period in years
     f = 1.0 / (constants.eps + f*constants.sec_per_year)
@@ -122,11 +119,12 @@ def nino34_index(config, streamMap=None, variableMap=None):
 def compute_nino34_index(regionSST, config):
     # {{{
     """
-    Computes nino34 index time series.  It follow the standard nino34 algorithm, i.e.,
+    Computes nino34 index time series.  It follow the standard nino34
+    algorithm, i.e.,
 
-    1) Compute monthly average SST in the region
-    2) Computes anomalous SST
-    3) Performs a 5 month running mean over the anomalies
+      1. Compute monthly average SST in the region
+      2. Computes anomalous SST
+      3. Performs a 5 month running mean over the anomalies
 
     This routine requires regionSST to be the SSTs in the nino3.4 region ONLY.
     It is defined as lat > -5S and lat < 5N and lon > 190E and lon < 240E.
@@ -136,7 +134,8 @@ def compute_nino34_index(regionSST, config):
     regionSST : xarray.dataArray object
        values of SST in the nino region
 
-    config : instance of the MPAS configParser
+    config : MpasConfigParser object
+        the config options
 
     Returns
     -------
@@ -159,7 +158,8 @@ def compute_nino34_index(regionSST, config):
     calendar = namelist.get('config_calendar_type')
 
     # Compute monthly average and anomaly of climatology of SST
-    monthlyClimatology = climatology.compute_monthly_climatology(regionSST, calendar)
+    monthlyClimatology = climatology.compute_monthly_climatology(regionSST,
+                                                                 calendar)
     anomalySST = regionSST.groupby('month') - monthlyClimatology
 
     return _running_mean(anomalySST.to_pandas())

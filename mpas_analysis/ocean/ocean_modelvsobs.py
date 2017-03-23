@@ -227,6 +227,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
 
     ds = open_multifile_dataset(fileNames=inputFiles,
                                 calendar=calendar,
+                                config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=varList,

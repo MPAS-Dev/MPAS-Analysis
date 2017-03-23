@@ -84,6 +84,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
         oceanStreams = StreamsFile(oceanStreamsFileName,
                                    streamsdir=inDirectory)
         simulationStartTime = get_simulation_start_time(oceanStreams)
+
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('climatology', 'startDate')
@@ -111,6 +112,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     print "  Load sea-ice data..."
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=['iceAreaCell',

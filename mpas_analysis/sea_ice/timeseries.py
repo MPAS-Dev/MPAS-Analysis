@@ -121,6 +121,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     # Load data
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=['iceAreaCell',
@@ -144,9 +145,11 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     if preprocessedReferenceRunName != 'None':
         inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
             preprocessedReferenceDirectory, preprocessedReferenceRunName)
-        dsPreprocessed = open_multifile_dataset(fileNames=inFilesPreprocessed,
-                                                calendar=calendar,
-                                                timeVariableName='xtime')
+        dsPreprocessed = open_multifile_dataset(
+            fileNames=inFilesPreprocessed,
+            calendar=calendar,
+            config=config,
+            timeVariableName='xtime')
         preprocessedYearEnd = days_to_datetime(dsPreprocessed.Time.max(),
                                                calendar=calendar).year
         if yearStart <= preprocessedYearEnd:
@@ -219,17 +222,17 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 preprocessedReferenceRunName)
         else:
             figureNameStdNH = '{}/{}NH_{}.png'.format(plotsDirectory,
-                                                   variableName,
-                                                   mainRunName)
+                                                      variableName,
+                                                      mainRunName)
             figureNameStdSH = '{}/{}SH_{}.png'.format(plotsDirectory,
-                                                   variableName,
-                                                   mainRunName)
+                                                      variableName,
+                                                      mainRunName)
             figureNamePolarNH = '{}/{}NH_{}_polar.png'.format(plotsDirectory,
-                                                   variableName,
-                                                   mainRunName)
+                                                              variableName,
+                                                              mainRunName)
             figureNamePolarSH = '{}/{}SH_{}_polar.png'.format(plotsDirectory,
-                                                   variableName,
-                                                   mainRunName)
+                                                              variableName,
+                                                              mainRunName)
 
         titleNH = '{} (NH), {} (r)'.format(plotTitle, mainRunName)
         titleSH = '{} (SH), {} (r)'.format(plotTitle, mainRunName)
@@ -253,15 +256,19 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         if variableName == 'iceAreaCell':
 
             if compareWithObservations:
-                dsObs = open_multifile_dataset(fileNames=obsFileNameNH,
-                                               calendar=calendar,
-                                               timeVariableName='xtime')
+                dsObs = open_multifile_dataset(
+                    fileNames=obsFileNameNH,
+                    calendar=calendar,
+                    config=config,
+                    timeVariableName='xtime')
                 varNHObs = dsObs.IceArea
                 varNHObs = replicate_cycle(varNH, varNHObs, calendar)
 
-                dsObs = open_multifile_dataset(fileNames=obsFileNameSH,
-                                               calendar=calendar,
-                                               timeVariableName='xtime')
+                dsObs = open_multifile_dataset(
+                    fileNames=obsFileNameSH,
+                    calendar=calendar,
+                    config=config,
+                    timeVariableName='xtime')
                 varSHObs = dsObs.IceArea
                 varSHObs = replicate_cycle(varSH, varSHObs, calendar)
 
@@ -272,6 +279,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 dsPreprocessed = open_multifile_dataset(
                     fileNames=inFilesPreprocessed,
                     calendar=calendar,
+                    config=config,
                     timeVariableName='xtime')
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
@@ -281,9 +289,11 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         elif variableName == 'iceVolumeCell':
 
             if compareWithObservations:
-                dsObs = open_multifile_dataset(fileNames=obsFileNameNH,
-                                               calendar=calendar,
-                                               timeVariableName='xtime')
+                dsObs = open_multifile_dataset(
+                    fileNames=obsFileNameNH,
+                    calendar=calendar,
+                    config=config,
+                    timeVariableName='xtime')
                 varNHObs = dsObs.IceVol
                 varNHObs = replicate_cycle(varNH, varNHObs, calendar)
 
@@ -296,6 +306,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 dsPreprocessed = open_multifile_dataset(
                     fileNames=inFilesPreprocessed,
                     calendar=calendar,
+                    config=config,
                     timeVariableName='xtime')
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
@@ -340,14 +351,16 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
                 if (polarPlot):
-                    timeseries_analysis_plot_polar(config, varsNH, movingAveragePoints,
+                    timeseries_analysis_plot_polar(config, varsNH,
+                                                   movingAveragePoints,
                                                    titleNH,
                                                    figureNamePolarNH,
                                                    lineStyles=lineStyles,
                                                    lineWidths=lineWidths,
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
-                    timeseries_analysis_plot_polar(config, varsSH, movingAveragePoints,
+                    timeseries_analysis_plot_polar(config, varsSH,
+                                                   movingAveragePoints,
                                                    titleSH,
                                                    figureNamePolarSH,
                                                    lineStyles=lineStyles,
@@ -356,10 +369,12 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                                    calendar=calendar)
             else:
                 # we will combine north and south onto a single graph
-                figureNameStd = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
-                                                   variableName)
-                figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory, mainRunName,
-                                                   variableName)
+                figureNameStd = '{}/{}.{}.png'.format(plotsDirectory,
+                                                      mainRunName,
+                                                      variableName)
+                figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory,
+                                                              mainRunName,
+                                                              variableName)
                 title = '{}, NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
                 timeseries_analysis_plot(config, [varNH, varSH],
                                          movingAveragePoints,
@@ -380,9 +395,10 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         elif variableName == 'iceThickCell':
 
             figureNameStd = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
-                                               variableName)
-            figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory, mainRunName,
-                                               variableName)
+                                                  variableName)
+            figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory,
+                                                          mainRunName,
+                                                          variableName)
             title = '{} NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
             timeseries_analysis_plot(config, [varNH, varSH],
                                      movingAveragePoints, title,
