@@ -9,7 +9,7 @@ Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-03/03/2017
+03/23/2017
 """
 
 import xarray as xr
@@ -24,8 +24,7 @@ from ..shared.plot.plotting import plot_global_comparison, \
     setup_colormap
 from ..shared.constants import constants
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
+from ..shared.io.utility import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -35,8 +34,10 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 
 from ..shared.climatology import climatology
 
+from ..shared.analysis_task import setup_task
 
-def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
+
+def ocn_modelvsobs(config, field):
 
     """
     Plots a comparison of ACME/MPAS output to SST or MLD observations
@@ -49,47 +50,32 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
     field : {'sst', 'sss', 'mld'}
         The name of a field to be analyized
 
-    streamMap : dict, optional
-        A dictionary of MPAS-O stream names that map to their mpas_analysis
-        counterparts.
-
-    variableMap : dict, optional
-        A dictionary of MPAS-O variable names that map to their mpas_analysis
-        counterparts.
-
     Authors
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     Last Modified
     -------------
-    03/03/2017
+    03/23/2017
     """
 
-    # read parameters from config file
-    inDirectory = config.get('input', 'baseDirectory')
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    streamsFileName = config.get('input', 'oceanStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
-
-    calendar = namelist.get('config_calendar_type')
-    simulationStartTime = get_simulation_start_time(streams)
+    simulationStartTime = get_simulation_start_time(runStreams)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('climatology', 'startDate')
     endDate = config.get('climatology', 'endDate')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    inputFiles = streams.readpath(streamName, startDate=startDate,
-                                  endDate=endDate, calendar=calendar)
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    inputFiles = historyStreams.readpath(streamName, startDate=startDate,
+                                         endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(inputFiles[0], inputFiles[-1])
 
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
-    observationsDirectory = buildConfigFullPath(config, 'oceanObservations',
-                                                '{}Subdirectory'.format(field))
+    observationsDirectory = build_config_full_path(
+        config, 'oceanObservations', '{}Subdirectory'.format(field))
     mainRunName = config.get('runs', 'mainRunName')
 
     overwriteMpasClimatology = config.getWithDefault(
@@ -99,7 +85,7 @@ def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
         'oceanObservations', 'overwriteObsClimatology', False)
 
     try:
-        restartFileName = streams.readpath('restart')[0]
+        restartFileName = runStreams.readpath('restart')[0]
     except ValueError:
         raise IOError('No MPAS-O restart file found: need at least one '
                       'restart file for ocn_modelvsobs calculation')

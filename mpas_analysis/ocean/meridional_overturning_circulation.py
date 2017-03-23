@@ -8,11 +8,11 @@ Will eventually support:
 
 Authors
 -------
-Milena Veneziani, Mark Petersen, Phillip Wolfram
+Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
 Last Modified
 -------------
-03/14/2017
+03/23/2017
 """
 
 import xarray as xr
@@ -24,8 +24,7 @@ from ..shared.constants.constants import m3ps_to_Sv, rad_to_deg
 from ..shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
+from ..shared.io.utility import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -33,8 +32,10 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
+from ..shared.analysis_task import setup_task
 
-def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
+
+def moc_streamfunction(config):  # {{{
     """
     Process MOC analysis member data if available, or compute MOC at
     post-processing if not. Plots streamfunction climatolgoical sections
@@ -56,22 +57,18 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
 
     Authors
     -------
-    Milena Veneziani, Mark Petersen, Phillip J. Wolfram
+    Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
 
     Last Modified
     -------------
-    03/14/2017
+    03/23/2017
     """
 
     # **** Initial settings ****
-    # read parameters from config file
-    inDirectory = config.get('input', 'baseDirectory')
 
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    streamsFileName = config.get('input', 'oceanStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
     timeSeriesStatsMonthlyAnalysisMemberFlag = namelist.get(
         'config_am_timeseriesstatsmonthly_enable')
@@ -83,14 +80,13 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
     # Get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
     #   First a list necessary for the streamfunctionMOC climatology
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     startDateClimo = config.get('climatology', 'startDate')
     endDateClimo = config.get('climatology', 'endDate')
-    calendar = namelist.get('config_calendar_type')
-    inputFilesClimo = streams.readpath(streamName,
-                                       startDate=startDateClimo,
-                                       endDate=endDateClimo,
-                                       calendar=calendar)
+    inputFilesClimo = historyStreams.readpath(streamName,
+                                              startDate=startDateClimo,
+                                              endDate=endDateClimo,
+                                              calendar=calendar)
     print '\n  List of files for climatologies:\n{} through {}'.format(
            inputFilesClimo[0], inputFilesClimo[-1])
     startYearClimo = config.getint('climatology', 'startYear')
@@ -105,10 +101,10 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
     #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
     startDateTseries = config.get('timeSeries', 'startDate')
     endDateTseries = config.get('timeSeries', 'endDate')
-    inputFilesTseries = streams.readpath(streamName,
-                                         startDate=startDateTseries,
-                                         endDate=endDateTseries,
-                                         calendar=calendar)
+    inputFilesTseries = historyStreams.readpath(streamName,
+                                                startDate=startDateTseries,
+                                                endDate=endDateTseries,
+                                                calendar=calendar)
     print '\n  List of files for timeSeries:\n{} through {}'.format(
            inputFilesTseries[0], inputFilesTseries[-1])
     startYearTseries = config.getint('timeSeries', 'startYear')
@@ -133,15 +129,14 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
         #     streams, calendar, sectionName, dictClimo, dictTseries)
     else:
         mocDictClimo, dictRegion = _compute_moc_climo_postprocess(
-            config, streams, variableMap, calendar, sectionName, regionNames,
-            dictClimo)
+            config, runStreams, variableMap, calendar, sectionName,
+            regionNames, dictClimo)
         dsMOCTimeSeries = _compute_moc_time_series_postprocess(
-            config, streams, variableMap, calendar, sectionName, regionNames,
-            dictTseries, mocDictClimo, dictRegion)
+            config, runStreams, variableMap, calendar, sectionName,
+            regionNames, dictTseries, mocDictClimo, dictRegion)
 
     # **** Plot MOC ****
     # Define plotting variables
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
     mainRunName = config.get('runs', 'mainRunName')
     movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
     colorbarLabel = '[Sv]'
@@ -184,10 +179,10 @@ def moc_streamfunction(config, streamMap=None, variableMap=None):  # {{{
     # }}}
 
 
-def _load_mesh(streams):  # {{{
+def _load_mesh(runStreams):  # {{{
     # Load mesh related variables
     try:
-        restartFile = streams.readpath('restart')[0]
+        restartFile = runStreams.readpath('restart')[0]
     except ValueError:
         raise IOError('No MPAS-O restart file found: need at least one '
                       'restart file for MOC calculation')
@@ -210,13 +205,13 @@ def _load_mesh(streams):  # {{{
         refTopDepth, refLayerThickness  # }}}
 
 
-def _compute_moc_climo_postprocess(config, streams, variableMap, calendar,
+def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
                                    sectionName, regionNames, dictClimo):  # {{{
 
     '''compute mean MOC streamfunction as a post-process'''
 
     dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness = _load_mesh(streams)
+        refTopDepth, refLayerThickness = _load_mesh(runStreams)
 
     variableList = ['avgNormalVelocity',
                     'avgVertVelocityTop']
@@ -257,9 +252,9 @@ def _compute_moc_climo_postprocess(config, streams, variableMap, calendar,
     # Compute and plot annual climatology of MOC streamfunction
     print '\n  Compute and/or plot post-processed MOC climatological '\
           'streamfunction...'
-    simulationStartTime = get_simulation_start_time(streams)
-    outputDirectory = buildConfigFullPath(config, 'output',
-                                          'mpasClimatologySubdirectory')
+    simulationStartTime = get_simulation_start_time(runStreams)
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'mpasClimatologySubdirectory')
     try:
         os.makedirs(outputDirectory)
     except OSError:
@@ -375,7 +370,7 @@ def _compute_moc_climo_postprocess(config, streams, variableMap, calendar,
     return mocDictClimo, dictRegion  # }}}
 
 
-def _compute_moc_time_series_postprocess(config, streams, variableMap,
+def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                          calendar, sectionName, regionNames,
                                          dictTseries, mocDictClimo,
                                          dictRegion):  # {{{
@@ -397,12 +392,12 @@ def _compute_moc_time_series_postprocess(config, streams, variableMap,
           'time series...'
     print '   Load data...'
 
-    simulationStartTime = get_simulation_start_time(streams)
+    simulationStartTime = get_simulation_start_time(runStreams)
     variableList = ['avgNormalVelocity',
                     'avgVertVelocityTop']
 
     dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness = _load_mesh(streams)
+        refTopDepth, refLayerThickness = _load_mesh(runStreams)
 
     ds = open_multifile_dataset(fileNames=dictTseries['inputFilesTseries'],
                                 calendar=calendar,
@@ -422,8 +417,8 @@ def _compute_moc_time_series_postprocess(config, streams, variableMap,
     transectEdgeMaskSigns = dictRegion['transectEdgeMaskSignsAtlantic']
     regionCellMask = dictRegion['AtlanticCellMask']
 
-    outputDirectory = buildConfigFullPath(config, 'output',
-                                          'timeseriesSubdirectory')
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'timeseriesSubdirectory')
     try:
         os.makedirs(outputDirectory)
     except OSError:

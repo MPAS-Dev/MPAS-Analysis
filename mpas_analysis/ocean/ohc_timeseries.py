@@ -3,14 +3,13 @@ import netCDF4
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
-
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     date_to_days, days_to_datetime, string_to_datetime
+
+from ..shared.analysis_task import setup_task
 
 
 def ohc_timeseries(config, streamMap=None, variableMap=None):
@@ -29,19 +28,14 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/11/2017
+    Last Modified: 03/23/2017
     """
 
-    inDirectory = config.get('input', 'baseDirectory')
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    streamsFileName = config.get('input', 'oceanStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
-
-    calendar = namelist.get('config_calendar_type')
-    simulationStartTime = get_simulation_start_time(streams)
+    simulationStartTime = get_simulation_start_time(runStreams)
 
     # read parameters from config file
     mainRunName = config.get('runs', 'mainRunName')
@@ -52,8 +46,6 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     compareWithObservations = config.getboolean('timeSeriesOHC',
                                                 'compareWithObservations')
-
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
     movingAveragePoints = config.getint('timeSeriesOHC', 'movingAveragePoints')
 
@@ -67,7 +59,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     # well as simulationStartTime, that are not guaranteed to be in the mesh
     # file.
     try:
-        restartFile = streams.readpath('restart')[0]
+        restartFile = runStreams.readpath('restart')[0]
     except ValueError:
         raise IOError('No MPAS-O restart file found: need at least one '
                       'restart file for OHC calculation')
@@ -76,9 +68,9 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     # reading only those that are between the start and end dates
     startDate = config.get('timeSeries', 'startDate')
     endDate = config.get('timeSeries', 'endDate')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    fileNames = streams.readpath(streamName, startDate=startDate,
-                                 endDate=endDate, calendar=calendar)
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    fileNames = historyStreams.readpath(streamName, startDate=startDate,
+                                        endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     # Define/read in general variables
@@ -123,10 +115,10 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         startDateFirstYear = simulationStartTime
         firstYear = int(startDateFirstYear[0:4])
         endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
-        filesFirstYear = streams.readpath(streamName,
-                                          startDate=startDateFirstYear,
-                                          endDate=endDateFirstYear,
-                                          calendar=calendar)
+        filesFirstYear = historyStreams.readpath(streamName,
+                                                 startDate=startDateFirstYear,
+                                                 endDate=endDateFirstYear,
+                                                 calendar=calendar)
         dsFirstYear = open_multifile_dataset(
             fileNames=filesFirstYear,
             calendar=calendar,

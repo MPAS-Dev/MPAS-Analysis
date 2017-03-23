@@ -8,7 +8,7 @@ Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-03/03/2017
+03/23/2017
 """
 
 import os
@@ -28,14 +28,16 @@ from ..shared.climatology import climatology
 from ..shared.plot.plotting import plot_polar_comparison, \
     setup_colormap
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
+from ..shared.io import StreamsFile
+from ..shared.io.utility import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
+
+from .utility import setup_sea_ice_task
 
 
 def seaice_modelvsobs(config, streamMap=None, variableMap=None):
@@ -63,45 +65,44 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     Last Modified
     -------------
-    03/03/2017
+    03/23/2017
     """
 
-    # read parameters from config file
-    inDirectory = config.get('input', 'baseDirectory')
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, variableMap, \
+        plotsDirectory, simulationStartTime, restartFileName = \
+        setup_sea_ice_task(config)
 
-    namelistFileName = config.get('input', 'seaIceNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    streamsFileName = config.get('input', 'seaIceStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
-
-    calendar = namelist.get('config_calendar_type')
     try:
-        simulationStartTime = get_simulation_start_time(streams)
+        simulationStartTime = get_simulation_start_time(runStreams)
     except IOError:
         # try the ocean stream instead
+        runDirectory = build_config_full_path(config, 'input',
+                                              'runSubdirectory')
         oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
         oceanStreams = StreamsFile(oceanStreamsFileName,
-                                   streamsdir=inDirectory)
+                                   streamsdir=runDirectory)
         simulationStartTime = get_simulation_start_time(oceanStreams)
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('climatology', 'startDate')
     endDate = config.get('climatology', 'endDate')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    fileNames = streams.readpath(streamName, startDate=startDate,
-                                 endDate=endDate, calendar=calendar)
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    fileNames = historyStreams.readpath(streamName, startDate=startDate,
+                                        endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     try:
-        restartFileName = streams.readpath('restart')[0]
+        restartFileName = runStreams.readpath('restart')[0]
     except ValueError:
         # get an ocean restart file, since no sea-ice restart exists
         try:
+            runDirectory = build_config_full_path(config, 'input',
+                                                  'runSubdirectory')
             oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
             oceanStreams = StreamsFile(oceanStreamsFileName,
-                                       streamsdir=inDirectory)
+                                       streamsdir=runDirectory)
             restartFileName = oceanStreams.readpath('restart')[0]
         except ValueError:
             raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
@@ -169,7 +170,8 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
 
     print "  Make ice concentration plots..."
 
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
+    plotsDirectory = build_config_full_path(config, 'output',
+                                            'plotsSubdirectory')
     mainRunName = config.get('runs', 'mainRunName')
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
@@ -195,7 +197,7 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
         climFieldName = 'iceConcentration'
         for obsName in ['NASATeam', 'Bootstrap']:
             key = (months, obsName)
-            obsFileName = buildConfigFullPath(
+            obsFileName = build_config_full_path(
                 config, 'seaIceObservations',
                 'concentration{}{}_{}'.format(obsName, hemisphere, months))
             obsFieldName = '{}_{}_{}'.format(climFieldName, hemisphere,
@@ -359,7 +361,8 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
 
     subtitle = "Ice thickness"
 
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
+    plotsDirectory = build_config_full_path(config, 'output',
+                                            'plotsSubdirectory')
     mainRunName = config.get('runs', 'mainRunName')
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
@@ -378,7 +381,7 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
         climFieldName = 'iceThickness'
         for hemisphere in ['NH', 'SH']:
             key = (months, hemisphere)
-            obsFileName = buildConfigFullPath(
+            obsFileName = build_config_full_path(
                 config, 'seaIceObservations',
                 'thickness{}_{}'.format(hemisphere, months))
             if not os.path.isfile(obsFileName):
