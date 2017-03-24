@@ -14,21 +14,23 @@ Xylar Asay-Davis
 
 Last modified
 -------------
-02/17/2017
+02/23/2017
 """
 
 import xarray
 from functools import partial
+import resource
 
 from ..mpas_xarray import mpas_xarray
 from ..timekeeping.utility import string_to_days_since_date
 
 
-def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
+def open_multifile_dataset(fileNames, calendar, config,
+                           simulationStartTime=None,
                            timeVariableName='Time',
                            variableList=None, selValues=None,
                            iselValues=None, variableMap=None,
-                           startDate=None, endDate=None, **kwargs):  # {{{
+                           startDate=None, endDate=None):  # {{{
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -40,6 +42,9 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
 
     calendar : {'gregorian', 'gregorian_noleap'}, optional
         The name of one of the calendars supported by MPAS cores
+
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
 
     simulationStartTime : string, optional
         The start date of the simulation, used to convert from time variables
@@ -86,9 +91,6 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
-    kwargs : dict of keyword arguments
-        Keyword arguments passed to `xarray.open_mfdataset`
-
     Returns
     -------
     ds : An xarray data set.
@@ -111,7 +113,7 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
 
     Last modified
     -------------
-    02/17/2017
+    02/23/2017
     """
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
@@ -124,9 +126,37 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
                                  startDate=startDate,
                                  endDate=endDate)
 
-    ds = xarray.open_mfdataset(fileNames,
-                               preprocess=preprocess_partial,
-                               decode_times=False, concat_dim='Time', **kwargs)
+    kwargs = {'decode_times': False,
+              'concat_dim': 'Time'}
+
+    autocloseFileLimitFraction = config.getfloat('input',
+                                                 'autocloseFileLimitFraction')
+
+    # get the number of files that can be open at the same time.  We want the
+    # "soft" limit because we'll get a crash if we exceed it.
+    softLimit = resource.getrlimit(resource.RLIMIT_NOFILE)[0]
+
+    # use autoclose if we will use more than autocloseFileLimitFraction (50%
+    # by default) of the soft limit of open files
+    autoclose = len(fileNames) > softLimit*autocloseFileLimitFraction
+
+    try:
+        ds = xarray.open_mfdataset(fileNames,
+                                   preprocess=preprocess_partial,
+                                   autoclose=autoclose, **kwargs)
+    except TypeError as e:
+        if 'autoclose' in str(e):
+            if autoclose:
+                # This indicates that xarray version doesn't support autoclose
+                print 'Warning: open_multifile_dataset is trying to use autoclose=True but\n' \
+                      'it appears your xarray version doesn\'t support this argument. Will\n' \
+                      'try again without autoclose argument.'
+
+            ds = xarray.open_mfdataset(fileNames,
+                                       preprocess=preprocess_partial,
+                                       **kwargs)
+        else:
+            raise e
 
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
@@ -140,6 +170,9 @@ def open_multifile_dataset(fileNames, calendar, simulationStartTime=None,
 
     # select only the data in the specified range of dates
     ds = ds.sel(Time=slice(startDate, endDate))
+
+    # private record of autoclose use
+    ds.attrs['_autoclose'] = autoclose
 
     return ds  # }}}
 

@@ -1,18 +1,18 @@
-## This file contains the default values of all possible configuration options 
-## used to run analysis tasks.  Do not modify options in this file direct.  
+## This file contains the default values of all possible configuration options
+## used to run analysis tasks.  Do not modify options in this file direct.
 ## Instead, follow this procedure:
 ##  1. Create and empty config file (say config.myrun) or copy one of the
 ##     example files in the configs directory.
 ##  2. Copy and modify any config options you want to change from this file into
-##     into your new config file. Make sure they have the right section name 
-##     (e.g. [run] or [output]). If nothing esle, you will need to set 
+##     into your new config file. Make sure they have the right section name
+##     (e.g. [run] or [output]). If nothing esle, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
 ##  3. run: ./run_analysis.py config.myrun.  This will read the configuraiton
 ##     first from this file and then replace that configuraiton with any
 ##     changes from from config.myrun
-##  4. If you want to run a subset of the analysis, you can either set the 
-##     generate option under [output] in your config file or use the 
-##     --generate flag on the command line.  See the comments for 'generate'  
+##  4. If you want to run a subset of the analysis, you can either set the
+##     generate option under [output] in your config file or use the
+##     --generate flag on the command line.  See the comments for 'generate'
 ##     in the '[output]' section below for more details on this option.
 
 
@@ -46,6 +46,15 @@ seaIceStreamsFileName = streams.cice
 
 # names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
 mpasMeshName = mesh
+
+# The system has a limit to how many files can be open at one time.  By
+# default, xarray attempts to open all files in a data set simultaneously.
+# A new option allows files to be automatically closed as a data set is being
+# read to prevent hitting this limit.  Here, you can set what fraction of the
+# system limit of open files an analysis task is allowed to use.  Note: In the
+# future when multiple tasks can run simultaneously, the system file limit will
+# first be divided among the tasks before applying this fraction.
+autocloseFileLimitFraction = 0.5
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -140,7 +149,7 @@ endYear = 9999
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
-startYear = 1 
+startYear = 1
 endYear = 9999
 
 [oceanObservations]
@@ -293,7 +302,7 @@ movingAveragePoints = 12
 ## options related to plotting time series of the El Nino 3.4 index
 
 # Specified region for the Nino Index, 5 = Nino34, 3 = Nino3, 4 = Nino4
-# The indexNino34 routine only accepts one value at a time, 
+# The indexNino34 routine only accepts one value at a time,
 # regionIndicesToPlot should be an integer
 regionIndicesToPlot = 5
 
@@ -312,7 +321,7 @@ regionIndicesToPlot = [6]
 movingAveragePoints = 12
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
+## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 
 # Region names for basin MOC calculation.

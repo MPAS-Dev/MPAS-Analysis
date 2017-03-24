@@ -106,6 +106,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                     'avgLayerThickness']
     ds = open_multifile_dataset(fileNames=fileNames,
                                 calendar=calendar,
+                                config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
                                 variableList=variableList,
@@ -129,6 +130,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         dsFirstYear = open_multifile_dataset(
             fileNames=filesFirstYear,
             calendar=calendar,
+            config=config,
             simulationStartTime=simulationStartTime,
             timeVariableName='Time',
             variableList=variableList,
@@ -171,6 +173,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         dsPreprocessed = open_multifile_dataset(
             fileNames=inFilesPreprocessed,
             calendar=calendar,
+            config=config,
             simulationStartTime=simulationStartTime,
             timeVariableName='xtime')
         yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),

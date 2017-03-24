@@ -39,7 +39,7 @@ class TestInterp(TestCase):
 
         mpasMeshFileName = str(self.datadir.join('mpasMesh.nc'))
         latLonGridFileName = str(self.datadir.join('SST_annual_1870-1900.nc'))
-        timeSeriesFileName = str(self.datadir.join('timeSeries.nc'))
+        timeSeriesFileName = str(self.datadir.join('timeSeries.0002-01-01.nc'))
 
         suffix = 'destination_from_grid_file'
         weightFileName = '{}/weights_{}.nc'.format(self.test_dir, suffix)
@@ -83,7 +83,7 @@ class TestInterp(TestCase):
                                                usenumpyfunc=True))
 
         mpasMeshFileName = str(self.datadir.join('mpasMesh.nc'))
-        timeSeriesFileName = str(self.datadir.join('timeSeries.nc'))
+        timeSeriesFileName = str(self.datadir.join('timeSeries.0002-01-01.nc'))
 
         suffix = 'destination_from_config_options'
         weightFileName = '{}/weights_{}.nc'.format(self.test_dir, suffix)
