@@ -103,7 +103,9 @@ def build_remap_weights(sourceFileName, outWeightFileName,
 
     if find_executable('ESMF_RegridWeightGen') is None:
         raise OSError('ESMF_RegridWeightGen not found. Make sure esmf package '
-                      'is installed via\nlatest nco: \n    conda install nco')
+                      'is installed via\nlatest nco: \n'
+                      'conda install nco\n'
+                      'Note: this presumes use of the conda-forge channel.')
 
     # two temporary SCRIP files, one for the MPAS mesh and one for the dest
     # grid
