@@ -171,6 +171,9 @@ def open_multifile_dataset(fileNames, calendar, config,
     # select only the data in the specified range of dates
     ds = ds.sel(Time=slice(startDate, endDate))
 
+    # private record of autoclose use
+    ds.attrs['_autoclose'] = autoclose
+
     return ds  # }}}
 
 

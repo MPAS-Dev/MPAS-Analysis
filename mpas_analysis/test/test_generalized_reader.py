@@ -137,8 +137,14 @@ class TestGeneralizedReader(TestCase):
                 variableList=['mld'],
                 variableMap=variableMap)
 
+            # note, the asserts for autoclose below are only guaranteed 
+            # to work immediately following call to open_multifile_dataset
+            assert hasattr(ds, '_autoclose'), \
+                '`autoclose` not defined for dataset'
             if hasattr(ds, '_autoclose'):
-                assert(ds._autoclose == autoclose)
+                assert ds._autoclose == autoclose, \
+                        ('`autoclose` used for dataset is inconsistent '
+                         'with expected test value.')
 
             annualClimatologies.append(ds.mean(dim='Time'))
 
