@@ -30,7 +30,19 @@ def update_generate(config, generate):  # {{{
     """
     Update the 'generate' config option using a string from the command line.
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    generate : str
+        a comma-separated string of generate flags: either names of analysis
+        tasks or commands of the form ``all_<tag>`` or ``no_<tag>`` indicating
+        that analysis with a given tag should be included or excluded).
+
+    Authors
+    -------
+    Xylar Asay-Davis
     """
 
     # overwrite the 'generate' in config with a string that parses to
@@ -45,7 +57,22 @@ def update_generate(config, generate):  # {{{
 def run_parallel_tasks(config, analyses, configFiles, taskCount):
     # {{{
     """
-    Run this script once each for several parallel tasks.
+    Launch new processes for parallel tasks, allowing up to ``taskCount``
+    tasks to run at once.
+
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    analyses : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    configFiles : list of str
+        A list of config files, passed on to each parallel task
+
+    taskCount : int
+        The maximum number of tasks that are allowed to run at once
 
     Author
     ------
@@ -84,7 +111,20 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     """
     Launch one or more tasks
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    taskNames : list of str
+        the names of the tasks to launch
+
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    configFiles : list of str
+        A list of config files, passed along when each task is launched
+
+    Author
+    ------
+    Xylar Asay-Davis
     """
     thisFile = os.path.realpath(__file__)
 
@@ -122,7 +162,23 @@ def wait_for_task(processes):  # {{{
     Wait for the next process to finish and check its status.  Returns both the
     task name and the process that finished.
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    processes : list of ``subprocess.Popen`` objects
+        Processes to wait for
+
+
+    Returns
+    -------
+    taskName : str
+        The name of the task that finished
+
+    process : ``subprocess.Popen`` object
+        The process that finished
+
+    Author
+    ------
+    Xylar Asay-Davis
     """
 
     # first, check if any process has already finished
@@ -143,7 +199,19 @@ def is_running(process):  # {{{
     """
     Returns whether a given process is currently running
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    process : ``subprocess.Popen`` object
+        The process to check
+
+    Returns
+    -------
+    isRunning : bool
+        whether the process is running
+
+    Author
+    ------
+    Xylar Asay-Davis
     """
 
     try:
@@ -157,8 +225,22 @@ def is_running(process):  # {{{
 def build_analysis_list(config):  # {{{
     """
     Build a list of analysis modules based on the 'generate' config option.
+    New tasks should be added here, following the approach used for existing
+    analysis tasks.
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    Returns
+    -------
+    analysesToGenerate : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    Author
+    ------
+    Xylar Asay-Davis
     """
 
     # choose the right rendering backend, depending on whether we're displaying
@@ -201,7 +283,7 @@ def build_analysis_list(config):  # {{{
             try:
                 analysisTask.setup_and_check()
                 add = True
-            except:
+            except (Exception, BaseException):
                 traceback.print_exc(file=sys.stdout)
                 print "ERROR: analysis module {} failed during check and " \
                     "will not be run".format(analysisTask.taskName)
@@ -212,6 +294,27 @@ def build_analysis_list(config):  # {{{
 
 
 def run_analysis(config, analyses):  # {{{
+    """
+    Run one or more analysis tasks
+
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    analyses : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    Raises
+    ------
+    Exception:
+        If one or more tasks raise exceptions, re-raises the last exception
+        after all tasks have completed to indicate that there was a problem
+
+    Author
+    ------
+    Xylar Asay-Davis
+    """
 
     # run each analysis task
     lastException = None
