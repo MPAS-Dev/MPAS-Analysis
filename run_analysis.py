@@ -17,6 +17,7 @@ import sys
 import warnings
 import subprocess
 import time
+import pkg_resources
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -396,14 +397,14 @@ if __name__ == "__main__":
 
     # add config.default to cover default not included in the config files
     # provided on the command line
-    defaultConfig = '{}/config.default'.format(
-        os.path.dirname(os.path.realpath(__file__)))
-    if os.path.exists(defaultConfig):
+    if pkg_resources.resource_exists('mpas_analysis', 'config.default'):
+        defaultConfig = pkg_resources.resource_filename('mpas_analysis',
+                                                        'config.default')
         configFiles = [defaultConfig] + args.configFiles
     else:
-        warnings.warn('WARNING: Did not find config.default.  Assuming other '
-                      'config file(s) contain a\n'
-                      'full set of configuration options.')
+        print 'WARNING: Did not find config.default.  Assuming other config ' \
+              'file(s) contain a\n' \
+              'full set of configuration options.'
         configFiles = args.configFiles
 
     config = MpasAnalysisConfigParser()
