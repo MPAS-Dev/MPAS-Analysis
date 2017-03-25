@@ -3,8 +3,8 @@ import xarray as xr
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
+from ..shared.io import StreamsFile
+from ..shared.io.utility import build_config_full_path
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     date_to_days, days_to_datetime, datetime_to_days
@@ -13,6 +13,8 @@ from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
+
+from .utility import setup_sea_ice_task
 
 
 def seaice_timeseries(config, streamMap=None, variableMap=None):
@@ -29,35 +31,21 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/02/2017
+    Last Modified: 03/23/2017
     """
 
-    # read parameters from config file
-    inDirectory = config.get('input', 'baseDirectory')
-
-    namelistFileName = config.get('input', 'seaIceNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    streamsFileName = config.get('input', 'seaIceStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
-
-    calendar = namelist.get('config_calendar_type')
-    try:
-        simulationStartTime = get_simulation_start_time(streams)
-    except IOError:
-        # try the ocean stream instead
-        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-        oceanStreams = StreamsFile(oceanStreamsFileName,
-                                   streamsdir=inDirectory)
-        simulationStartTime = get_simulation_start_time(oceanStreams)
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, variableMap, \
+        plotsDirectory, simulationStartTime, restartFileName = \
+        setup_sea_ice_task(config)
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('timeSeries', 'startDate')
     endDate = config.get('timeSeries', 'endDate')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    fileNames = streams.readpath(streamName, startDate=startDate,
-                                 endDate=endDate,  calendar=calendar)
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    fileNames = historyStreams.readpath(streamName, startDate=startDate,
+                                        endDate=endDate,  calendar=calendar)
     print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     variableNames = ['iceAreaCell', 'iceVolumeCell']
@@ -71,11 +59,11 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                        'iceThickness': '[m]'}
 
     obsFileNames = {
-        'iceAreaCell': [buildConfigFullPath(config, 'seaIceObservations',
-                                            subdir)
+        'iceAreaCell': [build_config_full_path(config, 'seaIceObservations',
+                                               subdir)
                         for subdir in ['areaNH', 'areaSH']],
-        'iceVolumeCell': [buildConfigFullPath(config, 'seaIceObservations',
-                                              subdir)
+        'iceVolumeCell': [build_config_full_path(config, 'seaIceObservations',
+                                                 subdir)
                           for subdir in ['volNH', 'volSH']]}
 
     # Some plotting rules
@@ -90,31 +78,14 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     compareWithObservations = config.getboolean('timeSeriesSeaIceAreaVol',
                                                 'compareWithObservations')
 
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
-
     movingAveragePoints = config.getint('timeSeriesSeaIceAreaVol',
                                         'movingAveragePoints')
 
     polarPlot = config.getboolean('timeSeriesSeaIceAreaVol', 'polarPlot')
 
-    # first, check for a sea-ice restart file
-    try:
-        restartFile = streams.readpath('restart')[0]
-    except ValueError:
-        # get an ocean restart file, since no sea-ice restart exists
-        try:
-            oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-            oceanStreams = StreamsFile(oceanStreamsFileName,
-                                       streamsdir=inDirectory)
-            restartFile = oceanStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
-                          'at least one restart file for seaice_timeseries '
-                          'calculation')
-
     print '  Load sea-ice data...'
     # Load mesh
-    dsMesh = xr.open_dataset(restartFile)
+    dsMesh = xr.open_dataset(restartFileName)
     dsMesh = subset_variables(dsMesh,
                               variableList=['lonCell', 'latCell', 'areaCell'])
 

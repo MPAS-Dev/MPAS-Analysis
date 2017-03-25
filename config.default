@@ -38,7 +38,21 @@ preprocessedReferenceRunName = None
 
 # directory containing model results
 baseDirectory = /dir/to/model/output
-# names of namelist and streams files.  If not in baseDirectory, give full path
+
+# Note: an absolute path can be supplied for any of these subdirectories.
+# A relative path is assumed to be relative to baseDirectory.
+# By default, results are assumed to be directly in baseDirectory,
+# i.e. <baseDirecory>/./
+
+# subdirectory containing restart files
+runSubdirectory = .
+# subdirectory for ocean history files
+oceanHistorySubdirectory = .
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = .
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
 oceanNamelistFileName = mpas-o_in
 oceanStreamsFileName = streams.ocean
 seaIceNamelistFileName = mpas-cice_in

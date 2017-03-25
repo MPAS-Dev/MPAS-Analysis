@@ -3,19 +3,17 @@ Computes NINO34 index and plots the time series and power spectra
 
 Author
 ------
-Luke Van Roekel
+Luke Van Roekel, Xylar Asay-Davis
 
 Last Modified
 -------------
-03/21/2017
+03/23/2017
 """
-from ..shared.plot.plotting import nino34_timeseries_plot, nino34_spectra_plot
 import xarray as xr
 import pandas as pd
 import numpy as np
+from scipy import signal, stats
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
 from ..shared.climatology import climatology
 from ..shared.constants import constants
 
@@ -24,9 +22,12 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
+from ..shared.plot.plotting import nino34_timeseries_plot, nino34_spectra_plot
 
-def nino34_index(config, streamMap=None, variableMap=None):
-    # {{{
+from ..shared.analysis_task import setup_task
+
+
+def nino34_index(config, streamMap=None, variableMap=None):  # {{{
     """
     Computes NINO34 index and plots the time series and power spectrum with
     95 and 99% confidence bounds
@@ -46,38 +47,30 @@ def nino34_index(config, streamMap=None, variableMap=None):
 
     Author
     ------
-    Luke Van Roekel
+    Luke Van Roekel, Xylar Asay-Davis
 
     Last Modified
     -------------
-    03/22/2017
+    03/23/2017
     """
 
-    # Define/read in general variables
     print '  Load SST data...'
-    # read parameters from config file
-    inDirectory = config.get('input', 'baseDirectory')
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    streamsFileName = config.get('input', 'oceanStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
-
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    calendar = namelist.get('config_calendar_type')
-    simulationStartTime = get_simulation_start_time(streams)
+    simulationStartTime = get_simulation_start_time(runStreams)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('index', 'startDate')
     endDate = config.get('index', 'endDate')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    fileNames = streams.readpath(streamName, startDate=startDate,
-                                 endDate=endDate,  calendar=calendar)
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    fileNames = historyStreams.readpath(streamName, startDate=startDate,
+                                        endDate=endDate,  calendar=calendar)
     print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     mainRunName = config.get('runs', 'mainRunName')
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
     # regionIndex should correspond to NINO34 in surface weighted Average AM
     regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
@@ -96,11 +89,10 @@ def nino34_index(config, streamMap=None, variableMap=None):
 
     SSTregions = ds.avgSurfaceTemperature
     print '  Compute NINO3.4 index...'
-    nino34 = compute_nino34_index(SSTregions[:, regionIndex], config)
+    nino34 = compute_nino34_index(SSTregions[:, regionIndex], calendar)
 
     print ' Computing NINO3.4 power spectra...'
-    f, spectra, conf99, conf95, redNoise = compute_nino34_spectra(nino34,
-                                                                  config)
+    f, spectra, conf99, conf95, redNoise = compute_nino34_spectra(nino34)
 
     # Convert frequencies to period in years
     f = 1.0 / (constants.eps + f*constants.sec_per_year)
@@ -113,11 +105,10 @@ def nino34_index(config, streamMap=None, variableMap=None):
     figureName = '{}/NINO34_spectra_{}.png'.format(plotsDirectory, mainRunName)
     nino34_spectra_plot(config, f, spectra, conf95, conf99, redNoise,
                         'NINO3.4 power spectrum', figureName, linewidths=2)
+    # }}}
 
 
-# }}}
-def compute_nino34_index(regionSST, config):
-    # {{{
+def compute_nino34_index(regionSST, calendar):  # {{{
     """
     Computes nino34 index time series.  It follow the standard nino34
     algorithm, i.e.,
@@ -134,8 +125,8 @@ def compute_nino34_index(regionSST, config):
     regionSST : xarray.dataArray object
        values of SST in the nino region
 
-    config : MpasConfigParser object
-        the config options
+    calendar: {'gregorian', 'gregorian_noleap'}
+        The name of the calendars used in the MPAS run
 
     Returns
     -------
@@ -143,31 +134,25 @@ def compute_nino34_index(regionSST, config):
 
     Author
     ------
-    Luke Van Roekel
+    Luke Van Roekel, Xylar Asay-Davis
 
     Last Modified
     -------------
-    03/22/2017
+    03/23/2017
     """
 
-    assert isinstance(regionSST, xr.core.dataarray.DataArray)
-
-    inDirectory = config.get('input', 'baseDirectory')
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-    calendar = namelist.get('config_calendar_type')
+    if not isinstance(regionSST, xr.core.dataarray.DataArray):
+        raise ValueError('regionSST should be an xarray DataArray')
 
     # Compute monthly average and anomaly of climatology of SST
     monthlyClimatology = climatology.compute_monthly_climatology(regionSST,
                                                                  calendar)
     anomalySST = regionSST.groupby('month') - monthlyClimatology
 
-    return _running_mean(anomalySST.to_pandas())
+    return _running_mean(anomalySST.to_pandas())  # }}}
 
 
-# }}}
-def compute_nino34_spectra(nino34Index, config):
-    # {{{
+def compute_nino34_spectra(nino34Index):  # {{{
     """
     Computes power spectra of Nino34 index.
 
@@ -180,8 +165,6 @@ def compute_nino34_spectra(nino34Index, config):
     ----------
     nino34Index : xarray.DataArray object
         nino34Index for analysis
-
-    config : instance of the MPAS configParser
 
     Returns
     -------
@@ -204,14 +187,12 @@ def compute_nino34_spectra(nino34Index, config):
 
     Author
     ------
-    Luke Van Roekel
+    Luke Van Roekel, Xylar Asay-Davis
 
     Last Modified
     -------------
-    03/22/2017
+    03/23/2017
     """
-
-    from scipy import signal, stats
 
     detrendedNino34 = signal.detrend(nino34Index.values)
 
@@ -244,12 +225,10 @@ def compute_nino34_spectra(nino34Index, config):
 
     # return Spectra, 99% confidence level, 95% confidence level,
     #        and Red-noise fit
-    return f, pxxSmooth, mkov*scale*xHigh, mkov*scale*xLow, mkov*scale
+    return f, pxxSmooth, mkov*scale*xHigh, mkov*scale*xLow, mkov*scale  # }}}
 
 
-# }}}
-def _autocorr(x, t=1):
-    # {{{
+def _autocorr(x, t=1):  # {{{
     """
     Computes lag one auto-correlation for the NINO34 spectra calculation
 
@@ -272,27 +251,24 @@ def _autocorr(x, t=1):
     03/22/2017
     """
 
-    return np.corrcoef(np.array([x[0:len(x)-t], x[t:len(x)]]))
+    return np.corrcoef(np.array([x[0:len(x)-t], x[t:len(x)]]))  # }}}
 
 
-# }}}
-def _running_mean(inputData):
-    # {{{
+def _running_mean(inputData):  # {{{
     """
     Calculates 5-month running mean for NINO index and the spectra
 
     Author
     ------
-    Luke Van Roekel
+    Luke Van Roekel, Xylar Asay-Davis
 
     Last Modified
     -------------
-    03/22/2017
+    03/23/2017
     """
 
-    runningMean = pd.Series.rolling(inputData, 5, center=True, min_periods=1).mean()
-    return xr.DataArray.from_series(runningMean)
+    runningMean = pd.Series.rolling(inputData, 5, center=True,
+                                    min_periods=1).mean()
+    return xr.DataArray.from_series(runningMean)  # }}}
 
-
-# }}}
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

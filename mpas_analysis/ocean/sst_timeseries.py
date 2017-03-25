@@ -1,13 +1,12 @@
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.io import NameList, StreamsFile
-from ..shared.io.utility import buildConfigFullPath
-
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     date_to_days, days_to_datetime
+
+from ..shared.analysis_task import setup_task
 
 
 def sst_timeseries(config, streamMap=None, variableMap=None):
@@ -25,30 +24,24 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 02/11/2017
+    Last Modified: 03/23/2017
     """
 
-    # Define/read in general variables
     print '  Load SST data...'
-    # read parameters from config file
-    inDirectory = config.get('input', 'baseDirectory')
 
-    streamsFileName = config.get('input', 'oceanStreamsFileName')
-    streams = StreamsFile(streamsFileName, streamsdir=inDirectory)
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    namelistFileName = config.get('input', 'oceanNamelistFileName')
-    namelist = NameList(namelistFileName, path=inDirectory)
-
-    calendar = namelist.get('config_calendar_type')
-    simulationStartTime = get_simulation_start_time(streams)
+    simulationStartTime = get_simulation_start_time(runStreams)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
     startDate = config.get('timeSeries', 'startDate')
     endDate = config.get('timeSeries', 'endDate')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    fileNames = streams.readpath(streamName, startDate=startDate,
-                                 endDate=endDate,  calendar=calendar)
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    fileNames = historyStreams.readpath(streamName, startDate=startDate,
+                                        endDate=endDate,  calendar=calendar)
     print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
 
     mainRunName = config.get('runs', 'mainRunName')
@@ -56,8 +49,6 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
                                               'preprocessedReferenceRunName')
     preprocessedInputDirectory = config.get('oceanPreprocessedReference',
                                             'baseDirectory')
-
-    plotsDirectory = buildConfigFullPath(config, 'output', 'plotsSubdirectory')
 
     movingAveragePoints = config.getint('timeSeriesSST', 'movingAveragePoints')
 

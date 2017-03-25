@@ -20,7 +20,7 @@ from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import buildConfigFullPath
+from ..io.utility import build_config_full_path
 
 from ..interpolation import interpolate
 
@@ -80,8 +80,8 @@ def write_mpas_mapping_file(config, meshFileName):
     else:
         # we need to build the path to the mapping file and an appropriate
         # file name
-        mappingSubdirectory = buildConfigFullPath(config, 'output',
-                                                  'mappingSubdirectory')
+        mappingSubdirectory = build_config_full_path(config, 'output',
+                                                     'mappingSubdirectory')
         try:
             os.makedirs(mappingSubdirectory)
         except OSError:
@@ -186,8 +186,8 @@ def write_observations_mapping_file(config, componentName, fieldName,
             # no need to remap the observations
             obsMappingFileName = None
         else:
-            mappingSubdirectory = buildConfigFullPath(config, 'output',
-                                                      'mappingSubdirectory')
+            mappingSubdirectory = build_config_full_path(config, 'output',
+                                                         'mappingSubdirectory')
 
             try:
                 os.makedirs(mappingSubdirectory)
@@ -267,11 +267,11 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames):
                                              'comparisonLatResolution',
                                              constants.dLongitude)
 
-    climatologyDirectory = buildConfigFullPath(config, 'output',
-                                               'mpasClimatologySubdirectory')
+    climatologyDirectory = build_config_full_path(
+        config, 'output', 'mpasClimatologySubdirectory')
 
-    regriddedDirectory = buildConfigFullPath(config, 'output',
-                                             'mpasRegriddedClimSubdirectory')
+    regriddedDirectory = build_config_full_path(
+        config, 'output', 'mpasRegriddedClimSubdirectory')
     try:
         os.makedirs(regriddedDirectory)
     except OSError:
@@ -349,12 +349,12 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
                                              'comparisonLatResolution',
                                              constants.dLongitude)
 
-    climatologyDirectory = buildConfigFullPath(
+    climatologyDirectory = build_config_full_path(
         config=config, section='output',
         relativePathOption='climatologySubdirectory',
         relativePathSection=obsSection)
 
-    regriddedDirectory = buildConfigFullPath(
+    regriddedDirectory = build_config_full_path(
         config=config, section='output',
         relativePathOption='regriddedClimSubdirectory',
         relativePathSection=obsSection)
