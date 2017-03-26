@@ -37,25 +37,23 @@ def open_multifile_dataset(fileNames, calendar,
     fileNames : list of strings
         A lsit of file paths to read
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
     simulationStartTime : string, optional
         The start date of the simulation, used to convert from time variables
         expressed as days since the start of the simulation to days since the
-        reference date. `simulationStartTime` takes one of the following
-        forms:
+        reference date. ``simulationStartTime`` takes one of the following
+        forms::
             0001-01-01
-
             0001-01-01 00:00:00
 
-        simulationStartTime is only required if the MPAS time variable
-        (identified by timeVariableName) is a number of days since the
+        ``simulationStartTime`` is only required if the MPAS time variable
+        (identified by ``timeVariableName``) is a number of days since the
         start of the simulation.
 
     timeVariableName : string, optional
-        The name of the time variable (typically 'Time' if using a variableMap
-        or 'xtime' if not using a variableMap)
+        The name of the time variable (typically ``'xtime'`` or ``'Time'``).
 
     variableList : list of strings, optional
         If present, a list of variables to be included in the data set
@@ -63,15 +61,15 @@ def open_multifile_dataset(fileNames, calendar,
     selectCorrdValues : dict, optional
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
-        xarray.dataset.sel() for details on how this dictonary is used.
-        An example:
+        ``xarray.dataset.sel()`` for details on how this dictonary is used.
+        An example::
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict, optional
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
-        xarray.dataset.isel() for details on how this dictonary is used.
-        An example:
+        ``xarray.dataset.isel()`` for details on how this dictonary is used.
+        An example::
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
 
@@ -123,7 +121,7 @@ def subset_variables(ds, variableList):  # {{{
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set from which a subset of variables is to be extracted.
 
     variableList : string or list of strings
@@ -131,7 +129,7 @@ def subset_variables(ds, variableList):  # {{{
 
     Returns
     -------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         A copy of the original data set with only the variables in
         variableList.
 
@@ -187,29 +185,27 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set containing an MPAS time variable to be used to build
         an xarray time coordinate.
 
-    calendar : {'gregorian', 'gregorian_noleap'}
+    calendar : {``'gregorian'``, ``'gregorian_noleap'``}
         The name of one of the calendars supported by MPAS cores
 
     simulationStartTime : string, optinal
         The start date of the simulation, used to convert from time
         variables expressed as days since the start of the simulation to
-        days since the reference date. `simulationStartTime` takes one
-        of the following forms:
+        days since the reference date. ``simulationStartTime`` takes one
+        of the following forms::
             0001-01-01
-
             0001-01-01 00:00:00
 
-        simulationStartTime is only required if the MPAS time variable
-        (identified by timeVariableName) is a number of days since the
+        ``simulationStartTime`` is only required if the MPAS time variable
+        (identified by ``timeVariableName``) is a number of days since the
         start of the simulation.
 
-    timeVariableName : string
-        The name of the time variable (typically 'Time' if using a variableMap
-        or 'xtime' if not using a variableMap)
+    timeVariableName : string, optional
+        The name of the time variable (typically ``'xtime'`` or ``'Time'``).
 
     variableList : list of strings
         If present, a list of variables to be included in the data set
@@ -217,21 +213,21 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
     selectCorrdValues : dict
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
-        xarray.DataSet.sel() for details on how this dictonary is used.
-        An example:
+        ``xarray.DataSet.sel()`` for details on how this dictonary is used.
+        An example::
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
-        xarray.DataSet.isel() for details on how this dictonary is used.
-        An example:
+        ``xarray.DataSet.isel()`` for details on how this dictonary is used.
+        An example::
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
 
     Returns
     -------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         A copy of the data set with the time coordinate set and which
         has been sliced.
 
@@ -274,12 +270,12 @@ def remove_repeated_time_index(ds):  # {{{
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set potentially containing repeated time indices.
 
     Returns
     -------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         A copy of the original data set with any repeated time indices removed.
 
     Authors

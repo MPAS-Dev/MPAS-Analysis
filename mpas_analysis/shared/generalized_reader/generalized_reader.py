@@ -41,28 +41,27 @@ def open_multifile_dataset(fileNames, calendar, config,
     fileNames : list of strings
         A lsit of file paths to read
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
-    config :  instance of MpasAnalysisConfigParser
+    config :  instance of ``MpasAnalysisConfigParser``
         Contains configuration options
 
     simulationStartTime : string, optional
         The start date of the simulation, used to convert from time variables
         expressed as days since the start of the simulation to days since the
-        reference date. `simulationStartTime` takes one of the following
-        forms:
+        reference date. ``simulationStartTime`` takes one of the following
+        forms::
             0001-01-01
-
             0001-01-01 00:00:00
 
-        simulationStartTime is only required if the MPAS time variable
-        (identified by time_variable_name) is a number of days since the
+        ``simulationStartTime`` is only required if the MPAS time variable
+        (identified by ``timeVariableName``) is a number of days since the
         start of the simulation.
 
     timeVariableName : string, optional
-        The name of the time variable (typically 'Time' if using a variableMap
-        or 'xtime' if not using a variableMap)
+        The name of the time variable (typically ``'Time'`` if using a
+        ``variableMap`` or ``'xtime'`` if not using a ``variableMap``)
 
     variableList : list of strings, optional
         If present, a list of variables to be included in the data set
@@ -70,15 +69,15 @@ def open_multifile_dataset(fileNames, calendar, config,
     selValues : dict, optional
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
-        xarray.DataSet.sel() for details on how this dictonary is used.
-        An example:
+        ``xarray.DataSet.sel()`` for details on how this dictonary is used.
+        An example::
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict, optional
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
-        xarray.DataSet.isel() for details on how this dictonary is used.
-        An example:
+        ``xarray.DataSet.isel()`` for details on how this dictonary is used.
+        An example::
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
 
@@ -108,7 +107,7 @@ def open_multifile_dataset(fileNames, calendar, config,
     TypeError
         If the time variable has an unsupported type (not a date string,
         a floating-pont number of days since the start of the simulation
-        or a numpy.datatime64 object).
+        or a ``numpy.datatime64`` object).
 
     ValueError
         If the time variable is not found in the data set or if the time
