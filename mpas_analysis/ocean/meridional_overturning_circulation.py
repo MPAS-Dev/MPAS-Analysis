@@ -33,6 +33,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
 from ..shared.analysis_task import setup_task
+from ..shared.climatology import climatology
 
 
 def moc_streamfunction(config):  # {{{
@@ -274,6 +275,17 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
             variableMap=variableMap,
             startDate=dictClimo['startDateClimo'],
             endDate=dictClimo['endDateClimo'])
+
+        changed, startYear, endYear = \
+            climatology.update_start_end_year(ds, config, calendar)
+        if changed:
+            # update the file name in case the start and end years changed
+            outputFileClimo = \
+                '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
+                    outputDirectory, startYear, endYear)
+
+            dictClimo['startYearClimo'] = startYear
+            dictClimo['endYearClimo'] = endYear
 
         # Compute annual climatology
         annualClimatology = ds.mean('Time')

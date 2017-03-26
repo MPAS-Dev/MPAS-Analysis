@@ -14,6 +14,7 @@ import xarray as xr
 import os
 import numpy
 import netCDF4
+from warnings import warn
 
 from ..mpas_xarray import mpas_xarray
 from ..constants import constants
@@ -473,6 +474,58 @@ def compute_seasonal_climatology(monthlyClimatology, monthValues,
     seasonalClimatology /= days.where(days > 0.)
 
     return seasonalClimatology
+
+
+def update_start_end_year(ds, config, calendar):
+    """
+    Given a monthly climatology, compute a seasonal climatology weighted by
+    the number of days in each month (on the no-leap-year calendar).
+
+    Parameters
+    ----------
+    ds : instance of xarray.DataSet
+        A data set from which start and end years will be determined
+
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    calendar: {'gregorian', 'gregorian_noleap'}
+        The name of one of the calendars supported by MPAS cores
+
+    Returns
+    -------
+    changed : bool
+        Whether the start and end years were changed
+
+    startYear, endYear : int
+        The start and end years of the data set
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/25/2017
+    """
+    requestedStartYear = config.getint('climatology', 'startYear')
+    requestedEndYear = config.getint('climatology', 'endYear')
+
+    startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
+    endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
+    changed = False
+    if startYear != requestedStartYear or endYear != requestedEndYear:
+        warn("climatology start and/or end year different from requested\n"
+             "requestd: {:04d}-{:04d}\n"
+             "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                requestedEndYear,
+                                                startYear,
+                                                endYear))
+        config.set('climatology', 'startYear', str(startYear))
+        config.set('climatology', 'endYear', str(endYear))
+        changed = True
+
+    return changed, startYear, endYear
 
 
 def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):

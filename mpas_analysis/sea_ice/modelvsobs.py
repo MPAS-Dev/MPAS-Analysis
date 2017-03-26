@@ -125,10 +125,8 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     # Compute climatologies (first motnhly and then seasonally)
     print "  Compute seasonal climatologies..."
 
-    startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
-    endYear = days_to_datetime(ds.Time.max().values, calendar=calendar).year
-    config.set('climatology', 'startYear', str(startYear))
-    config.set('climatology', 'endYear', str(endYear))
+    changed, startYear, endYear = \
+        climatology.update_start_end_year(ds, config, calendar)
 
     monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
 
