@@ -240,6 +240,7 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         raise IOError('Regional masking file for MOC calculation '
                       'does not exist')
     iRegion = 0
+    dictRegion = {}
     for region in regionNames:
         print '\n  Reading region and transect mask for {}...'.format(region)
         ncFileRegional = netCDF4.Dataset(regionMaskFiles, mode='r')
@@ -255,12 +256,14 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         iRegion += 1
 
         indRegion = np.where(regionCellMask == 1)
-        dictRegion = {
+        # Milena: this seems like it will only have the last entry in regionNames.  
+        # Is this what we want?
+        dictRegion.update({
             'ind{}'.format(region): indRegion,
             '{}CellMask'.format(region): regionCellMask,
             'maxEdgesInTransect{}'.format(region): maxEdgesInTransect,
             'transectEdgeMaskSigns{}'.format(region): transectEdgeMaskSigns,
-            'transectEdgeGlobalIDs{}'.format(region): transectEdgeGlobalIDs}
+            'transectEdgeGlobalIDs{}'.format(region): transectEdgeGlobalIDs})
     # Add Global regionCellMask=1 everywhere to make the algorithm
     # for the global moc similar to that of the regional moc
     dictRegion['GlobalCellMask'] = np.ones(np.size(latCell))
