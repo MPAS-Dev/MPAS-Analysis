@@ -306,10 +306,9 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         # Compute annual climatology
         annualClimatology = ds.mean('Time')
 
-        # Convert to numpy arrays 
-        # (can result in a memory error for large array size)
-        horizontalVel = annualClimatology.avgNormalVelocity.values
-        verticalVel = annualClimatology.avgVertVelocityTop.values
+        # Convert to numpy arrays
+        horizontalVel = annualClimatology.avgNormalVelocity
+        verticalVel = annualClimatology.avgVertVelocityTop
         velArea = verticalVel * areaCell[:, np.newaxis]
 
         # Create dictionary for MOC climatology (NB: need this form
@@ -484,8 +483,8 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
             first = False
         date = days_to_datetime(ds.Time[tIndex], calendar=calendar)
         print '     date: {:04d}-{:02d}'.format(date.year, date.month)
-        horizontalVel = ds.avgNormalVelocity[tIndex, :, :].values
-        verticalVel = ds.avgVertVelocityTop[tIndex, :, :].values
+        horizontalVel = ds.avgNormalVelocity.isel(Time=tIndex)
+        verticalVel = ds.avgVertVelocityTop.isel(Time=tIndex)
         velArea = verticalVel * areaCell[:, np.newaxis]
         transportZ = _compute_transport(maxEdgesInTransect,
                                         transectEdgeGlobalIDs,
