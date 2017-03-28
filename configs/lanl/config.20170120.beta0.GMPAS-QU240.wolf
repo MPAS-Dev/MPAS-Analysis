@@ -66,6 +66,13 @@ startYear = 1
 # the last year over which to average climatalogies
 endYear = 3
 
+# The names of the mapping file used for interpolation.  If a mapping file has
+# already been generated, supplying the absolute path can save the time of
+# generating a new one.  If nothing is supplied, the file name is automatically
+# generated based on the MPAS mesh name, the comparison grid resolution, and
+# the interpolation method
+mpasMappingFile = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/mapping/map_QU240_to_0.5x0.5degree_blin.170309.nc
+
 [timeSeries]
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs
@@ -118,3 +125,10 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_
 
 # plot on polar plot
 polarPlot = False
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning 
+## circulation (MOC)
+
+# Mask file for ocean basin regional computation
+regionMaskFiles = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks/QU240v1_SingleRegionAtlanticWTransportTransects_masks.nc
