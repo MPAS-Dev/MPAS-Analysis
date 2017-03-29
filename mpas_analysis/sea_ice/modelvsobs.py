@@ -8,7 +8,7 @@ Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-03/23/2017
+03/29/2017
 """
 
 import os
@@ -34,8 +34,7 @@ from ..shared.io.utility import build_config_full_path
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    days_to_datetime
+from ..shared.timekeeping.utility import get_simulation_start_time
 
 from .utility import setup_sea_ice_task
 
@@ -65,7 +64,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     Last Modified
     -------------
-    03/23/2017
+    03/29/2017
     """
 
     # perform common setup for the task
@@ -128,20 +127,15 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     changed, startYear, endYear = \
         climatology.update_start_end_year(ds, config, calendar)
 
-    monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
-
     mpasMappingFileName = climatology.write_mpas_mapping_file(
         config=config, meshFileName=restartFileName)
 
-    _compute_and_plot_concentration(config, monthlyClimatology,
-                                    mpasMappingFileName)
+    _compute_and_plot_concentration(config, ds, mpasMappingFileName, calendar)
 
-    _compute_and_plot_thickness(config, monthlyClimatology,
-                                mpasMappingFileName)
+    _compute_and_plot_thickness(config, ds, mpasMappingFileName, calendar)
 
 
-def _compute_and_plot_concentration(config, monthlyClimatology,
-                                    mpasMappingFileName):
+def _compute_and_plot_concentration(config, ds, mpasMappingFileName, calendar):
     """
     Given a config file, monthly climatology on the mpas grid, and the data
     necessary to perform horizontal interpolation to a comparison grid,
@@ -152,10 +146,14 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
     ----------
     config : an instance of MpasConfigParser
 
-    monthlyClimatology : an xarray data set containing a monthly climatology
+    ds : ``xarray.Dataset`` object
+        an xarray data set from which to compute climatologies
 
     mpasMappingFileName : The name of a mapping file used to perform
         interpolation of MPAS model results
+
+    calendar: ``{'gregorian', 'gregorian_noleap'}``
+        The name of one of the calendars supported by MPAS cores
 
     Authors
     -------
@@ -163,7 +161,7 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
 
     Last Modified
     -------------
-    03/03/2017
+    03/29/2017
     """
 
     print "  Make ice concentration plots..."
@@ -230,8 +228,8 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
                     monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.compute_seasonal_climatology(
-                monthlyClimatology, monthValues, field)
+            seasonalClimatology = climatology.compute_climatology(
+                ds, monthValues, calendar)
             # write out the climatology so we can interpolate it with
             # interpolate.remap
             seasonalClimatology.to_netcdf(climatologyFileName)
@@ -329,8 +327,7 @@ def _compute_and_plot_concentration(config, monthlyClimatology,
                 cbarlabel="fraction")
 
 
-def _compute_and_plot_thickness(config, monthlyClimatology,
-                                mpasMappingFileName):
+def _compute_and_plot_thickness(config, ds,  mpasMappingFileName, calendar):
     """
     Given a config file, monthly climatology on the mpas grid, and the data
     necessary to perform horizontal interpolation to a comparison grid,
@@ -341,10 +338,14 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
     ----------
     config : an instance of MpasConfigParser
 
-    monthlyClimatology : an xarray data set containing a monthly climatology
+    ds : ``xarray.Dataset`` object
+        an xarray data set from which to compute climatologies
 
     mpasMappingFileName : The name of a mapping file used to perform
         interpolation of MPAS model results
+
+    calendar: ``{'gregorian', 'gregorian_noleap'}``
+        The name of one of the calendars supported by MPAS cores
 
     Authors
     -------
@@ -352,7 +353,7 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
 
     Last Modified
     -------------
-    03/03/2017
+    03/29/2017
     """
 
     print "  Make ice thickness plots..."
@@ -411,8 +412,8 @@ def _compute_and_plot_thickness(config, monthlyClimatology,
                     monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.compute_seasonal_climatology(
-                monthlyClimatology, monthValues, field)
+            seasonalClimatology = climatology.compute_climatology(
+                ds, monthValues, calendar)
             # write out the climatology so we can interpolate it with
             # interpolate.remap.  Set _FillValue so ncremap doesn't produce
             # an error

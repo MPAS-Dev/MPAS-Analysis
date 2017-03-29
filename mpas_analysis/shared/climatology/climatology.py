@@ -14,9 +14,8 @@ import xarray as xr
 import os
 import numpy
 import netCDF4
-from warnings import warn
+import warnings
 
-from ..mpas_xarray import mpas_xarray
 from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
@@ -386,25 +385,30 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     return (climatologyFileName, regriddedFileName)
 
 
-def compute_monthly_climatology(ds, calendar):
+def compute_monthly_climatology(ds, calendar=None):
     """
-    Compute a monthly climatology data set from a data set with Time expressed
-    as days since 0001-01-01 with the given calendar.
+    Compute monthly climatologies from a data set.  The mean is weighted but
+    the number of days in each month of the data set, ignoring values masked
+    out with NaNs.  If the month coordinate is not present, a data array
+    ``month`` will be added based on ``Time`` and the provided calendar.
 
     Parameters
     ----------
-    ds : instance of xarray.DataSet
-        A data set with a 'Time' coordinate expressed as days since
-        0001-01-01
+    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set with a ``Time`` coordinate expressed as days since
+        0001-01-01 or ``month`` coordinate
 
-    calendar: {'gregorian', 'gregorian_noleap'}
-        The name of one of the calendars supported by MPAS cores
+    calendar: ``{'gregorian', 'gregorian_noleap'}``, optional
+        The name of one of the calendars supported by MPAS cores, used to
+        determine ``month`` from ``Time`` coordinate, so must be supplied if
+        ``ds`` does not already have a ``month`` coordinate or data array
 
     Returns
     -------
-    monthlyClimatology : instance of xarray.DataSet
-        A data set with a new 'month' coordinate,
-        containing monthly climatologies of all variables in ds
+    climatology : object of same type as ``ds``
+        A data set without the ``'Time'`` coordinate containing the mean
+        of ds over all months in monthValues, weighted by the number of days
+        in each month.
 
     Authors
     -------
@@ -412,35 +416,50 @@ def compute_monthly_climatology(ds, calendar):
 
     Last Modified
     -------------
-    02/25/2017
+    03/30/2017
     """
-    months = [date.month for date in days_to_datetime(ds.Time,
-                                                      calendar=calendar)]
 
-    ds.coords['month'] = ('Time', months)
-    monthlyClimatology = ds.groupby('month').mean('Time')
+    def compute_one_month_climatology(ds):
+        monthValues = list(ds.month.values)
+        return compute_climatology(ds, monthValues, calendar)
+
+    if 'month' not in ds.coords or 'daysInMonth' not in ds.coords:
+        ds = add_months_and_days_in_month(ds, calendar)
+
+    monthlyClimatology = \
+        ds.groupby('month').apply(compute_one_month_climatology)
+
     return monthlyClimatology
 
 
-def compute_seasonal_climatology(monthlyClimatology, monthValues,
-                                 variableName):
+def compute_climatology(ds, monthValues, calendar=None):
     """
-    Given a monthly climatology, compute a seasonal climatology weighted by
-    the number of days in each month (on the no-leap-year calendar).
+    Compute a monthly, seasonal or annual climatology data set from a data
+    set.  The mean is weighted but the number of days in each month of
+    the data set, ignoring values masked out with NaNs.  If the month
+    coordinate is not present, a data array ``month`` will be added based
+    on ``Time`` and the provided calendar.
 
     Parameters
     ----------
-    monthlyClimatology : instance of xarray.DataSet
-        A data set containing a monthly climatology
+    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set with a ``Time`` coordinate expressed as days since
+        0001-01-01 or ``month`` coordinate
 
     monthValues : int or array-like of ints
         A single month or an array of months to be averaged together
-        before interpolation.
+
+    calendar: ``{'gregorian', 'gregorian_noleap'}``, optional
+        The name of one of the calendars supported by MPAS cores, used to
+        determine ``month`` from ``Time`` coordinate, so must be supplied if
+        ``ds`` does not already have a ``month`` coordinate or data array
 
     Returns
     -------
-    seasonalClimatology : instance of xarray.DataSet
-        A data set containing the seasonal climatology
+    climatology : object of same type as ``ds``
+        A data set without the ``'Time'`` coordinate containing the mean
+        of ds over all months in monthValues, weighted by the number of days
+        in each month.
 
     Authors
     -------
@@ -448,32 +467,22 @@ def compute_seasonal_climatology(monthlyClimatology, monthValues,
 
     Last Modified
     -------------
-    02/27/2017
+    03/30/2017
     """
 
-    # select only the desired field from the obs. data set
-    monthlyClimatology = mpas_xarray.subset_variables(
-        monthlyClimatology, variableList=[variableName])
+    if ('month' not in ds.coords or 'daysInMonth' not in ds.coords):
+        ds = add_months_and_days_in_month(ds, calendar)
 
-    # Make a DataArray with the number of days in each month
-    daysInMonth = xr.DataArray(numpy.array(constants.daysInMonth, float),
-                               coords=[monthlyClimatology.month],
-                               name='daysInMonth')
+    mask = xr.zeros_like(ds.month, bool)
 
-    daysInMonth = daysInMonth.sel(month=monthValues)
-    monthlyClimatology = monthlyClimatology.sel(month=monthValues)
+    for month in monthValues:
+        mask = xr.ufuncs.logical_or(mask, ds.month == month)
 
-    varArray = monthlyClimatology[variableName]
-    mask = xr.DataArray(~numpy.isnan(varArray.values),
-                        coords=varArray.coords,
-                        name='mask')
-    seasonalClimatology = (monthlyClimatology * daysInMonth).sum(
-        dim='month', keep_attrs=True)
+    climatologyMonths = ds.where(mask, drop=True)
 
-    days = (mask * daysInMonth).sum(dim='month')
-    seasonalClimatology /= days.where(days > 0.)
+    climatology = _compute_masked_mean(climatologyMonths)
 
-    return seasonalClimatology
+    return climatology
 
 
 def update_start_end_year(ds, config, calendar):
@@ -483,7 +492,7 @@ def update_start_end_year(ds, config, calendar):
 
     Parameters
     ----------
-    ds : instance of xarray.DataSet
+    ds : instance of xarray.Dataset
         A data set from which start and end years will be determined
 
     config :  instance of MpasAnalysisConfigParser
@@ -515,17 +524,103 @@ def update_start_end_year(ds, config, calendar):
     endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
     changed = False
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        warn("climatology start and/or end year different from requested\n"
-             "requestd: {:04d}-{:04d}\n"
-             "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                requestedEndYear,
-                                                startYear,
-                                                endYear))
+        warnings.warn("climatology start and/or end year different from requested\n"
+                      "requestd: {:04d}-{:04d}\n"
+                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear, requestedEndYear, startYear, endYear))
         config.set('climatology', 'startYear', str(startYear))
         config.set('climatology', 'endYear', str(endYear))
         changed = True
 
     return changed, startYear, endYear
+
+
+def add_months_and_days_in_month(ds, calendar):
+    '''
+    Add ``months`` and ``daysInMonth`` as data arrays in ``ds``.  The number
+    of days in each month of ``ds`` is computed either using the ``startTime``
+    and ``endTime`` if available or assuming ``gregorian_noleap`` calendar and
+    ignoring leap years.
+
+    Parameters
+    ----------
+    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set with a ``Time`` coordinate expressed as days since
+        0001-01-01
+
+    calendar: ``{'gregorian', 'gregorian_noleap'}``
+        The name of one of the calendars supported by MPAS cores, used to
+        determine ``month`` from ``Time`` coordinate
+
+    Returns
+    -------
+    ds : object of same type as ``ds``
+        The data set with ``month`` and ``daysInMonth`` data arrays added (if
+        not already present)
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    03/29/2017
+    """    '''
+
+    ds = ds.copy()
+
+    if 'month' not in ds.coords:
+        if calendar is None:
+            raise ValueError('calendar must be provided if month coordinate is not in ds')
+        months = [date.month for date in days_to_datetime(ds.Time,
+                                                          calendar=calendar)]
+
+        ds.coords['month'] = ('Time', months)
+
+    if 'daysInMonth' not in ds.coords:
+        if 'startTime' in ds.coords and 'endTime' in ds.coords:
+            ds.coords['daysInMonth'] = ds.endTime - ds.startTime
+        else:
+            if calendar == 'gregorian':
+                warnings.warn('The MPAS run used the Gregorian calendar but does not appear to have\n'
+                              'supplied start and end times.  Climatologies will be computed with\n'
+                              'month durations ignoring leap years.')
+            # TODO: support leap years if calendar is 'gregorian'
+            daysInMonth = numpy.array([constants.daysInMonth[month-1] for
+                                       month in ds.month.values], float)
+            ds.coords['daysInMonth'] = ('Time', daysInMonth)
+
+    return ds
+
+
+def _compute_masked_mean(ds):
+    '''
+    Compute the time average of data set, masked out where the variables in ds
+    are NaN and weighting by the number of days used to compute each monthly
+    mean time in ds.
+    '''
+    def ds_to_weights(ds):
+        # make an identical data set to ds but replacing all data arrays with
+        # nonnull applied to that data array
+        weights = ds.copy(deep=True)
+        if isinstance(ds, xr.core.dataarray.DataArray):
+            weights = ds.notnull()
+        elif isinstance(ds, xr.core.dataset.Dataset):
+            for var in ds.data_vars:
+                weights[var] = ds[var].notnull()
+        else:
+            raise TypeError('ds must be an instance of either xarray.Dataset or xarray.DataArray.')
+
+        return weights
+
+    dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+
+    weights = ds_to_weights(ds)
+
+    weightSum = (weights * ds.daysInMonth).sum(dim='Time')
+
+    timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
+
+    return timeMean
 
 
 def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):

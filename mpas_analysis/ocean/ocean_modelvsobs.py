@@ -9,7 +9,7 @@ Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-03/23/2017
+03/29/2017
 """
 
 import xarray as xr
@@ -29,12 +29,13 @@ from ..shared.io.utility import build_config_full_path
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    days_to_datetime
+from ..shared.timekeeping.utility import get_simulation_start_time
 
 from ..shared.climatology import climatology
 
 from ..shared.analysis_task import setup_task
+
+from ..shared.mpas_xarray import mpas_xarray
 
 
 def ocn_modelvsobs(config, field):
@@ -56,7 +57,7 @@ def ocn_modelvsobs(config, field):
 
     Last Modified
     -------------
-    03/23/2017
+    03/29/2017
     """
 
     # perform common setup for the task
@@ -123,6 +124,8 @@ def ocn_modelvsobs(config, field):
 
         iselvals = None
 
+        obsFieldName = 'mld_dt_mean'
+
         if buildObsClimatologies:
             # Load MLD observational data
             dsObs = xr.open_mfdataset(obsFileName)
@@ -133,17 +136,18 @@ def ocn_modelvsobs(config, field):
             # Rename the dimensions to be consistent with other obs. data sets
             dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
                           'lon': 'lonCoord'}, inplace=True)
-            dsObs.rename({'iMONTH': 'month', 'iLAT': 'lat', 'iLON': 'lon'},
+            dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'},
                          inplace=True)
             # set the coordinates now that the dimensions have the same names
             dsObs.coords['lat'] = dsObs['latCoord']
             dsObs.coords['lon'] = dsObs['lonCoord']
-            dsObs.coords['month'] = dsObs['calmonth']
+            dsObs.coords['Time'] = dsObs['calmonth']
+            dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
 
+            dsObs = mpas_xarray.subset_variables(dsObs, [obsFieldName,
+                                                         'month'])
             # Reorder dataset for consistence with other obs. data sets
-            dsObs = dsObs.transpose('month', 'lat', 'lon')
-
-        obsFieldName = 'mld_dt_mean'
+            dsObs = dsObs.transpose('Time', 'lat', 'lon')
 
         # Set appropriate MLD figure labels
         observationTitleLabel = \
@@ -169,11 +173,10 @@ def ocn_modelvsobs(config, field):
 
         if buildObsClimatologies:
             dsObs = xr.open_mfdataset(obsFileName)
-
-            dsTimeSlice = dsObs.sel(time=slice(timeStart, timeEnd))
-            monthlyClimatology = dsTimeSlice.groupby('time.month').mean('time')
-
-            dsObs = monthlyClimatology.transpose('month', 'lat', 'lon')
+            dsObs.rename({'time': 'Time'}, inplace=True)
+            dsObs = dsObs.transpose('Time', 'lat', 'lon')
+            dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+            dsObs.coords['month'] = dsObs['Time.month']
 
         obsFieldName = 'SST'
 
@@ -194,16 +197,10 @@ def ocn_modelvsobs(config, field):
 
         if buildObsClimatologies:
             dsObs = xr.open_mfdataset(obsFileName)
-            dsTimeSlice = dsObs.sel(time=slice(timeStart, timeEnd))
-
-            # The following line converts from DASK to numpy to supress an odd
-            # warning that doesn't influence the figure output
-            dsTimeSlice.SSS.values
-
-            monthlyClimatology = dsTimeSlice.groupby('time.month').mean('time')
-
-            # Rename the observation data for code compactness
-            dsObs = monthlyClimatology.transpose('month', 'lat', 'lon')
+            dsObs.rename({'time': 'Time'}, inplace=True)
+            dsObs = dsObs.transpose('Time', 'lat', 'lon')
+            dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+            dsObs.coords['month'] = dsObs['Time.month']
 
         obsFieldName = 'SSS'
 
@@ -224,8 +221,6 @@ def ocn_modelvsobs(config, field):
 
     changed, startYear, endYear = \
         climatology.update_start_end_year(ds, config, calendar)
-
-    monthlyClimatology = climatology.compute_monthly_climatology(ds, calendar)
 
     mpasMappingFileName = climatology.write_mpas_mapping_file(
         config=config, meshFileName=restartFileName)
@@ -253,8 +248,8 @@ def ocn_modelvsobs(config, field):
                                                         monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.compute_seasonal_climatology(
-                monthlyClimatology, monthValues, field)
+            seasonalClimatology = climatology.compute_climatology(
+                ds, monthValues, calendar)
             # write out the climatology so we can interpolate it with
             # interpolate.remap
             seasonalClimatology.to_netcdf(climatologyFileName)
@@ -283,8 +278,8 @@ def ocn_modelvsobs(config, field):
             if (overwriteObsClimatology or
                     (not os.path.exists(climatologyFileName) and
                      not os.path.exists(regriddedFileName))):
-                seasonalClimatology = climatology.compute_seasonal_climatology(
-                    dsObs, monthValues, obsFieldName)
+                seasonalClimatology = climatology.compute_climatology(
+                    dsObs, monthValues)
                 # Either we want to overwite files or neither the climatology
                 # nor its regridded counterpart exist. Write out the
                 # climatology so we can interpolate it with interpolate.remap

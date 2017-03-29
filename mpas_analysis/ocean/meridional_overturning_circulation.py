@@ -36,6 +36,8 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 from ..shared.analysis_task import setup_task
 from ..shared.climatology import climatology
 
+from ..shared.constants import constants
+
 
 def moc_streamfunction(config):  # {{{
     """
@@ -304,7 +306,10 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
             dictClimo['endYearClimo'] = endYear
 
         # Compute annual climatology
-        annualClimatology = ds.mean('Time')
+        annualClimatology = \
+            climatology.compute_climatology(ds,
+                                            constants.monthDictionary['ANN'],
+                                            calendar)
 
         # Convert to numpy arrays 
         # (can result in a memory error for large array size)
