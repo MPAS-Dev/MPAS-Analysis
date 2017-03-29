@@ -176,6 +176,9 @@ def open_multifile_dataset(fileNames, calendar, config,
     # select only the data in the specified range of dates
     ds = ds.sel(Time=slice(startDate, endDate))
 
+    # limit chunk size to prevent memory error
+    ds = ds.chunk(config.getint('input', 'maxChunkSize'))
+
     # private record of autoclose use
     ds.attrs['_autoclose'] = autoclose
 
