@@ -305,7 +305,8 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         # Compute annual climatology
         annualClimatology = ds.mean('Time')
 
-        # Convert to numpy arrays
+        # Convert to numpy arrays 
+        # (can result in a memory error for large array size)
         horizontalVel = annualClimatology.avgNormalVelocity.values
         verticalVel = annualClimatology.avgVertVelocityTop.values
         velArea = verticalVel * areaCell[:, np.newaxis]
