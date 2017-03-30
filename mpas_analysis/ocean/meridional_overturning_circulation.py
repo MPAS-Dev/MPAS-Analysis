@@ -15,6 +15,7 @@ Last Modified
 03/28/2017
 """
 
+from functools import partial
 import xarray as xr
 import numpy as np
 import netCDF4
@@ -28,7 +29,7 @@ from ..shared.plot.plotting import plot_vertical_section,\
 from ..shared.io.utility import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+    import open_multifile_dataset, preload
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
@@ -293,9 +294,11 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         # Compute annual climatology
         annualClimatology = ds.mean('Time')
 
-        # Convert to numpy arrays
-        horizontalVel = annualClimatology.avgNormalVelocity
-        velArea = annualClimatology.avgVertVelocityTop * areaCell
+        # Cache results if their size is reasonable
+        load = partial(preload, maxgb=config.getfloat('input',
+                                                      'reasonableArraySizeGB'))
+        horizontalVel = load(annualClimatology.avgNormalVelocity)
+        velArea = load(annualClimatology.avgVertVelocityTop * areaCell)
 
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
@@ -461,8 +464,11 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
             first = False
         date = days_to_datetime(ds.Time[tIndex], calendar=calendar)
         print '     date: {:04d}-{:02d}'.format(date.year, date.month)
-        horizontalVel = ds.avgNormalVelocity.isel(Time=tIndex)
-        velArea = ds.avgVertVelocityTop.isel(Time=tIndex) * areaCell
+        # Cache results if their size is reasonable
+        load = partial(preload, maxgb=config.getfloat('input',
+                                                      'reasonableArraySizeGB'))
+        horizontalVel = load(ds.avgNormalVelocity.isel(Time=tIndex))
+        velArea = load(ds.avgVertVelocityTop.isel(Time=tIndex) * areaCell)
         transportZ = _compute_transport(transectEdgeMaskSigns,
                                         nVertLevels, dvEdge,
                                         refLayerThickness,

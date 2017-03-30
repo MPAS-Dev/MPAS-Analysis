@@ -76,6 +76,9 @@ autocloseFileLimitFraction = 0.5
 # with a single time slice.
 maxChunkSize = 10000
 
+# Reasonable size for an array to be cached into memory
+reasonableArraySizeGB = 3.0
+
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
