@@ -19,6 +19,7 @@ import xarray as xr
 import numpy as np
 import netCDF4
 import os
+import warnings
 
 from ..shared.constants.constants import m3ps_to_Sv, rad_to_deg
 from ..shared.plot.plotting import plot_vertical_section,\
@@ -71,8 +72,15 @@ def moc_streamfunction(config):  # {{{
     namelist, runStreams, historyStreams, calendar, streamMap, \
         variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    timeSeriesStatsMonthlyAnalysisMemberFlag = namelist.get(
-        'config_am_timeseriesstatsmonthly_enable')
+    try:
+        timeSeriesStatsMonthlyAnalysisMemberFlag = namelist.get(
+            'config_am_timeseriesstatsmonthly_enable')
+    except KeyError:
+        warnings.warn('WARNING: namelist option config_am_timeseriesstatsmonthly_enable not found.\n'
+                      'This likely indicates that the simulation you are analyzing was run with an\n'
+                      'older version of MPAS-O that did not support this flag.  Assuming .true.')
+        timeSeriesStatsMonthlyAnalysisMemberFlag = '.true.'
+
     if timeSeriesStatsMonthlyAnalysisMemberFlag == '.false.':
         raise RuntimeError('*** MPAS-Analysis relies on the existence of monthly\n'
                            '*** averaged files: make sure to enable the\n'
@@ -121,7 +129,14 @@ def moc_streamfunction(config):  # {{{
     regionNames = config.getExpression(sectionName, 'regionNames')
 
     # **** Compute MOC ****
-    mocAnalysisMemberFlag = namelist.get('config_am_mocstreamfunction_enable')
+    try:
+        mocAnalysisMemberFlag = namelist.get('config_am_mocstreamfunction_enable')
+    except KeyError:
+        warnings.warn('WARNING: namelist option config_am_mocstreamfunction_enable not found.\n'
+                      'This likely indicates that the simulation you are analyzing was run with an\n'
+                      'older version of MPAS-O that did not support this flag.  Assuming .false.')
+        mocAnalysisMemberFlag = '.false.'
+
     # Check whether MOC Analysis Member is enabled
     if mocAnalysisMemberFlag == '.true.':
         # Add a moc_analisysMember_processing
@@ -290,7 +305,8 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         # Compute annual climatology
         annualClimatology = ds.mean('Time')
 
-        # Convert to numpy arrays
+        # Convert to numpy arrays 
+        # (can result in a memory error for large array size)
         horizontalVel = annualClimatology.avgNormalVelocity.values
         verticalVel = annualClimatology.avgVertVelocityTop.values
         velArea = verticalVel * areaCell[:, np.newaxis]

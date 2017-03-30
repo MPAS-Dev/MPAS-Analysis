@@ -177,7 +177,7 @@ def subset_variables(ds, variableList):  # {{{
 
 
 def preprocess(ds, calendar, simulationStartTime, timeVariableName,
-               variableList, selValues, iselValues):  # {{{
+               variableList, selValues, iselValues, maxChunkSize=1000):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset
     because the time must be between 1678 and 2262 based on the xarray
@@ -229,6 +229,10 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
 
+    maxChunkSize : int
+       Specifies the maximum chunk size to limit chunks used by dask to
+       prevent out of memory errors for large datasets.
+
     Returns
     -------
     ds : xarray.DataSet object
@@ -242,7 +246,7 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     Last modified
     -------------
-    02/17/2017
+    03/30/2017
     """
 
     ds = _parse_dataset_time(ds=ds,
@@ -264,6 +268,13 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     if iselValues is not None:
         ds = ds.isel(**iselValues)
+
+    chunks = {}
+    for name in ds.chunks.keys():
+        chunklim = np.asarray(ds.chunks[name]).max()
+        chunks[name] = np.minimum(maxChunkSize, chunklim)
+
+    ds = ds.chunk(chunks)
 
     return ds  # }}}
 
@@ -502,7 +513,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
                              'simulationStartTime was not '
                              'supplied.'.format(inTimeVariableName))
 
-        if (string_to_datetime(referenceDate) == 
+        if (string_to_datetime(referenceDate) ==
                 string_to_datetime(simulationStartTime)):
             days = timeVar.values
         else:

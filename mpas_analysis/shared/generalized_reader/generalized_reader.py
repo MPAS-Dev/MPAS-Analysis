@@ -109,12 +109,16 @@ def open_multifile_dataset(fileNames, calendar, config,
 
     Author
     ------
-    Xylar Asay-Davis
+    Xylar Asay-Davis, Phillip J. Wolfram
 
     Last modified
     -------------
-    02/23/2017
+    03/29/2017
     """
+
+    # limit chunk size to prevent memory error
+    maxChunkSize = config.getint('input', 'maxChunkSize')
+
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
                                  simulationStartTime=simulationStartTime,
@@ -124,7 +128,8 @@ def open_multifile_dataset(fileNames, calendar, config,
                                  iselValues=iselValues,
                                  variableMap=variableMap,
                                  startDate=startDate,
-                                 endDate=endDate)
+                                 endDate=endDate,
+                                 maxChunkSize=maxChunkSize)
 
     kwargs = {'decode_times': False,
               'concat_dim': 'Time'}
@@ -179,7 +184,7 @@ def open_multifile_dataset(fileNames, calendar, config,
 
 def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                 variableList, selValues, iselValues, variableMap,
-                startDate, endDate):  # {{{
+                startDate, endDate, maxChunkSize):  # {{{
     """
     Performs variable remapping, then calls mpas_xarray.preprocess, to
     perform the remainder of preprocessing.
@@ -242,6 +247,10 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
+    maxChunkSize : int
+       Specifies the maximum chunk size to limit chunks used by dask to
+       prevent out of memory errors for large datasets.
+
     Returns
     -------
     ds : xarray.DataSet object
@@ -250,11 +259,11 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     Authors
     -------
-    Xylar Asay-Davis
+    Xylar Asay-Davis, Phillip J. Wolfram
 
     Last modified
     -------------
-    02/17/2017
+    03/30/2017
     """
 
     submap = variableMap
@@ -283,7 +292,8 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                                 timeVariableName=timeVariableName,
                                 variableList=variableList,
                                 selValues=selValues,
-                                iselValues=iselValues)
+                                iselValues=iselValues,
+                                maxChunkSize=maxChunkSize)
 
     return ds  # }}}
 

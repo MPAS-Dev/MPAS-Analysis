@@ -70,6 +70,12 @@ mpasMeshName = mesh
 # first be divided among the tasks before applying this fraction.
 autocloseFileLimitFraction = 0.5
 
+# Large datasets can encounter a memory error.  Specification of a maximum
+# chunk size `maxChunkSize` can be helpful to prevent the memory error.  The
+# current maximum chunk size assumes approximately 64GB of ram and large files
+# with a single time slice.
+maxChunkSize = 10000
+
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.

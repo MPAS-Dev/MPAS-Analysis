@@ -16,11 +16,13 @@ from mpas_analysis.configuration.MpasAnalysisConfigParser \
 @pytest.mark.usefixtures("loaddatadir")
 class TestGeneralizedReader(TestCase):
 
-    def setup_config(self, autocloseFileLimitFraction=0.5):
+    def setup_config(self, autocloseFileLimitFraction=0.5,
+                           maxChunkSize=10000):
         config = MpasAnalysisConfigParser()
         config.add_section('input')
         config.set('input', 'autocloseFileLimitFraction',
                    str(autocloseFileLimitFraction))
+        config.set('input', 'maxChunkSize', str(maxChunkSize))
         return config
 
     def test_variableMap(self):
