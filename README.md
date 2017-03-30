@@ -13,7 +13,7 @@ This analysis repository presumes that the following python packages are availab
  * scipy
  * matplotlib
  * netCDF4
- * xarray
+ * xarray ≥ 0.9.1
  * dask
  * bottleneck
  * basemap
