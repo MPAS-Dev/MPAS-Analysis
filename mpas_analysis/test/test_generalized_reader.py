@@ -139,7 +139,7 @@ class TestGeneralizedReader(TestCase):
                 variableList=['mld'],
                 variableMap=variableMap)
 
-            # note, the asserts for autoclose below are only guaranteed 
+            # note, the asserts for autoclose below are only guaranteed
             # to work immediately following call to open_multifile_dataset
             assert hasattr(ds, '_autoclose'), \
                 '`autoclose` not defined for dataset'
