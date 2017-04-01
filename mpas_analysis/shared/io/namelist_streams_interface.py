@@ -9,7 +9,7 @@ Phillip Wolfram, Xylar Asay-Davis
 
 Last modified
 -------------
-02/06/2017
+04/01/2017
 """
 
 from lxml import etree
@@ -103,6 +103,44 @@ class NameList:
             return True
         else:
             return False
+
+    def find_option(self, possibleOptions):
+        """
+        If one (or more) of the names in ``possibleOptions`` is an option in
+        this namelist file, returns the first match.
+
+        Parameters
+        ----------
+        possibleOptions: list of str
+            A list of options to search for
+
+        Returns
+        -------
+        optionName : str
+            The name of an option from possibleOptions occurring in the
+            namelist file
+
+        Raises
+        ------
+        ValueError
+            If no match is found.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+
+        Last modified
+        -------------
+        04/01/2017
+        """
+
+        for optionName in possibleOptions:
+            if optionName in self.nml.keys():
+                return optionName
+
+        raise ValueError('None of the possible options {} found in namelist file {}.'.format(
+            possibleOptions, self.fname))
+
     # }}}
 
 
@@ -295,18 +333,38 @@ class StreamsFile:
 
     def find_stream(self, possibleStreams):
         """
-        If one (or more) of the names in possibleStreams is a stream in this
-        streams file, returns the first match.  If no match is found, raises
-        a ValueError.
+        If one (or more) of the names in ``possibleStreams`` is an stream in
+        this streams file, returns the first match.
 
+        Parameters
+        ----------
+        possibleStreams: list of str
+            A list of streams to search for
+
+        Returns
+        -------
+        streamName : str
+            The name of an stream from possibleOptions occurring in the
+            streams file
+
+        Raises
+        ------
+        ValueError
+            If no match is found.
+
+        Authors
+        -------
         Xylar Asay-Davis
-        Last modified: 12/07/2016
+
+        Last modified
+        -------------
+        04/01/2017
         """
         for streamName in possibleStreams:
             if self.has_stream(streamName):
                 return streamName
 
-        raise ValueError('Stream {} not found in streams file {}.'.format(
-            streamName, self.fname))
+        raise ValueError('None of the possible streams {} found in streams file {}.'.format(
+            possibleStreams, self.fname))
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
