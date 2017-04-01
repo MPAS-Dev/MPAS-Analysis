@@ -19,7 +19,6 @@ import xarray as xr
 import numpy as np
 import netCDF4
 import os
-import warnings
 from functools import partial
 
 from ..shared.constants.constants import m3ps_to_Sv, rad_to_deg, \
@@ -35,7 +34,7 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.analysis_task import setup_task
+from ..shared.analysis_task import setup_task, check_analysis_enabled
 from ..shared.climatology.climatology import update_start_end_year, \
     cache_climatologies
 from ..shared.time_series import time_series
@@ -73,22 +72,14 @@ def moc_streamfunction(config):  # {{{
     # **** Initial settings ****
 
     # perform common setup for the task
-    namelist, runStreams, historyStreams, calendar, streamMap, \
+    namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
         variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    try:
-        timeSeriesStatsMonthlyAnalysisMemberFlag = namelist.get(
-            'config_am_timeseriesstatsmonthly_enable')
-    except KeyError:
-        warnings.warn('WARNING: namelist option config_am_timeseriesstatsmonthly_enable not found.\n'
-                      'This likely indicates that the simulation you are analyzing was run with an\n'
-                      'older version of MPAS-O that did not support this flag.  Assuming .true.')
-        timeSeriesStatsMonthlyAnalysisMemberFlag = '.true.'
-
-    if timeSeriesStatsMonthlyAnalysisMemberFlag == '.false.':
-        raise RuntimeError('*** MPAS-Analysis relies on the existence of monthly\n'
-                           '*** averaged files: make sure to enable the\n'
-                           '*** timeSeriesStatsMonthly analysis member!')
+    check_analysis_enabled(
+        namelist=namelist,
+        analysisOptionName='config_am_timeseriesstatsmonthly_enable',
+        namelistMap=namelistMap,
+        raiseException=True)
 
     # Get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
@@ -142,16 +133,14 @@ def moc_streamfunction(config):  # {{{
     regionNames = config.getExpression(sectionName, 'regionNames')
 
     # **** Compute MOC ****
-    try:
-        mocAnalysisMemberFlag = namelist.get('config_am_mocstreamfunction_enable')
-    except KeyError:
-        warnings.warn('WARNING: namelist option config_am_mocstreamfunction_enable not found.\n'
-                      'This likely indicates that the simulation you are analyzing was run with an\n'
-                      'older version of MPAS-O that did not support this flag.  Assuming .false.')
-        mocAnalysisMemberFlag = '.false.'
+    mocAnalysisMemberEnabled = check_analysis_enabled(
+        namelist=namelist,
+        analysisOptionName='config_am_mocstreamfunction_enable',
+        namelistMap=namelistMap,
+        raiseException=False)
 
     # Check whether MOC Analysis Member is enabled
-    if mocAnalysisMemberFlag == '.true.':
+    if mocAnalysisMemberEnabled:
         # Add a moc_analisysMember_processing
         print '*** MOC Analysis Member is on ***'
         # (mocDictClimo, mocDictTseries) = _compute_moc_analysismember(config,

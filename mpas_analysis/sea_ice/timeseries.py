@@ -63,9 +63,9 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
         return dsAreaSum
 
     # perform common setup for the task
-    namelist, runStreams, historyStreams, calendar, streamMap, variableMap, \
-        plotsDirectory, simulationStartTime, restartFileName = \
-        setup_sea_ice_task(config)
+    namelist, runStreams, historyStreams, calendar, namelistMap, \
+        streamMap, variableMap, plotsDirectory, simulationStartTime, \
+        restartFileName = setup_sea_ice_task(config)
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates

@@ -1,5 +1,18 @@
-# mappings of stream names from various MPAS-SI versions to those in
-# mpas_analysis
+'''
+Mappings of namelist options, stream names and variable names from various
+MPAS-SeaIce versions to those used by mpas_analysis
+
+Authors
+-------
+Xylar Asay-Davis
+
+Last Modified
+-------------
+03/29/2017
+'''
+
+seaIceNamelistMap = {}
+
 seaIceStreamMap = {'timeSeriesStats': ['timeSeriesStatsMonthlyOutput']}
 
 

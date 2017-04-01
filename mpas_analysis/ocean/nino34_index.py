@@ -61,7 +61,7 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
     field = 'nino'
 
     # perform common setup for the task
-    namelist, runStreams, historyStreams, calendar, streamMap, \
+    namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
         variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
     simulationStartTime = get_simulation_start_time(runStreams)

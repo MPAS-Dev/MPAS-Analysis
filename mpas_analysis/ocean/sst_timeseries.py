@@ -40,7 +40,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     print '  Load SST data...'
 
     # perform common setup for the task
-    namelist, runStreams, historyStreams, calendar, streamMap, \
+    namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
         variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
     simulationStartTime = get_simulation_start_time(runStreams)
