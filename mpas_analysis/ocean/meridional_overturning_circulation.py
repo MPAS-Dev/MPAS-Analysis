@@ -162,10 +162,11 @@ def moc_streamfunction(config):  # {{{
     for region in regionNames:
         print '   Plot climatological {} MOC...'.format(region)
         title = '{} MOC (ANN, years {:04d}-{:04d})\n {}'.format(
-                 region, startYearClimo, endYearClimo, mainRunName)
+                 region, dictClimo['startYearClimo'], dictClimo['endYearClimo'],
+                 mainRunName)
         figureName = '{}/moc{}_{}_years{:04d}-{:04d}.png'.format(
                       plotsDirectory, region, mainRunName,
-                      startYearClimo, endYearClimo)
+                      dictClimo['startYearClimo'], dictClimo['endYearClimo'])
         contourLevels = config.getExpression(sectionName,
                                              'contourLevels{}'.format(region),
                                              usenumpyfunc=True)
