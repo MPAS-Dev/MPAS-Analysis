@@ -314,7 +314,7 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
                 transportZ = _compute_transport(transectEdgeMaskSigns,
                                                 nVertLevels, dvEdge,
                                                 refLayerThickness,
-                                                horizontalVel)
+                                                horizontalVel, load)
 
             regionCellMask = dictRegion['{}CellMask'.format(region)]
             latBinSize = config.getExpression(sectionName,
@@ -472,7 +472,7 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
         transportZ = _compute_transport(transectEdgeMaskSigns,
                                         nVertLevels, dvEdge,
                                         refLayerThickness,
-                                        horizontalVel)
+                                        horizontalVel, load)
         mocTop = _compute_moc(latAtlantic, nVertLevelsP1, latCell,
                               regionCellMask, transportZ, velArea)
         mocAtlantic26 = mocTop.sel(latBins=26.5, method='nearest').max()
@@ -504,17 +504,17 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
 
 
 def _compute_transport(transectEdgeMaskSigns, nz, dvEdge, refLayerThickness,
-                       horizontalVel):  # {{{
+                       horizontalVel, load):  # {{{
 
     '''compute mass transport across southern transect of ocean basin'''
 
-    transect = transectEdgeMaskSigns != 0
-    transportZ = (refLayerThickness*horizontalVel.where(transect)
-                  *transectEdgeMaskSigns.where(transect)
-                  *dvEdge.where(transect)
-                  ).sum('nEdges')
+    transect = load(transectEdgeMaskSigns != 0)
+    transportZ = (refLayerThickness*(
+                  horizontalVel.where(transect, drop=True)*
+                  transectEdgeMaskSigns.where(transect, drop=True)*
+                  dvEdge.where(transect, drop=True)).sum('nEdges'))
 
-    return transportZ  # }}}
+    return load(transportZ)  # }}}
 
 
 def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
@@ -525,18 +525,18 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
     # via a multidimensional groupby_bins when available
     # (see https://github.com/pydata/xarray/pull/924)
 
-    mocTop = xr.DataArray(np.zeros([len(nz), len(latBins)]),
-                          coords=[nz, latBins])
-    mocTop[1:, 0] = transportZ.cumsum(axis=0)
+    mask = regionCellMask.values > 0
+    velArea = velArea.values[mask, :]
+    latCell = latCell.values[mask]
+    mocTop = np.zeros([len(nz), len(latBins)])
+    mocTop[1:, 0] = transportZ.values.cumsum(axis=0)
     for iLat in np.arange(1, len(latBins)):
-        mask = np.logical_and(
-                np.logical_and(latCell >= latBins[iLat-1],
-                               latCell < latBins[iLat]),
-                               regionCellMask > 0)
-        mocTop[:, iLat] = velArea.where(mask).sum('nCells')
-    mocTop = mocTop.cumsum('latBins')
+        mask = np.logical_and(latCell >= latBins[iLat-1].values,
+                              latCell < latBins[iLat].values)
+        mocTop[:, iLat] = mocTop[:, iLat-1] + \
+                          velArea[mask, :].sum(axis=0)
     # convert m^3/s to Sverdrup
-    mocTop *= m3ps_to_Sv
+    mocTop = xr.DataArray(mocTop*m3ps_to_Sv, coords=[nz, latBins])
     return mocTop  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
