@@ -145,7 +145,6 @@ def compute_nino34_index(regionSST, calendar):  # {{{
     if not isinstance(regionSST, xr.core.dataarray.DataArray):
         raise ValueError('regionSST should be an xarray DataArray')
 
-
     # add 'month' data array so we can group by month below.
     regionSST = climatology.add_months_and_days_in_month(regionSST, calendar)
 
@@ -154,7 +153,11 @@ def compute_nino34_index(regionSST, calendar):  # {{{
 
     anomaly = regionSST.groupby('month') - monthlyClimatology
 
-    return _running_mean(anomaly.to_pandas())  # }}}
+    # Remove the long term trend from the anomalies
+    detrendedAnomal = signal.detrend(anomaly.values)
+    anomaly.values = detrendedAnomal
+
+    return _running_mean(anomaly.to_series())  # }}}
 
 
 def compute_nino34_spectra(nino34Index):  # {{{
@@ -199,10 +202,10 @@ def compute_nino34_spectra(nino34Index):  # {{{
     03/23/2017
     """
 
-    detrendedNino34 = signal.detrend(nino34Index.values)
-
-    window = signal.tukey(len(detrendedNino34), alpha=0.1)
-    f, Pxx = signal.periodogram(window * detrendedNino34,
+    # Move nino34Index to numpy to allow functionality with scipy routines
+    ninoIndex = nino34Index.values
+    window = signal.tukey(len(ninoIndex), alpha=0.1)
+    f, Pxx = signal.periodogram(window * ninoIndex,
                                 1.0 / constants.sec_per_month,
                                 scaling='spectrum')
 
@@ -212,7 +215,7 @@ def compute_nino34_spectra(nino34Index):  # {{{
     # compute 99 and 95% confidence intervals and red-noise process
     # Uses Chi squared test
 
-    r = _autocorr(detrendedNino34)[0, 1]
+    r = _autocorr(ninoIndex)[0, 1]
     r2 = 2.*r
     rsq = r**2
 
