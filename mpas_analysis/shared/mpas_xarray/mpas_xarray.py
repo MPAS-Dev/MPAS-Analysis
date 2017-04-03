@@ -482,59 +482,63 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         ends = dsEnd[outTimeVariableName].values
 
         # replace the time in starts with the mean of starts and ends
-        dsStart[outTimeVariableName] = [starts[i] +
-                                        (ends[i] - starts[i])/2
-                                        for i in range(len(starts))]
+        dsOut = dsStart.copy()
 
-        return dsStart
+        dsOut.coords['startTime'] = (outTimeVariableName, starts)
+        dsOut.coords['endTime'] = (outTimeVariableName, ends)
 
-    # The remainder of the function is for cases when there is just one time
-    # variable (either because we're recursively calling the function or
-    # because we're not averaging).  The contents of the time variable is
-    # expected to be either a string (|S64) or a float (meaning days since
-    # start of the simulation).
+        dsOut.coords[outTimeVariableName] = (outTimeVariableName,
+                                             [starts[i] +
+                                                 (ends[i] - starts[i])/2
+                                                 for i in range(len(starts))])
 
-    timeVar = ds[inTimeVariableName]
-
-    if timeVar.dtype == '|S64':
-        # this is an array of date strings like 'xtime'
-        # convert to string
-        timeStrings = [''.join(xtime).strip() for xtime in timeVar.values]
-        days = string_to_days_since_date(dateString=timeStrings,
-                                         referenceDate=referenceDate,
-                                         calendar=calendar)
-
-    elif timeVar.dtype == 'float64':
-        # this array contains floating-point days like 'daysSinceStartOfSim'
-
-        if simulationStartTime is None:
-            raise ValueError('MPAS time variable {} appears to be a number of '
-                             'days since start of sim but '
-                             'simulationStartTime was not '
-                             'supplied.'.format(inTimeVariableName))
-
-        if (string_to_datetime(referenceDate) ==
-                string_to_datetime(simulationStartTime)):
-            days = timeVar.values
-        else:
-            # a conversion may be required
-            dates = days_to_datetime(days=timeVar.values,
-                                     referenceDate=simulationStartTime,
-                                     calendar=calendar)
-            days = datetime_to_days(dates=dates,
-                                    referenceDate=referenceDate,
-                                    calendar=calendar)
-
-    elif timeVar.dtype == 'timedelta64[ns]':
-        raise TypeError("timeVar of unsupported type {}.  This is likely "
-                        "because xarray.open_dataset was called with "
-                        "decode_times=True.".format(timeVar.dtype))
     else:
-        raise TypeError("timeVar of unsupported type {}".format(
-            timeVar.dtype))
 
-    dsOut = ds.copy()
-    dsOut.coords[outTimeVariableName] = (outTimeVariableName, days)
+        # there is just one time variable (either because we're recursively
+        # calling the function or because we're not averaging).
+
+        # The contents of the time variable is expected to be either a string
+        # (|S64) or a float (meaning days since start of the simulation).
+
+        timeVar = ds[inTimeVariableName]
+
+        if timeVar.dtype == '|S64':
+            # this is an array of date strings like 'xtime'
+            # convert to string
+            timeStrings = [''.join(xtime).strip() for xtime in timeVar.values]
+            days = string_to_days_since_date(dateString=timeStrings,
+                                             referenceDate=referenceDate,
+                                             calendar=calendar)
+
+        elif timeVar.dtype == 'float64':
+            # this array contains floating-point days like
+            # 'daysSinceStartOfSim'
+
+            if simulationStartTime is None:
+                raise ValueError('MPAS time variable {} appears to be a number of days since start \n'
+                                 'of sim but simulationStartTime was not  supplied.'.format(inTimeVariableName))
+
+            if (string_to_datetime(referenceDate) ==
+                    string_to_datetime(simulationStartTime)):
+                days = timeVar.values
+            else:
+                # a conversion may be required
+                dates = days_to_datetime(days=timeVar.values,
+                                         referenceDate=simulationStartTime,
+                                         calendar=calendar)
+                days = datetime_to_days(dates=dates,
+                                        referenceDate=referenceDate,
+                                        calendar=calendar)
+
+        elif timeVar.dtype == 'timedelta64[ns]':
+            raise TypeError('timeVar of unsupported type {}.  This is likely because xarray.open_dataset \n'
+                            'was called with decode_times=True, which can mangle MPAS times.'.format(timeVar.dtype))
+        else:
+            raise TypeError("timeVar of unsupported type {}".format(
+                timeVar.dtype))
+
+        dsOut = ds.copy()
+        dsOut.coords[outTimeVariableName] = (outTimeVariableName, days)
 
     return dsOut  # }}}
 

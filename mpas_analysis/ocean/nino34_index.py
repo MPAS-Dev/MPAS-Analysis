@@ -7,8 +7,9 @@ Luke Van Roekel, Xylar Asay-Davis
 
 Last Modified
 -------------
-03/23/2017
+03/29/2017
 """
+
 import xarray as xr
 import pandas as pd
 import numpy as np
@@ -51,7 +52,7 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
 
     Last Modified
     -------------
-    03/23/2017
+    03/29/2017
     """
 
     print '  Load SST data...'
@@ -87,9 +88,9 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
                                 startDate=startDate,
                                 endDate=endDate)
 
-    SSTregions = ds.avgSurfaceTemperature
     print '  Compute NINO3.4 index...'
-    nino34 = compute_nino34_index(SSTregions[:, regionIndex], calendar)
+    regionSST = ds.avgSurfaceTemperature.isel(nOceanRegions=regionIndex)
+    nino34 = compute_nino34_index(regionSST, calendar)
 
     print ' Computing NINO3.4 power spectra...'
     f, spectra, conf99, conf95, redNoise = compute_nino34_spectra(nino34)
@@ -122,7 +123,7 @@ def compute_nino34_index(regionSST, calendar):  # {{{
 
     Parameters
     ----------
-    regionSST : xarray.dataArray object
+    regionSST : xarray.DataArray object
        values of SST in the nino region
 
     calendar: {'gregorian', 'gregorian_noleap'}
@@ -138,18 +139,22 @@ def compute_nino34_index(regionSST, calendar):  # {{{
 
     Last Modified
     -------------
-    03/23/2017
+    03/30/2017
     """
 
     if not isinstance(regionSST, xr.core.dataarray.DataArray):
         raise ValueError('regionSST should be an xarray DataArray')
 
-    # Compute monthly average and anomaly of climatology of SST
-    monthlyClimatology = climatology.compute_monthly_climatology(regionSST,
-                                                                 calendar)
-    anomalySST = regionSST.groupby('month') - monthlyClimatology
 
-    return _running_mean(anomalySST.to_pandas())  # }}}
+    # add 'month' data array so we can group by month below.
+    regionSST = climatology.add_months_and_days_in_month(regionSST, calendar)
+
+    # Compute monthly average and anomaly of climatology of SST
+    monthlyClimatology = climatology.compute_monthly_climatology(regionSST)
+
+    anomaly = regionSST.groupby('month') - monthlyClimatology
+
+    return _running_mean(anomaly.to_pandas())  # }}}
 
 
 def compute_nino34_spectra(nino34Index):  # {{{

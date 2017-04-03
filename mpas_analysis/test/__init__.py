@@ -74,6 +74,10 @@ class TestCase(unittest.TestCase):
     def assertApproxEqual(self, a1, a2, rtol=1e-5, atol=1e-8):
         assert np.isclose(a1, a2, rtol=rtol, atol=atol)
 
+    @requires_numpy
+    def assertArrayApproxEqual(self, a1, a2, rtol=1e-5, atol=1e-8):
+        assert np.all(np.isclose(a1, a2, rtol=rtol, atol=atol))
+
     @contextmanager
     def assertWarns(self, message):
         with warnings.catch_warnings(record=True) as w:
