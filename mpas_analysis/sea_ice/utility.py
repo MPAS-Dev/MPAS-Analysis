@@ -3,7 +3,7 @@ common utility functions for sea ice analysis tasks
 
 Xylar Asay-Davis
 
-Last Modified: 03/23/2017
+Last Modified: 04/03/2017
 '''
 
 from ..shared.io import StreamsFile
@@ -63,7 +63,7 @@ def setup_sea_ice_task(config):  # {{{
 
     Last Modified
     -------------
-    03/23/2017
+    04/03/2017
     '''
     # perform common setup for the task
     namelist, runStreams, historyStreams, calendar, streamMap, \
@@ -76,7 +76,8 @@ def setup_sea_ice_task(config):  # {{{
         # try the ocean stream instead
         runDirectory = build_config_full_path(config, 'input',
                                               'runSubdirectory')
-        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+        oceanStreamsFileName = build_config_full_path(
+            config, 'input', 'oceanStreamsFileName')
         oceanStreams = StreamsFile(oceanStreamsFileName,
                                    streamsdir=runDirectory)
         simulationStartTime = get_simulation_start_time(oceanStreams)
@@ -88,7 +89,8 @@ def setup_sea_ice_task(config):  # {{{
         try:
             runDirectory = build_config_full_path(config, 'input',
                                                   'runSubdirectory')
-            oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
+            oceanStreamsFileName = build_config_full_path(
+                config, 'input', 'oceanStreamsFileName')
             oceanStreams = StreamsFile(oceanStreamsFileName,
                                        streamsdir=runDirectory)
             restartFileName = oceanStreams.readpath('restart')[0]

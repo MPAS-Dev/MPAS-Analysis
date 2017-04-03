@@ -8,7 +8,7 @@ Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-03/29/2017
+04/03/2017
 """
 
 import os
@@ -64,24 +64,13 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     Last Modified
     -------------
-    03/29/2017
+    04/03/2017
     """
 
     # perform common setup for the task
     namelist, runStreams, historyStreams, calendar, streamMap, variableMap, \
         plotsDirectory, simulationStartTime, restartFileName = \
         setup_sea_ice_task(config)
-
-    try:
-        simulationStartTime = get_simulation_start_time(runStreams)
-    except IOError:
-        # try the ocean stream instead
-        runDirectory = build_config_full_path(config, 'input',
-                                              'runSubdirectory')
-        oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-        oceanStreams = StreamsFile(oceanStreamsFileName,
-                                   streamsdir=runDirectory)
-        simulationStartTime = get_simulation_start_time(oceanStreams)
 
     # get a list of timeSeriesStatsMonthly output files from the streams file,
     # reading only those that are between the start and end dates
@@ -91,22 +80,6 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     fileNames = historyStreams.readpath(streamName, startDate=startDate,
                                         endDate=endDate, calendar=calendar)
     print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
-
-    try:
-        restartFileName = runStreams.readpath('restart')[0]
-    except ValueError:
-        # get an ocean restart file, since no sea-ice restart exists
-        try:
-            runDirectory = build_config_full_path(config, 'input',
-                                                  'runSubdirectory')
-            oceanStreamsFileName = config.get('input', 'oceanStreamsFileName')
-            oceanStreams = StreamsFile(oceanStreamsFileName,
-                                       streamsdir=runDirectory)
-            restartFileName = oceanStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O or MPAS-Seaice restart file found: need '
-                          'at least one restart file for seaice_timeseries '
-                          'calculation')
 
     # Load data
     print "  Load sea-ice data..."
