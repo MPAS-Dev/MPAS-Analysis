@@ -214,12 +214,11 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
         xLabel = 'Time [years]'
         yLabel = '[x$10^{22}$ J]'
 
+        figureName = '{}/ohc_{}_{}.png'.format(plotsDirectory,
+                                               regions[regionIndex],
+                                               mainRunName)
+
         if preprocessedReferenceRunName != 'None':
-            figureName = '{}/ohc_{}_{}_{}.png'.format(
-                    plotsDirectory,
-                    regions[regionIndex],
-                    mainRunName,
-                    preprocessedReferenceRunName)
             ohcPreprocessedTotal = dsPreprocessedTimeSlice.ohc_tot
             ohcPreprocessed700m = dsPreprocessedTimeSlice.ohc_700m
             ohcPreprocessed2000m = dsPreprocessedTimeSlice.ohc_2000m
@@ -241,9 +240,6 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
         if (not compareWithObservations and
                 preprocessedReferenceRunName == 'None'):
-            figureName = '{}/ohc_{}_{}.png'.format(plotsDirectory,
-                                                   regions[regionIndex],
-                                                   mainRunName)
             timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
                                               ohcBottom],
                                      movingAveragePoints, title,

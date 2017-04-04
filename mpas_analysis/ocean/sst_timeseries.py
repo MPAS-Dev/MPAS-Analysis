@@ -109,10 +109,11 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
 
         SST = SSTregions[:, regionIndex]
 
+        figureName = '{}/sst_{}_{}.png'.format(plotsDirectory,
+                                               regions[regionIndex],
+                                               mainRunName)
+
         if preprocessedReferenceRunName != 'None':
-            figureName = '{}/sst_{}_{}_{}.png'.format(
-                plotsDirectory, regions[regionIndex], mainRunName,
-                preprocessedReferenceRunName)
             SST_v0 = dsPreprocessedTimeSlice.SST
 
             title = '{}\n {} (b-)'.format(title, preprocessedReferenceRunName)
@@ -123,9 +124,6 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
                                      lineWidths=[1.2, 1.2],
                                      calendar=calendar)
         else:
-            figureName = '{}/sst_{}_{}.png'.format(plotsDirectory,
-                                                   regions[regionIndex],
-                                                   mainRunName)
             timeseries_analysis_plot(config, [SST], movingAveragePoints, title,
                                      xLabel, yLabel, figureName,
                                      lineStyles=['r-'], lineWidths=[1.2],

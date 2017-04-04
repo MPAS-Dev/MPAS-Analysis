@@ -178,32 +178,18 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
         xLabel = 'Time [years]'
 
-        if preprocessedReferenceRunName != 'None':
-            figureNameStdNH = '{}/{}NH_{}_{}.png'.format(
-                plotsDirectory, variableName, mainRunName,
-                preprocessedReferenceRunName)
-            figureNameStdSH = '{}/{}SH_{}_{}.png'.format(
-                plotsDirectory, variableName, mainRunName,
-                preprocessedReferenceRunName)
-            figureNamePolarNH = '{}/{}NH_{}_{}_polar.png'.format(
-                plotsDirectory, variableName, mainRunName,
-                preprocessedReferenceRunName)
-            figureNamePolarSH = '{}/{}SH_{}_{}_polar.png'.format(
-                plotsDirectory, variableName, mainRunName,
-                preprocessedReferenceRunName)
-        else:
-            figureNameStdNH = '{}/{}NH_{}.png'.format(plotsDirectory,
-                                                      variableName,
-                                                      mainRunName)
-            figureNameStdSH = '{}/{}SH_{}.png'.format(plotsDirectory,
-                                                      variableName,
-                                                      mainRunName)
-            figureNamePolarNH = '{}/{}NH_{}_polar.png'.format(plotsDirectory,
-                                                              variableName,
-                                                              mainRunName)
-            figureNamePolarSH = '{}/{}SH_{}_polar.png'.format(plotsDirectory,
-                                                              variableName,
-                                                              mainRunName)
+        figureNameStdNH = '{}/{}NH_{}.png'.format(plotsDirectory,
+                                                  variableName,
+                                                  mainRunName)
+        figureNameStdSH = '{}/{}SH_{}.png'.format(plotsDirectory,
+                                                  variableName,
+                                                  mainRunName)
+        figureNamePolarNH = '{}/{}NH_{}_polar.png'.format(plotsDirectory,
+                                                          variableName,
+                                                          mainRunName)
+        figureNamePolarSH = '{}/{}SH_{}_polar.png'.format(plotsDirectory,
+                                                          variableName,
+                                                          mainRunName)
 
         titleNH = '{} (NH), {} (r)'.format(plotTitle, mainRunName)
         titleSH = '{} (SH), {} (r)'.format(plotTitle, mainRunName)
