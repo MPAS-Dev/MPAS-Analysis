@@ -12,9 +12,10 @@ Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
 Last Modified
 -------------
-03/23/2017
+03/28/2017
 """
 
+from functools import partial
 import xarray as xr
 import numpy as np
 import netCDF4
@@ -28,7 +29,7 @@ from ..shared.plot.plotting import plot_vertical_section,\
 from ..shared.io.utility import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+    import open_multifile_dataset, preload
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
@@ -205,23 +206,18 @@ def _load_mesh(runStreams):  # {{{
     except ValueError:
         raise IOError('No MPAS-O restart file found: need at least one '
                       'restart file for MOC calculation')
-    ncFile = netCDF4.Dataset(restartFile, mode='r')
-    dvEdge = ncFile.variables['dvEdge'][:]
-    areaCell = ncFile.variables['areaCell'][:]
-    refBottomDepth = ncFile.variables['refBottomDepth'][:]
-    latCell = ncFile.variables['latCell'][:]
+    ds = xr.open_dataset(restartFile)
+    latCell = ds.latCell
     latCell = latCell * rad_to_deg  # convert to degree
-    ncFile.close()
-    nVertLevels = len(refBottomDepth)
-    refTopDepth = np.zeros(nVertLevels+1)
-    refTopDepth[1:nVertLevels+1] = refBottomDepth[0:nVertLevels]
-    refLayerThickness = np.zeros(nVertLevels)
-    refLayerThickness[0] = refBottomDepth[0]
-    refLayerThickness[1:nVertLevels] = (refBottomDepth[1:nVertLevels] -
-                                        refBottomDepth[0:nVertLevels-1])
+    refTopDepth = xr.DataArray(np.hstack((0, ds.refBottomDepth.values)),
+                               coords=[ds.nVertLevelsP1])
+    refLayerThickness = xr.DataArray(np.hstack((ds.refBottomDepth[0].values,
+                                                ds.refBottomDepth.diff('nVertLevels').values)),
+                                     coords=[ds.nVertLevels])
 
-    return dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness  # }}}
+    return ds.dvEdge, ds.areaCell, ds.refBottomDepth, latCell, \
+            ds. nVertLevels, ds.nVertLevelsP1, \
+            refTopDepth, refLayerThickness  # }}}
 
 
 def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
@@ -230,7 +226,7 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
     '''compute mean MOC streamfunction as a post-process'''
 
     dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness = _load_mesh(runStreams)
+        nVertLevelsP1, refTopDepth, refLayerThickness = _load_mesh(runStreams)
 
     variableList = ['avgNormalVelocity',
                     'avgVertVelocityTop']
@@ -242,30 +238,22 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
         raise IOError('Regional masking file for MOC calculation '
                       'does not exist')
     iRegion = 0
+    dictRegion = {}
     for region in regionNames:
         print '\n  Reading region and transect mask for {}...'.format(region)
-        ncFileRegional = netCDF4.Dataset(regionMaskFiles, mode='r')
-        maxEdgesInTransect = \
-            ncFileRegional.dimensions['maxEdgesInTransect'].size
+        dsRegion = xr.open_dataset(regionMaskFiles)
         transectEdgeMaskSigns = \
-            ncFileRegional.variables['transectEdgeMaskSigns'][:, iRegion]
-        transectEdgeGlobalIDs = \
-            ncFileRegional.variables['transectEdgeGlobalIDs'][iRegion, :]
-        regionCellMask = \
-            ncFileRegional.variables['regionCellMasks'][:, iRegion]
-        ncFileRegional.close()
+            dsRegion.transectEdgeMaskSigns.isel(nTransects=iRegion)
+        regionCellMask = dsRegion.regionCellMasks.isel(nRegions=iRegion)
         iRegion += 1
 
-        indRegion = np.where(regionCellMask == 1)
-        dictRegion = {
-            'ind{}'.format(region): indRegion,
+        # this will only have the last entry in regionNames
+        dictRegion.update({
             '{}CellMask'.format(region): regionCellMask,
-            'maxEdgesInTransect{}'.format(region): maxEdgesInTransect,
-            'transectEdgeMaskSigns{}'.format(region): transectEdgeMaskSigns,
-            'transectEdgeGlobalIDs{}'.format(region): transectEdgeGlobalIDs}
+            'transectEdgeMaskSigns{}'.format(region): transectEdgeMaskSigns})
     # Add Global regionCellMask=1 everywhere to make the algorithm
     # for the global moc similar to that of the regional moc
-    dictRegion['GlobalCellMask'] = np.ones(np.size(latCell))
+    dictRegion['GlobalCellMask'] = xr.ones_like(regionCellMask).rename('GlobalCellMask')
     regionNames[:0] = ['Global']
 
     # Compute and plot annual climatology of MOC streamfunction
@@ -311,11 +299,11 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
                                             constants.monthDictionary['ANN'],
                                             calendar)
 
-        # Convert to numpy arrays 
-        # (can result in a memory error for large array size)
-        horizontalVel = annualClimatology.avgNormalVelocity.values
-        verticalVel = annualClimatology.avgVertVelocityTop.values
-        velArea = verticalVel * areaCell[:, np.newaxis]
+        # Cache results if their size is reasonable
+        load = partial(preload, maxgb=config.getfloat('input',
+                                                      'reasonableArraySizeGB'))
+        horizontalVel = load(annualClimatology.avgNormalVelocity)
+        velArea = load(annualClimatology.avgVertVelocityTop * areaCell)
 
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
@@ -324,20 +312,14 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
             print '   Compute {} MOC...'.format(region)
             print '    Compute transport through region southern transect...'
             if region == 'Global':
-                transportZ = np.zeros(nVertLevels)
+                transportZ = xr.zeros_like(nVertLevels).rename('transportZ')
             else:
-                maxEdgesInTransect = \
-                    dictRegion['maxEdgesInTransect{}'.format(region)]
-                transectEdgeGlobalIDs = \
-                    dictRegion['transectEdgeGlobalIDs{}'.format(region)]
                 transectEdgeMaskSigns = \
                     dictRegion['transectEdgeMaskSigns{}'.format(region)]
-                transportZ = _compute_transport(maxEdgesInTransect,
-                                                transectEdgeGlobalIDs,
-                                                transectEdgeMaskSigns,
+                transportZ = _compute_transport(transectEdgeMaskSigns,
                                                 nVertLevels, dvEdge,
                                                 refLayerThickness,
-                                                horizontalVel)
+                                                horizontalVel, load)
 
             regionCellMask = dictRegion['{}CellMask'.format(region)]
             latBinSize = config.getExpression(sectionName,
@@ -345,12 +327,13 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
             if region == 'Global':
                 latBins = np.arange(-90.0, 90.1, latBinSize)
             else:
-                indRegion = dictRegion['ind{}'.format(region)]
-                latBins = latCell[indRegion]
+                cellMask = dictRegion['{}CellMask'.format(region)]
+                latBins = latCell.where(cellMask)
                 latBins = np.arange(np.amin(latBins),
                                     np.amax(latBins)+latBinSize,
                                     latBinSize)
-            mocTop = _compute_moc(latBins, nVertLevels, latCell,
+            latBins = xr.DataArray(latBins, coords=[latBins], dims=['latBins'])
+            mocTop = _compute_moc(latBins, nVertLevelsP1, latCell,
                                   regionCellMask, transportZ, velArea)
 
             # Store computed MOC to dictionary
@@ -368,7 +351,7 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
             latBins = mocDictClimo['lat{}'.format(region)]['data']
             mocTop = mocDictClimo['moc{}'.format(region)]['data']
             ncFile.createDimension('nx{}'.format(region), len(latBins))
-        # create variables
+            # create variables
             x = ncFile.createVariable('lat{}'.format(region), 'f4',
                                       ('nx{}'.format(region),))
             x.description = 'latitude bins for MOC {}'\
@@ -379,7 +362,7 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
             y.description = 'MOC {} streamfunction, annual'\
                             ' climatology'.format(region)
             y.units = 'Sv (10^6 m^3/s)'
-        # save variables
+            # save variables
             x[:] = latBins
             y[:, :] = mocTop
         depth = ncFile.createVariable('depth', 'f4', ('nz',))
@@ -417,7 +400,8 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
         dsMOCTimeSeries.Time.attrs['units'] = 'days since 0001-01-01'
         dsMOCTimeSeries.mocAtlantic26.attrs['units'] = 'Sv (10^6 m^3/s)'
         dsMOCTimeSeries.mocAtlantic26.attrs['description'] = \
-            'Max MOC Atlantic streamfunction nearest to RAPID Array latitude (26.5N)'
+            ('Max MOC Atlantic streamfunction nearest to '
+             'RAPID Array latitude (26.5N)')
         dsMOCTimeSeries.to_netcdf(outputFileTseries)
         return dsMOCTimeSeries
 
@@ -431,7 +415,7 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                     'avgVertVelocityTop']
 
     dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness = _load_mesh(runStreams)
+        nVertLevelsP1, refTopDepth, refLayerThickness = _load_mesh(runStreams)
 
     ds = open_multifile_dataset(fileNames=dictTseries['inputFilesTseries'],
                                 calendar=calendar,
@@ -443,11 +427,7 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                 startDate=dictTseries['startDateTseries'],
                                 endDate=dictTseries['endDateTseries'])
     latAtlantic = mocDictClimo['latAtlantic']['data']
-    dLat = latAtlantic - 26.5
-    indlat26 = np.where(dLat == np.amin(np.abs(dLat)))
 
-    maxEdgesInTransect = dictRegion['maxEdgesInTransectAtlantic']
-    transectEdgeGlobalIDs = dictRegion['transectEdgeGlobalIDsAtlantic']
     transectEdgeMaskSigns = dictRegion['transectEdgeMaskSignsAtlantic']
     regionCellMask = dictRegion['AtlanticCellMask']
 
@@ -489,18 +469,18 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
             first = False
         date = days_to_datetime(ds.Time[tIndex], calendar=calendar)
         print '     date: {:04d}-{:02d}'.format(date.year, date.month)
-        horizontalVel = ds.avgNormalVelocity[tIndex, :, :].values
-        verticalVel = ds.avgVertVelocityTop[tIndex, :, :].values
-        velArea = verticalVel * areaCell[:, np.newaxis]
-        transportZ = _compute_transport(maxEdgesInTransect,
-                                        transectEdgeGlobalIDs,
-                                        transectEdgeMaskSigns,
+        # Cache results if their size is reasonable
+        load = partial(preload, maxgb=config.getfloat('input',
+                                                      'reasonableArraySizeGB'))
+        horizontalVel = load(ds.avgNormalVelocity.isel(Time=tIndex))
+        velArea = load(ds.avgVertVelocityTop.isel(Time=tIndex) * areaCell)
+        transportZ = _compute_transport(transectEdgeMaskSigns,
                                         nVertLevels, dvEdge,
                                         refLayerThickness,
-                                        horizontalVel)
-        mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
+                                        horizontalVel, load)
+        mocTop = _compute_moc(latAtlantic, nVertLevelsP1, latCell,
                               regionCellMask, transportZ, velArea)
-        mocAtlantic26 = np.amax(mocTop[:, indlat26])
+        mocAtlantic26 = mocTop.sel(latBins=26.5, method='nearest').max()
 
         dictonary = {'Time': {'dims': ('Time'), 'data': [ds.Time[tIndex]]},
                      'mocAtlantic26': {'dims': ('Time'),
@@ -528,41 +508,40 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
 #     return (mocDictClimo, mocDictTseries)
 
 
-def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
-                       transectEdgeMaskSigns, nz, dvEdge, refLayerThickness,
-                       horizontalVel):  # {{{
+def _compute_transport(transectEdgeMaskSigns, nz, dvEdge, refLayerThickness,
+                       horizontalVel, load):  # {{{
 
     '''compute mass transport across southern transect of ocean basin'''
 
-    transportZEdge = np.zeros([nz, maxEdgesInTransect])
-    for i in range(maxEdgesInTransect):
-        if transectEdgeGlobalIDs[i] == 0:
-            break
-        # subtract 1 because of python 0-indexing
-        iEdge = transectEdgeGlobalIDs[i] - 1
-        transportZEdge[:, i] = horizontalVel[iEdge, :] * \
-            transectEdgeMaskSigns[iEdge, np.newaxis] * \
-            dvEdge[iEdge, np.newaxis] * \
-            refLayerThickness[np.newaxis, :]
-    transportZ = transportZEdge.sum(axis=1)
-    return transportZ  # }}}
+    transect = load(transectEdgeMaskSigns != 0)
+    transportZ = (refLayerThickness*(
+                  horizontalVel.where(transect, drop=True)*
+                  transectEdgeMaskSigns.where(transect, drop=True)*
+                  dvEdge.where(transect, drop=True)).sum('nEdges'))
+
+    return load(transportZ)  # }}}
 
 
 def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
                  velArea):  # {{{
 
     '''compute meridionally integrated MOC streamfunction'''
+    # note computation should be more cleanly facilitated 
+    # via a multidimensional groupby_bins when available
+    # (see https://github.com/pydata/xarray/pull/924)
 
-    mocTop = np.zeros([np.size(latBins), nz+1])
-    mocTop[0, range(1, nz+1)] = transportZ.cumsum()
-    for iLat in range(1, np.size(latBins)):
-        indlat = np.logical_and(np.logical_and(
-                     regionCellMask == 1, latCell >= latBins[iLat-1]),
-                     latCell < latBins[iLat])
-        mocTop[iLat, :] = mocTop[iLat-1, :] + velArea[indlat, :].sum(axis=0)
+    mask = regionCellMask.values > 0
+    velArea = velArea.values[mask, :]
+    latCell = latCell.values[mask]
+    mocTop = np.zeros([len(nz), len(latBins)])
+    mocTop[1:, 0] = transportZ.values.cumsum(axis=0)
+    for iLat in np.arange(1, len(latBins)):
+        mask = np.logical_and(latCell >= latBins[iLat-1].values,
+                              latCell < latBins[iLat].values)
+        mocTop[:, iLat] = mocTop[:, iLat-1] + \
+                          velArea[mask, :].sum(axis=0)
     # convert m^3/s to Sverdrup
-    mocTop = mocTop * m3ps_to_Sv
-    mocTop = mocTop.T
+    mocTop = xr.DataArray(mocTop*m3ps_to_Sv, coords=[nz, latBins])
     return mocTop  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -182,6 +182,35 @@ def open_multifile_dataset(fileNames, calendar, config,
     return ds  # }}}
 
 
+def preload(xarrayobj, maxgb): # {{{
+    """
+    Loads the xarray object into memory if it is of an acceptable size.
+
+    Parameters
+    ----------
+    xarrayobj : xarray.DataSet or xarray.DataArray object
+        xarray object to load into memory if it is of a reasonable size.
+
+    maxgb : float
+        Maximum size of array that can be loaded into memory.
+    
+    Returns
+    -------
+    xarrayobj : xarray.DataSet or xarray.DataArray object
+    
+    Authors
+    -------
+    Phillip J. Wolfram
+
+    Last modified
+    -------------
+    03/30/2017
+    """
+    if _size_gb(xarrayobj) < maxgb:
+        xarrayobj.load()
+    return xarrayobj # }}}
+
+
 def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                 variableList, selValues, iselValues, variableMap,
                 startDate, endDate, maxChunkSize):  # {{{
@@ -296,6 +325,34 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                                 maxChunkSize=maxChunkSize)
 
     return ds  # }}}
+
+
+def _size_gb(xarrayobj): #{{{
+    """
+    Computes the size of an xarray object in GB.
+
+    Parameters
+    ----------
+    xarrayobj : xarray.DataSet or xarray.DataArray object
+        xarray object to compute size in GB.
+    
+    Returns
+    -------
+    gbs : float
+        size of xarrayobj in GB.
+    
+    Authors
+    -------
+    Phillip J. Wolfram
+
+    Last modified
+    -------------
+    03/30/2017
+    """
+
+    gbs = xarrayobj.nbytes * 2 ** -30
+
+    return gbs #}}}
 
 
 def _map_variable_name(variableName, ds, variableMap):  # {{{
