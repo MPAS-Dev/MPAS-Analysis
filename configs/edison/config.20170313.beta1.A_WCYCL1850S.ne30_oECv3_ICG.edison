@@ -132,6 +132,7 @@ polarPlot = False
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning 
 ## circulation (MOC)
+maxChunkSize = 1000
 
 # Mask file for ocean basin regional computation
 regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/EC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
