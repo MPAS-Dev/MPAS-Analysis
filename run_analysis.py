@@ -164,6 +164,15 @@ def analysis(config):  # {{{
             import moc_streamfunction
         moc_streamfunction(config)
 
+    if checkGenerate(config, analysisName='meridionalHeatTransport',
+                     mpasCore='ocean',
+                     analysisCategory='meridionalHeatTransport'):
+        print ""
+        print "Plotting meridional heat transport (MHT)..."
+        from mpas_analysis.ocean.meridional_heat_transport \
+            import meridional_heat_transport
+        meridional_heat_transport(config)
+
     # GENERATE SEA-ICE DIAGNOSTICS
     if checkGenerate(config, analysisName='timeSeriesSeaIceAreaVol',
                      mpasCore='seaIce', analysisCategory='timeSeries'):
