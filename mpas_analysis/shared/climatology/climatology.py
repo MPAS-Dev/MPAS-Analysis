@@ -385,7 +385,7 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     return (climatologyFileName, regriddedFileName)
 
 
-def compute_monthly_climatology(ds, calendar=None):
+def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
     """
     Compute monthly climatologies from a data set.  The mean is weighted but
     the number of days in each month of the data set, ignoring values masked
@@ -402,6 +402,11 @@ def compute_monthly_climatology(ds, calendar=None):
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
+
+    maskVaries: bool, optional
+        If the mask (where variables in ``ds`` are ``NaN``) varies with time.
+        If not, the weighted average does not need make extra effort to account
+        for the mask.
 
     Returns
     -------
@@ -421,7 +426,7 @@ def compute_monthly_climatology(ds, calendar=None):
 
     def compute_one_month_climatology(ds):
         monthValues = list(ds.month.values)
-        return compute_climatology(ds, monthValues, calendar)
+        return compute_climatology(ds, monthValues, calendar, maskVaries)
 
     if 'month' not in ds.coords or 'daysInMonth' not in ds.coords:
         ds = add_months_and_days_in_month(ds, calendar)
@@ -432,7 +437,7 @@ def compute_monthly_climatology(ds, calendar=None):
     return monthlyClimatology
 
 
-def compute_climatology(ds, monthValues, calendar=None):
+def compute_climatology(ds, monthValues, calendar=None, maskVaries=True):
     """
     Compute a monthly, seasonal or annual climatology data set from a data
     set.  The mean is weighted but the number of days in each month of
@@ -454,6 +459,11 @@ def compute_climatology(ds, monthValues, calendar=None):
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
 
+    maskVaries: bool, optional
+        If the mask (where variables in ``ds`` are ``NaN``) varies with time.
+        If not, the weighted average does not need make extra effort to account
+        for the mask.
+
     Returns
     -------
     climatology : object of same type as ``ds``
@@ -467,7 +477,7 @@ def compute_climatology(ds, monthValues, calendar=None):
 
     Last Modified
     -------------
-    03/30/2017
+    04/08/2017
     """
 
     if ('month' not in ds.coords or 'daysInMonth' not in ds.coords):
@@ -480,7 +490,7 @@ def compute_climatology(ds, monthValues, calendar=None):
 
     climatologyMonths = ds.where(mask, drop=True)
 
-    climatology = _compute_masked_mean(climatologyMonths)
+    climatology = _compute_masked_mean(climatologyMonths, maskVaries)
 
     return climatology
 
@@ -524,9 +534,14 @@ def update_start_end_year(ds, config, calendar):
     endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
     changed = False
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        warnings.warn("climatology start and/or end year different from requested\n"
-                      "requestd: {:04d}-{:04d}\n"
-                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear, requestedEndYear, startYear, endYear))
+        message = "climatology start and/or end year different from " \
+                  "requested\n" \
+                  "requestd: {:04d}-{:04d}\n" \
+                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear)
+        warnings.warn(message)
         config.set('climatology', 'startYear', str(startYear))
         config.set('climatology', 'endYear', str(endYear))
         changed = True
@@ -592,11 +607,11 @@ def add_months_and_days_in_month(ds, calendar):
     return ds
 
 
-def _compute_masked_mean(ds):
+def _compute_masked_mean(ds, maskVaries):
     '''
     Compute the time average of data set, masked out where the variables in ds
-    are NaN and weighting by the number of days used to compute each monthly
-    mean time in ds.
+    are NaN and, if ``maskVaries == True``, weighting by the number of days
+    used to compute each monthly mean time in ds.
     '''
     def ds_to_weights(ds):
         # make an identical data set to ds but replacing all data arrays with
@@ -612,13 +627,18 @@ def _compute_masked_mean(ds):
 
         return weights
 
-    dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+    if maskVaries:
+        dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
 
-    weights = ds_to_weights(ds)
+        weights = ds_to_weights(ds)
 
-    weightSum = (weights * ds.daysInMonth).sum(dim='Time')
+        weightSum = (weights * ds.daysInMonth).sum(dim='Time')
 
-    timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
+        timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
+    else:
+        days = ds.daysInMonth.sum(dim='Time')
+        dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+        timeMean = dsWeightedSum / days.where(days > 0.)
 
     return timeMean
 
