@@ -4,11 +4,10 @@ import os
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
-from ..shared.io import StreamsFile
 from ..shared.io.utility import build_config_full_path
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    date_to_days, days_to_datetime, datetime_to_days
+from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
+    datetime_to_days
 from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
 from ..shared.generalized_reader.generalized_reader \
@@ -16,6 +15,8 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 from .utility import setup_sea_ice_task
+
+from ..shared.time_series import time_series
 
 
 def seaice_timeseries(config, streamMap=None, variableMap=None):
@@ -34,6 +35,32 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     Author: Xylar Asay-Davis, Milena Veneziani
     Last Modified: 04/08/2017
     """
+    def compute_area_vol_part(timeIndices, firstCall):
+        dsLocal = ds.isel(Time=timeIndices)
+
+        if hemisphere == 'NH':
+            mask = dsMesh.latCell > 0
+        else:
+            mask = dsMesh.latCell < 0
+        dsLocal = dsLocal.where(mask)
+
+        dsAreaSum = (dsLocal*dsMesh.areaCell).sum('nCells')
+        dsAreaSum = dsAreaSum.rename({'iceAreaCell': 'iceArea',
+                                      'iceVolumeCell': 'iceVolume'})
+        dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
+                                     dsMesh.areaCell.sum('nCells'))
+
+        dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
+        dsAreaSum['iceArea'].attrs['description'] = \
+            'Total {} sea ice area'.format(hemisphere)
+        dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
+        dsAreaSum['iceVolume'].attrs['description'] = \
+            'Total {} sea ice volume'.format(hemisphere)
+        dsAreaSum['iceThickness'].attrs['units'] = 'm'
+        dsAreaSum['iceThickness'].attrs['description'] = \
+            'Mean {} sea ice volume'.format(hemisphere)
+
+        return dsAreaSum
 
     # perform common setup for the task
     namelist, runStreams, historyStreams, calendar, streamMap, variableMap, \
@@ -52,23 +79,25 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
               os.path.basename(fileNames[0]),
               os.path.basename(fileNames[-1]))
 
-    variableNames = ['iceAreaCell', 'iceVolumeCell']
+    plotTitles = {'iceArea': 'Sea-ice area',
+                  'iceVolume': 'Sea-ice volume',
+                  'iceThickness': 'Sea-ice mean thickness'}
 
-    plotTitles = {'iceAreaCell': 'Sea-ice area',
-                  'iceVolumeCell': 'Sea-ice volume',
-                  'iceThickness': 'Sea-ice thickness'}
-
-    unitsDictionary = {'iceAreaCell': '[km$^2$]',
-                       'iceVolumeCell': '[10$^3$ km$^3$]',
-                       'iceThickness': '[m]'}
+    units = {'iceArea': '[km$^2$]',
+             'iceVolume': '[10$^3$ km$^3$]',
+             'iceThickness': '[m]'}
 
     obsFileNames = {
-        'iceAreaCell': [build_config_full_path(config, 'seaIceObservations',
-                                               subdir)
-                        for subdir in ['areaNH', 'areaSH']],
-        'iceVolumeCell': [build_config_full_path(config, 'seaIceObservations',
-                                                 subdir)
-                          for subdir in ['volNH', 'volSH']]}
+        'iceArea': {'NH': build_config_full_path(config, 'seaIceObservations',
+                                                 'areaNH'),
+                    'SH': build_config_full_path(config, 'seaIceObservations',
+                                                 'areaSH')},
+        'iceVolume': {'NH': build_config_full_path(config,
+                                                   'seaIceObservations',
+                                                   'volNH'),
+                      'SH': build_config_full_path(config,
+                                                   'seaIceObservations',
+                                                   'volSH')}}
 
     # Some plotting rules
     titleFontSize = config.get('timeSeriesSeaIceAreaVol', 'titleFontSize')
@@ -87,6 +116,14 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
 
     polarPlot = config.getboolean('timeSeriesSeaIceAreaVol', 'polarPlot')
 
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'timeseriesSubdirectory')
+
+    try:
+        os.makedirs(outputDirectory)
+    except OSError:
+        pass
+
     print '  Load sea-ice data...'
     # Load mesh
     dsMesh = xr.open_dataset(restartFileName)
@@ -104,11 +141,6 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                                 variableMap=variableMap,
                                 startDate=startDate,
                                 endDate=endDate)
-
-    # handle the case where the "mesh" file has a spurious time dimension
-    if 'Time' in dsMesh.keys():
-        dsMesh = dsMesh.drop('Time')
-    ds = ds.merge(dsMesh)
 
     yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
     yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -135,252 +167,183 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
                 'timeSeries startYear and will not be plotted.'
             preprocessedReferenceRunName = 'None'
 
-    # Make Northern and Southern Hemisphere partition:
-    areaCell = ds.areaCell
-    maskNH = ds.latCell > 0
-    maskSH = ds.latCell < 0
-    areaCellNH = areaCell.where(maskNH)
-    areaCellSH = areaCell.where(maskSH)
+    norm = {'iceArea': 1e-6,  # m^2 to km^2
+            'iceVolume': 1e-12,  # m^3 to 10^3 km^3
+            'iceThickness': 1.}
 
-    for variableName in variableNames:
-        obsFileNameNH = obsFileNames[variableName][0]
-        obsFileNameSH = obsFileNames[variableName][1]
-        plotTitle = plotTitles[variableName]
-        units = unitsDictionary[variableName]
+    xLabel = 'Time [years]'
 
-        print '  Compute NH and SH time series of {}...'.format(variableName)
-        if variableName == 'iceThickCell':
-            variableNamefull = 'iceVolumeCell'
-        else:
-            variableNamefull = variableName
-        var = ds[variableNamefull]
+    dsTimeSeries = {}
+    obs = {}
+    preprocessed = {}
+    figureNameStd = {}
+    figureNamePolar = {}
+    title = {}
+    plotVars = {}
 
-        varNH = var.where(maskNH)*areaCellNH
-        varSH = var.where(maskSH)*areaCellSH
+    for hemisphere in ['NH', 'SH']:
+        print '   Caching {} data'.format(hemisphere)
+        cacheFileName = '{}/seaIceAreaVolumeTimeSeries_{}.nc'.format(
+            outputDirectory, hemisphere)
 
-        maskIceExtent = var > 0.15
-        varNHIceExtent = varNH.where(maskIceExtent)
-        varSHIceExtent = varSH.where(maskIceExtent)
+        dsTimeSeries[hemisphere] = time_series.cache_time_series(
+            ds.Time.values, compute_area_vol_part, cacheFileName, calendar,
+            yearsPerCacheUpdate=10, printProgress=True)
 
-        if variableName == 'iceAreaCell':
-            varNH = varNH.sum('nCells')
-            varSH = varSH.sum('nCells')
-            varNH = 1e-6*varNH  # m^2 to km^2
-            varSH = 1e-6*varSH  # m^2 to km^2
-            varNHIceExtent = 1e-6*varNHIceExtent.sum('nCells')
-            varSHIceExtent = 1e-6*varSHIceExtent.sum('nCells')
-        elif variableName == 'iceVolumeCell':
-            varNH = varNH.sum('nCells')
-            varSH = varSH.sum('nCells')
-            varNH = 1e-3*1e-9*varNH  # m^3 to 10^3 km^3
-            varSH = 1e-3*1e-9*varSH  # m^3 to 10^3 km^3
-        else:
-            varNH = varNH.mean('nCells')/areaCellNH.mean('nCells')
-            varSH = varSH.mean('nCells')/areaCellSH.mean('nCells')
+        print '  Make {} plots...'.format(hemisphere)
 
-        print '  Make plots...'
+        for variableName in ['iceArea', 'iceVolume']:
+            key = (hemisphere, variableName)
 
-        xLabel = 'Time [years]'
+            # apply the norm to each variable
+            plotVars[key] = (norm[variableName] *
+                             dsTimeSeries[hemisphere][variableName])
 
-        figureNameStdNH = '{}/{}NH_{}.png'.format(plotsDirectory,
-                                                  variableName,
-                                                  mainRunName)
-        figureNameStdSH = '{}/{}SH_{}.png'.format(plotsDirectory,
-                                                  variableName,
-                                                  mainRunName)
-        figureNamePolarNH = '{}/{}NH_{}_polar.png'.format(plotsDirectory,
-                                                          variableName,
-                                                          mainRunName)
-        figureNamePolarSH = '{}/{}SH_{}_polar.png'.format(plotsDirectory,
-                                                          variableName,
-                                                          mainRunName)
+            prefix = '{}/{}{}_{}'.format(plotsDirectory,
+                                         variableName,
+                                         hemisphere,
+                                         mainRunName)
 
-        titleNH = '{} (NH), {} (r)'.format(plotTitle, mainRunName)
-        titleSH = '{} (SH), {} (r)'.format(plotTitle, mainRunName)
+            figureNameStd[key] = '{}.png'.format(prefix)
+            figureNamePolar[key] = '{}_polar.png'.format(prefix)
+
+            title[key] = '{} ({}), {} (r)'.format(
+                plotTitles[variableName], hemisphere, mainRunName)
 
         if compareWithObservations:
-            if variableName == 'iceAreaCell':
-                titleNH = \
-                    '{}\nSSM/I observations, annual cycle (k)'.format(titleNH)
-                titleSH = \
-                    '{}\nSSM/I observations, annual cycle (k)'.format(titleSH)
-            elif variableName == 'iceVolumeCell':
-                titleNH = '{}\nPIOMAS, annual cycle (k)'.format(titleNH)
-                titleSH = '{}\n'.format(titleSH)
+            key = (hemisphere, 'iceArea')
+            title[key] = '{}\nSSM/I observations, annual cycle (k)'.format(
+                title[key])
+            if hemisphere == 'NH':
+                key = (hemisphere, 'iceVolume')
+                title[key] = '{}\nPIOMAS, annual cycle (k)'.format(title[key])
 
         if preprocessedReferenceRunName != 'None':
-            titleNH = '{}\n {} (b)'.format(titleNH,
-                                           preprocessedReferenceRunName)
-            titleSH = '{}\n {} (b)'.format(titleSH,
-                                           preprocessedReferenceRunName)
+            for variableName in ['iceArea', 'iceVolume']:
+                key = (hemisphere, variableName)
+                title[key] = '{}\n {} (b)'.format(
+                    title[key], preprocessedReferenceRunName)
 
-        if variableName == 'iceAreaCell':
+        if compareWithObservations:
+            dsObs = open_multifile_dataset(
+                fileNames=obsFileNames['iceArea'][hemisphere],
+                calendar=calendar,
+                config=config,
+                timeVariableName='xtime')
+            key = (hemisphere, 'iceArea')
+            obs[key] = replicate_cycle(plotVars[key], dsObs.IceArea, calendar)
 
-            if compareWithObservations:
+            key = (hemisphere, 'iceVolume')
+            if hemisphere == 'NH':
                 dsObs = open_multifile_dataset(
-                    fileNames=obsFileNameNH,
+                    fileNames=obsFileNames['iceVolume'][hemisphere],
                     calendar=calendar,
                     config=config,
                     timeVariableName='xtime')
-                varNHObs = dsObs.IceArea
-                varNHObs = replicate_cycle(varNH, varNHObs, calendar)
+                obs[key] = replicate_cycle(plotVars[key], dsObs.IceVol,
+                                           calendar)
+            else:
+                obs[key] = None
 
-                dsObs = open_multifile_dataset(
-                    fileNames=obsFileNameSH,
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
-                varSHObs = dsObs.IceArea
-                varSHObs = replicate_cycle(varSH, varSHObs, calendar)
+        if preprocessedReferenceRunName != 'None':
+            inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
+                preprocessedReferenceDirectory,
+                preprocessedReferenceRunName)
+            dsPreprocessed = open_multifile_dataset(
+                fileNames=inFilesPreprocessed,
+                calendar=calendar,
+                config=config,
+                timeVariableName='xtime')
+            dsPreprocessedTimeSlice = dsPreprocessed.sel(
+                Time=slice(timeStart, timeEnd))
+            key = (hemisphere, 'iceArea')
+            preprocessed[key] = dsPreprocessedTimeSlice[
+                'icearea_{}'.format(hemisphere.lower())]
 
-            if preprocessedReferenceRunName != 'None':
-                inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
-                    preprocessedReferenceDirectory,
-                    preprocessedReferenceRunName)
-                dsPreprocessed = open_multifile_dataset(
-                    fileNames=inFilesPreprocessed,
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
-                dsPreprocessedTimeSlice = dsPreprocessed.sel(
-                    Time=slice(timeStart, timeEnd))
-                varNHPreprocessed = dsPreprocessedTimeSlice.icearea_nh
-                varSHPreprocessed = dsPreprocessedTimeSlice.icearea_sh
+            inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
+                preprocessedReferenceDirectory,
+                preprocessedReferenceRunName)
+            dsPreprocessed = open_multifile_dataset(
+                fileNames=inFilesPreprocessed,
+                calendar=calendar,
+                config=config,
+                timeVariableName='xtime')
+            dsPreprocessedTimeSlice = dsPreprocessed.sel(
+                Time=slice(timeStart, timeEnd))
+            key = (hemisphere, 'iceVolume')
+            preprocessed[key] = dsPreprocessedTimeSlice[
+                'icevolume_{}'.format(hemisphere.lower())]
 
-        elif variableName == 'iceVolumeCell':
-
-            if compareWithObservations:
-                dsObs = open_multifile_dataset(
-                    fileNames=obsFileNameNH,
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
-                varNHObs = dsObs.IceVol
-                varNHObs = replicate_cycle(varNH, varNHObs, calendar)
-
-                varSHObs = None
-
-            if preprocessedReferenceRunName != 'None':
-                inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
-                    preprocessedReferenceDirectory,
-                    preprocessedReferenceRunName)
-                dsPreprocessed = open_multifile_dataset(
-                    fileNames=inFilesPreprocessed,
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
-                dsPreprocessedTimeSlice = dsPreprocessed.sel(
-                    Time=slice(timeStart, timeEnd))
-                varNHPreprocessed = dsPreprocessedTimeSlice.icevolume_nh
-                varSHPreprocessed = dsPreprocessedTimeSlice.icevolume_sh
-
-        if variableName in ['iceAreaCell', 'iceVolumeCell']:
+        for variableName in ['iceArea', 'iceVolume']:
+            key = (hemisphere, variableName)
             if compareWithObservations:
                 if preprocessedReferenceRunName != 'None':
-                    varsNH = [varNH, varNHObs, varNHPreprocessed]
-                    varsSH = [varSH, varSHObs, varSHPreprocessed]
+                    plotVars[key] = [plotVars[key], obs[key],
+                                     preprocessed[key]]
                     lineStyles = ['r-', 'k-', 'b-']
                     lineWidths = [1.2, 1.2, 1.2]
                 else:
                     # just v1 model and obs
-                    varsNH = [varNH, varNHObs]
-                    varsSH = [varSH, varSHObs]
+                    plotVars[key] = [plotVars[key], obs[key]]
                     lineStyles = ['r-', 'k-']
                     lineWidths = [1.2, 1.2]
             elif preprocessedReferenceRunName != 'None':
                 # just v1 and v0 models
-                varsNH = [varNH, varNHPreprocessed]
-                varsSH = [varSH, varSHPreprocessed]
+                plotVars[key] = [plotVars[key], preprocessed[key]]
                 lineStyles = ['r-', 'b-']
                 lineWidths = [1.2, 1.2]
 
             if (compareWithObservations or
                     preprocessedReferenceRunName != 'None'):
                 # separate plots for nothern and southern hemispheres
-                timeseries_analysis_plot(config, varsNH, movingAveragePoints,
-                                         titleNH,
-                                         xLabel, units, figureNameStdNH,
-                                         lineStyles=lineStyles,
-                                         lineWidths=lineWidths,
-                                         titleFontSize=titleFontSize,
-                                         calendar=calendar)
-                timeseries_analysis_plot(config, varsSH, movingAveragePoints,
-                                         titleSH,
-                                         xLabel, units, figureNameStdSH,
-                                         lineStyles=lineStyles,
-                                         lineWidths=lineWidths,
-                                         titleFontSize=titleFontSize,
-                                         calendar=calendar)
-                if (polarPlot):
-                    timeseries_analysis_plot_polar(config, varsNH,
-                                                   movingAveragePoints,
-                                                   titleNH,
-                                                   figureNamePolarNH,
-                                                   lineStyles=lineStyles,
-                                                   lineWidths=lineWidths,
-                                                   titleFontSize=titleFontSize,
-                                                   calendar=calendar)
-                    timeseries_analysis_plot_polar(config, varsSH,
-                                                   movingAveragePoints,
-                                                   titleSH,
-                                                   figureNamePolarSH,
-                                                   lineStyles=lineStyles,
-                                                   lineWidths=lineWidths,
-                                                   titleFontSize=titleFontSize,
-                                                   calendar=calendar)
-            else:
-                # we will combine north and south onto a single graph
-                figureNameStd = '{}/{}.{}.png'.format(plotsDirectory,
-                                                      mainRunName,
-                                                      variableName)
-                figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory,
-                                                              mainRunName,
-                                                              variableName)
-                title = '{}, NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
-                timeseries_analysis_plot(config, [varNH, varSH],
+                timeseries_analysis_plot(config, plotVars[key],
                                          movingAveragePoints,
-                                         title, xLabel, units, figureNameStd,
-                                         lineStyles=['r-', 'k-'],
-                                         lineWidths=[1.2, 1.2],
+                                         title[key], xLabel,
+                                         units[variableName],
+                                         figureNameStd[key],
+                                         lineStyles=lineStyles,
+                                         lineWidths=lineWidths,
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
                 if (polarPlot):
-                    timeseries_analysis_plot_polar(config, [varNH, varSH],
+                    timeseries_analysis_plot_polar(config, plotVars[key],
                                                    movingAveragePoints,
-                                                   title, figureNamePolar,
-                                                   lineStyles=['r-', 'k-'],
-                                                   lineWidths=[1.2, 1.2],
+                                                   title[key],
+                                                   figureNamePolar[key],
+                                                   lineStyles=lineStyles,
+                                                   lineWidths=lineWidths,
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
-
-        elif variableName == 'iceThickCell':
-
-            figureNameStd = '{}/{}.{}.png'.format(plotsDirectory, mainRunName,
+    if (not compareWithObservations and
+            preprocessedReferenceRunName == 'None'):
+        for variableName in ['iceArea', 'iceVolume']:
+            # we will combine north and south onto a single graph
+            figureNameStd = '{}/{}.{}.png'.format(plotsDirectory,
+                                                  mainRunName,
                                                   variableName)
             figureNamePolar = '{}/{}.{}_polar.png'.format(plotsDirectory,
                                                           mainRunName,
                                                           variableName)
-            title = '{} NH (r), SH (k)\n{}'.format(plotTitle, mainRunName)
-            timeseries_analysis_plot(config, [varNH, varSH],
-                                     movingAveragePoints, title,
-                                     xLabel, units, figureNameStd,
+            title = '{}, NH (r), SH (k)\n{}'.format(plotTitles[variableName],
+                                                    mainRunName)
+            varList = [plotVars[('NH', variableName)],
+                       plotVars[('SH', variableName)]]
+            timeseries_analysis_plot(config, varList,
+                                     movingAveragePoints,
+                                     title, xLabel, units[variableName],
+                                     figureNameStd,
                                      lineStyles=['r-', 'k-'],
                                      lineWidths=[1.2, 1.2],
                                      titleFontSize=titleFontSize,
                                      calendar=calendar)
             if (polarPlot):
-                timeseries_analysis_plot_polar(config, [varNH, varSH],
-                                               movingAveragePoints, title,
-                                               figureNamePolar,
+                timeseries_analysis_plot_polar(config, varList,
+                                               movingAveragePoints,
+                                               title, figureNamePolar,
                                                lineStyles=['r-', 'k-'],
                                                lineWidths=[1.2, 1.2],
                                                titleFontSize=titleFontSize,
                                                calendar=calendar)
-
-        else:
-            raise ValueError(
-                'variableName variable {} not supported for plotting'.format(
-                    variableName))
 
 
 def replicate_cycle(ds, dsToReplicate, calendar):
