@@ -12,6 +12,10 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 
 from ..shared.analysis_task import setup_task
 
+from ..shared.time_series import time_series
+
+from ..shared.io.utility import build_config_full_path
+
 
 def ohc_timeseries(config, streamMap=None, variableMap=None):
     """
@@ -31,6 +35,18 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     Author: Xylar Asay-Davis, Milena Veneziani
     Last Modified: 04/08/2017
     """
+
+    def compute_ohc_part(timeIndices, firstCall):
+        dsLocal = ds.isel(Time=timeIndices)
+
+        dsLocal['ohc'] = rho*cp*dsLocal.sumLayerMaskValue * \
+            dsLocal.avgLayerArea * dsLocal.avgLayerThickness * \
+            dsLocal.avgLayTemperatureAnomaly
+        dsLocal.ohc.attrs['units'] = 'J'
+        dsLocal.ohc.attrs['description'] = 'Ocean heat content in each region'
+        dsLocal['regionNames'] = ('nOceanRegionsTmp', regionNames)
+
+        return dsLocal
 
     # perform common setup for the task
     namelist, runStreams, historyStreams, calendar, streamMap, \
@@ -54,6 +70,17 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     plotTitles = config.getExpression('regions', 'plotTitles')
     regionIndicesToPlot = config.getExpression('timeSeriesOHC',
                                                'regionIndicesToPlot')
+
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'timeseriesSubdirectory')
+
+    try:
+        os.makedirs(outputDirectory)
+    except OSError:
+        pass
+
+    regionNames = config.getExpression('regions', 'regions')
+    regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
     # Note: input file, not a mesh file because we need dycore specific fields
     # such as refBottomDepth and namelist fields such as config_density0, as
@@ -87,7 +114,7 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     cp = namelist.getfloat('config_specific_heat_sea_water')
     # [kg/m3]
     rho = namelist.getfloat('config_density0')
-    factor = 1e-22*rho*cp
+    factor = 1e-22
 
     k700m = np.where(depth > 700.)[0][0] - 1
     k2000m = np.where(depth > 2000.)[0][0] - 1
@@ -110,6 +137,8 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                 startDate=startDate,
                                 endDate=endDate)
 
+    ds = ds.isel(nOceanRegionsTmp=regionIndicesToPlot)
+
     timeStart = string_to_datetime(startDate)
     timeEnd = string_to_datetime(endDate)
 
@@ -129,12 +158,16 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
             config=config,
             simulationStartTime=simulationStartTime,
             timeVariableName='Time',
-            variableList=variableList,
+            variableList=['avgLayerTemperature'],
             variableMap=variableMap,
             startDate=startDateFirstYear,
             endDate=endDateFirstYear)
+
+        dsFirstYear = dsFirstYear.isel(nOceanRegionsTmp=regionIndicesToPlot)
+
+        firstYearAvgLayerTemperature = dsFirstYear.avgLayerTemperature
     else:
-        dsFirstYear = ds
+        firstYearAvgLayerTemperature = ds.avgLayerTemperature
         firstYear = timeStart.year
 
     timeStartFirstYear = date_to_days(year=firstYear, month=1, day=1,
@@ -143,17 +176,15 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                                     hour=23, minute=59, second=59,
                                     calendar=calendar)
 
-    dsFirstYear = dsFirstYear.sel(Time=slice(timeStartFirstYear,
-                                             timeEndFirstYear))
+    firstYearAvgLayerTemperature = firstYearAvgLayerTemperature.sel(
+        Time=slice(timeStartFirstYear, timeEndFirstYear))
 
-    meanFirstYear = dsFirstYear.mean('Time')
+    firstYearAvgLayerTemperature = firstYearAvgLayerTemperature.mean('Time')
 
     print '  Compute temperature anomalies...'
-    avgLayerTemperature = ds.avgLayerTemperature
-    avgLayerTemperatureFirstYear = meanFirstYear.avgLayerTemperature
 
-    avgLayTemperatureAnomaly = (avgLayerTemperature -
-                                avgLayerTemperatureFirstYear)
+    ds['avgLayTemperatureAnomaly'] = (ds.avgLayerTemperature -
+                                      firstYearAvgLayerTemperature)
 
     yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
     yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -182,21 +213,18 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
                 'timeSeries startYear and will not be plotted.'
             preprocessedReferenceRunName = 'None'
 
-    sumLayerMaskValue = ds.sumLayerMaskValue
-    avgLayerArea = ds.avgLayerArea
-    avgLayerThickness = ds.avgLayerThickness
+    cacheFileName = '{}/ohcTimeSeries.nc'.format(outputDirectory)
+
+    dsOHC = time_series.cache_time_series(ds.Time.values, compute_ohc_part,
+                                          cacheFileName, calendar,
+                                          yearsPerCacheUpdate=10,
+                                          printProgress=True)
 
     print '  Compute OHC and make plots...'
-    for index in range(len(regionIndicesToPlot)):
-        regionIndex = regionIndicesToPlot[index]
+    for index, regionIndex in enumerate(regionIndicesToPlot):
 
-        # Compute volume of each layer in the region:
-        layerArea = sumLayerMaskValue[:, regionIndex, :] * \
-            avgLayerArea[:, regionIndex, :]
-        layerVolume = layerArea * avgLayerThickness[:, regionIndex, :]
+        ohc = dsOHC.ohc.isel(nOceanRegionsTmp=index)
 
-        # Compute OHC:
-        ohc = layerVolume * avgLayTemperatureAnomaly[:, regionIndex, :]
         # OHC over 0-bottom depth range:
         ohcTotal = ohc.sum('nVertLevels')
         ohcTotal = factor*ohcTotal
