@@ -7,13 +7,14 @@ Luke Van Roekel, Xylar Asay-Davis
 
 Last Modified
 -------------
-03/29/2017
+04/08/2017
 """
 
 import xarray as xr
 import pandas as pd
 import numpy as np
 from scipy import signal, stats
+import os
 
 from ..shared.climatology import climatology
 from ..shared.constants import constants
@@ -52,7 +53,7 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
 
     Last Modified
     -------------
-    03/29/2017
+    04/08/2017
     """
 
     print '  Load SST data...'
@@ -69,8 +70,10 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
     streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     fileNames = historyStreams.readpath(streamName, startDate=startDate,
                                         endDate=endDate,  calendar=calendar)
-    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
-
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(fileNames[0]),
+              os.path.basename(fileNames[-1]))
     mainRunName = config.get('runs', 'mainRunName')
 
     # regionIndex should correspond to NINO34 in surface weighted Average AM
@@ -139,17 +142,18 @@ def compute_nino34_index(regionSST, calendar):  # {{{
 
     Last Modified
     -------------
-    03/30/2017
+    04/08/2017
     """
 
     if not isinstance(regionSST, xr.core.dataarray.DataArray):
         raise ValueError('regionSST should be an xarray DataArray')
 
     # add 'month' data array so we can group by month below.
-    regionSST = climatology.add_months_and_days_in_month(regionSST, calendar)
+    regionSST = climatology.add_years_months_days_in_month(regionSST, calendar)
 
     # Compute monthly average and anomaly of climatology of SST
-    monthlyClimatology = climatology.compute_monthly_climatology(regionSST)
+    monthlyClimatology = \
+        climatology.compute_monthly_climatology(regionSST, maskVaries=False)
 
     anomaly = regionSST.groupby('month') - monthlyClimatology
 

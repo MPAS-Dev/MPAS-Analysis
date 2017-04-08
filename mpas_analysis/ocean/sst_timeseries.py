@@ -1,3 +1,5 @@
+import os
+
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.generalized_reader.generalized_reader \
@@ -24,7 +26,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 03/23/2017
+    Last Modified: 04/08/2017
     """
 
     print '  Load SST data...'
@@ -42,7 +44,10 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     fileNames = historyStreams.readpath(streamName, startDate=startDate,
                                         endDate=endDate,  calendar=calendar)
-    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(fileNames[0]),
+              os.path.basename(fileNames[-1]))
 
     mainRunName = config.get('runs', 'mainRunName')
     preprocessedReferenceRunName = config.get('runs',
