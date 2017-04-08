@@ -144,7 +144,7 @@ class TestGeneralizedReader(TestCase):
             assert hasattr(ds, '_autoclose'), \
                 '`autoclose` not defined for dataset'
             if hasattr(ds, '_autoclose'):
-                assert ds._autoclose == autoclose, \
+                assert ds._autoclose == int(autoclose), \
                         ('`autoclose` used for dataset is inconsistent '
                          'with expected test value.')
 
