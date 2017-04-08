@@ -36,6 +36,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 
 from ..shared.analysis_task import setup_task
 from ..shared.climatology import climatology
+from ..shared.time_series import time_series
 
 
 def moc_streamfunction(config):  # {{{
@@ -438,17 +439,50 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                          dictRegion):  # {{{
     '''compute MOC time series as a post-process'''
 
-    def write_file(dsMOCTimeSeries):
-        # make sure the Time dimension is in ascending order by Time
-        indices = dsMOCTimeSeries.Time.argsort()
-        dsMOCTimeSeries = dsMOCTimeSeries.isel(Time=indices)
-        dsMOCTimeSeries.Time.attrs['units'] = 'days since 0001-01-01'
-        dsMOCTimeSeries.mocAtlantic26.attrs['units'] = 'Sv (10^6 m^3/s)'
-        dsMOCTimeSeries.mocAtlantic26.attrs['description'] = \
-            'Max MOC Atlantic streamfunction nearest to RAPID Array '\
-            'latitude (26.5N)'
-        dsMOCTimeSeries.to_netcdf(outputFileTseries)
-        return dsMOCTimeSeries
+    def compute_moc_time_series_part(timeIndices, firstCall):
+        # computes a subset of the MOC time series
+
+        if firstCall:
+            print '   Process and save time series'
+
+        times = ds.Time[timeIndices].values
+        mocRegion = np.zeros(timeIndices.shape)
+
+        for localIndex, timeIndex in enumerate(timeIndices):
+            time = times[localIndex]
+            dsLocal = ds.isel(Time=timeIndex)
+            date = days_to_datetime(time, calendar=calendar)
+
+            print '     date: {:04d}-{:02d}'.format(date.year, date.month)
+
+            horizontalVel = dsLocal.avgNormalVelocity.values
+            verticalVel = dsLocal.avgVertVelocityTop.values
+            velArea = verticalVel * areaCell[:, np.newaxis]
+            transportZ = _compute_transport(maxEdgesInTransect,
+                                            transectEdgeGlobalIDs,
+                                            transectEdgeMaskSigns,
+                                            nVertLevels, dvEdge,
+                                            refLayerThickness,
+                                            horizontalVel)
+            mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
+                                  regionCellMask, transportZ, velArea)
+            mocRegion[localIndex] = np.amax(mocTop[:, indlat26])
+
+        description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
+            'Array latitude (26.5N)'
+
+        dictonary = {'dims': ['Time'],
+                     'coords': {'Time':
+                                {'dims': ('Time'),
+                                 'data': times,
+                                 'attrs': {'units': 'days since 0001-01-01'}}},
+                     'data_vars': {'mocAtlantic26':
+                                   {'dims': ('Time'),
+                                    'data': mocRegion,
+                                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                                              'description': description}}}}
+        dsMOC = xr.Dataset.from_dict(dictonary)
+        return dsMOC
 
     # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
     print '\n  Compute and/or plot post-processed Atlantic MOC '\
@@ -492,62 +526,10 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
     continueOutput = os.path.exists(outputFileTseries)
     if continueOutput:
         print '   Read in previously computed MOC time series'
-        # read in what we have so far
-        dsMOCTimeSeries = xr.open_dataset(outputFileTseries,
-                                          decode_times=False)
-        # force loading and then close so we can overwrite the file later
-        dsMOCTimeSeries.load()
-        dsMOCTimeSeries.close()
-    else:
-        # create a new data set from a dictionary
-        dictonary = {
-            'Time': {'dims': ('Time'),
-                     'data': []},
-            'mocAtlantic26': {'dims': ('Time'),
-                              'data': []}}
-        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
 
-    newEntries = False
-    first = True
-    for tIndex in range(ds.Time.size):
-        if ds.Time[tIndex].values in dsMOCTimeSeries.Time.values:
-            # we have it already, so no need to recompute
-            continue
-        if first:
-            print '   Process and save MOC time series'
-            first = False
-        date = days_to_datetime(ds.Time[tIndex], calendar=calendar)
-        print '     date: {:04d}-{:02d}'.format(date.year, date.month)
-        horizontalVel = ds.avgNormalVelocity[tIndex, :, :].values
-        verticalVel = ds.avgVertVelocityTop[tIndex, :, :].values
-        velArea = verticalVel * areaCell[:, np.newaxis]
-        transportZ = _compute_transport(maxEdgesInTransect,
-                                        transectEdgeGlobalIDs,
-                                        transectEdgeMaskSigns,
-                                        nVertLevels, dvEdge,
-                                        refLayerThickness,
-                                        horizontalVel)
-        mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
-                              regionCellMask, transportZ, velArea)
-        mocAtlantic26 = np.amax(mocTop[:, indlat26])
-
-        dictonary = {'Time': {'dims': ('Time'), 'data': [ds.Time[tIndex]]},
-                     'mocAtlantic26': {'dims': ('Time'),
-                                       'data': [mocAtlantic26]}}
-        # add the new time entry to the data set
-        dsMOCTimeSeries = xr.concat([dsMOCTimeSeries,
-                                     xr.Dataset.from_dict(dictonary)],
-                                    dim='Time')
-        newEntries = True
-        if date.month == 12:
-            # each year, save the data set for safe keeping
-            print '   saving progress.'
-            dsMOCTimeSeries = write_file(dsMOCTimeSeries)
-            newEntries = False
-
-    if newEntries:
-        print '   saving final result.'
-        dsMOCTimeSeries = write_file(dsMOCTimeSeries)
+    dsMOCTimeSeries = time_series.cache_time_series(
+        ds.Time.values,  compute_moc_time_series_part, outputFileTseries,
+        calendar, yearsPerCacheUpdate=1,  printProgress=False)
 
     return dsMOCTimeSeries  # }}}
 
