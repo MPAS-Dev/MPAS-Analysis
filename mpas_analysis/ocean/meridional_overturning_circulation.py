@@ -20,13 +20,14 @@ import numpy as np
 import netCDF4
 import os
 import warnings
+from functools import partial
 
 from ..shared.constants.constants import m3ps_to_Sv, rad_to_deg, \
     monthDictionary
 from ..shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io.utility import build_config_full_path, make_directories
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -35,7 +36,8 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
 from ..shared.analysis_task import setup_task
-from ..shared.climatology import climatology
+from ..shared.climatology.climatology import update_start_end_year, \
+    cache_climatologies
 from ..shared.time_series import time_series
 
 
@@ -253,10 +255,7 @@ def _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
     outputDirectory = build_config_full_path(config, 'output',
                                              'mpasClimatologySubdirectory')
 
-    try:
-        os.makedirs(outputDirectory)
-    except OSError:
-        pass
+    make_directories(outputDirectory)
 
     ds = open_multifile_dataset(fileNames=inputFilesClimo,
                                 calendar=calendar,
@@ -268,13 +267,15 @@ def _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
                                 startDate=startDateClimo,
                                 endDate=endDateClimo)
 
-    climatology.update_start_end_year(ds, config, calendar)
+    # update the start and end year in config based on the real extend of ds
+    update_start_end_year(ds, config, calendar)
 
     cachePrefix = '{}/meanVelocity'.format(outputDirectory)
 
-    climatology.cache_climatologies(ds, monthDictionary['ANN'],
-                                    config, cachePrefix, calendar,
-                                    printProgress=True)
+    # compute and cache the velocity climatology
+    cache_climatologies(ds, monthDictionary['ANN'],
+                        config, cachePrefix, calendar,
+                        printProgress=True)
     # }}}
 
 
@@ -324,10 +325,9 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
           'streamfunction...'
     outputDirectory = build_config_full_path(config, 'output',
                                              'mpasClimatologySubdirectory')
-    try:
-        os.makedirs(outputDirectory)
-    except OSError:
-        pass
+
+    make_directories(outputDirectory)
+
     outputFileClimo = '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
                        outputDirectory, dictClimo['startYearClimo'],
                        dictClimo['endYearClimo'])
@@ -439,51 +439,6 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                          dictRegion):  # {{{
     '''compute MOC time series as a post-process'''
 
-    def compute_moc_time_series_part(timeIndices, firstCall):
-        # computes a subset of the MOC time series
-
-        if firstCall:
-            print '   Process and save time series'
-
-        times = ds.Time[timeIndices].values
-        mocRegion = np.zeros(timeIndices.shape)
-
-        for localIndex, timeIndex in enumerate(timeIndices):
-            time = times[localIndex]
-            dsLocal = ds.isel(Time=timeIndex)
-            date = days_to_datetime(time, calendar=calendar)
-
-            print '     date: {:04d}-{:02d}'.format(date.year, date.month)
-
-            horizontalVel = dsLocal.avgNormalVelocity.values
-            verticalVel = dsLocal.avgVertVelocityTop.values
-            velArea = verticalVel * areaCell[:, np.newaxis]
-            transportZ = _compute_transport(maxEdgesInTransect,
-                                            transectEdgeGlobalIDs,
-                                            transectEdgeMaskSigns,
-                                            nVertLevels, dvEdge,
-                                            refLayerThickness,
-                                            horizontalVel)
-            mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
-                                  regionCellMask, transportZ, velArea)
-            mocRegion[localIndex] = np.amax(mocTop[:, indlat26])
-
-        description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
-            'Array latitude (26.5N)'
-
-        dictonary = {'dims': ['Time'],
-                     'coords': {'Time':
-                                {'dims': ('Time'),
-                                 'data': times,
-                                 'attrs': {'units': 'days since 0001-01-01'}}},
-                     'data_vars': {'mocAtlantic26':
-                                   {'dims': ('Time'),
-                                    'data': mocRegion,
-                                    'attrs': {'units': 'Sv (10^6 m^3/s)',
-                                              'description': description}}}}
-        dsMOC = xr.Dataset.from_dict(dictonary)
-        return dsMOC
-
     # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
     print '\n  Compute and/or plot post-processed Atlantic MOC '\
           'time series...'
@@ -527,11 +482,69 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
     if continueOutput:
         print '   Read in previously computed MOC time series'
 
+    # add all the other arguments to the function
+    comp_moc_part = partial(_compute_moc_time_series_part, ds,
+                            calendar, areaCell, latCell, indlat26,
+                            maxEdgesInTransect, transectEdgeGlobalIDs,
+                            transectEdgeMaskSigns,  nVertLevels, dvEdge,
+                            refLayerThickness, latAtlantic, regionCellMask)
+
     dsMOCTimeSeries = time_series.cache_time_series(
-        ds.Time.values,  compute_moc_time_series_part, outputFileTseries,
+        ds.Time.values,  comp_moc_part, outputFileTseries,
         calendar, yearsPerCacheUpdate=1,  printProgress=False)
 
     return dsMOCTimeSeries  # }}}
+
+
+def _compute_moc_time_series_part(timeIndices, firstCall, ds, calendar,
+                                  areaCell, latCell, indlat26,
+                                  maxEdgesInTransect,
+                                  transectEdgeGlobalIDs, transectEdgeMaskSigns,
+                                  nVertLevels, dvEdge, refLayerThickness,
+                                  latAtlantic, regionCellMask):
+    # computes a subset of the MOC time series
+
+    if firstCall:
+        print '   Process and save time series'
+
+    times = ds.Time[timeIndices].values
+    mocRegion = np.zeros(timeIndices.shape)
+
+    for localIndex, timeIndex in enumerate(timeIndices):
+        time = times[localIndex]
+        dsLocal = ds.isel(Time=timeIndex)
+        date = days_to_datetime(time, calendar=calendar)
+
+        print '     date: {:04d}-{:02d}'.format(date.year, date.month)
+
+        horizontalVel = dsLocal.avgNormalVelocity.values
+        verticalVel = dsLocal.avgVertVelocityTop.values
+        velArea = verticalVel * areaCell[:, np.newaxis]
+        transportZ = _compute_transport(maxEdgesInTransect,
+                                        transectEdgeGlobalIDs,
+                                        transectEdgeMaskSigns,
+                                        nVertLevels, dvEdge,
+                                        refLayerThickness,
+                                        horizontalVel)
+        mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
+                              regionCellMask, transportZ, velArea)
+        mocRegion[localIndex] = np.amax(mocTop[:, indlat26])
+
+    description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
+        'Array latitude (26.5N)'
+
+    dictonary = {'dims': ['Time'],
+                 'coords': {'Time':
+                            {'dims': ('Time'),
+                             'data': times,
+                             'attrs': {'units': 'days since 0001-01-01'}}},
+                 'data_vars': {'mocAtlantic26':
+                               {'dims': ('Time'),
+                                'data': mocRegion,
+                                'attrs': {'units': 'Sv (10^6 m^3/s)',
+                                          'description': description}}}}
+    dsMOC = xr.Dataset.from_dict(dictonary)
+    return dsMOC
 
 
 # def _compute_moc_analysismember(config):

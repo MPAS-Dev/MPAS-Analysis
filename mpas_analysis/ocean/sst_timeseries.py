@@ -12,7 +12,7 @@ from ..shared.analysis_task import setup_task
 
 from ..shared.time_series import time_series
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io.utility import build_config_full_path, make_directories
 
 
 def sst_timeseries(config, streamMap=None, variableMap=None):
@@ -73,10 +73,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     outputDirectory = build_config_full_path(config, 'output',
                                              'timeseriesSubdirectory')
 
-    try:
-        os.makedirs(outputDirectory)
-    except OSError:
-        pass
+    make_directories(outputDirectory)
 
     regionNames = config.getExpression('regions', 'regions')
     regionNames = [regionNames[index] for index in regionIndicesToPlot]

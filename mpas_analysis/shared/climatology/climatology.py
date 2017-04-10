@@ -20,7 +20,7 @@ from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path
+from ..io.utility import build_config_full_path, make_directories
 
 from ..interpolation import interpolate
 
@@ -82,10 +82,8 @@ def write_mpas_mapping_file(config, meshFileName):
         # file name
         mappingSubdirectory = build_config_full_path(config, 'output',
                                                      'mappingSubdirectory')
-        try:
-            os.makedirs(mappingSubdirectory)
-        except OSError:
-            pass
+
+        make_directories(mappingSubdirectory)
 
         meshName = config.get('input', 'mpasMeshName')
 
@@ -189,10 +187,7 @@ def write_observations_mapping_file(config, componentName, fieldName,
             mappingSubdirectory = build_config_full_path(config, 'output',
                                                          'mappingSubdirectory')
 
-            try:
-                os.makedirs(mappingSubdirectory)
-            except OSError:
-                pass
+            make_directories(mappingSubdirectory)
 
             obsMappingFileName = \
                 '{}/map_obs_{}_{}_to_{}x{}degree_{}.nc'.format(
@@ -276,14 +271,9 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames):
 
     regriddedDirectory = build_config_full_path(
         config, 'output', 'mpasRegriddedClimSubdirectory')
-    try:
-        os.makedirs(regriddedDirectory)
-    except OSError:
-        pass
-    try:
-        os.makedirs(climatologyDirectory)
-    except OSError:
-        pass
+
+    make_directories(regriddedDirectory)
+    make_directories(climatologyDirectory)
 
     climatologyPrefix = '{}/{}_{}_{}'.format(climatologyDirectory, fieldName,
                                              meshName, monthNames)
@@ -377,16 +367,10 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
         regriddedDirectory, fieldName, gridName, comparisonLatRes,
         comparisonLonRes, monthNames)
 
-    try:
-        os.makedirs(climatologyDirectory)
-    except OSError:
-        pass
+    make_directories(climatologyDirectory)
 
     if not matchesComparison:
-        try:
-            os.makedirs(regriddedDirectory)
-        except OSError:
-            pass
+        make_directories(regriddedDirectory)
 
     return (climatologyFileName, regriddedFileName)
 
@@ -583,7 +567,8 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
         if os.path.exists(outputFileClimo):
             # already cached
             dsCached = xr.open_dataset(outputFileClimo)
-            if dsCached.attrs['totalMonths'] == 12*len(years):
+            if (dsCached.attrs['totalMonths'] ==
+                    constants.monthsInYear*len(years)):
                 # also complete, so we can move on
                 done = True
 
@@ -632,13 +617,15 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
     done = False
     if os.path.exists(outputFileClimo):
         climatology = xr.open_dataset(outputFileClimo)
-        if climatology.attrs['totalMonths'] == (endYearClimo-startYearClimo+1)*12:
+        if (climatology.attrs['totalMonths'] ==
+                (endYearClimo-startYearClimo+1)*constants.monthsInYear):
             # also complete, so we can move on
             done = True
 
     if not done:
         if printProgress:
-            print '   Computing aggregated climatology {}...'.format(yearString)
+            print '   Computing aggregated climatology ' \
+                  '{}...'.format(yearString)
 
         first = True
         for cacheIndex, info in enumerate(cacheInfo):

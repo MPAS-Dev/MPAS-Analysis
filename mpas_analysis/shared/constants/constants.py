@@ -20,6 +20,8 @@ lonmax = 180.
 latmin = -90.
 latmax = 90.
 
+monthsInYear = 12
+
 monthDictionary = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
                    'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11,
                    'Dec': 12, 'JFM': np.array([1, 2, 3]),
@@ -30,7 +32,8 @@ monthDictionary = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
 
 daysInMonth = np.array([31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])
 
-abrevMonthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+abrevMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+                   "Sep", "Oct", "Nov", "Dec"]
 
 # conversion factor from m^3/s to Sverdrups
 m3ps_to_Sv = 1e-6

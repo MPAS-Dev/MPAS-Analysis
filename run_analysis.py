@@ -28,23 +28,6 @@ def checkPathExists(path):  # {{{
 # }}}
 
 
-def makeDirectories(path):  # {{{
-    """
-    Make the given path if it does not already exist.
-
-    Returns the path unchanged.
-
-    Author: Xylar Asay-Davis
-    Last Modified: 02/02/2017
-    """
-
-    try:
-        os.makedirs(path)
-    except OSError:
-        pass
-    return path  # }}}
-
-
 def checkGenerate(config, analysisName, mpasCore, analysisCategory=None):
     # {{{
     """

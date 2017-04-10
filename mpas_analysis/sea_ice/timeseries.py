@@ -4,7 +4,7 @@ import os
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io.utility import build_config_full_path, make_directories
 
 from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
     datetime_to_days
@@ -119,10 +119,7 @@ def seaice_timeseries(config, streamMap=None, variableMap=None):
     outputDirectory = build_config_full_path(config, 'output',
                                              'timeseriesSubdirectory')
 
-    try:
-        os.makedirs(outputDirectory)
-    except OSError:
-        pass
+    make_directories(outputDirectory)
 
     print '  Load sea-ice data...'
     # Load mesh
