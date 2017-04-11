@@ -699,6 +699,14 @@ def _compute_masked_mean(ds, maskVaries):
     Compute the time average of data set, masked out where the variables in ds
     are NaN and, if ``maskVaries == True``, weighting by the number of days
     used to compute each monthly mean time in ds.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
     '''
     def ds_to_weights(ds):
         # make an identical data set to ds but replacing all data arrays with
@@ -744,6 +752,14 @@ def _get_comparison_lat_lon(comparisonLatRes, comparisonLonRes):
     '''
     Returns the lat and lon arrays defining the corners of the comparison
     grid.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
     '''
     nLat = int((constants.latmax-constants.latmin)/comparisonLatRes)+1
     nLon = int((constants.lonmax-constants.lonmin)/comparisonLonRes)+1
@@ -759,6 +775,14 @@ def _get_grid_name(gridFileName, latVarName, lonVarName, comparisonLatRes,
     Given a grid file with given lat and lon variable names, finds the
     resolution of the grid and generates a grid name.  Given comparison
     lat and lon resolution, determines if the grid matches the comparison grid.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
     '''
     inFile = netCDF4.Dataset(gridFileName, 'r')
 
@@ -789,6 +813,14 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     '''
     Determine which cache files already exist, which are incomplete and which
     years are present in each cache file (whether existing or to be created).
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
     '''
 
     cacheInfo = []
@@ -848,6 +880,14 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
                                     calendar):  # {{{
     '''
     Cache individual climatologies for later aggregation.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
     '''
 
     for cacheIndex, info in enumerate(cacheInfo):
@@ -879,6 +919,14 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
                                   cacheInfo):  # {{{
     '''
     Cache aggregated climatology from individual climatologies.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
     '''
 
     if startYearClimo == endYearClimo:
