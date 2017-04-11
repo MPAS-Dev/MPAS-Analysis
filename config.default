@@ -185,6 +185,7 @@ baseDirectory = /dir/to/ocean/observations
 sstSubdirectory = SST
 sssSubdirectory = SSS
 mldSubdirectory = MLD
+ninoSubdirectory = Nino
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -330,6 +331,11 @@ movingAveragePoints = 12
 # The indexNino34 routine only accepts one value at a time,
 # regionIndicesToPlot should be an integer
 regionIndicesToPlot = 5
+
+# Data source to read for comparison.  There are three options
+# 1 - ERS SSTv4 -- Updated version of previous -- 1854 - 2016
+# 2 - HADIsst -- Hadley center analysis -- 1870 - 2016
+observationData = HADIsst 
 
 [timeSeriesMHT]
 ## options related to plotting time series of meridional heat transport (MHT)

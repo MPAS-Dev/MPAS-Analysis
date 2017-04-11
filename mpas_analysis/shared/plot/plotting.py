@@ -11,7 +11,7 @@ Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
 
 Last Modified
 -------------
-03/21/2017
+04/07/2017
 """
 
 import matplotlib.pyplot as plt
@@ -30,9 +30,12 @@ from ..constants import constants
 
 
 def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
-                        redNoiseSpectra, title, fileout, linewidths,
-                        xlabel='Period (years)', ylabel='Power Spectrum',
-                        titleFontSize=None, figsize=(15, 6), dpi=300):
+                        redNoiseSpectra, fObs, f30, ninoObs, conf95Obs, conf99Obs,
+                        redNoiseObs, nino30yr, conf9530, conf9930, redNoise30,
+                        title, modelTitle, obsTitle,
+                        fileout, linewidths, xlabel='Period (years)',
+                        ylabel=r'Power ($^o$C / cycles mo$^{-1}$)', titleFontSize=None,
+                        figsize=(9, 21), dpi=300):
     """
     Plots the nino34 time series and power spectra in an image file
     Parameters
@@ -56,8 +59,32 @@ def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
     redNoiseSpectra : numpy.array
         red noise fit to the ninoSpectra
 
+    fObs : numpy.array
+           periods to plot on x-axis for observations
+
+    ninoObs : xarray.dataArray object
+        nino34 power spectra from the full observational record
+
+    conf95Obs : numpy.array
+        95% confidence level based on chi squared for observations
+
+    conf99Obs : numpy.array
+        99% confidence level based on chi squared for observations
+
+    redNoiseObs : numpy.array
+        red noise fit to ninoObs
+
+    nino30yr : xarray.dataArray object
+        power spectra of the last 30 years of the observational record
+
     title : str
         the title of the plot
+
+    modelTitle : str
+        the title of model panel
+
+    obsTitle : str
+        the title of the obs panel
 
     xLabel, yLabel : str
         axis labels
@@ -82,38 +109,10 @@ def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
 
     Last Modified
     -------------
-    03/22/2017
+    04/07/2017
     """
 
-    fig, ax = plt.subplots()
-
-    ax.plot(f[2:-3], ninoSpectra[2:-3], 'k', linewidth=linewidths)
-    ax.plot(f[2:-3], redNoiseSpectra[2:-3], 'r', linewidth=linewidths)
-    ax.plot(f[2:-3], confidence95[2:-3], 'b', linewidth=linewidths)
-    ax.plot(f[2:-3], confidence99[2:-3], 'g', linewidth=linewidths)
-    ax.set_xlim(15, 1)
-
-    # add legend
-    ax.legend(['Nino34 index spectra', 'Red noise fit',
-               '95% confidence threshold', '99% confidence threshold'],
-               loc='upper right')
-
-    # automatically size y-axis
-    xmin = ax.get_xlim()[0]
-    xmax = ax.get_xlim()[1]
-
-    # find period/frequency bounds for chosen xmin/xmax
-    minIndex = np.abs(f-xmin).argmin()
-    maxIndex = np.abs(f-xmax).argmin()
-
-    # find maximum value of three curves plotted
-    # The confidence95 curve is by definition less than confidence99
-    maxValueNinoSpectra = ninoSpectra[minIndex:maxIndex].values.max()
-    maxValueRedNoise = redNoiseSpectra[minIndex:maxIndex].max()
-    maxValueConf99 = confidence99[minIndex:maxIndex].max()
-    # Set ylim max to be 1.1*max(maxValueNino,maxRed,maxCon)
-    ax.set_ylim(0,0.9*max(maxValueNinoSpectra, maxValueRedNoise,
-                          maxValueConf99))
+    fig = plt.figure(figsize=figsize, dpi=dpi)
 
     if titleFontSize is None:
         titleFontSize = config.get('plot', 'titleFontSize')
@@ -123,11 +122,73 @@ def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
                   'color': config.get('plot', 'titleFontColor'),
                   'weight': config.get('plot', 'titleFontWeight')}
     if title is not None:
-        ax.set_title(title, **title_font)
+        fig.suptitle(title, y=0.92, **title_font)
+
+    ax1 = plt.subplot(3, 1, 1)
+
+    plt.plot(fObs[2:-3], ninoObs[2:-3], 'k', linewidth=linewidths)
+    plt.plot(fObs[2:-3], redNoiseObs[2:-3], 'r', linewidth=linewidths)
+    plt.plot(fObs[2:-3], conf95Obs[2:-3], 'b', linewidth=linewidths)
+    plt.plot(fObs[2:-3], conf99Obs[2:-3], 'g', linewidth=linewidths)
+    plt.xlim(10, 1)
+
+    plt.legend(['Nino34 spectra (Full Record)', 'Red noise fit',
+               '95% confidence threshold', '99% confidence threshold'],
+               loc='upper right')
+    maxObs = _plot_size_y_axis(plt, fObs, c1=conf99Obs, c2=redNoiseObs)
+    max30 = _plot_size_y_axis(plt, f30, c1=conf9930, c2=redNoise30)
+    maxModel = _plot_size_y_axis(plt, f, c1=ninoSpectra.values, c2=confidence99,
+                                 c3=redNoiseSpectra)
+
+    maxYval = max(maxObs, max30, maxModel)
+    plt.ylim(0, 0.9*maxYval)
+
+    if obsTitle is not None:
+        plt.title(obsTitle+' (Full Record)', **title_font)
     if xlabel is not None:
-        ax.set_xlabel(xlabel, **axis_font)
+        plt.xlabel(xlabel, **axis_font)
     if ylabel is not None:
-        ax.set_ylabel(ylabel, **axis_font)
+        plt.ylabel(ylabel, **axis_font)
+
+    ax2 = plt.subplot(3, 1, 2)
+
+    plt.plot(f30[2:-3], nino30yr[2:-3], 'k', linewidth=linewidths)
+    plt.plot(f30[2:-3], redNoise30[2:-3], 'r', linewidth=linewidths)
+    plt.plot(f30[2:-3], conf9530[2:-3], 'b', linewidth=linewidths)
+    plt.plot(f30[2:-3], conf9930[2:-3], 'g', linewidth=linewidths)
+    plt.xlim(10, 1)
+    plt.ylim(0, 0.9*maxYval)
+
+    plt.legend(['Nino34 spectra (1976 - 2016)', 'Red noise fit',
+               '95% confidence threshold', '99% confidence threshold'],
+               loc='upper right')
+
+    if obsTitle is not None:
+        plt.title(obsTitle+' (1976-2016)', **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+
+    ax3 = plt.subplot(3, 1, 3)
+    plt.plot(f[2:-3], ninoSpectra[2:-3], 'k', linewidth=linewidths)
+    plt.plot(f[2:-3], redNoiseSpectra[2:-3], 'r', linewidth=linewidths)
+    plt.plot(f[2:-3], confidence95[2:-3], 'b', linewidth=linewidths)
+    plt.plot(f[2:-3], confidence99[2:-3], 'g', linewidth=linewidths)
+    plt.xlim(10, 1)
+    plt.ylim(0, 0.9*maxYval)
+
+    # add legend
+    plt.legend(['Nino34 index spectra', 'Red noise fit',
+               '95% confidence threshold', '99% confidence threshold'],
+               loc='upper right')
+
+    if modelTitle is not None:
+        plt.title(modelTitle, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
     if fileout is not None:
         fig.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
@@ -135,9 +196,10 @@ def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
         plt.close()
 
 
-def nino34_timeseries_plot(config, nino34Index, title, fileout, linewidths,
+def nino34_timeseries_plot(config, nino34Index, nino34Obs, nino3430, title,
+                           modelTitle, obsTitle, fileout, linewidths,
                            calendar, xlabel='Time [years]', ylabel='[$^\circ$C]',
-                           titleFontSize=None, figsize=(15, 6), dpi=300,
+                           titleFontSize=None, figsize=(12, 28), dpi=300,
                            maxXTicks=20):
     """
     Plots the nino34 time series and power spectra in an image file
@@ -151,8 +213,20 @@ def nino34_timeseries_plot(config, nino34Index, title, fileout, linewidths,
     nino34Index : xarray.dataArray
         nino34 timeseries to plot
 
+    nino34Obs : xarray.dataArray
+        nino34 observation
+
+    nino3430 : xarray.dataArray
+        subset of nino34 observations
+
     title : str
         the title of the plot
+
+    obsTitle : str
+        title of observational plot
+
+    modelTitle : str
+        title of model plot
 
     xLabel, yLabel : str
         axis labels
@@ -183,17 +257,91 @@ def nino34_timeseries_plot(config, nino34Index, title, fileout, linewidths,
 
     Last Modified
     -------------
-    03/22/2017
+    04/07/2017
     """
-    plt.figure(figsize=figsize, dpi=dpi)
+    fig = plt.figure(figsize=figsize, dpi=dpi)
 
-    nino34Index = nino34Index[2:-3]
-    y1 = nino34Index.values
-    nt = np.size(nino34Index)
-    time = nino34Index.Time.values
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
 
-    minDays = nino34Index.Time.values.min()
-    maxDays = nino34Index.Time.values.max()
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        fig.suptitle(title, y=0.92, **title_font)
+
+    # Plot Nino34 Observation Time series
+    plt.subplot(3, 1, 1)
+    _plot_nino_timeseries(plt, nino34Obs[2:-3].values, nino34Obs.Time[2:-3].values,
+                          xlabel, ylabel, obsTitle+' (Full Record)', calendar,
+                          axis_font, linewidths, maxXTicks)
+
+    # Plot subset of the observational data set
+    plt.subplot(3, 1, 2)
+    _plot_nino_timeseries(plt, nino3430.values, nino3430.Time.values,
+                          xlabel, ylabel, obsTitle+' (1976 - 2016)', calendar,
+                          axis_font, linewidths, maxXTicks)
+
+    # Plot Nino34 model time series
+    plt.subplot(3, 1, 3)
+    _plot_nino_timeseries(plt, nino34Index[2:-3].values, nino34Index.Time[2:-3].values,
+                          xlabel, ylabel, modelTitle, calendar, axis_font, linewidths,
+                          maxXTicks)
+    minDays = nino34Index.Time[2:-3].values.min()
+    maxDays = nino34Index.Time[2:-3].values.max()
+
+    _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+
+def _plot_nino_timeseries(plt, ninoIndex, time, xlabel, ylabel,
+                          panelTitle, calendar, axis_font, linewidths,
+                          maxXTicks):
+    '''
+    Plot the nino time series on a subplot
+
+    Parameters
+    ----------
+    ninoIndex : numpy.array
+      nino34 Index values (can be obs or model)
+
+    time : numpy.array
+      time values for the nino index
+
+    calendar : specified calendar for the plot
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.
+
+    panelTitle : string
+        string to label the subplot with
+
+    xlabel : string
+        string for x-axis label
+
+    ylabel : string
+        string for y-axis label
+
+    Author
+    ------
+    Luke Van Roekel
+
+    Last Modified
+    -------------
+    04/07/2017
+    '''
+    plt.title(panelTitle, y=1.06, **axis_font)
+    y1 = ninoIndex
+    nt = np.size(ninoIndex)
+
     y2 = np.zeros(nt)
 
     plt.plot(time, 0.4*np.ones(nt), '--k',
@@ -205,26 +353,10 @@ def nino34_timeseries_plot(config, nino34Index, title, fileout, linewidths,
     plt.fill_between(time, y1, y2, where=y1 < y2,
                      facecolor='blue', interpolate=True, linewidth=0)
 
-    _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
-
-    if titleFontSize is None:
-        titleFontSize = config.get('plot', 'titleFontSize')
-
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
-    title_font = {'size': titleFontSize,
-                  'color': config.get('plot', 'titleFontColor'),
-                  'weight': config.get('plot', 'titleFontWeight')}
-    if title is not None:
-        plt.title(title, **title_font)
     if xlabel is not None:
         plt.xlabel(xlabel, **axis_font)
     if ylabel is not None:
         plt.ylabel(ylabel, **axis_font)
-    if fileout is not None:
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
@@ -302,7 +434,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     yaxLimits = ax.get_ylim()
     if yaxLimits[0]*yaxLimits[1] < 0:
         indgood = np.where(np.logical_not(np.isnan(mean)))
-        x  = mean['Time'][indgood]
+        x = mean['Time'][indgood]
         plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2)
 
     _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
@@ -396,7 +528,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     majorTickLocs = np.zeros(12)
     minorTickLocs = np.zeros(12)
     majorTickLocs[0] = 0.0
-    minorTickLocs[0]= (constants.daysInMonth[0] * np.pi) / 365.0
+    minorTickLocs[0] = (constants.daysInMonth[0] * np.pi) / 365.0
     for month in range(1, 12):
         majorTickLocs[month] = majorTickLocs[month-1] + \
             ((constants.daysInMonth[month-1] * np.pi * 2.0) / 365.0)
@@ -910,9 +1042,50 @@ def setup_colormap(config, configSectionName, suffix=''):
     colormap.set_over(overColor)
     return (colormap, colorbarLevels)
 
+
+def _plot_size_y_axis(plt, xaxisValues, **data):
+    '''
+    Resize the y-axis limit based on the curves being plotted
+
+    Parameters
+    ----------
+    plt : plot handle
+
+    xaxisValues : numpy.array
+       Values plotted along the x-axis
+
+    data : dictionary entries must be numpy.array
+       data for curves on plot
+
+    Author
+    ------
+    Luke Van Roekel
+
+    Last modified
+    -------------
+    04/07/2017
+    '''
+
+    ax = plt.gca()
+    xmin = ax.get_xlim()[0]
+    xmax = ax.get_xlim()[1]
+
+    # find period/frequency bounds for chosen xmin/xmax
+    minIndex = np.abs(xaxisValues - xmin).argmin()
+    maxIndex = np.abs(xaxisValues - xmax).argmin()
+
+    # find maximum value of three curves plotted
+    maxCurveVal = -1E20
+    for key in data:
+        maxTemp = data[key][minIndex:maxIndex].max()
+        maxCurveVal = max(maxTemp, maxCurveVal)
+
+    return maxCurveVal
+
+
 def _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
     '''
-    Formats tick labels and positions along the x-axis for time series 
+    Formats tick labels and positions along the x-axis for time series
     / index plots
 
     Parameters

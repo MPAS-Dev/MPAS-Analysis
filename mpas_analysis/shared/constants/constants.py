@@ -50,6 +50,9 @@ sec_per_year = 86400. * 365.
 # seconds per month (approximate)
 sec_per_month = 86400. * 30.
 
+# Tapering coefficient for calculating spectral degrees of freedom
+tapcoef = 1.055111111111111
+
 # small value to prevent division by zero
 eps = 1.E-10
 

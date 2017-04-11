@@ -7,9 +7,10 @@ Luke Van Roekel, Xylar Asay-Davis
 
 Last Modified
 -------------
-04/08/2017
+04/10/2017
 """
 
+import datetime
 import xarray as xr
 import pandas as pd
 import numpy as np
@@ -18,7 +19,7 @@ import os
 
 from ..shared.climatology import climatology
 from ..shared.constants import constants
-
+from ..shared.io.utility import build_config_full_path
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
@@ -53,10 +54,12 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
 
     Last Modified
     -------------
-    04/08/2017
+    04/10/2017
     """
 
     print '  Load SST data...'
+    field = 'nino'
+
     # perform common setup for the task
     namelist, runStreams, historyStreams, calendar, streamMap, \
         variableMap, plotsDirectory = setup_task(config, componentName='ocean')
@@ -67,6 +70,20 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
     # reading only those that are between the start and end dates
     startDate = config.get('index', 'startDate')
     endDate = config.get('index', 'endDate')
+    dataSource = config.get('indexNino34', 'observationData')
+
+    observationsDirectory = build_config_full_path(
+        config, 'oceanObservations', '{}Subdirectory'.format(field))
+
+    # specify obsTitle based on data path
+    # These are the only data sets supported
+    if dataSource == 'HADIsst':
+        dataPath = "{}/HADIsst_nino34.nc".format(observationsDirectory)
+        obsTitle = 'HADSST'
+    else:
+        dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
+        obsTitle = 'ERS SSTv4'
+
     streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     fileNames = historyStreams.readpath(streamName, startDate=startDate,
                                         endDate=endDate,  calendar=calendar)
@@ -91,24 +108,49 @@ def nino34_index(config, streamMap=None, variableMap=None):  # {{{
                                 startDate=startDate,
                                 endDate=endDate)
 
+    # Observations have been processed to the nino34Index prior to reading
+    dsObs = xr.open_dataset(dataPath)
+    nino34Obs = dsObs.sst
+
     print '  Compute NINO3.4 index...'
     regionSST = ds.avgSurfaceTemperature.isel(nOceanRegions=regionIndex)
     nino34 = compute_nino34_index(regionSST, calendar)
 
+    # Compute the observational index over the entire time range
+#    nino34Obs = compute_nino34_index(dsObs.sst, calendar)
+
     print ' Computing NINO3.4 power spectra...'
     f, spectra, conf99, conf95, redNoise = compute_nino34_spectra(nino34)
 
+    # Compute the observational spectra over the whole record
+    fObs, spectraObs, conf99Obs, conf95Obs, redNoiseObs = compute_nino34_spectra(nino34Obs)
+
+    # Compute the observational spectra over the last 30 years for comparison
+    # Only saving the spectra
+    time_start = datetime.datetime(1976, 1, 1)
+    time_end = datetime.datetime(2016, 12, 31)
+    nino3430 = nino34Obs.sel(Time=slice(time_start, time_end))
+    f30, spectra30yrs, conf9930, conf9530, redNoise30 = compute_nino34_spectra(nino3430)
+
     # Convert frequencies to period in years
     f = 1.0 / (constants.eps + f*constants.sec_per_year)
+    fObs = 1.0 / (constants.eps + fObs*constants.sec_per_year)
+    f30 = 1.0 / (constants.eps + f30*constants.sec_per_year)
+
     print ' Plot NINO3.4 index and spectra...'
 
     figureName = '{}/NINO34_{}.png'.format(plotsDirectory, mainRunName)
-    nino34_timeseries_plot(config, nino34, 'NINO 3.4 Index',
-                           figureName, linewidths=2, calendar=calendar)
+    modelTitle = "{}".format(mainRunName)
+    nino34_timeseries_plot(config, nino34, nino34Obs, nino3430, 'NINO 3.4 Index',
+                           modelTitle, obsTitle, figureName, linewidths=2,
+                           calendar=calendar)
 
     figureName = '{}/NINO34_spectra_{}.png'.format(plotsDirectory, mainRunName)
     nino34_spectra_plot(config, f, spectra, conf95, conf99, redNoise,
-                        'NINO3.4 power spectrum', figureName, linewidths=2)
+                        fObs, f30, spectraObs, conf95Obs, conf99Obs, redNoiseObs,
+                        spectra30yrs, conf9530, conf9930, redNoise30,
+                        'NINO3.4 power spectrum', modelTitle,
+                        obsTitle, figureName, linewidths=2)
     # }}}
 
 
@@ -161,7 +203,9 @@ def compute_nino34_index(regionSST, calendar):  # {{{
     detrendedAnomal = signal.detrend(anomaly.values)
     anomaly.values = detrendedAnomal
 
-    return _running_mean(anomaly.to_series())  # }}}
+    # Compute 5 month running mean
+    wgts = np.ones(5) / 5.
+    return _running_mean(anomaly, wgts)  # }}}
 
 
 def compute_nino34_spectra(nino34Index):  # {{{
@@ -181,8 +225,9 @@ def compute_nino34_spectra(nino34Index):  # {{{
     Returns
     -------
     pxxSmooth : xarray.DataArray object
-        nino34Index power spectra that has been smoothed with a 5-point
-        running mean
+        nino34Index power spectra that has been smoothed with a modified
+        Daniell window (https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml) 
+        
 
     f : numpy.array
         array of frequencies corresponding to the center of the spectral
@@ -203,18 +248,28 @@ def compute_nino34_spectra(nino34Index):  # {{{
 
     Last Modified
     -------------
-    03/23/2017
+    04/10/2017
     """
 
     # Move nino34Index to numpy to allow functionality with scipy routines
     ninoIndex = nino34Index.values
     window = signal.tukey(len(ninoIndex), alpha=0.1)
     f, Pxx = signal.periodogram(window * ninoIndex,
-                                1.0 / constants.sec_per_month,
-                                scaling='spectrum')
+                                1.0 / constants.sec_per_month)
 
-    # computes power spectra, smoothed with 5 point running mean
-    pxxSmooth = _running_mean(pd.Series(Pxx))
+    # computes power spectra, smoothed with a weighted running mean
+    nwts = max(1, int(7*len(ninoIndex) / 1200))
+    # verify window length is odd, if not, add 1
+    if nwts % 2 == 0:
+        nwts += 1
+    # Calculate the weights for the running mean
+    # Weights are from the modified Daniell Window
+    wgts = np.ones(nwts)
+    wgts[0] = 0.5
+    wgts[-1] = 0.5
+    wgts /= sum(wgts)
+
+    pxxSmooth = _running_mean(pd.Series(Pxx), wgts) / constants.sec_per_month
 
     # compute 99 and 95% confidence intervals and red-noise process
     # Uses Chi squared test
@@ -232,8 +287,9 @@ def compute_nino34_spectra(nino34Index):  # {{{
     sum2 = np.sum(pxxSmooth.values)
     scale = sum2 / sum1
 
-    xLow = stats.chi2.interval(0.95, 4)[1]/4.
-    xHigh = stats.chi2.interval(0.99, 4)[1]/4.
+    df = 2. / (constants.tapcoef * sum(wgts**2))
+    xLow = stats.chi2.interval(0.95, df)[1]/df
+    xHigh = stats.chi2.interval(0.99, df)[1]/df
 
     # return Spectra, 99% confidence level, 95% confidence level,
     #        and Red-noise fit
@@ -266,21 +322,36 @@ def _autocorr(x, t=1):  # {{{
     return np.corrcoef(np.array([x[0:len(x)-t], x[t:len(x)]]))  # }}}
 
 
-def _running_mean(inputData):  # {{{
+def _running_mean(inputData, wgts):  # {{{
     """
-    Calculates 5-month running mean for NINO index and the spectra
+    Calculates a generic weighted running mean
 
+    Parameters
+    ----------
+    inputData : xr.DataArray
+       Data to be smoothed
+
+    wgts : numpy.array
+       array of weights that give the smoothing type
+       for the nino index this is a 5-point boxcar window
+       for the nino power spectra this is a modified Daniell window (see
+       https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)
+    
     Author
     ------
     Luke Van Roekel, Xylar Asay-Davis
 
     Last Modified
     -------------
-    03/23/2017
+    04/10/2017
     """
 
-    runningMean = pd.Series.rolling(inputData, 5, center=True,
-                                    min_periods=1).mean()
-    return xr.DataArray.from_series(runningMean)  # }}}
+    nt = len(inputData)
+    sp = (len(wgts) - 1)/2
+    runningMean = inputData.copy()
+    for k in range(sp, nt-(sp+1)):
+        runningMean[k] = sum(wgts*inputData[k-sp:k+sp+1].values)
+
+    return runningMean  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
