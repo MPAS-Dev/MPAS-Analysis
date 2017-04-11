@@ -225,8 +225,9 @@ def compute_nino34_spectra(nino34Index):  # {{{
     Returns
     -------
     pxxSmooth : xarray.DataArray object
-        nino34Index power spectra that has been smoothed with a 5-point
-        running mean
+        nino34Index power spectra that has been smoothed with a modified
+        Daniell window (https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml) 
+        
 
     f : numpy.array
         array of frequencies corresponding to the center of the spectral
@@ -247,7 +248,7 @@ def compute_nino34_spectra(nino34Index):  # {{{
 
     Last Modified
     -------------
-    04/09/2017
+    04/10/2017
     """
 
     # Move nino34Index to numpy to allow functionality with scipy routines
@@ -262,7 +263,7 @@ def compute_nino34_spectra(nino34Index):  # {{{
     if nwts % 2 == 0:
         nwts += 1
     # Calculate the weights for the running mean
-    # Weights are from the Daniell Window
+    # Weights are from the modified Daniell Window
     wgts = np.ones(nwts)
     wgts[0] = 0.5
     wgts[-1] = 0.5
@@ -323,15 +324,26 @@ def _autocorr(x, t=1):  # {{{
 
 def _running_mean(inputData, wgts):  # {{{
     """
-    Calculates 5-month running mean for NINO index and the spectra
+    Calculates a generic weighted running mean
 
+    Parameters
+    ----------
+    inputData : xr.DataArray
+       Data to be smoothed
+
+    wgts : numpy.array
+       array of weights that give the smoothing type
+       for the nino index this is a 5-point boxcar window
+       for the nino power spectra this is a modified Daniell window (see
+       https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)
+    
     Author
     ------
     Luke Van Roekel, Xylar Asay-Davis
 
     Last Modified
     -------------
-    04/09/2017
+    04/10/2017
     """
 
     nt = len(inputData)
