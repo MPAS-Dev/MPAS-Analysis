@@ -810,10 +810,23 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
         done = False
         if os.path.exists(outputFileClimo):
             # already cached
-            dsCached = xr.open_dataset(outputFileClimo)
-            if (dsCached.attrs['totalMonths'] == len(monthValues)*len(years)):
+            dsCached = None
+            try:
+                dsCached = xr.open_dataset(outputFileClimo)
+            except IOError:
+                # assuming the cache file is corrupt, so deleting it.
+                message = 'Deleting cache file {}, which appears to have ' \
+                          'been corrupted.'.format(outputFileClimo)
+                warnings.warn(message)
+                os.remove(outputFileClimo)
+
+            monthsIfDone = len(monthValues)*len(years)
+            if ((dsCached is not None) and
+                    (dsCached.attrs['totalMonths'] == monthsIfDone)):
                 # also complete, so we can move on
                 done = True
+            if dsCached is not None:
+                dsCached.close()
 
         cacheIndex = len(cacheInfo)
         for year in years:
@@ -877,9 +890,20 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
     done = False
     if os.path.exists(outputFileClimo):
-        climatology = xr.open_dataset(outputFileClimo)
-        if (climatology.attrs['totalMonths'] ==
-                (endYearClimo-startYearClimo+1)*len(monthValues)):
+        # already cached
+        climatology = None
+        try:
+            climatology = xr.open_dataset(outputFileClimo)
+        except IOError:
+            # assuming the cache file is corrupt, so deleting it.
+            message = 'Deleting cache file {}, which appears to have ' \
+                      'been corrupted.'.format(outputFileClimo)
+            warnings.warn(message)
+            os.remove(outputFileClimo)
+
+        monthsIfDone = (endYearClimo-startYearClimo+1)*len(monthValues)
+        if ((climatology is not None) and
+                (climatology.attrs['totalMonths'] == monthsIfDone)):
             # also complete, so we can move on
             done = True
 
