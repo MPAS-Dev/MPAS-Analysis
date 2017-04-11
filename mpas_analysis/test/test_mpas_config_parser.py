@@ -31,8 +31,16 @@ class TestMPASAnalysisConfigParser(TestCase):
         self.assertEqual(colorMapName, 'coolwarm')
 
         self.assertEqual(self.config.getint('Test', 'testInt'), 15)
-        self.assertEqual(self.config.getfloat('Test', 'testFloat'), 18.)
+        self.assertEqual(self.config.getExpression('Test', 'testInt'), 15)
+
+        self.assertEqual(self.config.getfloat('Test', 'testFloat'), 18.0)
+        self.assertEqual(self.config.getExpression('Test', 'testFloat'), 18.0)
+
+        self.assertEqual(self.config.getfloat('Test', 'testFloat2'), 3.)
+        self.assertEqual(self.config.getExpression('Test', 'testFloat2'), 3.)
+
         self.assertEqual(self.config.getboolean('Test', 'testBool'), True)
+        self.assertEqual(self.config.getExpression('Test', 'testBool'), True)
 
         testList = self.config.getExpression('sst_modelvsobs',
                                              'cmapIndicesModelObs')

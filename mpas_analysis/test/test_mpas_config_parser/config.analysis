@@ -21,6 +21,7 @@ comparisonTimes =  ['JFM', 'JAS', 'ANN']
 testInt = 15
 
 testFloat = 18.0
+testFloat2 = 3.
 
 testBool = True
 
