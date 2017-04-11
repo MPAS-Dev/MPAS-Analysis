@@ -157,7 +157,8 @@ def moc_streamfunction(config):  # {{{
         # (mocDictClimo, mocDictTseries) = _compute_moc_analysismember(config,
         #     streams, calendar, sectionName, dictClimo, dictTseries)
     else:
-        _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
+        _cache_velocity_climatologies(config, sectionName,
+                                      startDateClimo, endDateClimo,
                                       inputFilesClimo, simulationStartTime,
                                       variableMap, calendar)
 
@@ -244,7 +245,8 @@ def _load_mesh(runStreams):  # {{{
         refTopDepth, refLayerThickness  # }}}
 
 
-def _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
+def _cache_velocity_climatologies(config, sectionName,
+                                  startDateClimo, endDateClimo,
                                   inputFilesClimo, simulationStartTime,
                                   variableMap, calendar):  # {{{
     '''compute yearly velocity climatologies and cache them'''
@@ -257,6 +259,7 @@ def _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
 
     make_directories(outputDirectory)
 
+    chunking = config.getExpression(sectionName, 'maxChunkSize')
     ds = open_multifile_dataset(fileNames=inputFilesClimo,
                                 calendar=calendar,
                                 config=config,
@@ -265,7 +268,8 @@ def _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
                                 variableList=variableList,
                                 variableMap=variableMap,
                                 startDate=startDateClimo,
-                                endDate=endDateClimo)
+                                endDate=endDateClimo,
+                                chunking=chunking)
 
     # update the start and end year in config based on the real extend of ds
     update_start_end_year(ds, config, calendar)
@@ -451,6 +455,7 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
     dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
         refTopDepth, refLayerThickness = _load_mesh(runStreams)
 
+    chunking = config.getExpression(sectionName, 'maxChunkSize')
     ds = open_multifile_dataset(fileNames=dictTseries['inputFilesTseries'],
                                 calendar=calendar,
                                 config=config,
@@ -459,7 +464,8 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                 variableList=variableList,
                                 variableMap=variableMap,
                                 startDate=dictTseries['startDateTseries'],
-                                endDate=dictTseries['endDateTseries'])
+                                endDate=dictTseries['endDateTseries'],
+                                chunking=chunking)
     latAtlantic = mocDictClimo['latAtlantic']['data']
     dLat = latAtlantic - 26.5
     indlat26 = np.where(dLat == np.amin(np.abs(dLat)))

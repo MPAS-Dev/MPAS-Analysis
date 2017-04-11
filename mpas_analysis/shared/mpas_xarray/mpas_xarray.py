@@ -77,7 +77,7 @@ def open_multifile_dataset(fileNames, calendar,
 
     Returns
     -------
-    ds : An xarray data set.
+    ds : ``xarray.Dataset``
 
     Raises
     ------
@@ -177,7 +177,7 @@ def subset_variables(ds, variableList):  # {{{
 
 
 def preprocess(ds, calendar, simulationStartTime, timeVariableName,
-               variableList, selValues, iselValues, maxChunkSize=1000):  # {{{
+               variableList, selValues, iselValues):  # {{{
     """
     Builds correct time specification for MPAS, allowing a date offset
     because the time must be between 1678 and 2262 based on the xarray
@@ -229,10 +229,6 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
             iselValues = {'nVertLevels': slice(0, 3),
                            'nCells': cellIDs}
 
-    maxChunkSize : int
-       Specifies the maximum chunk size to limit chunks used by dask to
-       prevent out of memory errors for large datasets.
-
     Returns
     -------
     ds : xarray.DataSet object
@@ -246,7 +242,7 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     Last modified
     -------------
-    03/30/2017
+    04/06/2017
     """
 
     ds = _parse_dataset_time(ds=ds,
@@ -268,13 +264,6 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     if iselValues is not None:
         ds = ds.isel(**iselValues)
-
-    chunks = {}
-    for name in ds.chunks.keys():
-        chunklim = np.asarray(ds.chunks[name]).max()
-        chunks[name] = np.minimum(maxChunkSize, chunklim)
-
-    ds = ds.chunk(chunks)
 
     return ds  # }}}
 
@@ -542,5 +531,60 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
 
     return dsOut  # }}}
 
+
+def process_chunking(ds, chunking):  # {{{
+    """
+    Computes chunking for a dataset.
+
+    Parameters
+    ----------
+    ds : ``xarray.Dataset``
+        Input dataset to be chunked.
+
+    chunking : None, int, dict
+        If chunking is an integer it specifies the maximum chunking rule,
+        otherwise if None do not perform chunking.  If a chunking is a dict use
+        dictionary values for chunking.
+
+    Returns
+    -------
+    ds : ``xarray.Dataset``
+
+    Raises
+    ------
+
+    ValueError
+        If chunking value used is not an acceptable value.
+
+    Author
+    ------
+    Phillip J. Wolfram
+
+    Last modified
+    -------------
+    04/06/2017
+    """
+
+    if isinstance(chunking, int):
+        chunks = {}
+        for name in ds.chunks.keys():
+            chunklim = np.asarray(ds.chunks[name]).max()
+            chunks[name] = np.minimum(chunking, chunklim)
+
+        ds = ds.chunk(chunks)
+
+    elif isinstance(chunking, dict):
+        ds = ds.chunk(chunking)
+
+    # if chunking is None don't do any chunking
+    elif chunking is None:
+        pass
+
+    else:
+        raise ValueError(
+                'Chunking parameter choice is not understood '
+                'for {} of type {}\n'.format(chunking, type(chunking)))
+
+    return ds  # }}}
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

@@ -30,7 +30,8 @@ def open_multifile_dataset(fileNames, calendar, config,
                            timeVariableName='Time',
                            variableList=None, selValues=None,
                            iselValues=None, variableMap=None,
-                           startDate=None, endDate=None):  # {{{
+                           startDate=None, endDate=None,
+                           chunking=None):  # {{{
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -91,9 +92,16 @@ def open_multifile_dataset(fileNames, calendar, config,
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
+    chunking : None, int, True, dict, optional
+        If integer is present, applies maximum chunk size from config file
+        value ``maxChunkSize``, otherwise if None do not perform chunking.  If
+        True, use automated chunking using default config value
+        ``maxChunkSize``. If chunking is a dict use dictionary values for
+        chunking.
+
     Returns
     -------
-    ds : An xarray data set.
+    ds : ``xarray.Dataset``
 
     Raises
     ------
@@ -113,11 +121,9 @@ def open_multifile_dataset(fileNames, calendar, config,
 
     Last modified
     -------------
-    03/29/2017
+    04/06/2017
     """
 
-    # limit chunk size to prevent memory error
-    maxChunkSize = config.getint('input', 'maxChunkSize')
 
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
@@ -128,8 +134,7 @@ def open_multifile_dataset(fileNames, calendar, config,
                                  iselValues=iselValues,
                                  variableMap=variableMap,
                                  startDate=startDate,
-                                 endDate=endDate,
-                                 maxChunkSize=maxChunkSize)
+                                 endDate=endDate)
 
     kwargs = {'decode_times': False,
               'concat_dim': 'Time'}
@@ -176,6 +181,13 @@ def open_multifile_dataset(fileNames, calendar, config,
     # select only the data in the specified range of dates
     ds = ds.sel(Time=slice(startDate, endDate))
 
+    # process chunking
+    if chunking is True:
+        # limit chunk size to prevent memory error
+        chunking = config.getint('input', 'maxChunkSize')
+
+    ds = mpas_xarray.process_chunking(ds, chunking)
+
     # private record of autoclose use
     ds.attrs['_autoclose'] = int(autoclose)
 
@@ -184,7 +196,7 @@ def open_multifile_dataset(fileNames, calendar, config,
 
 def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                 variableList, selValues, iselValues, variableMap,
-                startDate, endDate, maxChunkSize):  # {{{
+                startDate, endDate):  # {{{
     """
     Performs variable remapping, then calls mpas_xarray.preprocess, to
     perform the remainder of preprocessing.
@@ -247,10 +259,6 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
         If present, the first and last dates to be used in the data set.  The
         time variable is sliced to only include dates within this range.
 
-    maxChunkSize : int
-       Specifies the maximum chunk size to limit chunks used by dask to
-       prevent out of memory errors for large datasets.
-
     Returns
     -------
     ds : xarray.DataSet object
@@ -263,7 +271,7 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     Last modified
     -------------
-    03/30/2017
+    04/06/2017
     """
 
     submap = variableMap
@@ -292,8 +300,7 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                                 timeVariableName=timeVariableName,
                                 variableList=variableList,
                                 selValues=selValues,
-                                iselValues=iselValues,
-                                maxChunkSize=maxChunkSize)
+                                iselValues=iselValues)
 
     return ds  # }}}
 
@@ -404,5 +411,6 @@ def _rename_variables(ds, variableMap):  # {{{
                 break
 
     return ds.rename(renameDict)  # }}}
+
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

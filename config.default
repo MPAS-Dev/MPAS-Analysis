@@ -356,6 +356,17 @@ regionNames = ['Atlantic']
 # Mask file for post-processing regional MOC computation
 regionMaskFiles = /path/to/MOCregional/mapping/file
 
+# xarray (with dask) divides data sets into "chunks", allowing computations
+# to be made on data that is larger than the available memory.  MPAS-Analysis
+# supports setting a maximum chunk size for data sets generally, and a
+# separate option specific to loading the 3D velocity field in the MOC
+# specifically.  By default, maxChunkSize is left undefined, so that chunking
+# is handled automatically.  If the MOC calculation encounters memory problems,
+# consider setting maxChunkSize to a number significantly lower than nEdges
+# in your MPAS mesh so that the calculation will be divided into smaller
+# pieces.
+# maxChunkSize = 1000
+
 # Size of latitude bins over which MOC streamfunction is integrated
 latBinSizeGlobal = 1.
 latBinSizeAtlantic = 0.5

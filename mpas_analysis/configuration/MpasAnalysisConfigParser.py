@@ -55,6 +55,7 @@ class MpasAnalysisConfigParser(ConfigParser):
         dicts should also work).  `section` and `option` work as in `get(...)`.
         The expression is required to have valid python syntax, so that
         string entries are required to be in single or double quotes.
+        If the option in the section does not exist, returns None.
 
         If `elementType` is supplied, each element in a list or tuple, or each
         value in a dictionary are cast to this type.  This is likely most
@@ -65,25 +66,29 @@ class MpasAnalysisConfigParser(ConfigParser):
         of having selected numpy and / or np functionality available.
 
         Author: Xylar Asay-Davis, Phillip J. Wolfram
-        Last Modified: 01/31/2017
+        Last Modified: 04/10/2017
         """
-        expressionString = self.get(section, option)
-        if usenumpyfunc:
-            assert '__' not in expressionString, \
-                    "'__' is not allowed in {} "\
-                    "for `usenumpyfunc=True`".format(expressionString)
-            sanitizedstr = expressionString.replace('np.', '')\
-                                           .replace('numpy.', '')\
-                                           .replace('__', '')
-            result = eval(sanitizedstr, npallow)
+        if self.has_section(section):
+            if self.has_option(section, option):
+                expressionString = self.get(section, option)
+                if usenumpyfunc:
+                    assert '__' not in expressionString, \
+                            "'__' is not allowed in {} "\
+                            "for `usenumpyfunc=True`".format(expressionString)
+                    sanitizedstr = expressionString.replace('np.', '')\
+                                                   .replace('numpy.', '')\
+                                                   .replace('__', '')
+                    result = eval(sanitizedstr, npallow)
+                else:
+                    result = ast.literal_eval(expressionString)
+
+                if elementType is not None:
+                    if isinstance(result, (list, tuple)):
+                        result = [elementType(element) for element in result]
+                    elif isinstance(result, dict):
+                        for key in result:
+                            result[key] = elementType(result[key])
+
+                return result
         else:
-            result = ast.literal_eval(expressionString)
-
-        if elementType is not None:
-            if isinstance(result, (list, tuple)):
-                result = [elementType(element) for element in result]
-            elif isinstance(result, dict):
-                for key in result:
-                    result[key] = elementType(result[key])
-
-        return result
+            return None
