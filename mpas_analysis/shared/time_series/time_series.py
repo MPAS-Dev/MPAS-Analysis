@@ -13,6 +13,7 @@ Last Modified
 import xarray as xr
 import numpy
 import os
+import warnings
 
 from ..timekeeping.utility import days_to_datetime
 
@@ -84,13 +85,23 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         if printProgress:
             print '   Read in previously computed time series'
         # read in what we have so far
-        dsCache = xr.open_dataset(cacheFileName, decode_times=False)
-        # force loading and then close so we can overwrite the file later
-        dsCache.load()
-        dsCache.close()
-        for time in dsCache.Time.values:
-            timesProcessed[timesInDataSet == time] = True
-        cacheDataSetExists = True
+
+        try:
+            dsCache = xr.open_dataset(cacheFileName, decode_times=False)
+            cacheDataSetExists = True
+        except IOError:
+        # assuming the cache file is corrupt, so deleting it.
+            message = 'Deleting cache file {}, which appears to have ' \
+                      'been corrupted.'.format(cacheFileName)
+            warnings.warn(message)
+            os.remove(cacheFileName)
+
+        if cacheDataSetExists:
+            # force loading and then close so we can overwrite the file later
+            dsCache.load()
+            dsCache.close()
+            for time in dsCache.Time.values:
+                timesProcessed[timesInDataSet == time] = True
 
     datetimes = days_to_datetime(timesInDataSet, calendar=calendar)
     yearsInDataSet = numpy.array([date.year for date in datetimes])

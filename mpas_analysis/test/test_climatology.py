@@ -2,7 +2,7 @@
 Unit test infrastructure for climatologies.
 
 Xylar Asay-Davis
-04/03/2017
+04/11/2017
 """
 
 import pytest
@@ -19,6 +19,7 @@ from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import climatology
 from mpas_analysis.shared.constants import constants
+
 
 @pytest.mark.usefixtures("loaddatadir")
 class TestClimatology(TestCase):
@@ -243,12 +244,95 @@ class TestClimatology(TestCase):
         config.set('climatology', 'endYear', '50')
         ds = self.open_test_ds(config, calendar)
 
-        with self.assertWarns('climatology start and/or end year different from requested'):
+        with self.assertWarns('climatology start and/or end year different '
+                              'from requested'):
             changed, startYear, endYear = \
                 climatology.update_start_end_year(ds, config, calendar)
 
         assert(changed)
         assert(startYear == 2)
         assert(endYear == 2)
+
+    def test_cache_climatologies(self):
+        config = self.setup_config()
+        calendar = 'gregorian_noleap'
+        ds = self.open_test_ds(config, calendar)
+        fieldName = 'mld'
+        monthNames = 'JFM'
+        monthValues = constants.monthDictionary[monthNames]
+
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+            climatology.get_mpas_climatology_file_names(config, fieldName,
+                                                        monthNames)
+
+        climFileName = '{}/refSeasonalClim.nc'.format(self.datadir)
+        refClimatology = xarray.open_dataset(climFileName)
+
+        # test1: 1-year climatologies are cached; only one file is produced
+        #        with suffix year0002; a second run of cache_climatologies
+        #        doesn't modify any files
+        test1 = (1, ['year0002'], [False])
+        # test2: 2-year climatologies are cached; 2 files are produced
+        #        with suffix years0002-0003 (the "individual" climatology file)
+        #        and year0002 (the "aggregated" climatology file); a second
+        #        tries to update the "individual" cache file because it appears
+        #        to be incomplete but does not attempt to update the aggregated
+        #        climatology file because no additional years were processed
+        #        and the file was already complete for the span of years
+        #        present
+        test2 = (2, ['years0002-0003', 'year0002'], [True, False])
+
+        tests = [test1, test2]
+
+        for yearsPerCacheFile, expectedSuffixes, expectModified in tests:
+
+            config.set('climatology', 'yearsPerCacheFile',
+                       str(yearsPerCacheFile))
+            # once without cache files
+            dsClimatology = climatology.cache_climatologies(ds, monthValues,
+                                                            config,
+                                                            climatologyPrefix,
+                                                            calendar,
+                                                            printProgress=True)
+            self.assertArrayApproxEqual(dsClimatology.mld.values,
+                                        refClimatology.mld.values)
+            dsClimatology.close()
+
+            datesModfied = []
+            for suffix in expectedSuffixes:
+                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_JFM_' \
+                                              '{}.nc'.format(self.test_dir,
+                                                             suffix)
+                assert os.path.exists(expectedClimatologyFileName)
+
+                datesModfied.append(os.path.getmtime(
+                    expectedClimatologyFileName))
+
+            # try it again with cache files saved
+            dsClimatology = climatology.cache_climatologies(ds, monthValues,
+                                                            config,
+                                                            climatologyPrefix,
+                                                            calendar,
+                                                            printProgress=True)
+
+            self.assertArrayApproxEqual(dsClimatology.mld.values,
+                                        refClimatology.mld.values)
+            dsClimatology.close()
+
+            for index, suffix in enumerate(expectedSuffixes):
+                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_JFM_' \
+                                              '{}.nc'.format(self.test_dir,
+                                                             suffix)
+                dateModifiedCheck = os.path.getmtime(
+                    expectedClimatologyFileName)
+
+                # Check whether the given file was modified, and whether this
+                # was the expected result
+                fileWasModified = datesModfied[index] != dateModifiedCheck
+                assert fileWasModified == expectModified[index]
+
+                # remove the cache file for the next try
+                os.remove(expectedClimatologyFileName)
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
