@@ -536,123 +536,36 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
 
     Last Modified
     -------------
-    04/08/2017
+    04/11/2017
     '''
     startYearClimo = config.getint('climatology', 'startYear')
     endYearClimo = config.getint('climatology', 'endYear')
     yearsPerCacheFile = config.getint('climatology', 'yearsPerCacheFile')
 
-    cacheInfo = []
-
-    ds = add_years_months_days_in_month(ds, calendar)
-
     if printProgress:
         print '   Computing and caching climatologies covering {}-year ' \
               'spans...'.format(yearsPerCacheFile)
 
-    cacheIndices = numpy.zeros(ds.dims['Time'], int)
-    yearsInDs = ds.year.values
+    ds = add_years_months_days_in_month(ds, calendar)
 
-    # figure out which files to load and which years go in each file
-    for firstYear in range(startYearClimo, endYearClimo+1, yearsPerCacheFile):
-        years = range(firstYear, numpy.minimum(endYearClimo+1,
-                                               firstYear+yearsPerCacheFile))
-        if len(years) == 0:
-            continue
-
-        if yearsPerCacheFile == 1:
-            yearString = '{:04d}'.format(years[0])
-            outputFileClimo = '{}_year{}.nc'.format(cachePrefix, yearString)
-        else:
-            yearString = '{:04d}-{:04d}'.format(years[0], years[-1])
-            outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
-
-        done = False
-        if os.path.exists(outputFileClimo):
-            # already cached
-            dsCached = xr.open_dataset(outputFileClimo)
-            if (dsCached.attrs['totalMonths'] ==
-                    constants.monthsInYear*len(years)):
-                # also complete, so we can move on
-                done = True
-
-        cacheIndex = len(cacheInfo)
-        for year in years:
-            cacheIndices[yearsInDs == year] = cacheIndex
-
-        if numpy.count_nonzero(cacheIndices == cacheIndex) == 0:
-            continue
-
-        cacheInfo.append((outputFileClimo, done, years))
+    cacheInfo, cacheIndices = _setup_climatology_caching(ds, startYearClimo,
+                                                         endYearClimo,
+                                                         yearsPerCacheFile,
+                                                         cachePrefix,
+                                                         monthValues)
 
     ds = ds.copy()
     ds.coords['cacheIndices'] = ('Time', cacheIndices)
 
-    # compute and store each cache file
-    for cacheIndex, info in enumerate(cacheInfo):
-        outputFileClimo, done, years = info
-        if done:
-            continue
-        dsYear = ds.where(ds.cacheIndices == cacheIndex, drop=True)
-
-        if printProgress:
-            if yearsPerCacheFile == 1:
-                yearString = '{:04d}'.format(years[0])
-            else:
-                yearString = '{:04d}-{:04d}'.format(years[0], years[-1])
-            print '     {}'.format(yearString)
-
-        totalDays = dsYear.daysInMonth.sum(dim='Time').values
-
-        monthCount = dsYear.dims['Time']
-
-        climatology = compute_climatology(dsYear,  monthValues, calendar,
-                                          maskVaries=False)
-
-        climatology.attrs['totalDays'] = totalDays
-        climatology.attrs['totalMonths'] = monthCount
-
-        climatology.to_netcdf(outputFileClimo)
+    # compute and store each cache file with interval yearsPerCacheFile
+    _cache_individual_climatologies(ds, cacheInfo, printProgress,
+                                    yearsPerCacheFile, monthValues,
+                                    calendar)
 
     # compute the aggregate climatology
-    yearString = '{:04d}-{:04d}'.format(startYearClimo, endYearClimo)
-    outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
-
-    done = False
-    if os.path.exists(outputFileClimo):
-        climatology = xr.open_dataset(outputFileClimo)
-        if (climatology.attrs['totalMonths'] ==
-                (endYearClimo-startYearClimo+1)*constants.monthsInYear):
-            # also complete, so we can move on
-            done = True
-
-    if not done:
-        if printProgress:
-            print '   Computing aggregated climatology ' \
-                  '{}...'.format(yearString)
-
-        first = True
-        for cacheIndex, info in enumerate(cacheInfo):
-            inFileClimo = info[0]
-            ds = xr.open_dataset(inFileClimo)
-            days = ds.attrs['totalDays']
-            months = ds.attrs['totalMonths']
-            if first:
-                totalDays = days
-                totalMonths = months
-                climatology = ds * days
-                first = False
-            else:
-                totalDays += days
-                totalMonths += months
-                climatology = climatology + ds * days
-
-        climatology = climatology / totalDays
-
-        climatology.attrs['totalDays'] = totalDays
-        climatology.attrs['totalMonths'] = totalMonths
-
-        climatology.to_netcdf(outputFileClimo)
+    climatology = _cache_aggregated_climatology(startYearClimo, endYearClimo,
+                                                cachePrefix, printProgress,
+                                                monthValues, cacheInfo)
 
     return climatology  # }}}
 
@@ -869,5 +782,135 @@ def _get_grid_name(gridFileName, latVarName, lonVarName, comparisonLatRes,
 
     return (gridName, matchesComparison)
 
+
+def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
+                               yearsPerCacheFile, cachePrefix,
+                               monthValues):  # {{{
+    '''
+    Determine which cache files already exist, which are incomplete and which
+    years are present in each cache file (whether existing or to be created).
+    '''
+
+    cacheInfo = []
+
+    cacheIndices = numpy.zeros(ds.dims['Time'], int)
+    yearsInDs = ds.year.values
+
+    # figure out which files to load and which years go in each file
+    for firstYear in range(startYearClimo, endYearClimo+1, yearsPerCacheFile):
+        years = range(firstYear, firstYear+yearsPerCacheFile)
+
+        if yearsPerCacheFile == 1:
+            yearString = '{:04d}'.format(years[0])
+            outputFileClimo = '{}_year{}.nc'.format(cachePrefix, yearString)
+        else:
+            yearString = '{:04d}-{:04d}'.format(years[0], years[-1])
+            outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
+
+        done = False
+        if os.path.exists(outputFileClimo):
+            # already cached
+            dsCached = xr.open_dataset(outputFileClimo)
+            if (dsCached.attrs['totalMonths'] == len(monthValues)*len(years)):
+                # also complete, so we can move on
+                done = True
+
+        cacheIndex = len(cacheInfo)
+        for year in years:
+            cacheIndices[yearsInDs == year] = cacheIndex
+
+        if numpy.count_nonzero(cacheIndices == cacheIndex) == 0:
+            continue
+
+        cacheInfo.append((outputFileClimo, done, yearString))
+
+    ds = ds.copy()
+    ds.coords['cacheIndices'] = ('Time', cacheIndices)
+
+    return cacheInfo, cacheIndices  # }}}
+
+
+def _cache_individual_climatologies(ds, cacheInfo, printProgress,
+                                    yearsPerCacheFile, monthValues,
+                                    calendar):  # {{{
+    '''
+    Cache individual climatologies for later aggregation.
+    '''
+
+    for cacheIndex, info in enumerate(cacheInfo):
+        outputFileClimo, done, yearString = info
+        if done:
+            continue
+        dsYear = ds.where(ds.cacheIndices == cacheIndex, drop=True)
+
+        if printProgress:
+            print '     {}'.format(yearString)
+
+        totalDays = dsYear.daysInMonth.sum(dim='Time').values
+
+        monthCount = dsYear.dims['Time']
+
+        climatology = compute_climatology(dsYear,  monthValues, calendar,
+                                          maskVaries=False)
+
+        climatology.attrs['totalDays'] = totalDays
+        climatology.attrs['totalMonths'] = monthCount
+
+        climatology.to_netcdf(outputFileClimo)
+
+    # }}}
+
+
+def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
+                                  printProgress, monthValues,
+                                  cacheInfo):  # {{{
+    '''
+    Cache aggregated climatology from individual climatologies.
+    '''
+
+    if startYearClimo == endYearClimo:
+        yearString = '{:04d}'.format(startYearClimo)
+        outputFileClimo = '{}_year{}.nc'.format(cachePrefix, yearString)
+    else:
+        yearString = '{:04d}-{:04d}'.format(startYearClimo, endYearClimo)
+        outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
+
+    done = False
+    if os.path.exists(outputFileClimo):
+        climatology = xr.open_dataset(outputFileClimo)
+        if (climatology.attrs['totalMonths'] ==
+                (endYearClimo-startYearClimo+1)*len(monthValues)):
+            # also complete, so we can move on
+            done = True
+
+    if not done:
+        if printProgress:
+            print '   Computing aggregated climatology ' \
+                  '{}...'.format(yearString)
+
+        first = True
+        for cacheIndex, info in enumerate(cacheInfo):
+            inFileClimo = info[0]
+            ds = xr.open_dataset(inFileClimo)
+            days = ds.attrs['totalDays']
+            months = ds.attrs['totalMonths']
+            if first:
+                totalDays = days
+                totalMonths = months
+                climatology = ds * days
+                first = False
+            else:
+                totalDays += days
+                totalMonths += months
+                climatology = climatology + ds * days
+
+        climatology = climatology / totalDays
+
+        climatology.attrs['totalDays'] = totalDays
+        climatology.attrs['totalMonths'] = totalMonths
+
+        climatology.to_netcdf(outputFileClimo)
+
+    return climatology  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
