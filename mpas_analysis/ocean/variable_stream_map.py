@@ -1,5 +1,23 @@
-# mappings of stream names from various MPAS-O versions to those in
-# mpas_analysis
+'''
+Mappings of namelist options, stream names and variable names from various
+MPAS-O versions to those used by mpas_analysis
+
+Authors
+-------
+Xylar Asay-Davis
+
+Last Modified
+-------------
+03/29/2017
+'''
+
+oceanNamelistMap = {
+    'config_am_timeseriesstatsmonthly_enable':
+        ['config_am_timeseriesstatsmonthly_enable',
+         'config_am_timeseriesstats_enable'],
+    'config_am_mocstreamfunction_enable':
+        ['config_am_mocstreamfunction_enable']}
+
 oceanStreamMap = {'timeSeriesStats': ['timeSeriesStatsOutput',
                                       'timeSeriesStatsMonthly',
                                       'timeSeriesStatsMonthlyOutput']}

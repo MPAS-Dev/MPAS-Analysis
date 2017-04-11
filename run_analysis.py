@@ -200,6 +200,10 @@ if __name__ == "__main__":
                         type=str, nargs='+', help='config file')
     args = parser.parse_args()
 
+    for configFile in args.configFiles:
+        if not os.path.exists(configFile):
+            raise OSError('Config file {} not found.'.format(configFile))
+
     # add config.default to cover default not included in the config files
     # provided on the command line
     defaultConfig = '{}/config.default'.format(

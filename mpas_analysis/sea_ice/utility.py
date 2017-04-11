@@ -66,7 +66,7 @@ def setup_sea_ice_task(config):  # {{{
     04/03/2017
     '''
     # perform common setup for the task
-    namelist, runStreams, historyStreams, calendar, streamMap, \
+    namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
         variableMap, plotsDirectory = setup_task(config,
                                                  componentName='seaIce')
 
@@ -99,8 +99,9 @@ def setup_sea_ice_task(config):  # {{{
                           'at least one restart file for seaice_timeseries '
                           'calculation')
 
-    return namelist, runStreams, historyStreams, calendar, streamMap, \
-        variableMap, plotsDirectory, simulationStartTime, restartFileName
+    return namelist, runStreams, historyStreams, calendar, namelistMap, \
+        streamMap, variableMap, plotsDirectory, simulationStartTime, \
+        restartFileName
     # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
