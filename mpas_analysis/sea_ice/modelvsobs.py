@@ -8,7 +8,7 @@ Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-04/03/2017
+04/08/2017
 """
 
 import os
@@ -28,13 +28,10 @@ from ..shared.climatology import climatology
 from ..shared.plot.plotting import plot_polar_comparison, \
     setup_colormap
 
-from ..shared.io import StreamsFile
 from ..shared.io.utility import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-
-from ..shared.timekeeping.utility import get_simulation_start_time
 
 from .utility import setup_sea_ice_task
 
@@ -64,7 +61,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
 
     Last Modified
     -------------
-    04/03/2017
+    04/08/2017
     """
 
     # perform common setup for the task
@@ -79,8 +76,10 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     fileNames = historyStreams.readpath(streamName, startDate=startDate,
                                         endDate=endDate, calendar=calendar)
-    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
-
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(fileNames[0]),
+              os.path.basename(fileNames[-1]))
     # Load data
     print "  Load sea-ice data..."
     ds = open_multifile_dataset(fileNames=fileNames,
@@ -134,7 +133,7 @@ def _compute_and_plot_concentration(config, ds, mpasMappingFileName, calendar):
 
     Last Modified
     -------------
-    03/29/2017
+    04/08/2017
     """
 
     print "  Make ice concentration plots..."
@@ -195,14 +194,15 @@ def _compute_and_plot_concentration(config, ds, mpasMappingFileName, calendar):
         climFieldName = 'iceConcentration'
 
         # interpolate the model results
-        (climatologyFileName, regriddedFileName) = \
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
             climatology.get_mpas_climatology_file_names(
                     config=config, fieldName=climFieldName,
                     monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.compute_climatology(
-                ds, monthValues, calendar)
+            seasonalClimatology = climatology.cache_climatologies(
+                ds, monthValues, config, climatologyPrefix, calendar,
+                printProgress=True)
             # write out the climatology so we can interpolate it with
             # interpolate.remap
             seasonalClimatology.to_netcdf(climatologyFileName)
@@ -326,7 +326,7 @@ def _compute_and_plot_thickness(config, ds,  mpasMappingFileName, calendar):
 
     Last Modified
     -------------
-    03/29/2017
+    04/08/2017
     """
 
     print "  Make ice thickness plots..."
@@ -379,14 +379,15 @@ def _compute_and_plot_thickness(config, ds,  mpasMappingFileName, calendar):
         climFieldName = 'iceThickness'
 
         # interpolate the model results
-        (climatologyFileName, regriddedFileName) = \
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
             climatology.get_mpas_climatology_file_names(
                     config=config, fieldName=climFieldName,
                     monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.compute_climatology(
-                ds, monthValues, calendar)
+            seasonalClimatology = climatology.cache_climatologies(
+                ds, monthValues, config, climatologyPrefix, calendar,
+                printProgress=True)
             # write out the climatology so we can interpolate it with
             # interpolate.remap.  Set _FillValue so ncremap doesn't produce
             # an error

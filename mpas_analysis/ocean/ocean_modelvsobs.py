@@ -9,7 +9,7 @@ Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-03/29/2017
+04/08/2017
 """
 
 import xarray as xr
@@ -57,7 +57,7 @@ def ocn_modelvsobs(config, field):
 
     Last Modified
     -------------
-    03/29/2017
+    04/08/2017
     """
 
     # perform common setup for the task
@@ -73,7 +73,10 @@ def ocn_modelvsobs(config, field):
     streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     inputFiles = historyStreams.readpath(streamName, startDate=startDate,
                                          endDate=endDate, calendar=calendar)
-    print 'Reading files {} through {}'.format(inputFiles[0], inputFiles[-1])
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(inputFiles[0]),
+              os.path.basename(inputFiles[-1]))
 
     observationsDirectory = build_config_full_path(
         config, 'oceanObservations', '{}Subdirectory'.format(field))
@@ -143,6 +146,8 @@ def ocn_modelvsobs(config, field):
             dsObs.coords['lon'] = dsObs['lonCoord']
             dsObs.coords['Time'] = dsObs['calmonth']
             dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
+            # no meaningful year since this is already a climatology
+            dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
 
             dsObs = mpas_xarray.subset_variables(dsObs, [obsFieldName,
                                                          'month'])
@@ -177,6 +182,7 @@ def ocn_modelvsobs(config, field):
             dsObs = dsObs.transpose('Time', 'lat', 'lon')
             dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
             dsObs.coords['month'] = dsObs['Time.month']
+            dsObs.coords['year'] = dsObs['Time.year']
 
         obsFieldName = 'SST'
 
@@ -201,6 +207,7 @@ def ocn_modelvsobs(config, field):
             dsObs = dsObs.transpose('Time', 'lat', 'lon')
             dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
             dsObs.coords['month'] = dsObs['Time.month']
+            dsObs.coords['year'] = dsObs['Time.year']
 
         obsFieldName = 'SSS'
 
@@ -242,14 +249,15 @@ def ocn_modelvsobs(config, field):
     for months in outputTimes:
         monthValues = constants.monthDictionary[months]
 
-        (climatologyFileName, regriddedFileName) = \
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
             climatology.get_mpas_climatology_file_names(config=config,
                                                         fieldName=field,
                                                         monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.compute_climatology(
-                ds, monthValues, calendar)
+            seasonalClimatology = climatology.cache_climatologies(
+                ds, monthValues, config, climatologyPrefix, calendar,
+                printProgress=True)
             # write out the climatology so we can interpolate it with
             # interpolate.remap
             seasonalClimatology.to_netcdf(climatologyFileName)
@@ -279,7 +287,7 @@ def ocn_modelvsobs(config, field):
                     (not os.path.exists(climatologyFileName) and
                      not os.path.exists(regriddedFileName))):
                 seasonalClimatology = climatology.compute_climatology(
-                    dsObs, monthValues)
+                    dsObs, monthValues, maskVaries=True)
                 # Either we want to overwite files or neither the climatology
                 # nor its regridded counterpart exist. Write out the
                 # climatology so we can interpolate it with interpolate.remap

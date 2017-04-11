@@ -110,12 +110,16 @@ class TestClimatology(TestCase):
         config = self.setup_config()
         fieldName = 'sst'
         monthNames = 'JFM'
-        (climatologyFileName, regriddedFileName) = \
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
             climatology.get_mpas_climatology_file_names(config, fieldName,
                                                         monthNames)
         expectedClimatologyFileName = '{}/clim/mpas/sst_QU240_JFM_' \
                                       'years0002-0002.nc'.format(self.test_dir)
         self.assertEqual(climatologyFileName, expectedClimatologyFileName)
+
+        expectedClimatologyPrefix = '{}/clim/mpas/sst_QU240_' \
+                                    'JFM'.format(self.test_dir)
+        self.assertEqual(climatologyPrefix, expectedClimatologyPrefix)
 
         expectedRegriddedFileName = '{}/clim/mpas/regrid/sst_QU240_to_' \
                                     '0.5x0.5degree_JFM_' \
@@ -170,7 +174,7 @@ class TestClimatology(TestCase):
         assert('daysInMonth' not in ds.coords.keys())
 
         # test add_months_and_days_in_month
-        ds = climatology.add_months_and_days_in_month(ds, calendar)
+        ds = climatology.add_years_months_days_in_month(ds, calendar)
 
         self.assertArrayEqual(ds.month.values, [1, 2, 3])
         self.assertArrayEqual(numpy.round(ds.daysInMonth.values), [31, 28, 31])

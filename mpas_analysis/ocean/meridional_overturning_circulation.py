@@ -12,7 +12,7 @@ Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
 Last Modified
 -------------
-03/23/2017
+04/08/2017
 """
 
 import xarray as xr
@@ -20,12 +20,14 @@ import numpy as np
 import netCDF4
 import os
 import warnings
+from functools import partial
 
-from ..shared.constants.constants import m3ps_to_Sv, rad_to_deg
+from ..shared.constants.constants import m3ps_to_Sv, rad_to_deg, \
+    monthDictionary
 from ..shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io.utility import build_config_full_path, make_directories
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -34,9 +36,9 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
 from ..shared.analysis_task import setup_task
-from ..shared.climatology import climatology
-
-from ..shared.constants import constants
+from ..shared.climatology.climatology import update_start_end_year, \
+    cache_climatologies
+from ..shared.time_series import time_series
 
 
 def moc_streamfunction(config):  # {{{
@@ -65,7 +67,7 @@ def moc_streamfunction(config):  # {{{
 
     Last Modified
     -------------
-    03/23/2017
+    04/08/2017
     """
 
     # **** Initial settings ****
@@ -98,8 +100,13 @@ def moc_streamfunction(config):  # {{{
                                               startDate=startDateClimo,
                                               endDate=endDateClimo,
                                               calendar=calendar)
-    print '\n  List of files for climatologies:\n{} through {}'.format(
-           inputFilesClimo[0], inputFilesClimo[-1])
+    simulationStartTime = get_simulation_start_time(runStreams)
+
+    print '\n  List of files for climatologies:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(inputFilesClimo[0]),
+              os.path.basename(inputFilesClimo[-1]))
+
     startYearClimo = config.getint('climatology', 'startYear')
     endYearClimo = config.getint('climatology', 'endYear')
     #   Create dictionary to store Climo related variables
@@ -116,8 +123,12 @@ def moc_streamfunction(config):  # {{{
                                                 startDate=startDateTseries,
                                                 endDate=endDateTseries,
                                                 calendar=calendar)
-    print '\n  List of files for timeSeries:\n{} through {}'.format(
-           inputFilesTseries[0], inputFilesTseries[-1])
+
+    print '\n  List of files for time series:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(inputFilesTseries[0]),
+              os.path.basename(inputFilesTseries[-1]))
+
     startYearTseries = config.getint('timeSeries', 'startYear')
     endYearTseries = config.getint('timeSeries', 'endYear')
     #   Create dictionary to store Tseries related variables
@@ -146,6 +157,14 @@ def moc_streamfunction(config):  # {{{
         # (mocDictClimo, mocDictTseries) = _compute_moc_analysismember(config,
         #     streams, calendar, sectionName, dictClimo, dictTseries)
     else:
+        _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
+                                      inputFilesClimo, simulationStartTime,
+                                      variableMap, calendar)
+
+        # update the start and end year in case they have changed
+        dictClimo['startYearClimo'] = config.getint('climatology', 'startYear')
+        dictClimo['endYearClimo'] = config.getint('climatology', 'endYear')
+
         mocDictClimo, dictRegion = _compute_moc_climo_postprocess(
             config, runStreams, variableMap, calendar, sectionName,
             regionNames, dictClimo)
@@ -164,7 +183,8 @@ def moc_streamfunction(config):  # {{{
     for region in regionNames:
         print '   Plot climatological {} MOC...'.format(region)
         title = '{} MOC (ANN, years {:04d}-{:04d})\n {}'.format(
-                 region, dictClimo['startYearClimo'], dictClimo['endYearClimo'],
+                 region, dictClimo['startYearClimo'],
+                 dictClimo['endYearClimo'],
                  mainRunName)
         figureName = '{}/moc{}_{}_years{:04d}-{:04d}.png'.format(
                       plotsDirectory, region, mainRunName,
@@ -224,6 +244,41 @@ def _load_mesh(runStreams):  # {{{
         refTopDepth, refLayerThickness  # }}}
 
 
+def _cache_velocity_climatologies(config, startDateClimo, endDateClimo,
+                                  inputFilesClimo, simulationStartTime,
+                                  variableMap, calendar):  # {{{
+    '''compute yearly velocity climatologies and cache them'''
+
+    variableList = ['avgNormalVelocity',
+                    'avgVertVelocityTop']
+
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'mpasClimatologySubdirectory')
+
+    make_directories(outputDirectory)
+
+    ds = open_multifile_dataset(fileNames=inputFilesClimo,
+                                calendar=calendar,
+                                config=config,
+                                simulationStartTime=simulationStartTime,
+                                timeVariableName='Time',
+                                variableList=variableList,
+                                variableMap=variableMap,
+                                startDate=startDateClimo,
+                                endDate=endDateClimo)
+
+    # update the start and end year in config based on the real extend of ds
+    update_start_end_year(ds, config, calendar)
+
+    cachePrefix = '{}/meanVelocity'.format(outputDirectory)
+
+    # compute and cache the velocity climatology
+    cache_climatologies(ds, monthDictionary['ANN'],
+                        config, cachePrefix, calendar,
+                        printProgress=True)
+    # }}}
+
+
 def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
                                    sectionName, regionNames, dictClimo):  # {{{
 
@@ -231,9 +286,6 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
 
     dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
         refTopDepth, refLayerThickness = _load_mesh(runStreams)
-
-    variableList = ['avgNormalVelocity',
-                    'avgVertVelocityTop']
 
     # Load basin region related variables and save them to dictionary
     # NB: The following will need to change with new regional mapping files
@@ -271,47 +323,24 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
     # Compute and plot annual climatology of MOC streamfunction
     print '\n  Compute and/or plot post-processed MOC climatological '\
           'streamfunction...'
-    simulationStartTime = get_simulation_start_time(runStreams)
     outputDirectory = build_config_full_path(config, 'output',
                                              'mpasClimatologySubdirectory')
-    try:
-        os.makedirs(outputDirectory)
-    except OSError:
-        pass
+
+    make_directories(outputDirectory)
+
     outputFileClimo = '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
                        outputDirectory, dictClimo['startYearClimo'],
                        dictClimo['endYearClimo'])
     if not os.path.exists(outputFileClimo):
         print '   Load data...'
-        ds = open_multifile_dataset(
-            fileNames=dictClimo['inputFilesClimo'],
-            calendar=calendar,
-            config=config,
-            simulationStartTime=simulationStartTime,
-            timeVariableName='Time',
-            variableList=variableList,
-            variableMap=variableMap,
-            startDate=dictClimo['startDateClimo'],
-            endDate=dictClimo['endDateClimo'])
 
-        changed, startYear, endYear = \
-            climatology.update_start_end_year(ds, config, calendar)
-        if changed:
-            # update the file name in case the start and end years changed
-            outputFileClimo = \
-                '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
-                    outputDirectory, startYear, endYear)
+        velClimoFile = '{}/meanVelocity_years{:04d}-{:04d}.nc'.format(
+                       outputDirectory, dictClimo['startYearClimo'],
+                       dictClimo['endYearClimo'])
 
-            dictClimo['startYearClimo'] = startYear
-            dictClimo['endYearClimo'] = endYear
+        annualClimatology = xr.open_dataset(velClimoFile)
 
-        # Compute annual climatology
-        annualClimatology = \
-            climatology.compute_climatology(ds,
-                                            constants.monthDictionary['ANN'],
-                                            calendar)
-
-        # Convert to numpy arrays 
+        # Convert to numpy arrays
         # (can result in a memory error for large array size)
         horizontalVel = annualClimatology.avgNormalVelocity.values
         verticalVel = annualClimatology.avgVertVelocityTop.values
@@ -410,17 +439,6 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                          dictRegion):  # {{{
     '''compute MOC time series as a post-process'''
 
-    def write_file(dsMOCTimeSeries):
-        # make sure the Time dimension is in ascending order by Time
-        indices = dsMOCTimeSeries.Time.argsort()
-        dsMOCTimeSeries = dsMOCTimeSeries.isel(Time=indices)
-        dsMOCTimeSeries.Time.attrs['units'] = 'days since 0001-01-01'
-        dsMOCTimeSeries.mocAtlantic26.attrs['units'] = 'Sv (10^6 m^3/s)'
-        dsMOCTimeSeries.mocAtlantic26.attrs['description'] = \
-            'Max MOC Atlantic streamfunction nearest to RAPID Array latitude (26.5N)'
-        dsMOCTimeSeries.to_netcdf(outputFileTseries)
-        return dsMOCTimeSeries
-
     # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
     print '\n  Compute and/or plot post-processed Atlantic MOC '\
           'time series...'
@@ -463,34 +481,44 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
     continueOutput = os.path.exists(outputFileTseries)
     if continueOutput:
         print '   Read in previously computed MOC time series'
-        # read in what we have so far
-        dsMOCTimeSeries = xr.open_dataset(outputFileTseries,
-                                          decode_times=False)
-        # force loading and then close so we can overwrite the file later
-        dsMOCTimeSeries.load()
-        dsMOCTimeSeries.close()
-    else:
-        # create a new data set from a dictionary
-        dictonary = {
-            'Time': {'dims': ('Time'),
-                     'data': []},
-            'mocAtlantic26': {'dims': ('Time'),
-                              'data': []}}
-        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
 
-    newEntries = False
-    first = True
-    for tIndex in range(ds.Time.size):
-        if ds.Time[tIndex].values in dsMOCTimeSeries.Time.values:
-            # we have it already, so no need to recompute
-            continue
-        if first:
-            print '   Process and save MOC time series'
-            first = False
-        date = days_to_datetime(ds.Time[tIndex], calendar=calendar)
+    # add all the other arguments to the function
+    comp_moc_part = partial(_compute_moc_time_series_part, ds,
+                            calendar, areaCell, latCell, indlat26,
+                            maxEdgesInTransect, transectEdgeGlobalIDs,
+                            transectEdgeMaskSigns,  nVertLevels, dvEdge,
+                            refLayerThickness, latAtlantic, regionCellMask)
+
+    dsMOCTimeSeries = time_series.cache_time_series(
+        ds.Time.values,  comp_moc_part, outputFileTseries,
+        calendar, yearsPerCacheUpdate=1,  printProgress=False)
+
+    return dsMOCTimeSeries  # }}}
+
+
+def _compute_moc_time_series_part(timeIndices, firstCall, ds, calendar,
+                                  areaCell, latCell, indlat26,
+                                  maxEdgesInTransect,
+                                  transectEdgeGlobalIDs, transectEdgeMaskSigns,
+                                  nVertLevels, dvEdge, refLayerThickness,
+                                  latAtlantic, regionCellMask):
+    # computes a subset of the MOC time series
+
+    if firstCall:
+        print '   Process and save time series'
+
+    times = ds.Time[timeIndices].values
+    mocRegion = np.zeros(timeIndices.shape)
+
+    for localIndex, timeIndex in enumerate(timeIndices):
+        time = times[localIndex]
+        dsLocal = ds.isel(Time=timeIndex)
+        date = days_to_datetime(time, calendar=calendar)
+
         print '     date: {:04d}-{:02d}'.format(date.year, date.month)
-        horizontalVel = ds.avgNormalVelocity[tIndex, :, :].values
-        verticalVel = ds.avgVertVelocityTop[tIndex, :, :].values
+
+        horizontalVel = dsLocal.avgNormalVelocity.values
+        verticalVel = dsLocal.avgVertVelocityTop.values
         velArea = verticalVel * areaCell[:, np.newaxis]
         transportZ = _compute_transport(maxEdgesInTransect,
                                         transectEdgeGlobalIDs,
@@ -500,27 +528,23 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
                                         horizontalVel)
         mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
                               regionCellMask, transportZ, velArea)
-        mocAtlantic26 = np.amax(mocTop[:, indlat26])
+        mocRegion[localIndex] = np.amax(mocTop[:, indlat26])
 
-        dictonary = {'Time': {'dims': ('Time'), 'data': [ds.Time[tIndex]]},
-                     'mocAtlantic26': {'dims': ('Time'),
-                                       'data': [mocAtlantic26]}}
-        # add the new time entry to the data set
-        dsMOCTimeSeries = xr.concat([dsMOCTimeSeries,
-                                     xr.Dataset.from_dict(dictonary)],
-                                    dim='Time')
-        newEntries = True
-        if date.month == 12:
-            # each year, save the data set for safe keeping
-            print '   saving progress.'
-            dsMOCTimeSeries = write_file(dsMOCTimeSeries)
-            newEntries = False
+    description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
+        'Array latitude (26.5N)'
 
-    if newEntries:
-        print '   saving final result.'
-        dsMOCTimeSeries = write_file(dsMOCTimeSeries)
-
-    return dsMOCTimeSeries  # }}}
+    dictonary = {'dims': ['Time'],
+                 'coords': {'Time':
+                            {'dims': ('Time'),
+                             'data': times,
+                             'attrs': {'units': 'days since 0001-01-01'}}},
+                 'data_vars': {'mocAtlantic26':
+                               {'dims': ('Time'),
+                                'data': mocRegion,
+                                'attrs': {'units': 'Sv (10^6 m^3/s)',
+                                          'description': description}}}}
+    dsMOC = xr.Dataset.from_dict(dictonary)
+    return dsMOC
 
 
 # def _compute_moc_analysismember(config):

@@ -1,3 +1,5 @@
+import os
+
 from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.generalized_reader.generalized_reader \
@@ -7,6 +9,10 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
     date_to_days, days_to_datetime
 
 from ..shared.analysis_task import setup_task
+
+from ..shared.time_series import time_series
+
+from ..shared.io.utility import build_config_full_path, make_directories
 
 
 def sst_timeseries(config, streamMap=None, variableMap=None):
@@ -24,8 +30,12 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 03/23/2017
+    Last Modified: 04/08/2017
     """
+
+    def compute_sst_part(timeIndices, firstCall):
+        dsLocal = ds.isel(Time=timeIndices)
+        return dsLocal
 
     print '  Load SST data...'
 
@@ -42,7 +52,10 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
     fileNames = historyStreams.readpath(streamName, startDate=startDate,
                                         endDate=endDate,  calendar=calendar)
-    print 'Reading files {} through {}'.format(fileNames[0], fileNames[-1])
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(fileNames[0]),
+              os.path.basename(fileNames[-1]))
 
     mainRunName = config.get('runs', 'mainRunName')
     preprocessedReferenceRunName = config.get('runs',
@@ -57,6 +70,14 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
     regionIndicesToPlot = config.getExpression('timeSeriesSST',
                                                'regionIndicesToPlot')
 
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'timeseriesSubdirectory')
+
+    make_directories(outputDirectory)
+
+    regionNames = config.getExpression('regions', 'regions')
+    regionNames = [regionNames[index] for index in regionIndicesToPlot]
+
     # Load data:
     varList = ['avgSurfaceTemperature']
     ds = open_multifile_dataset(fileNames=fileNames,
@@ -69,7 +90,7 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
                                 startDate=startDate,
                                 endDate=endDate)
 
-    SSTregions = ds.avgSurfaceTemperature
+    ds = ds.isel(nOceanRegions=regionIndicesToPlot)
 
     yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
     yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -98,16 +119,23 @@ def sst_timeseries(config, streamMap=None, variableMap=None):
                 'timeSeries startYear and will not be plotted.'
             preprocessedReferenceRunName = 'None'
 
+    cacheFileName = '{}/sstTimeSeries.nc'.format(outputDirectory)
+
+    dsSST = time_series.cache_time_series(ds.Time.values, compute_sst_part,
+                                          cacheFileName, calendar,
+                                          yearsPerCacheUpdate=10,
+                                          printProgress=True)
+
     print '  Make plots...'
-    for index in range(len(regionIndicesToPlot)):
-        regionIndex = regionIndicesToPlot[index]
+    for index, regionIndex in enumerate(regionIndicesToPlot):
 
         title = plotTitles[regionIndex]
         title = 'SST, %s, %s (r-)' % (title, mainRunName)
         xLabel = 'Time [years]'
         yLabel = '[$^\circ$ C]'
 
-        SST = SSTregions[:, regionIndex]
+        SST = dsSST.avgSurfaceTemperature.isel(nOceanRegions=index)
+
 
         figureName = '{}/sst_{}_{}.png'.format(plotsDirectory,
                                                regions[regionIndex],

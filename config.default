@@ -152,6 +152,11 @@ overwriteMpasClimatology = False
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 mpasInterpolationMethod = bilinear
 
+# the number of years per cached climatology file.  These cached files are
+# aggregated together to create annual climatologies, for example, when
+# computing the MOC.
+yearsPerCacheFile = 1
+
 [timeSeries]
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs

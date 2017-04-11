@@ -177,7 +177,7 @@ def open_multifile_dataset(fileNames, calendar, config,
     ds = ds.sel(Time=slice(startDate, endDate))
 
     # private record of autoclose use
-    ds.attrs['_autoclose'] = autoclose
+    ds.attrs['_autoclose'] = int(autoclose)
 
     return ds  # }}}
 

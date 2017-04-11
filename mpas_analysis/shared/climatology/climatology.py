@@ -7,7 +7,7 @@ Xylar Asay-Davis
 
 Last Modified
 -------------
-03/04/2017
+04/08/2017
 """
 
 import xarray as xr
@@ -20,7 +20,7 @@ from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path
+from ..io.utility import build_config_full_path, make_directories
 
 from ..interpolation import interpolate
 
@@ -82,10 +82,8 @@ def write_mpas_mapping_file(config, meshFileName):
         # file name
         mappingSubdirectory = build_config_full_path(config, 'output',
                                                      'mappingSubdirectory')
-        try:
-            os.makedirs(mappingSubdirectory)
-        except OSError:
-            pass
+
+        make_directories(mappingSubdirectory)
 
         meshName = config.get('input', 'mpasMeshName')
 
@@ -189,10 +187,7 @@ def write_observations_mapping_file(config, componentName, fieldName,
             mappingSubdirectory = build_config_full_path(config, 'output',
                                                          'mappingSubdirectory')
 
-            try:
-                os.makedirs(mappingSubdirectory)
-            except OSError:
-                pass
+            make_directories(mappingSubdirectory)
 
             obsMappingFileName = \
                 '{}/map_obs_{}_{}_to_{}x{}degree_{}.nc'.format(
@@ -241,6 +236,10 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames):
         The absolute path to a file where the climatology should be stored
         before regridding.
 
+    climatologyPrefix : str
+        The prfix including absolute path for climatology cache files before
+        regridding.
+
     regriddedFileName : str
         The absolute path to a file where the climatology should be stored
         after regridding.
@@ -272,24 +271,21 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames):
 
     regriddedDirectory = build_config_full_path(
         config, 'output', 'mpasRegriddedClimSubdirectory')
-    try:
-        os.makedirs(regriddedDirectory)
-    except OSError:
-        pass
-    try:
-        os.makedirs(climatologyDirectory)
-    except OSError:
-        pass
 
-    climatologyFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.nc'.format(
-        climatologyDirectory, fieldName, meshName, monthNames, startYear,
-        endYear)
+    make_directories(regriddedDirectory)
+    make_directories(climatologyDirectory)
+
+    climatologyPrefix = '{}/{}_{}_{}'.format(climatologyDirectory, fieldName,
+                                             meshName, monthNames)
+    climatologyFileName = '{}_years{:04d}-{:04d}.nc'.format(climatologyPrefix,
+                                                            startYear,
+                                                            endYear)
     regriddedFileName = \
         '{}/{}_{}_to_{}x{}degree_{}_years{:04d}-{:04d}.nc'.format(
             regriddedDirectory, fieldName, meshName, comparisonLatRes,
             comparisonLonRes, monthNames, startYear, endYear)
 
-    return (climatologyFileName, regriddedFileName)
+    return (climatologyFileName, climatologyPrefix, regriddedFileName)
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,
@@ -371,21 +367,15 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
         regriddedDirectory, fieldName, gridName, comparisonLatRes,
         comparisonLonRes, monthNames)
 
-    try:
-        os.makedirs(climatologyDirectory)
-    except OSError:
-        pass
+    make_directories(climatologyDirectory)
 
     if not matchesComparison:
-        try:
-            os.makedirs(regriddedDirectory)
-        except OSError:
-            pass
+        make_directories(regriddedDirectory)
 
     return (climatologyFileName, regriddedFileName)
 
 
-def compute_monthly_climatology(ds, calendar=None):
+def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
     """
     Compute monthly climatologies from a data set.  The mean is weighted but
     the number of days in each month of the data set, ignoring values masked
@@ -398,10 +388,17 @@ def compute_monthly_climatology(ds, calendar=None):
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01 or ``month`` coordinate
 
-    calendar: ``{'gregorian', 'gregorian_noleap'}``, optional
+    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
+
+    maskVaries: bool, optional
+        If the mask (where variables in ``ds`` are ``NaN``) varies with time.
+        If not, the weighted average does not need make extra effort to account
+        for the mask.  Most MPAS fields will have masks that don't vary in
+        time, whereas observations may sometimes be present only at some
+        times and not at others, requiring ``maskVaries = True``.
 
     Returns
     -------
@@ -416,15 +413,14 @@ def compute_monthly_climatology(ds, calendar=None):
 
     Last Modified
     -------------
-    03/30/2017
+    04/08/2017
     """
 
     def compute_one_month_climatology(ds):
         monthValues = list(ds.month.values)
-        return compute_climatology(ds, monthValues, calendar)
+        return compute_climatology(ds, monthValues, calendar, maskVaries)
 
-    if 'month' not in ds.coords or 'daysInMonth' not in ds.coords:
-        ds = add_months_and_days_in_month(ds, calendar)
+    ds = add_years_months_days_in_month(ds, calendar)
 
     monthlyClimatology = \
         ds.groupby('month').apply(compute_one_month_climatology)
@@ -432,7 +428,7 @@ def compute_monthly_climatology(ds, calendar=None):
     return monthlyClimatology
 
 
-def compute_climatology(ds, monthValues, calendar=None):
+def compute_climatology(ds, monthValues, calendar=None, maskVaries=True):
     """
     Compute a monthly, seasonal or annual climatology data set from a data
     set.  The mean is weighted but the number of days in each month of
@@ -449,10 +445,17 @@ def compute_climatology(ds, monthValues, calendar=None):
     monthValues : int or array-like of ints
         A single month or an array of months to be averaged together
 
-    calendar: ``{'gregorian', 'gregorian_noleap'}``, optional
+    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
+
+    maskVaries: bool, optional
+        If the mask (where variables in ``ds`` are ``NaN``) varies with time.
+        If not, the weighted average does not need make extra effort to account
+        for the mask.  Most MPAS fields will have masks that don't vary in
+        time, whereas observations may sometimes be present only at some
+        times and not at others, requiring ``maskVaries = True``.
 
     Returns
     -------
@@ -467,11 +470,10 @@ def compute_climatology(ds, monthValues, calendar=None):
 
     Last Modified
     -------------
-    03/30/2017
+    04/08/2017
     """
 
-    if ('month' not in ds.coords or 'daysInMonth' not in ds.coords):
-        ds = add_months_and_days_in_month(ds, calendar)
+    ds = add_years_months_days_in_month(ds, calendar)
 
     mask = xr.zeros_like(ds.month, bool)
 
@@ -480,9 +482,179 @@ def compute_climatology(ds, monthValues, calendar=None):
 
     climatologyMonths = ds.where(mask, drop=True)
 
-    climatology = _compute_masked_mean(climatologyMonths)
+    climatology = _compute_masked_mean(climatologyMonths, maskVaries)
 
     return climatology
+
+
+def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
+                        printProgress=False):  # {{{
+    '''
+    Cache NetCDF files for each year of an annual climatology, and then use
+    the cached files to compute a climatology for the full range of years.
+    The start and end years of the climatology are taken from ``config``, and
+    are updated in ``config`` if the data set ``ds`` doesn't contain this
+    full range.
+
+    Note: only works with climatologies where the mask (locations of ``NaN``
+    values) doesn't vary with time.
+
+    Parameters
+    ----------
+    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set with a ``Time`` coordinate expressed as days since
+        0001-01-01
+
+    monthValues : int or array-like of ints
+        A single month or an array of months to be averaged together
+
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    cachePrefix :  str
+        The file prefix (including path) to which the year (or years) will be
+        appended as cache files are stored
+
+    calendar : ``{'gregorian', 'gregorian_noleap'}``
+        The name of one of the calendars supported by MPAS cores, used to
+        determine ``year`` and ``month`` from ``Time`` coordinate
+
+    printProgress: bool, optional
+        Whether progress messages should be printed as the climatology is
+        computed
+
+    Returns
+    -------
+    climatology : object of same type as ``ds``
+        A data set without the ``'Time'`` coordinate containing the mean
+        of ds over all months in monthValues, weighted by the number of days
+        in each month.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/08/2017
+    '''
+    startYearClimo = config.getint('climatology', 'startYear')
+    endYearClimo = config.getint('climatology', 'endYear')
+    yearsPerCacheFile = config.getint('climatology', 'yearsPerCacheFile')
+
+    cacheInfo = []
+
+    ds = add_years_months_days_in_month(ds, calendar)
+
+    if printProgress:
+        print '   Computing and caching climatologies covering {}-year ' \
+              'spans...'.format(yearsPerCacheFile)
+
+    cacheIndices = numpy.zeros(ds.dims['Time'], int)
+    yearsInDs = ds.year.values
+
+    # figure out which files to load and which years go in each file
+    for firstYear in range(startYearClimo, endYearClimo+1, yearsPerCacheFile):
+        years = range(firstYear, numpy.minimum(endYearClimo+1,
+                                               firstYear+yearsPerCacheFile))
+        if len(years) == 0:
+            continue
+
+        if yearsPerCacheFile == 1:
+            yearString = '{:04d}'.format(years[0])
+            outputFileClimo = '{}_year{}.nc'.format(cachePrefix, yearString)
+        else:
+            yearString = '{:04d}-{:04d}'.format(years[0], years[-1])
+            outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
+
+        done = False
+        if os.path.exists(outputFileClimo):
+            # already cached
+            dsCached = xr.open_dataset(outputFileClimo)
+            if (dsCached.attrs['totalMonths'] ==
+                    constants.monthsInYear*len(years)):
+                # also complete, so we can move on
+                done = True
+
+        cacheIndex = len(cacheInfo)
+        for year in years:
+            cacheIndices[yearsInDs == year] = cacheIndex
+
+        if numpy.count_nonzero(cacheIndices == cacheIndex) == 0:
+            continue
+
+        cacheInfo.append((outputFileClimo, done, years))
+
+    ds = ds.copy()
+    ds.coords['cacheIndices'] = ('Time', cacheIndices)
+
+    # compute and store each cache file
+    for cacheIndex, info in enumerate(cacheInfo):
+        outputFileClimo, done, years = info
+        if done:
+            continue
+        dsYear = ds.where(ds.cacheIndices == cacheIndex, drop=True)
+
+        if printProgress:
+            if yearsPerCacheFile == 1:
+                yearString = '{:04d}'.format(years[0])
+            else:
+                yearString = '{:04d}-{:04d}'.format(years[0], years[-1])
+            print '     {}'.format(yearString)
+
+        totalDays = dsYear.daysInMonth.sum(dim='Time').values
+
+        monthCount = dsYear.dims['Time']
+
+        climatology = compute_climatology(dsYear,  monthValues, calendar,
+                                          maskVaries=False)
+
+        climatology.attrs['totalDays'] = totalDays
+        climatology.attrs['totalMonths'] = monthCount
+
+        climatology.to_netcdf(outputFileClimo)
+
+    # compute the aggregate climatology
+    yearString = '{:04d}-{:04d}'.format(startYearClimo, endYearClimo)
+    outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
+
+    done = False
+    if os.path.exists(outputFileClimo):
+        climatology = xr.open_dataset(outputFileClimo)
+        if (climatology.attrs['totalMonths'] ==
+                (endYearClimo-startYearClimo+1)*constants.monthsInYear):
+            # also complete, so we can move on
+            done = True
+
+    if not done:
+        if printProgress:
+            print '   Computing aggregated climatology ' \
+                  '{}...'.format(yearString)
+
+        first = True
+        for cacheIndex, info in enumerate(cacheInfo):
+            inFileClimo = info[0]
+            ds = xr.open_dataset(inFileClimo)
+            days = ds.attrs['totalDays']
+            months = ds.attrs['totalMonths']
+            if first:
+                totalDays = days
+                totalMonths = months
+                climatology = ds * days
+                first = False
+            else:
+                totalDays += days
+                totalMonths += months
+                climatology = climatology + ds * days
+
+        climatology = climatology / totalDays
+
+        climatology.attrs['totalDays'] = totalDays
+        climatology.attrs['totalMonths'] = totalMonths
+
+        climatology.to_netcdf(outputFileClimo)
+
+    return climatology  # }}}
 
 
 def update_start_end_year(ds, config, calendar):
@@ -498,7 +670,7 @@ def update_start_end_year(ds, config, calendar):
     config :  instance of MpasAnalysisConfigParser
         Contains configuration options
 
-    calendar: {'gregorian', 'gregorian_noleap'}
+    calendar : {'gregorian', 'gregorian_noleap'}
         The name of one of the calendars supported by MPAS cores
 
     Returns
@@ -524,9 +696,14 @@ def update_start_end_year(ds, config, calendar):
     endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
     changed = False
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        warnings.warn("climatology start and/or end year different from requested\n"
-                      "requestd: {:04d}-{:04d}\n"
-                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear, requestedEndYear, startYear, endYear))
+        message = "climatology start and/or end year different from " \
+                  "requested\n" \
+                  "requestd: {:04d}-{:04d}\n" \
+                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear)
+        warnings.warn(message)
         config.set('climatology', 'startYear', str(startYear))
         config.set('climatology', 'endYear', str(endYear))
         changed = True
@@ -534,12 +711,13 @@ def update_start_end_year(ds, config, calendar):
     return changed, startYear, endYear
 
 
-def add_months_and_days_in_month(ds, calendar):
+def add_years_months_days_in_month(ds, calendar=None):  # {{{
     '''
-    Add ``months`` and ``daysInMonth`` as data arrays in ``ds``.  The number
-    of days in each month of ``ds`` is computed either using the ``startTime``
-    and ``endTime`` if available or assuming ``gregorian_noleap`` calendar and
-    ignoring leap years.
+    Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.
+    The number of days in each month of ``ds`` is computed either using the
+    ``startTime`` and ``endTime`` if available or assuming ``gregorian_noleap``
+    calendar and ignoring leap years.  ``year`` and ``month`` are computed
+    accounting correctly for the the calendar.
 
     Parameters
     ----------
@@ -547,15 +725,15 @@ def add_months_and_days_in_month(ds, calendar):
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01
 
-    calendar: ``{'gregorian', 'gregorian_noleap'}``
+    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
         The name of one of the calendars supported by MPAS cores, used to
-        determine ``month`` from ``Time`` coordinate
+        determine ``year`` and ``month`` from ``Time`` coordinate
 
     Returns
     -------
     ds : object of same type as ``ds``
-        The data set with ``month`` and ``daysInMonth`` data arrays added (if
-        not already present)
+        The data set with ``year``, ``month`` and ``daysInMonth`` data arrays
+        added (if not already present)
 
     Authors
     -------
@@ -563,40 +741,51 @@ def add_months_and_days_in_month(ds, calendar):
 
     Last Modified
     -------------
-    03/29/2017
-    """    '''
+    04/08/2017
+    '''
+
+    if ('year' in ds.coords and 'month' in ds.coords and
+            'daysInMonth' in ds.coords):
+        return ds
 
     ds = ds.copy()
 
-    if 'month' not in ds.coords:
+    if 'year' not in ds.coords or 'month' not in ds.coords:
         if calendar is None:
-            raise ValueError('calendar must be provided if month coordinate is not in ds')
-        months = [date.month for date in days_to_datetime(ds.Time,
-                                                          calendar=calendar)]
+            raise ValueError('calendar must be provided if month and year '
+                             'coordinate is not in ds.')
+        datetimes = days_to_datetime(ds.Time, calendar=calendar)
 
-        ds.coords['month'] = ('Time', months)
+    if 'year' not in ds.coords:
+        ds.coords['year'] = ('Time', [date.year for date in datetimes])
+
+    if 'month' not in ds.coords:
+        ds.coords['month'] = ('Time', [date.month for date in datetimes])
 
     if 'daysInMonth' not in ds.coords:
         if 'startTime' in ds.coords and 'endTime' in ds.coords:
             ds.coords['daysInMonth'] = ds.endTime - ds.startTime
         else:
             if calendar == 'gregorian':
-                warnings.warn('The MPAS run used the Gregorian calendar but does not appear to have\n'
-                              'supplied start and end times.  Climatologies will be computed with\n'
-                              'month durations ignoring leap years.')
-            # TODO: support leap years if calendar is 'gregorian'
+                message = 'The MPAS run used the Gregorian calendar but ' \
+                          'does not appear to have\n' \
+                          'supplied start and end times.  Climatologies ' \
+                          'will be computed with\n' \
+                          'month durations ignoring leap years.'
+                warnings.warn(message)
+
             daysInMonth = numpy.array([constants.daysInMonth[month-1] for
                                        month in ds.month.values], float)
             ds.coords['daysInMonth'] = ('Time', daysInMonth)
 
-    return ds
+    return ds  # }}}
 
 
-def _compute_masked_mean(ds):
+def _compute_masked_mean(ds, maskVaries):
     '''
     Compute the time average of data set, masked out where the variables in ds
-    are NaN and weighting by the number of days used to compute each monthly
-    mean time in ds.
+    are NaN and, if ``maskVaries == True``, weighting by the number of days
+    used to compute each monthly mean time in ds.
     '''
     def ds_to_weights(ds):
         # make an identical data set to ds but replacing all data arrays with
@@ -608,17 +797,23 @@ def _compute_masked_mean(ds):
             for var in ds.data_vars:
                 weights[var] = ds[var].notnull()
         else:
-            raise TypeError('ds must be an instance of either xarray.Dataset or xarray.DataArray.')
+            raise TypeError('ds must be an instance of either xarray.Dataset '
+                            'or xarray.DataArray.')
 
         return weights
 
-    dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+    if maskVaries:
+        dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
 
-    weights = ds_to_weights(ds)
+        weights = ds_to_weights(ds)
 
-    weightSum = (weights * ds.daysInMonth).sum(dim='Time')
+        weightSum = (weights * ds.daysInMonth).sum(dim='Time')
 
-    timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
+        timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
+    else:
+        days = ds.daysInMonth.sum(dim='Time')
+        dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+        timeMean = dsWeightedSum / days.where(days > 0.)
 
     return timeMean
 
