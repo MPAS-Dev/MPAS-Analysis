@@ -65,6 +65,9 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key2': -12,
                                     'key3': False})
 
+        testNone = self.config.getExpression('Test', 'doesntexist')
+        assert testNone is None
+
     @requires_numpy
     def test_read_config_numpy(self):
         self.setup_config()
