@@ -502,12 +502,11 @@ def _compute_moc_time_series_postprocess(config, runStreams, variableMap,
     return dsMOCTimeSeries  # }}}
 
 
-def _compute_moc_time_series_part(timeIndices, firstCall, ds, calendar,
-                                  areaCell, latCell, indlat26,
-                                  maxEdgesInTransect,
-                                  transectEdgeGlobalIDs, transectEdgeMaskSigns,
-                                  nVertLevels, dvEdge, refLayerThickness,
-                                  latAtlantic, regionCellMask):
+def _compute_moc_time_series_part(ds, calendar, areaCell, latCell, indlat26,
+                                  maxEdgesInTransect, transectEdgeGlobalIDs,
+                                  transectEdgeMaskSigns, nVertLevels, dvEdge,
+                                  refLayerThickness, latAtlantic,
+                                  regionCellMask, timeIndices, firstCall):
     # computes a subset of the MOC time series
 
     if firstCall:
