@@ -396,7 +396,9 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
     maskVaries: bool, optional
         If the mask (where variables in ``ds`` are ``NaN``) varies with time.
         If not, the weighted average does not need make extra effort to account
-        for the mask.
+        for the mask.  Most MPAS fields will have masks that don't vary in
+        time, whereas observations may sometimes be present only at some
+        times and not at others, requiring ``maskVaries = True``.
 
     Returns
     -------
@@ -451,7 +453,9 @@ def compute_climatology(ds, monthValues, calendar=None, maskVaries=True):
     maskVaries: bool, optional
         If the mask (where variables in ``ds`` are ``NaN``) varies with time.
         If not, the weighted average does not need make extra effort to account
-        for the mask.
+        for the mask.  Most MPAS fields will have masks that don't vary in
+        time, whereas observations may sometimes be present only at some
+        times and not at others, requiring ``maskVaries = True``.
 
     Returns
     -------
