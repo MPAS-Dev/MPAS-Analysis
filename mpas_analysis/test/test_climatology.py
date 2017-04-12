@@ -258,78 +258,134 @@ class TestClimatology(TestCase):
         calendar = 'gregorian_noleap'
         ds = self.open_test_ds(config, calendar)
         fieldName = 'mld'
-        monthNames = 'JFM'
-        monthValues = constants.monthDictionary[monthNames]
-
-        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
-            climatology.get_mpas_climatology_file_names(config, fieldName,
-                                                        monthNames)
-
         climFileName = '{}/refSeasonalClim.nc'.format(self.datadir)
         refClimatology = xarray.open_dataset(climFileName)
 
-        # test1: 1-year climatologies are cached; only one file is produced
-        #        with suffix year0002; a second run of cache_climatologies
-        #        doesn't modify any files
-        test1 = (1, ['year0002'], [False])
-        # test2: 2-year climatologies are cached; 2 files are produced
-        #        with suffix years0002-0003 (the "individual" climatology file)
-        #        and year0002 (the "aggregated" climatology file); a second
-        #        tries to update the "individual" cache file because it appears
-        #        to be incomplete but does not attempt to update the aggregated
-        #        climatology file because no additional years were processed
-        #        and the file was already complete for the span of years
-        #        present
+        tests = []
+        # test1: Just January, 1-year climatologies are cached; only one file
+        #        is produced with suffix year0002; a second run of
+        #        cache_climatologies doesn't modify any files
+        test1 = {'monthNames': 'Jan',
+                 'monthValues': [1],
+                 'yearsPerCacheFile': 1,
+                 'expectedSuffixes': ['year0002'],
+                 'expectedModified': [False],
+                 # weird value because first time step of Jan. missing in ds
+                 'expectedDays': 30.958333,
+                 'expectedMonths': 1,
+                 'refClimatology': None}
+        tests.append(test1)
+        # same as test1 but with JFM
+        test2 = {'monthNames': 'JFM',
+                 'monthValues': constants.monthDictionary['JFM'],
+                 'yearsPerCacheFile': 1,
+                 'expectedSuffixes': ['year0002'],
+                 'expectedModified': [False],
+                 # weird value because first time step of Jan. missing in ds
+                 'expectedDays': 89.958333,
+                 'expectedMonths': 3,
+                 'refClimatology': refClimatology}
+        tests.append(test2)
+        # test3: 2-year climatologies are cached; 2 files are produced
+        #        with suffix years0002-0003 (the "individual" climatology
+        #        file) and year0002 (the "aggregated" climatology file);
+        #        a second tries to update the "individual" cache file
+        #        because it appears to be incomplete but does not attempt
+        #        to update the aggregated climatology file because no
+        #        additional years were processed and the file was already
+        #        complete for the span of years present
         test2 = (2, ['years0002-0003', 'year0002'], [True, False])
+        test3 = {'monthNames': 'Jan',
+                 'monthValues': [1],
+                 'yearsPerCacheFile': 2,
+                 'expectedSuffixes': ['years0002-0003', 'year0002'],
+                 'expectedModified': [True, False],
+                 # weird value because first time step of Jan. missing in ds
+                 'expectedDays': 30.958333,
+                 'expectedMonths': 1,
+                 'refClimatology': None}
+        tests.append(test3)
+        # test4: same as test3 but with JFM
+        test4 = {'monthNames': 'JFM',
+                 'monthValues': constants.monthDictionary['JFM'],
+                 'yearsPerCacheFile': 2,
+                 'expectedSuffixes': ['years0002-0003', 'year0002'],
+                 'expectedModified': [True, False],
+                 # weird value because first time step of Jan. missing in ds
+                 'expectedDays': 89.958333,
+                 'expectedMonths': 3,
+                 'refClimatology': refClimatology}
+        tests.append(test4)
 
-        tests = [test1, test2]
+        for test in tests:
+            monthNames = test['monthNames']
+            monthValues = test['monthValues']
+            yearsPerCacheFile = test['yearsPerCacheFile']
+            expectedSuffixes = test['expectedSuffixes']
+            expectedModified = test['expectedModified']
+            expectedDays = test['expectedDays']
+            expectedMonths = test['expectedMonths']
+            refClimatology = test['refClimatology']
 
-        for yearsPerCacheFile, expectedSuffixes, expectModified in tests:
+            (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+                climatology.get_mpas_climatology_file_names(config, fieldName,
+                                                            monthNames)
 
             config.set('climatology', 'yearsPerCacheFile',
                        str(yearsPerCacheFile))
             # once without cache files
-            dsClimatology = climatology.cache_climatologies(ds, monthValues,
-                                                            config,
-                                                            climatologyPrefix,
-                                                            calendar,
-                                                            printProgress=True)
-            self.assertArrayApproxEqual(dsClimatology.mld.values,
-                                        refClimatology.mld.values)
+            dsClimatology = climatology.cache_climatologies(
+                ds, monthValues, config, climatologyPrefix, calendar,
+                printProgress=True)
+            if refClimatology is not None:
+                self.assertArrayApproxEqual(dsClimatology.mld.values,
+                                            refClimatology.mld.values)
+
+            self.assertEqual(dsClimatology.attrs['totalMonths'],
+                             expectedMonths)
+            self.assertApproxEqual(dsClimatology.attrs['totalDays'],
+                                   expectedDays)
             dsClimatology.close()
 
             datesModfied = []
             for suffix in expectedSuffixes:
-                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_JFM_' \
-                                              '{}.nc'.format(self.test_dir,
-                                                             suffix)
+                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
+                                              '{}_{}.nc'.format(
+                                                  self.test_dir, monthNames,
+                                                  suffix)
                 assert os.path.exists(expectedClimatologyFileName)
 
                 datesModfied.append(os.path.getmtime(
                     expectedClimatologyFileName))
 
             # try it again with cache files saved
-            dsClimatology = climatology.cache_climatologies(ds, monthValues,
-                                                            config,
-                                                            climatologyPrefix,
-                                                            calendar,
-                                                            printProgress=True)
+            dsClimatology = climatology.cache_climatologies(
+                ds, monthValues, config,  climatologyPrefix, calendar,
+                printProgress=True)
 
-            self.assertArrayApproxEqual(dsClimatology.mld.values,
-                                        refClimatology.mld.values)
+            if refClimatology is not None:
+                self.assertArrayApproxEqual(dsClimatology.mld.values,
+                                            refClimatology.mld.values)
+
+            self.assertEqual(dsClimatology.attrs['totalMonths'],
+                             expectedMonths)
+            self.assertApproxEqual(dsClimatology.attrs['totalDays'],
+                                   expectedDays)
             dsClimatology.close()
 
             for index, suffix in enumerate(expectedSuffixes):
-                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_JFM_' \
-                                              '{}.nc'.format(self.test_dir,
-                                                             suffix)
+                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
+                                              '{}_{}.nc'.format(
+                                                  self.test_dir, monthNames,
+                                                  suffix)
+
                 dateModifiedCheck = os.path.getmtime(
                     expectedClimatologyFileName)
 
-                # Check whether the given file was modified, and whether this
-                # was the expected result
+                # Check whether the given file was modified, and whether
+                # this was the expected result
                 fileWasModified = datesModfied[index] != dateModifiedCheck
-                assert fileWasModified == expectModified[index]
+                assert fileWasModified == expectedModified[index]
 
                 # remove the cache file for the next try
                 os.remove(expectedClimatologyFileName)
