@@ -825,7 +825,8 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
 
     cacheInfo = []
 
-    cacheIndices = numpy.zeros(ds.dims['Time'], int)
+    cacheIndices = -1*numpy.ones(ds.dims['Time'], int)
+    monthsInDs = ds.month.values
     yearsInDs = ds.year.values
 
     # figure out which files to load and which years go in each file
@@ -862,7 +863,10 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
 
         cacheIndex = len(cacheInfo)
         for year in years:
-            cacheIndices[yearsInDs == year] = cacheIndex
+            for month in monthValues:
+                mask = numpy.logical_and(yearsInDs == year,
+                                         monthsInDs == month)
+                cacheIndices[mask] = cacheIndex
 
         if numpy.count_nonzero(cacheIndices == cacheIndex) == 0:
             continue
