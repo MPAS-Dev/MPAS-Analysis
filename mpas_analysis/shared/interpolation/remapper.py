@@ -14,7 +14,7 @@ Xylar Asay-Davis
 
 Last Modified
 -------------
-04/06/2017
+04/13/2017
 '''
 
 import subprocess
@@ -41,11 +41,11 @@ class Remapper(object):
 
     Last Modified
     -------------
-    04/05/2017
+    04/13/2017
     '''
 
     def __init__(self, sourceDescriptor, destinationDescriptor,
-                 mappingFileName):  # {{{
+                 mappingFileName=None):  # {{{
         '''
         Create the remapper and read weights and indices from the given file
         for later used in remapping fields.
@@ -64,9 +64,13 @@ class Remapper(object):
             An object used to write a scrip files and to determine the type of
             the destination mesh or grid.
 
-        mappingFileName : str
+        mappingFileName : str, optional
             The path where the mapping file containing interpolation weights
-            and indices will be written and/or read
+            and indices will be written and/or read.  If ``None``,
+            no interpolation is performed and data sets are returned unchanged.
+            This is useful if the source and destination grids are determined
+            to be the same (though the Remapper does not attempt to determine
+            if this is the case).
 
         Author
         ------
@@ -74,7 +78,7 @@ class Remapper(object):
 
         Last Modified
         -------------
-        04/05/2017
+        04/13/2017
         '''
 
         if not isinstance(sourceDescriptor,
@@ -127,10 +131,11 @@ class Remapper(object):
 
         Last Modified
         -------------
-        04/05/2017
+        04/13/2017
         '''
 
-        if os.path.exists(self.mappingFileName):
+        if self.mappingFileName is None or \
+                os.path.exists(self.mappingFileName):
             # a valid weight file already exists, so nothing to do
             return
 
@@ -202,7 +207,11 @@ class Remapper(object):
         Raises
         ------
         OSError
-            If `ncremap` is not in the system path.
+            If ``ncremap`` is not in the system path.
+
+        ValueError
+            If ``mappingFileName`` is ``None`` (meaning no remapping is
+            needed).
 
         Author
         ------
@@ -210,8 +219,14 @@ class Remapper(object):
 
         Last Modified
         -------------
-        04/06/2017
+        04/13/2017
         '''
+
+        if self.mappingFileName is None:
+            raise ValueError('No mapping file was given because remapping is '
+                             'not necessary. The calling\n'
+                             'code should simply use the constents of {} '
+                             'directly.'.format(inFileName))
 
         if not overwrite and os.path.exists(outFileName):
             # a remapped file already exists, so nothing to do
@@ -293,8 +308,12 @@ class Remapper(object):
 
         Last Modified
         -------------
-        04/06/2017
+        04/13/2017
         '''
+
+        if self.mappingFileName is None:
+            # No remapping is needed
+            return ds
 
         self._load_mapping()
 
