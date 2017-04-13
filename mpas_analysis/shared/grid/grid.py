@@ -1,14 +1,15 @@
 '''
-Classes for creating SCRIP files, used to create mapping files
+Classes for describing meshes and grids , including creating SCRIP files,
+used to create mapping files
 
 Classes
 -------
-MpasMeshDescriptor - create a SCRIP file for an MPAS mesh
+MpasMeshDescriptor - describes an MPAS mesh
 
-LatLonGridDescriptor - create a SCRIP file based on a lat-lon grid
+LatLonGridDescriptor - describes a lat-lon grid
 
-ProjectionGridDescriptor - create a SCRIP file based on a logically rectangular
-    grid on a pyproj projection
+ProjectionGridDescriptor - describes a logically rectangular grid on a pyproj
+    projection
 
 Author
 ------
@@ -16,7 +17,7 @@ Xylar Asay-Davis
 
 Last Modified
 -------------
-04/06/2017
+04/13/2017
 '''
 
 import netCDF4
@@ -26,9 +27,9 @@ import pyproj
 import xarray
 
 
-class MpasMeshDescriptor(object):  # {{{
+class MeshDescriptor(object):  # {{{
     '''
-    A class for writing a SCRIP file from an MPAS mesh
+    A class for describing a mesh
 
     Author
     ------
@@ -36,10 +37,64 @@ class MpasMeshDescriptor(object):  # {{{
 
     Last Modified
     -------------
-    04/06/2017
+    04/13/2017
     '''
 
-    def __init__(self, fileName):  # {{{
+    def __init__(self):  # {{{
+        '''
+        Constructor creates a common ``meshName`` member variable, ``None`` by
+        default.  Each Subclass should define or use input arguments to set
+        ``meshName`` to a short description of the mesh or grid.
+
+        Author
+        ------
+        Xylar Asay-Davis
+
+        Last Modified
+        -------------
+        04/13/2017
+        '''
+
+        self.meshName = None  # }}}
+
+    def to_scrip(self, scripFileName):  # {{{
+        '''
+        Subclasses should overload this method to write a SCRIP file based on
+        the mesh.
+
+        Parameters
+        ----------
+        scripFileName : str
+            The path to which the SCRIP file should be written
+
+        Authors
+        ------
+        Xylar Asay-Davis
+
+        Last Modified
+        -------------
+        03/17/2017
+        '''
+
+        return  # }}}
+
+    # }}}
+
+
+class MpasMeshDescriptor(MeshDescriptor):  # {{{
+    '''
+    A class for describing an MPAS mesh
+
+    Author
+    ------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/13/2017
+    '''
+
+    def __init__(self, fileName, meshName):  # {{{
         '''
         Constructor stores the file name
 
@@ -48,14 +103,19 @@ class MpasMeshDescriptor(object):  # {{{
         fileName : str
             The path of the file containing the MPAS mesh
 
+        meshName : str
+            The name of the MPAS mesh (e.g. ``'oEC60to30'`` or ``'oRRS18to6'``)
+
         Author
         ------
         Xylar Asay-Davis
 
         Last Modified
         -------------
-        04/05/2017
+        04/13/2017
         '''
+        self.meshName = meshName
+
         self.fileName = fileName
         self.regional = True
 
@@ -144,9 +204,9 @@ class MpasMeshDescriptor(object):  # {{{
 # }}}
 
 
-class LatLonGridDescriptor(object):  # {{{
+class LatLonGridDescriptor(MeshDescriptor):  # {{{
     '''
-    A class for writing a SCRIP file from a lat-lon grid
+    A class for describing a lat-lon grid
 
     Author
     ------
@@ -154,7 +214,7 @@ class LatLonGridDescriptor(object):  # {{{
 
     Last Modified
     -------------
-    04/06/2017
+    04/13/2017
     '''
     def __init__(self):
         '''
@@ -306,13 +366,26 @@ class LatLonGridDescriptor(object):  # {{{
                                     'data': self.lon,
                                     'attrs': {'units': self.units}}}
 
-        self.dims = [latDimName, lonDimName]  # }}}
+        self.dims = [latDimName, lonDimName]
+
+        # set the name of the grid
+        dLat = self.lat[1]-self.lat[0]
+        dLon = self.lon[1]-self.lon[0]
+        if 'degree' in self.units:
+            units = 'degree'
+        elif 'rad' in self.units:
+            units = 'radian'
+        else:
+            raise ValueError('Could not figure out units {}'.format(
+                self.units))
+        self.meshName = '{}x{}{}'.format(abs(dLat), abs(dLon), units)
+        # }}}
 
 
-class ProjectionGridDescriptor(object):  # {{{
+class ProjectionGridDescriptor(MeshDescriptor):  # {{{
     '''
-    A class for writing a SCRIP file from a general logically rectangular grid
-    that can be defined by a `pyproj` projection.
+    A class for describing a general logically rectangular grid that can be
+    defined by a `pyproj` projection.
 
     Author
     ------
@@ -320,7 +393,7 @@ class ProjectionGridDescriptor(object):  # {{{
 
     Last Modified
     -------------
-    04/06/2017
+    04/13/2017
     '''
 
     def __init__(self, projection):  # {{{
@@ -345,7 +418,7 @@ class ProjectionGridDescriptor(object):  # {{{
         self.latLonProjection = pyproj.Proj(proj='latlong', datum='WGS84')
         self.regional = True
 
-    def read(self, fileName, xVarName='x', yVarName='y'):  # {{{
+    def read(self, fileName, meshName, xVarName='x', yVarName='y'):  # {{{
         '''
         Given a grid file with x and y coordinates defining the axes of the
         logically rectangular grid, read in the x and y coordinates and
@@ -355,6 +428,9 @@ class ProjectionGridDescriptor(object):  # {{{
         ----------
         fileName : str
             The path of the file containing the grid data
+
+        meshName : str
+            The name of the grid (e.g. ``'10km_Antarctic_stereo'``)
 
         xVarName, yVarName : str, optional
             The name of the x and y (in meters) variables in the grid file
@@ -367,6 +443,9 @@ class ProjectionGridDescriptor(object):  # {{{
         -------------
         03/20/2017
         '''
+
+        self.meshName = meshName
+
         ds = xarray.open_dataset(fileName)
 
         # Get info from input file
@@ -387,7 +466,7 @@ class ProjectionGridDescriptor(object):  # {{{
         else:
             self.history = sys.argv[:]  # }}}
 
-    def create(self, x, y):  # {{{
+    def create(self, x, y, meshName):  # {{{
         '''
         Given x and y coordinates defining the axes of the logically
         rectangular grid, save the coordinates interpolate/extrapolate to
@@ -399,6 +478,9 @@ class ProjectionGridDescriptor(object):  # {{{
             One dimensional arrays defining the x and y coordinates of grid
             cell centers.
 
+        meshName : str
+            The name of the grid (e.g. ``'10km_Antarctic_stereo'``)
+
         Author
         ------
         Xylar Asay-Davis
@@ -407,6 +489,9 @@ class ProjectionGridDescriptor(object):  # {{{
         -------------
         03/20/2017
         '''
+
+        self.meshName = meshName
+
         self.x = x
         self.y = y
 
@@ -516,7 +601,8 @@ class ProjectionGridDescriptor(object):  # {{{
                                'data': Lon,
                                'attrs': {'units': 'degrees'}}}
 
-        self.dims = [xDimName, yDimName]  # }}}
+        self.dims = [xDimName, yDimName]
+        # }}}
 
 
 def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units):  # {{{
