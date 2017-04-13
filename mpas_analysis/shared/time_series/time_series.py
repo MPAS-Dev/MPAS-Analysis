@@ -90,7 +90,7 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
             dsCache = xr.open_dataset(cacheFileName, decode_times=False)
             cacheDataSetExists = True
         except IOError:
-        # assuming the cache file is corrupt, so deleting it.
+            # assuming the cache file is corrupt, so deleting it.
             message = 'Deleting cache file {}, which appears to have ' \
                       'been corrupted.'.format(cacheFileName)
             warnings.warn(message)
@@ -138,12 +138,16 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
 
         if cacheDataSetExists:
             dsCache = xr.concat([dsCache, ds], dim='Time')
+            # now sort the Time dimension:
+            dsCache = dsCache.loc[{'Time': sorted(dsCache.Time.values)}]
         else:
             dsCache = ds
             cacheDataSetExists = True
 
         dsCache.to_netcdf(cacheFileName)
 
-    return dsCache.sel(Time=slice(timesInDataSet[0],timesInDataSet[-1]))  # }}}
+    return dsCache.sel(Time=slice(timesInDataSet[0], timesInDataSet[-1]))
+
+    # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
