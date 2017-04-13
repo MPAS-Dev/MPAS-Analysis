@@ -29,11 +29,14 @@ try:
 except ImportError:
     has_numpy = False
 
+
 def requires_lxml(test):
     return test if has_lxml else unittest.skip('requires lxml')(test)
 
+
 def requires_numpy(test):
     return test if has_numpy else unittest.skip('requires numpy')(test)
+
 
 # Adapted from
 # http://stackoverflow.com/questions/29627341/pytest-where-to-store-expected-data
@@ -58,18 +61,22 @@ class TestCase(unittest.TestCase):
         assert a1 == a2 or (a1 != a1 and a2 != a2)
 
     def assertLessThan(self, a1, a2):
-        assert a1 <= a2 
-        
+        assert a1 <= a2
+
     def assertGreaterThan(self, a1, a2):
         assert a1 >= a2
-        
+
     @requires_numpy
     def assertArrayEqual(self, a1, a2):
         np.testing.assert_array_equal(a1, a2)
-        
+
     @requires_numpy
     def assertApproxEqual(self, a1, a2, rtol=1e-5, atol=1e-8):
         assert np.isclose(a1, a2, rtol=rtol, atol=atol)
+
+    @requires_numpy
+    def assertArrayApproxEqual(self, a1, a2, rtol=1e-5, atol=1e-8):
+        assert np.all(np.isclose(a1, a2, rtol=rtol, atol=atol))
 
     @contextmanager
     def assertWarns(self, message):

@@ -1,274 +1,336 @@
-#!/usr/bin/env python
 """
 General comparison of 2-d model fields against data.  Currently only supports
-mixed layer depths (mld) and sea surface temperature (sst)
+sea surface temperature (sst), sea surface salinity (sss) and mixed layer
+depth (mld)
 
-Author: Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
-Last Modified: 12/06/2016
+Authors
+-------
+Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
+Last Modified
+-------------
+04/08/2017
 """
 
-import matplotlib.pyplot as plt
-import matplotlib.colors as cols
-
-import numpy as np
 import xarray as xr
 import datetime
-from netCDF4 import Dataset as netcdf_dataset
+import numpy as np
+import netCDF4
+import os
 
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
-from ..shared.plot.plotting import plot_global_comparison
-from ..shared.interpolation.interpolate import interp_fields, init_tree
+from ..shared.interpolation import interpolate
+
+from ..shared.plot.plotting import plot_global_comparison, \
+    setup_colormap
 from ..shared.constants import constants
 
-from ..shared.io import StreamsFile
+from ..shared.io.utility import build_config_full_path
+
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
+
+from ..shared.timekeeping.utility import get_simulation_start_time
+
+from ..shared.climatology import climatology
+
+from ..shared.analysis_task import setup_task
+
+from ..shared.mpas_xarray import mpas_xarray
 
 
-def ocn_modelvsobs(config, field, streamMap=None, variableMap=None):
+def ocn_modelvsobs(config, field):
 
     """
     Plots a comparison of ACME/MPAS output to SST or MLD observations
 
-    config is an instance of MpasAnalysisConfigParser containing configuration
-    options.
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
 
-    field is the name of a field to be analyize (currently one of 'mld' or
-    'sst')
+    field : {'sst', 'sss', 'mld'}
+        The name of a field to be analyized
 
-    If present, streamMap is a dictionary of MPAS-O stream names that map to
-    their mpas_analysis counterparts.
+    Authors
+    -------
+    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
-    If present, variableMap is a dictionary of MPAS-O variable names that map
-    to their mpas_analysis counterparts.
-
-    Authors: Luke Van Roekel, Milena Veneziani, Xylar Asay-Davis
-    Modified: 12/08/2016
+    Last Modified
+    -------------
+    04/08/2017
     """
 
-    # read parameters from config file
-    indir = config.get('paths', 'archive_dir_ocn')
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
 
-    streams_filename = config.get('input', 'ocean_streams_filename')
-    streams = StreamsFile(streams_filename, streamsdir=indir)
+    simulationStartTime = get_simulation_start_time(runStreams)
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
-    startDate = config.get('time', 'climo_start_date')
-    endDate = config.get('time', 'climo_end_date')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    infiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate)
-    print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
+    startDate = config.get('climatology', 'startDate')
+    endDate = config.get('climatology', 'endDate')
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    inputFiles = historyStreams.readpath(streamName, startDate=startDate,
+                                         endDate=endDate, calendar=calendar)
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(inputFiles[0]),
+              os.path.basename(inputFiles[-1]))
 
-    plots_dir = config.get('paths', 'plots_dir')
-    obsdir = config.get('paths', 'obs_' + field + 'dir')
-    casename = config.get('case', 'casename')
-    meshfile = config.get('data', 'mpas_meshfile')
-    climo_yr1 = config.getint('time', 'climo_yr1')
-    climo_yr2 = config.getint('time', 'climo_yr2')
-    yr_offset = config.getint('time', 'yr_offset')
+    observationsDirectory = build_config_full_path(
+        config, 'oceanObservations', '{}Subdirectory'.format(field))
+    mainRunName = config.get('runs', 'mainRunName')
 
-    outputTimes = config.getExpression(field + '_modelvsobs',
-                                       'comparisonTimes')
+    overwriteMpasClimatology = config.getWithDefault(
+        'climatology', 'overwriteMpasClimatology', False)
 
-    f = netcdf_dataset(meshfile, mode='r')
-    lonCell = f.variables["lonCell"][:]
-    latCell = f.variables["latCell"][:]
+    overwriteObsClimatology = config.getWithDefault(
+        'oceanObservations', 'overwriteObsClimatology', False)
+
+    try:
+        restartFileName = runStreams.readpath('restart')[0]
+    except ValueError:
+        raise IOError('No MPAS-O restart file found: need at least one '
+                      'restart file for ocn_modelvsobs calculation')
+
+    sectionName = 'regridded{}'.format(field.upper())
+    outputTimes = config.getExpression(sectionName, 'comparisonTimes')
+
+    # get a list of regridded observations files and check if they exist.  If
+    # they are all there, we don't have to do anything else with the
+    # observations
+    obsFileNames = \
+        {'mld': "{}/holtetalley_mld_climatology.nc".format(
+                observationsDirectory),
+         'sst': "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
+                observationsDirectory),
+         'sss': "{}/Aquarius_V3_SSS_Monthly.nc".format(
+                observationsDirectory)}
+
+    obsFileName = obsFileNames[field]
+
+    buildObsClimatologies = overwriteObsClimatology
+    for months in outputTimes:
+        (climatologyFileName, regriddedFileName) = \
+            climatology.get_observation_climatology_file_names(
+                config=config, fieldName=field, monthNames=months,
+                componentName='ocean', gridFileName=obsFileName,
+                latVarName='lat', lonVarName='lon')
+        if not os.path.exists(regriddedFileName):
+            buildObsClimatologies = True
+            break
 
     varList = [field]
 
     if field == 'mld':
 
-        selvals = None
-
-        # Load MLD observational data
-        obs_filename = "{}/holtetalley_mld_climatology.nc".format(obsdir)
-        dsData = xr.open_mfdataset(obs_filename)
-
-        # Increment month value to be consistent with the model output
-        dsData.iMONTH.values += 1
-
-        # Rename the time dimension to be consistent with the SST dataset
-        dsData.rename({'month': 'calmonth'}, inplace=True)
-        dsData.rename({'iMONTH': 'month'}, inplace=True)
+        iselvals = None
 
         obsFieldName = 'mld_dt_mean'
 
-        # Reorder dataset for consistence
-        dsData = dsData.transpose('month', 'iLON', 'iLAT')
+        if buildObsClimatologies:
+            # Load MLD observational data
+            dsObs = xr.open_mfdataset(obsFileName)
+
+            # Increment month value to be consistent with the model output
+            dsObs.iMONTH.values += 1
+
+            # Rename the dimensions to be consistent with other obs. data sets
+            dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
+                          'lon': 'lonCoord'}, inplace=True)
+            dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'},
+                         inplace=True)
+            # set the coordinates now that the dimensions have the same names
+            dsObs.coords['lat'] = dsObs['latCoord']
+            dsObs.coords['lon'] = dsObs['lonCoord']
+            dsObs.coords['Time'] = dsObs['calmonth']
+            dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
+            # no meaningful year since this is already a climatology
+            dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
+
+            dsObs = mpas_xarray.subset_variables(dsObs, [obsFieldName,
+                                                         'month'])
+            # Reorder dataset for consistence with other obs. data sets
+            dsObs = dsObs.transpose('Time', 'lat', 'lon')
 
         # Set appropriate MLD figure labels
-        obsTitleLabel = "Observations (HolteTalley density threshold MLD)"
-        fileOutLabel = "mldHolteTalleyARGO"
+        observationTitleLabel = \
+            "Observations (HolteTalley density threshold MLD)"
+        outFileLabel = "mldHolteTalleyARGO"
         unitsLabel = 'm'
 
     elif field == 'sst':
 
-        selvals = {'nVertLevels': 0}
+        iselvals = {'nVertLevels': 0}
 
-        obs_filename = \
-            "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(obsdir)
-        dsData = xr.open_mfdataset(obs_filename)
-        # Select years for averaging (pre-industrial or present-day)
-        # This seems fragile as definitions can change
-        if yr_offset < 1900:
-            time_start = datetime.datetime(1870, 1, 1)
-            time_end = datetime.datetime(1900, 12, 31)
-            preIndustrial_txt = "pre-industrial 1870-1900"
+        climStartYear = config.getint('oceanObservations',
+                                      'sstClimatologyStartYear')
+        climEndYear = config.getint('oceanObservations',
+                                    'sstClimatologyEndYear')
+        timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
+        timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
+
+        if climStartYear < 1925:
+            period = 'pre-industrial'
         else:
-            time_start = datetime.datetime(1990, 1, 1)
-            time_end = datetime.datetime(2011, 12, 31)
-            preIndustrial_txt = "present-day 1990-2011"
+            period = 'present-day'
 
-        ds_tslice = dsData.sel(time=slice(time_start, time_end))
-        monthly_clim_data = ds_tslice.groupby('time.month').mean('time')
+        if buildObsClimatologies:
+            dsObs = xr.open_mfdataset(obsFileName)
+            dsObs.rename({'time': 'Time'}, inplace=True)
+            dsObs = dsObs.transpose('Time', 'lat', 'lon')
+            dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+            dsObs.coords['month'] = dsObs['Time.month']
+            dsObs.coords['year'] = dsObs['Time.year']
 
-        # Rename the observation data for code compactness
-        dsData = monthly_clim_data.transpose('month', 'lon', 'lat')
         obsFieldName = 'SST'
 
         # Set appropriate figure labels for SST
-        obsTitleLabel = \
-            "Observations (Hadley/OI, {})".format(preIndustrial_txt)
-        fileOutLabel = "sstHADOI"
+        observationTitleLabel = \
+            "Observations (Hadley/OI, {} {:04d}-{:04d})".format(period,
+                                                                climStartYear,
+                                                                climEndYear)
+        outFileLabel = "sstHADOI"
         unitsLabel = r'$^o$C'
 
     elif field == 'sss':
 
-        selvals = {'nVertLevels': 0}
+        iselvals = {'nVertLevels': 0}
 
-        obs_filename = "{}/Aquarius_V3_SSS_Monthly.nc".format(obsdir)
-        dsData = xr.open_mfdataset(obs_filename)
+        timeStart = datetime.datetime(2011, 8, 1)
+        timeEnd = datetime.datetime(2014, 12, 31)
 
-        time_start = datetime.datetime(2011, 8, 1)
-        time_end = datetime.datetime(2014, 12, 31)
+        if buildObsClimatologies:
+            dsObs = xr.open_mfdataset(obsFileName)
+            dsObs.rename({'time': 'Time'}, inplace=True)
+            dsObs = dsObs.transpose('Time', 'lat', 'lon')
+            dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+            dsObs.coords['month'] = dsObs['Time.month']
+            dsObs.coords['year'] = dsObs['Time.year']
 
-        ds_tslice = dsData.sel(time=slice(time_start, time_end))
-
-        # The following line converts from DASK to numpy to supress an odd
-        # warning that doesn't influence the figure output
-        ds_tslice.SSS.values
-
-        monthly_clim_data = ds_tslice.groupby('time.month').mean('time')
-
-        # Rename the observation data for code compactness
-        dsData = monthly_clim_data.transpose('month', 'lon', 'lat')
         obsFieldName = 'SSS'
 
-        # Set appropriate figure labels for SSS
-        preIndustrial_txt = "2011-2014"
-
-        obsTitleLabel = "Observations (Aquarius, {})".format(preIndustrial_txt)
-        fileOutLabel = 'sssAquarius'
+        observationTitleLabel = "Observations (Aquarius, 2011-2014)"
+        outFileLabel = 'sssAquarius'
         unitsLabel = 'PSU'
 
-    ds = xr.open_mfdataset(
-        infiles,
-        preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset,
-                                             timestr='Time',
-                                             onlyvars=varList,
-                                             selvals=selvals,
-                                             varmap=variableMap))
-    ds = remove_repeated_time_index(ds)
+    ds = open_multifile_dataset(fileNames=inputFiles,
+                                calendar=calendar,
+                                config=config,
+                                simulationStartTime=simulationStartTime,
+                                timeVariableName='Time',
+                                variableList=varList,
+                                iselValues=iselvals,
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate)
 
-    time_start = datetime.datetime(yr_offset+climo_yr1, 1, 1)
-    time_end = datetime.datetime(yr_offset+climo_yr2, 12, 31)
-    ds_tslice = ds.sel(Time=slice(time_start, time_end))
-    monthly_clim = ds_tslice.groupby('Time.month').mean('Time')
+    changed, startYear, endYear = \
+        climatology.update_start_end_year(ds, config, calendar)
 
-    latData, lonData = np.meshgrid(dsData.lat.values, dsData.lon.values)
-    latData = latData.flatten()
-    lonData = lonData.flatten()
+    mpasMappingFileName = climatology.write_mpas_mapping_file(
+        config=config, meshFileName=restartFileName)
 
-    daysarray = np.ones((12, dsData[obsFieldName].values.shape[1],
-                         dsData[obsFieldName].values.shape[2]))
+    if buildObsClimatologies:
+        obsMappingFileName = \
+            climatology.write_observations_mapping_file(
+                config=config, componentName='ocean', fieldName=field,
+                gridFileName=obsFileName, latVarName='lat',  lonVarName='lon')
+    else:
+        obsMappingFileName = None
 
-    for i, dval in enumerate(constants.dinmonth):
-        daysarray[i, :, :] = dval
-        inds = np.where(np.isnan(dsData[obsFieldName][i, :, :].values))
-        daysarray[i, inds[0], inds[1]] = np.NaN
-
-    # initialize interpolation variables
-    d2, inds2, lonTarg, latTarg = init_tree(np.rad2deg(lonCell),
-                                            np.rad2deg(latCell),
-                                            constants.lonmin,
-                                            constants.lonmax,
-                                            constants.latmin,
-                                            constants.latmax,
-                                            constants.dLongitude,
-                                            constants.dLatitude)
-    d, inds, lonTargD, latTargD = init_tree(lonData, latData,
-                                            constants.lonmin,
-                                            constants.lonmax,
-                                            constants.latmin,
-                                            constants.latmax,
-                                            constants.dLongitude,
-                                            constants.dLatitude)
-    nLon = lonTarg.shape[0]
-    nLat = lonTarg.shape[1]
-
-    modelOutput = np.zeros((len(outputTimes), nLon, nLat))
-    observations = np.zeros((len(outputTimes), nLon, nLat))
-    bias = np.zeros((len(outputTimes), nLon, nLat))
+    (colormapResult, colorbarLevelsResult) = setup_colormap(
+        config, sectionName, suffix='Result')
+    (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+        config, sectionName, suffix='Difference')
 
     # Interpolate and compute biases
-    for i, timestring in enumerate(outputTimes):
-        monthsvalue = constants.monthdictionary[timestring]
+    for months in outputTimes:
+        monthValues = constants.monthDictionary[months]
 
-        if isinstance(monthsvalue, (int, long)):
-            modeldata = monthly_clim.sel(month=monthsvalue)[field].values
-            obsdata = dsData.sel(month=monthsvalue)[obsFieldName].values
-        else:
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+            climatology.get_mpas_climatology_file_names(config=config,
+                                                        fieldName=field,
+                                                        monthNames=months)
 
-            modeldata = (np.sum(
-                constants.dinmonth[monthsvalue-1] *
-                monthly_clim.sel(month=monthsvalue)[field].values.T, axis=1) /
-                np.sum(constants.dinmonth[monthsvalue-1]))
-            obsdata = (np.nansum(
-                daysarray[monthsvalue-1, :, :] *
-                dsData.sel(month=monthsvalue)[obsFieldName].values, axis=0) /
-                np.nansum(daysarray[monthsvalue-1, :, :], axis=0))
+        if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
+            seasonalClimatology = climatology.cache_climatologies(
+                ds, monthValues, config, climatologyPrefix, calendar,
+                printProgress=True)
+            # write out the climatology so we can interpolate it with
+            # interpolate.remap
+            seasonalClimatology.to_netcdf(climatologyFileName)
 
-        modelOutput[i, :, :] = interp_fields(modeldata, d2, inds2, lonTarg)
-        observations[i, :, :] = interp_fields(obsdata.flatten(), d, inds,
-                                              lonTargD)
+        interpolate.remap(inFileName=climatologyFileName,
+                          outFileName=regriddedFileName,
+                          inWeightFileName=mpasMappingFileName,
+                          sourceFileType='mpas',
+                          overwrite=overwriteMpasClimatology)
 
-    for i in range(len(outputTimes)):
-        bias[i, :, :] = modelOutput[i, :, :] - observations[i, :, :]
+        ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
+        modelOutput = ncFile.variables[field][:]
+        lons = ncFile.variables["lon"][:]
+        lats = ncFile.variables["lat"][:]
+        ncFile.close()
+        lonTarg, latTarg = np.meshgrid(lons, lats)
 
-    clevsModelObs = config.getExpression(field + '_modelvsobs',
-                                         'clevsModelObs')
-    cmap = plt.get_cmap(config.get(field + '_modelvsobs',
-                                   'cmapModelObs'))
-    cmapIndices = config.getExpression(field + '_modelvsobs',
-                                       'cmapIndicesModelObs')
-    cmapModelObs = cols.ListedColormap(cmap(cmapIndices), "cmapModelObs")
-    clevsDiff = config.getExpression(field + '_modelvsobs',
-                                     'clevsDiff')
-    cmap = plt.get_cmap(config.get(field + '_modelvsobs', 'cmapDiff'))
-    cmapIndices = config.getExpression(field + '_modelvsobs',
-                                       'cmapIndicesDiff')
-    cmapDiff = cols.ListedColormap(cmap(cmapIndices), "cmapDiff")
+        # now the observations
+        (climatologyFileName, regriddedFileName) = \
+            climatology.get_observation_climatology_file_names(
+                config=config, fieldName=field, monthNames=months,
+                componentName='ocean', gridFileName=obsFileName,
+                latVarName='lat', lonVarName='lon')
 
-    for i in range(len(outputTimes)):
-        fileout = "{}/{}_{}_{}_years{:04d}-{:04d}.png".format(
-            plots_dir, fileOutLabel, casename, outputTimes[i], climo_yr1,
-            climo_yr2)
+        if buildObsClimatologies:
+            if (overwriteObsClimatology or
+                    (not os.path.exists(climatologyFileName) and
+                     not os.path.exists(regriddedFileName))):
+                seasonalClimatology = climatology.compute_climatology(
+                    dsObs, monthValues, maskVaries=True)
+                # Either we want to overwite files or neither the climatology
+                # nor its regridded counterpart exist. Write out the
+                # climatology so we can interpolate it with interpolate.remap
+                seasonalClimatology.to_netcdf(climatologyFileName)
+
+            if obsMappingFileName is None:
+                # no remapping is needed
+                regriddedFileName = climatologyFileName
+            else:
+                interpolate.remap(inFileName=climatologyFileName,
+                                  outFileName=regriddedFileName,
+                                  inWeightFileName=obsMappingFileName,
+                                  sourceFileType='latlon',
+                                  overwrite=overwriteObsClimatology)
+
+        # read in the results from the remapped files
+        ncFile = netCDF4.Dataset(regriddedFileName, mode='r')
+        observations = ncFile.variables[obsFieldName][:]
+        ncFile.close()
+
+        bias = modelOutput - observations
+
+        outFileName = "{}/{}_{}_{}_years{:04d}-{:04d}.png".format(
+                plotsDirectory, outFileLabel, mainRunName,
+                months, startYear, endYear)
         title = "{} ({}, years {:04d}-{:04d})".format(
-            field.upper(), outputTimes[i], climo_yr1, climo_yr2)
+                field.upper(), months, startYear, endYear)
         plot_global_comparison(config,
                                lonTarg,
                                latTarg,
-                               modelOutput[i, :, :],
-                               observations[i, :, :],
-                               bias[i, :, :],
-                               cmapModelObs,
-                               clevsModelObs,
-                               cmapDiff,
-                               clevsDiff,
-                               fileout=fileout,
+                               modelOutput,
+                               observations,
+                               bias,
+                               colormapResult,
+                               colorbarLevelsResult,
+                               colormapDifference,
+                               colorbarLevelsDifference,
+                               fileout=outFileName,
                                title=title,
-                               modelTitle="{}".format(casename),
-                               obsTitle=obsTitleLabel,
+                               modelTitle="{}".format(mainRunName),
+                               obsTitle=observationTitleLabel,
                                diffTitle="Model-Observations",
                                cbarlabel=unitsLabel)
+
+
+# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

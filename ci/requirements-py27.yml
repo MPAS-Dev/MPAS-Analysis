@@ -1,4 +1,6 @@
 name: test_env
+channels:
+  - conda-forge
 dependencies:
   - python=2.7
   - pytest
@@ -8,3 +10,7 @@ dependencies:
   - xarray
   - matplotlib
   - dask
+  - netcdf4
+  - hdf5
+  - hdf4
+  - nco

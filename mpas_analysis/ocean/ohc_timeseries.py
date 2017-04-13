@@ -1,18 +1,20 @@
 import numpy as np
 import netCDF4
-from netCDF4 import Dataset as netcdf_dataset
-import xarray as xr
-import pandas as pd
-import datetime
-
-from ..shared.mpas_xarray.mpas_xarray import preprocess_mpas, \
-    remove_repeated_time_index
+import os
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.io import NameList, StreamsFile
+from ..shared.generalized_reader.generalized_reader \
+    import open_multifile_dataset
 
-from ..shared.timekeeping.Date import Date
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    date_to_days, days_to_datetime, string_to_datetime
+
+from ..shared.analysis_task import setup_task
+
+from ..shared.time_series import time_series
+
+from ..shared.io.utility import build_config_full_path, make_directories
 
 
 def ohc_timeseries(config, streamMap=None, variableMap=None):
@@ -31,65 +33,85 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
     to their mpas_analysis counterparts.
 
     Author: Xylar Asay-Davis, Milena Veneziani
-    Last Modified: 01/07/2017
+    Last Modified: 04/08/2017
     """
 
+    def compute_ohc_part(timeIndices, firstCall):
+        dsLocal = ds.isel(Time=timeIndices)
+
+        dsLocal['ohc'] = rho*cp*dsLocal.sumLayerMaskValue * \
+            dsLocal.avgLayerArea * dsLocal.avgLayerThickness * \
+            dsLocal.avgLayTemperatureAnomaly
+        dsLocal.ohc.attrs['units'] = 'J'
+        dsLocal.ohc.attrs['description'] = 'Ocean heat content in each region'
+        dsLocal['regionNames'] = ('nOceanRegionsTmp', regionNames)
+
+        return dsLocal
+
+    # perform common setup for the task
+    namelist, runStreams, historyStreams, calendar, namelistMap, streamMap, \
+        variableMap, plotsDirectory = setup_task(config, componentName='ocean')
+
+    simulationStartTime = get_simulation_start_time(runStreams)
+
     # read parameters from config file
-    casename = config.get('case', 'casename')
-    ref_casename_v0 = config.get('case', 'ref_casename_v0')
-    indir_v0data = config.get('paths', 'ref_archive_v0_ocndir')
+    mainRunName = config.get('runs', 'mainRunName')
+    preprocessedReferenceRunName = config.get('runs',
+                                              'preprocessedReferenceRunName')
+    preprocessedInputDirectory = config.get('oceanPreprocessedReference',
+                                            'baseDirectory')
 
-    compare_with_obs = config.getboolean('ohc_timeseries', 'compare_with_obs')
+    compareWithObservations = config.getboolean('timeSeriesOHC',
+                                                'compareWithObservations')
 
-    plots_dir = config.get('paths', 'plots_dir')
-
-    yr_offset = config.getint('time', 'yr_offset')
-
-    N_movavg = config.getint('ohc_timeseries', 'N_movavg')
+    movingAveragePoints = config.getint('timeSeriesOHC', 'movingAveragePoints')
 
     regions = config.getExpression('regions', 'regions')
-    plot_titles = config.getExpression('regions', 'plot_titles')
-    iregions = config.getExpression('ohc_timeseries', 'regionIndicesToPlot')
+    plotTitles = config.getExpression('regions', 'plotTitles')
+    regionIndicesToPlot = config.getExpression('timeSeriesOHC',
+                                               'regionIndicesToPlot')
 
-    indir = config.get('paths', 'archive_dir_ocn')
+    outputDirectory = build_config_full_path(config, 'output',
+                                             'timeseriesSubdirectory')
 
-    namelist_filename = config.get('input', 'ocean_namelist_filename')
-    namelist = NameList(namelist_filename, path=indir)
+    make_directories(outputDirectory)
 
-    streams_filename = config.get('input', 'ocean_streams_filename')
-    streams = StreamsFile(streams_filename, streamsdir=indir)
+    regionNames = config.getExpression('regions', 'regions')
+    regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
     # Note: input file, not a mesh file because we need dycore specific fields
     # such as refBottomDepth and namelist fields such as config_density0, as
-    # well as simulationStartTime, that are not guaranteed to be in the mesh file.
+    # well as simulationStartTime, that are not guaranteed to be in the mesh
+    # file.
     try:
-        inputfile = streams.readpath('restart')[0]
+        restartFile = runStreams.readpath('restart')[0]
     except ValueError:
-        raise IOError('No MPAS-O restart file found: need at least one restart file for OHC calculation')
+        raise IOError('No MPAS-O restart file found: need at least one '
+                      'restart file for OHC calculation')
 
     # get a list of timeSeriesStats output files from the streams file,
     # reading only those that are between the start and end dates
-    startDate = config.get('time', 'timeseries_start_date')
-    endDate = config.get('time', 'timeseries_end_date')
-    streamName = streams.find_stream(streamMap['timeSeriesStats'])
-    infiles = streams.readpath(streamName, startDate=startDate,
-                               endDate=endDate)
-    print 'Reading files {} through {}'.format(infiles[0], infiles[-1])
+    startDate = config.get('timeSeries', 'startDate')
+    endDate = config.get('timeSeries', 'endDate')
+    streamName = historyStreams.find_stream(streamMap['timeSeriesStats'])
+    fileNames = historyStreams.readpath(streamName, startDate=startDate,
+                                        endDate=endDate, calendar=calendar)
+    print '\n  Reading files:\n' \
+          '    {} through\n    {}'.format(
+              os.path.basename(fileNames[0]),
+              os.path.basename(fileNames[-1]))
 
     # Define/read in general variables
     print '  Read in depth and compute specific depth indexes...'
-    f = netcdf_dataset(inputfile, mode='r')
+    ncFile = netCDF4.Dataset(restartFile, mode='r')
     # reference depth [m]
-    depth = f.variables['refBottomDepth'][:]
-    # simulation start time
-    simStartTime = netCDF4.chartostring(f.variables['simulationStartTime'][:])
-    simStartTime = str(simStartTime)
-    f.close()
+    depth = ncFile.variables['refBottomDepth'][:]
+    ncFile.close()
     # specific heat [J/(kg*degC)]
     cp = namelist.getfloat('config_specific_heat_sea_water')
     # [kg/m3]
     rho = namelist.getfloat('config_density0')
-    fac = 1e-22*rho*cp
+    factor = 1e-22
 
     k700m = np.where(depth > 700.)[0][0] - 1
     k2000m = np.where(depth > 2000.)[0][0] - 1
@@ -98,135 +120,159 @@ def ohc_timeseries(config, streamMap=None, variableMap=None):
 
     # Load data
     print '  Load ocean data...'
-    varList = ['avgLayerTemperature',
-               'sumLayerMaskValue',
-               'avgLayerArea',
-               'avgLayerThickness']
-    ds = xr.open_mfdataset(
-        infiles,
-        preprocess=lambda x: preprocess_mpas(x,
-                                             yearoffset=yr_offset,
-                                             timestr='Time',
-                                             onlyvars=varList,
-                                             varmap=variableMap))
+    variableList = ['avgLayerTemperature',
+                    'sumLayerMaskValue',
+                    'avgLayerArea',
+                    'avgLayerThickness']
+    ds = open_multifile_dataset(fileNames=fileNames,
+                                calendar=calendar,
+                                config=config,
+                                simulationStartTime=simulationStartTime,
+                                timeVariableName='Time',
+                                variableList=variableList,
+                                variableMap=variableMap,
+                                startDate=startDate,
+                                endDate=endDate)
 
-    ds = remove_repeated_time_index(ds)
+    ds = ds.isel(nOceanRegionsTmp=regionIndicesToPlot)
 
-    # convert the start and end dates to datetime objects using
-    # the Date class, which ensures the results are within the
-    # supported range
-    time_start = Date(startDate).to_datetime(yr_offset)
-    time_end = Date(endDate).to_datetime(yr_offset)
-    # select only the data in the specified range of years
-    ds = ds.sel(Time=slice(time_start, time_end))
+    timeStart = string_to_datetime(startDate)
+    timeEnd = string_to_datetime(endDate)
 
     # Select year-1 data and average it (for later computing anomalies)
-    time_start_yr1 = Date(simStartTime).to_datetime(yr_offset)
-    if time_start_yr1 < time_start:
-        startDate_yr1 = simStartTime
-        endDate_yr1 = startDate_yr1[0:5]+'12-31'+startDate_yr1[10:]
-        infiles_yr1 = streams.readpath(streamName, startDate=startDate_yr1,
-                                       endDate=endDate_yr1)
-        ds_yr1 = xr.open_mfdataset(
-                infiles_yr1,
-                preprocess=lambda x: preprocess_mpas(x,
-                                                     yearoffset=yr_offset,
-                                                     timestr='Time',
-                                                     onlyvars=varList,
-                                                     varmap=variableMap))
+    timeStartFirstYear = string_to_datetime(simulationStartTime)
+    if timeStartFirstYear < timeStart:
+        startDateFirstYear = simulationStartTime
+        firstYear = int(startDateFirstYear[0:4])
+        endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
+        filesFirstYear = historyStreams.readpath(streamName,
+                                                 startDate=startDateFirstYear,
+                                                 endDate=endDateFirstYear,
+                                                 calendar=calendar)
+        dsFirstYear = open_multifile_dataset(
+            fileNames=filesFirstYear,
+            calendar=calendar,
+            config=config,
+            simulationStartTime=simulationStartTime,
+            timeVariableName='Time',
+            variableList=['avgLayerTemperature'],
+            variableMap=variableMap,
+            startDate=startDateFirstYear,
+            endDate=endDateFirstYear)
 
-        ds_yr1 = remove_repeated_time_index(ds_yr1)
+        dsFirstYear = dsFirstYear.isel(nOceanRegionsTmp=regionIndicesToPlot)
+
+        firstYearAvgLayerTemperature = dsFirstYear.avgLayerTemperature
     else:
-        time_start = datetime.datetime(time_start.year, 1, 1)
-        time_end = datetime.datetime(time_start.year, 12, 31)
-        ds_yr1 = ds.sel(Time=slice(time_start, time_end))
-    mean_yr1 = ds_yr1.mean('Time')
+        firstYearAvgLayerTemperature = ds.avgLayerTemperature
+        firstYear = timeStart.year
+
+    timeStartFirstYear = date_to_days(year=firstYear, month=1, day=1,
+                                      calendar=calendar)
+    timeEndFirstYear = date_to_days(year=firstYear, month=12, day=31,
+                                    hour=23, minute=59, second=59,
+                                    calendar=calendar)
+
+    firstYearAvgLayerTemperature = firstYearAvgLayerTemperature.sel(
+        Time=slice(timeStartFirstYear, timeEndFirstYear))
+
+    firstYearAvgLayerTemperature = firstYearAvgLayerTemperature.mean('Time')
 
     print '  Compute temperature anomalies...'
-    avgLayerTemperature = ds.avgLayerTemperature
-    avgLayerTemperature_yr1 = mean_yr1.avgLayerTemperature
 
-    avgLayTemp_anomaly = avgLayerTemperature - avgLayerTemperature_yr1
+    ds['avgLayTemperatureAnomaly'] = (ds.avgLayerTemperature -
+                                      firstYearAvgLayerTemperature)
 
-    year_start = (pd.to_datetime(ds.Time.min().values)).year
-    year_end = (pd.to_datetime(ds.Time.max().values)).year
-    time_start = datetime.datetime(year_start, 1, 1)
-    time_end = datetime.datetime(year_end, 12, 31)
+    yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
+    yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+    timeStart = date_to_days(year=yearStart, month=1, day=1,
+                             calendar=calendar)
+    timeEnd = date_to_days(year=yearEnd, month=12, day=31,
+                           calendar=calendar)
 
-    if ref_casename_v0 != 'None':
-        print '  Load in OHC for ACMEv0 case...'
-        infiles_v0data = '{}/OHC.{}.year*.nc'.format(
-            indir_v0data, ref_casename_v0)
-        ds_v0 = xr.open_mfdataset(
-            infiles_v0data,
-            preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
-        ds_v0 = remove_repeated_time_index(ds_v0)
-    	year_end_v0 = (pd.to_datetime(ds_v0.Time.max().values)).year
-	if year_start <= year_end_v0:
-       	    ds_v0_tslice = ds_v0.sel(Time=slice(time_start, time_end))
-	else:
-            print '   Warning: v0 time series lies outside current bounds of v1 time series. Skipping it.'
-	    ref_casename_v0 = 'None'
+    if preprocessedReferenceRunName != 'None':
+        print '  Load in OHC from preprocessed reference run...'
+        inFilesPreprocessed = '{}/OHC.{}.year*.nc'.format(
+            preprocessedInputDirectory, preprocessedReferenceRunName)
+        dsPreprocessed = open_multifile_dataset(
+            fileNames=inFilesPreprocessed,
+            calendar=calendar,
+            config=config,
+            simulationStartTime=simulationStartTime,
+            timeVariableName='xtime')
+        yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
+                                               calendar=calendar).year
+        if yearStart <= yearEndPreprocessed:
+            dsPreprocessedTimeSlice = dsPreprocessed.sel(Time=slice(timeStart,
+                                                                    timeEnd))
+        else:
+            print '   Warning: Preprocessed time series ends before the ' \
+                'timeSeries startYear and will not be plotted.'
+            preprocessedReferenceRunName = 'None'
 
-    sumLayerMaskValue = ds.sumLayerMaskValue
-    avgLayerArea = ds.avgLayerArea
-    avgLayerThickness = ds.avgLayerThickness
+    cacheFileName = '{}/ohcTimeSeries.nc'.format(outputDirectory)
+
+    dsOHC = time_series.cache_time_series(ds.Time.values, compute_ohc_part,
+                                          cacheFileName, calendar,
+                                          yearsPerCacheUpdate=10,
+                                          printProgress=True)
 
     print '  Compute OHC and make plots...'
-    for index in range(len(iregions)):
-        iregion = iregions[index]
+    for index, regionIndex in enumerate(regionIndicesToPlot):
 
-        # Compute volume of each layer in the region:
-        layerArea = sumLayerMaskValue[:, iregion, :] * \
-            avgLayerArea[:, iregion, :]
-        layerVolume = layerArea * avgLayerThickness[:, iregion, :]
+        ohc = dsOHC.ohc.isel(nOceanRegionsTmp=index)
 
-        # Compute OHC:
-        ohc = layerVolume * avgLayTemp_anomaly[:, iregion, :]
         # OHC over 0-bottom depth range:
-        ohc_tot = ohc.sum('nVertLevels')
-        ohc_tot = fac*ohc_tot
+        ohcTotal = ohc.sum('nVertLevels')
+        ohcTotal = factor*ohcTotal
 
         # OHC over 0-700m depth range:
-        ohc_700m = fac*ohc[:, 0:k700m].sum('nVertLevels')
+        ohc700m = factor*ohc[:, 0:k700m].sum('nVertLevels')
 
         # OHC over 700m-2000m depth range:
-        ohc_2000m = fac*ohc[:, k700m+1:k2000m].sum('nVertLevels')
+        ohc2000m = factor*ohc[:, k700m+1:k2000m].sum('nVertLevels')
 
         # OHC over 2000m-bottom depth range:
-        ohc_btm = ohc[:, k2000m+1:kbtm].sum('nVertLevels')
-        ohc_btm = fac*ohc_btm
+        ohcBottom = ohc[:, k2000m+1:kbtm].sum('nVertLevels')
+        ohcBottom = factor*ohcBottom
 
         title = 'OHC, {}, 0-bottom (thick-), 0-700m (thin-), 700-2000m (--),' \
-                ' 2000m-bottom (-.) \n {}'.format(plot_titles[iregion], casename)
+                ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
+                                                  mainRunName)
 
-        xlabel = 'Time [years]'
-        ylabel = '[x$10^{22}$ J]'
+        xLabel = 'Time [years]'
+        yLabel = '[x$10^{22}$ J]'
 
-        if ref_casename_v0 != 'None':
-            figname = '{}/ohc_{}_{}_{}.png'.format(plots_dir,
-                                                   regions[iregion],
-                                                   casename,
-                                                   ref_casename_v0)
-            ohc_v0_tot = ds_v0_tslice.ohc_tot
-            ohc_v0_700m = ds_v0_tslice.ohc_700m
-            ohc_v0_2000m = ds_v0_tslice.ohc_2000m
-            ohc_v0_btm = ds_v0_tslice.ohc_btm
-            title = '{} (r), {} (b)'.format(title, ref_casename_v0)
-            timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m,
-                                              ohc_btm, ohc_v0_tot, ohc_v0_700m,
-                                              ohc_v0_2000m, ohc_v0_btm],
-                                     N_movavg, title, xlabel, ylabel, figname,
+        figureName = '{}/ohc_{}_{}.png'.format(plotsDirectory,
+                                               regions[regionIndex],
+                                               mainRunName)
+
+        if preprocessedReferenceRunName != 'None':
+            ohcPreprocessedTotal = dsPreprocessedTimeSlice.ohc_tot
+            ohcPreprocessed700m = dsPreprocessedTimeSlice.ohc_700m
+            ohcPreprocessed2000m = dsPreprocessedTimeSlice.ohc_2000m
+            ohcPreprocessedBottom = dsPreprocessedTimeSlice.ohc_btm
+            title = '{} (r), {} (b)'.format(title,
+                                            preprocessedReferenceRunName)
+            timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
+                                              ohcBottom, ohcPreprocessedTotal,
+                                              ohcPreprocessed700m,
+                                              ohcPreprocessed2000m,
+                                              ohcPreprocessedBottom],
+                                     movingAveragePoints, title,
+                                     xLabel, yLabel, figureName,
                                      lineStyles=['r-', 'r-', 'r--', 'r-.',
                                                  'b-', 'b-', 'b--', 'b-.'],
                                      lineWidths=[2, 1, 1.5, 1.5, 2, 1, 1.5,
-                                                 1.5])
+                                                 1.5],
+                                     calendar=calendar)
 
-        if not compare_with_obs and ref_casename_v0 == 'None':
-            figname = '{}/ohc_{}_{}.png'.format(plots_dir, regions[iregion],
-                                                casename)
-            timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m,
-                                              ohc_btm],
-                                     N_movavg, title, xlabel, ylabel, figname,
+        if (not compareWithObservations and
+                preprocessedReferenceRunName == 'None'):
+            timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
+                                              ohcBottom],
+                                     movingAveragePoints, title,
+                                     xLabel, yLabel, figureName,
                                      lineStyles=['r-', 'r-', 'r--', 'r-.'],
-                                     lineWidths=[2, 1, 1.5, 1.5])
+                                     lineWidths=[2, 1, 1.5, 1.5],
+                                     calendar=calendar)

@@ -1,5 +1,23 @@
-# mappings of stream names from various MPAS-O versions to those in
-# mpas_analysis
+'''
+Mappings of namelist options, stream names and variable names from various
+MPAS-O versions to those used by mpas_analysis
+
+Authors
+-------
+Xylar Asay-Davis
+
+Last Modified
+-------------
+03/29/2017
+'''
+
+oceanNamelistMap = {
+    'config_am_timeseriesstatsmonthly_enable':
+        ['config_am_timeseriesstatsmonthly_enable',
+         'config_am_timeseriesstats_enable'],
+    'config_am_mocstreamfunction_enable':
+        ['config_am_mocstreamfunction_enable']}
+
 oceanStreamMap = {'timeSeriesStats': ['timeSeriesStatsOutput',
                                       'timeSeriesStatsMonthly',
                                       'timeSeriesStatsMonthlyOutput']}
@@ -33,6 +51,16 @@ oceanVariableMap['avgLayerThickness'] = \
     ['time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness',
      'time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness_1',
      'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerThickness']
+
+# MOC
+oceanVariableMap['avgNormalVelocity'] = \
+    ['time_avg_normalVelocity',
+     'time_avg_normalVelocity_1',
+     'timeMonthly_avg_normalVelocity']
+oceanVariableMap['avgVertVelocityTop'] = \
+    ['time_avg_vertVelocityTop',
+     'time_avg_vertVelocityTop_1',
+     'timeMonthly_avg_vertVelocityTop']
 
 # model vs. obs.
 oceanVariableMap['mld'] = \

@@ -1,0 +1,560 @@
+## This file contains the default values of all possible configuration options
+## used to run analysis tasks.  Do not modify options in this file direct.
+## Instead, follow this procedure:
+##  1. Create and empty config file (say config.myrun) or copy one of the
+##     example files in the configs directory.
+##  2. Copy and modify any config options you want to change from this file into
+##     into your new config file. Make sure they have the right section name
+##     (e.g. [run] or [output]). If nothing esle, you will need to set
+##     baseDirectory under [output] to the folder where output should be stored.
+##  3. run: ./run_analysis.py config.myrun.  This will read the configuraiton
+##     first from this file and then replace that configuraiton with any
+##     changes from from config.myrun
+##  4. If you want to run a subset of the analysis, you can either set the
+##     generate option under [output] in your config file or use the
+##     --generate flag on the command line.  See the comments for 'generate'
+##     in the '[output]' section below for more details on this option.
+
+
+[runs]
+## options related to the run to be analyzed and reference runs to be
+## compared against
+
+# mainRunName is a name that identifies the simulation being analyzed.
+mainRunName = runName
+# referenceRunName is the name of a reference run to compare against (or None
+# to turn off comparison with a reference, e.g. if no reference case is
+# available)
+referenceRunName = None
+# preprocessedReferenceRunName is the name of a reference run that has been
+# preprocessed to compare against (or None to turn off comparison).  Reference
+# runs of this type would have preprocessed results because they were not
+# performed with MPAS components (so they cannot be easily ingested by
+# MPAS-Analysis)
+preprocessedReferenceRunName = None
+
+[input]
+## options related to reading in the results to be analyzed
+
+# directory containing model results
+baseDirectory = /dir/to/model/output
+
+# Note: an absolute path can be supplied for any of these subdirectories.
+# A relative path is assumed to be relative to baseDirectory.
+# By default, results are assumed to be directly in baseDirectory,
+# i.e. <baseDirecory>/./
+
+# subdirectory containing restart files
+runSubdirectory = .
+# subdirectory for ocean history files
+oceanHistorySubdirectory = .
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = .
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpas-o_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpas-cice_in
+seaIceStreamsFileName = streams.cice
+
+# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+mpasMeshName = mesh
+
+# The system has a limit to how many files can be open at one time.  By
+# default, xarray attempts to open all files in a data set simultaneously.
+# A new option allows files to be automatically closed as a data set is being
+# read to prevent hitting this limit.  Here, you can set what fraction of the
+# system limit of open files an analysis task is allowed to use.  Note: In the
+# future when multiple tasks can run simultaneously, the system file limit will
+# first be divided among the tasks before applying this fraction.
+autocloseFileLimitFraction = 0.5
+
+# Large datasets can encounter a memory error.  Specification of a maximum
+# chunk size `maxChunkSize` can be helpful to prevent the memory error.  The
+# current maximum chunk size assumes approximately 64GB of ram and large files
+# with a single time slice.
+maxChunkSize = 10000
+
+[output]
+## options related to writing out plots, intermediate cached data sets, logs,
+## etc.
+
+# directory where analysis should be written
+# NOTE: This directory path must be specific to each test case.
+baseDirectory = /dir/to/analysis/output
+
+# subdirectories within baseDirectory for analysis output
+scratchSubdirectory = scratch
+plotsSubdirectory = plots
+logsSubdirectory = logs
+mpasClimatologySubdirectory = clim/mpas
+mpasRegriddedClimSubdirectory = clim/mpas/regridded
+mappingSubdirectory = mapping
+timeSeriesSubdirectory = timeseries
+
+# a list of analyses to generate.  Valid names are:
+#   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
+#   'regriddedSSS', 'regriddedMLD', 'streamfunctionMOC',
+#   'timeSeriesSeaIceAreaVol', 'regriddedSeaIceConcThick'
+# the following shortcuts exist:
+#   'all' -- all analyses will be run
+#   'all_timeSeries' -- all time-series analyses will be run
+#   'all_regriddedHorizontal' -- all analyses involving regridded horizontal
+#                                fields will be run
+#   'all_ocean' -- all ocean analyses will be run
+#   'all_seaIce' -- all sea-ice analyses will be run
+#   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
+#                             other analyses).
+#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
+#                                            given category of analysis
+# an equivalent syntax can be used on the command line to override this
+# option:
+#    ./run_analysis.py config.analysis --generate \
+#         all,no_ocean,all_timeSeries
+generate = ['all']
+
+# alternative examples that would perform all analysis except
+#   'timeSeriesOHC'
+#generate = ['timeSeriesSST', 'streamfunctionMOC',
+#            'all_regriddedHorizontal', 'all_seaIce']
+#generate = ['all', 'no_timeSeriesOHC']
+# Each subsequent list entry can be used to alter previous list entries. For
+# example, the following would produce all analyses except regriddedSST,
+# regriddedSSS and regriddedMLD (albeit not in a very intuitive way):
+#generate = ['all', 'no_ocean', 'all_timeSeries']
+
+[climatology]
+## options related to producing climatologies, typically to compare against
+## observations and previous runs
+
+# the first year over which to average climatalogies
+startYear = 11
+# the last year over which to average climatalogies
+endYear = 20
+
+# The comparison grid resolution in degrees
+comparisonLatResolution = 0.5
+comparisonLonResolution = 0.5
+
+# The names of the mapping file used for interpolation.  If a mapping file has
+# already been generated, supplying the absolute path can save the time of
+# generating a new one.  If nothing is supplied, the file name is automatically
+# generated based on the MPAS mesh name, the comparison grid resolution, and
+# the interpolation method
+# mpasMappingFile = /path/to/mapping/file
+
+# overwrite files when building climatologies?
+overwriteMapping = False
+overwriteMpasClimatology = False
+
+# interpolation order for model and observation results. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+mpasInterpolationMethod = bilinear
+
+# the number of years per cached climatology file.  These cached files are
+# aggregated together to create annual climatologies, for example, when
+# computing the MOC.
+yearsPerCacheFile = 1
+
+[timeSeries]
+## options related to producing time series plots, often to compare against
+## observations and previous runs
+
+# start and end years for timeseries analysis. Using out-of-bounds values
+#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
+#   of years, and is a good way of insuring that all values are used.
+startYear = 1
+endYear = 9999
+
+[index]
+## options related to producing nino index.
+
+# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
+#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
+#   of years, and is a good way of insuring that all values are used.
+# For valid statistics, index times should include at least 30 years
+startYear = 1
+endYear = 9999
+
+[oceanObservations]
+## options related to ocean observations with which the results will be compared
+
+# directory where ocean observations are stored
+baseDirectory = /dir/to/ocean/observations
+sstSubdirectory = SST
+sssSubdirectory = SSS
+mldSubdirectory = MLD
+ninoSubdirectory = Nino
+
+# first and last year of SST observational climatology (preferably one of the
+# two ranges given below)
+# values for preindustrial
+sstClimatologyStartYear = 1870
+sstClimatologyEndYear = 1900
+# alternative values for present day
+#sstClimatologyStartYear = 1990
+#sstClimatologyEndYear = 2011
+
+# The name of mapping files used for interpolating observations to the
+# comparison grid.  Interpolation is only performed if the observation grid has
+# a different resolution from the comparison grid. If nothing is supplied, the
+# file name is automatically generated based on the MPAS mesh name, the
+# comparison grid resolution, and the interpolation method
+# sstClimatologyMappingFile = /path/to/mapping/file
+# sssClimatologyMappingFile = /path/to/mapping/file
+# mldClimatologyMappingFile = /path/to/mapping/file
+
+
+# interpolation order for observations. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+interpolationMethod = bilinear
+
+# The directories where observation climatologies will be stored if they need
+# to be computed.  If a relative path is supplied, it is relative to the output
+# base directory.  If an absolute path is supplied, this should point to
+# cached climatology files on the desired comparison grid, in which case
+# overwriteObsClimatology should be False.  If cached regridded files are
+# supplied, there is no need to provide cached files before regridding.
+climatologySubdirectory = clim/obs
+regriddedClimSubdirectory = clim/obs/regridded
+
+# overwrite files when building climatologies?
+overwriteObsClimatology = False
+
+[oceanReference]
+## options related to ocean reference run with which the results will be
+## compared
+
+# directory where ocean reference simulation results are stored
+baseDirectory = /dir/to/ocean/reference
+
+[oceanPreprocessedReference]
+## options related to preprocessed ocean reference run with which the results
+## will be compared (e.g. a POP, CESM or ACME v0 run)
+
+# directory where ocean reference simulation results are stored
+baseDirectory = /dir/to/ocean/reference
+
+[seaIceObservations]
+## options related to sea ice observations with which the results will be
+## compared
+
+# directory where sea ice observations are stored
+baseDirectory = /dir/to/seaice/observations
+areaNH = IceArea_timeseries/iceAreaNH_climo.nc
+areaSH = IceArea_timeseries/iceAreaSH_climo.nc
+volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+volSH = none
+concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
+concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
+thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
+thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
+thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
+
+# The name of mapping files used for interpolating observations to the
+# comparison grid.  Interpolation is only performed if the observation grid has
+# a different resolution from the comparison grid. If nothing is supplied, the
+# file name is automatically generated based on the MPAS mesh name, the
+# comparison grid resolution, and the interpolation method
+# seaIceClimatologyMappingFile = /path/to/mapping/file
+
+# interpolation order for observations. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+interpolationMethod = bilinear
+
+# The directories where observation climatologies will be stored if they need
+# to be computed.  If a relative path is supplied, it is relative to the output
+# base directory.  If an absolute path is supplied, this should point to
+# cached climatology files on the desired comparison grid, in which case
+# overwriteObsClimatology should be False.  If cached regridded files are
+# supplied, there is no need to provide cached files before regridding.
+climatologySubdirectory = clim/obs
+regriddedClimSubdirectory = clim/obs/regridded
+
+# overwrite files when building climatologies?
+overwriteObsClimatology = False
+
+[seaIceReference]
+## options related to sea ice reference run with which the results will be
+## compared
+
+# directory where sea ice reference simulation results are stored
+baseDirectory = /dir/to/seaice/reference
+
+[seaIcePreprocessedReference]
+## options related to preprocessed sea ice reference run with which the results
+## will be compared (e.g. a CICE, CESM or ACME v0 run)
+
+# directory where ocean reference simulation results are stored
+baseDirectory = /dir/to/seaice/reference
+
+[timeSeriesOHC]
+## options related to plotting time series of ocean heat content (OHC)
+
+## compare to output from another model run?
+#compareWithModel = True
+# compare to observations?
+compareWithObservations = False
+# list of region indices to plot from the region list in [regions] below
+regionIndicesToPlot = [6]
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+[timeSeriesSST]
+## options related to plotting time series of sea surface temperature (SST)
+
+## compare to output from another model run?
+#compareWithModel = True
+# compare to observations?
+compareWithObservations = True
+# list of region indices to plot from the region list in [regions] below
+regionIndicesToPlot = [6]
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+[indexNino34]
+## options related to plotting time series of the El Nino 3.4 index
+
+# Specified region for the Nino Index, 5 = Nino34, 3 = Nino3, 4 = Nino4
+# The indexNino34 routine only accepts one value at a time,
+# regionIndicesToPlot should be an integer
+regionIndicesToPlot = 5
+
+# Data source to read for comparison.  There are three options
+# 1 - ERS SSTv4 -- Updated version of previous -- 1854 - 2016
+# 2 - HADIsst -- Hadley center analysis -- 1870 - 2016
+observationData = HADIsst 
+
+[timeSeriesMHT]
+## options related to plotting time series of meridional heat transport (MHT)
+
+## compare to output from another model run?
+#compareWithModel = True
+# compare to observations?
+compareWithObservations = True
+# list of region indices to plot from the region list in [regions] below
+regionIndicesToPlot = [6]
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning
+## circulation (MOC)
+
+# Region names for basin MOC calculation.
+# Supported options are Atlantic and IndoPacific
+regionNames = ['Atlantic']
+
+# Mask file for post-processing regional MOC computation
+regionMaskFiles = /path/to/MOCregional/mapping/file
+
+# xarray (with dask) divides data sets into "chunks", allowing computations
+# to be made on data that is larger than the available memory.  MPAS-Analysis
+# supports setting a maximum chunk size for data sets generally, and a
+# separate option specific to loading the 3D velocity field in the MOC
+# specifically.  By default, maxChunkSize is left undefined, so that chunking
+# is handled automatically.  If the MOC calculation encounters memory problems,
+# consider setting maxChunkSize to a number significantly lower than nEdges
+# in your MPAS mesh so that the calculation will be divided into smaller
+# pieces.
+# maxChunkSize = 1000
+
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSizeGlobal = 1.
+latBinSizeAtlantic = 0.5
+latBinSizeIndoPacific = 0.5
+
+# colormap for model results
+colormapNameGlobal = RdYlBu_r
+colormapNameAtlantic = RdYlBu_r
+colormapNameIndoPacific = RdYlBu_r
+# colormap indices for contour color
+colormapIndicesGlobal = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesAtlantic = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesIndoPacific = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
+colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+contourLevelsGlobal = np.arange(-25.1,35.1,10)
+contourLevelsAtlantic = np.arange(-8,20.1,2)
+contourLevelsIndoPacific = np.arange(-8,20.1,2)
+
+## compare to output from another model run?
+#compareWithModel = True
+# compare to observations?
+compareWithObservations = True
+
+# Number of points over which to compute moving average for
+# MOC timeseries (e.g., for monthly output, movingAveragePoints=12
+# corresponds to a 12-month moving average window)
+movingAveragePoints = 12
+
+[timeSeriesSeaIceAreaVol]
+## options related to plotting time series of sea ice area and volume
+
+## compare to output from another model run?
+#compareWithModel = True
+# compare to observations?
+compareWithObservations = True
+# list of region indices to plot from the region list in [regions] below
+regionIndicesToPlot = [6]
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 1
+# title font properties
+titleFontSize = 18
+# plot on polar plot
+polarPlot = False
+
+[regriddedSST]
+## options related to plotting horizontally regridded sea surface temperature
+## (SST) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['JFM', 'JAS', 'ANN']
+
+[regriddedSSS]
+## options related to plotting horizontally regridded sea surface salinity
+## (SSS) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [28, 29, 30, 31, 32, 33, 34, 35, 36, 38]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['JFM', 'JAS', 'ANN']
+
+[regriddedMLD]
+## options related to plotting horizontally regridded mixed layer depth
+## (MLD) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = viridis
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['JFM', 'JAS', 'ANN']
+
+[regriddedSeaIceConcThick]
+## options related to plotting horizontally regridded sea ice concentration
+## and thickness against reference model results and observations
+
+# colormap for model/observations
+colormapNameConcResultWinter = inferno
+colormapNameConcResultSummer = inferno
+colormapNameThickResultNH = inferno
+colormapNameThickResultSH = inferno
+# color indices into colormapName for filled contours
+colormapIndicesConcResultWinter = [20, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesConcResultSummer = [20, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesThickResultNH = [20, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesThickResultSH = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries for:
+# concentration in winter and summer
+colorbarLevelsConcResultWinter = [0.15, 0.4, 0.7, 0.9, 0.94, 0.96, 0.98, 0.99, 1]
+colorbarLevelsConcResultSummer = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+# thickness in the northern and southern hemispheres
+colorbarLevelsThickResultNH = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+colorbarLevelsThickResultSH = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+
+# colormap for differences
+colormapNameConcDifferenceWinter = RdBu_r
+colormapNameConcDifferenceSummer = RdBu_r
+colormapNameThickDifferenceNH = RdBu_r
+colormapNameThickDifferenceSH = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesConcDifferenceWinter = [0, 40, 80, 127, 127, 170, 210, 255]
+colormapIndicesConcDifferenceSummer = [0, 40, 80, 127, 127, 170, 210, 255]
+colormapIndicesThickDifferenceNH = [0, 40, 80, 127, 127, 170, 210, 255]
+colormapIndicesThickDifferenceSH = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries for:
+# concentration in winter and summer
+colorbarLevelsConcDifferenceWinter = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
+colorbarLevelsConcDifferenceSummer = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
+# thickness in the northern and southern hemispheres
+colorbarLevelsThickDifferenceNH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+colorbarLevelsThickDifferenceSH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitudeNH = 50
+referenceLongitudeNH = 0
+# reference lat/lon for sea ice plots in the southern hemisphere
+minimumLatitudeSH = -50
+referenceLongitudeSH = 180
+
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# list of region names (needs to be in the same order as region indices in
+# time-series stats)
+regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
+# list of plot titles (needs to be in the same order as region indices in
+# time-series stats)
+plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3', 'Nino 4', 'Nino 3.4', 'Global Ocean']
+
+[plot]
+## options related to plotting that are the defaults across all analysis modules
+
+# set to true if you want plots to be displayed (one by one) to the screen in
+# addition to being written out to png files
+# Note: displayToScreen = True seems to hang on Edison on large data sets,
+# so suggested use is just for debugging either locally or with small data sets
+displayToScreen = False
+
+# font size on axes
+axisFontSize = 16
+# title font properties
+titleFontSize = 20
+titleFontColor = black
+titleFontWeight = normal

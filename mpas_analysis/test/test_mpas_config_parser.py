@@ -1,14 +1,15 @@
 """
 Unit test infrastructure for MpasAnalysisConfigParser
 
-Xylar Asay-Davis
-12/05/2016
+Xylar Asay-Davis, Phillip J. Wolfram
+01/31/2017
 """
 
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
+from . import requires_numpy
 
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -30,8 +31,16 @@ class TestMPASAnalysisConfigParser(TestCase):
         self.assertEqual(colorMapName, 'coolwarm')
 
         self.assertEqual(self.config.getint('Test', 'testInt'), 15)
-        self.assertEqual(self.config.getfloat('Test', 'testFloat'), 18.)
+        self.assertEqual(self.config.getExpression('Test', 'testInt'), 15)
+
+        self.assertEqual(self.config.getfloat('Test', 'testFloat'), 18.0)
+        self.assertEqual(self.config.getExpression('Test', 'testFloat'), 18.0)
+
+        self.assertEqual(self.config.getfloat('Test', 'testFloat2'), 3.)
+        self.assertEqual(self.config.getExpression('Test', 'testFloat2'), 3.)
+
         self.assertEqual(self.config.getboolean('Test', 'testBool'), True)
+        self.assertEqual(self.config.getExpression('Test', 'testBool'), True)
 
         testList = self.config.getExpression('sst_modelvsobs',
                                              'cmapIndicesModelObs')
@@ -64,5 +73,52 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key2': -12,
                                     'key3': False})
 
+        testNone = self.config.getExpression('Test', 'doesntexist')
+        assert testNone is None
+
+    @requires_numpy
+    def test_read_config_numpy(self):
+        self.setup_config()
+
+        # tests numpy evaluation capability
+        import numpy as np
+        for testname in ['testNumpyarange' + str(ii) for ii in np.arange(3)]:
+            self.assertArrayEqual(self.config.getExpression('TestNumpy',
+                                                            testname,
+                                                            usenumpyfunc=True),
+                                  np.arange(0, 1, 10))
+        for testname in ['testNumpylinspace' + str(ii) for ii in np.arange(3)]:
+            self.assertArrayEqual(self.config.getExpression('TestNumpy',
+                                                            testname,
+                                                            usenumpyfunc=True),
+                                  np.linspace(0, 1, 10))
+        for testNumpy in ['testNumpypi' + str(ii) for ii in np.arange(3)] + \
+                ['testNumpyPi']:
+            self.assertEqual(self.config.getExpression('TestNumpy', testNumpy,
+                                                       usenumpyfunc=True),
+                             np.pi)
+        with self.assertRaisesRegexp(
+                AssertionError,
+                "'__' is not allowed in .* for `usenumpyfunc=True`"):
+            self.config.getExpression('TestNumpy', 'testBadStr',
+                                      usenumpyfunc=True),
+
+    def test_get_with_default(self):
+        self.setup_config()
+
+        def check_get_with_default(name, value, dtype):
+            # test an options that doesn't exist using getWithDefault
+            var = self.config.getWithDefault('sst_modelvsobs', name, value)
+            assert isinstance(var, dtype)
+            self.assertEqual(var, value)
+
+        # test several types with getWithDefault
+        check_get_with_default(name='aBool', value=True, dtype=bool)
+        check_get_with_default(name='anInt', value=1, dtype=(int, long))
+        check_get_with_default(name='aFloat', value=1.0, dtype=float)
+        check_get_with_default(name='aList', value=[1, 2, 3], dtype=list)
+        check_get_with_default(name='aTuple', value=(1, 2, 3), dtype=tuple)
+        check_get_with_default(name='aDict', value={'blah': 1}, dtype=dict)
+        check_get_with_default(name='aStr', value='blah', dtype=str)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

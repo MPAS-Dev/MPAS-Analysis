@@ -1,0 +1,3 @@
+[interpolate]
+lat = numpy.linspace(-90., 90., 361)
+lon = numpy.linspace(-180., 180., 721)

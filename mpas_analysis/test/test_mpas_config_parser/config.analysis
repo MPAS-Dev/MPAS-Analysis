@@ -21,6 +21,7 @@ comparisonTimes =  ['JFM', 'JAS', 'ANN']
 testInt = 15
 
 testFloat = 18.0
+testFloat2 = 3.
 
 testBool = True
 
@@ -32,3 +33,15 @@ testDict = {'key1': 'string',
             'key2': -12,
             'key3': False}
 
+[TestNumpy]
+testNumpyarange0 = arange(0, 1, 10)
+testNumpyarange1 = np.arange(0, 1, 10)
+testNumpyarange2 = numpy.arange(0, 1, 10)
+testNumpylinspace0 = linspace(0, 1, 10)
+testNumpylinspace1 = np.linspace(0, 1, 10)
+testNumpylinspace2 = numpy.linspace(0, 1, 10)
+testNumpypi0 = pi
+testNumpypi1 = np.pi
+testNumpypi2 = numpy.pi
+testNumpyPi = Pi
+testBadStr = __bad_string__

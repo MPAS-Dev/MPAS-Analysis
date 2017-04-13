@@ -1,6 +1,6 @@
 # User defined config files
-/config.analysis.*
-/config.analysis_*
+/config.*
+!/config.default
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

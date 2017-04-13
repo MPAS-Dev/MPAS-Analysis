@@ -10,6 +10,7 @@ import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.io import NameList, StreamsFile
 
+
 @pytest.mark.usefixtures("loaddatadir")
 class TestNamelist(TestCase):
     def setup_namelist(self):
@@ -50,41 +51,45 @@ class TestNamelist(TestCase):
 
         files = self.sf.readpath('output')
         expectedFiles = []
-        for date in ['0001-01-01','0001-01-02','0001-02-01','0002-01-01']:
+        for date in ['0001-01-01', '0001-01-02', '0001-02-01', '0002-01-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
                                  .format(self.sf.streamsdir, date))
         self.assertEqual(files, expectedFiles)
 
         files = self.sf.readpath('output',
-                                    startDate='0001-01-03',
-                                    endDate='0001-12-30')
+                                 startDate='0001-01-03',
+                                 endDate='0001-12-30',
+                                 calendar='gregorian_noleap')
         expectedFiles = []
-        for date in ['0001-01-02','0001-02-01']:
+        for date in ['0001-01-02', '0001-02-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
                                  .format(self.sf.streamsdir, date))
         self.assertEqual(files, expectedFiles)
 
         files = self.sf.readpath('output',
-                                    startDate='0001-01-03')
+                                 startDate='0001-01-03',
+                                 calendar='gregorian_noleap')
         expectedFiles = []
-        for date in ['0001-01-02','0001-02-01','0002-01-01']:
+        for date in ['0001-01-02', '0001-02-01', '0002-01-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
                                  .format(self.sf.streamsdir, date))
         self.assertEqual(files, expectedFiles)
 
         files = self.sf.readpath('output',
-                                    endDate='0001-12-30')
+                                 endDate='0001-12-30',
+                                 calendar='gregorian_noleap')
         expectedFiles = []
-        for date in ['0001-01-01','0001-01-02','0001-02-01']:
+        for date in ['0001-01-01', '0001-01-02', '0001-02-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
                                  .format(self.sf.streamsdir, date))
         self.assertEqual(files, expectedFiles)
 
         files = self.sf.readpath('restart',
-                                    startDate='0001-01-01',
-                                    endDate='0001-12-31')
+                                 startDate='0001-01-01',
+                                 endDate='0001-12-31',
+                                 calendar='gregorian_noleap')
         expectedFiles = []
-        for seconds in ['00010','00020']:
+        for seconds in ['00010', '00020']:
             expectedFiles.append('{}/restarts/restart.0001-01-01_{}.nc'
                                  .format(self.sf.streamsdir, seconds))
         self.assertEqual(files, expectedFiles)
@@ -93,10 +98,10 @@ class TestNamelist(TestCase):
         expectedFiles = ['{}/mesh.nc'.format(self.sf.streamsdir)]
         self.assertEqual(files, expectedFiles)
 
-
         files = self.sf.readpath('mesh',
-                                    startDate='0001-01-01',
-                                    endDate='0001-12-31')
+                                 startDate='0001-01-01',
+                                 endDate='0001-12-31',
+                                 calendar='gregorian_noleap')
         expectedFiles = ['{}/mesh.nc'.format(self.sf.streamsdir)]
         self.assertEqual(files, expectedFiles)
 
