@@ -36,7 +36,7 @@ class TestInterp(TestCase):
     def get_mpas_descriptor(self):
         mpasMeshFileName = str(self.datadir.join('mpasMesh.nc'))
         timeSeriesFileName = str(self.datadir.join('timeSeries.0002-01-01.nc'))
-        descriptor = MpasMeshDescriptor(mpasMeshFileName)
+        descriptor = MpasMeshDescriptor(mpasMeshFileName, meshName='oQU240')
 
         return (descriptor, mpasMeshFileName, timeSeriesFileName)
 
@@ -74,7 +74,8 @@ class TestInterp(TestCase):
         nx = 2*int(xMax/res)+1
         x = numpy.linspace(-xMax, xMax, nx)
         descriptor = ProjectionGridDescriptor(projection)
-        descriptor.create(x, x)
+        meshName = '{}km_Antarctic_stereo'.format(int(res*1e-3))
+        descriptor.create(x, x, meshName)
         return descriptor
 
     def get_file_names(self, suffix):
@@ -106,7 +107,6 @@ class TestInterp(TestCase):
 
             assert os.path.exists(outFileName)
             dsRemapped = xarray.open_dataset(outFileName)
-            dsRemapped.to_netcdf('from_ncremap.nc')
             # drop some extra vairables added by ncremap that aren't in the
             # reference data set
             dsRemapped = dsRemapped.drop(['lat_bnds', 'lon_bnds', 'gw',
