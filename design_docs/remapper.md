@@ -3,6 +3,7 @@ Xylar Asay-Davis <br>
 date: 2017/04/15 <br>
 </h1>
 <h2> Summary </h2>
+
 This document describes the design and implementation of a `Remapper` class
 for performing either "online" (in memory) or "offline" (through files
 via `ncremap`) remapping of horizontal data sets.  The `Remapper` is needed in
