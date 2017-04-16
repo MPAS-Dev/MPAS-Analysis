@@ -22,7 +22,7 @@ import xarray as xr
 
 from ..shared.constants import constants
 
-from ..shared.climatology import get_lat_lon_comarison_descriptor, \
+from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_file_names, \
     get_observation_climatology_file_names, \
     cache_climatologies, update_start_end_year, \
@@ -106,7 +106,7 @@ def seaice_modelvsobs(config, streamMap=None, variableMap=None):
     mpasDescriptor = MpasMeshDescriptor(
         restartFileName, meshName=config.get('input', 'mpasMeshName'))
 
-    comparisonDescriptor = get_lat_lon_comarison_descriptor(config)
+    comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
 
     mpasRemapper = get_remapper(
         config=config, sourceDescriptor=mpasDescriptor,

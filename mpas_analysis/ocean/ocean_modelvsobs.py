@@ -29,7 +29,13 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology import climatology
+from ..shared.climatology import get_lat_lon_comarison_descriptor, \
+    get_remapper, get_mpas_climatology_file_names, \
+    get_observation_climatology_file_names, \
+    compute_climatology, cache_climatologies, update_start_end_year, \
+    remap_and_write_climatology
+
+from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
 from ..shared.analysis_task import setup_task
 
@@ -108,13 +114,26 @@ def ocn_modelvsobs(config, field):
 
     obsFileName = obsFileNames[field]
 
+    obsDescriptor = LatLonGridDescriptor()
+    obsDescriptor.read(fileName=obsFileName, latVarName='lat',
+                       lonVarName='lon')
+
+    comparisonDescriptor = get_lat_lon_comarison_descriptor(config)
+
+    obsRemapper = get_remapper(
+        config=config, sourceDescriptor=obsDescriptor,
+        comparisonDescriptor=comparisonDescriptor,
+        mappingFileSection='oceanObservations',
+        mappingFileOption='{}ClimatologyMappingFile'.format(field),
+        mappingFilePrefix='map_obs_{}'.format(field),
+        method=config.get('oceanObservations', 'interpolationMethod'))
+
     buildObsClimatologies = overwriteObsClimatology
     for months in outputTimes:
         (climatologyFileName, regriddedFileName) = \
-            climatology.get_observation_climatology_file_names(
+            get_observation_climatology_file_names(
                 config=config, fieldName=field, monthNames=months,
-                componentName='ocean', gridFileName=obsFileName,
-                latVarName='lat', lonVarName='lon')
+                componentName='ocean', remapper=obsRemapper)
         if not os.path.exists(regriddedFileName):
             buildObsClimatologies = True
             break
@@ -176,7 +195,6 @@ def ocn_modelvsobs(config, field):
         if buildObsClimatologies:
             dsObs = xr.open_mfdataset(obsFileName)
             dsObs.rename({'time': 'Time'}, inplace=True)
-            dsObs = dsObs.transpose('Time', 'lat', 'lon')
             dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
             dsObs.coords['month'] = dsObs['Time.month']
             dsObs.coords['year'] = dsObs['Time.year']
@@ -201,7 +219,6 @@ def ocn_modelvsobs(config, field):
         if buildObsClimatologies:
             dsObs = xr.open_mfdataset(obsFileName)
             dsObs.rename({'time': 'Time'}, inplace=True)
-            dsObs = dsObs.transpose('Time', 'lat', 'lon')
             dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
             dsObs.coords['month'] = dsObs['Time.month']
             dsObs.coords['year'] = dsObs['Time.year']
@@ -223,19 +240,17 @@ def ocn_modelvsobs(config, field):
                                 startDate=startDate,
                                 endDate=endDate)
 
-    changed, startYear, endYear = \
-        climatology.update_start_end_year(ds, config, calendar)
+    changed, startYear, endYear = update_start_end_year(ds, config, calendar)
 
-    mpasRemapper = climatology.get_mpas_remapper(
-        config=config, meshFileName=restartFileName)
+    mpasDescriptor = MpasMeshDescriptor(
+        restartFileName, meshName=config.get('input', 'mpasMeshName'))
 
-    if buildObsClimatologies:
-        obsRemapper = \
-            climatology.get_observations_remapper(
-                config=config, componentName='ocean', fieldName=field,
-                gridFileName=obsFileName, latVarName='lat',  lonVarName='lon')
-    else:
-        obsRemapper = None
+    mpasRemapper = get_remapper(
+        config=config, sourceDescriptor=mpasDescriptor,
+        comparisonDescriptor=comparisonDescriptor,
+        mappingFileSection='climatology', mappingFileOption='mpasMappingFile',
+        mappingFilePrefix='map', method=config.get('climatology',
+                                                   'mpasInterpolationMethod'))
 
     (colormapResult, colorbarLevelsResult) = setup_colormap(
         config, sectionName, suffix='Result')
@@ -247,12 +262,13 @@ def ocn_modelvsobs(config, field):
         monthValues = constants.monthDictionary[months]
 
         (climatologyFileName, climatologyPrefix, regriddedFileName) = \
-            climatology.get_mpas_climatology_file_names(config=config,
-                                                        fieldName=field,
-                                                        monthNames=months)
+            get_mpas_climatology_file_names(config=config,
+                                            fieldName=field,
+                                            monthNames=months,
+                                            remapper=mpasRemapper)
 
         if overwriteMpasClimatology or not os.path.exists(regriddedFileName):
-            seasonalClimatology = climatology.cache_climatologies(
+            seasonalClimatology = cache_climatologies(
                 ds, monthValues, config, climatologyPrefix, calendar,
                 printProgress=True)
 
@@ -263,7 +279,7 @@ def ocn_modelvsobs(config, field):
                     field, months))
                 continue
 
-            remappedClimatology = climatology.remap_and_write_climatology(
+            remappedClimatology = remap_and_write_climatology(
                 config, seasonalClimatology, climatologyFileName,
                 regriddedFileName, mpasRemapper)
 
@@ -279,16 +295,15 @@ def ocn_modelvsobs(config, field):
 
         # now the observations
         (climatologyFileName, regriddedFileName) = \
-            climatology.get_observation_climatology_file_names(
+            get_observation_climatology_file_names(
                 config=config, fieldName=field, monthNames=months,
-                componentName='ocean', gridFileName=obsFileName,
-                latVarName='lat', lonVarName='lon')
+                componentName='ocean', remapper=obsRemapper)
 
         if buildObsClimatologies:
             if (overwriteObsClimatology or
                     not os.path.exists(regriddedFileName)):
 
-                seasonalClimatology = climatology.compute_climatology(
+                seasonalClimatology = compute_climatology(
                     dsObs, monthValues, maskVaries=True)
 
                 if obsRemapper is None:
@@ -297,7 +312,7 @@ def ocn_modelvsobs(config, field):
                     remappedClimatology = seasonalClimatology
                 else:
                     remappedClimatology = \
-                        climatology.remap_and_write_climatology(
+                        remap_and_write_climatology(
                             config, seasonalClimatology, climatologyFileName,
                             regriddedFileName, obsRemapper)
 
