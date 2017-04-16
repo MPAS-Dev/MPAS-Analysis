@@ -318,11 +318,11 @@ class Remapper(object):
         self._load_mapping()
 
         for index, dim in enumerate(self.sourceDescriptor.dims):
-            if self.src_grid_dims[index] != ds.dims[dim]:
+            if self.src_grid_dims[index] != ds.sizes[dim]:
                 raise ValueError('data set and remapping source dimension {} '
                                  'don\'t have the same size: {} != {}'.format(
                                      dim, self.src_grid_dims[index],
-                                     len(ds.dims[dim])))
+                                     len(ds.sizes[dim])))
 
         if isinstance(ds, xr.DataArray):
             remappedDs = self._remap_data_array(ds, renormalizationThreshold)
@@ -345,6 +345,8 @@ class Remapper(object):
         else:
             newhist = sys.argv[:]
         remappedDs.attrs['history'] = newhist
+
+        remappedDs.attrs['meshName'] = self.destinationDescriptor.meshName
 
         return remappedDs  # }}}
 
@@ -374,6 +376,7 @@ class Remapper(object):
         nDestinationDims = len(self.destinationDescriptor.dims)
         dst_grid_rank = dsMapping.dims['dst_grid_rank']
 
+        # check that the mapping file has the right number of dimensions
         if nSourceDims != src_grid_rank or \
                 nDestinationDims != dst_grid_rank:
             raise ValueError('The number of source and/or '
@@ -387,6 +390,24 @@ class Remapper(object):
         # grid dimensions need to be reversed because they are in Fortran order
         self.src_grid_dims = dsMapping['src_grid_dims'].values[::-1]
         self.dst_grid_dims = dsMapping['dst_grid_dims'].values[::-1]
+
+        # now, check that each source and destination dimension is right
+        for index in range(len(self.sourceDescriptor.dims)):
+            dim = self.sourceDescriptor.dims[index]
+            dimSize = self.sourceDescriptor.dimSize[index]
+            checkDimSize = self.src_grid_dims[index]
+            if dimSize != checkDimSize:
+                raise ValueError('source mesh descriptor and remapping source '
+                                 'dimension {} don\'t have the same size: \n'
+                                 '{} != {}'.format(dim, dimSize, checkDimSize))
+        for index in range(len(self.destinationDescriptor.dims)):
+            dim = self.destinationDescriptor.dims[index]
+            dimSize = self.destinationDescriptor.dimSize[index]
+            checkDimSize = self.dst_grid_dims[index]
+            if dimSize != checkDimSize:
+                raise ValueError('dest. mesh descriptor and remapping dest. '
+                                 'dimension {} don\'t have the same size: \n'
+                                 '{} != {}'.format(dim, dimSize, checkDimSize))
 
         self.frac_b = dsMapping['frac_b'].values
 
