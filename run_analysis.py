@@ -110,21 +110,21 @@ def analysis(config):  # {{{
                      analysisCategory='timeSeries'):
         print ""
         print "Plotting OHC time series..."
-        from mpas_analysis.ocean.ohc_timeseries import ohc_timeseries
+        from mpas_analysis.ocean import ohc_timeseries
         ohc_timeseries(config)
 
     if checkGenerate(config, analysisName='timeSeriesSST', mpasCore='ocean',
                      analysisCategory='timeSeries'):
         print ""
         print "Plotting SST time series..."
-        from mpas_analysis.ocean.sst_timeseries import sst_timeseries
+        from mpas_analysis.ocean import sst_timeseries
         sst_timeseries(config)
 
     if checkGenerate(config, analysisName='indexNino34',
                      mpasCore='ocean', analysisCategory='index'):
         print ""
         print "Plotting Nino3.4 time series and power spectrum...."
-        from mpas_analysis.ocean.nino34_index import nino34_index
+        from mpas_analysis.ocean import nino34_index
         nino34_index(config)
 
 #    if checkGenerate(config, analysisName='timeSeriesMHT', mpasCore='ocean',
@@ -138,30 +138,30 @@ def analysis(config):  # {{{
                      analysisCategory='regriddedHorizontal'):
         print ""
         print "Plotting 2-d maps of SST climatologies..."
-        from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
+        from mpas_analysis.ocean import ocn_modelvsobs
         ocn_modelvsobs(config, 'sst')
 
     if checkGenerate(config, analysisName='regriddedMLD', mpasCore='ocean',
                      analysisCategory='regriddedHorizontal'):
         print ""
         print "Plotting 2-d maps of MLD climatologies..."
-        from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
+        from mpas_analysis.ocean import ocn_modelvsobs
         ocn_modelvsobs(config, 'mld')
 
     if checkGenerate(config, analysisName='regriddedSSS', mpasCore='ocean',
                      analysisCategory='regriddedHorizontal'):
         print ""
         print "Plotting 2-d maps of SSS climatologies..."
-        from mpas_analysis.ocean.ocean_modelvsobs import ocn_modelvsobs
+        from mpas_analysis.ocean import ocn_modelvsobs
         ocn_modelvsobs(config, 'sss')
 
     if checkGenerate(config, analysisName='streamfunctionMOC',
                      mpasCore='ocean',
                      analysisCategory='streamfunctionMOC'):
         print ""
-        print "Plotting streamfunction of Meridional Overturning Circulation (MOC)..."
-        from mpas_analysis.ocean.meridional_overturning_circulation \
-            import moc_streamfunction
+        print "Plotting streamfunction of Meridional Overturning " \
+              "Circulation (MOC)..."
+        from mpas_analysis.ocean import moc_streamfunction
         moc_streamfunction(config)
 
     if checkGenerate(config, analysisName='meridionalHeatTransport',
@@ -178,7 +178,7 @@ def analysis(config):  # {{{
                      mpasCore='seaIce', analysisCategory='timeSeries'):
         print ""
         print "Plotting sea-ice area and volume time series..."
-        from mpas_analysis.sea_ice.timeseries import seaice_timeseries
+        from mpas_analysis.sea_ice import seaice_timeseries
         seaice_timeseries(config)
 
     if checkGenerate(config, analysisName='regriddedSeaIceConcThick',
@@ -187,7 +187,7 @@ def analysis(config):  # {{{
         print ""
         print "Plotting 2-d maps of sea-ice concentration and thickness " \
             "climatologies..."
-        from mpas_analysis.sea_ice.modelvsobs import seaice_modelvsobs
+        from mpas_analysis.sea_ice import seaice_modelvsobs
         seaice_modelvsobs(config)
 
     # GENERATE LAND-ICE DIAGNOSTICS

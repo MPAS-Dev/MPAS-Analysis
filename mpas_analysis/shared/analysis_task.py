@@ -11,12 +11,11 @@ import warnings
 from .io import NameList, StreamsFile
 from .io.utility import build_config_full_path, make_directories
 
-from ..ocean.variable_stream_map import oceanNamelistMap, oceanStreamMap, \
-    oceanVariableMap
+from .variable_namelist_stream_maps.ocean_maps import oceanNamelistMap, \
+    oceanStreamMap, oceanVariableMap
 
-from ..sea_ice.variable_stream_map import seaIceNamelistMap, seaIceStreamMap, \
-    seaIceVariableMap
-
+from .variable_namelist_stream_maps.sea_ice_maps import seaIceNamelistMap, \
+    seaIceStreamMap, seaIceVariableMap
 
 def setup_task(config, componentName):  # {{{
     '''
