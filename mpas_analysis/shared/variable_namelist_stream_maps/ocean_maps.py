@@ -89,3 +89,8 @@ oceanVariableMap['sss'] = \
     ['time_avg_activeTracers_salinity',
      'time_avg_activeTracers_salinity_1',
      'timeMonthly_avg_activeTracers_salinity']
+
+oceanVariableMap['melt'] = \
+    ['time_avg_landIceFreshwaterFlux',
+     'time_avg_landIceFreshwaterFlux_1',
+     'timeMonthly_avg_landIceFreshwaterFlux']

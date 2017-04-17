@@ -1,3 +1,4 @@
+from antarctic_climatology_map import antarctic_climatology_map
 from ocean_modelvsobs import ocn_modelvsobs
 from nino34_index import nino34_index
 from sst_timeseries import sst_timeseries

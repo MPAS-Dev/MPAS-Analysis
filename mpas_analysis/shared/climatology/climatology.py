@@ -14,6 +14,7 @@ import xarray as xr
 import os
 import numpy
 import warnings
+import pyproj
 
 from ..constants import constants
 
@@ -64,6 +65,52 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
 
     descriptor = LatLonGridDescriptor()
     descriptor.create(lat, lon, units='degrees')
+
+    return descriptor  # }}}
+
+
+def get_Antarctic_stereographic_comparison_descriptor(config):  # {{{
+    """
+    Get a descriptor of an Antarctic steregraphic comparison grid, used for
+    remapping and determining the grid name
+
+    Parameters
+    ----------
+    config :  instance of ``MpasAnalysisConfigParser``
+        Contains configuration options
+
+    Returns
+    -------
+    descriptor : ``ProjectionGridDescriptor`` object
+        A descriptor of the Antarctic comparison grid
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    Last Modified
+    -------------
+    04/13/2017
+    """
+    climSection = 'climatology'
+
+    comparisonStereoWidth = config.getfloat(climSection,
+                                            'comparisonAntarcticStereoWidth')
+    comparisonStereoResolution = config.getfloat(
+        climSection, 'comparisonAntarcticStereoResolution')
+
+    projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
+                             '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+
+    xMax = 0.5*comparisonStereoWidth*1e3
+    nx = int(comparisonStereoWidth/comparisonStereoResolution)+1
+    x = numpy.linspace(-xMax, xMax, nx)
+    descriptor = ProjectionGridDescriptor(projection)
+
+    meshName = '{}x{}km_{}km_Antarctic_stereo'.format(
+        comparisonStereoWidth, comparisonStereoWidth,
+        comparisonStereoResolution)
+    descriptor.create(x, x, meshName)
 
     return descriptor  # }}}
 
@@ -616,7 +663,7 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
 
 def remap_and_write_climatology(config, climatologyDataSet,
                                 climatologyFileName, regriddedFileName,
-                                remapper):  # {{{
+                                remapper, useNcremap=None):  # {{{
     """
     Given a field in a climatology data set, use the ``remapper`` to regrid
     horizontal dimensions of all fields, write the results to an output file,
@@ -650,6 +697,10 @@ def remap_and_write_climatology(config, climatologyDataSet,
         A remapper that can be used to remap files or data sets to a
         comparison grid.
 
+    useNcremap : bool, optional
+        Whether to force remapping with ``ncreamp`` or not.  If ``None``,
+        the value of the config option ``useNcremap`` will be used.
+
     Returns
     -------
     remappedClimatology : ``xarray.DataSet`` or ``xarray.DataArray`` object
@@ -661,9 +712,11 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     Last Modified
     -------------
-    04/13/2017
+    04/27/2017
     """
-    useNcremap = config.getboolean('climatology', 'useNcremap')
+
+    if useNcremap is None:
+        useNcremap = config.getboolean('climatology', 'useNcremap')
 
     if remapper.mappingFileName is None:
         # no remapping is needed
