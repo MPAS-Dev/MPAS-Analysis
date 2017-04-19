@@ -280,12 +280,12 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         else:
             self.units = 'radians'
 
-        self._set_coords(latVarName, lonVarName, ds[latVarName].dims[0],
-                         ds[lonVarName].dims[0])
-
         # interp/extrap corners
         self.lonCorner = _interp_extrap_corner(self.lon)
         self.latCorner = _interp_extrap_corner(self.lat)
+
+        self._set_coords(latVarName, lonVarName, ds[latVarName].dims[0],
+                         ds[lonVarName].dims[0])
 
         if 'history' in ds.attrs:
             self.history = '\n'.join([ds.attrs['history'],
@@ -396,6 +396,15 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
                 self.units))
         if self.meshName is None:
             self.meshName = '{}x{}{}'.format(abs(dLat), abs(dLon), units)
+
+        # determine if the grid is regional or global
+        totalLon = numpy.abs(self.lonCorner[-1] - self.lonCorner[0])
+        if units == 'radian':
+            totalLon = numpy.radians(totalLon)
+        # regardless of the extent in latitude, it seems like a grid should
+        # be considered "global" if it covers 360 degrees longitude.
+        # Otherwise, you end up with a seam at the prime- or antemeridian.
+        self.regional = not numpy.isclose(totalLon, 360.)
         # }}}
 
 
