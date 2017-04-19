@@ -95,8 +95,9 @@ timeSeriesSubdirectory = timeseries
 
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
-#   'regriddedSSS', 'regriddedMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
+#   'regriddedSSS', 'regriddedMLD', 'regriddedAntarcticMelt',
+#   'regriddedAntarcticBotTemp', 'regriddedAntarcticBotSalin',
+#   'streamfunctionMOC', 'indexNino34', 'meridionalHeatTransport',
 #   'timeSeriesSeaIceAreaVol', 'regriddedSeaIceConcThick'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -205,6 +206,8 @@ mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
 meltSubdirectory = Melt
+botTempSubdirectory = SOSE
+botSalinSubdirectory = SOSE
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -536,6 +539,60 @@ normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
                       'vmax': 100.}
 colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
                            5., 10., 20., 50., 100.]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
+[regriddedAntarcticBotTemp]
+## options related to plotting horizontally regridded maps of Antarctic
+## potential temperature at the sea floor against reference model results and
+## SOSE reanalysis data
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
+[regriddedAntarcticBotSalin]
+## options related to plotting horizontally regridded maps of Antarctic
+## salinity at the sea floor against reference model results and
+## SOSE reanalysis data
+
+# colormap for model/observations
+colormapNameResult = viridis
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 33.5, 'vmax': 35.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-33.5, 35., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -1., 'vmax': 1.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-1., 1., 9)
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)

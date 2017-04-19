@@ -966,8 +966,9 @@ def plot_polar_projection_comparison(
         plt.pcolormesh(x, y, array, cmap=cmap, norm=norm)
         cbar = plt.colorbar()
         cbar.set_label(cbarlabel)
-        cbar.set_ticks(ticks)
-        cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+        if ticks is not None:
+            cbar.set_ticks(ticks)
+            cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
         plt.pcolormesh(x, y, landMask, cmap=landColorMap)
         plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
                     linewidths=0.5)

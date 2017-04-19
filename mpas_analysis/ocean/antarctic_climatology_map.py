@@ -41,15 +41,15 @@ from ..shared.mpas_xarray import mpas_xarray
 def antarctic_climatology_map(config, field):
 
     '''
-    Plots a comparison of ACME/MPAS output to sub-ice-shelf melt rate
-    observations
+    Plots a comparison of various Antarctic fields from ACME/MPAS output to
+    observations and reanalysis
 
     Parameters
     ----------
     config :  instance of MpasAnalysisConfigParser
         Contains configuration options
 
-    field : {'melt'}
+    field : {'melt', 'botTemp', 'botSalin'}
         The name of the field to be analyzed
 
     Authors
@@ -98,14 +98,21 @@ def antarctic_climatology_map(config, field):
     if field == 'melt':
         setup = _setup_melt
         setup_obs = _setup_melt_obs
+    elif field == 'botTemp':
+        setup = _setup_bot_temp
+        setup_obs = _setup_bot_temp_obs
+    elif field == 'botSalin':
+        setup = _setup_bot_salin
+        setup_obs = _setup_bot_salin_obs
     else:
         raise ValueError('Field {} not supported.'.format(field))
 
     try:
-        iselvals, modelScaling, fieldInTitle, sectionName, obsFileName, \
-            obsFieldName, observationTitleLabel, outFileLabel, unitsLabel, \
-            obsDescriptor, comparisonDescriptor = setup(config, namelist,
-                                                        observationsDirectory)
+        mpasFieldName, mpasMaskName, verticalIndexName, modelScaling,  \
+            fieldInTitle, sectionName, obsFileName, obsFieldName, \
+            observationTitleLabel, outFileLabel, unitsLabel,  obsDescriptor, \
+            comparisonDescriptor = setup(config, namelist,
+                                         observationsDirectory)
     except ValueError as e:
         print e.message, "Skipping analysis."
         return
@@ -126,22 +133,47 @@ def antarctic_climatology_map(config, field):
     if buildObsClimatologies:
         dsObs = setup_obs(config, obsFileName, obsFieldName)
 
-    varList = [field]
-
     ds = open_multifile_dataset(fileNames=inputFiles,
                                 calendar=calendar,
                                 config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
-                                variableList=varList,
-                                iselValues=iselvals,
+                                variableList=[mpasFieldName],
                                 variableMap=variableMap,
                                 startDate=startDate,
                                 endDate=endDate)
 
     dsRestart = xr.open_dataset(restartFileName)
-    dsRestart = mpas_xarray.subset_variables(dsRestart, ['landIceMask'])
-    dsRestart = dsRestart.isel(Time=0)
+    varList = ['maxLevelCell']
+    if verticalIndexName is not None and verticalIndexName not in varList:
+        varList.append(verticalIndexName)
+    if mpasMaskName is not None:
+        varList.append(mpasMaskName)
+    dsRestart = mpas_xarray.subset_variables(dsRestart, varList)
+    if 'Time' in dsRestart.dims:
+        dsRestart = dsRestart.isel(Time=0)
+
+    oceanMask = xr.DataArray(np.ones(dsRestart.dims['nCells']),
+                             dims=['nCells'])
+    oceanMask = oceanMask.where(dsRestart.maxLevelCell > 0)
+
+    if verticalIndexName is not None:
+        verticalIndex = dsRestart[verticalIndexName] - 1
+        # make a copy so we can add a vertical coordinate that we need only
+        # temporarily
+        dsCopy = ds.copy()
+        dsCopy.coords['verticalIndex'] = ('nVertLevels',
+                                          np.arange(ds.dims['nVertLevels']))
+        # mask only the values with the right vertical index
+        da = ds[mpasFieldName].where(dsCopy.verticalIndex == verticalIndex)
+        # Each vertical layer has at most one non-NaN value so the "sum" over
+        # the vertical is used to collapse the array in the vertical dimension
+        ds[field] = da.sum(dim='nVertLevels')
+        if mpasFieldName != field:
+            ds = ds.drop(mpasFieldName)
+    elif mpasFieldName != field:
+        # we expect a variable with the field name later on
+        ds.rename(mpasFieldName, field)
 
     changed, startYear, endYear = \
         update_start_end_year(ds, config, calendar)
@@ -153,12 +185,10 @@ def antarctic_climatology_map(config, field):
         config=config, sourceDescriptor=mpasDescriptor,
         comparisonDescriptor=comparisonDescriptor,
         mappingFileSection='climatology',
-        mappingFileOption='mpastToAntarcticStereoMappingFile',
+        mappingFileOption='mpasToAntarcticStereoMappingFile',
         mappingFilePrefix='map', method=config.get('climatology',
                                                    'mpasInterpolationMethod'))
 
-    oceanMask = xr.DataArray(np.ones(dsRestart.dims['nCells']),
-                             dims=['nCells'])
     oceanMask = mpasRemapper.remap(oceanMask)
     landMask = np.ma.masked_array(
         np.ones(oceanMask.values.shape),
@@ -179,8 +209,10 @@ def antarctic_climatology_map(config, field):
                 ds, monthValues, config, climatologyPrefix, calendar,
                 printProgress=True)
 
-            seasonalClimatology[field] = \
-                seasonalClimatology[field].where(dsRestart.landIceMask > 0.)
+            if mpasMaskName is not None:
+                seasonalClimatology[field] = \
+                    seasonalClimatology[field].where(
+                        dsRestart[mpasMaskName] > 0.)
 
             remappedModelClimatology = remap_and_write_climatology(
                 config, seasonalClimatology, climatologyFileName,
@@ -200,17 +232,16 @@ def antarctic_climatology_map(config, field):
                 config=config, fieldName=field, monthNames=months,
                 componentName='ocean', remapper=obsRemapper)
 
-        if buildObsClimatologies:
-            if (overwriteObsClimatology or
-                    not os.path.exists(regriddedFileName)):
+        if buildObsClimatologies and (overwriteObsClimatology or
+                                      not os.path.exists(regriddedFileName)):
 
-                seasonalClimatology = compute_climatology(
-                    dsObs, monthValues, maskVaries=True)
+            seasonalClimatology = compute_climatology(
+                dsObs, monthValues, maskVaries=True)
 
-                remappedClimatology = \
-                    remap_and_write_climatology(
-                        config, seasonalClimatology, climatologyFileName,
-                        regriddedFileName, obsRemapper)
+            remappedClimatology = \
+                remap_and_write_climatology(
+                    config, seasonalClimatology, climatologyFileName,
+                    regriddedFileName, obsRemapper)
 
         else:
 
@@ -280,7 +311,10 @@ def _setup_melt(config, namelist, observationsDirectory):  # {{{
     if flux_mode not in ['standalone', 'coupled']:
         raise ValueError('sub-ice-shelf melting disabled.')
 
-    iselvals = None
+    verticalIndexName = None
+
+    mpasFieldName = 'melt'
+    mpasMaskName = 'landIceMask'
 
     # model output is in kg/m^2/s, but we want m/yr
     modelScaling = constants.sec_per_year/constants.rho_fw
@@ -307,9 +341,10 @@ def _setup_melt(config, namelist, observationsDirectory):  # {{{
     # the mesh name will be read from the file
     obsDescriptor.read(fileName=obsFileName, xVarName='x', yVarName='y')
 
-    return iselvals, modelScaling, fieldInTitle, sectionName, \
-        obsFileName, obsFieldName, observationTitleLabel,  outFileLabel, \
-        unitsLabel,  obsDescriptor,  comparisonDescriptor  # }}}
+    return mpasFieldName, mpasMaskName, verticalIndexName, modelScaling,  \
+        fieldInTitle, sectionName, obsFileName, obsFieldName, \
+        observationTitleLabel, outFileLabel, unitsLabel,  obsDescriptor, \
+        comparisonDescriptor  # }}}
 
 
 def _setup_melt_obs(config, obsFileName, obsFieldName):  # {{{
@@ -319,6 +354,101 @@ def _setup_melt_obs(config, obsFileName, obsFieldName):  # {{{
     dsObs.coords['month'] = ('Time', np.ones(1, int))
     dsObs.coords['year'] = ('Time', np.ones(1, int))
     return dsObs  # }}}
+
+
+def _setup_bot_temp(config, namelist, observationsDirectory):  # {{{
+
+    verticalIndexName = 'maxLevelCell'
+
+    mpasFieldName = 'temperature'
+    mpasMaskName = None
+
+    # model output is already what we want (degrees C)
+    modelScaling = 1.
+
+    fieldInTitle = 'Ocean Bot. Temp.'
+    sectionName = 'regriddedAntarcticBotTemp'
+
+    obsFileName = '{}/SOSE_2005-2010_pot_temp_6000.0x6000.0km_10.0km_' \
+                  'Antarctic_stereo.nc'.format(observationsDirectory)
+
+    obsFieldName = 'botTheta'
+
+    # Set appropriate melt rate figure labels
+    observationTitleLabel = 'Observations (SOSE)'
+    outFileLabel = 'botTemp_SOSE'
+    unitsLabel = '$^\circ$C'
+
+    comparisonDescriptor = \
+        get_Antarctic_stereographic_comparison_descriptor(config)
+
+    obsDescriptor = ProjectionGridDescriptor(
+        comparisonDescriptor.projection)
+
+    # the mesh name will be read from the file
+    obsDescriptor.read(fileName=obsFileName, xVarName='x', yVarName='y')
+
+    return mpasFieldName, mpasMaskName, verticalIndexName, modelScaling,  \
+        fieldInTitle, sectionName, obsFileName, obsFieldName, \
+        observationTitleLabel, outFileLabel, unitsLabel,  obsDescriptor, \
+        comparisonDescriptor  # }}}
+
+
+def _setup_bot_temp_obs(config, obsFileName, obsFieldName):  # {{{
+    dsObs = xr.open_mfdataset(obsFileName)
+    # since this is already a climatology, add a fake month and year to
+    # "average" over
+    dsObs.coords['month'] = ('Time', np.ones(1, int))
+    dsObs.coords['year'] = ('Time', np.ones(1, int))
+    return dsObs  # }}}
+
+
+def _setup_bot_salin(config, namelist, observationsDirectory):  # {{{
+
+    verticalIndexName = 'maxLevelCell'
+
+    mpasFieldName = 'salinity'
+    mpasMaskName = None
+
+    # model output is already what we want (degrees C)
+    modelScaling = 1.
+
+    fieldInTitle = 'Ocean Bot. Salin.'
+    sectionName = 'regriddedAntarcticBotSalin'
+
+    obsFileName = '{}/SOSE_2005-2010_salinity_6000.0x6000.0km_10.0km_' \
+                  'Antarctic_stereo.nc'.format(observationsDirectory)
+
+    obsFieldName = 'botSalinity'
+
+    # Set appropriate melt rate figure labels
+    observationTitleLabel = 'Observations (SOSE)'
+    outFileLabel = 'botSalin_SOSE'
+    unitsLabel = 'PSU'
+
+    comparisonDescriptor = \
+        get_Antarctic_stereographic_comparison_descriptor(config)
+
+    obsDescriptor = ProjectionGridDescriptor(
+        comparisonDescriptor.projection)
+
+    # the mesh name will be read from the file
+    obsDescriptor.read(fileName=obsFileName, xVarName='x', yVarName='y')
+
+    return mpasFieldName, mpasMaskName, verticalIndexName, modelScaling,  \
+        fieldInTitle, sectionName, obsFileName, obsFieldName, \
+        observationTitleLabel, outFileLabel, unitsLabel,  obsDescriptor, \
+        comparisonDescriptor  # }}}
+
+
+def _setup_bot_salin_obs(config, obsFileName, obsFieldName):  # {{{
+    dsObs = xr.open_mfdataset(obsFileName)
+    # since this is already a climatology, add a fake month and year to
+    # "average" over
+    dsObs.coords['month'] = ('Time', np.ones(1, int))
+    dsObs.coords['year'] = ('Time', np.ones(1, int))
+    return dsObs  # }}}
+
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
