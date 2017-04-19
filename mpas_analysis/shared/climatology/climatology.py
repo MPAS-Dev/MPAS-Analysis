@@ -277,13 +277,13 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames):
 
     climatologyPrefix = '{}/{}_{}_{}'.format(climatologyDirectory, fieldName,
                                              meshName, monthNames)
-    climatologyFileName = '{}_years{:04d}-{:04d}.nc'.format(climatologyPrefix,
-                                                            startYear,
-                                                            endYear)
+
+    yearString, fileSuffix = _get_year_string(startYear, endYear)
+    climatologyFileName = '{}_{}.nc'.format(climatologyPrefix, fileSuffix)
     regriddedFileName = \
-        '{}/{}_{}_to_{}x{}degree_{}_years{:04d}-{:04d}.nc'.format(
+        '{}/{}_{}_to_{}x{}degree_{}_{}.nc'.format(
             regriddedDirectory, fieldName, meshName, comparisonLatRes,
-            comparisonLonRes, monthNames, startYear, endYear)
+            comparisonLonRes, monthNames, fileSuffix)
 
     return (climatologyFileName, climatologyPrefix, regriddedFileName)
 
@@ -833,12 +833,8 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     for firstYear in range(startYearClimo, endYearClimo+1, yearsPerCacheFile):
         years = range(firstYear, firstYear+yearsPerCacheFile)
 
-        if yearsPerCacheFile == 1:
-            yearString = '{:04d}'.format(years[0])
-            outputFileClimo = '{}_year{}.nc'.format(cachePrefix, yearString)
-        else:
-            yearString = '{:04d}-{:04d}'.format(years[0], years[-1])
-            outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
+        yearString, fileSuffix = _get_year_string(years[0], years[-1])
+        outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)
 
         done = False
         if os.path.exists(outputFileClimo):
@@ -891,7 +887,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
 
     Last Modified
     -------------
-    04/08/2017
+    04/19/2017
     '''
 
     for cacheIndex, info in enumerate(cacheInfo):
@@ -914,6 +910,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
         climatology.attrs['totalMonths'] = monthCount
 
         climatology.to_netcdf(outputFileClimo)
+        climatology.close()
 
     # }}}
 
@@ -930,15 +927,11 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
     Last Modified
     -------------
-    04/08/2017
+    04/19/2017
     '''
 
-    if startYearClimo == endYearClimo:
-        yearString = '{:04d}'.format(startYearClimo)
-        outputFileClimo = '{}_year{}.nc'.format(cachePrefix, yearString)
-    else:
-        yearString = '{:04d}-{:04d}'.format(startYearClimo, endYearClimo)
-        outputFileClimo = '{}_years{}.nc'.format(cachePrefix, yearString)
+    yearString, fileSuffix = _get_year_string(startYearClimo, endYearClimo)
+    outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)
 
     done = False
     if os.path.exists(outputFileClimo):
@@ -946,6 +939,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
         climatology = None
         try:
             climatology = xr.open_dataset(outputFileClimo)
+
         except IOError:
             # assuming the cache file is corrupt, so deleting it.
             message = 'Deleting cache file {}, which appears to have ' \
@@ -953,11 +947,18 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
             warnings.warn(message)
             os.remove(outputFileClimo)
 
-        monthsIfDone = (endYearClimo-startYearClimo+1)*len(monthValues)
-        if ((climatology is not None) and
-                (climatology.attrs['totalMonths'] == monthsIfDone)):
-            # also complete, so we can move on
+        if len(cacheInfo) == 1 and outputFileClimo == cacheInfo[0][0]:
+            # theres only one cache file and it already has the same name
+            # as the aggregated file so no need to aggregate
             done = True
+
+        elif climatology is not None:
+            monthsIfDone = (endYearClimo-startYearClimo+1)*len(monthValues)
+            if climatology.attrs['totalMonths'] == monthsIfDone:
+                # also complete, so we can move on
+                done = True
+            else:
+                climatology.close()
 
     if not done:
         if printProgress:
@@ -980,6 +981,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
                 totalMonths += months
                 climatology = climatology + ds * days
 
+        ds.close()
         climatology = climatology / totalDays
 
         climatology.attrs['totalDays'] = totalDays
@@ -988,5 +990,17 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
         climatology.to_netcdf(outputFileClimo)
 
     return climatology  # }}}
+
+
+def _get_year_string(startYear, endYear):
+    if startYear == endYear:
+        yearString = '{:04d}'.format(startYear)
+        fileSuffix = 'year{}'.format(yearString)
+    else:
+        yearString = '{:04d}-{:04d}'.format(startYear, endYear)
+        fileSuffix = 'years{}'.format(yearString)
+
+    return yearString, fileSuffix
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
