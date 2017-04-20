@@ -29,7 +29,7 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology import get_lat_lon_comarison_descriptor, \
+from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_file_names, \
     get_observation_climatology_file_names, \
     compute_climatology, cache_climatologies, update_start_end_year, \
@@ -118,7 +118,7 @@ def ocn_modelvsobs(config, field):
     obsDescriptor.read(fileName=obsFileName, latVarName='lat',
                        lonVarName='lon')
 
-    comparisonDescriptor = get_lat_lon_comarison_descriptor(config)
+    comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
 
     obsRemapper = get_remapper(
         config=config, sourceDescriptor=obsDescriptor,
@@ -299,22 +299,21 @@ def ocn_modelvsobs(config, field):
                 config=config, fieldName=field, monthNames=months,
                 componentName='ocean', remapper=obsRemapper)
 
-        if buildObsClimatologies:
-            if (overwriteObsClimatology or
-                    not os.path.exists(regriddedFileName)):
+        if buildObsClimatologies and (overwriteObsClimatology or
+                                      not os.path.exists(regriddedFileName)):
 
-                seasonalClimatology = compute_climatology(
-                    dsObs, monthValues, maskVaries=True)
+            seasonalClimatology = compute_climatology(
+                dsObs, monthValues, maskVaries=True)
 
-                if obsRemapper is None:
-                    # no need to remap because the observations are on the
-                    # comparison grid already
-                    remappedClimatology = seasonalClimatology
-                else:
-                    remappedClimatology = \
-                        remap_and_write_climatology(
-                            config, seasonalClimatology, climatologyFileName,
-                            regriddedFileName, obsRemapper)
+            if obsRemapper is None:
+                # no need to remap because the observations are on the
+                # comparison grid already
+                remappedClimatology = seasonalClimatology
+            else:
+                remappedClimatology = \
+                    remap_and_write_climatology(
+                        config, seasonalClimatology, climatologyFileName,
+                        regriddedFileName, obsRemapper)
 
         else:
 
