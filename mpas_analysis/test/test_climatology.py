@@ -115,7 +115,7 @@ class TestClimatology(TestCase):
             climatology.get_mpas_climatology_file_names(config, fieldName,
                                                         monthNames)
         expectedClimatologyFileName = '{}/clim/mpas/sst_QU240_JFM_' \
-                                      'years0002-0002.nc'.format(self.test_dir)
+                                      'year0002.nc'.format(self.test_dir)
         self.assertEqual(climatologyFileName, expectedClimatologyFileName)
 
         expectedClimatologyPrefix = '{}/clim/mpas/sst_QU240_' \
@@ -124,7 +124,7 @@ class TestClimatology(TestCase):
 
         expectedRegriddedFileName = '{}/clim/mpas/regrid/sst_QU240_to_' \
                                     '0.5x0.5degree_JFM_' \
-                                    'years0002-0002.nc'.format(self.test_dir)
+                                    'year0002.nc'.format(self.test_dir)
         self.assertEqual(regriddedFileName, expectedRegriddedFileName)
 
     def test_get_observation_climatology_file_names(self):
