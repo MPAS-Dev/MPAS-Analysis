@@ -200,12 +200,9 @@ def _compute_and_plot_concentration(config, ds, mpasMappingFileName, calendar):
                     monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.cache_climatologies(
-                ds, monthValues, config, climatologyPrefix, calendar,
-                printProgress=True)
-            # write out the climatology so we can interpolate it with
-            # interpolate.remap
-            seasonalClimatology.to_netcdf(climatologyFileName)
+            climatology.cache_climatologies(ds, monthValues, config,
+                                            climatologyPrefix, calendar,
+                                            printProgress=True)
 
         interpolate.remap(inFileName=climatologyFileName,
                           outFileName=regriddedFileName,
@@ -385,13 +382,9 @@ def _compute_and_plot_thickness(config, ds,  mpasMappingFileName, calendar):
                     monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            seasonalClimatology = climatology.cache_climatologies(
-                ds, monthValues, config, climatologyPrefix, calendar,
-                printProgress=True)
-            # write out the climatology so we can interpolate it with
-            # interpolate.remap.  Set _FillValue so ncremap doesn't produce
-            # an error
-            seasonalClimatology.to_netcdf(climatologyFileName)
+            climatology.cache_climatologies(ds, monthValues, config,
+                                            climatologyPrefix, calendar,
+                                            printProgress=True)
 
         interpolate.remap(inFileName=climatologyFileName,
                           outFileName=regriddedFileName,
