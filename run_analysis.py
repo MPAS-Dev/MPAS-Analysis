@@ -195,6 +195,24 @@ def analysis(config):  # {{{
             import meridional_heat_transport
         meridional_heat_transport(config)
 
+    if checkGenerate(config, analysisName='antarcticTransectsTemp',
+                     mpasCore='ocean',
+                     analysisCategory='transects'):
+        print ""
+        print "Plotting Antarctic transects of potential temperature..."
+        from mpas_analysis.ocean.antarctic_transects \
+            import antarctic_transects
+        antarctic_transects(config, 'temperature')
+
+    if checkGenerate(config, analysisName='antarcticTransectsSalin',
+                     mpasCore='ocean',
+                     analysisCategory='transects'):
+        print ""
+        print "Plotting Antarctic transects of salinity..."
+        from mpas_analysis.ocean.antarctic_transects \
+            import antarctic_transects
+        antarctic_transects(config, 'salinity')
+
     # GENERATE SEA-ICE DIAGNOSTICS
     if checkGenerate(config, analysisName='timeSeriesSeaIceAreaVol',
                      mpasCore='seaIce', analysisCategory='timeSeries'):

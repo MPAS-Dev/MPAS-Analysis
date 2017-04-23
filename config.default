@@ -208,6 +208,7 @@ mhtSubdirectory = MHT
 meltSubdirectory = Melt
 botTempSubdirectory = SOSE
 botSalinSubdirectory = SOSE
+antarcticTransectsSubdirectory = SOSE
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -544,6 +545,27 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['ANN']
 
+
+[antarcticTransects]
+## options related to plotting transects of Antarctic potential temperature
+## and salinity against SOSE reanalysis data
+
+# latitudes and longitudes of transects
+# start and end latitude
+transectLat = [-80., -60.]
+# list of longitudes, constant in each transect
+transectLon = np.arange(-175., 177., 2.)
+
+# resolution of the transect in km
+transectResolution = 20.
+# depth of sample points in the transect in m, default is every 10 m down to
+# -3000 m
+transectDepth = np.linspace(0, -3000., 301)
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
 [regriddedAntarcticBotTemp]
 ## options related to plotting horizontally regridded maps of Antarctic
 ## potential temperature at the sea floor against reference model results and
@@ -662,7 +684,8 @@ plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3', 'Nin
 # addition to being written out to png files
 # Note: displayToScreen = True seems to hang on Edison on large data sets,
 # so suggested use is just for debugging either locally or with small data sets
-displayToScreen = False
+#displayToScreen = False
+displayToScreen = True
 
 # font size on axes
 axisFontSize = 16
