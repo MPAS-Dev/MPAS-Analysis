@@ -96,6 +96,7 @@ timeSeriesSubdirectory = timeseries
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
 #   'regriddedSSS', 'regriddedMLD', 'streamfunctionMOC',
+#   'indexNino34', 'meridionalHeatTransport',
 #   'timeSeriesSeaIceAreaVol', 'regriddedSeaIceConcThick'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -186,6 +187,7 @@ sstSubdirectory = SST
 sssSubdirectory = SSS
 mldSubdirectory = MLD
 ninoSubdirectory = Nino
+mhtSubdirectory = MHT
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -299,8 +301,6 @@ baseDirectory = /dir/to/seaice/reference
 [timeSeriesOHC]
 ## options related to plotting time series of ocean heat content (OHC)
 
-## compare to output from another model run?
-#compareWithModel = True
 # compare to observations?
 compareWithObservations = False
 # list of region indices to plot from the region list in [regions] below
@@ -313,8 +313,6 @@ movingAveragePoints = 12
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
 
-## compare to output from another model run?
-#compareWithModel = True
 # compare to observations?
 compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below
@@ -337,19 +335,35 @@ regionIndicesToPlot = 5
 # 2 - HADIsst -- Hadley center analysis -- 1870 - 2016
 observationData = HADIsst 
 
-[timeSeriesMHT]
-## options related to plotting time series of meridional heat transport (MHT)
+[meridionalHeatTransport]
+## options related to plotting meridional heat transport (MHT)
 
-## compare to output from another model run?
-#compareWithModel = True
+# Data source to read for comparison
+observationData = mht_TrenberthCaron.NoAtm.nc
+
+# colormap for model results
+colormapNameGlobal = RdBu_r
+colormapNameAtlantic = RdBu_r
+colormapNameIndoPacific = RdBu_r
+# colormap indices for contour color
+colormapIndicesGlobal = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesAtlantic = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesIndoPacific = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsGlobal = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
+colorbarLevelsAtlantic = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
+colorbarLevelsIndoPacific = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
+# contour line levels
+contourLevelsGlobal = [-0.1, -0.01, 0.01, 0.1]
+contourLevelsAtlantic = [-0.1, -0.01, 0.01, 0.1]
+contourLevelsPacific = [-0.1, -0.01, 0.01, 0.1]
+
+# latitude and depth limits
+xLimGlobal = [-80, 80]
+depthLimGlobal = [-1000, 0]
+
 # compare to observations?
 compareWithObservations = True
-# list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
-# Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
-# window)
-movingAveragePoints = 12
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
@@ -391,12 +405,10 @@ colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
 colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
 colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
 # contour line levels
-contourLevelsGlobal = np.arange(-25.1,35.1,10)
-contourLevelsAtlantic = np.arange(-8,20.1,2)
-contourLevelsIndoPacific = np.arange(-8,20.1,2)
+contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
+contourLevelsAtlantic = np.arange(-8, 20.1, 2)
+contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
 
-## compare to output from another model run?
-#compareWithModel = True
 # compare to observations?
 compareWithObservations = True
 
@@ -408,8 +420,6 @@ movingAveragePoints = 12
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
 
-## compare to output from another model run?
-#compareWithModel = True
 # compare to observations?
 compareWithObservations = True
 # list of region indices to plot from the region list in [regions] below

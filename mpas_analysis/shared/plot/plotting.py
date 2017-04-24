@@ -19,7 +19,6 @@ import matplotlib.colors as cols
 import xarray as xr
 import pandas as pd
 from mpl_toolkits.basemap import Basemap
-import matplotlib.colors as cols
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
@@ -29,13 +28,15 @@ from ..timekeeping.utility import days_to_datetime, date_to_days
 from ..constants import constants
 
 
-def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
-                        redNoiseSpectra, fObs, f30, ninoObs, conf95Obs, conf99Obs,
-                        redNoiseObs, nino30yr, conf9530, conf9930, redNoise30,
+def nino34_spectra_plot(config, f, ninoSpectra,
+                        confidence95, confidence99, redNoiseSpectra,
+                        fObs, f30, ninoObs,
+                        conf95Obs, conf99Obs, redNoiseObs,
+                        nino30yr, conf9530, conf9930, redNoise30,
                         title, modelTitle, obsTitle,
                         fileout, linewidths, xlabel='Period (years)',
-                        ylabel=r'Power ($^o$C / cycles mo$^{-1}$)', titleFontSize=None,
-                        figsize=(9, 21), dpi=300):
+                        ylabel=r'Power ($^o$C / cycles mo$^{-1}$)',
+                        titleFontSize=None, figsize=(9, 21), dpi=300):
     """
     Plots the nino34 time series and power spectra in an image file
     Parameters
@@ -137,8 +138,8 @@ def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
                loc='upper right')
     maxObs = _plot_size_y_axis(plt, fObs, c1=conf99Obs, c2=redNoiseObs)
     max30 = _plot_size_y_axis(plt, f30, c1=conf9930, c2=redNoise30)
-    maxModel = _plot_size_y_axis(plt, f, c1=ninoSpectra.values, c2=confidence99,
-                                 c3=redNoiseSpectra)
+    maxModel = _plot_size_y_axis(plt, f, c1=ninoSpectra.values,
+                                 c2=confidence99, c3=redNoiseSpectra)
 
     maxYval = max(maxObs, max30, maxModel)
     plt.ylim(0, 0.9*maxYval)
@@ -197,8 +198,8 @@ def nino34_spectra_plot(config, f, ninoSpectra, confidence95, confidence99,
 
 
 def nino34_timeseries_plot(config, nino34Index, nino34Obs, nino3430, title,
-                           modelTitle, obsTitle, fileout, linewidths,
-                           calendar, xlabel='Time [years]', ylabel='[$^\circ$C]',
+                           modelTitle, obsTitle, fileout, linewidths, calendar,
+                           xlabel='Time [years]', ylabel='[$^\circ$C]',
                            titleFontSize=None, figsize=(12, 28), dpi=300,
                            maxXTicks=20):
     """
@@ -273,9 +274,10 @@ def nino34_timeseries_plot(config, nino34Index, nino34Obs, nino3430, title,
 
     # Plot Nino34 Observation Time series
     plt.subplot(3, 1, 1)
-    _plot_nino_timeseries(plt, nino34Obs[2:-3].values, nino34Obs.Time[2:-3].values,
-                          xlabel, ylabel, obsTitle+' (Full Record)', calendar,
-                          axis_font, linewidths, maxXTicks)
+    _plot_nino_timeseries(plt, nino34Obs[2:-3].values,
+                          nino34Obs.Time[2:-3].values,
+                          xlabel, ylabel, obsTitle+' (Full Record)',
+                          calendar, axis_font, linewidths, maxXTicks)
 
     # Plot subset of the observational data set
     plt.subplot(3, 1, 2)
@@ -285,9 +287,10 @@ def nino34_timeseries_plot(config, nino34Index, nino34Obs, nino3430, title,
 
     # Plot Nino34 model time series
     plt.subplot(3, 1, 3)
-    _plot_nino_timeseries(plt, nino34Index[2:-3].values, nino34Index.Time[2:-3].values,
-                          xlabel, ylabel, modelTitle, calendar, axis_font, linewidths,
-                          maxXTicks)
+    _plot_nino_timeseries(plt, nino34Index[2:-3].values,
+                          nino34Index.Time[2:-3].values,
+                          xlabel, ylabel, modelTitle, calendar,
+                          axis_font, linewidths, maxXTicks)
     minDays = nino34Index.Time[2:-3].values.min()
     maxDays = nino34Index.Time[2:-3].values.max()
 
@@ -519,8 +522,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
         plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
-                   lineStyles[dsIndex],
-                   linewidth=lineWidths[dsIndex])
+                  lineStyles[dsIndex],
+                  linewidth=lineWidths[dsIndex])
 
     ax = plt.gca()
 
@@ -800,7 +803,7 @@ def plot_global_comparison(
 
     Last Modified
     -------------
-    03/13/2017
+    04/20/2017
     """
 
     # set up figure
@@ -879,6 +882,128 @@ def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
         return '{:04d}'.format(date.year)
 
 
+def plot_1D(config, xArrays, fieldArrays, errArrays,
+            lineColors, lineWidths, legendText,
+            title=None, xlabel=None, ylabel=None,
+            fileout='plot_1D.png',
+            figsize=(10, 4), dpi=300,
+            xLim=None,
+            yLim=None,
+            invertYAxis=False):  # {{{
+
+    """
+    Plots a 1D line plot with error bars if available.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    xArrays : list of float arrays
+        x array (latitude, or any other x axis except time)
+
+    fieldArrays : list of float arrays
+        y array (any field as function of x)
+
+    errArrays : list of float arrays
+        error array (y errors)
+
+    lineColors, legendText : list of str
+        control line color and legend
+
+    lineWidths : list of int
+        control line width
+
+    title : str, optional
+        title of plot
+
+    xlabel, ylabel : str, optional
+        label of x- and y-axis
+
+    fileout : str, optional
+        the file name to be written
+
+    figsize : tuple of float, optional
+        size of the figure in inches
+
+    dpi : int, optional
+        number of dots per inch of the figure
+
+    xLim : float array, optional
+        x range of plot
+
+    yLim : float array, optional
+        y range of plot
+
+    invertYAxis : logical, optional
+        if True, invert Y axis
+
+    Authors
+    -------
+    Mark Petersen, Milena Veneziani
+
+    Last Modified
+    -------------
+    04/20/2017
+    """
+
+    # set up figure
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+
+    for dsIndex in range(len(xArrays)):
+        xArray = xArrays[dsIndex]
+        fieldArray = fieldArrays[dsIndex]
+        errArray = errArrays[dsIndex]
+        if xArray is None:
+            continue
+        if errArray is None:
+            plt.plot(xArray, fieldArray,
+                     color=lineColors[dsIndex],
+                     linewidth=lineWidths[dsIndex],
+                     label=legendText[dsIndex])
+        else:
+            plt.plot(xArray, fieldArray,
+                     color=lineColors[dsIndex],
+                     linewidth=lineWidths[dsIndex],
+                     label=legendText[dsIndex])
+            plt.fill_between(xArray, fieldArray, fieldArray+errArray,
+                             facecolor=lineColors[dsIndex], alpha=0.2)
+            plt.fill_between(xArray, fieldArray, fieldArray-errArray,
+                             facecolor=lineColors[dsIndex], alpha=0.2)
+    plt.grid()
+    plt.axhline(0.0, linestyle='-', color='k')  # horizontal lines
+    if dsIndex > 0:
+        plt.legend()
+
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': config.get('plot', 'titleFontSize'),
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+
+    if invertYAxis:
+        plt.gca().invert_yaxis()
+
+    if xLim:
+        plt.xlim(xLim)
+    if yLim:
+        plt.ylim(yLim)
+
+    if (fileout is not None):
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+    return  # }}}
+
+
 def plot_vertical_section(
     config,
     xArray,
@@ -893,7 +1018,10 @@ def plot_vertical_section(
     ylabel=None,
     fileout='moc.png',
     figsize=(10, 4),
-    dpi=300):  # {{{
+    dpi=300,
+    xLim=None,
+    yLim=None,
+    invertYAxis=True):  # {{{
 
     """
     Plots a data set as a x distance (latitude, longitude,
@@ -941,6 +1069,15 @@ def plot_vertical_section(
     dpi : int, optional
         number of dots per inch of the figure
 
+    xLim : float array, optional
+        x range of plot
+
+    yLim : float array, optional
+        y range of plot
+
+    invertYAxis : logical, optional
+        if True, invert Y axis
+
     Authors
     -------
     Milena Veneziani, Mark Petersen
@@ -977,7 +1114,13 @@ def plot_vertical_section(
     if ylabel is not None:
         plt.ylabel(ylabel, **axis_font)
 
-    plt.gca().invert_yaxis()
+    if invertYAxis:
+        plt.gca().invert_yaxis()
+
+    if xLim:
+        plt.xlim(xLim)
+    if yLim:
+        plt.ylim(yLim)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
