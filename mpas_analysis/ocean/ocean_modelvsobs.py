@@ -9,7 +9,7 @@ Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 Last Modified
 -------------
-04/08/2017
+04/25/2017
 '''
 
 import xarray as xr
@@ -41,6 +41,8 @@ from ..shared.analysis_task import setup_task
 
 from ..shared.mpas_xarray import mpas_xarray
 
+from ..shared.interpolation import Remapper
+
 
 def ocn_modelvsobs(config, field):
 
@@ -61,7 +63,7 @@ def ocn_modelvsobs(config, field):
 
     Last Modified
     -------------
-    04/08/2017
+    04/25/2017
     '''
 
     # perform common setup for the task
@@ -114,29 +116,7 @@ def ocn_modelvsobs(config, field):
 
     obsFileName = obsFileNames[field]
 
-    obsDescriptor = LatLonGridDescriptor()
-    obsDescriptor.read(fileName=obsFileName, latVarName='lat',
-                       lonVarName='lon')
-
     comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
-
-    obsRemapper = get_remapper(
-        config=config, sourceDescriptor=obsDescriptor,
-        comparisonDescriptor=comparisonDescriptor,
-        mappingFileSection='oceanObservations',
-        mappingFileOption='{}ClimatologyMappingFile'.format(field),
-        mappingFilePrefix='map_obs_{}'.format(field),
-        method=config.get('oceanObservations', 'interpolationMethod'))
-
-    buildObsClimatologies = overwriteObsClimatology
-    for months in outputTimes:
-        (climatologyFileName, regriddedFileName) = \
-            get_observation_climatology_file_names(
-                config=config, fieldName=field, monthNames=months,
-                componentName='ocean', remapper=obsRemapper)
-        if not os.path.exists(regriddedFileName):
-            buildObsClimatologies = True
-            break
 
     varList = [field]
 
@@ -145,30 +125,6 @@ def ocn_modelvsobs(config, field):
         iselvals = None
 
         obsFieldName = 'mld_dt_mean'
-
-        if buildObsClimatologies:
-            # Load MLD observational data
-            dsObs = xr.open_mfdataset(obsFileName)
-
-            # Increment month value to be consistent with the model output
-            dsObs.iMONTH.values += 1
-            # Rename the dimensions to be consistent with other obs. data sets
-            dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
-                          'lon': 'lonCoord'}, inplace=True)
-            dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'},
-                         inplace=True)
-
-            # set the coordinates now that the dimensions have the same names
-            dsObs.coords['lat'] = dsObs['latCoord']
-            dsObs.coords['lon'] = dsObs['lonCoord']
-            dsObs.coords['Time'] = dsObs['calmonth']
-            dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
-
-            # no meaningful year since this is already a climatology
-            dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
-
-            dsObs = mpas_xarray.subset_variables(dsObs, [obsFieldName,
-                                                         'month'])
 
         # Set appropriate MLD figure labels
         observationTitleLabel = \
@@ -180,26 +136,17 @@ def ocn_modelvsobs(config, field):
 
         iselvals = {'nVertLevels': 0}
 
+        obsFieldName = 'SST'
+
         climStartYear = config.getint('oceanObservations',
                                       'sstClimatologyStartYear')
         climEndYear = config.getint('oceanObservations',
                                     'sstClimatologyEndYear')
-        timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
-        timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
 
         if climStartYear < 1925:
             period = 'pre-industrial'
         else:
             period = 'present-day'
-
-        if buildObsClimatologies:
-            dsObs = xr.open_mfdataset(obsFileName)
-            dsObs.rename({'time': 'Time'}, inplace=True)
-            dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
-            dsObs.coords['month'] = dsObs['Time.month']
-            dsObs.coords['year'] = dsObs['Time.year']
-
-        obsFieldName = 'SST'
 
         # Set appropriate figure labels for SST
         observationTitleLabel = \
@@ -212,16 +159,6 @@ def ocn_modelvsobs(config, field):
     elif field == 'sss':
 
         iselvals = {'nVertLevels': 0}
-
-        timeStart = datetime.datetime(2011, 8, 1)
-        timeEnd = datetime.datetime(2014, 12, 31)
-
-        if buildObsClimatologies:
-            dsObs = xr.open_mfdataset(obsFileName)
-            dsObs.rename({'time': 'Time'}, inplace=True)
-            dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
-            dsObs.coords['month'] = dsObs['Time.month']
-            dsObs.coords['year'] = dsObs['Time.year']
 
         obsFieldName = 'SSS'
 
@@ -252,10 +189,19 @@ def ocn_modelvsobs(config, field):
         mappingFilePrefix='map', method=config.get('climatology',
                                                    'mpasInterpolationMethod'))
 
+    obsDescriptor = LatLonGridDescriptor()
+    obsDescriptor.read(fileName=obsFileName, latVarName='lat',
+                       lonVarName='lon')
+
+    origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
+
     (colormapResult, colorbarLevelsResult) = setup_colormap(
         config, sectionName, suffix='Result')
     (colormapDifference, colorbarLevelsDifference) = setup_colormap(
         config, sectionName, suffix='Difference')
+
+    dsObs = None
+    obsRemapperBuilt = False
 
     # Interpolate and compute biases
     for months in outputTimes:
@@ -297,13 +243,38 @@ def ocn_modelvsobs(config, field):
         (climatologyFileName, regriddedFileName) = \
             get_observation_climatology_file_names(
                 config=config, fieldName=field, monthNames=months,
-                componentName='ocean', remapper=obsRemapper)
+                componentName='ocean', remapper=origObsRemapper)
 
-        if buildObsClimatologies and (overwriteObsClimatology or
-                                      not os.path.exists(regriddedFileName)):
+        if overwriteObsClimatology or not os.path.exists(regriddedFileName):
+
+            if dsObs is None:
+                # load the observations the first time
+                dsObs = _build_observational_dataset(config, field,
+                                                     obsFileName, obsFieldName)
 
             seasonalClimatology = compute_climatology(
                 dsObs, monthValues, maskVaries=True)
+
+            if not obsRemapperBuilt:
+                seasonalClimatology.load()
+                seasonalClimatology.close()
+                seasonalClimatology.to_netcdf(climatologyFileName)
+                # make the remapper for the climatology
+                obsDescriptor = LatLonGridDescriptor()
+                obsDescriptor.read(fileName=climatologyFileName,
+                                   latVarName='lat',
+                                   lonVarName='lon')
+
+                obsRemapper = get_remapper(
+                    config=config, sourceDescriptor=obsDescriptor,
+                    comparisonDescriptor=comparisonDescriptor,
+                    mappingFileSection='oceanObservations',
+                    mappingFileOption='{}ClimatologyMappingFile'.format(field),
+                    mappingFilePrefix='map_obs_{}'.format(field),
+                    method=config.get('oceanObservations',
+                                      'interpolationMethod'))
+
+                obsRemapperBuilt = True
 
             if obsRemapper is None:
                 # no need to remap because the observations are on the
@@ -344,5 +315,64 @@ def ocn_modelvsobs(config, field):
                                diffTitle='Model-Observations',
                                cbarlabel=unitsLabel)
 
+
+def _build_observational_dataset(config, field, obsFileName, obsFieldName):
+    '''
+    read in the data sets for observations, and possibly rename some variables
+    and dimensions
+    '''
+
+    if field == 'mld':
+
+        # Load MLD observational data
+        dsObs = xr.open_mfdataset(obsFileName)
+
+        # Increment month value to be consistent with the model output
+        dsObs.iMONTH.values += 1
+        # Rename the dimensions to be consistent with other obs. data sets
+        dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
+                      'lon': 'lonCoord'}, inplace=True)
+        dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'},
+                     inplace=True)
+
+        # set the coordinates now that the dimensions have the same names
+        dsObs.coords['lat'] = dsObs['latCoord']
+        dsObs.coords['lon'] = dsObs['lonCoord']
+        dsObs.coords['Time'] = dsObs['calmonth']
+        dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
+
+        # no meaningful year since this is already a climatology
+        dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
+
+        dsObs = mpas_xarray.subset_variables(dsObs, [obsFieldName,
+                                                     'month'])
+
+    elif field == 'sst':
+
+        climStartYear = config.getint('oceanObservations',
+                                      'sstClimatologyStartYear')
+        climEndYear = config.getint('oceanObservations',
+                                    'sstClimatologyEndYear')
+        timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
+        timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
+
+        dsObs = xr.open_mfdataset(obsFileName)
+        dsObs.rename({'time': 'Time'}, inplace=True)
+        dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+        dsObs.coords['month'] = dsObs['Time.month']
+        dsObs.coords['year'] = dsObs['Time.year']
+
+    elif field == 'sss':
+
+        timeStart = datetime.datetime(2011, 8, 1)
+        timeEnd = datetime.datetime(2014, 12, 31)
+
+        dsObs = xr.open_mfdataset(obsFileName)
+        dsObs.rename({'time': 'Time'}, inplace=True)
+        dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+        dsObs.coords['month'] = dsObs['Time.month']
+        dsObs.coords['year'] = dsObs['Time.year']
+
+    return dsObs
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
