@@ -18,6 +18,7 @@ import numpy.ma as ma
 import numpy as np
 
 import netCDF4
+import warnings
 
 from ..shared.constants import constants
 
@@ -203,9 +204,12 @@ def _compute_and_plot_concentration(config, ds, mpasMappingFileName, calendar):
             seasonalClimatology = climatology.cache_climatologies(
                 ds, monthValues, config, climatologyPrefix, calendar,
                 printProgress=True)
-            # write out the climatology so we can interpolate it with
-            # interpolate.remap
-            seasonalClimatology.to_netcdf(climatologyFileName)
+            if seasonalClimatology is None:
+                # apparently, there was no data available to create the
+                # climatology
+                warnings.warn('no data to create sea ice concentration '
+                              'climatology for {}'.format(months))
+                continue
 
         interpolate.remap(inFileName=climatologyFileName,
                           outFileName=regriddedFileName,
@@ -388,10 +392,12 @@ def _compute_and_plot_thickness(config, ds,  mpasMappingFileName, calendar):
             seasonalClimatology = climatology.cache_climatologies(
                 ds, monthValues, config, climatologyPrefix, calendar,
                 printProgress=True)
-            # write out the climatology so we can interpolate it with
-            # interpolate.remap.  Set _FillValue so ncremap doesn't produce
-            # an error
-            seasonalClimatology.to_netcdf(climatologyFileName)
+            if seasonalClimatology is None:
+                # apparently, there was no data available to create the
+                # climatology
+                warnings.warn('no data to create sea ice thickness '
+                              'climatology for {}'.format(months))
+                continue
 
         interpolate.remap(inFileName=climatologyFileName,
                           outFileName=regriddedFileName,

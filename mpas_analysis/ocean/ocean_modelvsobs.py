@@ -17,6 +17,7 @@ import datetime
 import numpy as np
 import netCDF4
 import os
+import warnings
 
 from ..shared.interpolation import interpolate
 
@@ -258,9 +259,13 @@ def ocn_modelvsobs(config, field):
             seasonalClimatology = climatology.cache_climatologies(
                 ds, monthValues, config, climatologyPrefix, calendar,
                 printProgress=True)
-            # write out the climatology so we can interpolate it with
-            # interpolate.remap
-            seasonalClimatology.to_netcdf(climatologyFileName)
+
+            if seasonalClimatology is None:
+                # apparently, there was no data available to create the
+                # climatology
+                warnings.warn('no data to create {} climatology for {}'.format(
+                    field, months))
+                continue
 
         interpolate.remap(inFileName=climatologyFileName,
                           outFileName=regriddedFileName,
