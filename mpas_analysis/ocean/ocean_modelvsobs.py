@@ -17,6 +17,7 @@ import datetime
 import numpy as np
 import netCDF4
 import os
+import warnings
 
 from ..shared.interpolation import interpolate
 
@@ -255,9 +256,16 @@ def ocn_modelvsobs(config, field):
                                                         monthNames=months)
 
         if overwriteMpasClimatology or not os.path.exists(climatologyFileName):
-            climatology.cache_climatologies(ds, monthValues, config,
-                                            climatologyPrefix, calendar,
-                                            printProgress=True)
+            seasonalClimatology = climatology.cache_climatologies(
+                ds, monthValues, config, climatologyPrefix, calendar,
+                printProgress=True)
+
+            if seasonalClimatology is None:
+                # apparently, there was no data available to create the
+                # climatology
+                warnings.warn('no data to create {} climatology for {}'.format(
+                    field, months))
+                continue
 
         interpolate.remap(inFileName=climatologyFileName,
                           outFileName=regriddedFileName,

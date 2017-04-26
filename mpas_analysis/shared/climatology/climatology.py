@@ -934,6 +934,10 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
     outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)
 
     done = False
+    if len(cacheInfo) == 0:
+        climatology = None
+        done = True
+
     if os.path.exists(outputFileClimo):
         # already cached
         climatology = None
@@ -965,6 +969,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
             print '   Computing aggregated climatology ' \
                   '{}...'.format(yearString)
 
+
         first = True
         for cacheIndex, info in enumerate(cacheInfo):
             inFileClimo = info[0]
@@ -981,7 +986,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
                 totalMonths += months
                 climatology = climatology + ds * days
 
-        ds.close()
+            ds.close()
         climatology = climatology / totalDays
 
         climatology.attrs['totalDays'] = totalDays
