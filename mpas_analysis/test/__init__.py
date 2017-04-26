@@ -1,8 +1,8 @@
 """
 Unit test infrastructure, adapted from approach of xarray.
 
-Phillip J. Wolfram
-10/07/2016
+Phillip J. Wolfram, Xylar Asay-Davis
+04/06/2017
 """
 
 import warnings
@@ -11,6 +11,8 @@ from contextlib import contextmanager
 import os
 from distutils import dir_util
 from pytest import fixture
+
+import xarray
 
 try:
     import unittest2 as unittest
@@ -76,7 +78,27 @@ class TestCase(unittest.TestCase):
 
     @requires_numpy
     def assertArrayApproxEqual(self, a1, a2, rtol=1e-5, atol=1e-8):
-        assert np.all(np.isclose(a1, a2, rtol=rtol, atol=atol))
+        close = np.isclose(a1, a2, rtol=rtol, atol=atol)
+        oneIsNaN = np.logical_or(np.isnan(a1), np.isnan(a2))
+        assert np.all(np.logical_or(close, oneIsNaN))
+
+    def assertDatasetApproxEqual(self, ds1, ds2, rtol=1e-5, atol=1e-8):
+        assert ((isinstance(ds1, xarray.Dataset) and
+                 isinstance(ds2, xarray.Dataset)) or
+                (isinstance(ds1, xarray.DataArray) and
+                 isinstance(ds2, xarray.DataArray)))
+
+        if isinstance(ds1, xarray.Dataset):
+            assert set(ds1.data_vars.keys()) == set(ds2.data_vars.keys())
+            for var in ds1.data_vars.keys():
+                assert var in ds2.data_vars.keys()
+                if ds1[var].values.dtype.char == 'S':
+                    continue
+                self.assertArrayApproxEqual(ds1[var].values, ds2[var].values,
+                                            rtol=rtol, atol=atol)
+        else:
+            self.assertArrayApproxEqual(ds1.values, ds2.values,
+                                        rtol=rtol, atol=atol)
 
     @contextmanager
     def assertWarns(self, message):
