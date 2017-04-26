@@ -160,7 +160,7 @@ yearsPerCacheFile = 1
 
 # should remapping be performed with ncremap or with the Remapper class
 # directly in MPAS-Analysis
-useNcremap = False
+useNcremap = True
 
 # The minimum weight of a destination cell after remapping. Any cell with 
 # weights lower than this threshold will therefore be masked out.
