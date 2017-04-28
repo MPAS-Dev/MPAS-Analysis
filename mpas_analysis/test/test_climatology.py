@@ -11,6 +11,7 @@ import shutil
 import os
 import numpy
 import xarray
+import time
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
@@ -353,7 +354,6 @@ class TestClimatology(TestCase):
         #        to update the aggregated climatology file because no
         #        additional years were processed and the file was already
         #        complete for the span of years present
-        test2 = (2, ['years0002-0003', 'year0002'], [True, False])
         test3 = {'monthNames': 'Jan',
                  'monthValues': [1],
                  'yearsPerCacheFile': 2,
@@ -407,7 +407,7 @@ class TestClimatology(TestCase):
                                    expectedDays)
             dsClimatology.close()
 
-            datesModfied = []
+            datesModified = []
             for suffix in expectedSuffixes:
                 expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
                                               '{}_{}.nc'.format(
@@ -415,9 +415,11 @@ class TestClimatology(TestCase):
                                                   suffix)
                 assert os.path.exists(expectedClimatologyFileName)
 
-                datesModfied.append(os.path.getmtime(
+                datesModified.append(os.path.getmtime(
                     expectedClimatologyFileName))
 
+            # delay 1 second to make sure time stamp changes
+            time.sleep(1)
             # try it again with cache files saved
             dsClimatology = climatology.cache_climatologies(
                 ds, monthValues, config,  climatologyPrefix, calendar,
@@ -444,7 +446,7 @@ class TestClimatology(TestCase):
 
                 # Check whether the given file was modified, and whether
                 # this was the expected result
-                fileWasModified = datesModfied[index] != dateModifiedCheck
+                fileWasModified = datesModified[index] != dateModifiedCheck
                 assert fileWasModified == expectedModified[index]
 
                 # remove the cache file for the next try
