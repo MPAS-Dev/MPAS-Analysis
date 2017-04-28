@@ -11,7 +11,6 @@ import shutil
 import os
 import numpy
 import xarray
-import time
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
@@ -311,7 +310,8 @@ class TestClimatology(TestCase):
         assert(startYear == 2)
         assert(endYear == 2)
 
-    def test_cache_climatologies(self):
+
+    def cache_climatologies_setup(self):
         config = self.setup_config()
         calendar = 'gregorian_noleap'
         ds = self.open_test_ds(config, calendar)
@@ -321,7 +321,13 @@ class TestClimatology(TestCase):
 
         remapper = self.setup_mpas_remapper(config)
 
-        tests = []
+        return {'config': config, 'calendar': calendar, 'ds': ds,
+                'fieldName': fieldName, 'climFileName': climFileName,
+                'refClimatology': refClimatology, 'remapper': remapper}
+
+
+    def test_jan_1yr_climo_test1(self):
+        setup = self.cache_climatologies_setup()
         # test1: Just January, 1-year climatologies are cached; only one file
         #        is produced with suffix year0002; a second run of
         #        cache_climatologies doesn't modify any files
@@ -334,7 +340,10 @@ class TestClimatology(TestCase):
                  'expectedDays': 30.958333,
                  'expectedMonths': 1,
                  'refClimatology': None}
-        tests.append(test1)
+        self.cache_climatologies_driver(test1, **setup)
+
+    def test_jfm_1yr_climo_test2(self):
+        setup = self.cache_climatologies_setup()
         # same as test1 but with JFM
         test2 = {'monthNames': 'JFM',
                  'monthValues': constants.monthDictionary['JFM'],
@@ -344,8 +353,12 @@ class TestClimatology(TestCase):
                  # weird value because first time step of Jan. missing in ds
                  'expectedDays': 89.958333,
                  'expectedMonths': 3,
-                 'refClimatology': refClimatology}
-        tests.append(test2)
+                 'refClimatology': setup['refClimatology']}
+        self.cache_climatologies_driver(test2, **setup)
+
+
+    def test_jan_2yr_climo_test3(self):
+        setup = self.cache_climatologies_setup()
         # test3: 2-year climatologies are cached; 2 files are produced
         #        with suffix years0002-0003 (the "individual" climatology
         #        file) and year0002 (the "aggregated" climatology file);
@@ -363,7 +376,11 @@ class TestClimatology(TestCase):
                  'expectedDays': 30.958333,
                  'expectedMonths': 1,
                  'refClimatology': None}
-        tests.append(test3)
+        self.cache_climatologies_driver(test3, **setup)
+
+
+    def test_jfm_2yr_climo_test4(self):
+        setup = self.cache_climatologies_setup()
         # test4: same as test3 but with JFM
         test4 = {'monthNames': 'JFM',
                  'monthValues': constants.monthDictionary['JFM'],
@@ -373,84 +390,83 @@ class TestClimatology(TestCase):
                  # weird value because first time step of Jan. missing in ds
                  'expectedDays': 89.958333,
                  'expectedMonths': 3,
-                 'refClimatology': refClimatology}
-        tests.append(test4)
+                 'refClimatology': setup['refClimatology']}
+        self.cache_climatologies_driver(test4, **setup)
 
-        for test in tests:
-            monthNames = test['monthNames']
-            monthValues = test['monthValues']
-            yearsPerCacheFile = test['yearsPerCacheFile']
-            expectedSuffixes = test['expectedSuffixes']
-            expectedModified = test['expectedModified']
-            expectedDays = test['expectedDays']
-            expectedMonths = test['expectedMonths']
-            refClimatology = test['refClimatology']
 
-            (climatologyFileName, climatologyPrefix, regriddedFileName) = \
-                climatology.get_mpas_climatology_file_names(config, fieldName,
-                                                            monthNames,
-                                                            remapper)
+    def cache_climatologies_driver(self, test, config, fieldName,
+                                   ds, remapper, calendar, **kwargs):
+        monthNames = test['monthNames']
+        monthValues = test['monthValues']
+        yearsPerCacheFile = test['yearsPerCacheFile']
+        expectedSuffixes = test['expectedSuffixes']
+        expectedModified = test['expectedModified']
+        expectedDays = test['expectedDays']
+        expectedMonths = test['expectedMonths']
+        refClimatology = test['refClimatology']
 
-            config.set('climatology', 'yearsPerCacheFile',
-                       str(yearsPerCacheFile))
-            # once without cache files
-            dsClimatology = climatology.cache_climatologies(
-                ds, monthValues, config, climatologyPrefix, calendar,
-                printProgress=True)
-            if refClimatology is not None:
-                self.assertArrayApproxEqual(dsClimatology.mld.values,
-                                            refClimatology.mld.values)
+        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+            climatology.get_mpas_climatology_file_names(config, fieldName,
+                                                        monthNames,
+                                                        remapper)
 
-            self.assertEqual(dsClimatology.attrs['totalMonths'],
-                             expectedMonths)
-            self.assertApproxEqual(dsClimatology.attrs['totalDays'],
-                                   expectedDays)
-            dsClimatology.close()
+        config.set('climatology', 'yearsPerCacheFile',
+                   str(yearsPerCacheFile))
+        # once without cache files
+        dsClimatology = climatology.cache_climatologies(
+            ds, monthValues, config, climatologyPrefix, calendar,
+            printProgress=True)
 
-            datesModified = []
-            for suffix in expectedSuffixes:
-                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
-                                              '{}_{}.nc'.format(
-                                                  self.test_dir, monthNames,
-                                                  suffix)
-                assert os.path.exists(expectedClimatologyFileName)
+        if refClimatology is not None:
+            self.assertArrayApproxEqual(dsClimatology.mld.values,
+                                        refClimatology.mld.values)
 
-                datesModified.append(os.path.getmtime(
-                    expectedClimatologyFileName))
+        self.assertEqual(dsClimatology.attrs['totalMonths'],
+                         expectedMonths)
+        self.assertApproxEqual(dsClimatology.attrs['totalDays'],
+                               expectedDays)
+        dsClimatology.close()
 
-            # delay 1 second to make sure time stamp changes
-            time.sleep(1)
-            # try it again with cache files saved
-            dsClimatology = climatology.cache_climatologies(
-                ds, monthValues, config,  climatologyPrefix, calendar,
-                printProgress=True)
+        fingerprints = []
+        for suffix in expectedSuffixes:
+            expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
+                                          '{}_{}.nc'.format(
+                                              self.test_dir, monthNames,
+                                              suffix)
+            assert os.path.exists(expectedClimatologyFileName)
 
-            if refClimatology is not None:
-                self.assertArrayApproxEqual(dsClimatology.mld.values,
-                                            refClimatology.mld.values)
+            fingerprints.append(xarray.open_dataset(expectedClimatologyFileName).fingerprintClimo)
 
-            self.assertEqual(dsClimatology.attrs['totalMonths'],
-                             expectedMonths)
-            self.assertApproxEqual(dsClimatology.attrs['totalDays'],
-                                   expectedDays)
-            dsClimatology.close()
+        # try it again with cache files saved
+        dsClimatology = climatology.cache_climatologies(
+            ds, monthValues, config,  climatologyPrefix, calendar,
+            printProgress=True)
 
-            for index, suffix in enumerate(expectedSuffixes):
-                expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
-                                              '{}_{}.nc'.format(
-                                                  self.test_dir, monthNames,
-                                                  suffix)
+        if refClimatology is not None:
+            self.assertArrayApproxEqual(dsClimatology.mld.values,
+                                        refClimatology.mld.values)
 
-                dateModifiedCheck = os.path.getmtime(
-                    expectedClimatologyFileName)
+        self.assertEqual(dsClimatology.attrs['totalMonths'],
+                         expectedMonths)
+        self.assertApproxEqual(dsClimatology.attrs['totalDays'],
+                               expectedDays)
+        dsClimatology.close()
 
-                # Check whether the given file was modified, and whether
-                # this was the expected result
-                fileWasModified = datesModified[index] != dateModifiedCheck
-                assert fileWasModified == expectedModified[index]
+        for index, suffix in enumerate(expectedSuffixes):
+            expectedClimatologyFileName = '{}/clim/mpas/mld_QU240_' \
+                                          '{}_{}.nc'.format(
+                                              self.test_dir, monthNames,
+                                              suffix)
 
-                # remove the cache file for the next try
-                os.remove(expectedClimatologyFileName)
+            fingerprintCheck = xarray.open_dataset(expectedClimatologyFileName).fingerprintClimo
+
+            # Check whether the given file was modified, and whether
+            # this was the expected result
+            fileWasModified = fingerprints[index] != fingerprintCheck
+            assert fileWasModified == expectedModified[index]
+
+            # remove the cache file for the next try
+            os.remove(expectedClimatologyFileName)
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

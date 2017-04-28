@@ -19,7 +19,7 @@ from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path, make_directories
+from ..io.utility import build_config_full_path, make_directories, fingerprint_generator
 
 from ..interpolation import Remapper
 from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
@@ -879,6 +879,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
 
         climatology.attrs['totalDays'] = totalDays
         climatology.attrs['totalMonths'] = monthCount
+        climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
         climatology.to_netcdf(outputFileClimo)
         climatology.close()
@@ -961,6 +962,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
         climatology.attrs['totalDays'] = totalDays
         climatology.attrs['totalMonths'] = totalMonths
+        climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
         climatology.to_netcdf(outputFileClimo)
 
