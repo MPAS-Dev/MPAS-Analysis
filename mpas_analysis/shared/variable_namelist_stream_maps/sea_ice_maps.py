@@ -5,13 +5,12 @@ MPAS-SeaIce versions to those used by mpas_analysis
 Authors
 -------
 Xylar Asay-Davis
-
-Last Modified
--------------
-03/29/2017
 '''
 
-seaIceNamelistMap = {}
+seaIceNamelistMap = {
+    'config_am_timeseriesstatsmonthly_enable':
+        ['config_am_timeseriesstatsmonthly_enable',
+         'config_am_timeseriesstats_enable']}
 
 seaIceStreamMap = {'timeSeriesStats': ['timeSeriesStatsMonthlyOutput']}
 

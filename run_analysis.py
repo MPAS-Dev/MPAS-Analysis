@@ -52,7 +52,7 @@ def build_analysis_list(config):  # {{{
 
     # analysis can only be imported after the right MPL renderer is selected
     from mpas_analysis import ocean as ocean_tasks
-    # from mpas_analysis import sea_ice as sea_ice_tasks
+    from mpas_analysis import sea_ice as sea_ice_tasks
 
     # analyses will be a list of analysis classes
     analyses = []
@@ -70,7 +70,7 @@ def build_analysis_list(config):  # {{{
 
     # Sea Ice Analyses
     # analyses.append(sea_ice_tasks.TimeSeriesSeaIce(config))
-    # analyses.append(sea_ice_tasks.ClimatologyMapSeaIce(config))
+    analyses.append(sea_ice_tasks.ClimatologyMapSeaIce(config))
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []
