@@ -8,9 +8,11 @@ Last Modified: 03/23/2017
 
 import glob
 import os
+import random
+import string
 
 
-def paths(*args):
+def paths(*args): # {{{
     """
     Returns glob'd paths in list for arbitrary number of function arguments.
     Note, each expanded set of paths is sorted.
@@ -21,7 +23,21 @@ def paths(*args):
     paths = []
     for aargs in args:
         paths += sorted(glob.glob(aargs))
-    return paths
+    return paths # }}}
+
+
+def fingerprint_generator(size=12,
+                          chars=string.ascii_uppercase + string.digits): # {{{
+    """
+    Returns a random string that can be used as a unique fingerprint 
+
+    Reference:
+    http://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python
+    
+    Phillip J. Wolfram
+    04/27/2017
+    """
+    return ''.join(random.choice(chars) for _ in range(size)) # }}}
 
 
 def make_directories(path):  # {{{
@@ -43,7 +59,7 @@ def make_directories(path):  # {{{
 
 def build_config_full_path(config, section, relativePathOption,
                            relativePathSection=None,
-                           defaultPath=None):
+                           defaultPath=None): # {{{
     """
     Returns a full path from a base directory and a relative path
 
@@ -86,6 +102,6 @@ def build_config_full_path(config, section, relativePathOption,
 
     if defaultPath is not None and not os.path.exists(fullPath):
         fullPath = defaultPath
-    return fullPath
+    return fullPath # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
