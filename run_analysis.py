@@ -60,7 +60,7 @@ def build_analysis_list(config):  # {{{
     # Ocean Analyses
     analyses.append(ocean_tasks.TimeSeriesOHC(config))
     analyses.append(ocean_tasks.TimeSeriesSST(config))
-    # analyses.append(ocean_tasks.IndexNino34(config))
+    analyses.append(ocean_tasks.IndexNino34(config))
     # analyses.append(ocean_tasks.MeridionalHeatTransport(config))
     # analyses.append(ocean_tasks.MeridionalOverturningCirculation(config))
 
