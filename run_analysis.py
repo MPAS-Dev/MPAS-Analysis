@@ -61,7 +61,7 @@ def build_analysis_list(config):  # {{{
     analyses.append(ocean_tasks.TimeSeriesOHC(config))
     analyses.append(ocean_tasks.TimeSeriesSST(config))
     analyses.append(ocean_tasks.IndexNino34(config))
-    # analyses.append(ocean_tasks.MeridionalHeatTransport(config))
+    analyses.append(ocean_tasks.MeridionalHeatTransport(config))
     analyses.append(ocean_tasks.StreamfunctionMOC(config))
 
     analyses.append(ocean_tasks.ClimatologyMapSST(config))
@@ -98,7 +98,9 @@ def run_analysis(config, analyses):  # {{{
     for analysisTask in analyses:
         try:
             analysisTask.run()
-        except:
+        except Exception as e:
+            if isinstance(e, KeyboardInterrupt):
+                raise e
             traceback.print_exc(file=sys.stdout)
             print "ERROR: analysis module {} failed during run".format(
                 analysisTask.taskName)
