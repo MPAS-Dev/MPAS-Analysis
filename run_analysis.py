@@ -69,7 +69,7 @@ def build_analysis_list(config):  # {{{
     analyses.append(ocean_tasks.ClimatologyMapSSS(config))
 
     # Sea Ice Analyses
-    #analyses.append(sea_ice_tasks.TimeSeriesSeaIce(config))
+    analyses.append(sea_ice_tasks.TimeSeriesSeaIce(config))
     analyses.append(sea_ice_tasks.ClimatologyMapSeaIce(config))
 
     # check which analysis we actually want to generate and only keep those

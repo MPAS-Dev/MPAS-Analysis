@@ -1,2 +1,2 @@
 from climatology_map import ClimatologyMapSeaIce
-#from timeseries import seaice_timeseries
+from time_series import TimeSeriesSeaIce
