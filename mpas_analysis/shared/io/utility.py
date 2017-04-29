@@ -104,4 +104,27 @@ def build_config_full_path(config, section, relativePathOption,
         fullPath = defaultPath
     return fullPath # }}}
 
+
+def check_path_exists(path):  # {{{
+    """
+    Raise an exception if the given path does not exist.
+
+    Parameters
+    ----------
+    path : str
+        Absolute path
+
+    Raises
+    ------
+    OSError
+        If the path does not exist
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+    if not (os.path.isdir(path) or os.path.isfile(path)):
+        raise OSError('Path {} not found'.format(path))  # }}}
+
+
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
