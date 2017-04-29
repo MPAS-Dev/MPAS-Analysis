@@ -2,17 +2,16 @@
 Unit tests for utility functions in run_analysis
 
 Xylar Asay-Davis
-02/03/2017
 """
 
 import pytest
 from mpas_analysis.test import TestCase
-from run_analysis import checkGenerate
+from mpas_analysis.shared.analysis_task import AnalysisTask
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
 
 
-class TestRunAnalysisUtils(TestCase):
+class TestAnalysisTask(TestCase):
 
     def test_checkGenerate(self):
 
@@ -20,12 +19,13 @@ class TestRunAnalysisUtils(TestCase):
             config = MpasAnalysisConfigParser()
             config.add_section('output')
             config.set('output', 'generate', generate)
-            for analysisName in expectedResults:
-                expectedResult = expectedResults[analysisName]
-                result = checkGenerate(
-                    config, analysisName=analysisName,
-                    mpasCore=cores[analysisName],
-                    analysisCategory=categories[analysisName])
+            for taskName in expectedResults:
+                genericTask = AnalysisTask(config)
+                genericTask.taskName = taskName
+                genericTask.componentName = cores[taskName]
+                genericTask.tags = tags[taskName]
+                expectedResult = expectedResults[taskName]
+                result = genericTask.check_generate()
                 self.assertEqual(result, expectedResult)
 
         # Comments from config.template about how generate works:
@@ -52,90 +52,96 @@ class TestRunAnalysisUtils(TestCase):
 
         cores = {'timeSeriesOHC': 'ocean',
                  'timeSeriesSST': 'ocean',
-                 'timeSeriesNino34': 'ocean',
-                 'timeSeriesMHT': 'ocean',
-                 'timeSeriesMOC': 'ocean',
-                 'regriddedSST': 'ocean',
-                 'regriddedMLD': 'ocean',
-                 'regriddedSSS': 'ocean',
+                 'indexNino34': 'ocean',
+                 'meridionalHeatTransport': 'ocean',
+                 'streamfunctionMOC': 'ocean',
+                 'climatologyMapSST': 'ocean',
+                 'climatologyMapMLD': 'ocean',
+                 'climatologyMapSSS': 'ocean',
                  'timeSeriesSeaIceAreaVol': 'seaIce',
-                 'regriddedSeaIceConcThick': 'seaIce'}
+                 'climatologyMapSeaIceConcThick': 'seaIce'}
 
-        categories = {'timeSeriesOHC': 'timeSeries',
-                      'timeSeriesSST': 'timeSeries',
-                      'timeSeriesNino34': 'timeSeries',
-                      'timeSeriesMHT': 'timeSeries',
-                      'timeSeriesMOC': 'timeSeries',
-                      'regriddedSST': 'regriddedHorizontal',
-                      'regriddedMLD': 'regriddedHorizontal',
-                      'regriddedSSS': 'regriddedHorizontal',
-                      'timeSeriesSeaIceAreaVol': 'timeSeries',
-                      'regriddedSeaIceConcThick': 'regriddedHorizontal'}
+        tags = {'timeSeriesOHC': ['timeSeries', 'ohc'],
+                'timeSeriesSST': ['timeSeries', 'sst'],
+                'indexNino34': ['index', 'nino'],
+                'meridionalHeatTransport': ['climatology', 'mht'],
+                'streamfunctionMOC': ['climatology', 'timeSeries',
+                                      'streamfunction', 'moc'],
+                'climatologyMapSST': ['climatology', 'horizontalMap', 'sst'],
+                'climatologyMapMLD': ['climatology', 'horizontalMap', 'mld'],
+                'climatologyMapSSS': ['climatology', 'horizontalMap', 'sss'],
+                'timeSeriesSeaIceAreaVol': ['timeSeries'],
+                'climatologyMapSeaIceConcThick': ['climatology',
+                                                  'horizontalMap']}
 
         # test 'all'
         expectedResults = {}
-        for analysisName in cores:
-            expectedResults[analysisName] = True
+        for taskName in cores:
+            expectedResults[taskName] = True
         doTest("['all']", expectedResults)
 
         # test 'all_<category>' and ['all', 'no_<category>']
-        for category in set(categories.values()):
+        allTags = []
+        for taskName in tags:
+            allTags.extend(tags[taskName])
+
+        for tag in set(allTags):
             expectedResults = {}
-            for analysisName in categories:
-                expectedResults[analysisName] = \
-                    (categories[analysisName] == category)
-            doTest("['all_{}']".format(category), expectedResults)
+            for taskName in tags:
+                expectedResults[taskName] = \
+                    (tag in tags[taskName])
+            doTest("['all_{}']".format(tag), expectedResults)
 
             expectedResults = {}
-            for analysisName in categories:
-                expectedResults[analysisName] = \
-                    (categories[analysisName] != category)
-            doTest("['all', 'no_{}']".format(category), expectedResults)
+            for taskName in tags:
+                expectedResults[taskName] = \
+                    (tag not in tags[taskName])
+            doTest("['all', 'no_{}']".format(tag), expectedResults)
 
         # test 'all_<core>' and ['all', 'no_<core>']
         for core in set(cores.values()):
             expectedResults = {}
-            for analysisName in cores:
-                expectedResults[analysisName] = \
-                    (cores[analysisName] == core)
+            for taskName in cores:
+                expectedResults[taskName] = \
+                    (cores[taskName] == core)
             doTest("['all_{}']".format(core), expectedResults)
 
             expectedResults = {}
-            for analysisName in cores:
-                expectedResults[analysisName] = \
-                    (cores[analysisName] != core)
+            for taskName in cores:
+                expectedResults[taskName] = \
+                    (cores[taskName] != core)
             doTest("['all','no_{}']".format(core), expectedResults)
 
         # test each analysis individually
-        for analysisName in cores:
+        for taskName in cores:
             expectedResults = {}
             for otherAnalysis in cores:
                 expectedResults[otherAnalysis] = \
-                    (analysisName == otherAnalysis)
-            doTest("['{}']".format(analysisName), expectedResults)
+                    (taskName == otherAnalysis)
+            doTest("['{}']".format(taskName), expectedResults)
 
         # test a non-existent analysis
         expectedResults = {}
-        for analysisName in cores:
-            expectedResults[analysisName] = False
+        for taskName in cores:
+            expectedResults[taskName] = False
         doTest("['fakeAnalysis']", expectedResults)
 
         # test ['all', 'no_ocean', 'all_timeSeries']
         expectedResults = {}
-        for analysisName in cores:
-            expectedResults[analysisName] = True
-        for analysisName in cores:
-            if cores[analysisName] == 'ocean':
-                expectedResults[analysisName] = False
-        for analysisName in categories:
-            if categories[analysisName] == 'timeSeries':
-                expectedResults[analysisName] = True
+        for taskName in cores:
+            expectedResults[taskName] = True
+        for taskName in cores:
+            if cores[taskName] == 'ocean':
+                expectedResults[taskName] = False
+        for taskName in tags:
+            if 'timeSeries' in tags[taskName]:
+                expectedResults[taskName] = True
         doTest("['all', 'no_ocean', 'all_timeSeries']", expectedResults)
 
         # test ['all', 'no_timeSeriesOHC']
         expectedResults = {}
-        for analysisName in cores:
-            expectedResults[analysisName] = True
+        for taskName in cores:
+            expectedResults[taskName] = True
         expectedResults['timeSeriesOHC'] = False
         doTest("['all', 'no_timeSeriesOHC']", expectedResults)
 
