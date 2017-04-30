@@ -327,9 +327,16 @@ def _compute_moc_climo_postprocess(config, runStreams, variableMap, calendar,
     if not os.path.exists(outputFileClimo):
         print '   Load data...'
 
-        velClimoFile = '{}/meanVelocity_years{:04d}-{:04d}.nc'.format(
-                       outputDirectory, dictClimo['startYearClimo'],
-                       dictClimo['endYearClimo'])
+        startYearClimo = dictClimo['startYearClimo']
+        endYearClimo = dictClimo['endYearClimo']
+        cachePrefix = '{}/meanVelocity'.format(outputDirectory)
+
+        if startYearClimo == endYearClimo:
+            yearString = '{:04d}'.format(startYearClimo)
+            velClimoFile = '{}_year{}.nc'.format(cachePrefix, yearString)
+        else:
+            yearString = '{:04d}-{:04d}'.format(startYearClimo, endYearClimo)
+            velClimoFile = '{}_years{}.nc'.format(cachePrefix, yearString)
 
         annualClimatology = xr.open_dataset(velClimoFile)
 

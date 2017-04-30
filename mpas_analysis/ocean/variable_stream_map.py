@@ -16,7 +16,9 @@ oceanNamelistMap = {
         ['config_am_timeseriesstatsmonthly_enable',
          'config_am_timeseriesstats_enable'],
     'config_am_mocstreamfunction_enable':
-        ['config_am_mocstreamfunction_enable']}
+        ['config_am_mocstreamfunction_enable'],
+    'config_am_meridionalheattransport_enable':
+        ['config_am_meridionalheattransport_enable']}
 
 oceanStreamMap = {'timeSeriesStats': ['timeSeriesStatsOutput',
                                       'timeSeriesStatsMonthly',
@@ -61,6 +63,16 @@ oceanVariableMap['avgVertVelocityTop'] = \
     ['time_avg_vertVelocityTop',
      'time_avg_vertVelocityTop_1',
      'timeMonthly_avg_vertVelocityTop']
+
+# MHT
+oceanVariableMap['avgMeridionalHeatTransportLat'] = \
+    ['time_avg_meridionalHeatTransportLat',
+     'time_avg_meridionalHeatTransportLat_1',
+     'timeMonthly_avg_meridionalHeatTransportLat']
+oceanVariableMap['avgMeridionalHeatTransportLatZ'] = \
+    ['time_avg_meridionalHeatTransportLatZ',
+     'time_avg_meridionalHeatTransportLatZ_1',
+     'timeMonthly_avg_meridionalHeatTransportLatZ']
 
 # model vs. obs.
 oceanVariableMap['mld'] = \
