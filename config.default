@@ -392,7 +392,8 @@ regionMaskFiles = /path/to/MOCregional/mapping/file
 # is handled automatically.  If the MOC calculation encounters memory problems,
 # consider setting maxChunkSize to a number significantly lower than nEdges
 # in your MPAS mesh so that the calculation will be divided into smaller
-# pieces.
+# pieces. 
+# Note, need to use maxChunkSize for the 18to6
 # maxChunkSize = 1000
 
 # Size of latitude bins over which MOC streamfunction is integrated
