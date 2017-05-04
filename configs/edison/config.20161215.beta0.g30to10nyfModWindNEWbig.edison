@@ -109,6 +109,7 @@ mldSubdirectory = MLD
 meltSubdirectory = /global/project/projectdirs/acme/mpas_analysis/observations/Ocean/Melt
 botTempSubdirectory = /global/project/projectdirs/acme/mpas_analysis/observations/Ocean/SOSE
 botSalinSubdirectory = /global/project/projectdirs/acme/mpas_analysis/observations/Ocean/SOSE
+antarcticTransectsSubdirectory = /global/project/projectdirs/acme/mpas_analysis/observations/Ocean/SOSE
 
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
