@@ -155,6 +155,28 @@ def analysis(config):  # {{{
         from mpas_analysis.ocean import ocn_modelvsobs
         ocn_modelvsobs(config, 'sss')
 
+    if checkGenerate(config, analysisName='regriddedAntarcticMelt',
+                     mpasCore='ocean', analysisCategory='regriddedHorizontal'):
+        print ""
+        print "Plotting 2-d climatology maps of ice-shelf melt rate..."
+        from mpas_analysis.ocean import antarctic_climatology_map
+        antarctic_climatology_map(config, 'melt')
+
+    if checkGenerate(config, analysisName='regriddedAntarcticBotTemp',
+                     mpasCore='ocean', analysisCategory='regriddedHorizontal'):
+        print ""
+        print "Plotting 2-d climatology maps of Antarctic bottom " \
+              "temperature..."
+        from mpas_analysis.ocean import antarctic_climatology_map
+        antarctic_climatology_map(config, 'botTemp')
+
+    if checkGenerate(config, analysisName='regriddedAntarcticBotSalin',
+                     mpasCore='ocean', analysisCategory='regriddedHorizontal'):
+        print ""
+        print "Plotting 2-d climatology maps of Antarctic bottom salinity..."
+        from mpas_analysis.ocean import antarctic_climatology_map
+        antarctic_climatology_map(config, 'botSalin')
+
     if checkGenerate(config, analysisName='streamfunctionMOC',
                      mpasCore='ocean',
                      analysisCategory='streamfunctionMOC'):
