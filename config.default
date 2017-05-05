@@ -134,16 +134,24 @@ startYear = 11
 # the last year over which to average climatalogies
 endYear = 20
 
-# The comparison grid resolution in degrees
+# The comparison lat/lon grid resolution in degrees
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
 
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
+# The comparison Antarctic polar stereographic grid size and resolution in km
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 10.
+
+# The names of the mapping file used for interpolation from the MPAS mesh to
+# the lat/lon comparison grid.  If a mapping file has already been generated,
+# supplying the absolute path can save the time of generating a new one.  If
+# nothing is supplied, the file name is automatically generated based on the
+# MPAS mesh name, the comparison grid resolution, and the interpolation method
 # mpasMappingFile = /path/to/mapping/file
+
+# The name of an optional mapping file for interpolating from the MPAS mesh to
+# the Antarctic polar stereogrpahic comparison grid
+# mpasToAntarcticStereoMappingFile = /path/to/mapping/file
 
 # overwrite files when building climatologies?
 overwriteMapping = False
@@ -162,7 +170,7 @@ yearsPerCacheFile = 1
 # directly in MPAS-Analysis
 useNcremap = True
 
-# The minimum weight of a destination cell after remapping. Any cell with 
+# The minimum weight of a destination cell after remapping. Any cell with
 # weights lower than this threshold will therefore be masked out.
 renormalizationThreshold = 0.01
 
@@ -196,6 +204,7 @@ sssSubdirectory = SSS
 mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
+meltSubdirectory = Melt
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -214,7 +223,7 @@ sstClimatologyEndYear = 1900
 # sstClimatologyMappingFile = /path/to/mapping/file
 # sssClimatologyMappingFile = /path/to/mapping/file
 # mldClimatologyMappingFile = /path/to/mapping/file
-
+# meltClimatologyMappingFile = /path/to/mapping/file
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -504,6 +513,34 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
+
+[regriddedAntarcticMelt]
+## options related to plotting horizontally regridded maps of Antarctic
+## sub-ice-shelf melt rates against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = erdc_iceFire_H
+# the type of norm used in the colormap
+normTypeResult = symLog
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                  'vmax': 100.}
+colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,
+                       10., 20., 50., 100.]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = symLog
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                      'vmax': 100.}
+colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
+                           5., 10., 20., 50., 100.]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
 
 [regriddedSeaIceConcThick]
 ## options related to plotting horizontally regridded sea ice concentration
