@@ -190,10 +190,12 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             monthValues = constants.monthDictionary[months]
 
             (climatologyFileName, climatologyPrefix, regriddedFileName) = \
-                get_mpas_climatology_file_names(config=config,
-                                                fieldName=fieldName,
-                                                monthNames=months,
-                                                remapper=mpasRemapper)
+                get_mpas_climatology_file_names(
+                    config=config,
+                    fieldName=fieldName,
+                    monthNames=months,
+                    mpasMeshName=mpasDescriptor.meshName,
+                    comparisonGridName=comparisonDescriptor.meshName)
 
             if (overwriteMpasClimatology or
                     not os.path.exists(regriddedFileName)):

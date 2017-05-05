@@ -225,10 +225,16 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             climFieldName = 'iceConcentration'
 
             # interpolate the model results
+            mpasMeshName = self.mpasRemapper.sourceDescriptor.meshName
+            comparisonGridName = \
+                self.mpasRemapper.destinationDescriptor.meshName
             (climatologyFileName, climatologyPrefix, regriddedFileName) = \
                 get_mpas_climatology_file_names(
-                        config=config, fieldName=climFieldName,
-                        monthNames=months, remapper=self.mpasRemapper)
+                    config=config,
+                    fieldName=climFieldName,
+                    monthNames=months,
+                    mpasMeshName=mpasMeshName,
+                    comparisonGridName=comparisonGridName)
 
             if (overwriteMpasClimatology or
                     not os.path.exists(regriddedFileName)):
@@ -403,10 +409,16 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             climFieldName = 'iceThickness'
 
             # interpolate the model results
+            mpasMeshName = self.mpasRemapper.sourceDescriptor.meshName
+            comparisonGridName = \
+                self.mpasRemapper.destinationDescriptor.meshName
             (climatologyFileName, climatologyPrefix, regriddedFileName) = \
                 get_mpas_climatology_file_names(
-                        config=config, fieldName=climFieldName,
-                        monthNames=months, remapper=self.mpasRemapper)
+                    config=config,
+                    fieldName=climFieldName,
+                    monthNames=months,
+                    mpasMeshName=mpasMeshName,
+                    comparisonGridName=comparisonGridName)
 
             if (overwriteMpasClimatology or
                     not os.path.exists(climatologyFileName)):
