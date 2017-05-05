@@ -155,6 +155,28 @@ def analysis(config):  # {{{
         from mpas_analysis.ocean import ocn_modelvsobs
         ocn_modelvsobs(config, 'sss')
 
+    if checkGenerate(config, analysisName='regriddedAntarcticMelt',
+                     mpasCore='ocean', analysisCategory='regriddedHorizontal'):
+        print ""
+        print "Plotting 2-d climatology maps of ice-shelf melt rate..."
+        from mpas_analysis.ocean import antarctic_climatology_map
+        antarctic_climatology_map(config, 'melt')
+
+    if checkGenerate(config, analysisName='regriddedAntarcticBotTemp',
+                     mpasCore='ocean', analysisCategory='regriddedHorizontal'):
+        print ""
+        print "Plotting 2-d climatology maps of Antarctic bottom " \
+              "temperature..."
+        from mpas_analysis.ocean import antarctic_climatology_map
+        antarctic_climatology_map(config, 'botTemp')
+
+    if checkGenerate(config, analysisName='regriddedAntarcticBotSalin',
+                     mpasCore='ocean', analysisCategory='regriddedHorizontal'):
+        print ""
+        print "Plotting 2-d climatology maps of Antarctic bottom salinity..."
+        from mpas_analysis.ocean import antarctic_climatology_map
+        antarctic_climatology_map(config, 'botSalin')
+
     if checkGenerate(config, analysisName='streamfunctionMOC',
                      mpasCore='ocean',
                      analysisCategory='streamfunctionMOC'):
@@ -172,6 +194,24 @@ def analysis(config):  # {{{
         from mpas_analysis.ocean.meridional_heat_transport \
             import meridional_heat_transport
         meridional_heat_transport(config)
+
+    if checkGenerate(config, analysisName='antarcticTransectsTemp',
+                     mpasCore='ocean',
+                     analysisCategory='transects'):
+        print ""
+        print "Plotting Antarctic transects of potential temperature..."
+        from mpas_analysis.ocean.antarctic_transects \
+            import antarctic_transects
+        antarctic_transects(config, 'temperature')
+
+    if checkGenerate(config, analysisName='antarcticTransectsSalin',
+                     mpasCore='ocean',
+                     analysisCategory='transects'):
+        print ""
+        print "Plotting Antarctic transects of salinity..."
+        from mpas_analysis.ocean.antarctic_transects \
+            import antarctic_transects
+        antarctic_transects(config, 'salinity')
 
     # GENERATE SEA-ICE DIAGNOSTICS
     if checkGenerate(config, analysisName='timeSeriesSeaIceAreaVol',

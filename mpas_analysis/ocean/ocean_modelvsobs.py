@@ -118,11 +118,10 @@ def ocn_modelvsobs(config, field):
 
     comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
 
-    varList = [field]
-
     if field == 'mld':
 
         iselvals = None
+        mpasFieldName = 'mld'
 
         obsFieldName = 'mld_dt_mean'
 
@@ -135,6 +134,7 @@ def ocn_modelvsobs(config, field):
     elif field == 'sst':
 
         iselvals = {'nVertLevels': 0}
+        mpasFieldName = 'temperature'
 
         obsFieldName = 'SST'
 
@@ -159,6 +159,7 @@ def ocn_modelvsobs(config, field):
     elif field == 'sss':
 
         iselvals = {'nVertLevels': 0}
+        mpasFieldName = 'salinity'
 
         obsFieldName = 'SSS'
 
@@ -171,7 +172,7 @@ def ocn_modelvsobs(config, field):
                                 config=config,
                                 simulationStartTime=simulationStartTime,
                                 timeVariableName='Time',
-                                variableList=varList,
+                                variableList=[mpasFieldName],
                                 iselValues=iselvals,
                                 variableMap=variableMap,
                                 startDate=startDate,
@@ -233,7 +234,7 @@ def ocn_modelvsobs(config, field):
 
             remappedClimatology = xr.open_dataset(regriddedFileName)
 
-        modelOutput = remappedClimatology[field].values
+        modelOutput = remappedClimatology[mpasFieldName].values
         lon = remappedClimatology['lon'].values
         lat = remappedClimatology['lat'].values
 

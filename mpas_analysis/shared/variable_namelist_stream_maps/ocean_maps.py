@@ -8,7 +8,7 @@ Xylar Asay-Davis
 
 Last Modified
 -------------
-03/29/2017
+04/23/2017
 '''
 
 oceanNamelistMap = {
@@ -80,12 +80,27 @@ oceanVariableMap['mld'] = \
      'time_avg_dThreshMLD_1',
      'timeMonthly_avg_dThreshMLD']
 
-oceanVariableMap['sst'] = \
+oceanVariableMap['temperature'] = \
     ['time_avg_activeTracers_temperature',
      'time_avg_activeTracers_temperature_1',
      'timeMonthly_avg_activeTracers_temperature']
 
-oceanVariableMap['sss'] = \
+oceanVariableMap['salinity'] = \
     ['time_avg_activeTracers_salinity',
      'time_avg_activeTracers_salinity_1',
      'timeMonthly_avg_activeTracers_salinity']
+
+oceanVariableMap['melt'] = \
+    ['time_avg_landIceFreshwaterFlux',
+     'time_avg_landIceFreshwaterFlux_1',
+     'timeMonthly_avg_landIceFreshwaterFlux']
+
+oceanVariableMap['layerThickness'] = \
+    ['time_avg_layerThickness',
+     'time_avg_layerThickness_1',
+     'timeMonthly_avg_layerThickness']
+
+oceanVariableMap['zMid'] = \
+    ['time_avg_zMid',
+     'time_avg_zMid_1',
+     'timeMonthly_avg_zMid']

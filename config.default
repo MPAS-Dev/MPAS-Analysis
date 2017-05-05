@@ -95,8 +95,9 @@ timeSeriesSubdirectory = timeseries
 
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
-#   'regriddedSSS', 'regriddedMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
+#   'regriddedSSS', 'regriddedMLD', 'regriddedAntarcticMelt',
+#   'regriddedAntarcticBotTemp', 'regriddedAntarcticBotSalin',
+#   'streamfunctionMOC', 'indexNino34', 'meridionalHeatTransport',
 #   'timeSeriesSeaIceAreaVol', 'regriddedSeaIceConcThick'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -134,16 +135,24 @@ startYear = 11
 # the last year over which to average climatalogies
 endYear = 20
 
-# The comparison grid resolution in degrees
+# The comparison lat/lon grid resolution in degrees
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
 
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
+# The comparison Antarctic polar stereographic grid size and resolution in km
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 10.
+
+# The names of the mapping file used for interpolation from the MPAS mesh to
+# the lat/lon comparison grid.  If a mapping file has already been generated,
+# supplying the absolute path can save the time of generating a new one.  If
+# nothing is supplied, the file name is automatically generated based on the
+# MPAS mesh name, the comparison grid resolution, and the interpolation method
 # mpasMappingFile = /path/to/mapping/file
+
+# The name of an optional mapping file for interpolating from the MPAS mesh to
+# the Antarctic polar stereogrpahic comparison grid
+# mpasToAntarcticStereoMappingFile = /path/to/mapping/file
 
 # overwrite files when building climatologies?
 overwriteMapping = False
@@ -162,7 +171,7 @@ yearsPerCacheFile = 1
 # directly in MPAS-Analysis
 useNcremap = True
 
-# The minimum weight of a destination cell after remapping. Any cell with 
+# The minimum weight of a destination cell after remapping. Any cell with
 # weights lower than this threshold will therefore be masked out.
 renormalizationThreshold = 0.01
 
@@ -196,6 +205,10 @@ sssSubdirectory = SSS
 mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
+meltSubdirectory = Melt
+botTempSubdirectory = SOSE
+botSalinSubdirectory = SOSE
+antarcticTransectsSubdirectory = SOSE
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -214,7 +227,7 @@ sstClimatologyEndYear = 1900
 # sstClimatologyMappingFile = /path/to/mapping/file
 # sssClimatologyMappingFile = /path/to/mapping/file
 # mldClimatologyMappingFile = /path/to/mapping/file
-
+# meltClimatologyMappingFile = /path/to/mapping/file
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -505,6 +518,109 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
+[regriddedAntarcticMelt]
+## options related to plotting horizontally regridded maps of Antarctic
+## sub-ice-shelf melt rates against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = erdc_iceFire_H
+# the type of norm used in the colormap
+normTypeResult = symLog
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                  'vmax': 100.}
+colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,
+                       10., 20., 50., 100.]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = symLog
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                      'vmax': 100.}
+colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
+                           5., 10., 20., 50., 100.]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
+
+[antarcticTransects]
+## options related to plotting transects of Antarctic potential temperature
+## and salinity against SOSE reanalysis data
+
+# latitudes and longitudes of transects
+# start and end latitude
+transectLat = [-80., -60.]
+# list of longitudes, constant in each transect
+transectLon = np.arange(-175., 177., 2.)
+
+# resolution of the transect in km
+transectResolution = 20.
+# depth of sample points in the transect in m, default is every 10 m down to
+# -3000 m
+transectDepth = np.linspace(0, -3000., 301)
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
+[regriddedAntarcticBotTemp]
+## options related to plotting horizontally regridded maps of Antarctic
+## potential temperature at the sea floor against reference model results and
+## SOSE reanalysis data
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
+[regriddedAntarcticBotSalin]
+## options related to plotting horizontally regridded maps of Antarctic
+## salinity at the sea floor against reference model results and
+## SOSE reanalysis data
+
+# colormap for model/observations
+colormapNameResult = viridis
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 33.5, 'vmax': 35.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-33.5, 35., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -1., 'vmax': 1.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-1., 1., 9)
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+comparisonTimes =  ['ANN']
+
 [regriddedSeaIceConcThick]
 ## options related to plotting horizontally regridded sea ice concentration
 ## and thickness against reference model results and observations
@@ -569,7 +685,8 @@ plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3', 'Nin
 # addition to being written out to png files
 # Note: displayToScreen = True seems to hang on Edison on large data sets,
 # so suggested use is just for debugging either locally or with small data sets
-displayToScreen = False
+#displayToScreen = False
+displayToScreen = True
 
 # font size on axes
 axisFontSize = 16
