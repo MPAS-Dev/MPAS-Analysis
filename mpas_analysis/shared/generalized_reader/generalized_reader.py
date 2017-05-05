@@ -22,7 +22,7 @@ from functools import partial
 import resource
 
 from ..mpas_xarray import mpas_xarray
-from ..timekeeping.utility import string_to_days_since_date
+from ..timekeeping.utility import string_to_days_since_date, days_to_datetime
 
 
 def open_multifile_dataset(fileNames, calendar, config,
@@ -181,6 +181,10 @@ def open_multifile_dataset(fileNames, calendar, config,
     # select only the data in the specified range of dates
     ds = ds.sel(Time=slice(startDate, endDate))
 
+    if ds.dims['Time'] == 0:
+        raise ValueError('The data set contains no Time entries between dates\n'
+                         '{} and {}.'.format(days_to_datetime(startDate),
+                                             days_to_datetime(endDate)))
     # process chunking
     if chunking is True:
         # limit chunk size to prevent memory error
