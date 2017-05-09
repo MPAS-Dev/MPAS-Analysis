@@ -1,0 +1,16 @@
+<streams>
+
+<stream name="timeSeriesStatsMonthlyOutput"
+        type="output"
+        filename_template="timeSeries.$Y-$M-$D.nc"
+        filename_interval="00-01-00_00:00:00"
+        output_interval="00-01-00_00:00:00"
+        clobber_mode="truncate"
+        packages="timeSeriesStatsMonthlyAMPKG"
+        runtime_format="single_file">
+
+    <var name="ssh"/>
+    <var name="tThreshMLD"/>
+</stream>
+
+</streams>

@@ -4,13 +4,22 @@ Defines the base class for analysis tasks.
 Authors
 -------
 Xylar Asay-Davis
-
 '''
 
 import warnings
+import pickle
+import os
+from collections import OrderedDict
+import numpy
 
-from .io import NameList, StreamsFile
-from .io.utility import build_config_full_path, make_directories
+from .constants import constants
+from .generalized_reader import open_multifile_dataset
+
+from .timekeeping.utility import days_to_datetime, string_to_days_since_date, \
+    add_years_months_days_in_month
+
+from .io import NameList, StreamsFile, build_config_full_path, \
+    make_directories
 
 from .variable_namelist_stream_maps.ocean_maps import oceanNamelistMap, \
     oceanStreamMap, oceanVariableMap
@@ -23,12 +32,74 @@ class AnalysisTask(object):  # {{{
     '''
     The base class for analysis tasks.
 
+    Attributes
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    taskName : str
+        The name of the task, typically the same as the class name except
+        starting with lowercase (e.g. 'myTask' for class 'MyTask')
+
+    componentName :  {'ocean', 'seaIce'}
+        The name of the component (same as the folder where the task
+        resides)
+
+    tags :  list of str
+        Tags used to describe the task (e.g. 'timeSeries', 'climatology',
+        horizontalMap', 'index', 'transect').  These are used to determine
+        which tasks are generated (e.g. 'all_transect' or 'no_climatology'
+        in the 'generate' flags)
+
+    prerequisiteTasks :  list of str, optional
+        Names of tasks that must complete before this task can run.
+        Typically, this will include one or more tasks of the form
+        ``cache<Component><StreamName>Times``, e.g.
+        ``cacheOceanTimeSeriesStatsTimes``
+
+    runDirectory : str
+        the base input directory for namelists, streams files and restart files
+
+    historyDirectory : str
+        the base input directory for history files
+
+    plotsDirectory : str
+        the directory for writing plots (which is also created if it doesn't
+        exist)
+
+    namelist : ``NameList`` object
+        the namelist reader
+
+    runStreams : ``StreamsFile`` object
+        the streams file reader for streams in the run directory (e.g. restart
+        files)
+
+    historyStreams : ``StreamsFile`` object
+        the streams file reader for streams in the history directory (most
+        streams other than restart files)
+
+    calendar : {'gregorian', 'gregorian_noleap'}
+        the name of the calendar
+
+    namelistMap : dict
+        A map between names of namelist options used by MPAS-Analysis and
+        those in various MPAS versions
+
+    streamMap  : dict
+        a map between names of streams used by MPAS-Analysis and those in
+        various MPAS versions
+
+    variableMap : dict
+        a map between names of variables within streams used by MPAS-Analysis
+        and those in various MPAS versions
+
     Authors
     -------
     Xylar Asay-Davis
 
     '''
-    def __init__(self, config, taskName, componentName, tags=[]):  # {{{
+    def __init__(self, config, taskName, componentName, tags=[],
+                 prerequisiteTasks=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -55,6 +126,12 @@ class AnalysisTask(object):  # {{{
             which tasks are generated (e.g. 'all_transect' or 'no_climatology'
             in the 'generate' flags)
 
+        prerequisiteTasks :  list of str, optional
+            Names of tasks that must complete before this task can run.
+            Typically, this will include one or more tasks of the form
+            ``cache<Component><StreamName>Times``, e.g.
+            ``cacheOceanTimeSeriesStatsTimes``
+
         Authors
         -------
         Xylar Asay-Davis
@@ -62,32 +139,13 @@ class AnalysisTask(object):  # {{{
         self.config = config
         self.taskName = taskName
         self.componentName = componentName
-        self.tags = tags  # }}}
+        self.tags = tags
+        self.prerequisiteTasks = prerequisiteTasks  # }}}
 
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis (e.g. reading namelists and
         streams files).
-
-        After this call, the following member variables are set:
-            self.runDirectory : the base input directory for namelists, streams
-                files and restart files
-            self.historyDirectory : the base input directory for history files
-            self.plotsDirectory : the directory for writing plots (which is
-                also created if it doesn't exist)
-            self.namelist : the namelist reader
-            self.runStreams : the streams file reader for streams in the run
-                directory (e.g. restart files)
-            self.historyStreams : the streams file reader for streams in the
-                history directory (most streams other than restart files)
-            self.calendar : the name of the calendar ('gregorian' or
-                'gregoraian_noleap')
-            self.namelistMap : a map between names of namelist options used by
-                MPAS-Analysis and those in various MPAS versions
-            self.streamMap : a map between names of streams used by
-                MPAS-Analysis and those in various MPAS versions
-            self.variableMap : a map between names of variables within streams
-                used by MPAS-Analysis and those in various MPAS versions
 
         Individual tasks (children classes of this base class) should first
         call this method to perform basic setup, then, check whether the
@@ -95,6 +153,51 @@ class AnalysisTask(object):  # {{{
         analysis-specific setup.  For example, this function could check if
         necessary observations and other data files are found, then, determine
         the list of files to be read when the analysis is run.
+
+        If the task includes ``climatology``, ``timeSeries`` or ``index`` tags,
+        ``startDate`` and ``endDate`` config options are computed from
+        ``startYear`` and ``endYear``config options.
+
+        After this call, the following attributes are set.
+
+        Attributes
+        ----------
+        runDirectory : str
+            the base input directory for namelists, streams files and restart
+            files
+
+        historyDirectory : str
+            the base input directory for history files
+
+        plotsDirectory : str
+            the directory for writing plots (which is also created if it
+            doesn't exist)
+
+        namelist : ``NameList`` object
+            the namelist reader
+
+        runStreams : ``StreamsFile`` object
+            the streams file reader for streams in the run directory (e.g.
+            restart files)
+
+        historyStreams : ``StreamsFile`` object
+            the streams file reader for streams in the history directory (most
+            streams other than restart files)
+
+        calendar : {'gregorian', 'gregorian_noleap'}
+            the name of the calendar
+
+        namelistMap : dict
+            A map between names of namelist options used by MPAS-Analysis and
+            those in various MPAS versions
+
+        streamMap  : dict
+            a map between names of streams used by MPAS-Analysis and those in
+            various MPAS versions
+
+        variableMap : dict
+            a map between names of variables within streams used by
+            MPAS-Analysis and those in various MPAS versions
 
         Authors
         -------
@@ -310,6 +413,263 @@ class AnalysisTask(object):  # {{{
             endDate = '{:04d}-12-31_23:59:59'.format(
                 self.config.getint(section, 'endYear'))
             self.config.set(section, 'endDate', endDate)  # }}}
+
+    def update_start_end_date(self, section, streamName):  # {{{
+        '''
+        Update the start and end dates (and years) based on the times found
+        in the given stream.  Cache the times if they are not already cached.
+
+        Parameters
+        ----------
+        section : str
+            The name of a section in the config file containing ``startYear``
+            and ``endYear`` options. ``section`` is typically one of
+            ``climatology``, ``timeSeries`` or ``index``
+
+        streamName : str
+            The name of a stream from which to read (and cache) the times
+
+        Returns
+        -------
+        changed : bool
+            Whether the start and end dates were updated.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        startDate = self.config.get(section, 'startDate')
+        endDate = self.config.get(section, 'endDate')
+        startDate = string_to_days_since_date(dateString=startDate,
+                                              calendar=self.calendar)
+        endDate = string_to_days_since_date(dateString=endDate,
+                                            calendar=self.calendar)
+
+        inFileNames = self.get_input_file_names(
+            streamName, startAndEndDateSection=section)
+
+        fullTimeCache = self.cache_multifile_dataset_times(
+            inFileNames, streamName, timeVariableName='Time')
+
+        # find only those cached times between starDate and endDate
+        times = []
+        for fileName in fullTimeCache:
+            localTimes = fullTimeCache[fileName]['times']
+            mask = numpy.logical_and(localTimes >= startDate,
+                                     localTimes < endDate)
+            if numpy.count_nonzero(mask) == 0:
+                continue
+
+            times.extend(list(localTimes[mask]))
+
+        requestedStartYear = self.config.getint('climatology', 'startYear')
+        requestedEndYear = self.config.getint('climatology', 'endYear')
+
+        startYear = days_to_datetime(numpy.amin(times),
+                                     calendar=self.calendar).year
+        endYear = days_to_datetime(numpy.amax(times),
+                                   calendar=self.calendar).year
+        changed = False
+        if startYear != requestedStartYear or endYear != requestedEndYear:
+            message = "{} start and/or end year different from " \
+                      "requested\n" \
+                      "requested: {:04d}-{:04d}\n" \
+                      "actual:    {:04d}-{:04d}\n".format(section,
+                                                          requestedStartYear,
+                                                          requestedEndYear,
+                                                          startYear,
+                                                          endYear)
+            warnings.warn(message)
+            self.config.set(section, 'startYear', str(startYear))
+            self.config.set(section, 'endYear', str(endYear))
+
+            startDate = '{:04d}-01-01_00:00:00'.format(startYear)
+            self.config.set(section, 'startDate', startDate)
+            endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+            self.config.set(section, 'endDate', endDate)  # }}}
+
+            changed = True
+
+        return changed  # }}}
+
+    def get_input_file_names(self, streamName,
+                             startDate=None, endDate=None,
+                             startAndEndDateSection=None):  # {{{
+        '''
+        Get a list of input files corresponding to the given stream and
+        optionally bounded by the start and end dates found in the given
+        section of the config file.
+
+        Parameters
+        ----------
+        streamName : str
+            The name of a stream to check.  If ``self.streamMap`` is defined,
+            the streamName will be mapped to the corresponding name in the
+            streams file
+
+        startDate, endDate : float, optional
+            start and end date to use in determining which files to include in
+            the list
+
+        startAndEndDateSection : str, optional
+            If ``startDate`` and ``endDate`` arguments are not supplied, the
+            name of a section in the config file containing ``startDate`` and
+            ``endDate`` options to use instead. ``startAndEndDateSection`` is
+            typically one of ``climatology``, ``timeSeries`` or ``index``.
+
+        Raises
+        ------
+        RuntimeError
+            If no files are found in the desired date range.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        if startDate is None and endDate is None and \
+                startAndEndDateSection is not None:
+            startDate = self.config.get(startAndEndDateSection, 'startDate')
+            endDate = self.config.get(startAndEndDateSection, 'endDate')
+
+        if self.streamMap is not None:
+            streamName = \
+                self.historyStreams.find_stream(self.streamMap[streamName])
+        inputFileNames = self.historyStreams.readpath(streamName,
+                                                      startDate=startDate,
+                                                      endDate=endDate,
+                                                      calendar=self.calendar)
+
+        if len(inputFileNames) == 0:
+            raise RuntimeError('No input files could be found in stream {} '
+                               'between {} and {}'.format(streamName,
+                                                          startDate, endDate))
+        return inputFileNames  # }}}
+
+    def cache_multifile_dataset_times(self, inFileNames, streamName,
+                                      timeVariableName='Time'):  # {{{
+        """
+        Creates a cache file of the times in each file of a multifile data set.
+        This is useful when caching climatologies and time series as a
+        simulation evolves, since files that have already been processed will
+        not need to be opened to find out which times they contain.
+
+        Parameters
+        ----------
+        inFileNames : list of str
+            A list of file paths to read
+
+        streamName : str
+            The name of a stream, used to build the name of the cache file
+
+        timeVariableName : string, optional
+            The name of the time variable (typically 'Time' if using a
+            variableMap or 'xtime' if not using a variableMap)
+
+        Author
+        ------
+        Xylar Asay-Davis
+        """
+
+        timeCacheDirectory = build_config_full_path(
+            self.config, 'output', 'timeCacheSubdirectory')
+
+        make_directories(timeCacheDirectory)
+
+        cacheFileName = '{}/{}_{}_times.pickle'.format(timeCacheDirectory,
+                                                       self.componentName,
+                                                       streamName)
+        if os.path.exists(cacheFileName):
+            with open(cacheFileName, 'rb') as handle:
+                inTimeCache = pickle.load(handle)
+        else:
+            inTimeCache = OrderedDict()
+
+        # add files already in the time cache to the list of files to check
+        # (and potentially update)
+        fileNames = list(set(inFileNames + inTimeCache.keys()))
+        fileNames.sort()
+
+        fileNames = [os.path.abspath(fileName) for fileName in fileNames]
+
+        if hasattr(self, 'simulationStartTime'):
+            simulationStartTime = self.simulationStartTime
+        else:
+            simulationStartTime = None
+
+        filesToRead = []
+        for fileName in fileNames:
+            read = True
+            if fileName in inTimeCache.keys():
+                dateModified = inTimeCache[fileName]['dateModified']
+                if dateModified == os.path.getmtime(fileName):
+                    # the file is already in the cache and hasn't been
+                    # changed so we don't need to update the times in the
+                    # cache
+                    read = False
+            if read:
+                filesToRead.append(fileName)
+
+        if len(filesToRead) == 0:
+            outTimeCache = inTimeCache
+        else:
+            print '\n  Caching times from files:\n' \
+                  '    {} through\n    {}'.format(
+                      os.path.basename(filesToRead[0]),
+                      os.path.basename(filesToRead[-1]))
+
+            outTimeCache = OrderedDict()
+            for fileName in fileNames:
+                read = True
+                if fileName in filesToRead:
+                    # open the files one at a time so we know which time is in
+                    # which file
+                    ds = open_multifile_dataset(
+                        fileNames=[fileName],
+                        calendar=self.calendar,
+                        config=self.config,
+                        simulationStartTime=simulationStartTime,
+                        timeVariableName=timeVariableName,
+                        variableList=['Time'],
+                        variableMap=self.variableMap)
+
+                    ds = add_years_months_days_in_month(ds, self.calendar)
+
+                    dateModified = os.path.getmtime(fileName)
+                    times = ds.Time.values
+                    datetimes = days_to_datetime(times, calendar=self.calendar)
+                    years = numpy.array([date.year for date in datetimes])
+                    months = numpy.array([date.month for date in datetimes])
+                    if 'startTime' in ds.coords and 'endTime' in ds.coords:
+                        daysInMonth = ds.endTime.values - ds.startTime.values
+                    else:
+                        if self.calendar == 'gregorian':
+                            message = 'The MPAS run used the Gregorian ' \
+                                      'calendar but does not appear to ' \
+                                      'have\n' \
+                                      'supplied start and end times.  ' \
+                                      'Climatologies will be computed with\n' \
+                                      'month durations ignoring leap years.'
+                            warnings.warn(message)
+
+                        daysInMonth = numpy.array(
+                            [constants.daysInMonth[month-1] for month
+                             in ds.month.values], float)
+                    del ds
+                    outTimeCache[fileName] = {'times': times,
+                                              'years': years,
+                                              'months': months,
+                                              'daysInMonth': daysInMonth,
+                                              'dateModified': dateModified}
+                else:
+                    outTimeCache[fileName] = inTimeCache[fileName]
+
+            with open(cacheFileName, 'wb') as handle:
+                pickle.dump(outTimeCache, handle,
+                            protocol=pickle.HIGHEST_PROTOCOL)
+
+        return outTimeCache  # }}}
 
 # }}}
 

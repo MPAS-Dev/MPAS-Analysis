@@ -4,17 +4,16 @@ Time keeping utility functions
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-02/11/2017
 """
 
 import datetime
 import netCDF4
 import numpy
+import warnings
 
 from .MpasRelativeDelta import MpasRelativeDelta
+
+from ..constants import constants
 
 
 def get_simulation_start_time(streams):
@@ -41,10 +40,6 @@ def get_simulation_start_time(streams):
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
 
     try:
@@ -99,10 +94,6 @@ def string_to_datetime(dateString):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     (year, month, day, hour, minute, second) = \
@@ -151,10 +142,6 @@ def string_to_relative_delta(dateString, calendar='gregorian'):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     (years, months, days, hours, minutes, seconds) = \
@@ -214,10 +201,6 @@ def string_to_days_since_date(dateString, calendar='gregorian',
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     isSingleString = isinstance(dateString, str)
@@ -267,10 +250,6 @@ def days_to_datetime(days, calendar='gregorian', referenceDate='0001-01-01'):
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     datetimes = netCDF4.num2date(days,
@@ -324,10 +303,6 @@ def datetime_to_days(dates, calendar='gregorian', referenceDate='0001-01-01'):
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
 
     isSingleDate = False
@@ -377,10 +352,6 @@ def date_to_days(year=1, month=1, day=1, hour=0, minute=0, second=0,
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
 
     calendar = _mpas_to_netcdf_calendar(calendar)
@@ -389,6 +360,71 @@ def date_to_days(year=1, month=1, day=1, hour=0, minute=0, second=0,
 
     return netCDF4.date2num(date, 'days since {}'.format(referenceDate),
                             calendar=calendar)
+
+
+def add_years_months_days_in_month(ds, calendar):  # {{{
+    '''
+    Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.
+    The number of days in each month of ``ds`` is computed either using the
+    ``startTime`` and ``endTime`` if available or assuming
+    ``gregorian_noleap`` calendar and ignoring leap years.  ``year`` and
+    ``month`` are computed accounting correctly for the the calendar.
+
+    Parameters
+    ----------
+    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set with a ``Time`` coordinate expressed as days since
+        0001-01-01
+
+    calendar : {'gregorian', 'gregorian_noleap'}, optional
+        A calendar to be used to convert days to a `datetime.datetime` object.
+
+    Returns
+    -------
+    ds : object of same type as ``ds``
+        The data set with ``year``, ``month`` and ``daysInMonth`` data
+        arrays added (if not already present)
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    '''
+
+    if ('year' in ds.coords and 'month' in ds.coords and
+            'daysInMonth' in ds.coords):
+        return ds
+
+    ds = ds.copy()
+
+    if 'year' not in ds.coords or 'month' not in ds.coords:
+        if calendar is None:
+            raise ValueError('calendar must be provided if month and year '
+                             'coordinate is not in ds.')
+        datetimes = days_to_datetime(ds.Time, calendar=calendar)
+
+    if 'year' not in ds.coords:
+        ds.coords['year'] = ('Time', [date.year for date in datetimes])
+
+    if 'month' not in ds.coords:
+        ds.coords['month'] = ('Time', [date.month for date in datetimes])
+
+    if 'daysInMonth' not in ds.coords:
+        if 'startTime' in ds.coords and 'endTime' in ds.coords:
+            ds.coords['daysInMonth'] = ds.endTime - ds.startTime
+        else:
+            if calendar == 'gregorian':
+                message = 'The MPAS run used the Gregorian calendar but ' \
+                          'does not appear to have\n' \
+                          'supplied start and end times.  Climatologies ' \
+                          'will be computed with\n' \
+                          'month durations ignoring leap years.'
+                warnings.warn(message)
+
+            daysInMonth = numpy.array([constants.daysInMonth[month-1] for
+                                       month in ds.month.values], float)
+            ds.coords['daysInMonth'] = ('Time', daysInMonth)
+
+    return ds  # }}}
 
 
 def _parse_date_string(dateString, isInterval=False):  # {{{
@@ -432,10 +468,6 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
     if isInterval:
         offset = 0

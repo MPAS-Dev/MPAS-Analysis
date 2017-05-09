@@ -4,25 +4,26 @@ Functions for creating climatologies from monthly time series data
 Authors
 -------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/13/2017
 """
 
 import xarray as xr
 import os
 import numpy
 import warnings
+from collections import OrderedDict
+import numbers
 
 from ..constants import constants
 
-from ..timekeeping.utility import days_to_datetime
+from ..timekeeping.utility import string_to_days_since_date, \
+    add_years_months_days_in_month
 
-from ..io.utility import build_config_full_path, make_directories, fingerprint_generator
+from ..io import build_config_full_path, make_directories
+from ..io.utility import fingerprint_generator
 
 from ..interpolation import Remapper
-from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
+from ..grid import MpasMeshDescriptor, LatLonGridDescriptor, \
+    ProjectionGridDescriptor
 
 
 def get_lat_lon_comparison_descriptor(config):  # {{{
@@ -43,10 +44,6 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
     climSection = 'climatology'
 
@@ -62,708 +59,451 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
     lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
     lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 
-    descriptor = LatLonGridDescriptor()
-    descriptor.create(lat, lon, units='degrees')
+    descriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
 
     return descriptor  # }}}
 
 
-def get_remapper(config, sourceDescriptor, comparisonDescriptor,
-                 mappingFileSection, mappingFileOption, mappingFilePrefix,
-                 method):  # {{{
+class Climatology(object):  # {{{
     """
-    Given config options and descriptions of the source and comparison grids,
-    returns a ``Remapper`` object that can be used to remap from source files
-    or data sets to corresponding data sets on the comparison grid.
+    A class for computing climatologies from a monthly mean data set.
 
-    If necessary, creates the mapping file containing weights and indices
-    needed to perform remapping.
-
-    Parameters
+    Attributes
     ----------
-    config :  instance of ``MpasAnalysisConfigParser``
-        Contains configuration options
-
-    sourceDescriptor : ``MeshDescriptor`` subclass object
-        A description of the source mesh or grid
-
-    comparisonDescriptor : ``MeshDescriptor`` subclass object
-        A description of the comparison grid
-
-    mappingFileSection, mappingFileOption : str
-        Section and option in ``config`` where the name of the mapping file
-        may be given, or where it will be stored if a new mapping file is
-        created
-
-    mappingFilePrefix : str
-        A prefix to be prepended to the mapping file name
-
-    method : {'bilinear', 'neareststod', 'conserve'}
-        The method of interpolation used.
-
-    Returns
-    -------
-    remapper : ``Remapper`` object
-        A remapper that can be used to remap files or data sets from the source
-        grid or mesh to the comparison grid.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
-    """
-
-    if config.has_option(mappingFileSection, mappingFileOption):
-        # a mapping file was supplied, so we'll use that name
-        mappingFileName = config.get(mappingFileSection, mappingFileOption)
-    else:
-        if _matches_comparison(sourceDescriptor, comparisonDescriptor):
-            # no need to remap
-            mappingFileName = None
-
-        else:
-            # we need to build the path to the mapping file and an appropriate
-            # file name
-            mappingSubdirectory = build_config_full_path(config, 'output',
-                                                         'mappingSubdirectory')
-
-            make_directories(mappingSubdirectory)
-
-            mappingFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-                mappingSubdirectory, mappingFilePrefix,
-                sourceDescriptor.meshName, comparisonDescriptor.meshName,
-                method)
-
-            config.set(mappingFileSection, mappingFileOption,
-                       mappingFileName)
-
-    remapper = Remapper(sourceDescriptor, comparisonDescriptor,
-                        mappingFileName)
-
-    remapper.build_mapping_file(method=method)
-
-    return remapper  # }}}
-
-
-def get_mpas_climatology_file_names(config, fieldName, monthNames,
-                                    mpasMeshName,
-                                    comparisonGridName=None):  # {{{
-    """
-    Given config options, the name of a field and a string identifying the
-    months in a seasonal climatology, returns the full path for MPAS
-    climatology files before and after regridding.
-
-    Parameters
-    ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
-
-    fieldName : str
-        Name of the field being mapped, used as a prefix for the climatology
-        file name.
-
-    monthNames : str
-        A string identifying the months in a seasonal climatology (e.g. 'JFM')
-
-    mpasMeshName : str
-        The name of the MPAS mesh
-
-    comparisonGridName : str, optional
-        The name of the comparison grid (if any)
-
-    Returns
-    -------
-    climatologyFileName : str
-        The absolute path to a file where the climatology should be stored
-        before regridding.
-
-    climatologyPrefix : str
-        The prfix including absolute path for climatology cache files before
-        regridding.
-
-    regriddedFileName : str
-        The absolute path to a file where the climatology should be stored
-        after regridding if ``comparisonGridName`` is supplied
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    05/05/2017
-    """
-
-    climSection = 'climatology'
-    startYear = config.getint(climSection, 'startYear')
-    endYear = config.getint(climSection, 'endYear')
-
-    climatologyDirectory = build_config_full_path(
-        config, 'output', 'mpasClimatologySubdirectory')
-
-    make_directories(climatologyDirectory)
-
-    climatologyPrefix = '{}/{}_{}_{}'.format(climatologyDirectory, fieldName,
-                                             mpasMeshName, monthNames)
-
-    yearString, fileSuffix = _get_year_string(startYear, endYear)
-    climatologyFileName = '{}_{}.nc'.format(climatologyPrefix, fileSuffix)
-
-    if comparisonGridName is None:
-        return (climatologyFileName, climatologyPrefix)
-    else:
-        regriddedDirectory = build_config_full_path(
-            config, 'output', 'mpasRegriddedClimSubdirectory')
-
-        make_directories(regriddedDirectory)
-
-        regriddedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
-                regriddedDirectory, fieldName, mpasMeshName,
-                comparisonGridName, monthNames, fileSuffix)
-
-        return (climatologyFileName, climatologyPrefix,
-                regriddedFileName)
-
-    # }}}
-
-
-def get_observation_climatology_file_names(config, fieldName, monthNames,
-                                           componentName, remapper):  # {{{
-    """
-    Given config options, the name of a field and a string identifying the
-    months in a seasonal climatology, returns the full path for observation
-    climatology files before and after regridding.
-
-    Parameters
-    ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
-
-    fieldName : str
-        Name of the field being mapped, used as a prefix for the climatology
-        file name.
-
-    monthNames : str
-        A string identifying the months in a seasonal climatology (e.g. 'JFM')
-
-    remapper : ``Remapper`` object
-        A remapper that used to remap files or data sets from the
-        observation grid to a comparison grid
-
-    Returns
-    -------
-    climatologyFileName : str
-        The absolute path to a file where the climatology should be stored
-        before regridding.
-
-    regriddedFileName : str
-        The absolute path to a file where the climatology should be stored
-        after regridding.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    03/03/2017
-    """
-
-    obsSection = '{}Observations'.format(componentName)
-
-    climatologyDirectory = build_config_full_path(
-        config=config, section='output',
-        relativePathOption='climatologySubdirectory',
-        relativePathSection=obsSection)
-
-    regriddedDirectory = build_config_full_path(
-        config=config, section='output',
-        relativePathOption='regriddedClimSubdirectory',
-        relativePathSection=obsSection)
-
-    obsGridName = remapper.sourceDescriptor.meshName
-    comparisonGridName = remapper.destinationDescriptor.meshName
-
-    climatologyFileName = '{}/{}_{}_{}.nc'.format(
-        climatologyDirectory, fieldName, obsGridName, monthNames)
-    regriddedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-        regriddedDirectory, fieldName, obsGridName, comparisonGridName,
-        monthNames)
-
-    make_directories(climatologyDirectory)
-
-    if not _matches_comparison(remapper.sourceDescriptor,
-                               remapper.destinationDescriptor):
-        make_directories(regriddedDirectory)
-
-    return (climatologyFileName, regriddedFileName)  # }}}
-
-
-def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
-    """
-    Compute monthly climatologies from a data set.  The mean is weighted but
-    the number of days in each month of the data set, ignoring values masked
-    out with NaNs.  If the month coordinate is not present, a data array
-    ``month`` will be added based on ``Time`` and the provided calendar.
-
-    Parameters
-    ----------
-    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
-        A data set with a ``Time`` coordinate expressed as days since
-        0001-01-01 or ``month`` coordinate
-
-    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
-        The name of one of the calendars supported by MPAS cores, used to
-        determine ``month`` from ``Time`` coordinate, so must be supplied if
-        ``ds`` does not already have a ``month`` coordinate or data array
-
-    maskVaries: bool, optional
-        If the mask (where variables in ``ds`` are ``NaN``) varies with time.
-        If not, the weighted average does not need make extra effort to account
-        for the mask.  Most MPAS fields will have masks that don't vary in
-        time, whereas observations may sometimes be present only at some
-        times and not at others, requiring ``maskVaries = True``.
-
-    Returns
-    -------
-    climatology : object of same type as ``ds``
-        A data set without the ``'Time'`` coordinate containing the mean
-        of ds over all months in monthValues, weighted by the number of days
-        in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
-    """
-
-    def compute_one_month_climatology(ds):
-        monthValues = list(ds.month.values)
-        return compute_climatology(ds, monthValues, calendar, maskVaries)
-
-    ds = add_years_months_days_in_month(ds, calendar)
-
-    monthlyClimatology = \
-        ds.groupby('month').apply(compute_one_month_climatology)
-
-    return monthlyClimatology  # }}}
-
-
-def compute_climatology(ds, monthValues, calendar=None,
-                        maskVaries=True):  # {{{
-    """
-    Compute a monthly, seasonal or annual climatology data set from a data
-    set.  The mean is weighted but the number of days in each month of
-    the data set, ignoring values masked out with NaNs.  If the month
-    coordinate is not present, a data array ``month`` will be added based
-    on ``Time`` and the provided calendar.
-
-    Parameters
-    ----------
-    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
-        A data set with a ``Time`` coordinate expressed as days since
-        0001-01-01 or ``month`` coordinate
-
-    monthValues : int or array-like of ints
-        A single month or an array of months to be averaged together
-
-    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
-        The name of one of the calendars supported by MPAS cores, used to
-        determine ``month`` from ``Time`` coordinate, so must be supplied if
-        ``ds`` does not already have a ``month`` coordinate or data array
-
-    maskVaries: bool, optional
-        If the mask (where variables in ``ds`` are ``NaN``) varies with time.
-        If not, the weighted average does not need make extra effort to account
-        for the mask.  Most MPAS fields will have masks that don't vary in
-        time, whereas observations may sometimes be present only at some
-        times and not at others, requiring ``maskVaries = True``.
-
-    Returns
-    -------
-    climatology : object of same type as ``ds``
-        A data set without the ``'Time'`` coordinate containing the mean
-        of ds over all months in monthValues, weighted by the number of days
-        in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
-    """
-
-    ds = add_years_months_days_in_month(ds, calendar)
-
-    mask = xr.zeros_like(ds.month, bool)
-
-    for month in monthValues:
-        mask = xr.ufuncs.logical_or(mask, ds.month == month)
-
-    climatologyMonths = ds.where(mask, drop=True)
-
-    climatology = _compute_masked_mean(climatologyMonths, maskVaries)
-
-    return climatology  # }}}
-
-
-def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
-                        printProgress=False):  # {{{
-    '''
-    Cache NetCDF files for each year of an annual climatology, and then use
-    the cached files to compute a climatology for the full range of years.
-    The start and end years of the climatology are taken from ``config``, and
-    are updated in ``config`` if the data set ``ds`` doesn't contain this
-    full range.
-
-    Note: only works with climatologies where the mask (locations of ``NaN``
-    values) doesn't vary with time.
-
-    Parameters
-    ----------
-    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
-        A data set with a ``Time`` coordinate expressed as days since
-        0001-01-01
-
-    monthValues : int or array-like of ints
-        A single month or an array of months to be averaged together
-
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
-
-    cachePrefix :  str
-        The file prefix (including path) to which the year (or years) will be
-        appended as cache files are stored
-
-    calendar : ``{'gregorian', 'gregorian_noleap'}``
-        The name of one of the calendars supported by MPAS cores, used to
-        determine ``year`` and ``month`` from ``Time`` coordinate
-
-    printProgress: bool, optional
-        Whether progress messages should be printed as the climatology is
-        computed
-
-    Returns
-    -------
-    climatology : object of same type as ``ds``
-        A data set without the ``'Time'`` coordinate containing the mean
-        of ds over all months in monthValues, weighted by the number of days
-        in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/11/2017
-    '''
-    startYearClimo = config.getint('climatology', 'startYear')
-    endYearClimo = config.getint('climatology', 'endYear')
-    yearsPerCacheFile = config.getint('climatology', 'yearsPerCacheFile')
-
-    if printProgress:
-        print '   Computing and caching climatologies covering {}-year ' \
-              'spans...'.format(yearsPerCacheFile)
-
-    ds = add_years_months_days_in_month(ds, calendar)
-
-    cacheInfo, cacheIndices = _setup_climatology_caching(ds, startYearClimo,
-                                                         endYearClimo,
-                                                         yearsPerCacheFile,
-                                                         cachePrefix,
-                                                         monthValues)
-
-    ds = ds.copy()
-    ds.coords['cacheIndices'] = ('Time', cacheIndices)
-
-    # compute and store each cache file with interval yearsPerCacheFile
-    _cache_individual_climatologies(ds, cacheInfo, printProgress,
-                                    yearsPerCacheFile, monthValues,
-                                    calendar)
-
-    # compute the aggregate climatology
-    climatology = _cache_aggregated_climatology(startYearClimo, endYearClimo,
-                                                cachePrefix, printProgress,
-                                                monthValues, cacheInfo)
-
-    return climatology  # }}}
-
-
-def update_start_end_year(ds, config, calendar):  # {{{
-    """
-    Given a monthly climatology, compute a seasonal climatology weighted by
-    the number of days in each month (on the no-leap-year calendar).
-
-    Parameters
-    ----------
-    ds : instance of xarray.Dataset
-        A data set from which start and end years will be determined
+    task : ``AnalysisTask`` object
+        An analysis task for which the climatology is needed. ``task`` is
+        used to get config options, define the component name, map streams,
+        namelists and variables, etc.
 
     config :  instance of MpasAnalysisConfigParser
         Contains configuration options
 
     calendar : {'gregorian', 'gregorian_noleap'}
-        The name of one of the calendars supported by MPAS cores
+        the name of the calendar
 
-    Returns
-    -------
-    changed : bool
-        Whether the start and end years were changed
+    monthNames : str
+        The months that make up the climatology, used in constructing the
+        names of cache files. If provided, ``monthNames`` should be one of
+        the keys of ``monthDictionary`` in the ``constants`` module.
 
-    startYear, endYear : int
-        The start and end years of the data set
+    monthValues : list of int
+        A list of integer months that make up the season in ``monthNames``,
+        taken from ``monthDictionary`` in the ``constants`` module.  The
+        entries are sorted in ascending order.
 
-    Authors
-    -------
-    Xylar Asay-Davis
+    sourceDescriptor : ``MeshDescriptor`` object
+        A descriptor of the source grid or mesh used for remapping.  This
+        attribute should be set by one of the subclasses of ``Climatology`` if
+        remapping will be performed.
 
-    Last Modified
-    -------------
-    03/25/2017
-    """
-    requestedStartYear = config.getint('climatology', 'startYear')
-    requestedEndYear = config.getint('climatology', 'endYear')
-
-    startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
-    endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
-    changed = False
-    if startYear != requestedStartYear or endYear != requestedEndYear:
-        message = "climatology start and/or end year different from " \
-                  "requested\n" \
-                  "requestd: {:04d}-{:04d}\n" \
-                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                     requestedEndYear,
-                                                     startYear,
-                                                     endYear)
-        warnings.warn(message)
-        config.set('climatology', 'startYear', str(startYear))
-        config.set('climatology', 'endYear', str(endYear))
-        changed = True
-
-    return changed, startYear, endYear  # }}}
-
-
-def add_years_months_days_in_month(ds, calendar=None):  # {{{
-    '''
-    Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.
-    The number of days in each month of ``ds`` is computed either using the
-    ``startTime`` and ``endTime`` if available or assuming ``gregorian_noleap``
-    calendar and ignoring leap years.  ``year`` and ``month`` are computed
-    accounting correctly for the the calendar.
-
-    Parameters
-    ----------
-    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
-        A data set with a ``Time`` coordinate expressed as days since
-        0001-01-01
-
-    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
-        The name of one of the calendars supported by MPAS cores, used to
-        determine ``year`` and ``month`` from ``Time`` coordinate
-
-    Returns
-    -------
-    ds : object of same type as ``ds``
-        The data set with ``year``, ``month`` and ``daysInMonth`` data arrays
-        added (if not already present)
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
-    '''
-
-    if ('year' in ds.coords and 'month' in ds.coords and
-            'daysInMonth' in ds.coords):
-        return ds
-
-    ds = ds.copy()
-
-    if 'year' not in ds.coords or 'month' not in ds.coords:
-        if calendar is None:
-            raise ValueError('calendar must be provided if month and year '
-                             'coordinate is not in ds.')
-        datetimes = days_to_datetime(ds.Time, calendar=calendar)
-
-    if 'year' not in ds.coords:
-        ds.coords['year'] = ('Time', [date.year for date in datetimes])
-
-    if 'month' not in ds.coords:
-        ds.coords['month'] = ('Time', [date.month for date in datetimes])
-
-    if 'daysInMonth' not in ds.coords:
-        if 'startTime' in ds.coords and 'endTime' in ds.coords:
-            ds.coords['daysInMonth'] = ds.endTime - ds.startTime
-        else:
-            if calendar == 'gregorian':
-                message = 'The MPAS run used the Gregorian calendar but ' \
-                          'does not appear to have\n' \
-                          'supplied start and end times.  Climatologies ' \
-                          'will be computed with\n' \
-                          'month durations ignoring leap years.'
-                warnings.warn(message)
-
-            daysInMonth = numpy.array([constants.daysInMonth[month-1] for
-                                       month in ds.month.values], float)
-            ds.coords['daysInMonth'] = ('Time', daysInMonth)
-
-    return ds  # }}}
-
-
-def remap_and_write_climatology(config, climatologyDataSet,
-                                climatologyFileName, regriddedFileName,
-                                remapper):  # {{{
-    """
-    Given a field in a climatology data set, use the ``remapper`` to regrid
-    horizontal dimensions of all fields, write the results to an output file,
-    and return the regridded data set.
-
-    Note that ``climatologyFileName`` and ``regriddedFileName`` will be
-    overwritten if they exist, so if this behavior is not desired, the calling
-    code should skip this call if the files exist and simply load the contents
-    of ``regriddedFileName``.
-
-    Parameters
-    ----------
-    config :  instance of ``MpasAnalysisConfigParser``
-        Contains configuration options
-
-    climatologyDataSet : ``xarray.DataSet`` or ``xarray.DataArray`` object
-        A data set containing a climatology
-
-    fieldName : str
-        A field within the climatology to be remapped
-
-    climatologyFileName : str
-        The name of the output file to which the data set should be written
-        before regridding (if using ncremap).
-
-    regriddedFileName : str
-        The name of the output file to which the regridded data set should
-        be written.
+    comparisonDescriptor : ``MeshDescriptor`` object
+        If the name of a  comparison grid name was supplied, this is an object
+        describing that comparison grid (e.g. for remapping).  If no comparison
+        grid name was supplied, this is ``None``.
 
     remapper : ``Remapper`` object
-        A remapper that can be used to remap files or data sets to a
-        comparison grid.
+        A remapper between the source and comparison grids.  Available only
+        after calling the ``create_remapper`` method.
 
-    Returns
-    -------
-    remappedClimatology : ``xarray.DataSet`` or ``xarray.DataArray`` object
-        A data set containing the remapped climatology
+    dataSet : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set containing the climatology (before remapping, if
+        applicable).  Available only after calling the ``compute`` or
+        ``compute_monthly`` method.
+
+    climatologyFileName : str
+        The name of the file where ``dataSet`` (the climatology data set before
+        remapping) should be stored.  This attribute should be set by one of
+        the subclasses of ``Climatology`` if remapping will be performed.
+
+    remappedDataSet : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set containing the remapped climatology.  Available only after
+        calling the ``remap_and_write`` method.
+
+    remappedFileName : str
+        The name of the file where ``remappedDataSet`` (the climatology data
+        set after remapping) should be stored.  This attribute should be set by
+        one of the subclasses of ``Climatology`` if remapping will be
+        performed.
+
+    Examples
+    --------
+    Here is an example of how to use a ``Climatology`` object within a
+    task. In the example, ``ds`` is an xarray data set with a ``Time``
+    dimension.  The result of the example code is that the xarray data set
+    ``climatology.dataSet`` is available for computation and plotting.
+
+    >>> from ..shared.climatology import Climatology
+    >>> climatology = Climatology(
+                task=self,
+                monthNames='ANN')
+    >>> climatology.compute(ds=ds)
+    >>> print climatology.dataSet
+
+    Computing a monthly climatology would look like this:
+    >>> from ..shared.climatology import Climatology
+    >>> climatology = Climatology(task=self)
+    >>> climatology.compute_monthly(ds=ds)
+    >>> print climatology.dataSet
 
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
-    useNcremap = config.getboolean('climatology', 'useNcremap')
 
-    if remapper.mappingFileName is None:
-        # no remapping is needed
-        remappedClimatology = climatologyDataSet
-    else:
-        if useNcremap:
-            if not os.path.exists(climatologyFileName):
-                climatologyDataSet.to_netcdf(climatologyFileName)
-            remapper.remap_file(inFileName=climatologyFileName,
-                                outFileName=regriddedFileName,
-                                overwrite=True)
-            remappedClimatology = xr.open_dataset(regriddedFileName)
+    def __init__(self, task, monthNames=None, comparisonGrid=None):
+        """
+        Create a new climatology.
+
+        Parameters
+        ----------
+        task : ``AnalysisTask`` object
+            An analysis task for which the climatology is needed. ``task`` is
+            used to get config options, define the component name, map streams,
+            namelists and variables, etc.
+
+        monthNames : str, optional
+            The months that make up the climatology, used in constructing the
+            names of cache files.  If provided, ``monthNames`` should be one of
+            the keys of ``monthDictionary`` in the ``constants`` module.
+
+        comparisonGrid : {'latlon'}, optional
+            The name of the comparison grid to use for remapping (if any).
+            If ``comparisonGrid=None`` (the default), no remapping will be
+            performed.
+
+        Raises
+        ------
+        ValueError
+            If comarisonGrid does not describe a known comparions grid
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        self.task = task
+        self.config = task.config
+        self.calendar = task.calendar
+        self.monthNames = monthNames
+        if monthNames is None:
+            self.monthValues = None
         else:
-            renormalizationThreshold = config.getfloat(
-                'climatology', 'renormalizationThreshold')
-
-            remappedClimatology = remapper.remap(climatologyDataSet,
-                                                 renormalizationThreshold)
-            remappedClimatology.to_netcdf(regriddedFileName)
-    return remappedClimatology  # }}}
-
-
-def _compute_masked_mean(ds, maskVaries):  # {{{
-    '''
-    Compute the time average of data set, masked out where the variables in ds
-    are NaN and, if ``maskVaries == True``, weighting by the number of days
-    used to compute each monthly mean time in ds.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
-    '''
-    def ds_to_weights(ds):
-        # make an identical data set to ds but replacing all data arrays with
-        # nonnull applied to that data array
-        weights = ds.copy(deep=True)
-        if isinstance(ds, xr.core.dataarray.DataArray):
-            weights = ds.notnull()
-        elif isinstance(ds, xr.core.dataset.Dataset):
-            for var in ds.data_vars:
-                weights[var] = ds[var].notnull()
+            monthValues = constants.monthDictionary[monthNames]
+            if isinstance(monthValues, numbers.Integral):
+                self.monthValues = [monthValues]
+            else:
+                self.monthValues = sorted(monthValues)
+        if comparisonGrid == 'latlon':
+            self.comparisonDescriptor = \
+                get_lat_lon_comparison_descriptor(task.config)
+        elif comparisonGrid is None:
+            self.comparisonDescriptor = None
         else:
-            raise TypeError('ds must be an instance of either xarray.Dataset '
-                            'or xarray.DataArray.')
+            raise ValueError('Unknown comaprison grid type {}'.format(
+                comparisonGrid))
 
-        return weights
+    def create_remapper(self, mappingFileSection, mappingFileOption,
+                        mappingFilePrefix, method):  # {{{
+        """
+        Creates an attribute ``remapper``, a ``Remapper`` object, that can be
+        used to remap from source files or data sets to corresponding data sets
+        on the comparison grid.
 
-    if maskVaries:
-        dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+        This call requires that the ``sourceDescriptor`` attribute be assigned,
+        which happens automatically for some of the subclasses of
+        ``Climatology`` (e.g. ``MpasClimatology`` and
+        ``ObservationClimatology``).
 
-        weights = ds_to_weights(ds)
+        If necessary, creates the mapping file containing weights and indices
+        needed to perform remapping.
 
-        weightSum = (weights * ds.daysInMonth).sum(dim='Time')
+        Parameters
+        ----------
+        mappingFileSection, mappingFileOption : str
+            Section and option in ``config`` where the name of the mapping file
+            may be given, or where it will be stored if a new mapping file is
+            created
 
-        timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
-    else:
-        days = ds.daysInMonth.sum(dim='Time')
+        mappingFilePrefix : str
+            A prefix to be prepended to the mapping file name
 
-        dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
+        method : {'bilinear', 'neareststod', 'conserve'}
+            The method of interpolation used.
 
-        timeMean = dsWeightedSum / days.where(days > 0.)
+        Returns
+        -------
+        remapper : ``Remapper`` object
+            A remapper between the source and comparison grids, also stored
+            as a ``remapper`` attribute.
 
-    return timeMean  # }}}
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
 
+        config = self.config
 
-def _matches_comparison(obsDescriptor, comparisonDescriptor):  # {{{
-    '''
-    Determine if the two meshes are the same
+        if config.has_option(mappingFileSection, mappingFileOption):
+            # a mapping file was supplied, so we'll use that name
+            mappingFileName = config.get(mappingFileSection, mappingFileOption)
+        else:
+            if self._matches_comparison(self.sourceDescriptor,
+                                        self.comparisonDescriptor):
+                # no need to remap
+                mappingFileName = None
 
-    Authors
-    -------
-    Xylar Asay-Davis
-    '''
+            else:
+                # we need to build the path to the mapping file and an
+                # appropriate file name
+                mappingSubdirectory = \
+                    build_config_full_path(config, 'output',
+                                           'mappingSubdirectory')
 
-    if isinstance(obsDescriptor, ProjectionGridDescriptor) and \
-            isinstance(comparisonDescriptor, ProjectionGridDescriptor):
-        # pretty hard to determine if projections are the same, so we'll rely
-        # on the grid names
-        match = obsDescriptor.meshName == comparisonDescriptor.meshName and \
-            len(obsDescriptor.x) == len(comparisonDescriptor.x) and \
-            len(obsDescriptor.y) == len(comparisonDescriptor.y) and \
-            numpy.all(numpy.isclose(obsDescriptor.x,
-                                    comparisonDescriptor.x)) and \
-            numpy.all(numpy.isclose(obsDescriptor.y,
-                                    comparisonDescriptor.y))
-    elif isinstance(obsDescriptor, LatLonGridDescriptor) and \
-            isinstance(comparisonDescriptor, LatLonGridDescriptor):
-        match = ((('degree' in obsDescriptor.units and
+                make_directories(mappingSubdirectory)
+
+                mappingFileName = '{}/{}_{}_to_{}_{}.nc'.format(
+                    mappingSubdirectory, mappingFilePrefix,
+                    self.sourceDescriptor.meshName,
+                    self.comparisonDescriptor.meshName,
+                    method)
+
+                config.set(mappingFileSection, mappingFileOption,
+                           mappingFileName)
+
+        remapper = Remapper(self.sourceDescriptor, self.comparisonDescriptor,
+                            mappingFileName)
+
+        remapper.build_mapping_file(method=method)
+
+        self.remapper = remapper
+        return remapper  # }}}
+
+    def compute(self, ds, monthValues=None, maskVaries=True):  # {{{
+        """
+        Compute a monthly, seasonal or annual climatology data set from a data
+        set.  The mean is weighted but the number of days in each month of
+        the data set, ignoring values masked out with NaNs.  If the month
+        coordinate is not present, a data array ``month`` will be added based
+        on ``Time`` and the provided calendar.
+
+        Parameters
+        ----------
+        ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+            A data set with a ``Time`` coordinate expressed as days since
+            0001-01-01 or ``month`` coordinate
+
+        monthValues : int or array-like of ints, optional
+            A single month or an array of months to be averaged together.
+            If this option is not provided, the value of ``monthValues`` passed
+            to ``__init__`` will be used.
+
+        maskVaries: bool, optional
+            If the mask (where variables in ``ds`` are ``NaN``) varies with
+            time. If not, the weighted average does not need make extra effort
+            to account for the mask.  Most MPAS fields will have masks that
+            don't vary in time, whereas observations may sometimes be present
+            only at some times and not at others, requiring
+            ``maskVaries = True``.
+
+        Returns
+        -------
+        dataSet : object of same type as ``ds``
+            A data set without the ``'Time'`` coordinate containing the mean
+            of ds over all months in monthValues, weighted by the number of
+            days in each month.  Also stored as the ``dataSet`` attribute.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        if monthValues is None:
+            monthValues = self.monthValues
+
+        ds = add_years_months_days_in_month(ds, self.calendar)
+
+        mask = xr.zeros_like(ds.month, bool)
+
+        for month in monthValues:
+            mask = xr.ufuncs.logical_or(mask, ds.month == month)
+
+        climatologyMonths = ds.where(mask, drop=True)
+
+        self.dataSet = self._compute_masked_mean(climatologyMonths, maskVaries)
+
+        return self.dataSet  # }}}
+
+    def compute_monthly(self, ds, maskVaries=True):  # {{{
+        """
+        Compute monthly climatologies from a data set.  The mean is
+        weighted by the number of days in each month of the data set,
+        ignoring values masked out with NaNs.  If the month coordinate is
+        not present, a data array ``month`` will be added based on
+        ``Time``.
+
+        Parameters
+        ----------
+        ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+            A data set with a ``Time`` coordinate expressed as days since
+            0001-01-01 or ``month`` coordinate
+
+        maskVaries: bool, optional
+            If the mask (where variables in ``ds`` are ``NaN``) varies with
+            time. If not, the weighted average does not need make extra
+            effort to account for the mask.  Most MPAS fields will have
+            masks that don't vary in time, whereas observations may
+            sometimes be present only at some times and not at others,
+            requiring ``maskVaries = True``.
+
+        Returns
+        -------
+        dataSet : object of same type as ``ds``
+            A data set with the same fields at ``ds`` but in which all data
+            from each month has been averaged together to create a
+            climatology for each month.  Also stored as the ``dataSet``
+            attribute
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        def compute_one_month_climatology(ds):
+            monthValues = list(ds.month.values)
+            return self.compute(ds, monthValues, maskVaries)
+
+        ds = add_years_months_days_in_month(ds, self.calendar)
+
+        self.dataSet = \
+            ds.groupby('month').apply(compute_one_month_climatology)
+
+        return self.dataSet  # }}}
+
+    def remap_and_write(self, useNcremap=None):  # {{{
+        """
+        Remap the climatology data set produced by a call to ``compute`` or
+        ``cache``, write the result to an output file, and return the remapped
+        data set.
+
+        This call requires that ``climatologyFileName`` and
+        ``remappedFileName`` attributes be assigned, which happens
+        automatically for some of the subclasses of ``Climatology``
+        (e.g. ``MpasClimatology`` and ``ObservationClimatology``).
+
+        Note that the files named by attributes ``climatologyFileName`` and
+        ``remappedFileName`` will be overwritten if they exist, so if
+        this behavior is not desired, the calling code should skip this call
+        if the files exist and simply load the contents of
+        ``remappedFileName``.
+
+        Parameters
+        ----------
+        useNcremap : bool, optional
+            If present, overrides ``useNcremap`` from the config file.  This
+            is useful for data sets that cannot be handle by ncremap (or are
+            masked better with the "online" remapper).
+
+        Returns
+        -------
+        remappedDataSet : ``xarray.DataSet`` or ``xarray.DataArray`` object
+            A data set containing the remapped climatology.  Also stored in
+            the ``remappedDataSet`` attribute.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        if useNcremap is None:
+            useNcremap = self.config.getboolean('climatology', 'useNcremap')
+
+        if self.remapper.mappingFileName is None:
+            # no remapping is needed
+            self.remappedDataSet = self.dataSet
+        else:
+            if useNcremap:
+                if not os.path.exists(self.climatologyFileName):
+                    self.dataSet.to_netcdf(self.climatologyFileName)
+                self.remapper.remap_file(inFileName=self.climatologyFileName,
+                                         outFileName=self.remappedFileName,
+                                         overwrite=True)
+                self.remappedDataSet = xr.open_dataset(self.remappedFileName)
+            else:
+                renormalizationThreshold = self.config.getfloat(
+                    'climatology', 'renormalizationThreshold')
+
+                self.remappedDataSet = self.remapper.remap(
+                    self.dataSet, renormalizationThreshold)
+                self.remappedDataSet.to_netcdf(self.remappedFileName)
+        return self.remappedDataSet  # }}}
+
+    def _compute_masked_mean(self, ds, maskVaries):  # {{{
+        '''
+        Compute the time average of data set, masked out where the variables
+        in ds are NaN and, if ``maskVaries == True``, weighting by the number
+        of days used to compute each monthly mean time in ds.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+        def ds_to_weights(ds):
+            # make an identical data set to ds but replacing all data arrays
+            # with notnull applied to that data array
+            weights = ds.copy(deep=True)
+            if isinstance(ds, xr.core.dataarray.DataArray):
+                weights = ds.notnull()
+            elif isinstance(ds, xr.core.dataset.Dataset):
+                for var in ds.data_vars:
+                    weights[var] = ds[var].notnull()
+            else:
+                raise TypeError('ds must be an instance of either '
+                                'xarray.Dataset or xarray.DataArray.')
+
+            return weights
+
+        if maskVaries:
+            dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time',
+                                                      keep_attrs=True)
+
+            weights = ds_to_weights(ds)
+
+            weightSum = (weights * ds.daysInMonth).sum(dim='Time')
+
+            timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
+        else:
+            days = ds.daysInMonth.sum(dim='Time')
+
+            dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time',
+                                                      keep_attrs=True)
+
+            timeMean = dsWeightedSum / days.where(days > 0.)
+
+        return timeMean  # }}}
+
+    def _matches_comparison(self, obsDescriptor, comparisonDescriptor):  # {{{
+        '''
+        Determine if the two meshes are the same
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        if isinstance(obsDescriptor, ProjectionGridDescriptor) and \
+                isinstance(comparisonDescriptor, ProjectionGridDescriptor):
+            # pretty hard to determine if projections are the same, so we'll
+            # rely on the grid names
+            match = \
+                obsDescriptor.meshName == comparisonDescriptor.meshName and \
+                len(obsDescriptor.x) == len(comparisonDescriptor.x) and \
+                len(obsDescriptor.y) == len(comparisonDescriptor.y) and \
+                numpy.all(numpy.isclose(obsDescriptor.x,
+                                        comparisonDescriptor.x)) and \
+                numpy.all(numpy.isclose(obsDescriptor.y,
+                                        comparisonDescriptor.y))
+        elif isinstance(obsDescriptor, LatLonGridDescriptor) and \
+                isinstance(comparisonDescriptor, LatLonGridDescriptor):
+            match = \
+                ((('degree' in obsDescriptor.units and
                    'degree' in comparisonDescriptor.units) or
                   ('radian' in obsDescriptor.units and
                    'radian' in comparisonDescriptor.units)) and
@@ -773,212 +513,704 @@ def _matches_comparison(obsDescriptor, comparisonDescriptor):  # {{{
                                          comparisonDescriptor.lat)) and
                  numpy.all(numpy.isclose(obsDescriptor.lon,
                                          comparisonDescriptor.lon)))
-    else:
-        match = False
+        else:
+            match = False
 
-    return match  # }}}
+        return match  # }}}
+
+# }}}
 
 
-def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
-                               yearsPerCacheFile, cachePrefix,
-                               monthValues):  # {{{
-    '''
-    Determine which cache files already exist, which are incomplete and which
-    years are present in each cache file (whether existing or to be created).
+class MpasClimatology(Climatology):  # {{{
+    """
+    A class for computing climatologies from an MPAS monthly mean data set.
+
+    Attributes
+    ----------
+    fieldName : str
+        The name of the field for which the climatology is being computed,
+        used in constructing the names of cache files.
+
+    streamName : str
+        The name of the stream from which the climatology data set will
+        be read, used to cache times and update their bounds in the
+        configuration parser.
+
+    startYear, endYear : int
+        The start and end years of the climatology
+
+    climatologyDirectory : str
+        The directory where climatologies will be cached
+
+    climatologyPrefix : str
+        The prefix (including full path) on climatology cache files.  A call
+        to the ``cache`` method may produce several intermediate cache files
+        as well as a "final" cache file with the seasonal average between
+        ``startYear`` and ``endYear``.
+
+    climatologyFileName : str
+        The full path to final climatology cache file where ``dataSet``
+        (the climatology data set before remapping) should be stored.
+
+    remappedFileName : str
+        The name of the cache file where ``remappedDataSet`` (the climatology
+        data set after remapping) should be stored.  This attribute will be
+        set only if a comparison grid name is supplied.
+
+    sourceDescriptor : ``MpasMeshDescriptor`` object
+        A descriptor of the source MPAS mesh used for remapping.
+
+    remapper : ``Remapper`` object
+        A remapper between the source and comparison grids, created
+        automatically if a comparison grid is supplied.
+
+    dataSet : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set containing the climatology (before remapping, if
+        applicable).  Available only after calling the ``compute``,
+        ``compute_monthly``, or ``cache`` methods.
+
+    remappedDataSet : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set containing the remapped climatology. Loaded automatically
+        if a comparison grid is supplied and the cache file in
+        ``remappedFileName`` already exists.  Otherwise, available only after
+        calling the ``remap_and_write`` method.
+
+    Examples
+    --------
+    Here is an example of how to use an ``MpasClimatology`` object within a
+    task. In the example, ``self._open_mpas_dataset_part`` is a function with
+    arguments ``inputFileNames``, ``startDate``, and ``endDate`` used to open
+    and return part of the data set during caching.  The result of the example
+    code is that the xarray data set ``climatology.remappedDataSet`` is
+    available for computation and plotting, having either been read from a
+    cache file or computed for the MPAS monthly time series data set.
+
+    >>> from ..shared.climatology import MpasClimatology
+    >>> restartFileName = self.runStreams.readpath('restart')[0]
+    >>> climatology = MpasClimatology(
+                task=self,
+                fieldName='sst',
+                monthNames='ANN',
+                streamName='timeSeriesStats',
+                meshFileName=restartFileName,
+                comparisonGrid='latlon',
+                mappingFileSection='climatology',
+                mappingFileOption='mpasMappingFile',
+                mappingFilePrefix='map',
+                method='bilinear')
+    >>> if climatology.remappedDataSet is None:
+            climatology.cache(
+                    openDataSetFunc=self._open_mpas_dataset_part,
+                    printProgress=True)
+            climatology.remap_and_write()
+    >>> print climatology.remappedDataSet
+
+    Here is another example, this time without remapping:
+
+    >>> from ..shared.climatology import MpasClimatology
+    >>> climatology = MpasClimatology(
+                task=self,
+                fieldName='sst',
+                monthNames='ANN',
+                streamName='timeSeriesStats')
+    >>> climatology.cache(
+                openDataSetFunc=self._open_mpas_dataset_part,
+                printProgress=True)
+    >>> print climatology.dataSet
+
 
     Authors
     -------
     Xylar Asay-Davis
+    """
 
-    Last Modified
-    -------------
-    04/08/2017
-    '''
+    def __init__(self, task, fieldName, monthNames, streamName,
+                 meshFileName=None, comparisonGrid=None,
+                 mappingFileSection=None, mappingFileOption=None,
+                 mappingFilePrefix=None, method=None):  # {{{
+        """
+        Create a new object for computing climatologies from an MPAS monthly
+        mean data set.
 
-    cacheInfo = []
+        If a ``comparisonGrid`` is provided, the climatology object also
+        either loads data from a cache file containing remapped data (if
+        one already exists) or creates a remapper that can be used later
+        on (via the ``remap_and_write`` method) to compute the remapped
+        climatology.
 
-    cacheIndices = -1*numpy.ones(ds.dims['Time'], int)
-    monthsInDs = ds.month.values
-    yearsInDs = ds.year.values
+        Parameters
+        ----------
+        task : ``AnalysisTask`` object
+            An analysis task for which the climatology is needed. ``task`` is
+            used to get config options, define the component name, map streams,
+            namelists and variables, etc.
 
-    # figure out which files to load and which years go in each file
-    for firstYear in range(startYearClimo, endYearClimo+1, yearsPerCacheFile):
-        years = range(firstYear, firstYear+yearsPerCacheFile)
+        fieldName : str
+            The name of the field for which the climatology is being computed,
+            used in constructing the names of cache files.
 
-        yearString, fileSuffix = _get_year_string(years[0], years[-1])
-        outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)
+        monthNames : str
+            The months that make up the climatology, used in constructing the
+            names of cache files.
+
+        streamName : str
+            The name of the stream from which the climatology data set will
+            be read, used to cache times and update their bounds in the
+            configuration parser.
+
+        The remaining parameters are all required if remapping is to be
+        performed.
+
+        meshFileName : str, optional
+            The name of the MPAS mesh file, used to create a descriptor of the
+            MPAS mesh for remapping.
+
+        comparisonGrid : {'latlon'}, optional
+            The name of the comparison grid to use for remapping (if any).
+
+        mappingFileSection, mappingFileOption : str, optional
+            Section and option in ``config`` where the name of the mapping file
+            may be given, or where it will be stored if a new mapping file is
+            created
+
+        mappingFilePrefix : str, optional
+            A prefix to be prepended to the mapping file name
+
+        method : {'bilinear', 'neareststod', 'conserve'}, optional
+            The method of interpolation used.
+
+        Raises
+        ------
+        ValueError
+            If comarisonGrid does not describe a known comparions grid
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        super(MpasClimatology, self).__init__(task, monthNames, comparisonGrid)
+
+        self.fieldName = fieldName
+        self.streamName = streamName
+        climSection = 'climatology'
+        task.update_start_end_date(section=climSection,
+                                   streamName=streamName)
+
+        self.startYear = self.config.getint(climSection, 'startYear')
+        self.endYear = self.config.getint(climSection, 'endYear')
+
+        mpasMeshName = self.config.get('input', 'mpasMeshName')
+
+        self.climatologyDirectory = build_config_full_path(
+            self.config, 'output', 'mpasClimatologySubdirectory')
+
+        make_directories(self.climatologyDirectory)
+
+        self.climatologyPrefix = \
+            '{}/{}_{}_{}'.format(self.climatologyDirectory, fieldName,
+                                 mpasMeshName, monthNames)
+
+        yearString, fileSuffix = self._get_year_string(self.startYear,
+                                                       self.endYear)
+        self.climatologyFileName = \
+            '{}_{}.nc'.format(self.climatologyPrefix, fileSuffix)
+
+        if comparisonGrid is not None:
+            remappedDirectory = build_config_full_path(
+                self.config, 'output', 'mpasRemappedClimSubdirectory')
+
+            make_directories(remappedDirectory)
+
+            self.remappedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
+                    remappedDirectory, fieldName, mpasMeshName,
+                    self.comparisonDescriptor.meshName, monthNames, fileSuffix)
+
+            if os.path.exists(self.remappedFileName):
+                # no need to create the remapper, since the cached data set
+                # alredy exists
+                self.remappedDataSet = xr.open_dataset(self.remappedFileName)
+            else:
+                self.sourceDescriptor = \
+                    MpasMeshDescriptor(fileName=meshFileName,
+                                       meshName=mpasMeshName)
+
+                self.create_remapper(mappingFileSection, mappingFileOption,
+                                     mappingFilePrefix, method)
+
+                self.remappedDataSet = None
+        # }}}
+
+    def cache(self, openDataSetFunc, printProgress=False):  # {{{
+        '''
+        Cache NetCDF files for each year of an annual climatology, and then use
+        the cached files to compute a climatology for the full range of years.
+        The start and end years of the climatology are taken from ``config``,
+        and are updated in ``config`` if the data set ``ds`` doesn't contain
+        this full range.
+
+        Note: only works with climatologies where the mask (locations of
+        ``NaN`` values) doesn't vary with time.
+
+        Parameters
+        ----------
+        openDataSetFunc : function
+            A function with arguments ``inputFileNames``, ``startDate``,
+            and ``endDate`` used to open a portion of the data set from which
+            the climatology is computed and cached.  Typically, the function
+            makes a call to ``generalized_reader.open_multifile_dataset``,
+            perhaps performing further manipulation of the resulting data set.
+
+        printProgress: bool, optional
+            Whether progress messages should be printed as the climatology is
+            computed
+
+        Returns
+        -------
+        dataSet : object of same type as ``ds``
+            A data set without the ``'Time'`` coordinate containing the mean
+            of ds over all months in monthValues, weighted by the number of
+            days in each month.  Also avialable through the ``dataSet``
+            attribute.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+        cacheInfo = self._setup_climatology_caching(printProgress)
+
+        # compute and store each cache file with interval yearsPerCacheFile
+        self._cache_individual_climatologies(openDataSetFunc, cacheInfo,
+                                             printProgress)
+
+        # compute the aggregate climatology
+        self.dataSet = self._cache_aggregated_climatology(cacheInfo,
+                                                          printProgress)
+
+        return self.dataSet  # }}}
+
+    def _setup_climatology_caching(self, printProgress):  # {{{
+        '''
+        Determine which cache files already exist, which are incomplete and
+        which years are present in each cache file (whether existing or to be
+        created).
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+        yearsPerCacheFile = self.config.getint('climatology',
+                                               'yearsPerCacheFile')
+        startDate = self.config.get('climatology', 'startDate')
+        endDate = self.config.get('climatology', 'endDate')
+        startDate = string_to_days_since_date(dateString=startDate,
+                                              calendar=self.calendar)
+        endDate = string_to_days_since_date(dateString=endDate,
+                                            calendar=self.calendar)
+
+        inFileNames = self.task.get_input_file_names(
+            self.streamName, startAndEndDateSection='climatology')
+
+        fullTimeCache = self.task.cache_multifile_dataset_times(
+            inFileNames, self.streamName, timeVariableName='Time')
+
+        # find only those cached times between starDate and endDate
+        timeCache = OrderedDict()
+        times = []
+        for fileName in fullTimeCache:
+            localTimes = fullTimeCache[fileName]['times']
+            mask = numpy.logical_and(localTimes >= startDate,
+                                     localTimes < endDate)
+            if numpy.count_nonzero(mask) == 0:
+                continue
+
+            times.extend(list(localTimes[mask]))
+            timeCache[fileName] = fullTimeCache[fileName]
+
+        if printProgress:
+            print '   Computing and caching climatologies covering {}-year ' \
+                  'spans...'.format(yearsPerCacheFile)
+
+        cacheInfo = []
+
+        firstFile = None
+        lastFile = None
+        # figure out which files to load and which years go in each file
+        for firstYear in range(self.startYear, self.endYear+1,
+                               yearsPerCacheFile):
+            years = numpy.arange(firstYear, firstYear+yearsPerCacheFile)
+
+            monthsIfDone = len(self.monthValues)*len(years)
+
+            yearString, fileSuffix = self._get_year_string(years[0], years[-1])
+            outputFileName = '{}_{}.nc'.format(self.climatologyPrefix,
+                                               fileSuffix)
+
+            done = False
+            if os.path.exists(outputFileName):
+                # already cached
+                dsCached = None
+                try:
+                    dsCached = xr.open_dataset(outputFileName)
+                except IOError:
+                    # assuming the cache file is corrupt, so deleting it.
+                    message = 'Deleting cache file {}, which appears to have' \
+                              ' been corrupted.'.format(outputFileName)
+                    warnings.warn(message)
+                    os.remove(outputFileName)
+
+                if ((dsCached is not None) and
+                        (dsCached.attrs['totalMonths'] == monthsIfDone)):
+                    # also complete, so we can move on
+                    done = True
+                if dsCached is not None:
+                    dsCached.close()
+
+            inputFileNames = []
+            for year in years:
+                for month in self.monthValues:
+                    for fileName in timeCache:
+                        timeCacheYears = timeCache[fileName]['years']
+                        timeCacheMonths = timeCache[fileName]['months']
+                        mask = numpy.logical_and(timeCacheYears == year,
+                                                 timeCacheMonths == month)
+                        if numpy.count_nonzero(mask) > 0:
+                            inputFileNames.append(fileName)
+
+            if len(inputFileNames) > 0:
+                cacheDict = {'outputFileName': outputFileName,
+                             'done': done,
+                             'years': years,
+                             'yearString': yearString,
+                             'inputFileNames': inputFileNames}
+                cacheInfo.append(cacheDict)
+                if not done:
+                    lastFile = inputFileNames[-1]
+                    if firstFile is None:
+                        firstFile = inputFileNames[0]
+
+        if printProgress and firstFile is not None:
+            print '\n  Caching data from files:\n' \
+                  '    {} through\n    {}'.format(
+                      os.path.basename(firstFile),
+                      os.path.basename(lastFile))
+
+        return cacheInfo  # }}}
+
+    def _cache_individual_climatologies(self, openDataSetFunc, cacheInfo,
+                                        printProgress):  # {{{
+        '''
+        Cache individual climatologies for later aggregation.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        startDate = self.config.get('climatology', 'startDate')
+        endDate = self.config.get('climatology', 'endDate')
+
+        for info in cacheInfo:
+            if info['done']:
+                continue
+            outputFileName = info['outputFileName']
+            yearString = info['yearString']
+            years = info['years']
+            inputFileNames = info['inputFileNames']
+            ds = openDataSetFunc(inputFileNames, startDate, endDate)
+            ds = add_years_months_days_in_month(ds, self.calendar)
+            mask = numpy.zeros(ds.dims['Time'], bool)
+            for year in years:
+                mask = numpy.logical_or(mask, ds.year.values == year)
+            ds.coords['cacheMask'] = ('Time', mask)
+            dsYear = ds.where(ds.cacheMask, drop=True)
+
+            if printProgress:
+                print '     {}'.format(yearString)
+
+            totalDays = dsYear.daysInMonth.sum(dim='Time').values
+
+            monthCount = dsYear.dims['Time']
+
+            climatology = self.compute(dsYear, maskVaries=False)
+
+            climatology.attrs['totalDays'] = totalDays
+            climatology.attrs['totalMonths'] = monthCount
+            climatology.attrs['fingerprintClimo'] = fingerprint_generator()
+
+            climatology.to_netcdf(outputFileName)
+            climatology.close()
+
+        # }}}
+
+    def _cache_aggregated_climatology(self, cacheInfo, printProgress):  # {{{
+        '''
+        Cache aggregated climatology from individual climatologies.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+
+        '''
+        yearString, fileSuffix = self._get_year_string(self.startYear,
+                                                       self.endYear)
+        outputFileName = '{}_{}.nc'.format(self.climatologyPrefix, fileSuffix)
 
         done = False
-        if os.path.exists(outputFileClimo):
+        if len(cacheInfo) == 0:
+            climatology = None
+            done = True
+
+        if os.path.exists(outputFileName):
             # already cached
-            dsCached = None
+            climatology = None
             try:
-                dsCached = xr.open_dataset(outputFileClimo)
+                climatology = xr.open_dataset(outputFileName)
+
             except IOError:
                 # assuming the cache file is corrupt, so deleting it.
                 message = 'Deleting cache file {}, which appears to have ' \
-                          'been corrupted.'.format(outputFileClimo)
+                          'been corrupted.'.format(outputFileName)
                 warnings.warn(message)
-                os.remove(outputFileClimo)
+                os.remove(outputFileName)
 
-            monthsIfDone = len(monthValues)*len(years)
-            if ((dsCached is not None) and
-                    (dsCached.attrs['totalMonths'] == monthsIfDone)):
-                # also complete, so we can move on
+            if len(cacheInfo) == 1 and \
+                    outputFileName == cacheInfo[0]['outputFileName']:
+                # theres only one cache file and it already has the same name
+                # as the aggregated file so no need to aggregate
                 done = True
-            if dsCached is not None:
-                dsCached.close()
 
-        cacheIndex = len(cacheInfo)
-        for year in years:
-            for month in monthValues:
-                mask = numpy.logical_and(yearsInDs == year,
-                                         monthsInDs == month)
-                cacheIndices[mask] = cacheIndex
+            elif climatology is not None:
+                monthsIfDone = (self.endYear-self.startYear+1) * \
+                    len(self.monthValues)
+                if climatology.attrs['totalMonths'] == monthsIfDone:
+                    # also complete, so we can move on
+                    done = True
+                else:
+                    climatology.close()
 
-        if numpy.count_nonzero(cacheIndices == cacheIndex) == 0:
-            continue
+        if not done:
+            if printProgress:
+                print '   Computing aggregated climatology ' \
+                      '{}...'.format(yearString)
 
-        cacheInfo.append((outputFileClimo, done, yearString))
+            first = True
+            for info in cacheInfo:
+                inputFileName = info['outputFileName']
+                ds = xr.open_dataset(inputFileName)
+                days = ds.attrs['totalDays']
+                months = ds.attrs['totalMonths']
+                if first:
+                    totalDays = days
+                    totalMonths = months
+                    climatology = ds * days
+                    first = False
+                else:
+                    totalDays += days
+                    totalMonths += months
+                    climatology = climatology + ds * days
 
-    ds = ds.copy()
-    ds.coords['cacheIndices'] = ('Time', cacheIndices)
+                ds.close()
+            climatology = climatology / totalDays
 
-    return cacheInfo, cacheIndices  # }}}
+            climatology.attrs['totalDays'] = totalDays
+            climatology.attrs['totalMonths'] = totalMonths
+            climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
+            climatology.to_netcdf(outputFileName)
 
-def _cache_individual_climatologies(ds, cacheInfo, printProgress,
-                                    yearsPerCacheFile, monthValues,
-                                    calendar):  # {{{
-    '''
-    Cache individual climatologies for later aggregation.
+        return climatology  # }}}
 
-    Authors
-    -------
-    Xylar Asay-Davis
+    def _get_year_string(self, startYear, endYear):  # {{{
+        if startYear == endYear:
+            yearString = '{:04d}'.format(startYear)
+            fileSuffix = 'year{}'.format(yearString)
+        else:
+            yearString = '{:04d}-{:04d}'.format(startYear, endYear)
+            fileSuffix = 'years{}'.format(yearString)
 
-    Last Modified
-    -------------
-    04/19/2017
-    '''
-
-    for cacheIndex, info in enumerate(cacheInfo):
-        outputFileClimo, done, yearString = info
-        if done:
-            continue
-        dsYear = ds.where(ds.cacheIndices == cacheIndex, drop=True)
-
-        if printProgress:
-            print '     {}'.format(yearString)
-
-        totalDays = dsYear.daysInMonth.sum(dim='Time').values
-
-        monthCount = dsYear.dims['Time']
-
-        climatology = compute_climatology(dsYear,  monthValues, calendar,
-                                          maskVaries=False)
-
-        climatology.attrs['totalDays'] = totalDays
-        climatology.attrs['totalMonths'] = monthCount
-        climatology.attrs['fingerprintClimo'] = fingerprint_generator()
-
-        climatology.to_netcdf(outputFileClimo)
-        climatology.close()
+        return yearString, fileSuffix  # }}}
 
     # }}}
 
 
-def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
-                                  printProgress, monthValues,
-                                  cacheInfo):  # {{{
-    '''
-    Cache aggregated climatology from individual climatologies.
+class ObservationClimatology(Climatology):  # {{{
+    """
+    A class for computing climatologies from an obsevational data set.
+
+    Attributes
+    ----------
+    fieldName : str
+        The name of the field for which the climatology is being computed,
+        used in constructing the names of cache files.
+
+    climatologyDirectory : str
+        The directory where climatologies will be cached
+
+    climatologyFileName : str
+        The full path to final climatology cache file where ``dataSet``
+        (the climatology data set before remapping) should be stored.
+
+    remappedFileName : str
+        The name of the cache file where ``remappedDataSet`` (the climatology
+        data set after remapping) should be stored.  This attribute will be
+        set only if a comparison grid name is supplied.
+
+    sourceDescriptor : ``MeshDescriptor`` object
+        The descriptor of the input data grid used for remapping.
+
+    remapper : ``Remapper`` object
+        A remapper between the source and comparison grids, created
+        automatically if a comparison grid is supplied.
+
+    dataSet : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set containing the climatology (before remapping, if
+        applicable).  Available only after calling the ```compute`` or
+        ``compute_monthly`` methods.
+
+    remappedDataSet : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        A data set containing the remapped climatology. Loaded automatically
+        if a comparison grid is supplied and the cache file in
+        ``remappedFileName`` already exists.  Otherwise, available only after
+        calling the ``remap_and_write`` method.
+
+    Examples
+    --------
+    Here is an example of how to use an ``ObservationClimatology`` object
+    within a task. In the example, ``obsDescriptor`` is a ``MeshDescriptor``
+    object describing the input observations grid and ``dsObs`` is an xarray
+    data set containing the monthly mean time series of the observations.  The
+    result of the example code is that the xarray data set
+    ``climatology.remappedDataSet`` is available for computation and plotting,
+    having either been read from a cache file or computed for the monthly
+    time series data set.
+
+    >>> from ..shared.climatology import ObservationClimatology
+    >>> climatology = ObservationClimatology(
+                task=self,
+                fieldName='sst',
+                monthNames='ANN',
+                obsGridDescriptor=obsDescriptor,
+                comparisonGrid='latlon',
+                mappingFileSection='oceanObservations',
+                mappingFileOption='sstClimatologyMappingFile',
+                mappingFilePrefix='map_obs_sst',
+                method='bilinear')
+    >>> if climatology.remappedDataSet is None:
+            climatology.compute(ds=dsObs)
+            climatology.remap_and_write()
+    >>> print climatology.remappedDataSet
+
 
     Authors
     -------
     Xylar Asay-Davis
+    """
 
-    Last Modified
-    -------------
-    04/19/2017
-    '''
+    def __init__(self, task, fieldName, monthNames,
+                 obsGridDescriptor, comparisonGrid=None,
+                 mappingFileSection=None, mappingFileOption=None,
+                 mappingFilePrefix=None, method=None):  # {{{
+        """
+        Create a new object for creating climatologies from observational data
+        sets.
 
-    yearString, fileSuffix = _get_year_string(startYearClimo, endYearClimo)
-    outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)
+        Parameters
+        ----------
+        task : ``AnalysisTask`` object
+            An analysis task for which the climatology is needed. ``task`` is
+            used to get config options, define the component name, map streams,
+            namelists and variables, etc.
 
-    done = False
-    if len(cacheInfo) == 0:
-        climatology = None
-        done = True
+        fieldName : str
+            The name of the field for which the climatology is being computed,
+            used in constructing the names of cache files.
 
-    if os.path.exists(outputFileClimo):
-        # already cached
-        climatology = None
-        try:
-            climatology = xr.open_dataset(outputFileClimo)
+        monthNames : str
+            The months that make up the climatology, used in constructing the
+            names of cache files.
 
-        except IOError:
-            # assuming the cache file is corrupt, so deleting it.
-            message = 'Deleting cache file {}, which appears to have ' \
-                      'been corrupted.'.format(outputFileClimo)
-            warnings.warn(message)
-            os.remove(outputFileClimo)
+        obsGridDescriptor : ``MeshDescriptor`` object
+            The descriptor of the input data grid
 
-        if len(cacheInfo) == 1 and outputFileClimo == cacheInfo[0][0]:
-            # theres only one cache file and it already has the same name
-            # as the aggregated file so no need to aggregate
-            done = True
+        The remaining parameters are all required if remapping is to be
+        performed.
 
-        elif climatology is not None:
-            monthsIfDone = (endYearClimo-startYearClimo+1)*len(monthValues)
-            if climatology.attrs['totalMonths'] == monthsIfDone:
-                # also complete, so we can move on
-                done = True
+        comparisonGrid : {'latlon'}, optional
+            The name of the comparison grid to use for remapping (if any).
+
+        mappingFileSection, mappingFileOption : str, optional
+            Section and option in ``config`` where the name of the mapping file
+            may be given, or where it will be stored if a new mapping file is
+            created
+
+        mappingFilePrefix : str, optional
+            A prefix to be prepended to the mapping file name
+
+        method : {'bilinear', 'neareststod', 'conserve'}, optional
+            The method of interpolation used.
+
+        Raises
+        ------
+        ValueError
+            If comarisonGrid does not describe a known comparions grid
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        super(ObservationClimatology, self).__init__(task, monthNames,
+                                                     comparisonGrid)
+
+        self.fieldName = fieldName
+
+        obsSection = '{}Observations'.format(task.componentName)
+
+        climatologyDirectory = build_config_full_path(
+            config=self.config, section='output',
+            relativePathOption='climatologySubdirectory',
+            relativePathSection=obsSection)
+
+        self.sourceDescriptor = obsGridDescriptor
+
+        obsGridName = self.sourceDescriptor.meshName
+        comparisonGridName = self.comparisonDescriptor.meshName
+
+        self.climatologyFileName = '{}/{}_{}_{}.nc'.format(
+            climatologyDirectory, fieldName, obsGridName, monthNames)
+
+        make_directories(climatologyDirectory)
+
+        if comparisonGrid is not None:
+            remappedDirectory = build_config_full_path(
+                config=self.config, section='output',
+                relativePathOption='remappedClimSubdirectory',
+                relativePathSection=obsSection)
+
+            if self._matches_comparison(self.sourceDescriptor,
+                                        self.comparisonDescriptor):
+                self.remappedFileName = self.climatologyFileName
             else:
-                climatology.close()
+                make_directories(remappedDirectory)
 
-    if not done:
-        if printProgress:
-            print '   Computing aggregated climatology ' \
-                  '{}...'.format(yearString)
+                self.remappedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
+                    remappedDirectory, fieldName, obsGridName,
+                    comparisonGridName, monthNames)
 
-        first = True
-        for cacheIndex, info in enumerate(cacheInfo):
-            inFileClimo = info[0]
-            ds = xr.open_dataset(inFileClimo)
-            days = ds.attrs['totalDays']
-            months = ds.attrs['totalMonths']
-            if first:
-                totalDays = days
-                totalMonths = months
-                climatology = ds * days
-                first = False
+            if os.path.exists(self.remappedFileName):
+                # no need to create the remapper, since the cached data set
+                # alredy exists
+                self.remappedDataSet = xr.open_dataset(self.remappedFileName)
             else:
-                totalDays += days
-                totalMonths += months
-                climatology = climatology + ds * days
 
-            ds.close()
-        climatology = climatology / totalDays
+                self.create_remapper(mappingFileSection, mappingFileOption,
+                                     mappingFilePrefix, method)
 
-        climatology.attrs['totalDays'] = totalDays
-        climatology.attrs['totalMonths'] = totalMonths
-        climatology.attrs['fingerprintClimo'] = fingerprint_generator()
+                self.remappedDataSet = None
+        # }}}
 
-        climatology.to_netcdf(outputFileClimo)
-
-    return climatology  # }}}
-
-
-def _get_year_string(startYear, endYear):
-    if startYear == endYear:
-        yearString = '{:04d}'.format(startYear)
-        fileSuffix = 'year{}'.format(yearString)
-    else:
-        yearString = '{:04d}-{:04d}'.format(startYear, endYear)
-        fileSuffix = 'years{}'.format(yearString)
-
-    return yearString, fileSuffix
+    # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

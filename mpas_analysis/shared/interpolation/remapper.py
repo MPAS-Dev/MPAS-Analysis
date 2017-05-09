@@ -11,10 +11,6 @@ remap - perform horizontal interpolation on a data sets, given a mapping file
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/13/2017
 '''
 
 import subprocess
@@ -29,7 +25,6 @@ import sys
 from ..grid import MpasMeshDescriptor, LatLonGridDescriptor, \
     ProjectionGridDescriptor
 
-
 class Remapper(object):
     '''
     A class for remapping fields using a given mapping file.  The weights and
@@ -38,10 +33,6 @@ class Remapper(object):
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     '''
 
     def __init__(self, sourceDescriptor, destinationDescriptor,
@@ -75,10 +66,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if not isinstance(sourceDescriptor,
@@ -128,10 +115,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None or \
@@ -221,10 +204,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None:
@@ -315,10 +294,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None:
@@ -368,10 +343,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/06/2017
         '''
 
         if self.mappingLoaded:
@@ -443,10 +414,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
 
         sourceDims = self.sourceDescriptor.dims
@@ -518,10 +485,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
 
         # permute the dimensions of inField so the axes to remap are first,
@@ -579,16 +542,6 @@ class Remapper(object):
         outField = numpy.transpose(outField, axes=unpermuteAxes)
 
         return outField  # }}}
-
-
-def _get_lock_path(fileName):  # {{{
-    '''Returns the name of a temporary lock file unique to a given file name'''
-    directory = '{}/.locks/'.format(os.path.dirname(fileName))
-    try:
-        os.makedirs(directory)
-    except OSError:
-        pass
-    return '{}/{}.lock'.format(directory, os.path.basename(fileName))  # }}}
 
 
 def _get_temp_path():  # {{{

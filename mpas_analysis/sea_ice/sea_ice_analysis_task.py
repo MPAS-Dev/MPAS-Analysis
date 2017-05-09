@@ -1,7 +1,6 @@
 from ..shared.analysis_task import AnalysisTask
 
-from ..shared.io import StreamsFile
-from ..shared.io.utility import build_config_full_path
+from ..shared.io import StreamsFile, build_config_full_path
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 

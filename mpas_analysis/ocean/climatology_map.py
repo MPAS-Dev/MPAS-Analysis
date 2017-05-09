@@ -11,8 +11,6 @@ Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 import xarray as xr
 import datetime
 import numpy as np
-import os
-import warnings
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -20,24 +18,17 @@ from ..shared.plot.plotting import plot_global_comparison, \
     setup_colormap
 from ..shared.constants import constants
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io import build_config_full_path
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology import get_lat_lon_comparison_descriptor, \
-    get_remapper, get_mpas_climatology_file_names, \
-    get_observation_climatology_file_names, \
-    compute_climatology, cache_climatologies, update_start_end_year, \
-    remap_and_write_climatology
-
-from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
+from ..shared.grid import LatLonGridDescriptor
+from ..shared.climatology import MpasClimatology, ObservationClimatology
 
 from ..shared.mpas_xarray import mpas_xarray
-
-from ..shared.interpolation import Remapper
 
 
 class ClimatologyMapOcean(AnalysisTask):  # {{{
@@ -48,6 +39,46 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+
+    def __init__(self, config, taskName, componentName, tags=[]):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        config :  instance of MpasAnalysisConfigParser
+            Contains configuration options
+
+        taskName :  str
+            The name of the task, typically the same as the class name except
+            starting with lowercase (e.g. 'myTask' for class 'MyTask')
+
+        componentName :  {'ocean', 'seaIce'}
+            The name of the component (same as the folder where the task
+            resides)
+
+        tags :  list of str, optional
+            Tags used to describe the task (e.g. 'timeSeries', 'climatology',
+            horizontalMap', 'index', 'transect').  These are used to determine
+            which tasks are generated (e.g. 'all_transect' or 'no_climatology'
+            in the 'generate' flags)
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        # call the constructor from the base class (AnalysisTask)
+        super(ClimatologyMapOcean, self).__init__(
+                config, taskName, componentName, tags,
+                prerequisiteTasks=['cacheOceanTimeSeriesStatsTimes'])
+
+        # by default, we don't override "useNcremap" from the config file.
+        # However, some child classes will set this explicitly, since results
+        # are better for remapping observations with the masking provided in
+        # MPAS-Analysis directly
+        self.useNcremapObs = None
+
+        # }}}
 
     def setup_and_check(self):  # {{{
         """
@@ -67,6 +98,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         self.check_analysis_enabled(
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
+
+        self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         # }}}
 
@@ -89,33 +122,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         # get local versions of member variables for convenience
         config = self.config
-        calendar = self.calendar
         fieldName = self.fieldName
-
-        simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        startDate = config.get('climatology', 'startDate')
-        endDate = config.get('climatology', 'endDate')
-        streamName = \
-            self.historyStreams.find_stream(self.streamMap['timeSeriesStats'])
-        inputFiles = self.historyStreams.readpath(streamName,
-                                                  startDate=startDate,
-                                                  endDate=endDate,
-                                                  calendar=calendar)
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(inputFiles[0]),
-                  os.path.basename(inputFiles[-1]))
-
-        mainRunName = config.get('runs', 'mainRunName')
-
-        overwriteMpasClimatology = config.getWithDefault(
-            'climatology', 'overwriteMpasClimatology', False)
-
-        overwriteObsClimatology = config.getWithDefault(
-            'oceanObservations', 'overwriteObsClimatology', False)
 
         try:
             restartFileName = self.runStreams.readpath('restart')[0]
@@ -125,27 +132,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         outputTimes = config.getExpression(self.taskName, 'comparisonTimes')
 
-        comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
-
-        varList = [fieldName]
-
-        ds = open_multifile_dataset(fileNames=inputFiles,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
-                                    variableList=varList,
-                                    iselValues=self.iselValues,
-                                    variableMap=self.variableMap,
-                                    startDate=startDate,
-                                    endDate=endDate)
-
-        changed, startYear, endYear = update_start_end_year(ds, config,
-                                                            calendar)
-
-        mpasDescriptor = MpasMeshDescriptor(
-            restartFileName, meshName=config.get('input', 'mpasMeshName'))
-
         parallel = self.config.getint('execute', 'parallelTaskCount') > 1
         if parallel:
             # avoid writing the same mapping file from multiple processes
@@ -153,122 +139,78 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         else:
             mappingFilePrefix = 'map'
 
-        mpasRemapper = get_remapper(
-            config=config, sourceDescriptor=mpasDescriptor,
-            comparisonDescriptor=comparisonDescriptor,
-            mappingFileSection='climatology',
-            mappingFileOption='mpasMappingFile',
-            mappingFilePrefix=mappingFilePrefix,
-            method=config.get('climatology', 'mpasInterpolationMethod'))
-
-        obsDescriptor = LatLonGridDescriptor()
-        obsDescriptor.read(fileName=self.obsFileName, latVarName='lat',
-                           lonVarName='lon')
-
-        origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
-
         (colormapResult, colorbarLevelsResult) = setup_colormap(
             config, self.taskName, suffix='Result')
         (colormapDifference, colorbarLevelsDifference) = setup_colormap(
             config, self.taskName, suffix='Difference')
 
-        dsObs = None
-        obsRemapperBuilt = False
+        # we don't have any way to know the observation lat/lon and grid
+        # without this, so we have to read the observational data set even
+        # if it's already been remapped.
+        dsObs = self._build_observational_dataset()
+        # create a descriptor of the observation grid using the lat/lon
+        # coordinates
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs)
 
         # Interpolate and compute biases
         for months in outputTimes:
             monthValues = constants.monthDictionary[months]
 
-            (climatologyFileName, climatologyPrefix, regriddedFileName) = \
-                get_mpas_climatology_file_names(
-                    config=config,
-                    fieldName=fieldName,
-                    monthNames=months,
-                    mpasMeshName=mpasDescriptor.meshName,
-                    comparisonGridName=comparisonDescriptor.meshName)
+            mpasClimatology = MpasClimatology(
+                task=self,
+                fieldName=fieldName,
+                monthNames=months,
+                streamName='timeSeriesStats',
+                meshFileName=restartFileName,
+                comparisonGrid='latlon',
+                mappingFileSection='climatology',
+                mappingFileOption='mpasMappingFile',
+                mappingFilePrefix=mappingFilePrefix,
+                method=config.get('climatology', 'mpasInterpolationMethod'))
 
-            if (overwriteMpasClimatology or
-                    not os.path.exists(regriddedFileName)):
-                seasonalClimatology = cache_climatologies(
-                    ds, monthValues, config, climatologyPrefix, calendar,
+            if mpasClimatology.remappedDataSet is None:
+                # the remapped climatology hasn't been cached yet
+                mpasClimatology.cache(
+                    openDataSetFunc=self._open_mpas_dataset_part,
                     printProgress=True)
+                mpasClimatology.remap_and_write()
 
-                if seasonalClimatology is None:
-                    # apparently, there was no data available to create the
-                    # climatology
-                    warnings.warn('no data to create {} climatology for '
-                                  '{}'.format(fieldName, months))
-                    continue
-
-                remappedClimatology = remap_and_write_climatology(
-                    config, seasonalClimatology, climatologyFileName,
-                    regriddedFileName, mpasRemapper)
-
-            else:
-
-                remappedClimatology = xr.open_dataset(regriddedFileName)
-
-            modelOutput = remappedClimatology[fieldName].values
-            lon = remappedClimatology['lon'].values
-            lat = remappedClimatology['lat'].values
+            modelOutput = \
+                mpasClimatology.remappedDataSet[self.mpasFieldName].values
+            lon = mpasClimatology.remappedDataSet['lon'].values
+            lat = mpasClimatology.remappedDataSet['lat'].values
 
             lonTarg, latTarg = np.meshgrid(lon, lat)
 
-            # now the observations
-            (climatologyFileName, regriddedFileName) = \
-                get_observation_climatology_file_names(
-                    config=config, fieldName=fieldName, monthNames=months,
-                    componentName='ocean', remapper=origObsRemapper)
+            obsClimatology = \
+                ObservationClimatology(
+                    task=self,
+                    fieldName=self.obsFieldName,
+                    monthNames=months,
+                    obsGridDescriptor=obsDescriptor,
+                    comparisonGrid='latlon',
+                    mappingFileSection='oceanObservations',
+                    mappingFileOption='{}ClimatologyMappingFile'.format(
+                        fieldName),
+                    mappingFilePrefix='map_obs_{}'.format(fieldName),
+                    method=config.get('oceanObservations',
+                                      'interpolationMethod'))
 
-            if (overwriteObsClimatology or
-                    not os.path.exists(regriddedFileName)):
+            if obsClimatology.remappedDataSet is None:
+                # the remapped climatology hasn't been cached yet
+                obsClimatology.compute(ds=dsObs, monthValues=monthValues,
+                                       maskVaries=True)
+                obsClimatology.remap_and_write(useNcremap=self.useNcremapObs)
 
-                if dsObs is None:
-                    # load the observations the first time
-                    dsObs = self._build_observational_dataset()
-
-                seasonalClimatology = compute_climatology(
-                    dsObs, monthValues, maskVaries=True)
-
-                if not obsRemapperBuilt:
-                    seasonalClimatology.load()
-                    seasonalClimatology.close()
-                    seasonalClimatology.to_netcdf(climatologyFileName)
-                    # make the remapper for the climatology
-                    obsDescriptor = LatLonGridDescriptor()
-                    obsDescriptor.read(fileName=climatologyFileName,
-                                       latVarName='lat',
-                                       lonVarName='lon')
-
-                    obsRemapper = get_remapper(
-                        config=config, sourceDescriptor=obsDescriptor,
-                        comparisonDescriptor=comparisonDescriptor,
-                        mappingFileSection='oceanObservations',
-                        mappingFileOption='{}ClimatologyMappingFile'.format(
-                            fieldName),
-                        mappingFilePrefix='map_obs_{}'.format(fieldName),
-                        method=config.get('oceanObservations',
-                                          'interpolationMethod'))
-
-                    obsRemapperBuilt = True
-
-                if obsRemapper is None:
-                    # no need to remap because the observations are on the
-                    # comparison grid already
-                    remappedClimatology = seasonalClimatology
-                else:
-                    remappedClimatology = \
-                        remap_and_write_climatology(
-                            config, seasonalClimatology, climatologyFileName,
-                            regriddedFileName, obsRemapper)
-
-            else:
-
-                remappedClimatology = xr.open_dataset(regriddedFileName)
-            observations = remappedClimatology[self.obsFieldName].values
+            observations = \
+                obsClimatology.remappedDataSet[self.obsFieldName].values
 
             bias = modelOutput - observations
 
+            startYear = mpasClimatology.startYear
+            endYear = mpasClimatology.endYear
+
+            mainRunName = config.get('runs', 'mainRunName')
             outFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
                     self.plotsDirectory, self.outFileLabel, mainRunName,
                     months, startYear, endYear)
@@ -292,6 +234,40 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                    cbarlabel=self.unitsLabel)
 
         # }}}
+
+    def _open_mpas_dataset_part(self, inputFileNames, startDate,
+                                endDate):  # {{{
+        """
+        Open part of a data set between the given start and end date, used
+        to cache a climatology of the data set.
+
+        Parameters
+        ----------
+        inputFileNames : list of str
+            File names in the multifile data set to open
+
+        startDate, endDate : float
+            start and end date to which to crop the Time dimension (given in
+            days since 0001-01-01)
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        varList = [self.mpasFieldName]
+
+        ds = open_multifile_dataset(
+            fileNames=inputFileNames,
+            calendar=self.calendar,
+            config=self.config,
+            simulationStartTime=self.simulationStartTime,
+            timeVariableName='Time',
+            variableList=varList,
+            iselValues=self.iselValues,
+            variableMap=self.variableMap,
+            startDate=startDate,
+            endDate=endDate)
+        return ds  # }}}
 
     # }}}
 
@@ -343,7 +319,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapSST, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -354,6 +330,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
                 observationsDirectory)
 
         self.iselValues = {'nVertLevels': 0}
+        self.mpasFieldName = 'temperature'
 
         self.obsFieldName = 'SST'
 
@@ -452,7 +429,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapSSS, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -463,6 +440,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
                 observationsDirectory)
 
         self.iselValues = {'nVertLevels': 0}
+        self.mpasFieldName = 'salinity'
 
         self.obsFieldName = 'SSS'
 
@@ -519,6 +497,10 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         Xylar Asay-Davis
         """
 
+        # We want to use the "online" remapper because it does a better job of
+        # masking missing values for MLD.
+        self.useNcremapObs = False
+
         self.fieldName = 'mld'
         self.fieldNameInTitle = 'MLD'
 
@@ -544,7 +526,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapMLD, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -555,6 +537,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
                 observationsDirectory)
 
         self.iselValues = None
+        self.mpasFieldName = 'mld'
 
         self.obsFieldName = 'mld_dt_mean'
 

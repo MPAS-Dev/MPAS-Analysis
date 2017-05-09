@@ -5,13 +5,14 @@ import numpy as np
 from scipy import signal, stats
 import os
 
-from ..shared.climatology import climatology
+from ..shared.climatology import Climatology
 from ..shared.constants import constants
-from ..shared.io.utility import build_config_full_path
+from ..shared.io import build_config_full_path
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    add_years_months_days_in_month
 
 from ..shared.plot.plotting import nino34_timeseries_plot, nino34_spectra_plot
 
@@ -139,7 +140,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         print '  Compute NINO3.4 index...'
         regionSST = ds.avgSurfaceTemperature.isel(nOceanRegions=regionIndex)
-        nino34 = self._compute_nino34_index(regionSST, calendar)
+        nino34 = self._compute_nino34_index(regionSST)
 
         # Compute the observational index over the entire time range
         # nino34Obs = compute_nino34_index(dsObs.sst, calendar)
@@ -183,7 +184,7 @@ class IndexNino34(AnalysisTask):  # {{{
                             obsTitle, figureName, linewidths=2)
     # }}}
 
-    def _compute_nino34_index(self, regionSST, calendar):  # {{{
+    def _compute_nino34_index(self, regionSST):  # {{{
         """
         Computes nino34 index time series.  It follow the standard nino34
         algorithm, i.e.,
@@ -217,15 +218,13 @@ class IndexNino34(AnalysisTask):  # {{{
             raise ValueError('regionSST should be an xarray DataArray')
 
         # add 'month' data array so we can group by month below.
-        regionSST = climatology.add_years_months_days_in_month(regionSST,
-                                                               calendar)
+        regionSST = add_years_months_days_in_month(regionSST, self.calendar)
 
         # Compute monthly average and anomaly of climatology of SST
-        monthlyClimatology = \
-            climatology.compute_monthly_climatology(regionSST,
-                                                    maskVaries=False)
+        monthlyClimatology = Climatology(task=self)
+        monthlyClimatology.compute_monthly(regionSST, maskVaries=False)
 
-        anomaly = regionSST.groupby('month') - monthlyClimatology
+        anomaly = regionSST.groupby('month') - monthlyClimatology.dataSet
 
         # Remove the long term trend from the anomalies
         detrendedAnomal = signal.detrend(anomaly.values)
