@@ -42,14 +42,11 @@ class IndexNino34(AnalysisTask):  # {{{
 
         '''
         # first, call the constructor from the base class (AnalysisTask)
-        super(IndexNino34, self).__init__(config)
-
-        # next, name the task, the component (ocean, sea_ice, etc.) and the
-        # tags (if any) of the component ('timeSeries', 'climatology',
-        # horizontalMap', 'index', 'transect', etc.)
-        self.taskName = 'indexNino34'
-        self.componentName = 'ocean'
-        self.tags = ['index', 'nino']
+        super(IndexNino34, self).__init__(
+            config=config,
+            taskName='indexNino34',
+            componentName='ocean',
+            tags=['index', 'nino'])
 
         # }}}
 

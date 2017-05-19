@@ -15,24 +15,6 @@ class SeaIceAnalysisTask(AnalysisTask):  # {{{
     Xylar Asay-Davis
     '''
 
-    def __init__(self, config):  # {{{
-        '''
-        Construct the analysis task.
-
-        Parameters
-        ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
-        '''
-        # call the constructor from the base class (AnalysisTask)
-        super(SeaIceAnalysisTask, self).__init__(config)
-        # }}}
-
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up common to sea ice analysis, including

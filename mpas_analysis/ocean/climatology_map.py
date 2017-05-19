@@ -49,23 +49,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config):  # {{{
-        """
-        Construct the analysis task.
-
-        Parameters
-        ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
-
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
-        # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapOcean, self).__init__(config)
-        # }}}
-
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
@@ -328,16 +311,15 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         -------
         Xylar Asay-Davis
         """
-        # first, call the constructor from the base class (ClimatologyMapOcean)
-        super(ClimatologyMapSST, self).__init__(config)
-
         self.fieldName = 'sst'
         self.fieldNameInTitle = 'SST'
 
-        # name the task, component and category
-        self.taskName = 'climatologyMapSST'
-        self.componentName = 'ocean'
-        self.tags = ['climatology', 'horizontalMap', self.fieldName]
+        # call the constructor from the base class (ClimatologyMapOcean)
+        super(ClimatologyMapSST, self).__init__(
+            config=config,
+            taskName='climatologyMapSST',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', self.fieldName])
 
         # }}}
 
@@ -438,16 +420,15 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         -------
         Xylar Asay-Davis
         """
-        # first, call the constructor from the base class (ClimatologyMapOcean)
-        super(ClimatologyMapSSS, self).__init__(config)
-
         self.fieldName = 'sss'
         self.fieldNameInTitle = 'SSS'
 
-        # name the task, component and category
-        self.taskName = 'climatologyMapSSS'
-        self.componentName = 'ocean'
-        self.tags = ['climatology', 'horizontalMap', self.fieldName]
+        # call the constructor from the base class (ClimatologyMapOcean)
+        super(ClimatologyMapSSS, self).__init__(
+            config=config,
+            taskName='climatologyMapSSS',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', self.fieldName])
 
         # }}}
 
@@ -530,16 +511,16 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         -------
         Xylar Asay-Davis
         """
-        # first, call the constructor from the base class (ClimatologyMapOcean)
-        super(ClimatologyMapMLD, self).__init__(config)
 
         self.fieldName = 'mld'
         self.fieldNameInTitle = 'MLD'
 
-        # name the task, component and category
-        self.taskName = 'climatologyMapMLD'
-        self.componentName = 'ocean'
-        self.tags = ['climatology', 'horizontalMap', self.fieldName]
+        # call the constructor from the base class (ClimatologyMapOcean)
+        super(ClimatologyMapMLD, self).__init__(
+            config=config,
+            taskName='climatologyMapMLD',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', self.fieldName])
 
         # }}}
 

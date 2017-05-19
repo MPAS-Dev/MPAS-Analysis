@@ -44,15 +44,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         '''
         # first, call the constructor from the base class (AnalysisTask)
-        super(MeridionalHeatTransport, self).__init__(config)
-
-        # next, name the task, the component (ocean, sea_ice, etc.) and the
-        # tags (if any) of the component ('timeSeries', 'climatology',
-        # horizontalMap', 'index', 'transect', etc.)
-        self.taskName = 'meridionalHeatTransport'
-        self.componentName = 'ocean'
-        self.tags = ['climatology']
-
+        super(MeridionalHeatTransport, self).__init__(
+            config=config,
+            taskName='meridionalHeatTransport',
+            componentName='ocean',
+            tags=['climatology'])
         # }}}
 
     def setup_and_check(self):  # {{{

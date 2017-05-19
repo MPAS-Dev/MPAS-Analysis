@@ -51,11 +51,11 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis
         """
         # first, call the constructor from the base class (SeaIceAnalysisTask)
-        super(ClimatologyMapSeaIce, self).__init__(config)
-        # name the task, component and category
-        self.taskName = 'climatologyMapSeaIceConcThick'
-        self.componentName = 'seaIce'
-        self.tags = ['climatology', 'horizontalMap']
+        super(ClimatologyMapSeaIce, self).__init__(
+            config=config,
+            taskName='climatologyMapSeaIceConcThick',
+            componentName='seaIce',
+            tags=['climatology', 'horizontalMap'])
 
         # }}}
 

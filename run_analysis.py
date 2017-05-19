@@ -51,26 +51,26 @@ def build_analysis_list(config):  # {{{
         mpl.use('Agg')
 
     # analysis can only be imported after the right MPL renderer is selected
-    from mpas_analysis import ocean as ocean_tasks
-    from mpas_analysis import sea_ice as sea_ice_tasks
+    from mpas_analysis import ocean
+    from mpas_analysis import sea_ice
 
     # analyses will be a list of analysis classes
     analyses = []
 
     # Ocean Analyses
-    analyses.append(ocean_tasks.TimeSeriesOHC(config))
-    analyses.append(ocean_tasks.TimeSeriesSST(config))
-    analyses.append(ocean_tasks.IndexNino34(config))
-    analyses.append(ocean_tasks.MeridionalHeatTransport(config))
-    analyses.append(ocean_tasks.StreamfunctionMOC(config))
+    analyses.append(ocean.TimeSeriesOHC(config))
+    analyses.append(ocean.TimeSeriesSST(config))
+    analyses.append(ocean.IndexNino34(config))
+    analyses.append(ocean.MeridionalHeatTransport(config))
+    analyses.append(ocean.StreamfunctionMOC(config))
 
-    analyses.append(ocean_tasks.ClimatologyMapSST(config))
-    analyses.append(ocean_tasks.ClimatologyMapMLD(config))
-    analyses.append(ocean_tasks.ClimatologyMapSSS(config))
+    analyses.append(ocean.ClimatologyMapSST(config))
+    analyses.append(ocean.ClimatologyMapMLD(config))
+    analyses.append(ocean.ClimatologyMapSSS(config))
 
     # Sea Ice Analyses
-    analyses.append(sea_ice_tasks.TimeSeriesSeaIce(config))
-    analyses.append(sea_ice_tasks.ClimatologyMapSeaIce(config))
+    analyses.append(sea_ice.TimeSeriesSeaIce(config))
+    analyses.append(sea_ice.ClimatologyMapSeaIce(config))
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []

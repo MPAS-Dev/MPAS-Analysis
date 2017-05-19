@@ -54,11 +54,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         '''
         # first, call the constructor from the base class (AnalysisTask)
-        super(StreamfunctionMOC, self).__init__(config)
-
-        self.taskName = 'streamfunctionMOC'
-        self.componentName = 'ocean'
-        self.tags = ['streamfunction', 'moc', 'climatology', 'timeSeries']
+        super(StreamfunctionMOC, self).__init__(
+            config=config,
+            taskName='streamfunctionMOC',
+            componentName='ocean',
+            tags=['streamfunction', 'moc', 'climatology', 'timeSeries'])
 
         # }}}
 

@@ -20,10 +20,10 @@ class TestAnalysisTask(TestCase):
             config.add_section('output')
             config.set('output', 'generate', generate)
             for taskName in expectedResults:
-                genericTask = AnalysisTask(config)
-                genericTask.taskName = taskName
-                genericTask.componentName = cores[taskName]
-                genericTask.tags = tags[taskName]
+                genericTask = AnalysisTask(config=config,
+                                           taskName=taskName,
+                                           componentName=cores[taskName],
+                                           tags=tags[taskName])
                 expectedResult = expectedResults[taskName]
                 result = genericTask.check_generate()
                 self.assertEqual(result, expectedResult)

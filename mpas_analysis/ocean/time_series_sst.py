@@ -40,12 +40,11 @@ class TimeSeriesSST(AnalysisTask):
         Xylar Asay-Davis
         """
         # first, call the constructor from the base class (AnalysisTask)
-        super(TimeSeriesSST, self).__init__(config)
-
-        # name the task, component and category
-        self.taskName = 'timeSeriesSST'
-        self.componentName = 'ocean'
-        self.tags = ['timeSeries', 'sst']
+        super(TimeSeriesSST, self).__init__(
+            config=config,
+            taskName='timeSeriesSST',
+            componentName='ocean',
+            tags=['timeSeries', 'sst'])
 
         # }}}
 

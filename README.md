@@ -54,3 +54,28 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap lxml
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
      `config.default` for more details on this option.
+
+
+## Instructions for creating a new analysis task
+
+1. create a new task by `copying mpas_analysis/analysis_task_template.py` to
+   the appropriate folder (`ocean`, `sea_ice`, etc.) and modifying it as
+   described in the template.  Take a look at
+   `mpas_analysis/shared/analysis_task.py` for additional guidance.
+2. note, no changes need to be made to `mpas_analysis/shared/analysis_task.py`
+3. modify `config.default` (and possibly any machine-specific config files in
+   `configs/<machine>`)
+4. import new analysis task in `mpas_analysis/<component>/__init__.py`
+5. if necessary, update variable maps in
+   `mpas_analysis/shared/variable_namelist_stream_maps/<component>_maps.py`
+6. add new analysis task to `run_analysis.py` under `build_analysis_list`:
+   ```python
+      analyses.append(<component>.MyTask(config, myArg='argValue'))
+   ```
+   This will add a new object of the `MyTask` class to a list of analysis tasks
+   created in `build_analysis_list`.  Later on in `run_analysis`, it will first
+   go through the list to make sure each task needs to be generated
+   (by calling `check_generate`, which is defined in `AnalysisTask`), then, will
+   call `setup_and_check` on each task (to make sure the appropriate AM is on
+   and files are present), and will finally call `run` on each task that is
+   to be generated and is set up properly.

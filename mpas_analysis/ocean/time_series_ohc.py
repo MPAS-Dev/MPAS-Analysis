@@ -41,12 +41,11 @@ class TimeSeriesOHC(AnalysisTask):
         Xylar Asay-Davis
         """
         # first, call the constructor from the base class (AnalysisTask)
-        super(TimeSeriesOHC, self).__init__(config)
-
-        # name the task, component and category
-        self.taskName = 'timeSeriesOHC'
-        self.componentName = 'ocean'
-        self.tags = ['timeSeries', 'ohc']
+        super(TimeSeriesOHC, self).__init__(
+            config=config,
+            taskName='timeSeriesOHC',
+            componentName='ocean',
+            tags=['timeSeries', 'ohc'])
 
         # }}}
 

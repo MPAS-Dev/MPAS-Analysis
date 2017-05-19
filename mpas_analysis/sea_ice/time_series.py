@@ -43,12 +43,11 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis
         """
         # first, call the constructor from the base class (SeaIceAnalysisTask)
-        super(TimeSeriesSeaIce, self).__init__(config)
-
-        # name the task, component and category
-        self.taskName = 'timeSeriesSeaIceAreaVol'
-        self.componentName = 'seaIce'
-        self.tags = ['timeSeries']
+        super(TimeSeriesSeaIce, self).__init__(
+            config=config,
+            taskName='timeSeriesSeaIceAreaVol',
+            componentName='seaIce',
+            tags=['timeSeries'])
 
         # }}}
 

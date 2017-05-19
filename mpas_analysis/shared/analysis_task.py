@@ -28,7 +28,7 @@ class AnalysisTask(object):  # {{{
     Xylar Asay-Davis
 
     '''
-    def __init__(self, config):  # {{{
+    def __init__(self, config, taskName, componentName, tags=[]):  # {{{
         '''
         Construct the analysis task.
 
@@ -41,11 +41,28 @@ class AnalysisTask(object):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
+        taskName :  str
+            The name of the task, typically the same as the class name except
+            starting with lowercase (e.g. 'myTask' for class 'MyTask')
+
+        componentName :  {'ocean', 'seaIce'}
+            The name of the component (same as the folder where the task
+            resides)
+
+        tags :  list of str, optional
+            Tags used to describe the task (e.g. 'timeSeries', 'climatology',
+            horizontalMap', 'index', 'transect').  These are used to determine
+            which tasks are generated (e.g. 'all_transect' or 'no_climatology'
+            in the 'generate' flags)
+
         Authors
         -------
         Xylar Asay-Davis
         '''
-        self.config = config  # }}}
+        self.config = config
+        self.taskName = taskName
+        self.componentName = componentName
+        self.tags = tags  # }}}
 
     def setup_and_check(self):  # {{{
         '''
