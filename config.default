@@ -94,15 +94,15 @@ mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
 
 # a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
-#   'regriddedSSS', 'regriddedMLD', 'streamfunctionMOC',
+#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
+#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'regriddedSeaIceConcThick'
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
-#   'all_regriddedHorizontal' -- all analyses involving regridded horizontal
-#                                fields will be run
+#   'all_climatology' -- all analyses involving climatologies
+#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
 #   'all_ocean' -- all ocean analyses will be run
 #   'all_seaIce' -- all sea-ice analyses will be run
 #   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
@@ -117,12 +117,10 @@ generate = ['all']
 
 # alternative examples that would perform all analysis except
 #   'timeSeriesOHC'
-#generate = ['timeSeriesSST', 'streamfunctionMOC',
-#            'all_regriddedHorizontal', 'all_seaIce']
 #generate = ['all', 'no_timeSeriesOHC']
 # Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would produce all analyses except regriddedSST,
-# regriddedSSS and regriddedMLD (albeit not in a very intuitive way):
+# example, the following would run all tasks that aren't ocean analyses,
+# except that it would also run ocean time series tasks:
 #generate = ['all', 'no_ocean', 'all_timeSeries']
 
 [climatology]
@@ -162,7 +160,7 @@ yearsPerCacheFile = 1
 # directly in MPAS-Analysis
 useNcremap = True
 
-# The minimum weight of a destination cell after remapping. Any cell with 
+# The minimum weight of a destination cell after remapping. Any cell with
 # weights lower than this threshold will therefore be masked out.
 renormalizationThreshold = 0.01
 
@@ -245,11 +243,11 @@ baseDirectory = /dir/to/ocean/reference
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/ocean/reference
-
+ 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
-
+ 
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
 areaNH = IceArea_timeseries/iceAreaNH_climo.nc
@@ -442,9 +440,10 @@ titleFontSize = 18
 # plot on polar plot
 polarPlot = False
 
-[regriddedSST]
-## options related to plotting horizontally regridded sea surface temperature
-## (SST) against reference model results and observations
+[climatologyMapSST]
+## options related to plotting horizontally regridded climatologies of
+## sea surface temperature (SST) against reference model results and
+## observations
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
@@ -460,12 +459,13 @@ colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
-[regriddedSSS]
-## options related to plotting horizontally regridded sea surface salinity
-## (SSS) against reference model results and observations
+[climatologyMapSSS]
+## options related to plotting horizontally regridded climatologies of
+## sea surface salinity (SSS) against reference model results and observations
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
@@ -481,12 +481,13 @@ colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
-[regriddedMLD]
-## options related to plotting horizontally regridded mixed layer depth
-## (MLD) against reference model results and observations
+[climatologyMapMLD]
+## options related to plotting horizontally regridded climatologies of
+## mixed layer depth (MLD) against reference model results and observations
 
 # colormap for model/observations
 colormapNameResult = viridis
@@ -502,12 +503,14 @@ colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
-[regriddedSeaIceConcThick]
-## options related to plotting horizontally regridded sea ice concentration
-## and thickness against reference model results and observations
+[climatologyMapSeaIceConcThick]
+## options related to plotting horizontally regridded climatologies of
+## sea ice concentration and thickness against reference model results and
+## observations
 
 # colormap for model/observations
 colormapNameConcResultWinter = inferno
@@ -560,10 +563,12 @@ referenceLongitudeSH = 180
 regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
 # list of plot titles (needs to be in the same order as region indices in
 # time-series stats)
-plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3', 'Nino 4', 'Nino 3.4', 'Global Ocean']
+plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
+              'Nino 4', 'Nino 3.4', 'Global Ocean']
 
 [plot]
-## options related to plotting that are the defaults across all analysis modules
+## options related to plotting that are the defaults across all analysis
+## modules
 
 # set to true if you want plots to be displayed (one by one) to the screen in
 # addition to being written out to png files

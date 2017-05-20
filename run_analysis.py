@@ -4,198 +4,113 @@
 Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
 specifying analysis options.
 
-Author: Xylar Asay-Davis, Phillip J. Wolfram
-Last Modified: 03/23/2017
+Authors
+-------
+Xylar Asay-Davis, Phillip J. Wolfram
 """
 
 import os
 import matplotlib as mpl
 import argparse
+import traceback
+import sys
+import warnings
 
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
 
 
-def checkPathExists(path):  # {{{
+def update_generate(config, generate):  # {{{
     """
-    Raise an exception if the given path does not exist.
+    Update the 'generate' config option using a string from the command line.
 
     Author: Xylar Asay-Davis
-    Last Modified: 02/02/2017
+    Last Modified: 03/07/2017
     """
-    if not (os.path.isdir(path) or os.path.isfile(path)):
-        raise OSError('Path {} not found'.format(path))
-# }}}
+
+    # overwrite the 'generate' in config with a string that parses to
+    # a list of string
+    generateList = generate.split(',')
+    generateString = ', '.join(["'{}'".format(element)
+                                for element in generateList])
+    generateString = '[{}]'.format(generateString)
+    config.set('output', 'generate', generateString)  # }}}
 
 
-def checkGenerate(config, analysisName, mpasCore, analysisCategory=None):
-    # {{{
+def build_analysis_list(config):  # {{{
     """
-    determine if a particular analysis of a particular core and (optionally)
-    category should be generated.
+    Build a list of analysis modules based on the 'generate' config option.
 
     Author: Xylar Asay-Davis
-    Last Modified: 02/02/2017
+    Last Modified: 03/07/2017
     """
-    generateList = config.getExpression('output', 'generate')
-    generate = False
-    for element in generateList:
-        if '_' in element:
-            (prefix, suffix) = element.split('_', 1)
-        else:
-            prefix = element
-            suffix = None
-
-        if prefix == 'all':
-            if (suffix in [mpasCore, analysisCategory]) or (suffix is None):
-                generate = True
-        elif prefix == 'no':
-            if suffix in [analysisName, mpasCore, analysisCategory]:
-                generate = False
-        elif element == analysisName:
-            generate = True
-
-    return generate  # }}}
-
-
-def analysis(config):  # {{{
-    # set default values of start and end dates for climotologies and
-    # timeseries and indices
-    for section in ['climatology', 'timeSeries', 'index']:
-        startDate = '{:04d}-01-01_00:00:00'.format(
-            config.getint(section, 'startYear'))
-        if not config.has_option(section, 'startDate'):
-            config.set(section, 'startDate', startDate)
-        endDate = '{:04d}-12-31_23:59:59'.format(
-            config.getint(section, 'endYear'))
-        if not config.has_option(section, 'endDate'):
-            config.set(section, 'endDate', endDate)
-
-    # Checks on directory/files existence:
-    if config.get('runs', 'preprocessedReferenceRunName') != 'None':
-        checkPathExists(config.get('oceanPreprocessedReference',
-                                   'baseDirectory'))
-        checkPathExists(config.get('seaIcePreprocessedReference',
-                                   'baseDirectory'))
-
-    generateTimeSeriesSeaIce = checkGenerate(
-        config, analysisName='timeSeriesSeaIceAreaVol',  mpasCore='seaIce',
-        analysisCategory='timeSeries')
-    compareTimeSeriesSeaIceWithObservations = config.getboolean(
-            'timeSeriesSeaIceAreaVol', 'compareWithObservations')
-    generateRegriddedSeaIce = checkGenerate(
-        config, analysisName='regriddedSeaIceConcThick',  mpasCore='seaIce',
-        analysisCategory='regriddedHorizontal')
-
-    if ((generateTimeSeriesSeaIce and
-         compareTimeSeriesSeaIceWithObservations) or generateRegriddedSeaIce):
-        # we will need sea-ice observations.  Make sure they're there
-        baseDirectory = config.get('seaIceObservations', 'baseDirectory')
-        for observationName in ['areaNH', 'areaSH', 'volNH', 'volSH']:
-            fileName = config.get('seaIceObservations', observationName)
-            if fileName.lower() == 'none':
-                continue
-            checkPathExists('{}/{}'.format(baseDirectory, fileName))
 
     # choose the right rendering backend, depending on whether we're displaying
     # to the screen
     if not config.getboolean('plot', 'displayToScreen'):
         mpl.use('Agg')
-    import matplotlib.pyplot as plt
 
     # analysis can only be imported after the right MPL renderer is selected
+    from mpas_analysis import ocean
+    from mpas_analysis import sea_ice
 
-    # GENERATE OCEAN DIAGNOSTICS
-    if checkGenerate(config, analysisName='timeSeriesOHC', mpasCore='ocean',
-                     analysisCategory='timeSeries'):
-        print ""
-        print "Plotting OHC time series..."
-        from mpas_analysis.ocean import ohc_timeseries
-        ohc_timeseries(config)
+    # analyses will be a list of analysis classes
+    analyses = []
 
-    if checkGenerate(config, analysisName='timeSeriesSST', mpasCore='ocean',
-                     analysisCategory='timeSeries'):
-        print ""
-        print "Plotting SST time series..."
-        from mpas_analysis.ocean import sst_timeseries
-        sst_timeseries(config)
+    # Ocean Analyses
+    analyses.append(ocean.TimeSeriesOHC(config))
+    analyses.append(ocean.TimeSeriesSST(config))
+    analyses.append(ocean.IndexNino34(config))
+    analyses.append(ocean.MeridionalHeatTransport(config))
+    analyses.append(ocean.StreamfunctionMOC(config))
 
-    if checkGenerate(config, analysisName='indexNino34',
-                     mpasCore='ocean', analysisCategory='index'):
-        print ""
-        print "Plotting Nino3.4 time series and power spectrum...."
-        from mpas_analysis.ocean import nino34_index
-        nino34_index(config)
+    analyses.append(ocean.ClimatologyMapSST(config))
+    analyses.append(ocean.ClimatologyMapMLD(config))
+    analyses.append(ocean.ClimatologyMapSSS(config))
 
-#    if checkGenerate(config, analysisName='timeSeriesMHT', mpasCore='ocean',
-#                     analysisCategory='timeSeries'):
-#        print ""
-#        print "Plotting Meridional Heat Transport (MHT)..."
-#        from mpas_analysis.ocean.mht_timeseries import mht_timeseries
-#        mht_timeseries(config)
+    # Sea Ice Analyses
+    analyses.append(sea_ice.TimeSeriesSeaIce(config))
+    analyses.append(sea_ice.ClimatologyMapSeaIce(config))
 
-    if checkGenerate(config, analysisName='regriddedSST', mpasCore='ocean',
-                     analysisCategory='regriddedHorizontal'):
-        print ""
-        print "Plotting 2-d maps of SST climatologies..."
-        from mpas_analysis.ocean import ocn_modelvsobs
-        ocn_modelvsobs(config, 'sst')
+    # check which analysis we actually want to generate and only keep those
+    analysesToGenerate = []
+    for analysisTask in analyses:
+        # for each anlaysis module, check if we want to generate this task
+        # and if the analysis task has a valid configuration
+        if analysisTask.check_generate():
+            add = False
+            try:
+                analysisTask.setup_and_check()
+                add = True
+            except:
+                traceback.print_exc(file=sys.stdout)
+                print "ERROR: analysis module {} failed during check and " \
+                    "will not be run".format(analysisTask.taskName)
+            if add:
+                analysesToGenerate.append(analysisTask)
 
-    if checkGenerate(config, analysisName='regriddedMLD', mpasCore='ocean',
-                     analysisCategory='regriddedHorizontal'):
-        print ""
-        print "Plotting 2-d maps of MLD climatologies..."
-        from mpas_analysis.ocean import ocn_modelvsobs
-        ocn_modelvsobs(config, 'mld')
+    return analysesToGenerate  # }}}
 
-    if checkGenerate(config, analysisName='regriddedSSS', mpasCore='ocean',
-                     analysisCategory='regriddedHorizontal'):
-        print ""
-        print "Plotting 2-d maps of SSS climatologies..."
-        from mpas_analysis.ocean import ocn_modelvsobs
-        ocn_modelvsobs(config, 'sss')
 
-    if checkGenerate(config, analysisName='streamfunctionMOC',
-                     mpasCore='ocean',
-                     analysisCategory='streamfunctionMOC'):
-        print ""
-        print "Plotting streamfunction of Meridional Overturning " \
-              "Circulation (MOC)..."
-        from mpas_analysis.ocean import moc_streamfunction
-        moc_streamfunction(config)
+def run_analysis(config, analyses):  # {{{
 
-    if checkGenerate(config, analysisName='meridionalHeatTransport',
-                     mpasCore='ocean',
-                     analysisCategory='meridionalHeatTransport'):
-        print ""
-        print "Plotting meridional heat transport (MHT)..."
-        from mpas_analysis.ocean.meridional_heat_transport \
-            import meridional_heat_transport
-        meridional_heat_transport(config)
-
-    # GENERATE SEA-ICE DIAGNOSTICS
-    if checkGenerate(config, analysisName='timeSeriesSeaIceAreaVol',
-                     mpasCore='seaIce', analysisCategory='timeSeries'):
-        print ""
-        print "Plotting sea-ice area and volume time series..."
-        from mpas_analysis.sea_ice import seaice_timeseries
-        seaice_timeseries(config)
-
-    if checkGenerate(config, analysisName='regriddedSeaIceConcThick',
-                     mpasCore='seaIce',
-                     analysisCategory='regriddedHorizontal'):
-        print ""
-        print "Plotting 2-d maps of sea-ice concentration and thickness " \
-            "climatologies..."
-        from mpas_analysis.sea_ice import seaice_modelvsobs
-        seaice_modelvsobs(config)
-
-    # GENERATE LAND-ICE DIAGNOSTICS
+    # run each analysis task
+    for analysisTask in analyses:
+        try:
+            analysisTask.run()
+        except Exception as e:
+            if isinstance(e, KeyboardInterrupt):
+                raise e
+            traceback.print_exc(file=sys.stdout)
+            print "ERROR: analysis module {} failed during run".format(
+                analysisTask.taskName)
 
     if config.getboolean('plot', 'displayToScreen'):
+        import matplotlib.pyplot as plt
         plt.show()
 
     return  # }}}
+
 
 if __name__ == "__main__":
 
@@ -209,10 +124,6 @@ if __name__ == "__main__":
                         type=str, nargs='+', help='config file')
     args = parser.parse_args()
 
-    for configFile in args.configFiles:
-        if not os.path.exists(configFile):
-            raise OSError('Config file {} not found.'.format(configFile))
-
     # add config.default to cover default not included in the config files
     # provided on the command line
     defaultConfig = '{}/config.default'.format(
@@ -220,22 +131,19 @@ if __name__ == "__main__":
     if os.path.exists(defaultConfig):
         configFiles = [defaultConfig] + args.configFiles
     else:
-        print 'WARNING: Did not find config.default.  Assuming other config ' \
-            'file(s) contain a\nfull set of configuration options.'
+        warnings.warn('WARNING: Did not find config.default.  Assuming other '
+                      'config file(s) contain a\n'
+                      'full set of configuration options.')
         configFiles = args.configFiles
 
     config = MpasAnalysisConfigParser()
     config.read(configFiles)
 
     if args.generate:
-        # overwrite the 'generate' in config with a string that parses to
-        # a list of string
-        generateList = args.generate.split(',')
-        generateString = ', '.join(["'{}'".format(element)
-                                    for element in generateList])
-        generateString = '[{}]'.format(generateString)
-        config.set('output', 'generate', generateString)
+        update_generate(config, args.generate)
 
-    analysis(config)
+    analyses = build_analysis_list(config)
+
+    run_analysis(config, analyses)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -1,2 +1,2 @@
-from modelvsobs import seaice_modelvsobs
-from timeseries import seaice_timeseries
+from climatology_map import ClimatologyMapSeaIce
+from time_series import TimeSeriesSeaIce
