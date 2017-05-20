@@ -243,11 +243,11 @@ baseDirectory = /dir/to/ocean/reference
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/ocean/reference
-
+ 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
-
+ 
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
 areaNH = IceArea_timeseries/iceAreaNH_climo.nc
