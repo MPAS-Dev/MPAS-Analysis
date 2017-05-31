@@ -63,8 +63,7 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
-                 mappingFileSection, mappingFileOption, mappingFilePrefix,
-                 method):  # {{{
+                 mappingFilePrefix, method):  # {{{
     """
     Given config options and descriptions of the source and comparison grids,
     returns a ``Remapper`` object that can be used to remap from source files
@@ -84,11 +83,6 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     comparisonDescriptor : ``MeshDescriptor`` subclass object
         A description of the comparison grid
 
-    mappingFileSection, mappingFileOption : str
-        Section and option in ``config`` where the name of the mapping file
-        may be given, or where it will be stored if a new mapping file is
-        created
-
     mappingFilePrefix : str
         A prefix to be prepended to the mapping file name
 
@@ -106,29 +100,36 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     Xylar Asay-Davis
     """
 
-    if config.has_option(mappingFileSection, mappingFileOption):
-        # a mapping file was supplied, so we'll use that name
-        mappingFileName = config.get(mappingFileSection, mappingFileOption)
-    else:
-        if _matches_comparison(sourceDescriptor, comparisonDescriptor):
-            # no need to remap
-            mappingFileName = None
+    mappingFileName = None
 
-        else:
-            # we need to build the path to the mapping file and an appropriate
-            # file name
-            mappingSubdirectory = build_config_full_path(config, 'output',
-                                                         'mappingSubdirectory')
+    if not _matches_comparison(sourceDescriptor, comparisonDescriptor):
+        # we need to remap because the grids don't match
 
-            make_directories(mappingSubdirectory)
-
-            mappingFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-                mappingSubdirectory, mappingFilePrefix,
-                sourceDescriptor.meshName, comparisonDescriptor.meshName,
+        mappingBaseName = '{}_{}_to_{}_{}.nc'.format(
+                mappingFilePrefix,
+                sourceDescriptor.meshName,
+                comparisonDescriptor.meshName,
                 method)
 
-            config.set(mappingFileSection, mappingFileOption,
-                       mappingFileName)
+        if config.has_option('input', 'mappingDirectory'):
+            # a mapping directory was supplied, so we'll see if there's
+            # a mapping file there that we can use
+            mappingSubdirectory = config.get('input', 'mappingDirectory')
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
+                                             mappingBaseName)
+            if not os.path.exists(mappingFileName):
+                # nope, looks like we still need to make a mapping file
+                mappingFileName = None
+
+        if mappingFileName is None:
+            # we don't have a mapping file yet, so get ready to create one
+            # in the output subfolder if needed
+            mappingSubdirectory = \
+                build_config_full_path(config, 'output',
+                                       'mappingSubdirectory')
+            make_directories(mappingSubdirectory)
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
+                                             mappingBaseName)
 
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)

@@ -151,8 +151,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         mpasRemapper = get_remapper(
             config=config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
-            mappingFileSection='climatology',
-            mappingFileOption='mpasMappingFile',
             mappingFilePrefix=mappingFilePrefix,
             method=config.get('climatology', 'mpasInterpolationMethod'))
 
@@ -236,9 +234,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
                         comparisonDescriptor=comparisonDescriptor,
-                        mappingFileSection='oceanObservations',
-                        mappingFileOption='{}ClimatologyMappingFile'.format(
-                            fieldName),
                         mappingFilePrefix='map_obs_{}'.format(fieldName),
                         method=config.get('oceanObservations',
                                           'interpolationMethod'))

@@ -147,8 +147,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         self.mpasRemapper = get_remapper(
             config=self.config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
-            mappingFileSection='climatology',
-            mappingFileOption='mpasMappingFile',
             mappingFilePrefix=mappingFilePrefix,
             method=self.config.get('climatology', 'mpasInterpolationMethod'))
 
@@ -207,8 +205,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
                         comparisonDescriptor=comparisonDescriptor,
-                        mappingFileSection='seaIceObservations',
-                        mappingFileOption='seaIceClimatologyMappingFile',
                         mappingFilePrefix='map_obs_seaIce',
                         method=config.get('seaIceObservations',
                                           'interpolationMethod'))
@@ -390,8 +386,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
                         comparisonDescriptor=comparisonDescriptor,
-                        mappingFileSection='seaIceObservations',
-                        mappingFileOption='seaIceClimatologyMappingFile',
                         mappingFilePrefix='map_obs_seaIce',
                         method=config.get('seaIceObservations',
                                           'interpolationMethod'))

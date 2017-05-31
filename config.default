@@ -47,7 +47,7 @@ commandPrefix =
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /dir/to/model/output
+baseDirectory = /dir/for/model/output
 
 # Note: an absolute path can be supplied for any of these subdirectories.
 # A relative path is assumed to be relative to baseDirectory.
@@ -86,13 +86,18 @@ autocloseFileLimitFraction = 0.5
 # with a single time slice.
 maxChunkSize = 10000
 
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+# mappingDirectory = /dir/for/mapping/files
+
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
 
 # directory where analysis should be written
 # NOTE: This directory path must be specific to each test case.
-baseDirectory = /dir/to/analysis/output
+baseDirectory = /dir/for/analysis/output
 
 # subdirectories within baseDirectory for analysis output
 scratchSubdirectory = scratch
@@ -146,13 +151,6 @@ endYear = 20
 # The comparison grid resolution in degrees
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
-
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-# mpasMappingFile = /path/to/mapping/file
 
 # interpolation order for model and observation results. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -211,16 +209,6 @@ sstClimatologyEndYear = 1900
 #sstClimatologyStartYear = 1990
 #sstClimatologyEndYear = 2011
 
-# The name of mapping files used for interpolating observations to the
-# comparison grid.  Interpolation is only performed if the observation grid has
-# a different resolution from the comparison grid. If nothing is supplied, the
-# file name is automatically generated based on the MPAS mesh name, the
-# comparison grid resolution, and the interpolation method
-# sstClimatologyMappingFile = /path/to/mapping/file
-# sssClimatologyMappingFile = /path/to/mapping/file
-# mldClimatologyMappingFile = /path/to/mapping/file
-
-
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 interpolationMethod = bilinear
@@ -270,13 +258,6 @@ thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
 thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
 thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
 thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
-
-# The name of mapping files used for interpolating observations to the
-# comparison grid.  Interpolation is only performed if the observation grid has
-# a different resolution from the comparison grid. If nothing is supplied, the
-# file name is automatically generated based on the MPAS mesh name, the
-# comparison grid resolution, and the interpolation method
-# seaIceClimatologyMappingFile = /path/to/mapping/file
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -381,7 +362,7 @@ compareWithObservations = True
 regionNames = ['Atlantic']
 
 # Mask file for post-processing regional MOC computation
-regionMaskFiles = /path/to/MOCregional/mapping/file
+regionMaskFiles = /path/to/MOCregional/mask/file
 
 # xarray (with dask) divides data sets into "chunks", allowing computations
 # to be made on data that is larger than the available memory.  MPAS-Analysis
