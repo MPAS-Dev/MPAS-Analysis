@@ -228,8 +228,8 @@ def run_analysis(config, analyses):  # {{{
         # write out a copy of the configuration to document the run
         logsDirectory = build_config_full_path(config, 'output',
                                                'logsSubdirectory')
-        configFileName = '{}/config.{}'.format(logsDirectory,
-                                               analysisTask.taskName)
+        configFileName = '{}/configs/config.{}'.format(logsDirectory,
+                                                       analysisTask.taskName)
         configFile = open(configFileName, 'w')
         config.write(configFile)
         configFile.close()
@@ -278,6 +278,7 @@ if __name__ == "__main__":
     logsDirectory = build_config_full_path(config, 'output',
                                            'logsSubdirectory')
     make_directories(logsDirectory)
+    make_directories('{}/configs/'.format(logsDirectory))
 
     analyses = build_analysis_list(config)
 
