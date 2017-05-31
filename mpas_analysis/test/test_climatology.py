@@ -81,8 +81,6 @@ class TestClimatology(TestCase):
         remapper = get_remapper(
             config=config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
-            mappingFileSection='climatology',
-            mappingFileOption='mpasMappingFile',
             mappingFilePrefix='map', method=config.get(
                 'climatology', 'mpasInterpolationMethod'))
 
@@ -102,8 +100,6 @@ class TestClimatology(TestCase):
             get_remapper(
                 config=config, sourceDescriptor=obsDescriptor,
                 comparisonDescriptor=comparisonDescriptor,
-                mappingFileSection='oceanObservations',
-                mappingFileOption='sstClimatologyMappingFile',
                 mappingFilePrefix='map_obs_{}'.format(fieldName),
                 method=config.get('oceanObservations',
                                   'interpolationMethod'))
@@ -133,15 +129,18 @@ class TestClimatology(TestCase):
     def test_get_mpas_remapper(self):
         config = self.setup_config()
 
-        defaultMappingFileName = '{}/map_QU240_to_0.5x0.5degree_' \
-                                 'bilinear.nc'.format(self.test_dir)
+        explicitMappingPath = '{}/maps'.format(self.test_dir)
+        os.makedirs(explicitMappingPath)
 
-        explicitMappingFileName = '{}/mapping.nc'.format(self.test_dir)
+        fileBase = 'map_QU240_to_0.5x0.5degree_bilinear.nc'
+
+        defaultMappingFileName = '{}/{}'.format(self.test_dir, fileBase)
+        explicitMappingFileName = '{}/{}'.format(explicitMappingPath, fileBase)
 
         for mappingFileName, setName in [(defaultMappingFileName,  False),
                                          (explicitMappingFileName, True)]:
             if setName:
-                config.set('climatology', 'mpasMappingFile', mappingFileName)
+                config.set('input', 'mappingDirectory', explicitMappingPath)
 
             remapper = self.setup_mpas_remapper(config)
 
@@ -154,22 +153,28 @@ class TestClimatology(TestCase):
             assert isinstance(remapper.destinationDescriptor,
                               LatLonGridDescriptor)
 
+            if not setName:
+                # copy the mapping file so it exists in the 'maps' dir
+                shutil.copyfile(defaultMappingFileName,
+                                explicitMappingFileName)
+
     def test_get_observations_remapper(self):
         config = self.setup_config()
         fieldName = 'sst'
 
-        defaultMappingFileName = '{}/map_obs_{}_1.0x1.0degree_to_' \
-                                 '0.5x0.5degree_bilinear.nc'.format(
-                                     self.test_dir, fieldName)
+        explicitMappingPath = '{}/maps'.format(self.test_dir)
+        os.makedirs(explicitMappingPath)
 
-        explicitMappingFileName = '{}/mapping.nc'.format(self.test_dir)
+        fileBase = 'map_obs_sst_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc'
+
+        defaultMappingFileName = '{}/{}'.format(self.test_dir, fileBase)
+        explicitMappingFileName = '{}/{}'.format(explicitMappingPath, fileBase)
 
         for mappingFileName, setName in [(defaultMappingFileName,  False),
                                          (explicitMappingFileName, True)]:
 
             if setName:
-                config.set('oceanObservations', 'sstClimatologyMappingFile',
-                           mappingFileName)
+                config.set('input', 'mappingDirectory', explicitMappingPath)
 
             remapper = self.setup_obs_remapper(config, fieldName)
 
@@ -181,6 +186,11 @@ class TestClimatology(TestCase):
                               LatLonGridDescriptor)
             assert isinstance(remapper.destinationDescriptor,
                               LatLonGridDescriptor)
+
+            if not setName:
+                # copy the mapping file so it exists in the 'maps' dir
+                shutil.copyfile(defaultMappingFileName,
+                                explicitMappingFileName)
 
     def test_get_mpas_climatology_file_names(self):
         config = self.setup_config()
@@ -203,8 +213,8 @@ class TestClimatology(TestCase):
         self.assertEqual(climatologyPrefix, expectedClimatologyPrefix)
 
         expectedRemappedFileName = '{}/clim/mpas/remap/sst_QU240_to_' \
-                                    '0.5x0.5degree_JFM_' \
-                                    'year0002.nc'.format(self.test_dir)
+                                   '0.5x0.5degree_JFM_' \
+                                   'year0002.nc'.format(self.test_dir)
         self.assertEqual(remappedFileName, expectedRemappedFileName)
 
     def test_get_observation_climatology_file_names(self):
@@ -223,8 +233,8 @@ class TestClimatology(TestCase):
         self.assertEqual(climatologyFileName, expectedClimatologyFileName)
 
         expectedRemappedFileName = '{}/clim/obs/remap/sst_1.0x1.0degree_' \
-                                    'to_0.5x0.5degree_' \
-                                    'JFM.nc'.format(self.test_dir)
+                                   'to_0.5x0.5degree_' \
+                                   'JFM.nc'.format(self.test_dir)
         self.assertEqual(remappedFileName, expectedRemappedFileName)
 
     def test_compute_climatology(self):
