@@ -16,6 +16,7 @@ import traceback
 import sys
 import warnings
 import subprocess
+import time
 
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
@@ -215,8 +216,16 @@ def run_analysis(config, analyses):  # {{{
     # run each analysis task
     lastException = None
     for analysisTask in analyses:
+        # write out a copy of the configuration to document the run
+        logsDirectory = build_config_full_path(config, 'output',
+                                               'logsSubdirectory')
         try:
+            startTime = time.clock()
             analysisTask.run()
+            runDuration = time.clock() - startTime
+            m, s = divmod(runDuration, 60)
+            h, m = divmod(int(m), 60)
+            print 'Execution time: {}:{:02d}:{:05.2f}'.format(h, m, s)
         except (Exception, BaseException) as e:
             if isinstance(e, KeyboardInterrupt):
                 raise e
@@ -225,9 +234,6 @@ def run_analysis(config, analyses):  # {{{
                 analysisTask.taskName)
             lastException = e
 
-        # write out a copy of the configuration to document the run
-        logsDirectory = build_config_full_path(config, 'output',
-                                               'logsSubdirectory')
         configFileName = '{}/configs/config.{}'.format(logsDirectory,
                                                        analysisTask.taskName)
         configFile = open(configFileName, 'w')
