@@ -15,4 +15,3 @@ dependencies:
   - hdf4
   - nco
   - pyproj
-  - fasteners

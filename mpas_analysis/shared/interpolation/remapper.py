@@ -25,7 +25,6 @@ import numpy
 from scipy.sparse import csr_matrix
 import xarray as xr
 import sys
-import fasteners
 
 from ..grid import MpasMeshDescriptor, LatLonGridDescriptor, \
     ProjectionGridDescriptor
@@ -157,7 +156,8 @@ class Remapper(object):
                 '--destination', self.destinationDescriptor.scripFileName,
                 '--weight', self.mappingFileName,
                 '--method', method,
-                '--netcdf4']
+                '--netcdf4',
+                '--no_log']
 
         if self.sourceDescriptor.regional:
             args.append('--src_regional')
@@ -172,16 +172,11 @@ class Remapper(object):
         if additionalArgs is not None:
             args.extend(additionalArgs)
 
-        # lock the weights file in case it is being written by another process
-        with fasteners.InterProcessLock(_get_lock_path(self.mappingFileName)):
-            # make sure another process didn't already create the mapping file
-            # in the meantime
-            if not os.path.exists(self.mappingFileName):
-                # make sure any output is flushed before we add output from the
-                # subprocess
-                sys.stdout.flush()
-                sys.stderr.flush()
-                subprocess.check_call(args)
+        # make sure any output is flushed before we add output from the
+        # subprocess
+        sys.stdout.flush()
+        sys.stderr.flush()
+        subprocess.check_call(args)
 
         # remove the temporary SCRIP files
         os.remove(self.sourceDescriptor.scripFileName)

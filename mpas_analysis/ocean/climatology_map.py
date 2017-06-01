@@ -146,12 +146,19 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         mpasDescriptor = MpasMeshDescriptor(
             restartFileName, meshName=config.get('input', 'mpasMeshName'))
 
+        parallel = self.config.getint('execute', 'parallelTaskCount') > 1
+        if parallel:
+            # avoid writing the same mapping file from multiple processes
+            mappingFilePrefix = 'map_{}'.format(self.taskName)
+        else:
+            mappingFilePrefix = 'map'
+
         mpasRemapper = get_remapper(
             config=config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
             mappingFileSection='climatology',
             mappingFileOption='mpasMappingFile',
-            mappingFilePrefix='map',
+            mappingFilePrefix=mappingFilePrefix,
             method=config.get('climatology', 'mpasInterpolationMethod'))
 
         obsDescriptor = LatLonGridDescriptor()
