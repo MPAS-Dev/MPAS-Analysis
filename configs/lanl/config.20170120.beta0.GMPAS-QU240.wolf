@@ -81,7 +81,7 @@ mpasMappingFile = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/m
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 3
+endYear = 2
 
 [index]
 ## options related to producing nino index.
@@ -131,4 +131,4 @@ polarPlot = False
 ## circulation (MOC)
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks/QU240v1_SingleRegionAtlanticWTransportTransects_masks.nc
+regionMaskFiles = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks/oQU240v1_Atlantic_region_and_southern_transect.nc
