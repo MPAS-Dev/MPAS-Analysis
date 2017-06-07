@@ -156,7 +156,8 @@ class Remapper(object):
                 '--destination', self.destinationDescriptor.scripFileName,
                 '--weight', self.mappingFileName,
                 '--method', method,
-                '--netcdf4']
+                '--netcdf4',
+                '--no_log']
 
         if self.sourceDescriptor.regional:
             args.append('--src_regional')
@@ -171,6 +172,10 @@ class Remapper(object):
         if additionalArgs is not None:
             args.extend(additionalArgs)
 
+        # make sure any output is flushed before we add output from the
+        # subprocess
+        sys.stdout.flush()
+        sys.stderr.flush()
         subprocess.check_call(args)
 
         # remove the temporary SCRIP files
@@ -266,6 +271,11 @@ class Remapper(object):
 
         if variableList is not None:
             args.extend(['-v', ','.join(variableList)])
+
+        # make sure any output is flushed before we add output from the
+        # subprocess
+        sys.stdout.flush()
+        sys.stderr.flush()
 
         subprocess.check_call(args)  # }}}
 
@@ -569,6 +579,16 @@ class Remapper(object):
         outField = numpy.transpose(outField, axes=unpermuteAxes)
 
         return outField  # }}}
+
+
+def _get_lock_path(fileName):  # {{{
+    '''Returns the name of a temporary lock file unique to a given file name'''
+    directory = '{}/.locks/'.format(os.path.dirname(fileName))
+    try:
+        os.makedirs(directory)
+    except OSError:
+        pass
+    return '{}/{}.lock'.format(directory, os.path.basename(fileName))  # }}}
 
 
 def _get_temp_path():  # {{{

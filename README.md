@@ -13,19 +13,20 @@ This analysis repository presumes that the following python packages are availab
  * scipy
  * matplotlib
  * netCDF4
- * xarray ≥ 0.9.1
+ * xarray >= 0.9.1
  * dask
  * bottleneck
  * basemap
  * lxml
- * nco
+ * nco >= 4.5.4
  * pyproj
 
 You can easily install them via the conda command:
 
 ```
 conda config --add channels conda-forge
-conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap lxml nco pyproj
+conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
+    lxml nco pyproj
 ```
 
 ## Running the analysis
@@ -54,3 +55,48 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap lxml
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
      `config.default` for more details on this option.
+
+
+## Running in parallel
+  1. Copy the appropriate job script file from `configs/<machine_name>` to
+     the same directory as `run_analysis.py` (or another directory if preferred).
+     The default script, `configs/job_script.default.bash`, is appropriate for
+     a laptop or desktop computer with multiple cores.
+  2. Modify the number of nodes (equal to the number of parallel tasks), the
+     run name and optionally the output directory and the path to the config
+     file for the run (default: `./configs/<machine_name>/config.<run_name>`)
+     Note: in `job_script.default.bash`, the number of parallel tasks is set
+     manually, since there are no nodes.
+  3. Note: the number of parallel tasks can be anything between 1 and the number
+     of analysis tasks to be performed.  If there are more tasks than parallel
+     tasks, later tasks will simply wait until earlier tasks have finished.
+  4. Submit the job using the modified job script
+
+If a job script for your machine is not available, try modifying the default
+job script in `configs/job_script.default.bash` or one of the job scripts for
+another machine to fit your needs.
+
+
+## Instructions for creating a new analysis task
+
+1. create a new task by `copying mpas_analysis/analysis_task_template.py` to
+   the appropriate folder (`ocean`, `sea_ice`, etc.) and modifying it as
+   described in the template.  Take a look at
+   `mpas_analysis/shared/analysis_task.py` for additional guidance.
+2. note, no changes need to be made to `mpas_analysis/shared/analysis_task.py`
+3. modify `config.default` (and possibly any machine-specific config files in
+   `configs/<machine>`)
+4. import new analysis task in `mpas_analysis/<component>/__init__.py`
+5. if necessary, update variable maps in
+   `mpas_analysis/shared/variable_namelist_stream_maps/<component>_maps.py`
+6. add new analysis task to `run_analysis.py` under `build_analysis_list`:
+   ```python
+      analyses.append(<component>.MyTask(config, myArg='argValue'))
+   ```
+   This will add a new object of the `MyTask` class to a list of analysis tasks
+   created in `build_analysis_list`.  Later on in `run_analysis`, it will first
+   go through the list to make sure each task needs to be generated
+   (by calling `check_generate`, which is defined in `AnalysisTask`), then, will
+   call `setup_and_check` on each task (to make sure the appropriate AM is on
+   and files are present), and will finally call `run` on each task that is
+   to be generated and is set up properly.

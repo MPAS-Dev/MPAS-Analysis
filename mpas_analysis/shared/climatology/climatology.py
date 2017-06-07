@@ -149,7 +149,8 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
 
 def get_mpas_climatology_file_names(config, fieldName, monthNames,
-                                    remapper):  # {{{
+                                    mpasMeshName,
+                                    comparisonGridName=None):  # {{{
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for MPAS
@@ -167,9 +168,11 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     monthNames : str
         A string identifying the months in a seasonal climatology (e.g. 'JFM')
 
-    remapper : ``Remapper`` object
-        A remapper that used to remap files or data sets from the
-        MPAS mesh to a comparison grid
+    mpasMeshName : str
+        The name of the MPAS mesh
+
+    comparisonGridName : str, optional
+        The name of the comparison grid (if any)
 
     Returns
     -------
@@ -183,7 +186,7 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
 
     regriddedFileName : str
         The absolute path to a file where the climatology should be stored
-        after regridding.
+        after regridding if ``comparisonGridName`` is supplied
 
     Authors
     -------
@@ -191,7 +194,7 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
 
     Last Modified
     -------------
-    03/03/2017
+    05/05/2017
     """
 
     climSection = 'climatology'
@@ -201,25 +204,30 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     climatologyDirectory = build_config_full_path(
         config, 'output', 'mpasClimatologySubdirectory')
 
-    regriddedDirectory = build_config_full_path(
-        config, 'output', 'mpasRegriddedClimSubdirectory')
-
-    make_directories(regriddedDirectory)
     make_directories(climatologyDirectory)
-
-    mpasMeshName = remapper.sourceDescriptor.meshName
-    comparisonGridName = remapper.destinationDescriptor.meshName
 
     climatologyPrefix = '{}/{}_{}_{}'.format(climatologyDirectory, fieldName,
                                              mpasMeshName, monthNames)
 
     yearString, fileSuffix = _get_year_string(startYear, endYear)
     climatologyFileName = '{}_{}.nc'.format(climatologyPrefix, fileSuffix)
-    regriddedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
-            regriddedDirectory, fieldName, mpasMeshName, comparisonGridName,
-            monthNames, fileSuffix)
 
-    return (climatologyFileName, climatologyPrefix, regriddedFileName)  # }}}
+    if comparisonGridName is None:
+        return (climatologyFileName, climatologyPrefix)
+    else:
+        regriddedDirectory = build_config_full_path(
+            config, 'output', 'mpasRegriddedClimSubdirectory')
+
+        make_directories(regriddedDirectory)
+
+        regriddedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
+                regriddedDirectory, fieldName, mpasMeshName,
+                comparisonGridName, monthNames, fileSuffix)
+
+        return (climatologyFileName, climatologyPrefix,
+                regriddedFileName)
+
+    # }}}
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,
@@ -717,25 +725,18 @@ def _compute_masked_mean(ds, maskVaries):  # {{{
 
     if maskVaries:
         dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
-        dsWeightedSum.compute()
 
         weights = ds_to_weights(ds)
-        weights.compute()
 
         weightSum = (weights * ds.daysInMonth).sum(dim='Time')
-        weightSum.compute()
 
         timeMean = dsWeightedSum / weightSum.where(weightSum > 0.)
-        timeMean.compute()
     else:
         days = ds.daysInMonth.sum(dim='Time')
-        days.compute()
 
         dsWeightedSum = (ds * ds.daysInMonth).sum(dim='Time', keep_attrs=True)
-        dsWeightedSum.compute()
 
         timeMean = dsWeightedSum / days.where(days > 0.)
-        timeMean.compute()
 
     return timeMean  # }}}
 

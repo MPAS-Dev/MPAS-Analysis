@@ -3,28 +3,30 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20161006bugfix.alpha8.A_WCYCL1850S.ne30_oEC_ICG.edison
+mainRunName = GMPAS-IAF_oRRS18to6v3
+# referenceRunName is the name of a reference run to compare against (or None
+# to turn off comparison with a reference, e.g. if no reference case is
+# available)
+referenceRunName = None
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
 # performed with MPAS components (so they cannot be easily ingested by
 # MPAS-Analysis)
-preprocessedReferenceRunName = B1850C5_ne30_v0.4
+preprocessedReferenceRunName = None
 
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /global/cscratch1/sd/jonbob/ACME_simulations/20161006bugfix.alpha8.A_WCYCL1850S.ne30_oEC_ICG.edison/run
-
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30
+baseDirectory = /lustre/atlas1/cli115/scratch/vanroek/GMPAS-IAF_oRRS18to6v3/run
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
 
 # directory where analysis should be written
+# NOTE: This directory path must be specific to each test case.
 baseDirectory = /dir/to/analysis/output
 
 # a list of analyses to generate.  Valid names are:
@@ -62,15 +64,13 @@ generate = ['all']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 6
+startYear = 11
 # the last year over which to average climatalogies
-endYear = 10
+endYear = 11
 
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-mpasMappingFile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
+# should remapping be performed with ncremap or with the Remapper class
+# directly in MPAS-Analysis
+useNcremap = True
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -79,8 +79,8 @@ mpasMappingFile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30_TO
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
-startYear = 1
-endYear = 51
+startYear = 11
+endYear = 11
 
 [index]
 ## options related to producing nino index.
@@ -96,44 +96,78 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /global/project/projectdirs/acme/observations/Ocean/
+baseDirectory = /lustre/atlas/proj-shared/cli115/observations
 sstSubdirectory = SST
 sssSubdirectory = SSS
 mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
 
+[oceanReference]
+## options related to ocean reference run with which the results will be
+## compared
+
+# directory where ocean reference simulation results are stored
+baseDirectory = /dir/to/ocean/reference
+
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /dir/to/ocean/reference
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /global/project/projectdirs/acme/observations/SeaIce
+baseDirectory = /lustre/atlas/proj-shared/cli115/observations/SeaIce
+areaNH = IceArea_timeseries/iceAreaNH_climo.nc
+areaSH = IceArea_timeseries/iceAreaSH_climo.nc
+volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+volSH = none
+concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
+concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
+thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
+thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
+thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
+
+[seaIceReference]
+## options related to sea ice reference run with which the results will be
+## compared
+
+# directory where sea ice reference simulation results are stored
+baseDirectory = /dir/to/seaice/reference
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[timeSeriesSeaIceAreaVol]
-## options related to plotting time series of sea ice area and volume
-
-# plot on polar plot
-polarPlot = False
+baseDirectory = /dir/to/seaice/reference
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
+## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
-maxChunkSize = 1000
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/EC60to30v1_SingleRegionAtlanticWTransportTransects_masks.nc
+# Mask file for post-processing regional MOC computation
+regionMaskFiles = /lustre/atlas1/cli115/proj-shared/mpas_analysis/region_masks/oRRS18to6v3.170111.SingleRegionAtlanticWTransportTransects_masks.nc
+
+# xarray (with dask) divides data sets into "chunks", allowing computations
+# to be made on data that is larger than the available memory.  MPAS-Analysis
+# supports setting a maximum chunk size for data sets generally, and a
+# separate option specific to loading the 3D velocity field in the MOC
+# specifically.  By default, maxChunkSize is left undefined, so that chunking
+# is handled automatically.  If the MOC calculation encounters memory problems,
+# consider setting maxChunkSize to a number significantly lower than nEdges
+# in your MPAS mesh so that the calculation will be divided into smaller
+# pieces.
+maxChunkSize = 500

@@ -28,14 +28,15 @@ mpasMeshName = QU240
 baseDirectory = /dir/to/analysis/output
 
 # a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
-#   'regriddedSSS', 'regriddedMLD', 'timeSeriesSeaIceAreaVol',
-#   'regriddedSeaIceConcThick'
+#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
+#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
+#   'indexNino34', 'meridionalHeatTransport',
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
-#   'all_regriddedHorizontal' -- all analyses involving regridded horizontal
-#                                fields will be run
+#   'all_climatology' -- all analyses involving climatologies
+#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
 #   'all_ocean' -- all ocean analyses will be run
 #   'all_seaIce' -- all sea-ice analyses will be run
 #   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
@@ -50,11 +51,10 @@ generate = ['all']
 
 # alternative examples that would perform all analysis except
 #   'timeSeriesOHC'
-#generate = ['timeSeriesSST', 'all_regriddedHorizontal', 'all_seaIce']
 #generate = ['all', 'no_timeSeriesOHC']
 # Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would produce all analyses except regriddedSST,
-# regriddedSSS and regriddedMLD (albeit not in a very intuitive way):
+# example, the following would run all tasks that aren't ocean analyses,
+# except that it would also run ocean time series tasks:
 #generate = ['all', 'no_ocean', 'all_timeSeries']
 
 [climatology]
@@ -81,7 +81,7 @@ mpasMappingFile = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/m
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 3
+endYear = 2
 
 [index]
 ## options related to producing nino index.
@@ -131,4 +131,4 @@ polarPlot = False
 ## circulation (MOC)
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks/QU240v1_SingleRegionAtlanticWTransportTransects_masks.nc
+regionMaskFiles = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks/oQU240v1_Atlantic_region_and_southern_transect.nc
