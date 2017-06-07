@@ -127,12 +127,19 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
         comparisonDescriptor = get_lat_lon_comparison_descriptor(self.config)
 
+        parallel = self.config.getint('execute', 'parallelTaskCount') > 1
+        if parallel:
+            # avoid writing the same mapping file from multiple processes
+            mappingFilePrefix = 'map_{}'.format(self.taskName)
+        else:
+            mappingFilePrefix = 'map'
+
         self.mpasRemapper = get_remapper(
             config=self.config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
             mappingFileSection='climatology',
             mappingFileOption='mpasMappingFile',
-            mappingFilePrefix='map',
+            mappingFilePrefix=mappingFilePrefix,
             method=self.config.get('climatology', 'mpasInterpolationMethod'))
 
         self._compute_and_plot_concentration()

@@ -13,19 +13,20 @@ This analysis repository presumes that the following python packages are availab
  * scipy
  * matplotlib
  * netCDF4
- * xarray ≥ 0.9.1
+ * xarray >= 0.9.1
  * dask
  * bottleneck
  * basemap
  * lxml
- * nco
+ * nco >= 4.5.4
  * pyproj
 
 You can easily install them via the conda command:
 
 ```
 conda config --add channels conda-forge
-conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap lxml nco pyproj
+conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
+    lxml nco pyproj
 ```
 
 ## Running the analysis
@@ -54,6 +55,26 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap lxml
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
      `config.default` for more details on this option.
+
+
+## Running in parallel
+  1. Copy the appropriate job script file from `configs/<machine_name>` to
+     the same directory as `run_analysis.py` (or another directory if preferred).
+     The default script, `configs/job_script.default.bash`, is appropriate for
+     a laptop or desktop computer with multiple cores.
+  2. Modify the number of nodes (equal to the number of parallel tasks), the
+     run name and optionally the output directory and the path to the config
+     file for the run (default: `./configs/<machine_name>/config.<run_name>`)
+     Note: in `job_script.default.bash`, the number of parallel tasks is set
+     manually, since there are no nodes.
+  3. Note: the number of parallel tasks can be anything between 1 and the number
+     of analysis tasks to be performed.  If there are more tasks than parallel
+     tasks, later tasks will simply wait until earlier tasks have finished.
+  4. Submit the job using the modified job script
+
+If a job script for your machine is not available, try modifying the default
+job script in `configs/job_script.default.bash` or one of the job scripts for
+another machine to fit your needs.
 
 
 ## Instructions for creating a new analysis task

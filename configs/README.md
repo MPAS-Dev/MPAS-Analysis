@@ -7,3 +7,6 @@ MPAS-Analysis (where `run_analysis.py` is located) before modifying them
 (e.g. setting the output `baseDirectory`) and using them to run the
 analysis.
 
+To run tasks in parallel, instead copy and modify the machine-specific job 
+script or the default job script.
+
