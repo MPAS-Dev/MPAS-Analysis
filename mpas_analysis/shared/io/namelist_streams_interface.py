@@ -13,7 +13,7 @@ Last modified
 """
 
 from lxml import etree
-import re, string
+import re
 import os.path
 
 from ..containers import ReadOnlyDict
@@ -37,7 +37,7 @@ def convert_namelist_to_dict(fname, readonly=True):
             match = regex.findall(line)
             if len(match) > 0:
                 # assumes that there is only one match per line
-                nml[string.lower(match[0][0])] = match[0][1]
+                nml[match[0][0].lower()] = match[0][1]
     if readonly:
         nml = ReadOnlyDict(nml)
 
