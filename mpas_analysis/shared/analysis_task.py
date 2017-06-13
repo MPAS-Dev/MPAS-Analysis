@@ -114,9 +114,10 @@ class AnalysisTask(object):  # {{{
 
         self.plotsDirectory = build_config_full_path(self.config, 'output',
                                                      'plotsSubdirectory')
-        namelistFileName = self.config.get(
-            'input', '{}NamelistFileName'.format(self.componentName))
-        self.namelist = NameList(namelistFileName, path=self.runDirectory)
+        namelistFileName = build_config_full_path(
+            self.config,  'input',
+            '{}NamelistFileName'.format(self.componentName))
+        self.namelist = NameList(namelistFileName)
 
         streamsFileName = build_config_full_path(
             self.config, 'input',
