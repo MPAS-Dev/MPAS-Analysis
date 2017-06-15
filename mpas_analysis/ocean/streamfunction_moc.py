@@ -138,7 +138,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
         '''
 
-        print "\n Plotting streamfunction of Meridional Overturning " \
+        print "\nPlotting streamfunction of Meridional Overturning " \
               "Circulation (MOC)..."
 
         print '\n  List of files for climatologies:\n' \
