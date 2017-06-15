@@ -83,8 +83,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         03/16/2017
         """
 
-        print ""
-        print "Plotting 2-d maps of {} climatologies...".format(
+        print "\nPlotting 2-d maps of {} climatologies...".format(
             self.fieldNameInTitle)
 
         # get local versions of member variables for convenience

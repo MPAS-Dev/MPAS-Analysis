@@ -88,7 +88,7 @@ class TimeSeriesSST(AnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting 2-d maps of SST climatologies..."
+        print "\nPlotting SST time series..."
 
         print '  Load SST data...'
 
