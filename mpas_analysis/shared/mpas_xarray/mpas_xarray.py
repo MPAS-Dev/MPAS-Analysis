@@ -19,7 +19,7 @@ Phillip J. Wolfram, Xylar Asay-Davis
 
 Last modified
 -------------
-02/22/2017
+05/08/2017
 """
 
 
@@ -119,11 +119,11 @@ def open_multifile_dataset(fileNames, calendar,
 def subset_variables(ds, variableList):  # {{{
     """
     Given a data set and a list of variable names, returns a new data set that
-    contains only variables with those names.
+    contains only variables or coords with those names.
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set from which a subset of variables is to be extracted.
 
     variableList : string or list of strings
@@ -131,9 +131,9 @@ def subset_variables(ds, variableList):  # {{{
 
     Returns
     -------
-    ds : xarray.DataSet object
-        A copy of the original data set with only the variables in
-        variableList.
+    ds : ``xarray.DataSet`` object
+        A copy of the original data set with only the variables and/or coords
+        in ``variableList``.
 
     Raises
     ------
@@ -146,10 +146,11 @@ def subset_variables(ds, variableList):  # {{{
 
     Last modified
     -------------
-    02/16/2017
+    05/08/2017
     """
 
     allvars = ds.data_vars.keys()
+    allcoords = ds.coords.keys()
 
     # get set of variables to drop (all ds variables not in vlist)
     dropvars = set(allvars) - set(variableList)
@@ -161,17 +162,19 @@ def subset_variables(ds, variableList):  # {{{
     coords = set()
     for avar in ds.data_vars.keys():
         coords |= set(ds[avar].coords.keys())
+    coords |= set(variableList)
     dropcoords = set(ds.coords.keys()) - coords
 
     # drop spurious coordinates
     ds = ds.drop(dropcoords)
 
-    if len(ds.data_vars.keys()) == 0:
+    if len(ds.data_vars.keys()) == 0 and len(ds.coords.keys()) == 0:
         raise ValueError(
                 'Empty dataset is returned.\n'
                 'Variables {}\n'
                 'are not found within the dataset '
-                'variables: {}.'.format(variableList, allvars))
+                'variables: {}\n'
+                'or coords: {}.'.format(variableList, allvars, allcoords))
 
     return ds  # }}}
 

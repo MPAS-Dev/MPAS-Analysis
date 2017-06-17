@@ -80,12 +80,12 @@ oceanVariableMap['mld'] = \
      'time_avg_dThreshMLD_1',
      'timeMonthly_avg_dThreshMLD']
 
-oceanVariableMap['sst'] = \
+oceanVariableMap['temperature'] = \
     ['time_avg_activeTracers_temperature',
      'time_avg_activeTracers_temperature_1',
      'timeMonthly_avg_activeTracers_temperature']
 
-oceanVariableMap['sss'] = \
+oceanVariableMap['salinity'] = \
     ['time_avg_activeTracers_salinity',
      'time_avg_activeTracers_salinity_1',
      'timeMonthly_avg_activeTracers_salinity']

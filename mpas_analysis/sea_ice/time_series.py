@@ -6,7 +6,7 @@ from .sea_ice_analysis_task import SeaIceAnalysisTask
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
-from ..shared.io.utility import build_config_full_path, check_path_exists, \
+from ..shared.io import build_config_full_path, check_path_exists, \
     make_directories
 
 from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \

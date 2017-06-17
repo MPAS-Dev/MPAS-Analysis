@@ -9,7 +9,7 @@ from ..shared.constants.constants import m3ps_to_Sv, \
 from ..shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from ..shared.io import build_config_full_path, make_directories
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -17,8 +17,7 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology.climatology import update_start_end_year, \
-    cache_climatologies
+from ..shared.climatology import MpasClimatology
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -55,10 +54,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         '''
         # first, call the constructor from the base class (AnalysisTask)
         super(StreamfunctionMOC, self).__init__(
-            config=config,
-            taskName='streamfunctionMOC',
-            componentName='ocean',
-            tags=['streamfunction', 'moc', 'climatology', 'timeSeries'])
+                config=config,
+                taskName='streamfunctionMOC',
+                componentName='ocean',
+                tags=['streamfunction', 'moc', 'climatology', 'timeSeries'],
+                prerequisiteTasks=['cacheOceanTimeSeriesStatsTimes'])
 
         # }}}
 
@@ -98,17 +98,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         #   First a list necessary for the streamfunctionMOC climatology
         streamName = self.historyStreams.find_stream(
             self.streamMap['timeSeriesStats'])
-        self.startDateClimo = config.get('climatology', 'startDate')
-        self.endDateClimo = config.get('climatology', 'endDate')
-        self.inputFilesClimo = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDateClimo,
-                                         endDate=self.endDateClimo,
-                                         calendar=self.calendar)
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        self.startYearClimo = config.getint('climatology', 'startYear')
-        self.endYearClimo = config.getint('climatology', 'endYear')
 
         #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
         self.startDateTseries = config.get('timeSeries', 'startDate')
@@ -141,11 +131,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         print "\nPlotting streamfunction of Meridional Overturning " \
               "Circulation (MOC)..."
 
-        print '\n  List of files for climatologies:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFilesClimo[0]),
-                  os.path.basename(self.inputFilesClimo[-1]))
-
         print '\n  List of files for time series:\n' \
               '    {} through\n    {}'.format(
                   os.path.basename(self.inputFilesTseries[0]),
@@ -163,8 +148,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #                                      sectionName, dictClimo,
             #                                      dictTseries)
         else:
-            self._cache_velocity_climatologies()
-            self._compute_moc_climo_postprocess()
+            velocityClimatology = self._cache_velocity_climatologies()
+            self.startYearClimo = velocityClimatology.startYear
+            self.endYearClimo = velocityClimatology.endYear
+            self._compute_moc_climo_postprocess(velocityClimatology)
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
 
         # **** Plot MOC ****
@@ -244,42 +231,56 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     def _cache_velocity_climatologies(self):  # {{{
         '''compute yearly velocity climatologies and cache them'''
 
+        velocityClimatology = MpasClimatology(
+            task=self,
+            fieldName='meanVelocity',
+            monthNames='ANN',
+            streamName='timeSeriesStats')
+
+        # compute and cache the velocity climatology
+        velocityClimatology.cache(openDataSetFunc=self._open_velcoity_part,
+                                  printProgress=True)
+
+        return velocityClimatology  # }}}
+
+    def _open_velcoity_part(self, inputFileNames, startDate, endDate):  # {{{
+        """
+        Open part of the monthly mean velocity data set between the given
+        start and end date, used to cache a climatology of the data set.
+
+        Parameters
+        ----------
+        inputFileNames : list of str
+            File names in the multifile data set to open
+
+        startDate, endDate : float
+            start and end date to which to crop the Time dimension (given in
+            days since 0001-01-01)
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
         variableList = ['avgNormalVelocity',
                         'avgVertVelocityTop']
 
-        config = self.config
-
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
-
-        make_directories(outputDirectory)
-
-        chunking = config.getExpression(self.sectionName, 'maxChunkSize')
+        chunking = self.config.getExpression(self.sectionName, 'maxChunkSize')
         ds = open_multifile_dataset(
-            fileNames=self.inputFilesClimo,
+            fileNames=inputFileNames,
             calendar=self.calendar,
-            config=config,
+            config=self.config,
             simulationStartTime=self.simulationStartTime,
             timeVariableName='Time',
             variableList=variableList,
             variableMap=self.variableMap,
-            startDate=self.startDateClimo,
-            endDate=self.endDateClimo,
+            startDate=startDate,
+            endDate=endDate,
             chunking=chunking)
 
-        # update the start and end year in config based on the real extend of
-        # ds
-        update_start_end_year(ds, config, self.calendar)
+        return ds  # }}}
 
-        cachePrefix = '{}/meanVelocity'.format(outputDirectory)
-
-        # compute and cache the velocity climatology
-        cache_climatologies(ds, monthDictionary['ANN'],
-                            config, cachePrefix, self.calendar,
-                            printProgress=True)
-        # }}}
-
-    def _compute_moc_climo_postprocess(self):  # {{{
+    def _compute_moc_climo_postprocess(self, velocityClimatology):  # {{{
 
         '''compute mean MOC streamfunction as a post-process'''
 
@@ -340,19 +341,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                            outputDirectory, self.startYearClimo,
                            self.endYearClimo)
         if not os.path.exists(outputFileClimo):
-            print '   Load data...'
-
-            cachePrefix = '{}/meanVelocity'.format(outputDirectory)
-
-            if self.startYearClimo == self.endYearClimo:
-                yearString = '{:04d}'.format(self.startYearClimo)
-                velClimoFile = '{}_year{}.nc'.format(cachePrefix, yearString)
-            else:
-                yearString = '{:04d}-{:04d}'.format(self.startYearClimo,
-                                                    self.endYearClimo)
-                velClimoFile = '{}_years{}.nc'.format(cachePrefix, yearString)
-
-            annualClimatology = xr.open_dataset(velClimoFile)
+            annualClimatology = velocityClimatology.dataSet
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)

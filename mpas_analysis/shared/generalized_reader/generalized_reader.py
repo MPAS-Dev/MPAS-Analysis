@@ -39,7 +39,7 @@ def open_multifile_dataset(fileNames, calendar, config,
     Parameters
     ----------
     fileNames : list of strings
-        A lsit of file paths to read
+        A list of file paths to read
 
     calendar : {'gregorian', 'gregorian_noleap'}, optional
         The name of one of the calendars supported by MPAS cores

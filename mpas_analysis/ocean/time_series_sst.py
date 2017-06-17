@@ -12,7 +12,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 
 from ..shared.time_series import time_series
 
-from ..shared.io.utility import build_config_full_path, make_directories, \
+from ..shared.io import build_config_full_path, make_directories, \
     check_path_exists
 
 

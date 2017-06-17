@@ -8,14 +8,14 @@ from ..shared.constants.constants import monthDictionary
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from ..shared.io import build_config_full_path, make_directories
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology import cache_climatologies
+from ..shared.climatology import MpasClimatology
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -45,10 +45,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         '''
         # first, call the constructor from the base class (AnalysisTask)
         super(MeridionalHeatTransport, self).__init__(
-            config=config,
-            taskName='meridionalHeatTransport',
-            componentName='ocean',
-            tags=['climatology'])
+                config=config,
+                taskName='meridionalHeatTransport',
+                componentName='ocean',
+                tags=['climatology'],
+                prerequisiteTasks=['cacheOceanTimeSeriesStatsTimes'])
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -80,22 +81,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             analysisOptionName='config_am_meridionalheattransport_enable',
             raiseException=True)
 
-        # Get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        #   First a list necessary for theMHT climatology
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        self.startDate = config.get('climatology', 'startDate')
-        self.endDate = config.get('climatology', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDate,
-                                         endDate=self.endDate,
-                                         calendar=self.calendar)
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        self.startYear = config.getint('climatology', 'startYear')
-        self.endYear = config.getint('climatology', 'endYear')
 
         self.sectionName = 'meridionalHeatTransport'
 
@@ -168,39 +154,16 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Then we will need to add another section for regions with a loop
         # over number of regions.
         ######################################################################
-        variableList = ['avgMeridionalHeatTransportLat',
-                        'avgMeridionalHeatTransportLatZ']
 
         print '\n  Compute and plot global meridional heat transport'
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        annualClimatology = MpasClimatology(task=self,
+                                            fieldName='mht',
+                                            monthNames='ANN',
+                                            streamName='timeSeriesStats')
 
-        print '\n  List of files for climatologies:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
-
-        make_directories(outputDirectory)
-
-        print '   Load data...'
-        ds = open_multifile_dataset(
-            fileNames=self.inputFiles,
-            calendar=self.calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
-            variableList=variableList,
-            variableMap=self.variableMap,
-            startDate=self.startDate,
-            endDate=self.endDate)
-
-        # Compute annual climatology
-        cachePrefix = '{}/meridionalHeatTransport'.format(outputDirectory)
-        annualClimatology = cache_climatologies(ds, monthDictionary['ANN'],
-                                                config, cachePrefix,
-                                                self.calendar,
-                                                printProgress=True)
+        annualClimatology.cache(openDataSetFunc=self._open_mht_part,
+                                printProgress=True)
 
         # **** Plot MHT ****
         # Define plotting variables
@@ -212,14 +175,15 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         print '   Plot global MHT...'
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
-        y = annualClimatology.avgMeridionalHeatTransportLat
+        y = annualClimatology.dataSet.avgMeridionalHeatTransportLat
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+                 annualClimatology.startYear, annualClimatology.endYear,
+                 mainRunName)
         figureName = '{}/mht_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      self.startYear, self.endYear)
+                      annualClimatology.startYear, annualClimatology.endYear)
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -251,7 +215,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         # normalize 2D MHT by layer thickness
         MHTLatZ = \
-            annualClimatology.avgMeridionalHeatTransportLatZ.values.T[:, :]
+            annualClimatology.dataSet.avgMeridionalHeatTransportLatZ.values.T
         for k in range(nVertLevels):
             MHTLatZ[k, :] = MHTLatZ[k, :]/refLayerThickness[k]
 
@@ -261,10 +225,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+                 annualClimatology.startYear, annualClimatology.endYear,
+                 mainRunName)
         figureName = '{}/mhtZ_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      self.startYear, self.endYear)
+                      annualClimatology.startYear, annualClimatology.endYear)
         colorbarLabel = '[PW/m]'
         contourLevels = config.getExpression(self.sectionName,
                                              'contourLevelsGlobal',
@@ -280,6 +245,39 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                               invertYAxis=False)
         # }}}
 
+    def _open_mht_part(self, inputFileNames, startDate, endDate):  # {{{
+        """
+        Open part of the MHT data set between the given start and end date,
+        used to cache a climatology of the data set.
+
+        Parameters
+        ----------
+        inputFileNames : list of str
+            File names in the multifile data set to open
+
+        startDate, endDate : float
+            start and end date to which to crop the Time dimension (given in
+            days since 0001-01-01)
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        variableList = ['avgMeridionalHeatTransportLat',
+                        'avgMeridionalHeatTransportLatZ']
+
+        ds = open_multifile_dataset(
+            fileNames=inputFileNames,
+            calendar=self.calendar,
+            config=self.config,
+            simulationStartTime=self.simulationStartTime,
+            timeVariableName='Time',
+            variableList=variableList,
+            variableMap=self.variableMap,
+            startDate=startDate,
+            endDate=endDate)
+
+        return ds  # }}}
     # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
