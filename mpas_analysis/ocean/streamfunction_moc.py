@@ -105,6 +105,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                          startDate=self.startDateClimo,
                                          endDate=self.endDateClimo,
                                          calendar=self.calendar)
+        if len(self.inputFilesClimo) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDateClimo,
+                                       self.endDateClimo))
+
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         self.startYearClimo = config.getint('climatology', 'startYear')
@@ -118,6 +123,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                          startDate=self.startDateTseries,
                                          endDate=self.endDateTseries,
                                          calendar=self.calendar)
+        if len(self.inputFilesTseries) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDateTseries,
+                                       self.endDateTseries))
 
         self.startYearTseries = config.getint('timeSeries', 'startYear')
         self.endYearTseries = config.getint('timeSeries', 'endYear')

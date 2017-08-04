@@ -82,7 +82,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        #   First a list necessary for theMHT climatology
+        #   First a list necessary for the MHT climatology
         streamName = self.historyStreams.find_stream(
             self.streamMap['timeSeriesStats'])
         self.startDate = config.get('climatology', 'startDate')
@@ -92,6 +92,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                          startDate=self.startDate,
                                          endDate=self.endDate,
                                          calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         self.startYear = config.getint('climatology', 'startYear')

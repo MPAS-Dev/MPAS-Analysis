@@ -66,6 +66,21 @@ class IndexNino34(AnalysisTask):  # {{{
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
         super(IndexNino34, self).setup_and_check()
 
+        # get a list of timeSeriesStats output files from the streams file,
+        # reading only those that are between the start and end dates
+        streamName = self.historyStreams.find_stream(
+            self.streamMap['timeSeriesStats'])
+        self.startDate = self.config.get('index', 'startDate')
+        self.endDate = self.config.get('index', 'endDate')
+        self.inputFiles = self.historyStreams.readpath(
+                streamName, startDate=self.startDate, endDate=self.endDate,
+                calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
         # }}}
 
     def run(self):  # {{{
@@ -87,10 +102,6 @@ class IndexNino34(AnalysisTask):  # {{{
         config = self.config
         calendar = self.calendar
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        startDate = config.get('index', 'startDate')
-        endDate = config.get('index', 'endDate')
         dataSource = config.get('indexNino34', 'observationData')
 
         observationsDirectory = build_config_full_path(
@@ -105,16 +116,10 @@ class IndexNino34(AnalysisTask):  # {{{
             dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
             obsTitle = 'ERS SSTv4'
 
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        fileNames = self.historyStreams.readpath(streamName,
-                                                 startDate=startDate,
-                                                 endDate=endDate,
-                                                 calendar=calendar)
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
-                  os.path.basename(fileNames[0]),
-                  os.path.basename(fileNames[-1]))
+                  os.path.basename(self.inputFiles[0]),
+                  os.path.basename(self.inputFiles[-1]))
         mainRunName = config.get('runs', 'mainRunName')
 
         # regionIndex should correspond to NINO34 in surface weighted Average
@@ -123,15 +128,15 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # Load data:
         varList = ['avgSurfaceTemperature']
-        ds = open_multifile_dataset(fileNames=fileNames,
+        ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
                                     timeVariableName='Time',
                                     variableList=varList,
                                     variableMap=self.variableMap,
-                                    startDate=startDate,
-                                    endDate=endDate)
+                                    startDate=self.startDate,
+                                    endDate=self.endDate)
 
         # Observations have been processed to the nino34Index prior to reading
         dsObs = xr.open_dataset(dataPath)

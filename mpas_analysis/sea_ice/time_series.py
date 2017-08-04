@@ -80,6 +80,22 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 check_path_exists(config.get('seaIcePreprocessedReference',
                                              'baseDirectory'))
 
+        # get a list of timeSeriesStatsMonthly output files from the streams
+        # file, reading only those that are between the start and end dates
+        streamName = self.historyStreams.find_stream(
+            self.streamMap['timeSeriesStats'])
+        self.startDate = config.get('timeSeries', 'startDate')
+        self.endDate = config.get('timeSeries', 'endDate')
+        self.inputFiles = \
+            self.historyStreams.readpath(streamName,
+                                         startDate=self.startDate,
+                                         endDate=self.endDate,
+                                         calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
         return  # }}}
 
     def run(self):  # {{{
@@ -96,20 +112,10 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         config = self.config
         calendar = self.calendar
 
-        # get a list of timeSeriesStatsMonthly output files from the streams
-        # file, reading only those that are between the start and end dates
-        startDate = config.get('timeSeries', 'startDate')
-        endDate = config.get('timeSeries', 'endDate')
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        fileNames = self.historyStreams.readpath(streamName,
-                                                 startDate=startDate,
-                                                 endDate=endDate,
-                                                 calendar=calendar)
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
-                  os.path.basename(fileNames[0]),
-                  os.path.basename(fileNames[-1]))
+                  os.path.basename(self.inputFiles[0]),
+                  os.path.basename(self.inputFiles[-1]))
 
         plotTitles = {'iceArea': 'Sea-ice area',
                       'iceVolume': 'Sea-ice volume',
@@ -164,15 +170,15 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         # Load data
         ds = open_multifile_dataset(
-            fileNames=fileNames,
+            fileNames=self.inputFiles,
             calendar=calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
             timeVariableName='Time',
             variableList=['iceAreaCell', 'iceVolumeCell'],
             variableMap=self.variableMap,
-            startDate=startDate,
-            endDate=endDate)
+            startDate=self.startDate,
+            endDate=self.endDate)
 
         yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
         yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
