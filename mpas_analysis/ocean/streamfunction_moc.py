@@ -270,6 +270,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # update the start and end year in config based on the real extend of
         # ds
         update_start_end_year(ds, config, self.calendar)
+        self.startYearClimo = config.getint('climatology', 'startYear')
+        self.endYearClimo = config.getint('climatology', 'endYear')
 
         cachePrefix = '{}/meanVelocity'.format(outputDirectory)
 
