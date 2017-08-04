@@ -342,7 +342,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapSST, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -451,7 +451,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapSSS, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -543,7 +543,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapMLD, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
