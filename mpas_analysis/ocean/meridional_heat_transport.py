@@ -15,7 +15,8 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology import cache_climatologies
+from ..shared.climatology.climatology import update_start_end_year, \
+    cache_climatologies
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -201,6 +202,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             startDate=self.startDate,
             endDate=self.endDate)
 
+        changed, startYear, endYear = update_start_end_year(ds, config,
+                                                            self.calendar)
+
         # Compute annual climatology
         cachePrefix = '{}/meridionalHeatTransport'.format(outputDirectory)
         annualClimatology = cache_climatologies(ds, monthDictionary['ANN'],
@@ -222,10 +226,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+                 startYear, endYear, mainRunName)
         figureName = '{}/mht_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      self.startYear, self.endYear)
+                      startYear, endYear)
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -267,10 +271,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+                 startYear, endYear, mainRunName)
         figureName = '{}/mhtZ_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      self.startYear, self.endYear)
+                      startYear, endYear)
         colorbarLabel = '[PW/m]'
         contourLevels = config.getExpression(self.sectionName,
                                              'contourLevelsGlobal',
