@@ -14,12 +14,16 @@ import xarray as xr
 import os
 import numpy
 import warnings
+from distutils.spawn import find_executable
+import sys
+import subprocess
 
 from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path, make_directories, fingerprint_generator
+from ..io.utility import build_config_full_path, make_directories, \
+    fingerprint_generator
 
 from ..interpolation import Remapper
 from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
@@ -228,6 +232,75 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
                 regriddedFileName)
 
     # }}}
+
+
+def compute_climatologies_with_ncclimo(inDirectory, outDirectory,
+                                       startYear, endYear,
+                                       variableList, modelName,
+                                       decemberMode='scd'):  # {{{
+    '''
+    Uses ncclimo to compute monthly, seasonal (DJF, MAM, JJA, SON) and annual
+    climatologies.
+
+    Parameters
+    ----------
+    inDirectory : str
+        The run directory containing timeSeriesStatsMonthly output
+
+    outDirectory : str
+        The output directory where climatologies will be written
+
+
+    startYear, endYear : int
+        The start and end years of the climatology
+
+    variableList : list of str
+        A list of variables to include in the climatology
+
+    modeName : ['mpaso', 'mpascice']
+        The name of the component for which the climatology is to be computed
+
+    decemberMode : ['scd', 'sdd']
+        Whether years start in December (scd - seasonally continuous December)
+        or January (sdd - seasonally discontinuous December).  If the former,
+        the data set begins with December of the year before startYear and ends
+        with November of endYear.  Otherwise, goes from January of startYear to
+        December of endYear.
+
+    Raises
+    ------
+    OSError
+        If ``ncclimo`` is not in the system path.
+
+    Author
+    ------
+    Xylar Asay-Davis
+    '''
+
+    if find_executable('ncclimo') is None:
+        raise OSError('ncclimo not found. Make sure the latest nco '
+                      'package is installed: \n'
+                      'conda install nco\n'
+                      'Note: this presumes use of the conda-forge '
+                      'channel.')
+
+    args = ['ncclimo',
+            '-a', decemberMode,
+            '-m', modelName,
+            '-v', ','.join(variableList),
+            '-s', '{:04d}'.format(startYear),
+            '-e', '{:04d}'.format(endYear),
+            '-i', inDirectory,
+            '-o', outDirectory]
+
+    print 'running: {}'.format(' '.join(args))
+
+    # make sure any output is flushed before we add output from the
+    # subprocess
+    sys.stdout.flush()
+    sys.stderr.flush()
+
+    subprocess.check_call(args)  # }}}
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,
@@ -500,8 +573,8 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
 
 def update_start_end_year(ds, config, calendar):  # {{{
     """
-    Given a monthly climatology, compute a seasonal climatology weighted by
-    the number of days in each month (on the no-leap-year calendar).
+    Update the start and end years for climatologies based on the
+    years actually present in the given data set.
 
     Parameters
     ----------
@@ -525,16 +598,77 @@ def update_start_end_year(ds, config, calendar):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    03/25/2017
     """
     requestedStartYear = config.getint('climatology', 'startYear')
     requestedEndYear = config.getint('climatology', 'endYear')
 
     startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
     endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
+    changed = False
+    if startYear != requestedStartYear or endYear != requestedEndYear:
+        message = "climatology start and/or end year different from " \
+                  "requested\n" \
+                  "requestd: {:04d}-{:04d}\n" \
+                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear)
+        warnings.warn(message)
+        config.set('climatology', 'startYear', str(startYear))
+        config.set('climatology', 'endYear', str(endYear))
+        changed = True
+
+    return changed, startYear, endYear  # }}}
+
+
+def update_start_end_year_from_file_names(inputFiles, config, calendar):  # {{{
+    """
+    Update the start and end years for climatologies based on the
+    years actually available in the list of files.
+
+    Parameters
+    ----------
+    inputFiles : list of str
+        A list of file names ending with dates (before the '.nc' extension)
+
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    calendar : {'gregorian', 'gregorian_noleap'}
+        The name of one of the calendars supported by MPAS cores
+
+    Returns
+    -------
+    changed : bool
+        Whether the start and end years were changed
+
+    startYear, endYear : int
+        The start and end years of the data set
+
+    Authors
+    -------
+    Xylar Asay-Davis
+
+    """
+    requestedStartYear = config.getint('climatology', 'startYear')
+    requestedEndYear = config.getint('climatology', 'endYear')
+
+    dates = sorted([fileName[-13:-6] for fileName in inputFiles])
+    years = [int(date[0:4]) for date in dates]
+    months = [int(date[5:7]) for date in dates]
+
+    # search for the start of the first full year
+    firstIndex = 0
+    while(firstIndex < len(years) and months[firstIndex] != 1):
+        firstIndex += 1
+    startYear = years[firstIndex]
+
+    # search for the end of the last full year
+    lastIndex = len(years)-1
+    while(lastIndex >= 0 and months[lastIndex] != 12):
+        lastIndex -= 1
+    endYear = years[lastIndex]
+
     changed = False
     if startYear != requestedStartYear or endYear != requestedEndYear:
         message = "climatology start and/or end year different from " \

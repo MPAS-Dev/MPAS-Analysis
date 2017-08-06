@@ -17,8 +17,9 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology.climatology import update_start_end_year, \
-    cache_climatologies
+from ..shared.climatology.climatology \
+    import update_start_end_year_from_file_names, \
+    compute_climatologies_with_ncclimo
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -172,7 +173,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #                                      sectionName, dictClimo,
             #                                      dictTseries)
         else:
-            self._cache_velocity_climatologies()
+            self._compute_velocity_climatologies()
             self._compute_moc_climo_postprocess()
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
 
@@ -250,44 +251,39 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness
         # }}}
 
-    def _cache_velocity_climatologies(self):  # {{{
+    def _compute_velocity_climatologies(self):  # {{{
         '''compute yearly velocity climatologies and cache them'''
 
-        variableList = ['avgNormalVelocity',
-                        'avgVertVelocityTop']
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
 
         config = self.config
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputRoot = build_config_full_path(config, 'output',
+                                            'mpasClimatologySubdirectory')
 
-        make_directories(outputDirectory)
+        outputDirectory = '{}/meanVelocity'.format(outputRoot)
 
-        chunking = config.getExpression(self.sectionName, 'maxChunkSize')
-        ds = open_multifile_dataset(
-            fileNames=self.inputFilesClimo,
-            calendar=self.calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
-            variableList=variableList,
-            variableMap=self.variableMap,
-            startDate=self.startDateClimo,
-            endDate=self.endDateClimo,
-            chunking=chunking)
+        changed, self.startYearClimo, self.endYearClimo = \
+            update_start_end_year_from_file_names(self.inputFilesClimo,
+                                                  config, self.calendar)
 
-        # update the start and end year in config based on the real extend of
-        # ds
-        update_start_end_year(ds, config, self.calendar)
-        self.startYearClimo = config.getint('climatology', 'startYear')
-        self.endYearClimo = config.getint('climatology', 'endYear')
+        self.velClimoFile = \
+            '{}/mpaso_ANN_{:04d}01_{:04d}12_climo.nc'.format(
+                    outputDirectory, self.startYearClimo,
+                    self.endYearClimo)
 
-        cachePrefix = '{}/meanVelocity'.format(outputDirectory)
+        if not os.path.exists(self.velClimoFile):
+            make_directories(outputDirectory)
 
-        # compute and cache the velocity climatology
-        cache_climatologies(ds, monthDictionary['ANN'],
-                            config, cachePrefix, self.calendar,
-                            printProgress=True)
+            compute_climatologies_with_ncclimo(
+                    inDirectory=self.historyDirectory,
+                    outDirectory=outputDirectory,
+                    startYear=self.startYearClimo,
+                    endYear=self.endYearClimo,
+                    variableList=variableList,
+                    modelName='mpaso',
+                    decemberMode='sdd')
         # }}}
 
     def _compute_moc_climo_postprocess(self):  # {{{
@@ -353,22 +349,16 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         if not os.path.exists(outputFileClimo):
             print '   Load data...'
 
-            cachePrefix = '{}/meanVelocity'.format(outputDirectory)
-
-            if self.startYearClimo == self.endYearClimo:
-                yearString = '{:04d}'.format(self.startYearClimo)
-                velClimoFile = '{}_year{}.nc'.format(cachePrefix, yearString)
-            else:
-                yearString = '{:04d}-{:04d}'.format(self.startYearClimo,
-                                                    self.endYearClimo)
-                velClimoFile = '{}_years{}.nc'.format(cachePrefix, yearString)
-
-            annualClimatology = xr.open_dataset(velClimoFile)
+            annualClimatology = xr.open_dataset(self.velClimoFile)
+            # rename some variables for convenience
+            annualClimatology = annualClimatology.rename(
+                    {'timeMonthly_avg_normalVelocity':'avgNormalVelocity',
+                     'timeMonthly_avg_vertVelocityTop':'avgVertVelocityTop'})
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)
-            horizontalVel = annualClimatology.avgNormalVelocity.values
-            verticalVel = annualClimatology.avgVertVelocityTop.values
+            horizontalVel = annualClimatology.avgNormalVelocity.values[0, :, :]
+            verticalVel = annualClimatology.avgVertVelocityTop.values[0, :, :]
             velArea = verticalVel * areaCell[:, np.newaxis]
 
             # Create dictionary for MOC climatology (NB: need this form
