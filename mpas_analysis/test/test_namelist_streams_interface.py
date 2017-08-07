@@ -57,7 +57,7 @@ class TestNamelist(TestCase):
         self.assertEqual(files, expectedFiles)
 
         files = self.sf.readpath('output',
-                                 startDate='0001-01-03',
+                                 startDate='0001-01-02',
                                  endDate='0001-12-30',
                                  calendar='gregorian_noleap')
         expectedFiles = []
@@ -67,7 +67,7 @@ class TestNamelist(TestCase):
         self.assertEqual(files, expectedFiles)
 
         files = self.sf.readpath('output',
-                                 startDate='0001-01-03',
+                                 startDate='0001-01-02',
                                  calendar='gregorian_noleap')
         expectedFiles = []
         for date in ['0001-01-02', '0001-02-01', '0002-01-01']:

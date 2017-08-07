@@ -259,37 +259,15 @@ class StreamsFile:
         if (startDate is None) and (endDate is None):
             return fileList
 
-        output_interval = self.read(streamName, 'output_interval')
-        if output_interval is None:
-            # There's no file interval, so hard to know what to do
-            # let's put a buffer of a year on each side to be safe
-            offsetDate = string_to_relative_delta(dateString='0001-00-00',
-                                                  calendar=calendar)
-        else:
-            offsetDate = string_to_relative_delta(dateString=output_interval,
-                                                  calendar=calendar)
-
         if startDate is not None:
             # read one extra file before the start date to be on the safe side
             if isinstance(startDate, str):
                 startDate = string_to_datetime(startDate)
-            try:
-                startDate -= offsetDate
-            except (ValueError, OverflowError):
-                # if the startDate would be out of range after subtracting
-                # the offset, we'll stick with the starDate as it is
-                pass
 
         if endDate is not None:
             # read one extra file after the end date to be on the safe side
             if isinstance(endDate, str):
                 endDate = string_to_datetime(endDate)
-            try:
-                endDate += offsetDate
-            except (ValueError, OverflowError):
-                # if the endDate would be out of range after adding
-                # the offset, we'll stick with the endDate as it is
-                pass
 
         # remove any path that's part of the template
         template = os.path.basename(template)
