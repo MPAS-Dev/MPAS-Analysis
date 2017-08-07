@@ -99,6 +99,16 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
+        # Later, we will read in depth and MHT latitude points
+        # from mpaso.hist.am.meridionalHeatTransport.*.nc
+        mhtFiles = self.historyStreams.readpath(
+                'meridionalHeatTransportOutput')
+        if len(mhtFiles) == 0:
+            raise IOError('No MPAS-O MHT history file found: need at least '
+                          'one ')
+
+        self.mhtFile = mhtFiles[0]
+
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         self.startYear = config.getint('climatology', 'startYear')
@@ -144,15 +154,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         #  mpaso.hist.am.meridionalHeatTransport.*.nc
         # Depth is from refZMid, also in
         # mpaso.hist.am.meridionalHeatTransport.*.nc
-        try:
-            mhtFile = self.historyStreams.readpath(
-                'meridionalHeatTransportOutput')[0]
-        except ValueError:
-            raise IOError('No MPAS-O MHT history file found: need at least '
-                          'one ')
 
         print '  Read in depth and latitude...'
-        ncFile = netCDF4.Dataset(mhtFile, mode='r')
+        ncFile = netCDF4.Dataset(self.mhtFile, mode='r')
         # reference depth [m]
         refZMid = ncFile.variables['refZMid'][:]
         refBottomDepth = ncFile.variables['refBottomDepth'][:]
