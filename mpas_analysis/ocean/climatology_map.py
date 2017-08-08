@@ -68,6 +68,21 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
+        # get a list of timeSeriesStats output files from the streams file,
+        # reading only those that are between the start and end dates
+        self.startDate = self.config.get('climatology', 'startDate')
+        self.endDate = self.config.get('climatology', 'endDate')
+        streamName = \
+            self.historyStreams.find_stream(self.streamMap['timeSeriesStats'])
+        self.inputFiles = self.historyStreams.readpath(
+                streamName, startDate=self.startDate, endDate=self.endDate,
+                calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
         # }}}
 
     def run(self):  # {{{
@@ -93,20 +108,10 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         simulationStartTime = get_simulation_start_time(self.runStreams)
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        startDate = config.get('climatology', 'startDate')
-        endDate = config.get('climatology', 'endDate')
-        streamName = \
-            self.historyStreams.find_stream(self.streamMap['timeSeriesStats'])
-        inputFiles = self.historyStreams.readpath(streamName,
-                                                  startDate=startDate,
-                                                  endDate=endDate,
-                                                  calendar=calendar)
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
-                  os.path.basename(inputFiles[0]),
-                  os.path.basename(inputFiles[-1]))
+                  os.path.basename(self.inputFiles[0]),
+                  os.path.basename(self.inputFiles[-1]))
 
         mainRunName = config.get('runs', 'mainRunName')
 
@@ -128,7 +133,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         varList = [fieldName]
 
-        ds = open_multifile_dataset(fileNames=inputFiles,
+        ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
@@ -136,8 +141,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                     variableList=varList,
                                     iselValues=self.iselValues,
                                     variableMap=self.variableMap,
-                                    startDate=startDate,
-                                    endDate=endDate)
+                                    startDate=self.startDate,
+                                    endDate=self.endDate)
 
         changed, startYear, endYear = update_start_end_year(ds, config,
                                                             calendar)
@@ -342,7 +347,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapSST, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -451,7 +456,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapSSS, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
@@ -543,7 +548,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapOcean, self).setup_and_check()
+        super(ClimatologyMapMLD, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',

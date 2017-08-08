@@ -76,6 +76,24 @@ class TimeSeriesSST(AnalysisTask):
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('oceanPreprocessedReference',
                                              'baseDirectory'))
+
+        # get a list of timeSeriesStats output files from the streams file,
+        # reading only those that are between the start and end dates
+        streamName = self.historyStreams.find_stream(
+            self.streamMap['timeSeriesStats'])
+        self.startDate = config.get('timeSeries', 'startDate')
+        self.endDate = config.get('timeSeries', 'endDate')
+        self.inputFiles = \
+            self.historyStreams.readpath(streamName,
+                                         startDate=self.startDate,
+                                         endDate=self.endDate,
+                                         calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
         return  # }}}
 
     def run(self):  # {{{
@@ -96,20 +114,10 @@ class TimeSeriesSST(AnalysisTask):
         config = self.config
         calendar = self.calendar
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        startDate = config.get('timeSeries', 'startDate')
-        endDate = config.get('timeSeries', 'endDate')
-        streamName = \
-            self.historyStreams.find_stream(self.streamMap['timeSeriesStats'])
-        fileNames = self.historyStreams.readpath(streamName,
-                                                 startDate=startDate,
-                                                 endDate=endDate,
-                                                 calendar=calendar)
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
-                  os.path.basename(fileNames[0]),
-                  os.path.basename(fileNames[-1]))
+                  os.path.basename(self.inputFiles[0]),
+                  os.path.basename(self.inputFiles[-1]))
 
         mainRunName = config.get('runs', 'mainRunName')
         preprocessedReferenceRunName = \
@@ -135,15 +143,15 @@ class TimeSeriesSST(AnalysisTask):
 
         # Load data:
         varList = ['avgSurfaceTemperature']
-        ds = open_multifile_dataset(fileNames=fileNames,
+        ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
                                     timeVariableName='Time',
                                     variableList=varList,
                                     variableMap=self.variableMap,
-                                    startDate=startDate,
-                                    endDate=endDate)
+                                    startDate=self.startDate,
+                                    endDate=self.endDate)
 
         ds = ds.isel(nOceanRegions=regionIndicesToPlot)
 

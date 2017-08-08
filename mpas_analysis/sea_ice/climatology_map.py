@@ -75,6 +75,23 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
+        # get a list of timeSeriesStatsMonthly output files from the streams
+        # file, reading only those that are between the start and end dates
+        streamName = self.historyStreams.find_stream(
+            self.streamMap['timeSeriesStats'])
+        self.startDate = self.config.get('climatology', 'startDate')
+        self.endDate = self.config.get('climatology', 'endDate')
+        self.inputFiles = \
+            self.historyStreams.readpath(streamName,
+                                         startDate=self.startDate,
+                                         endDate=self.endDate,
+                                         calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
         return  # }}}
 
     def run(self):  # {{{
@@ -90,29 +107,22 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         print "\nPlotting 2-d maps of sea-ice concentration and thickness " \
             "climatologies..."
 
-        # get a list of timeSeriesStatsMonthly output files from the streams
-        # file, reading only those that are between the start and end dates
-        startDate = self.config.get('climatology', 'startDate')
-        endDate = self.config.get('climatology', 'endDate')
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        fileNames = self.historyStreams.readpath(streamName,
-                                                 startDate=startDate,
-                                                 endDate=endDate,
-                                                 calendar=self.calendar)
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
-                  os.path.basename(fileNames[0]),
-                  os.path.basename(fileNames[-1]))
+                  os.path.basename(self.inputFiles[0]),
+                  os.path.basename(self.inputFiles[-1]))
         # Load data
         print '  Load sea-ice data...'
         self.ds = open_multifile_dataset(
-            fileNames=fileNames, calendar=self.calendar, config=self.config,
+            fileNames=self.inputFiles,
+            calendar=self.calendar,
+            config=self.config,
             simulationStartTime=self.simulationStartTime,
             timeVariableName='Time',
             variableList=['iceAreaCell', 'iceVolumeCell'],
-            variableMap=self.variableMap, startDate=startDate,
-            endDate=endDate)
+            variableMap=self.variableMap,
+            startDate=self.startDate,
+            endDate=self.endDate)
 
         # Compute climatologies (first motnhly and then seasonally)
         print '  Compute seasonal climatologies...'

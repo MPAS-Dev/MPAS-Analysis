@@ -15,7 +15,8 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology import cache_climatologies
+from ..shared.climatology.climatology import update_start_end_year, \
+    cache_climatologies
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -82,7 +83,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        #   First a list necessary for theMHT climatology
+        #   First a list necessary for the MHT climatology
         streamName = self.historyStreams.find_stream(
             self.streamMap['timeSeriesStats'])
         self.startDate = config.get('climatology', 'startDate')
@@ -92,6 +93,22 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                          startDate=self.startDate,
                                          endDate=self.endDate,
                                          calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
+        # Later, we will read in depth and MHT latitude points
+        # from mpaso.hist.am.meridionalHeatTransport.*.nc
+        mhtFiles = self.historyStreams.readpath(
+                'meridionalHeatTransportOutput')
+        if len(mhtFiles) == 0:
+            raise IOError('No MPAS-O MHT history file found: need at least '
+                          'one ')
+
+        self.mhtFile = mhtFiles[0]
+
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         self.startYear = config.getint('climatology', 'startYear')
@@ -137,15 +154,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         #  mpaso.hist.am.meridionalHeatTransport.*.nc
         # Depth is from refZMid, also in
         # mpaso.hist.am.meridionalHeatTransport.*.nc
-        try:
-            mhtFile = self.historyStreams.readpath(
-                'meridionalHeatTransportOutput')[0]
-        except ValueError:
-            raise IOError('No MPAS-O MHT history file found: need at least '
-                          'one ')
 
         print '  Read in depth and latitude...'
-        ncFile = netCDF4.Dataset(mhtFile, mode='r')
+        ncFile = netCDF4.Dataset(self.mhtFile, mode='r')
         # reference depth [m]
         refZMid = ncFile.variables['refZMid'][:]
         refBottomDepth = ncFile.variables['refBottomDepth'][:]
@@ -195,6 +206,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             startDate=self.startDate,
             endDate=self.endDate)
 
+        changed, startYear, endYear = update_start_end_year(ds, config,
+                                                            self.calendar)
+
         # Compute annual climatology
         cachePrefix = '{}/meridionalHeatTransport'.format(outputDirectory)
         annualClimatology = cache_climatologies(ds, monthDictionary['ANN'],
@@ -216,10 +230,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+                 startYear, endYear, mainRunName)
         figureName = '{}/mht_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      self.startYear, self.endYear)
+                      startYear, endYear)
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -261,10 +275,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+                 startYear, endYear, mainRunName)
         figureName = '{}/mhtZ_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      self.startYear, self.endYear)
+                      startYear, endYear)
         colorbarLabel = '[PW/m]'
         contourLevels = config.getExpression(self.sectionName,
                                              'contourLevelsGlobal',
