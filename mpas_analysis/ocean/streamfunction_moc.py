@@ -322,6 +322,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             make_directories(outputDirectory)
 
             compute_climatologies_with_ncclimo(
+                    config=config,
                     inDirectory=self.historyDirectory,
                     outDirectory=outputDirectory,
                     startYear=self.startYearClimo,
