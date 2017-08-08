@@ -4,8 +4,7 @@ import netCDF4
 import os
 from functools import partial
 
-from ..shared.constants.constants import m3ps_to_Sv, \
-    monthDictionary
+from ..shared.constants.constants import m3ps_to_Sv
 from ..shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
@@ -277,6 +276,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             make_directories(outputDirectory)
 
             compute_climatologies_with_ncclimo(
+                    config=config,
                     inDirectory=self.historyDirectory,
                     outDirectory=outputDirectory,
                     startYear=self.startYearClimo,
@@ -352,8 +352,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             annualClimatology = xr.open_dataset(self.velClimoFile)
             # rename some variables for convenience
             annualClimatology = annualClimatology.rename(
-                    {'timeMonthly_avg_normalVelocity':'avgNormalVelocity',
-                     'timeMonthly_avg_vertVelocityTop':'avgVertVelocityTop'})
+                    {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+                     'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)

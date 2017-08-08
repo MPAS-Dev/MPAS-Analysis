@@ -234,7 +234,7 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     # }}}
 
 
-def compute_climatologies_with_ncclimo(inDirectory, outDirectory,
+def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
                                        startYear, endYear,
                                        variableList, modelName,
                                        decemberMode='scd'):  # {{{
@@ -244,6 +244,9 @@ def compute_climatologies_with_ncclimo(inDirectory, outDirectory,
 
     Parameters
     ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
     inDirectory : str
         The run directory containing timeSeriesStatsMonthly output
 
@@ -284,9 +287,12 @@ def compute_climatologies_with_ncclimo(inDirectory, outDirectory,
                       'Note: this presumes use of the conda-forge '
                       'channel.')
 
+    parallelMode = config.get('execute', 'ncclimoParallelMode')
+
     args = ['ncclimo',
             '-a', decemberMode,
             '-m', modelName,
+            '-p', parallelMode,
             '-v', ','.join(variableList),
             '-s', '{:04d}'.format(startYear),
             '-e', '{:04d}'.format(endYear),
