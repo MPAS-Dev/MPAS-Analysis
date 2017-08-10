@@ -142,9 +142,8 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     return remapper  # }}}
 
 
-def get_mpas_climatology_file_names(config, fieldName, monthNames,
-                                    mpasMeshName,
-                                    comparisonGridName=None):  # {{{
+def get_mpas_climatology_dir_name(config, fieldName, mpasMeshName,
+                                  comparisonGridName=None):  # {{{
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for MPAS
@@ -158,9 +157,6 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     fieldName : str
         Name of the field being mapped, used as a prefix for the climatology
         file name.
-
-    monthNames : str
-        A string identifying the months in a seasonal climatology (e.g. 'JFM')
 
     mpasMeshName : str
         The name of the MPAS mesh
@@ -191,35 +187,28 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     05/05/2017
     """
 
-    climSection = 'climatology'
-    startYear = config.getint(climSection, 'startYear')
-    endYear = config.getint(climSection, 'endYear')
-
-    climatologyDirectory = build_config_full_path(
+    climatologyBaseDirectory = build_config_full_path(
         config, 'output', 'mpasClimatologySubdirectory')
+
+    climatologyDirectory = '{}/{}_{}'.format(climatologyBaseDirectory,
+                                             fieldName,
+                                             mpasMeshName)
 
     make_directories(climatologyDirectory)
 
-    climatologyPrefix = '{}/{}_{}_{}'.format(climatologyDirectory, fieldName,
-                                             mpasMeshName, monthNames)
-
-    yearString, fileSuffix = _get_year_string(startYear, endYear)
-    climatologyFileName = '{}_{}.nc'.format(climatologyPrefix, fileSuffix)
-
     if comparisonGridName is None:
-        return (climatologyFileName, climatologyPrefix)
+        return climatologyDirectory
     else:
-        remappedDirectory = build_config_full_path(
+        remappedBaseDirectory = build_config_full_path(
             config, 'output', 'mpasRemappedClimSubdirectory')
+
+        remappedDirectory = '{}/{}_{}_to_{}.nc'.format(
+                remappedBaseDirectory, fieldName, mpasMeshName,
+                comparisonGridName)
 
         make_directories(remappedDirectory)
 
-        remappedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
-                remappedDirectory, fieldName, mpasMeshName,
-                comparisonGridName, monthNames, fileSuffix)
-
-        return (climatologyFileName, climatologyPrefix,
-                remappedFileName)
+        return (climatologyDirectory, remappedDirectory)
 
     # }}}
 
@@ -227,7 +216,9 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
 def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
                                        startYear, endYear,
                                        variableList, modelName,
-                                       decemberMode='scd'):  # {{{
+                                       decemberMode='scd',
+                                       remapper=None,
+                                       regriddedDirectory=None):  # {{{
     '''
     Uses ncclimo to compute monthly, seasonal (DJF, MAM, JJA, SON) and annual
     climatologies.
@@ -250,7 +241,7 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     variableList : list of str
         A list of variables to include in the climatology
 
-    modeName : ['mpaso', 'mpascice']
+    modelName : ['mpaso', 'mpascice']
         The name of the component for which the climatology is to be computed
 
     decemberMode : ['scd', 'sdd']
@@ -259,6 +250,16 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
         the data set begins with December of the year before startYear and ends
         with November of endYear.  Otherwise, goes from January of startYear to
         December of endYear.
+
+    remapper : ``shared.intrpolation.Remapper`` object, optional
+        If present, a remapper that defines the source and desitnation grids
+        for remapping the climatologies.
+
+    regriddedDirectory : str, optional
+        If present, the path where regridded climatologies should be written.
+        By default, regridded files are stored in the same directory as the
+        climatologies on the source grid.  Has no effect if ``remapper`` is
+        ``None``.
 
     Raises
     ------
@@ -280,6 +281,7 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     parallelMode = config.get('execute', 'ncclimoParallelMode')
 
     args = ['ncclimo',
+            '--clm_md=mth',
             '-a', decemberMode,
             '-m', modelName,
             '-p', parallelMode,
@@ -288,6 +290,71 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
             '-e', '{:04d}'.format(endYear),
             '-i', inDirectory,
             '-o', outDirectory]
+
+    if remapper is not None:
+        args.extend(['-r', remapper.mappingFileName])
+    if regriddedDirectory is not None:
+        args.extend(['-O', regriddedDirectory])
+
+    print 'running: {}'.format(' '.join(args))
+
+    # make sure any output is flushed before we add output from the
+    # subprocess
+    sys.stdout.flush()
+    sys.stderr.flush()
+
+    subprocess.check_call(args)  # }}}
+
+
+def compute_seasonal_climatology_ncra(config, inDirectory, modelName,
+                                      inMonthValues, outFileName):  # {{{
+    '''
+    Uses ncra to compute a seasonal climatology from monthly climatologies
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    inDirectory : str
+        The run directory containing timeSeriesStatsMonthly output
+
+    modelName : ['mpaso', 'mpascice']
+        The name of the component for which the climatology is to be computed
+
+    inMonthValues : list like
+        A list of months in the season
+
+    outFileName : str
+        The file to which the seasonal climatology will be written
+
+    Raises
+    ------
+    OSError
+        If ``ncra`` is not in the system path.
+
+    Author
+    ------
+    Xylar Asay-Davis
+    '''
+
+    if find_executable('ncra') is None:
+        raise OSError('ncra not found. Make sure the latest nco '
+                      'package is installed: \n'
+                      'conda install nco\n'
+                      'Note: this presumes use of the conda-forge '
+                      'channel.')
+
+    weights = []
+    inFileNames = []
+    for month in inMonthValues:
+        weights.append(str(constants.daysInMonth[month-1]))
+
+        inFileNames.append('{}/{}_{:02d}_climo.nc'.format(
+                inDirectory, modelName, month))
+
+    args = ['ncra', '--cb', '-O', '-w', ','.join(weights)] + inFileNames + \
+        [outFileName]
 
     print 'running: {}'.format(' '.join(args))
 
@@ -601,9 +668,9 @@ def update_start_end_year(ds, config, calendar):  # {{{
     return changed, startYear, endYear  # }}}
 
 
-def update_start_end_year_from_file_names(inputFiles, config):  # {{{
+def update_climatology_bounds_from_file_names(inputFiles, config):  # {{{
     """
-    Update the start and end years for climatologies based on the
+    Update the start and end years and dates for climatologies based on the
     years actually available in the list of files.
 
     Parameters
@@ -658,9 +725,18 @@ def update_start_end_year_from_file_names(inputFiles, config):  # {{{
         warnings.warn(message)
         config.set('climatology', 'startYear', str(startYear))
         config.set('climatology', 'endYear', str(endYear))
+
+        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
+        config.set('climatology', 'startDate', startDate)
+        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+        config.set('climatology', 'endDate', endDate)
         changed = True
 
-    return changed, startYear, endYear  # }}}
+    else:
+        startDate = config.get('climatology', 'startDate')
+        endDate = config.get('climatology', 'endDate')
+
+    return changed, startYear, endYear, startDate, endDate  # }}}
 
 
 def add_years_months_days_in_month(ds, calendar=None):  # {{{

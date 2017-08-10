@@ -17,7 +17,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
 from ..shared.climatology.climatology \
-    import update_start_end_year_from_file_names, \
+    import update_climatology_bounds_from_file_names, \
     compute_climatologies_with_ncclimo
 
 from ..shared.analysis_task import AnalysisTask
@@ -105,6 +105,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                          startDate=self.startDateClimo,
                                          endDate=self.endDateClimo,
                                          calendar=self.calendar)
+
         if len(self.inputFilesClimo) == 0:
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDateClimo,
@@ -112,6 +113,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
+        update_climatology_bounds_from_file_names(self.inputFiles,
+                                                  self.config)
+
+        self.startDateClimo = config.get('climatology', 'startDate')
+        self.endDateClimo = config.get('climatology', 'endDate')
         self.startYearClimo = config.getint('climatology', 'startYear')
         self.endYearClimo = config.getint('climatology', 'endYear')
 
@@ -262,10 +268,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                             'mpasClimatologySubdirectory')
 
         outputDirectory = '{}/meanVelocity'.format(outputRoot)
-
-        changed, self.startYearClimo, self.endYearClimo = \
-            update_start_end_year_from_file_names(self.inputFilesClimo,
-                                                  config)
 
         self.velClimoFile = \
             '{}/mpaso_ANN_{:04d}01_{:04d}12_climo.nc'.format(

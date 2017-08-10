@@ -12,7 +12,6 @@ import xarray as xr
 import datetime
 import numpy as np
 import os
-import warnings
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -23,16 +22,11 @@ from ..shared.constants import constants
 from ..shared.io.utility import build_config_full_path
 from ..shared.io import write_netcdf
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
-
-from ..shared.timekeeping.utility import get_simulation_start_time
-
 from ..shared.climatology import get_lat_lon_comparison_descriptor, \
-    get_remapper, get_mpas_climatology_file_names, \
-    get_observation_climatology_file_names, \
-    compute_climatology, cache_climatologies, update_start_end_year, \
-    remap_and_write_climatology
+    get_remapper, get_mpas_climatology_dir_name, \
+    get_observation_climatology_file_names, compute_climatology, \
+    remap_and_write_climatology, update_climatology_bounds_from_file_names, \
+    compute_climatologies_with_ncclimo, compute_seasonal_climatology_ncra
 
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
@@ -71,18 +65,20 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        self.startDate = self.config.get('climatology', 'startDate')
-        self.endDate = self.config.get('climatology', 'endDate')
+        startDate = self.config.get('climatology', 'startDate')
+        endDate = self.config.get('climatology', 'endDate')
         streamName = \
             self.historyStreams.find_stream(self.streamMap['timeSeriesStats'])
         self.inputFiles = self.historyStreams.readpath(
-                streamName, startDate=self.startDate, endDate=self.endDate,
+                streamName, startDate=startDate, endDate=endDate,
                 calendar=self.calendar)
 
         if len(self.inputFiles) == 0:
             raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
+                          '{}.'.format(streamName, startDate, endDate))
+
+        update_climatology_bounds_from_file_names(self.inputFiles,
+                                                  self.config)
 
         # }}}
 
@@ -100,10 +96,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         # get local versions of member variables for convenience
         config = self.config
-        calendar = self.calendar
         fieldName = self.fieldName
-
-        simulationStartTime = get_simulation_start_time(self.runStreams)
 
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
@@ -121,22 +114,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         outputTimes = config.getExpression(self.taskName, 'comparisonTimes')
 
         comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
-
-        varList = [fieldName]
-
-        ds = open_multifile_dataset(fileNames=self.inputFiles,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
-                                    variableList=varList,
-                                    iselValues=self.iselValues,
-                                    variableMap=self.variableMap,
-                                    startDate=self.startDate,
-                                    endDate=self.endDate)
-
-        changed, startYear, endYear = update_start_end_year(ds, config,
-                                                            calendar)
 
         mpasDescriptor = MpasMeshDescriptor(
             restartFileName, meshName=config.get('input', 'mpasMeshName'))
@@ -165,42 +142,95 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         (colormapDifference, colorbarLevelsDifference) = setup_colormap(
             config, self.taskName, suffix='Difference')
 
+        climatologyDirectory = \
+            get_mpas_climatology_dir_name(
+                config=config,
+                fieldName=self.mpasFieldName,
+                mpasMeshName=mpasDescriptor.meshName)
+
+        (maskedClimatologyDirectory, remappedDirectory) = \
+            get_mpas_climatology_dir_name(
+                config=config,
+                fieldName='{}_masked'.format(fieldName),
+                mpasMeshName=mpasDescriptor.meshName,
+                comparisonGridName=comparisonDescriptor.meshName)
+
+        dsRestart = xr.open_dataset(restartFileName)
+        dsRestart = mpas_xarray.subset_variables(dsRestart, ['maxLevelCell'])
+
+        startYear = config.getint('climatology', 'startYear')
+        endYear = config.getint('climatology', 'endYear')
+
+        # the last climatology produced by NCO is always the annual, so if that
+        # exists, others are also finished.
+        climatologyFileName = \
+            '{}/mpaso_ANN_climo.nc'.format(climatologyDirectory)
+        if not os.path.exists(climatologyFileName):
+
+            compute_climatologies_with_ncclimo(
+                    config=config,
+                    inDirectory=self.historyDirectory,
+                    outDirectory=climatologyDirectory,
+                    startYear=startYear,
+                    endYear=endYear,
+                    variableList=[self.mpasFieldName],
+                    modelName='mpaso',
+                    decemberMode='sdd')
+
         dsObs = None
         obsRemapperBuilt = False
 
         # Interpolate and compute biases
         for months in outputTimes:
+
             monthValues = constants.monthDictionary[months]
 
-            (climatologyFileName, climatologyPrefix, remappedFileName) = \
-                get_mpas_climatology_file_names(
-                    config=config,
-                    fieldName=fieldName,
-                    monthNames=months,
-                    mpasMeshName=mpasDescriptor.meshName,
-                    comparisonGridName=comparisonDescriptor.meshName)
+            climatologyFileName = \
+                self._get_season_file_name(months, climatologyDirectory)
+
+            maskedClimatologyFileName = \
+                self._get_season_file_name(months, maskedClimatologyDirectory)
+
+            remappedFileName = \
+                self._get_season_file_name(months, remappedDirectory)
+
+            if months not in constants.ncclimoSeasonDictionary and \
+                    not os.path.exists(climatologyFileName):
+                # weighted average of months in season
+                compute_seasonal_climatology_ncra(
+                        config=config,
+                        inDirectory=climatologyDirectory,
+                        modelName='mpaso',
+                        inMonthValues=monthValues,
+                        outFileName=climatologyFileName)
+
+            if not os.path.exists(maskedClimatologyFileName):
+                # slice and mask the data set
+                climatology = xr.open_dataset(climatologyFileName)
+                iselValues = {'Time': 0}
+                if self.iselValues is not None:
+                    iselValues.update(self.iselValues)
+                # select only Time=0 and possibly only the desired vertical
+                # slice
+                climatology = climatology.isel(**iselValues)
+
+                # mask the data set
+                climatology[self.mpasFieldName] = \
+                    climatology[self.mpasFieldName].where(
+                            dsRestart.maxLevelCell > 0)
+
+                climatology.to_netcdf(maskedClimatologyFileName)
 
             if not os.path.exists(remappedFileName):
-                seasonalClimatology = cache_climatologies(
-                    ds, monthValues, config, climatologyPrefix, calendar,
-                    printProgress=True)
+                mpasRemapper.remap_file(inFileName=maskedClimatologyFileName,
+                                        outFileName=remappedFileName,
+                                        overwrite=True)
 
-                if seasonalClimatology is None:
-                    # apparently, there was no data available to create the
-                    # climatology
-                    warnings.warn('no data to create {} climatology for '
-                                  '{}'.format(fieldName, months))
-                    continue
+            remappedClimatology = xr.open_dataset(remappedFileName)
 
-                remappedClimatology = remap_and_write_climatology(
-                    config, seasonalClimatology, climatologyFileName,
-                    remappedFileName, mpasRemapper)
+            modelOutput = \
+                remappedClimatology[self.mpasFieldName].values
 
-            else:
-
-                remappedClimatology = xr.open_dataset(remappedFileName)
-
-            modelOutput = remappedClimatology[fieldName].values
             lon = remappedClimatology['lon'].values
             lat = remappedClimatology['lat'].values
 
@@ -281,6 +311,17 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         # }}}
 
+    def _get_season_file_name(self, seasonName, directory):  # {{{
+        if seasonName in constants.ncclimoSeasonDictionary:
+            fileName = '{}/mpaso_{}_climo.nc'.format(
+                    directory,
+                    constants.ncclimoSeasonDictionary[seasonName])
+        else:
+            # we're going to have to build the climatology manuallly
+            fileName = '{}/mpaso_{}_climo.nc'.format(
+                    directory, seasonName)
+        return fileName  # }}}
+
     # }}}
 
 
@@ -341,6 +382,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
             "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
                 observationsDirectory)
 
+        self.mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         self.iselValues = {'nVertLevels': 0}
 
         self.obsFieldName = 'SST'
@@ -450,6 +492,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
             '{}/Aquarius_V3_SSS_Monthly.nc'.format(
                 observationsDirectory)
 
+        self.mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
         self.iselValues = {'nVertLevels': 0}
 
         self.obsFieldName = 'SSS'
@@ -542,6 +585,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
             '{}/holtetalley_mld_climatology.nc'.format(
                 observationsDirectory)
 
+        self.mpasFieldName = 'timeMonthly_avg_dThreshMLD'
         self.iselValues = None
 
         self.obsFieldName = 'mld_dt_mean'
