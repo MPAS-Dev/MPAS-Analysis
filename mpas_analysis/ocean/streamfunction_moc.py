@@ -113,7 +113,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
-        update_climatology_bounds_from_file_names(self.inputFiles,
+        update_climatology_bounds_from_file_names(self.inputFilesClimo,
                                                   self.config)
 
         self.startDateClimo = config.get('climatology', 'startDate')
