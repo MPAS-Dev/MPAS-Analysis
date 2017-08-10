@@ -13,7 +13,8 @@ from ..shared.timekeeping.utility import get_simulation_start_time
 
 from ..shared.climatology.climatology \
     import update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo
+    compute_climatologies_with_ncclimo, \
+    get_ncclimo_season_file_name
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -198,9 +199,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         print '   Load data...'
 
-        climatologyFileName = \
-            '{}/mpaso_ANN_{:04d}01_{:04d}12_climo.nc'.format(
-                    outputDirectory, self.startYear, self.endYear)
+        climatologyFileName = get_ncclimo_season_file_name(outputDirectory,
+                                                           'mpaso', 'ANN',
+                                                           self.startYear,
+                                                           self.endYear)
 
         if not os.path.exists(climatologyFileName):
             make_directories(outputDirectory)

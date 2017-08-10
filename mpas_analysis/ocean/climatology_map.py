@@ -26,7 +26,8 @@ from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_dir_name, \
     get_observation_climatology_file_names, compute_climatology, \
     remap_and_write_climatology, update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo, compute_seasonal_climatology_ncra
+    compute_climatologies_with_ncclimo, compute_seasonal_climatology_ncra, \
+    get_ncclimo_season_file_name
 
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
@@ -161,6 +162,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
 
+        modelName = 'mpaso'
+
         # the last climatology produced by NCO is always the annual, so if that
         # exists, others are also finished.
         climatologyFileName = \
@@ -174,7 +177,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     startYear=startYear,
                     endYear=endYear,
                     variableList=[self.mpasFieldName],
-                    modelName='mpaso',
+                    modelName=modelName,
                     decemberMode='sdd')
 
         dsObs = None
@@ -186,13 +189,18 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             monthValues = constants.monthDictionary[months]
 
             climatologyFileName = \
-                self._get_season_file_name(months, climatologyDirectory)
+                get_ncclimo_season_file_name(climatologyDirectory, modelName,
+                                             months, startYear, endYear)
 
             maskedClimatologyFileName = \
-                self._get_season_file_name(months, maskedClimatologyDirectory)
+                get_ncclimo_season_file_name(maskedClimatologyDirectory,
+                                             modelName, months, startYear,
+                                             endYear)
 
             remappedFileName = \
-                self._get_season_file_name(months, remappedDirectory)
+                get_ncclimo_season_file_name(remappedDirectory,
+                                             modelName, months, startYear,
+                                             endYear)
 
             if months not in constants.ncclimoSeasonDictionary and \
                     not os.path.exists(climatologyFileName):
@@ -200,7 +208,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 compute_seasonal_climatology_ncra(
                         config=config,
                         inDirectory=climatologyDirectory,
-                        modelName='mpaso',
+                        modelName=modelName,
                         inMonthValues=monthValues,
                         outFileName=climatologyFileName)
 
@@ -310,17 +318,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                    cbarlabel=self.unitsLabel)
 
         # }}}
-
-    def _get_season_file_name(self, seasonName, directory):  # {{{
-        if seasonName in constants.ncclimoSeasonDictionary:
-            fileName = '{}/mpaso_{}_climo.nc'.format(
-                    directory,
-                    constants.ncclimoSeasonDictionary[seasonName])
-        else:
-            # we're going to have to build the climatology manuallly
-            fileName = '{}/mpaso_{}_climo.nc'.format(
-                    directory, seasonName)
-        return fileName  # }}}
 
     # }}}
 

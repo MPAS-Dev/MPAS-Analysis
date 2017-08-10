@@ -13,7 +13,8 @@ from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_observation_climatology_file_names, \
     compute_climatologies_with_ncclimo, \
     update_climatology_bounds_from_file_names, \
-    remap_and_write_climatology, compute_seasonal_climatology_ncra
+    remap_and_write_climatology, compute_seasonal_climatology_ncra, \
+    get_ncclimo_season_file_name
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
 from ..shared.plot.plotting import plot_polar_comparison, \
@@ -92,7 +93,10 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         update_climatology_bounds_from_file_names(self.inputFiles,
                                                   self.config)
 
-        return  # }}}
+        self.startYear = self.config.getint('climatology', 'startYear')
+        self.endYear = self.config.getint('climatology', 'endYear')
+
+        # }}}
 
     def run(self):  # {{{
         """
@@ -151,9 +155,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         overwriteMpasClimatology = config.getWithDefault(
             'climatology', 'overwriteMpasClimatology', False)
 
-        startYear = config.getint('climatology', 'startYear')
-        endYear = config.getint('climatology', 'endYear')
-
         self.climatologyDirectory = \
             get_mpas_climatology_dir_name(
                 config=config,
@@ -178,8 +179,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     config=config,
                     inDirectory=self.historyDirectory,
                     outDirectory=self.climatologyDirectory,
-                    startYear=startYear,
-                    endYear=endYear,
+                    startYear=self.startYear,
+                    endYear=self.endYear,
                     variableList=['timeMonthly_avg_iceAreaCell',
                                   'timeMonthly_avg_iceVolumeCell'],
                     modelName='mpascice',
@@ -204,8 +205,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         config = self.config
 
         mainRunName = config.get('runs', 'mainRunName')
-        startYear = config.getint('climatology', 'startYear')
-        endYear = config.getint('climatology', 'endYear')
 
         subtitle = 'Ice concentration'
 
@@ -265,7 +264,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             climFieldName = 'iceConcentration'
 
             remappedFileName = \
-                self._get_season_file_name(months, self.remappedDirectory)
+                get_ncclimo_season_file_name(self.remappedDirectory,
+                                             'mpascice', months,
+                                             self.startYear, self.endYear)
 
             remappedClimatology = xr.open_dataset(remappedFileName)
 
@@ -317,10 +318,10 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 difference = iceConcentration - obsIceConcentration
 
                 title = '{} ({}, years {:04d}-{:04d})'.format(
-                    subtitle, months, startYear, endYear)
+                    subtitle, months, self.startYear, self.endYear)
                 fileout = '{}/iceconc{}{}_{}_{}_years{:04d}-{:04d}.png'.format(
                     self.plotsDirectory, obsName, hemisphere, mainRunName,
-                    months, startYear, endYear)
+                    months, self.startYear, self.endYear)
                 plot_polar_comparison(
                     config,
                     lonTarg,
@@ -361,8 +362,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         plotsDirectory = build_config_full_path(config, 'output',
                                                 'plotsSubdirectory')
         mainRunName = config.get('runs', 'mainRunName')
-        startYear = config.getint('climatology', 'startYear')
-        endYear = config.getint('climatology', 'endYear')
 
         obsFileNames = {}
         remappedObsFileNames = {}
@@ -412,7 +411,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             climFieldName = 'iceThickness'
 
             remappedFileName = \
-                self._get_season_file_name(months, self.remappedDirectory)
+                get_ncclimo_season_file_name(self.remappedDirectory,
+                                             'mpascice', months,
+                                             self.startYear, self.endYear)
 
             remappedClimatology = xr.open_dataset(remappedFileName)
 
@@ -469,11 +470,11 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 difference = iceThickness - obsIceThickness
 
                 title = '{} ({}, years {:04d}-{:04d})'.format(subtitle, months,
-                                                              startYear,
-                                                              endYear)
+                                                              self.startYear,
+                                                              self.endYear)
                 fileout = '{}/icethick{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                    plotsDirectory, hemisphere, mainRunName, months, startYear,
-                    endYear)
+                    plotsDirectory, hemisphere, mainRunName, months,
+                    self.startYear, self.endYear)
                 plot_polar_comparison(
                     config,
                     lonTarg,
@@ -497,18 +498,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
         # }}}
 
-    def _get_season_file_name(self, seasonName, directory):  # {{{
-        if seasonName in constants.ncclimoSeasonDictionary:
-            fileName = '{}/mpascice_{}_climo.nc'.format(
-                    directory,
-                    constants.ncclimoSeasonDictionary[seasonName])
-        else:
-            # we're going to have to build the climatology manuallly
-            fileName = '{}/mpascice_{}_climo.nc'.format(
-                    directory, seasonName)
-        return fileName  # }}}
-
     def _remap_seasonal_climatology(self, seasons):  # {{{
+
+        modelName = 'mpascice'
 
         for season in seasons:
 
@@ -519,14 +511,19 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
             # interpolate the model results
             climatologyFileName = \
-                self._get_season_file_name(season, self.climatologyDirectory)
+                get_ncclimo_season_file_name(self.climatologyDirectory,
+                                             modelName, season,
+                                             self.startYear, self.endYear)
 
             maskedClimatologyFileName = \
-                self._get_season_file_name(season,
-                                           self.maskedClimatologyDirectory)
+                get_ncclimo_season_file_name(self.maskedClimatologyDirectory,
+                                             modelName, season,
+                                             self.startYear, self.endYear)
 
             remappedFileName = \
-                self._get_season_file_name(season, self.remappedDirectory)
+                get_ncclimo_season_file_name(self.remappedDirectory,
+                                             modelName, season,
+                                             self.startYear, self.endYear)
 
             if season not in constants.ncclimoSeasonDictionary and \
                     (overwriteMpasClimatology or
@@ -542,6 +539,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             if (overwriteMpasClimatology or
                     not os.path.exists(maskedClimatologyFileName)):
                 # slice the data set and set _FillValue (happens automatically)
+                print climatologyFileName
                 climatology = xr.open_dataset(climatologyFileName)
                 iselValues = {'Time': 0}
                 # select only Time=0
