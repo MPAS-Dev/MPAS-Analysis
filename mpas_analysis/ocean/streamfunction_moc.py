@@ -19,7 +19,8 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 
 from ..shared.climatology.climatology \
     import update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo
+    compute_climatologies_with_ncclimo, \
+    get_ncclimo_season_file_name
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -106,6 +107,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                          startDate=self.startDateClimo,
                                          endDate=self.endDateClimo,
                                          calendar=self.calendar)
+
         if len(self.inputFilesClimo) == 0:
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDateClimo,
@@ -113,9 +115,13 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
-        changed, self.startYearClimo, self.endYearClimo, self.startDateClimo, \
-            self.endDateClimo = update_climatology_bounds_from_file_names(
-                    self.inputFilesClimo, self.config)
+        update_climatology_bounds_from_file_names(self.inputFilesClimo,
+                                                  self.config)
+
+        self.startDateClimo = config.get('climatology', 'startDate')
+        self.endDateClimo = config.get('climatology', 'endDate')
+        self.startYearClimo = config.getint('climatology', 'startYear')
+        self.endYearClimo = config.getint('climatology', 'endYear')
 
         #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
         self.startDateTseries = config.get('timeSeries', 'startDate')
@@ -313,10 +319,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         outputDirectory = '{}/meanVelocity'.format(outputRoot)
 
-        self.velClimoFile = \
-            '{}/mpaso_ANN_{:04d}01_{:04d}12_climo.nc'.format(
-                    outputDirectory, self.startYearClimo,
-                    self.endYearClimo)
+        self.velClimoFile = get_ncclimo_season_file_name(outputDirectory,
+                                                         'mpaso', 'ANN',
+                                                         self.startYearClimo,
+                                                         self.endYearClimo)
 
         if not os.path.exists(self.velClimoFile):
             make_directories(outputDirectory)
@@ -329,6 +335,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                     endYear=self.endYearClimo,
                     variableList=variableList,
                     modelName='mpaso',
+                    seasons=['ANN'],
                     decemberMode='sdd')
         # }}}
 
