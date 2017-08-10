@@ -202,7 +202,7 @@ def get_mpas_climatology_dir_name(config, fieldName, mpasMeshName,
         remappedBaseDirectory = build_config_full_path(
             config, 'output', 'mpasRemappedClimSubdirectory')
 
-        remappedDirectory = '{}/{}_{}_to_{}.nc'.format(
+        remappedDirectory = '{}/{}_{}_to_{}'.format(
                 remappedBaseDirectory, fieldName, mpasMeshName,
                 comparisonGridName)
 
