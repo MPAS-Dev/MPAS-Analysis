@@ -286,6 +286,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                     endYear=self.endYearClimo,
                     variableList=variableList,
                     modelName='mpaso',
+                    seasons=['ANN'],
                     decemberMode='sdd')
         # }}}
 

@@ -26,8 +26,7 @@ from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_dir_name, \
     get_observation_climatology_file_names, compute_climatology, \
     remap_and_write_climatology, update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo, compute_seasonal_climatology_ncra, \
-    get_ncclimo_season_file_name
+    compute_climatologies_with_ncclimo, get_ncclimo_season_file_name
 
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
@@ -178,6 +177,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     endYear=endYear,
                     variableList=[self.mpasFieldName],
                     modelName=modelName,
+                    seasons=outputTimes,
                     decemberMode='sdd')
 
         dsObs = None
@@ -201,16 +201,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 get_ncclimo_season_file_name(remappedDirectory,
                                              modelName, months, startYear,
                                              endYear)
-
-            if months not in constants.ncclimoSeasonDictionary and \
-                    not os.path.exists(climatologyFileName):
-                # weighted average of months in season
-                compute_seasonal_climatology_ncra(
-                        config=config,
-                        inDirectory=climatologyDirectory,
-                        modelName=modelName,
-                        inMonthValues=monthValues,
-                        outFileName=climatologyFileName)
 
             if not os.path.exists(maskedClimatologyFileName):
                 # slice and mask the data set

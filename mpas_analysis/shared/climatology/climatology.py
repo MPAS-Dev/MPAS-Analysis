@@ -247,22 +247,18 @@ def get_ncclimo_season_file_name(directory, modelName, seasonName, startYear,
     suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(startYear, startMonth,
                                                       endYear, endMonth)
 
-    if seasonName in constants.ncclimoSeasonDictionary:
-        fileName = '{}/{}_{}_{}.nc'.format(
-                directory,
-                modelName,
-                constants.ncclimoSeasonDictionary[seasonName],
-                suffix)
-    else:
-        fileName = '{}/{}_{}_{}.nc'.format(directory, modelName, seasonName,
-                                           suffix)
+    if seasonName in constants.abrevMonthNames:
+        seasonName = '{:02d}'.format(monthValues[0])
+    fileName = '{}/{}_{}_{}.nc'.format(directory, modelName, seasonName,
+                                       suffix)
     return fileName  # }}}
 
 
 def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
                                        startYear, endYear,
                                        variableList, modelName,
-                                       decemberMode='scd',
+                                       seasons='none',
+                                       decemberMode='sdd',
                                        remapper=None,
                                        regriddedDirectory=None):  # {{{
     '''
@@ -290,12 +286,17 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     modelName : ['mpaso', 'mpascice']
         The name of the component for which the climatology is to be computed
 
-    decemberMode : ['scd', 'sdd']
+    seasons : list of str
+        Seasons (keys in ``constants.monthDictionary`` other than individual
+        months, which will be removed automatically) over which monthly
+        climatologies should be aggregated.
+
+    decemberMode : ['scd', 'sdd'], optional
         Whether years start in December (scd - seasonally continuous December)
         or January (sdd - seasonally discontinuous December).  If the former,
         the data set begins with December of the year before startYear and ends
-        with November of endYear.  Otherwise, goes from January of startYear to
-        December of endYear.
+        with November of endYear.  Otherwise (the default), goes from January
+        of startYear to December of endYear.
 
     remapper : ``shared.intrpolation.Remapper`` object, optional
         If present, a remapper that defines the source and desitnation grids
@@ -326,12 +327,17 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
 
     parallelMode = config.get('execute', 'ncclimoParallelMode')
 
+    # make sure to remove individual months from seasons
+    seasons = [season for season in seasons if season not in
+               constants.abrevMonthNames]
+
     args = ['ncclimo',
             '--clm_md=mth',
             '-a', decemberMode,
             '-m', modelName,
             '-p', parallelMode,
             '-v', ','.join(variableList),
+            '--seasons={}'.format(','.join(seasons)),
             '-s', '{:04d}'.format(startYear),
             '-e', '{:04d}'.format(endYear),
             '-i', inDirectory,
@@ -341,66 +347,6 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
         args.extend(['-r', remapper.mappingFileName])
     if regriddedDirectory is not None:
         args.extend(['-O', regriddedDirectory])
-
-    print 'running: {}'.format(' '.join(args))
-
-    # make sure any output is flushed before we add output from the
-    # subprocess
-    sys.stdout.flush()
-    sys.stderr.flush()
-
-    subprocess.check_call(args)  # }}}
-
-
-def compute_seasonal_climatology_ncra(config, inDirectory, modelName,
-                                      inMonthValues, outFileName):  # {{{
-    '''
-    Uses ncra to compute a seasonal climatology from monthly climatologies
-
-    Parameters
-    ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
-
-    inDirectory : str
-        The run directory containing timeSeriesStatsMonthly output
-
-    modelName : ['mpaso', 'mpascice']
-        The name of the component for which the climatology is to be computed
-
-    inMonthValues : list like
-        A list of months in the season
-
-    outFileName : str
-        The file to which the seasonal climatology will be written
-
-    Raises
-    ------
-    OSError
-        If ``ncra`` is not in the system path.
-
-    Author
-    ------
-    Xylar Asay-Davis
-    '''
-
-    if find_executable('ncra') is None:
-        raise OSError('ncra not found. Make sure the latest nco '
-                      'package is installed: \n'
-                      'conda install nco\n'
-                      'Note: this presumes use of the conda-forge '
-                      'channel.')
-
-    weights = []
-    inFileNames = []
-    for month in inMonthValues:
-        weights.append(str(constants.daysInMonth[month-1]))
-
-        inFileNames.append('{}/{}_{:02d}_climo.nc'.format(
-                inDirectory, modelName, month))
-
-    args = ['ncra', '--cb', '-O', '-w', ','.join(weights)] + inFileNames + \
-        [outFileName]
 
     print 'running: {}'.format(' '.join(args))
 

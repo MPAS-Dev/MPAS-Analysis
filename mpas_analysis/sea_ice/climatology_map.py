@@ -13,8 +13,7 @@ from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_observation_climatology_file_names, \
     compute_climatologies_with_ncclimo, \
     update_climatology_bounds_from_file_names, \
-    remap_and_write_climatology, compute_seasonal_climatology_ncra, \
-    get_ncclimo_season_file_name
+    remap_and_write_climatology, get_ncclimo_season_file_name
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
 from ..shared.plot.plotting import plot_polar_comparison, \
@@ -184,6 +183,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     variableList=['timeMonthly_avg_iceAreaCell',
                                   'timeMonthly_avg_iceVolumeCell'],
                     modelName='mpascice',
+                    seasons=seasons,
                     decemberMode='sdd')
 
         self._remap_seasonal_climatology(seasons)
@@ -524,17 +524,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 get_ncclimo_season_file_name(self.remappedDirectory,
                                              modelName, season,
                                              self.startYear, self.endYear)
-
-            if season not in constants.ncclimoSeasonDictionary and \
-                    (overwriteMpasClimatology or
-                        not os.path.exists(climatologyFileName)):
-                # weighted average of months in season
-                compute_seasonal_climatology_ncra(
-                        config=self.config,
-                        inDirectory=self.climatologyDirectory,
-                        modelName='mpascice',
-                        inMonthValues=monthValues,
-                        outFileName=climatologyFileName)
 
             if (overwriteMpasClimatology or
                     not os.path.exists(maskedClimatologyFileName)):

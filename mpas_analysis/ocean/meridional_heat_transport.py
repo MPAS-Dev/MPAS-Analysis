@@ -216,6 +216,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                     endYear=self.endYear,
                     variableList=variableList,
                     modelName='mpaso',
+                    seasons=['ANN'],
                     decemberMode='sdd')
 
         annualClimatology = xr.open_dataset(climatologyFileName)
