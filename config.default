@@ -44,8 +44,8 @@ parallelTaskCount = 1
 commandPrefix =
 
 # the parallelism mode in ncclimo ("serial" or "bck")
-# Set this to "bck" if running on a machine that can handle 12 simultaneous
-# processes, one for each monthly climatology.
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = serial
 
 [input]
