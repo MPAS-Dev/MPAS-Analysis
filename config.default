@@ -41,11 +41,11 @@ parallelTaskCount = 1
 
 # Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
 # Default is no prefix (run_analysis.py is executed directly)
-commandPrefix = 
+commandPrefix =
 
 # the parallelism mode in ncclimo ("serial" or "bck")
-# Set this to "bck" if running on a machine that can handle 12 simultaneous
-# processes, one for each monthly climatology.
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = serial
 
 [input]
@@ -257,11 +257,11 @@ baseDirectory = /dir/to/ocean/reference
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/ocean/reference
- 
+
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
- 
+
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
 areaNH = IceArea_timeseries/iceAreaNH_climo.nc
@@ -404,7 +404,7 @@ regionMaskFiles = /path/to/MOCregional/mapping/file
 # is handled automatically.  If the MOC calculation encounters memory problems,
 # consider setting maxChunkSize to a number significantly lower than nEdges
 # in your MPAS mesh so that the calculation will be divided into smaller
-# pieces. 
+# pieces.
 # Note, need to use maxChunkSize for the 18to6
 # maxChunkSize = 1000
 
