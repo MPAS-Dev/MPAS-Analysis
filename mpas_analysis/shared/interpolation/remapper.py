@@ -184,8 +184,8 @@ class Remapper(object):
 
         # }}}
 
-    def remap_file(self, inFileName, outFileName,
-                   variableList=None, overwrite=False):  # {{{
+    def remap_file(self, inFileName, outFileName, variableList=None,
+                   overwrite=False, renormalize=None):  # {{{
         '''
         Given a source file defining either an MPAS mesh or a lat-lon grid and
         a destination file or set of arrays defining a lat-lon grid, constructs
@@ -208,6 +208,9 @@ class Remapper(object):
             Whether the destination file should be overwritten if it already
             exists. If `False`, and the destination file is already present,
             the function does nothing and returns immediately
+
+        renormalize : float, optional
+            A threshold to use to renormalize the data
 
         Raises
         ------
@@ -259,10 +262,19 @@ class Remapper(object):
                 '--vrb=1',
                 '-o', outFileName]
 
+        regridArgs = []
+
+        if renormalize is not None:
+            regridArgs.append('--renormalize={}'.format(renormalize))
+
         if isinstance(self.sourceDescriptor, LatLonGridDescriptor):
-            args.extend(['-R', '--rgr lat_nm={}  --rgr lon_nm={}'.format(
-                self.sourceDescriptor.latVarName,
-                self.sourceDescriptor.lonVarName)])
+            regridArgs.extend(['--rgr lat_nm={}'.format(
+                                   self.sourceDescriptor.latVarName),
+                               '--rgr lon_nm={}'.format(
+                                   self.sourceDescriptor.lonVarName)])
+
+        if len(regridArgs) > 0:
+            args.extend(['-R', ' '.join(regridArgs)])
 
         if isinstance(self.sourceDescriptor, MpasMeshDescriptor):
             # Note: using the -C (climatology) flag for now because otherwise
@@ -272,6 +284,7 @@ class Remapper(object):
 
         if variableList is not None:
             args.extend(['-v', ','.join(variableList)])
+
 
         # make sure any output is flushed before we add output from the
         # subprocess
