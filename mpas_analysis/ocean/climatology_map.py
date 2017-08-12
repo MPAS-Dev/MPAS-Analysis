@@ -21,6 +21,7 @@ from ..shared.plot.plotting import plot_global_comparison, \
 from ..shared.constants import constants
 
 from ..shared.io.utility import build_config_full_path
+from ..shared.io import write_netcdf
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -237,7 +238,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 if not obsRemapperBuilt:
                     seasonalClimatology.load()
                     seasonalClimatology.close()
-                    seasonalClimatology.to_netcdf(climatologyFileName)
+                    write_netcdf(seasonalClimatology, climatologyFileName)
                     # make the remapper for the climatology
                     obsDescriptor = LatLonGridDescriptor()
                     obsDescriptor.read(fileName=climatologyFileName,

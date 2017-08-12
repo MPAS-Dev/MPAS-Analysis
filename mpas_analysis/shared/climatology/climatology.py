@@ -19,7 +19,9 @@ from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path, make_directories, fingerprint_generator
+from ..io.utility import build_config_full_path, make_directories, \
+    fingerprint_generator
+from ..io import write_netcdf
 
 from ..interpolation import Remapper
 from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
@@ -679,7 +681,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
     else:
         if useNcremap:
             if not os.path.exists(climatologyFileName):
-                climatologyDataSet.to_netcdf(climatologyFileName)
+                write_netcdf(climatologyDataSet, climatologyFileName)
             remapper.remap_file(inFileName=climatologyFileName,
                                 outFileName=regriddedFileName,
                                 overwrite=True)
@@ -690,7 +692,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
-            remappedClimatology.to_netcdf(regriddedFileName)
+            write_netcdf(remappedClimatology, regriddedFileName)
     return remappedClimatology  # }}}
 
 
@@ -882,7 +884,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
         climatology.attrs['totalMonths'] = monthCount
         climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
-        climatology.to_netcdf(outputFileClimo)
+        write_netcdf(climatology, outputFileClimo)
         climatology.close()
 
     # }}}
@@ -965,7 +967,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
         climatology.attrs['totalMonths'] = totalMonths
         climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
-        climatology.to_netcdf(outputFileClimo)
+        write_netcdf(climatology, outputFileClimo)
 
     return climatology  # }}}
 
