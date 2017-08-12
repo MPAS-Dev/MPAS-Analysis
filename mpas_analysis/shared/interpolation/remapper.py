@@ -176,7 +176,11 @@ class Remapper(object):
         # subprocess
         sys.stdout.flush()
         sys.stderr.flush()
-        subprocess.check_call(args)
+
+        # throw out the standard output from ESMF_RegridWeightGen, as it's
+        # rather verbose but keep stderr
+        DEVNULL = open(os.devnull, 'wb')
+        subprocess.check_call(args, stdout=DEVNULL)
 
         # remove the temporary SCRIP files
         os.remove(self.sourceDescriptor.scripFileName)
