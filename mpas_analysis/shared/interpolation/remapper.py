@@ -256,6 +256,7 @@ class Remapper(object):
         args = ['ncremap',
                 '-i', inFileName,
                 '-m', self.mappingFileName,
+                '--vrb=1',
                 '-o', outFileName]
 
         if isinstance(self.sourceDescriptor, LatLonGridDescriptor):
