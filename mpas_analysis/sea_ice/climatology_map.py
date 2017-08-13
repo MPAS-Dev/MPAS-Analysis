@@ -191,10 +191,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
             obsFileName = info['obsFileName']
 
-            obsDescriptor = LatLonGridDescriptor()
-            obsDescriptor.read(fileName=obsFileName,
-                               latVarName='t_lat',
-                               lonVarName='t_lon')
+            obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
+                                                      latVarName='t_lat',
+                                                      lonVarName='t_lon')
 
             if not os.path.isfile(obsFileName):
                 raise OSError('Obs file {} not found.'.format(
@@ -346,8 +345,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         modelName = 'mpascice'
 
         for season in self.seasons:
-
-            monthValues = constants.monthDictionary[season]
 
             # interpolate the model results
             climatologyFileName = \
