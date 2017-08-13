@@ -91,6 +91,26 @@ class AnalysisTask(object):  # {{{
     Xylar Asay-Davis
 
     '''
+    @classmethod
+    def create_tasks(cls, config):  # {{{
+        """
+        Construct a single analysis task.  This function can be replaced in
+        child classes so that a list of 2 or more tasks is returned, allowing
+        a task to also provide its own prerequisite tasks.
+
+        Parameters
+        ----------
+        config : MpasAnalysisConfigParser object
+            Contains configuration options
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        tasks = [cls(config=config)]
+        return tasks  # }}}
+
     def __init__(self, config, taskName, componentName, tags=[],
                  prerequisiteTasks=None):  # {{{
         '''

@@ -48,19 +48,19 @@ def build_analysis_list(config, isSubtask):  # {{{
     analyses = []
 
     # Ocean Analyses
-    analyses.append(ocean.TimeSeriesOHC(config))
-    analyses.append(ocean.TimeSeriesSST(config))
-    analyses.append(ocean.IndexNino34(config))
-    analyses.append(ocean.MeridionalHeatTransport(config))
-    analyses.append(ocean.StreamfunctionMOC(config))
+    analyses.extend(ocean.TimeSeriesOHC.create_tasks(config))
+    analyses.extend(ocean.TimeSeriesSST.create_tasks(config))
+    analyses.extend(ocean.IndexNino34.create_tasks(config))
+    analyses.extend(ocean.MeridionalHeatTransport.create_tasks(config))
+    analyses.extend(ocean.StreamfunctionMOC.create_tasks(config))
 
-    analyses.append(ocean.ClimatologyMapSST(config))
-    analyses.append(ocean.ClimatologyMapMLD(config))
-    analyses.append(ocean.ClimatologyMapSSS(config))
+    analyses.extend(ocean.ClimatologyMapSST.create_tasks(config))
+    analyses.extend(ocean.ClimatologyMapMLD.create_tasks(config))
+    analyses.extend(ocean.ClimatologyMapSSS.create_tasks(config))
 
     # Sea Ice Analyses
-    analyses.append(sea_ice.TimeSeriesSeaIce(config))
-    analyses.append(sea_ice.ClimatologyMapSeaIce(config))
+    analyses.extend(sea_ice.TimeSeriesSeaIce.create_tasks(config))
+    analyses.extend(sea_ice.ClimatologyMapSeaIce.create_tasks(config))
 
     possibleAnalyses = OrderedDict()
     for analysisTask in analyses:
