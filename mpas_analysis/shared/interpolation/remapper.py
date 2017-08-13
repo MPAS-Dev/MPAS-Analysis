@@ -563,16 +563,6 @@ class Remapper(object):
         return outField  # }}}
 
 
-def _get_lock_path(fileName):  # {{{
-    '''Returns the name of a temporary lock file unique to a given file name'''
-    directory = '{}/.locks/'.format(os.path.dirname(fileName))
-    try:
-        os.makedirs(directory)
-    except OSError:
-        pass
-    return '{}/{}.lock'.format(directory, os.path.basename(fileName))  # }}}
-
-
 def _get_temp_path():  # {{{
     '''Returns the name of a temporary NetCDF file'''
     return '{}/{}.nc'.format(tempfile._get_default_tempdir(),
