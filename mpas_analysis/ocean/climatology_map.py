@@ -93,10 +93,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         Authors
         -------
         Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
-
-        Last Modified
-        -------------
-        03/16/2017
         """
 
         print "\nPlotting 2-d maps of {} climatologies...".format(

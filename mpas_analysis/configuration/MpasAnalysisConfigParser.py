@@ -5,7 +5,6 @@ the capabilities to get an option including a default value
 that are lists, tuples, dicts, etc (`getExpression(section, option)`).
 
 Author: Xylar Asay-Davis, Phillip J. Wolfram
-Last Modified: 02/27/2017
 """
 
 import numbers
@@ -29,7 +28,6 @@ class MpasAnalysisConfigParser(ConfigParser):
         is present in the config file.
 
         Author: Xylar Asay-Davis
-        Last Modified: 02/27/2017
         """
         if self.has_section(section):
             if self.has_option(section, option):
@@ -66,7 +64,6 @@ class MpasAnalysisConfigParser(ConfigParser):
         of having selected numpy and / or np functionality available.
 
         Author: Xylar Asay-Davis, Phillip J. Wolfram
-        Last Modified: 04/10/2017
         """
         if self.has_section(section):
             if self.has_option(section, option):
