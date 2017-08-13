@@ -50,8 +50,8 @@ class TestClimatology(TestCase):
         config.set('output', 'baseDirectory', self.test_dir)
         config.set('output', 'mappingSubdirectory', '.')
         config.set('output', 'mpasClimatologySubdirectory', 'clim/mpas')
-        config.set('output', 'mpasRegriddedClimSubdirectory',
-                   'clim/mpas/regrid')
+        config.set('output', 'mpasRemappedClimSubdirectory',
+                   'clim/mpas/remap')
 
         config.add_section('climatology')
         config.set('climatology', 'startYear', '2')
@@ -66,8 +66,8 @@ class TestClimatology(TestCase):
         config.add_section('oceanObservations')
         config.set('oceanObservations', 'interpolationMethod', 'bilinear')
         config.set('oceanObservations', 'climatologySubdirectory', 'clim/obs')
-        config.set('oceanObservations', 'regriddedClimSubdirectory',
-                   'clim/obs/regrid')
+        config.set('oceanObservations', 'remappedClimSubdirectory',
+                   'clim/obs/remap')
 
         return config
 
@@ -191,7 +191,7 @@ class TestClimatology(TestCase):
 
         remapper = self.setup_mpas_remapper(config)
 
-        (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+        (climatologyFileName, climatologyPrefix, remappedFileName) = \
             get_mpas_climatology_file_names(
                 config, fieldName, monthNames,
                 remapper.sourceDescriptor.meshName,
@@ -204,10 +204,10 @@ class TestClimatology(TestCase):
                                     'JFM'.format(self.test_dir)
         self.assertEqual(climatologyPrefix, expectedClimatologyPrefix)
 
-        expectedRegriddedFileName = '{}/clim/mpas/regrid/sst_QU240_to_' \
+        expectedRemappedFileName = '{}/clim/mpas/remap/sst_QU240_to_' \
                                     '0.5x0.5degree_JFM_' \
                                     'year0002.nc'.format(self.test_dir)
-        self.assertEqual(regriddedFileName, expectedRegriddedFileName)
+        self.assertEqual(remappedFileName, expectedRemappedFileName)
 
     def test_get_observation_climatology_file_names(self):
         config = self.setup_config()
@@ -217,17 +217,17 @@ class TestClimatology(TestCase):
 
         remapper = self.setup_obs_remapper(config, fieldName)
 
-        (climatologyFileName, regriddedFileName) = \
+        (climatologyFileName, remappedFileName) = \
             get_observation_climatology_file_names(
                 config, fieldName, monthNames, componentName, remapper)
         expectedClimatologyFileName = '{}/clim/obs/sst_1.0x1.0degree_' \
                                       'JFM.nc'.format(self.test_dir)
         self.assertEqual(climatologyFileName, expectedClimatologyFileName)
 
-        expectedRegriddedFileName = '{}/clim/obs/regrid/sst_1.0x1.0degree_' \
+        expectedRemappedFileName = '{}/clim/obs/remap/sst_1.0x1.0degree_' \
                                     'to_0.5x0.5degree_' \
                                     'JFM.nc'.format(self.test_dir)
-        self.assertEqual(regriddedFileName, expectedRegriddedFileName)
+        self.assertEqual(remappedFileName, expectedRemappedFileName)
 
     def test_compute_climatology(self):
         config = self.setup_config()

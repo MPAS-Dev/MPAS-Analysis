@@ -184,7 +184,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         for months in outputTimes:
             monthValues = constants.monthDictionary[months]
 
-            (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+            (climatologyFileName, climatologyPrefix, remappedFileName) = \
                 get_mpas_climatology_file_names(
                     config=config,
                     fieldName=fieldName,
@@ -193,7 +193,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     comparisonGridName=comparisonDescriptor.meshName)
 
             if (overwriteMpasClimatology or
-                    not os.path.exists(regriddedFileName)):
+                    not os.path.exists(remappedFileName)):
                 seasonalClimatology = cache_climatologies(
                     ds, monthValues, config, climatologyPrefix, calendar,
                     printProgress=True)
@@ -207,11 +207,11 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
                 remappedClimatology = remap_and_write_climatology(
                     config, seasonalClimatology, climatologyFileName,
-                    regriddedFileName, mpasRemapper)
+                    remappedFileName, mpasRemapper)
 
             else:
 
-                remappedClimatology = xr.open_dataset(regriddedFileName)
+                remappedClimatology = xr.open_dataset(remappedFileName)
 
             modelOutput = remappedClimatology[fieldName].values
             lon = remappedClimatology['lon'].values
@@ -220,13 +220,13 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             lonTarg, latTarg = np.meshgrid(lon, lat)
 
             # now the observations
-            (climatologyFileName, regriddedFileName) = \
+            (climatologyFileName, remappedFileName) = \
                 get_observation_climatology_file_names(
                     config=config, fieldName=fieldName, monthNames=months,
                     componentName='ocean', remapper=origObsRemapper)
 
             if (overwriteObsClimatology or
-                    not os.path.exists(regriddedFileName)):
+                    not os.path.exists(remappedFileName)):
 
                 if dsObs is None:
                     # load the observations the first time
@@ -265,11 +265,11 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     remappedClimatology = \
                         remap_and_write_climatology(
                             config, seasonalClimatology, climatologyFileName,
-                            regriddedFileName, obsRemapper)
+                            remappedFileName, obsRemapper)
 
             else:
 
-                remappedClimatology = xr.open_dataset(regriddedFileName)
+                remappedClimatology = xr.open_dataset(remappedFileName)
             observations = remappedClimatology[self.obsFieldName].values
 
             bias = modelOutput - observations

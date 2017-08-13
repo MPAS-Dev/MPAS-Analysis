@@ -1,7 +1,7 @@
 """
 Plotting utilities, including routines for plotting:
     * time series (and comparing with reference data sets)
-    * regridded horizontal fields (and comparing with reference data sets)
+    * remapped horizontal fields (and comparing with reference data sets)
     * vertical sections on native grid
     * NINO34 time series and spectra
 
