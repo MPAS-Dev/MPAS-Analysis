@@ -59,8 +59,6 @@ class TestClimatology(TestCase):
         config.set('climatology', 'comparisonLatResolution', '0.5')
         config.set('climatology', 'comparisonLonResolution', '0.5')
 
-        config.set('climatology', 'overwriteMapping', 'False')
-        config.set('climatology', 'overwriteMpasClimatology', 'False')
         config.set('climatology', 'mpasInterpolationMethod', 'bilinear')
 
         config.add_section('oceanObservations')
