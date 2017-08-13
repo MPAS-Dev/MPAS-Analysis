@@ -4,10 +4,6 @@ Functions for creating climatologies from monthly time series data
 Authors
 -------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/13/2017
 """
 
 import xarray as xr
@@ -45,10 +41,6 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
     climSection = 'climatology'
 
@@ -112,10 +104,6 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
 
     if config.has_option(mappingFileSection, mappingFileOption):
@@ -268,10 +256,6 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    03/03/2017
     """
 
     obsSection = '{}Observations'.format(componentName)
@@ -339,10 +323,6 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     """
 
     def compute_one_month_climatology(ds):
@@ -397,10 +377,6 @@ def compute_climatology(ds, monthValues, calendar=None,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     """
 
     ds = add_years_months_days_in_month(ds, calendar)
@@ -463,10 +439,6 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/11/2017
     '''
     startYearClimo = config.getint('climatology', 'startYear')
     endYearClimo = config.getint('climatology', 'endYear')
@@ -581,10 +553,6 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     '''
 
     if ('year' in ds.coords and 'month' in ds.coords and
@@ -668,10 +636,6 @@ def remap_and_write_climatology(config, climatologyDataSet,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
     useNcremap = config.getboolean('climatology', 'useNcremap')
 
@@ -705,10 +669,6 @@ def _compute_masked_mean(ds, maskVaries):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     '''
     def ds_to_weights(ds):
         # make an identical data set to ds but replacing all data arrays with
@@ -791,10 +751,6 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     '''
 
     cacheInfo = []
@@ -858,10 +814,6 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/19/2017
     '''
 
     for cacheIndex, info in enumerate(cacheInfo):
@@ -899,10 +851,6 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/19/2017
     '''
 
     yearString, fileSuffix = _get_year_string(startYearClimo, endYearClimo)

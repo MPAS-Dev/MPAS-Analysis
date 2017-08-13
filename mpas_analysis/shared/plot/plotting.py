@@ -8,10 +8,6 @@ Plotting utilities, including routines for plotting:
 Authors
 -------
 Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
-
-Last Modified
--------------
-04/07/2017
 """
 
 import matplotlib.pyplot as plt
@@ -78,10 +74,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last Modified
-    -------------
-    03/14/2017
     """
     plt.figure(figsize=figsize, dpi=dpi)
 
@@ -170,10 +162,6 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     Authors
     -------
     Adrian K. Turner
-
-    Last Modified
-    -------------
-    03/15/2017
     """
     plt.figure(figsize=figsize, dpi=dpi)
 
@@ -315,10 +303,6 @@ def plot_polar_comparison(
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last Modified
-    -------------
-    03/17/2017
     """
 
     # set up figure
@@ -466,10 +450,6 @@ def plot_global_comparison(
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last Modified
-    -------------
-    04/20/2017
     """
 
     # set up figure
@@ -608,10 +588,6 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     Authors
     -------
     Mark Petersen, Milena Veneziani
-
-    Last Modified
-    -------------
-    04/20/2017
     """
 
     # set up figure
@@ -747,10 +723,6 @@ def plot_vertical_section(
     Authors
     -------
     Milena Veneziani, Mark Petersen
-
-    Last Modified
-    -------------
-    03/13/2017
     """
 
     # set up figure
@@ -825,10 +797,6 @@ def setup_colormap(config, configSectionName, suffix=''):
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last modified
-    -------------
-    03/17/2017
     '''
 
     colormap = plt.get_cmap(config.get(configSectionName,
@@ -869,10 +837,6 @@ def plot_size_y_axis(plt, xaxisValues, **data):
     Author
     ------
     Luke Van Roekel
-
-    Last modified
-    -------------
-    04/07/2017
     '''
 
     ax = plt.gca()
@@ -910,7 +874,6 @@ def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
     Author
     ------
     Xylar Asay-Davis
-
     '''
     ax = plt.gca()
 

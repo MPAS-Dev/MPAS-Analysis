@@ -16,10 +16,6 @@ class MpasRelativeDelta(relativedelta):
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    02/09/2017
     """
 
     def __init__(self, dt1=None, dt2=None, years=0, months=0, days=0,

@@ -11,10 +11,6 @@ remap - perform horizontal interpolation on a data sets, given a mapping file
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/13/2017
 '''
 
 import subprocess
@@ -38,10 +34,6 @@ class Remapper(object):
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     '''
 
     def __init__(self, sourceDescriptor, destinationDescriptor,
@@ -75,10 +67,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if not isinstance(sourceDescriptor,
@@ -128,10 +116,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None or \
@@ -228,10 +212,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None:
@@ -333,10 +313,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None:
@@ -386,10 +362,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/06/2017
         '''
 
         if self.mappingLoaded:
@@ -461,10 +433,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
 
         sourceDims = self.sourceDescriptor.dims
@@ -536,10 +504,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
 
         # permute the dimensions of inField so the axes to remap are first,

@@ -14,10 +14,6 @@ ProjectionGridDescriptor - describes a logically rectangular grid on a pyproj
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/16/2017
 '''
 
 import netCDF4
@@ -34,10 +30,6 @@ class MeshDescriptor(object):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     '''
 
     def __init__(self):  # {{{
@@ -49,10 +41,6 @@ class MeshDescriptor(object):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         self.meshName = None  # }}}
@@ -70,10 +58,6 @@ class MeshDescriptor(object):  # {{{
         Authors
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        03/17/2017
         '''
 
         return  # }}}
@@ -88,10 +72,6 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/16/2017
     '''
 
     def __init__(self, fileName, meshName=None):  # {{{
@@ -112,10 +92,6 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/16/2017
         '''
 
         ds = xarray.open_dataset(fileName)
@@ -153,10 +129,6 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
         Authors
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/16/2017
         '''
         self.scripFileName = scripFileName
 
@@ -222,10 +194,6 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/16/2017
     '''
     def __init__(self):  # {{{
         '''
@@ -239,10 +207,6 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
         self.regional = False
         self.meshName = None  # }}}
@@ -262,10 +226,6 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        03/17/2017
         '''
         ds = xarray.open_dataset(fileName)
 
@@ -309,10 +269,6 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        03/17/2017
         '''
 
         self.latCorner = latCorner
@@ -335,10 +291,6 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         Authors
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/16/2017
         '''
         self.scripFileName = scripFileName
 
@@ -407,10 +359,6 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/16/2017
     '''
 
     def __init__(self, projection):  # {{{
@@ -426,10 +374,6 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
         self.projection = projection
         self.latLonProjection = pyproj.Proj(proj='latlong', datum='WGS84')
@@ -457,10 +401,6 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         Authors
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/16/2017
         '''
 
         ds = xarray.open_dataset(fileName)
@@ -508,10 +448,6 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        03/20/2017
         '''
 
         self.meshName = meshName
@@ -538,10 +474,6 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         Authors
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/16/2017
         '''
         self.scripFileName = scripFileName
 
@@ -594,10 +526,6 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         Authors
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        03/20/2017
         '''
 
         Lon, Lat = pyproj.transform(self.projection, self.latLonProjection,
@@ -659,10 +587,6 @@ def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units,
     Authors
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/16/2017
     '''
     # Write to output file
     # Dimensions
