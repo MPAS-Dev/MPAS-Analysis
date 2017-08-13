@@ -627,7 +627,7 @@ def update_start_end_year(ds, config, calendar):  # {{{
     return changed, startYear, endYear  # }}}
 
 
-def update_start_end_year_from_file_names(inputFiles, config, calendar):  # {{{
+def update_start_end_year_from_file_names(inputFiles, config):  # {{{
     """
     Update the start and end years for climatologies based on the
     years actually available in the list of files.
@@ -639,9 +639,6 @@ def update_start_end_year_from_file_names(inputFiles, config, calendar):  # {{{
 
     config :  instance of MpasAnalysisConfigParser
         Contains configuration options
-
-    calendar : {'gregorian', 'gregorian_noleap'}
-        The name of one of the calendars supported by MPAS cores
 
     Returns
     -------

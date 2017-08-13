@@ -265,7 +265,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         changed, self.startYearClimo, self.endYearClimo = \
             update_start_end_year_from_file_names(self.inputFilesClimo,
-                                                  config, self.calendar)
+                                                  config)
 
         self.velClimoFile = \
             '{}/mpaso_ANN_{:04d}01_{:04d}12_climo.nc'.format(
