@@ -10,7 +10,7 @@ import random
 import string
 
 
-def paths(*args): # {{{
+def paths(*args):  # {{{
     """
     Returns glob'd paths in list for arbitrary number of function arguments.
     Note, each expanded set of paths is sorted.
@@ -20,11 +20,11 @@ def paths(*args): # {{{
     paths = []
     for aargs in args:
         paths += sorted(glob.glob(aargs))
-    return paths # }}}
+    return paths  # }}}
 
 
 def fingerprint_generator(size=12,
-                          chars=string.ascii_uppercase + string.digits): # {{{
+                          chars=string.ascii_uppercase + string.digits):  # {{{
     """
     Returns a random string that can be used as a unique fingerprint
 
@@ -33,7 +33,7 @@ def fingerprint_generator(size=12,
 
     Phillip J. Wolfram
     """
-    return ''.join(random.choice(chars) for _ in range(size)) # }}}
+    return ''.join(random.choice(chars) for _ in range(size))  # }}}
 
 
 def make_directories(path):  # {{{
@@ -54,7 +54,7 @@ def make_directories(path):  # {{{
 
 def build_config_full_path(config, section, relativePathOption,
                            relativePathSection=None,
-                           defaultPath=None): # {{{
+                           defaultPath=None):  # {{{
     """
     Returns a full path from a base directory and a relative path
 
@@ -93,7 +93,7 @@ def build_config_full_path(config, section, relativePathOption,
 
     if defaultPath is not None and not os.path.exists(fullPath):
         fullPath = defaultPath
-    return fullPath # }}}
+    return fullPath  # }}}
 
 
 def check_path_exists(path):  # {{{
