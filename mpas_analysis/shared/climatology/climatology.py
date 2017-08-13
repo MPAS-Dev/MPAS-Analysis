@@ -156,7 +156,7 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for MPAS
-    climatology files before and after regridding.
+    climatology files before and after remapping.
 
     Parameters
     ----------
@@ -180,15 +180,15 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     -------
     climatologyFileName : str
         The absolute path to a file where the climatology should be stored
-        before regridding.
+        before remapping.
 
     climatologyPrefix : str
         The prfix including absolute path for climatology cache files before
-        regridding.
+        remapping.
 
-    regriddedFileName : str
+    remappedFileName : str
         The absolute path to a file where the climatology should be stored
-        after regridding if ``comparisonGridName`` is supplied
+        after remapping if ``comparisonGridName`` is supplied
 
     Authors
     -------
@@ -217,17 +217,17 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     if comparisonGridName is None:
         return (climatologyFileName, climatologyPrefix)
     else:
-        regriddedDirectory = build_config_full_path(
-            config, 'output', 'mpasRegriddedClimSubdirectory')
+        remappedDirectory = build_config_full_path(
+            config, 'output', 'mpasRemappedClimSubdirectory')
 
-        make_directories(regriddedDirectory)
+        make_directories(remappedDirectory)
 
-        regriddedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
-                regriddedDirectory, fieldName, mpasMeshName,
+        remappedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
+                remappedDirectory, fieldName, mpasMeshName,
                 comparisonGridName, monthNames, fileSuffix)
 
         return (climatologyFileName, climatologyPrefix,
-                regriddedFileName)
+                remappedFileName)
 
     # }}}
 
@@ -237,7 +237,7 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for observation
-    climatology files before and after regridding.
+    climatology files before and after remapping.
 
     Parameters
     ----------
@@ -259,11 +259,11 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     -------
     climatologyFileName : str
         The absolute path to a file where the climatology should be stored
-        before regridding.
+        before remapping.
 
-    regriddedFileName : str
+    remappedFileName : str
         The absolute path to a file where the climatology should be stored
-        after regridding.
+        after remapping.
 
     Authors
     -------
@@ -281,9 +281,9 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
         relativePathOption='climatologySubdirectory',
         relativePathSection=obsSection)
 
-    regriddedDirectory = build_config_full_path(
+    remappedDirectory = build_config_full_path(
         config=config, section='output',
-        relativePathOption='regriddedClimSubdirectory',
+        relativePathOption='remappedClimSubdirectory',
         relativePathSection=obsSection)
 
     obsGridName = remapper.sourceDescriptor.meshName
@@ -291,17 +291,17 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
 
     climatologyFileName = '{}/{}_{}_{}.nc'.format(
         climatologyDirectory, fieldName, obsGridName, monthNames)
-    regriddedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-        regriddedDirectory, fieldName, obsGridName, comparisonGridName,
+    remappedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
+        remappedDirectory, fieldName, obsGridName, comparisonGridName,
         monthNames)
 
     make_directories(climatologyDirectory)
 
     if not _matches_comparison(remapper.sourceDescriptor,
                                remapper.destinationDescriptor):
-        make_directories(regriddedDirectory)
+        make_directories(remappedDirectory)
 
-    return (climatologyFileName, regriddedFileName)  # }}}
+    return (climatologyFileName, remappedFileName)  # }}}
 
 
 def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
@@ -625,17 +625,17 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
 
 
 def remap_and_write_climatology(config, climatologyDataSet,
-                                climatologyFileName, regriddedFileName,
+                                climatologyFileName, remappedFileName,
                                 remapper):  # {{{
     """
     Given a field in a climatology data set, use the ``remapper`` to regrid
     horizontal dimensions of all fields, write the results to an output file,
-    and return the regridded data set.
+    and return the remapped data set.
 
-    Note that ``climatologyFileName`` and ``regriddedFileName`` will be
+    Note that ``climatologyFileName`` and ``remappedFileName`` will be
     overwritten if they exist, so if this behavior is not desired, the calling
     code should skip this call if the files exist and simply load the contents
-    of ``regriddedFileName``.
+    of ``remappedFileName``.
 
     Parameters
     ----------
@@ -650,10 +650,10 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     climatologyFileName : str
         The name of the output file to which the data set should be written
-        before regridding (if using ncremap).
+        before remapping (if using ncremap).
 
-    regriddedFileName : str
-        The name of the output file to which the regridded data set should
+    remappedFileName : str
+        The name of the output file to which the remapped data set should
         be written.
 
     remapper : ``Remapper`` object
@@ -683,16 +683,16 @@ def remap_and_write_climatology(config, climatologyDataSet,
             if not os.path.exists(climatologyFileName):
                 write_netcdf(climatologyDataSet, climatologyFileName)
             remapper.remap_file(inFileName=climatologyFileName,
-                                outFileName=regriddedFileName,
+                                outFileName=remappedFileName,
                                 overwrite=True)
-            remappedClimatology = xr.open_dataset(regriddedFileName)
+            remappedClimatology = xr.open_dataset(remappedFileName)
         else:
             renormalizationThreshold = config.getfloat(
                 'climatology', 'renormalizationThreshold')
 
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
-            write_netcdf(remappedClimatology, regriddedFileName)
+            write_netcdf(remappedClimatology, remappedFileName)
     return remappedClimatology  # }}}
 
 

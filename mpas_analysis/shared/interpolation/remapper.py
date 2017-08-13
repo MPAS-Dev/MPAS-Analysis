@@ -456,7 +456,7 @@ class Remapper(object):
 
     def _remap_data_array(self, dataArray, renormalizationThreshold):  # {{{
         '''
-        Regrids a single xarray data array
+        Remap a single xarray data array
 
         Author
         ------
@@ -531,7 +531,7 @@ class Remapper(object):
     def _remap_numpy_array(self, inField, remapAxes,
                            renormalizationThreshold):  # {{{
         '''
-        Regrids a single numpy array
+        Remap a single numpy array
 
         Author
         ------
