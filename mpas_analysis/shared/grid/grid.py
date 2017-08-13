@@ -14,6 +14,7 @@ ProjectionGridDescriptor - describes a logically rectangular grid on a pyproj
 Author
 ------
 Xylar Asay-Davis
+
 '''
 
 import netCDF4
@@ -41,6 +42,7 @@ class MeshDescriptor(object):  # {{{
         Author
         ------
         Xylar Asay-Davis
+
         '''
 
         self.meshName = None  # }}}
@@ -211,14 +213,21 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         self.regional = False
         self.meshName = None  # }}}
 
-    def read(self, fileName, latVarName='lat', lonVarName='lon'):  # {{{
+    @classmethod
+    def read(cls, fileName=None, ds=None, latVarName='lat',
+             lonVarName='lon'):  # {{{
         '''
         Read the lat-lon grid from a file with the given lat/lon var names.
 
         Parameters
         ----------
-        fileName : str
-            The path of the file containing the lat-lon grid
+        fileName : str, optional
+            The path of the file containing the lat-lon grid (if ``ds`` is not
+            supplied directly)
+
+        ds : ``xarray.Dataset`` object, optional
+            The path of the file containing the lat-lon grid (if supplied,
+            ``fileName`` will be ignored)
 
         latVarName, lonVarName : str, optional
             The name of the latitude and longitude variables in the grid file
@@ -227,33 +236,38 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         ------
         Xylar Asay-Davis
         '''
-        ds = xarray.open_dataset(fileName)
+        if ds is None:
+            ds = xarray.open_dataset(fileName)
 
-        if self.meshName is None and 'meshName' in ds.attrs:
-            self.meshName = ds.attrs['meshName']
+        descriptor = cls()
+
+        if descriptor.meshName is None and 'meshName' in ds.attrs:
+            descriptor.meshName = ds.attrs['meshName']
 
         # Get info from input file
-        self.lat = numpy.array(ds[latVarName].values, float)
-        self.lon = numpy.array(ds[lonVarName].values, float)
+        descriptor.lat = numpy.array(ds[latVarName].values, float)
+        descriptor.lon = numpy.array(ds[lonVarName].values, float)
         if 'degree' in ds[latVarName].units:
-            self.units = 'degrees'
+            descriptor.units = 'degrees'
         else:
-            self.units = 'radians'
+            descriptor.units = 'radians'
 
-        self._set_coords(latVarName, lonVarName, ds[latVarName].dims[0],
-                         ds[lonVarName].dims[0])
+        descriptor._set_coords(latVarName, lonVarName, ds[latVarName].dims[0],
+                               ds[lonVarName].dims[0])
 
         # interp/extrap corners
-        self.lonCorner = _interp_extrap_corner(self.lon)
-        self.latCorner = _interp_extrap_corner(self.lat)
+        descriptor.lonCorner = _interp_extrap_corner(descriptor.lon)
+        descriptor.latCorner = _interp_extrap_corner(descriptor.lat)
 
         if 'history' in ds.attrs:
-            self.history = '\n'.join([ds.attrs['history'],
-                                     ' '.join(sys.argv[:])])
+            descriptor.history = '\n'.join([ds.attrs['history'],
+                                           ' '.join(sys.argv[:])])
         else:
-            self.history = sys.argv[:]  # }}}
+            descriptor.history = sys.argv[:]
+        return descriptor  # }}}
 
-    def create(self, latCorner, lonCorner, units='degrees'):  # {{{
+    @classmethod
+    def create(cls, latCorner, lonCorner, units='degrees'):  # {{{
         '''
         Create the lat-lon grid with the given arrays and units.
 
@@ -270,14 +284,16 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         ------
         Xylar Asay-Davis
         '''
+        descriptor = cls()
 
-        self.latCorner = latCorner
-        self.lonCorner = lonCorner
-        self.lon = 0.5*(lonCorner[0:-1] + lonCorner[1:])
-        self.lat = 0.5*(latCorner[0:-1] + latCorner[1:])
-        self.units = units
-        self.history = sys.argv[:]
-        self._set_coords('lat', 'lon', 'lat', 'lon')  # }}}
+        descriptor.latCorner = latCorner
+        descriptor.lonCorner = lonCorner
+        descriptor.lon = 0.5*(lonCorner[0:-1] + lonCorner[1:])
+        descriptor.lat = 0.5*(latCorner[0:-1] + latCorner[1:])
+        descriptor.units = units
+        descriptor.history = sys.argv[:]
+        descriptor._set_coords('lat', 'lon', 'lat', 'lon')
+        return descriptor  # }}}
 
     def to_scrip(self, scripFileName):  # {{{
         '''
@@ -379,7 +395,9 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         self.latLonProjection = pyproj.Proj(proj='latlong', datum='WGS84')
         self.regional = True
 
-    def read(self, fileName, meshName=None, xVarName='x', yVarName='y'):  # {{{
+    @classmethod
+    def read(cls, projection, fileName, meshName=None, xVarName='x',
+             yVarName='y'):  # {{{
         '''
         Given a grid file with x and y coordinates defining the axes of the
         logically rectangular grid, read in the x and y coordinates and
@@ -387,6 +405,10 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
 
         Parameters
         ----------
+        projection : pyproj.Proj object
+            The projection used to map from grid x-y space to latitude and
+            longitude
+
         fileName : str
             The path of the file containing the grid data
 
@@ -402,35 +424,38 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         ------
         Xylar Asay-Davis
         '''
+        descriptor = cls(projection)
 
         ds = xarray.open_dataset(fileName)
 
         if meshName is None:
             if 'meshName' not in ds.attrs:
                 raise ValueError('No meshName provided or found in file.')
-            self.meshName = ds.attrs['meshName']
+            descriptor.meshName = ds.attrs['meshName']
         else:
-            self.meshName = meshName
+            descriptor.meshName = meshName
 
         # Get info from input file
-        self.x = numpy.array(ds[xVarName].values, float)
-        self.y = numpy.array(ds[yVarName].values, float)
+        descriptor.x = numpy.array(ds[xVarName].values, float)
+        descriptor.y = numpy.array(ds[yVarName].values, float)
 
-        self._set_coords(xVarName, yVarName, ds[xVarName].dims[0],
-                         ds[yVarName].dims[0])
+        descriptor._set_coords(xVarName, yVarName, ds[xVarName].dims[0],
+                               ds[yVarName].dims[0])
 
         # interp/extrap corners
-        self.xCorner = _interp_extrap_corner(self.x)
-        self.yCorner = _interp_extrap_corner(self.y)
+        descriptor.xCorner = _interp_extrap_corner(descriptor.x)
+        descriptor.yCorner = _interp_extrap_corner(descriptor.y)
 
         # Update history attribute of netCDF file
         if 'history' in ds.attrs:
-            self.history = '\n'.join([ds.attrs['history'],
-                                     ' '.join(sys.argv[:])])
+            descriptor.history = '\n'.join([ds.attrs['history'],
+                                           ' '.join(sys.argv[:])])
         else:
-            self.history = sys.argv[:]  # }}}
+            descriptor.history = sys.argv[:]
+        return descriptor  # }}}
 
-    def create(self, x, y, meshName):  # {{{
+    @classmethod
+    def create(cls, projection, x, y, meshName):  # {{{
         '''
         Given x and y coordinates defining the axes of the logically
         rectangular grid, save the coordinates interpolate/extrapolate to
@@ -449,18 +474,20 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         ------
         Xylar Asay-Davis
         '''
+        descriptor = cls(projection)
 
-        self.meshName = meshName
+        descriptor.meshName = meshName
 
-        self.x = x
-        self.y = y
+        descriptor.x = x
+        descriptor.y = y
 
-        self._set_coords('x', 'y', 'x', 'y')
+        descriptor._set_coords('x', 'y', 'x', 'y')
 
         # interp/extrap corners
-        self.xCorner = _interp_extrap_corner(self.x)
-        self.yCorner = _interp_extrap_corner(self.y)
-        self.history = sys.argv[:]  # }}}
+        descriptor.xCorner = _interp_extrap_corner(descriptor.x)
+        descriptor.yCorner = _interp_extrap_corner(descriptor.y)
+        descriptor.history = sys.argv[:]
+        return descriptor  # }}}
 
     def to_scrip(self, scripFileName):  # {{{
         '''

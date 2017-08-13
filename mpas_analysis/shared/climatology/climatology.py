@@ -59,8 +59,7 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
     lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
     lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 
-    descriptor = LatLonGridDescriptor()
-    descriptor.create(lat, lon, units='degrees')
+    descriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
 
     return descriptor  # }}}
 

@@ -231,9 +231,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 obsFieldName = '{}_{}_{}'.format(climFieldName, hemisphere,
                                                  obsName)
 
-                obsDescriptor = LatLonGridDescriptor()
-                obsDescriptor.read(fileName=obsFileName, latVarName='t_lat',
-                                   lonVarName='t_lon')
+                obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
+                                                          latVarName='t_lat',
+                                                          lonVarName='t_lon')
                 obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
                         comparisonDescriptor=comparisonDescriptor,
@@ -383,9 +383,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                         obsFileName))
 
                 obsFieldName = '{}_{}'.format(climFieldName, hemisphere)
-                obsDescriptor = LatLonGridDescriptor()
-                obsDescriptor.read(fileName=obsFileName, latVarName='t_lat',
-                                   lonVarName='t_lon')
+                obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
+                                                          latVarName='t_lat',
+                                                          lonVarName='t_lon')
                 obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
                         comparisonDescriptor=comparisonDescriptor,
