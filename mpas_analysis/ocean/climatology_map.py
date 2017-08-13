@@ -116,12 +116,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        overwriteMpasClimatology = config.getWithDefault(
-            'climatology', 'overwriteMpasClimatology', False)
-
-        overwriteObsClimatology = config.getWithDefault(
-            'oceanObservations', 'overwriteObsClimatology', False)
-
         try:
             restartFileName = self.runStreams.readpath('restart')[0]
         except ValueError:
@@ -192,8 +186,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     mpasMeshName=mpasDescriptor.meshName,
                     comparisonGridName=comparisonDescriptor.meshName)
 
-            if (overwriteMpasClimatology or
-                    not os.path.exists(remappedFileName)):
+            if not os.path.exists(remappedFileName):
                 seasonalClimatology = cache_climatologies(
                     ds, monthValues, config, climatologyPrefix, calendar,
                     printProgress=True)
@@ -225,8 +218,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     config=config, fieldName=fieldName, monthNames=months,
                     componentName='ocean', remapper=origObsRemapper)
 
-            if (overwriteObsClimatology or
-                    not os.path.exists(remappedFileName)):
+            if not os.path.exists(remappedFileName):
 
                 if dsObs is None:
                     # load the observations the first time

@@ -175,11 +175,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         mainRunName = config.get('runs', 'mainRunName')
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
-        overwriteMpasClimatology = config.getWithDefault(
-            'climatology', 'overwriteMpasClimatology', False)
-
-        overwriteObsClimatology = config.getWithDefault(
-            'seaIceObservations', 'overwriteObsClimatology', False)
 
         subtitle = 'Ice concentration'
 
@@ -194,7 +189,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
         comparisonDescriptor = self.mpasRemapper.destinationDescriptor
 
-        buildObsClimatologies = overwriteObsClimatology
+        buildObsClimatologies = False
         for months in hemisphereSeasons:
             hemisphere, season = hemisphereSeasons[months]
             climFieldName = 'iceConcentration'
@@ -253,8 +248,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     mpasMeshName=mpasMeshName,
                     comparisonGridName=comparisonGridName)
 
-            if (overwriteMpasClimatology or
-                    not os.path.exists(remappedFileName)):
+            if not os.path.exists(remappedFileName):
                 seasonalClimatology = cache_climatologies(
                     ds, monthValues, config, climatologyPrefix, calendar,
                     printProgress=True)
@@ -369,11 +363,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         mainRunName = config.get('runs', 'mainRunName')
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
-        overwriteMpasClimatology = config.getWithDefault(
-            'climatology', 'overwriteMpasClimatology', False)
-
-        overwriteObsClimatology = config.getWithDefault(
-            'seaIceObservations', 'overwriteObsClimatology', False)
 
         obsFileNames = {}
         remappedObsFileNames = {}
@@ -382,7 +371,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         comparisonDescriptor = self.mpasRemapper.destinationDescriptor
 
         # build a list of remapped observations files
-        buildObsClimatologies = overwriteObsClimatology
+        buildObsClimatologies = False
         for months in ['FM', 'ON']:
             climFieldName = 'iceThickness'
             for hemisphere in ['NH', 'SH']:
@@ -437,8 +426,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     mpasMeshName=mpasMeshName,
                     comparisonGridName=comparisonGridName)
 
-            if (overwriteMpasClimatology or
-                    not os.path.exists(climatologyFileName)):
+            if not os.path.exists(climatologyFileName):
                 seasonalClimatology = cache_climatologies(
                     ds, monthValues, config, climatologyPrefix, calendar,
                     printProgress=True)
