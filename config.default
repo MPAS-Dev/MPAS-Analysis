@@ -152,7 +152,7 @@ startYear = 11
 # the last year over which to average climatalogies
 endYear = 20
 
-# The comparison grid resolution in degrees
+# The comparison lat/lon grid resolution in degrees
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
 
@@ -453,8 +453,31 @@ colorbarLevelsDifference = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
+
+[climatologyMapSSTAntarctic]
+## options related to  color maps for horizontally remapped climatologies of
+## sea surface temperature (SST) against reference model results and
+## observations on an Antarctic comparison grid
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2.5, 'vmax': 2.5}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2.5, 2.5, 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
 
 [climatologyMapSSS]
 ## options related to plotting horizontally remapped climatologies of
@@ -478,8 +501,31 @@ colorbarLevelsDifference = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
+
+[climatologyMapSSSAntarctic]
+## options related to color maps for horizontally remapped climatologies of
+## sea surface salinity (SSS) against reference model results and observations
+## on an Antarctic comparison grid
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 32., 'vmax': 35.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(32., 35., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2, 'vmax': 2}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2, 2, 9)
 
 [climatologyMapMLD]
 ## options related to plotting horizontally remapped climatologies of
@@ -503,8 +549,27 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
+
+[climatologyMapMLDAntarctic]
+## options related to color maps for horizontally remapped climatologies of
+## mixed layer depth (MLD) against reference model results and observations
+## on an Antarctic comparison grid
+
+# colormap for model/observations
+colormapNameResult = viridis
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
@@ -529,7 +594,7 @@ colorbarLevelsDifference = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
 # observations are only available for these seasons)
 seasons =  ['JFM', 'JAS']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
@@ -562,7 +627,7 @@ colorbarLevelsDifference = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
 # observations are only available for these seasons)
 seasons =  ['DJF', 'JJA']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
@@ -595,7 +660,7 @@ colorbarLevelsDifference = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
 # observations are only available for these seasons)
 seasons =  ['FM', 'ON']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
@@ -628,7 +693,7 @@ colorbarLevelsDifference = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
 # observations are only available for these seasons)
 seasons =  ['FM', 'ON']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('lonlat', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere

@@ -1,3 +1,4 @@
+import numpy
 import xarray as xr
 import os
 import warnings
@@ -536,6 +537,11 @@ class MpasClimatology(AnalysisTask):  # {{{
             # slice
             climatology = climatology.isel(**iselValues)
 
+            # add valid mask as a variable, useful for remapping later
+            climatology['validMask'] = \
+                xr.DataArray(numpy.ones(climatology.dims['nCells']),
+                             dims=['nCells'])
+
             # mask the data set
             for variableName in self.variableList:
                 climatology[variableName] = \
@@ -577,7 +583,7 @@ class MpasClimatology(AnalysisTask):  # {{{
 
         useNcremap = self.config.getboolean('climatology', 'useNcremap')
 
-        if comparisonGridName == 'antarctic':
+        if comparisonGridName != 'latlon':
             # ncremap doesn't support polar stereographic grids
             useNcremap = False
 

@@ -16,7 +16,7 @@ import os
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.plot.plotting import plot_global_comparison, \
-    setup_colormap
+    setup_colormap, plot_polar_projection_comparison
 from ..shared.constants import constants
 
 from ..shared.io.utility import build_config_full_path
@@ -26,7 +26,7 @@ from ..shared.climatology import get_comparison_descriptor, \
     get_remapper, get_observation_climatology_file_names, \
     compute_climatology, remap_and_write_climatology, MpasClimatology
 
-from ..shared.grid import LatLonGridDescriptor
+from ..shared.grid import LatLonGridDescriptor, interp_extrap_corner
 
 from ..shared.mpas_xarray import mpas_xarray
 
@@ -194,26 +194,19 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         # setup_and_check was already called, and run completed successfully.)
         climatologyTask.setup_and_check()
 
-        mainRunName = config.get('runs', 'mainRunName')
+        # we don't have any way to know the observation lat/lon and grid
+        # without this, so we have to read the observational data set even
+        # if it's already been remapped.
+        dsObs, obsDescriptor = self._build_observational_dataset()
 
-        obsDescriptor = LatLonGridDescriptor.read(fileName=self.obsFileName,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+        # set the landMask to None so we know we need to compute it later
+        # (if this is an antarctic projection)
+        self.landMask = None
 
         comparisonDescriptor = \
             get_comparison_descriptor(config, self.comparisonGridName)
 
         origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
-
-        sectionName = self.get_section_name()
-
-        (colormapResult, colorbarLevelsResult) = setup_colormap(
-            config, sectionName, suffix='Result')
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-            config, sectionName, suffix='Difference')
-
-        startYear = climatologyTask.startYear
-        endYear = climatologyTask.endYear
 
         # Interpolate and compute biases
         monthValues = constants.monthDictionary[self.season]
@@ -221,15 +214,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         remappedFileName = climatologyTask.get_ncclimo_file_name(
                     self.season, 'remapped', comparisonDescriptor)
 
-        remappedClimatology = xr.open_dataset(remappedFileName)
-
-        modelOutput = \
-            remappedClimatology[self.mpasFieldName].values
-
-        lon = remappedClimatology['lon'].values
-        lat = remappedClimatology['lat'].values
-
-        lonTarg, latTarg = np.meshgrid(lon, lat)
+        remappedModelClimatology = xr.open_dataset(remappedFileName)
 
         # now the observations
         (climatologyFileName, remappedFileName) = \
@@ -238,9 +223,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 componentName='ocean', remapper=origObsRemapper)
 
         if not os.path.exists(remappedFileName):
-
-            # load the observations the first time
-            dsObs = self._build_observational_dataset()
 
             seasonalClimatology = compute_climatology(
                 dsObs, monthValues, maskVaries=True)
@@ -264,41 +246,22 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             if obsRemapper is None:
                 # no need to remap because the observations are on the
                 # comparison grid already
-                remappedClimatology = seasonalClimatology
+                remappedObsClimatology = seasonalClimatology
             else:
-                remappedClimatology = \
+                remappedObsClimatology = \
                     remap_and_write_climatology(
                         config, seasonalClimatology, climatologyFileName,
                         remappedFileName, obsRemapper)
 
         else:
 
-            remappedClimatology = xr.open_dataset(remappedFileName)
-        observations = remappedClimatology[self.obsFieldName].values
+            remappedObsClimatology = xr.open_dataset(remappedFileName)
 
-        bias = modelOutput - observations
-
-        outFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                self.plotsDirectory, self.outFileLabel, mainRunName,
-                self.season, startYear, endYear)
-        title = '{} ({}, years {:04d}-{:04d})'.format(
-                self.fieldNameInTitle, self.season, startYear, endYear)
-        plot_global_comparison(config,
-                               lonTarg,
-                               latTarg,
-                               modelOutput,
-                               observations,
-                               bias,
-                               colormapResult,
-                               colorbarLevelsResult,
-                               colormapDifference,
-                               colorbarLevelsDifference,
-                               fileout=outFileName,
-                               title=title,
-                               modelTitle='{}'.format(mainRunName),
-                               obsTitle=self.observationTitleLabel,
-                               diffTitle='Model-Observations',
-                               cbarlabel=self.unitsLabel)
+        if self.comparisonGridName == 'latlon':
+            self._plot_latlon(remappedModelClimatology, remappedObsClimatology)
+        elif self.comparisonGridName == 'antarctic':
+            self._plot_antarctic(remappedModelClimatology,
+                                 remappedObsClimatology)
 
         # }}}
 
@@ -333,6 +296,122 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             sectionName = comparisonSectionName
 
         return sectionName
+
+    def _plot_latlon(self, remappedModelClimatology, remappedObsClimatology):
+        # {{{
+        """ plotting a global lat-lon data set """
+        config = self.config
+        climatologyTask = self.climatologyTask
+        startYear = climatologyTask.startYear
+        endYear = climatologyTask.endYear
+
+        sectionName = self.get_section_name()
+
+        (colormapResult, colorbarLevelsResult) = setup_colormap(
+            config, sectionName, suffix='Result')
+        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+            config, sectionName, suffix='Difference')
+
+        modelOutput = \
+            remappedModelClimatology[self.mpasFieldName].values
+
+        observations = remappedObsClimatology[self.obsFieldName].values
+
+        bias = modelOutput - observations
+
+        lon = remappedModelClimatology['lon'].values
+        lat = remappedModelClimatology['lat'].values
+
+        lonTarg, latTarg = np.meshgrid(lon, lat)
+
+        mainRunName = config.get('runs', 'mainRunName')
+        title = '{} ({}, years {:04d}-{:04d})'.format(
+                self.fieldNameInTitle, self.season, startYear, endYear)
+
+        outFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
+                self.plotsDirectory, self.outFileLabel, mainRunName,
+                self.season, startYear, endYear)
+
+        plot_global_comparison(config,
+                               lonTarg,
+                               latTarg,
+                               modelOutput,
+                               observations,
+                               bias,
+                               colormapResult,
+                               colorbarLevelsResult,
+                               colormapDifference,
+                               colorbarLevelsDifference,
+                               fileout=outFileName,
+                               title=title,
+                               modelTitle='{}'.format(mainRunName),
+                               obsTitle=self.observationTitleLabel,
+                               diffTitle='Model - Observations',
+                               cbarlabel=self.unitsLabel)
+        # }}}
+
+    def _plot_antarctic(self, remappedModelClimatology,
+                        remappedObsClimatology):  # {{{
+        """ plotting an Antarctic data set """
+
+        config = self.config
+        climatologyTask = self.climatologyTask
+
+        startYear = climatologyTask.startYear
+        endYear = climatologyTask.endYear
+
+        sectionName = self.get_section_name()
+
+        mainRunName = config.get('runs', 'mainRunName')
+        title = '{} ({}, years {:04d}-{:04d})'.format(
+                self.fieldNameInTitle, self.season, startYear, endYear)
+
+        if self.landMask is None:
+            oceanMask = remappedModelClimatology['validMask'].values
+            self.landMask = np.ma.masked_array(
+                np.ones(oceanMask.shape),
+                mask=np.logical_not(np.isnan(oceanMask)))
+
+        modelOutput = \
+            remappedModelClimatology[self.mpasFieldName].values
+
+        observations = remappedObsClimatology[self.obsFieldName].values
+
+        bias = modelOutput - observations
+
+        x = interp_extrap_corner(remappedModelClimatology['x'].values)
+        y = interp_extrap_corner(remappedModelClimatology['y'].values)
+
+        outFileName = '{}/{}_{}_{}_{}_years{:04d}-{:04d}.png'.format(
+                self.plotsDirectory, self.comparisonGridName, self.outFileLabel,
+                mainRunName, self.season, startYear, endYear)
+
+        if config.has_option(sectionName, 'colormapIndicesResult'):
+            colorMapType = 'indexed'
+        elif config.has_option(sectionName, 'normTypeResult'):
+            colorMapType = 'norm'
+        else:
+            raise ValueError('config section {} contains neither the info'
+                             'for an indexed color map nor for computing a '
+                             'norm'.format(sectionName))
+
+        plot_polar_projection_comparison(
+            config,
+            x,
+            y,
+            self.landMask,
+            modelOutput,
+            observations,
+            bias,
+            fileout=outFileName,
+            colorMapSectionName=sectionName,
+            colorMapType=colorMapType,
+            title=title,
+            modelTitle='{}'.format(mainRunName),
+            obsTitle=self.observationTitleLabel,
+            diffTitle='Model - Observations',
+            cbarlabel=self.unitsLabel)
+        # }}}
 
     # }}}
 
@@ -455,7 +534,11 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
 
-        return dsObs  # }}}
+        # create a descriptor of the observation grid using the lat/lon
+        # coordinates
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs)
+
+        return dsObs, obsDescriptor  # }}}
 
     # }}}
 
@@ -560,7 +643,11 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
 
-        return dsObs  # }}}
+        # create a descriptor of the observation grid using the lat/lon
+        # coordinates
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs)
+
+        return dsObs, obsDescriptor  # }}}
 
     # }}}
 
@@ -681,6 +768,10 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         dsObs = mpas_xarray.subset_variables(dsObs, [self.obsFieldName,
                                                      'month'])
 
-        return dsObs  # }}}
+        # create a descriptor of the observation grid using the lat/lon
+        # coordinates
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs)
+
+        return dsObs, obsDescriptor  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

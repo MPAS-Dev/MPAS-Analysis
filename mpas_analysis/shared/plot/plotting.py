@@ -841,13 +841,175 @@ def plot_global_comparison(
         plt.close()
 
 
-def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
-    days = np.maximum(days, 0.)
-    date = days_to_datetime(days, calendar)
-    if includeMonth:
-        return '{:04d}-{:02d}'.format(date.year, date.month)
+def plot_polar_projection_comparison(
+        config,
+        x,
+        y,
+        landMask,
+        modelArray,
+        obsArray,
+        diffArray,
+        fileout,
+        colorMapSectionName,
+        colorMapType='norm',
+        title=None,
+        modelTitle='Model',
+        obsTitle='Observations',
+        diffTitle='Model-Observations',
+        cbarlabel='units',
+        titleFontSize=None,
+        figsize=(8, 22),
+        dpi=300):
+
+    """
+    Plots a data set as a longitude/latitude map.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    x, y : numpy ndarrays
+        1D x and y arrays defining the projection grid
+
+    landMask : numpy ndarrays
+        model and observational data sets
+
+    modelArray, obsArray : numpy ndarrays
+        model and observational data sets
+
+    diffArray : float array
+        difference between modelArray and obsArray
+
+    fileout : str
+        the file name to be written
+
+    colorMapSectionName : str
+        section name in ``config`` where color map info can be found.
+
+    colorMapType : {'norm', 'indexed'}, optional
+        The type of color map, either a matplotlib norm or indices into a color
+        map.
+
+        If 'norm', the following options must be defined for suffixes
+        ``Result`` and ``Difference``:
+            ``colormapName<suffix>``, ``normType<suffix>``,
+            ``normArgs<suffix>``, ``colorbarTicks<suffix>``
+
+        If 'indexed', these options are required:
+            ``colormapName<suffix>``, ``colormapIndices<suffix>``,
+            ``colorbarLevels<suffix>``
+
+        The colorbar for each panel will be constructed from these options
+
+
+    title : str, optional
+        the subtitle of the plot
+
+    plotProjection : str, optional
+        Basemap projection for the plot
+
+    modelTitle : str, optional
+        title of the model panel
+
+    obsTitle : str, optional
+        title of the observations panel
+
+    diffTitle : str, optional
+        title of the difference (bias) panel
+
+    cbarlabel : str, optional
+        label on the colorbar
+
+    titleFontSize : int, optional
+        size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    def plot_panel(ax, title, array, cmap, norm, ticks):
+        plt.title(title, y=1.06, **axis_font)
+
+        plt.pcolormesh(x, y, array, cmap=cmap, norm=norm)
+        cbar = plt.colorbar()
+        cbar.set_label(cbarlabel)
+        if ticks is not None:
+            cbar.set_ticks(ticks)
+            cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+        plt.pcolormesh(x, y, landMask, cmap=landColorMap)
+        plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
+                    linewidths=0.5)
+        ax.axis('off')
+        ax.set_aspect('equal')
+        ax.autoscale(tight=True)
+
+    if colorMapType == 'norm':
+        (cmapModelObs, normModelObs) = _setup_colormap_and_norm(
+            config, colorMapSectionName, suffix='Result')
+        (cmapDiff, normDiff) = _setup_colormap_and_norm(
+            config, colorMapSectionName, suffix='Difference')
+
+        colorbarTicksResult = config.getExpression(colorMapSectionName,
+                                                   'colorbarTicksResult')
+        colorbarTicksDifference = config.getExpression(
+            colorMapSectionName, 'colorbarTicksDifference')
+    elif colorMapType == 'indexed':
+
+        (cmapModelObs, colorbarTicksResult) = setup_colormap(
+            config, colorMapSectionName, suffix='Result')
+        (cmapDiff, colorbarTicksDifference) = setup_colormap(
+            config, colorMapSectionName, suffix='Difference')
+
+        normModelObs = cols.BoundaryNorm(colorbarTicksResult, cmapModelObs.N)
+        normDiff = cols.BoundaryNorm(colorbarTicksDifference, cmapDiff.N)
     else:
-        return '{:04d}'.format(date.year)
+        raise ValueError('colorMapType must be one of {norm, indexed}')
+
+    # set up figure
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    if (title is not None):
+        if titleFontSize is None:
+            titleFontSize = config.get('plot', 'titleFontSize')
+        title_font = {'size': titleFontSize,
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
+        fig.suptitle(title, y=0.95, **title_font)
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+
+    # set up land colormap
+    colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
+    landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
+
+    # locations of centers for land contour
+    xCenter = 0.5*(x[1:] + x[0:-1])
+    yCenter = 0.5*(y[1:] + y[0:-1])
+
+    ax = plt.subplot(3, 1, 1)
+    plot_panel(ax, modelTitle, modelArray, cmapModelObs, normModelObs,
+               colorbarTicksResult)
+
+    ax = plt.subplot(3, 1, 2)
+    plot_panel(ax, obsTitle, obsArray, cmapModelObs, normModelObs,
+               colorbarTicksResult)
+
+    ax = plt.subplot(3, 1, 3)
+    plot_panel(ax, diffTitle, diffArray, cmapDiff, normDiff,
+               colorbarTicksDifference)
+
+    if (fileout is not None):
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
 
 
 def plot_1D(config, xArrays, fieldArrays, errArrays,
@@ -1121,6 +1283,8 @@ def setup_colormap(config, configSectionName, suffix=''):
     Xylar Asay-Davis, Milena Veneziani
     '''
 
+    _register_custom_colormaps()
+
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
     indices = config.getExpression(configSectionName,
@@ -1140,6 +1304,185 @@ def setup_colormap(config, configSectionName, suffix=''):
     colormap.set_under(underColor)
     colormap.set_over(overColor)
     return (colormap, colorbarLevels)
+
+
+def _setup_colormap_and_norm(config, configSectionName, suffix=''):
+
+    '''
+    Set up a colormap from the registry
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    configSectionName : str
+        name of config section
+
+    suffix: str, optional
+        suffix of colormap related options
+
+    Returns
+    -------
+    colormap : srt
+        new colormap
+
+    norm : ``SymLogNorm`` object
+        the norm used to normalize the colormap
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    '''
+
+    _register_custom_colormaps()
+
+    colormap = plt.get_cmap(config.get(configSectionName,
+                                       'colormapName{}'.format(suffix)))
+
+    normType = config.get(configSectionName, 'normType{}'.format(suffix))
+
+    kwargs = config.getExpression(configSectionName,
+                                  'normArgs{}'.format(suffix))
+
+    if normType == 'symLog':
+        norm = cols.SymLogNorm(**kwargs)
+    elif normType == 'linear':
+        norm = cols.Normalize(**kwargs)
+    else:
+        raise ValueError('Unsupported norm type {} in section {}'.format(
+            normType, configSectionName))
+
+    return (colormap, norm)
+
+
+def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
+    days = np.maximum(days, 0.)
+    date = days_to_datetime(days, calendar)
+    if includeMonth:
+        return '{:04d}-{:02d}'.format(date.year, date.month)
+    else:
+        return '{:04d}'.format(date.year)
+
+
+def _register_custom_colormaps():
+    name = 'ferret'
+    backgroundColor = (0.9, 0.9, 0.9)
+
+    red = np.array([[0, 0.6],
+                    [0.15, 1],
+                    [0.35, 1],
+                    [0.65, 0],
+                    [0.8, 0],
+                    [1, 0.75]])
+
+    green = np.array([[0, 0],
+                      [0.1, 0],
+                      [0.35, 1],
+                      [1, 0]])
+
+    blue = np.array([[0, 0],
+                     [0.5, 0],
+                     [0.9, 0.9],
+                     [1, 0.9]])
+
+    colorCount = 21
+    colorList = np.ones((colorCount, 4), float)
+    colorList[:, 0] = np.interp(np.linspace(0, 1, colorCount),
+                                red[:, 0], red[:, 1])
+    colorList[:, 1] = np.interp(np.linspace(0, 1, colorCount),
+                                green[:, 0], green[:, 1])
+    colorList[:, 2] = np.interp(np.linspace(0, 1, colorCount),
+                                blue[:, 0], blue[:, 1])
+    colorList = colorList[::-1, :]
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    colorMap.set_bad(backgroundColor)
+    plt.register_cmap(name, colorMap)
+
+    name = 'erdc_iceFire_H'
+
+    colorArray = np.array([
+        [-1, 4.05432e-07, 0, 5.90122e-06],
+        [-0.87451, 0, 0.120401, 0.302675],
+        [-0.74902, 0, 0.216583, 0.524574],
+        [-0.623529, 0.0552475, 0.345025, 0.6595],
+        [-0.498039, 0.128047, 0.492588, 0.720288],
+        [-0.372549, 0.188955, 0.641309, 0.792092],
+        [-0.247059, 0.327673, 0.784935, 0.873434],
+        [-0.121569, 0.60824, 0.892164, 0.935547],
+        [0.00392157, 0.881371, 0.912178, 0.818099],
+        [0.129412, 0.951407, 0.835621, 0.449279],
+        [0.254902, 0.904481, 0.690489, 0],
+        [0.380392, 0.85407, 0.510864, 0],
+        [0.505882, 0.777093, 0.33018, 0.00088199],
+        [0.631373, 0.672862, 0.139087, 0.00269398],
+        [0.756863, 0.508815, 0, 0],
+        [0.882353, 0.299417, 0.000366289, 0.000547829],
+        [1, 0.0157519, 0.00332021, 4.55569e-08]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex+1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    plt.register_cmap(name, colorMap)
+
+    name = 'erdc_iceFire_L'
+
+    colorArray = np.array([
+        [-1, 0.870485, 0.913768, 0.832905],
+        [-0.87451, 0.586919, 0.887865, 0.934003],
+        [-0.74902, 0.31583, 0.776442, 0.867858],
+        [-0.623529, 0.18302, 0.632034, 0.787722],
+        [-0.498039, 0.117909, 0.484134, 0.713825],
+        [-0.372549, 0.0507239, 0.335979, 0.654741],
+        [-0.247059, 0, 0.209874, 0.511832],
+        [-0.121569, 0, 0.114689, 0.28935],
+        [0.00392157, 0.0157519, 0.00332021, 4.55569e-08],
+        [0.129412, 0.312914, 0, 0],
+        [0.254902, 0.520865, 0, 0],
+        [0.380392, 0.680105, 0.15255, 0.0025996],
+        [0.505882, 0.785109, 0.339479, 0.000797922],
+        [0.631373, 0.857354, 0.522494, 0],
+        [0.756863, 0.910974, 0.699774, 0],
+        [0.882353, 0.951921, 0.842817, 0.478545],
+        [1, 0.881371, 0.912178, 0.818099]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex+1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    plt.register_cmap(name, colorMap)
+
+    name = 'BuOr'
+    colors1 = plt.cm.PuOr(np.linspace(0., 1, 256))
+    colors2 = plt.cm.RdBu(np.linspace(0, 1, 256))
+
+    # combine them and build a new colormap, just the orange from the first
+    # and the blue from the second
+    colorList = np.vstack((colors1[0:128, :], colors2[128:256, :]))
+    # reverse the order
+    colorList = colorList[::-1, :]
+    colorMap = cols.LinearSegmentedColormap.from_list(name, colorList)
+
+    plt.register_cmap(name, colorMap)
 
 
 def _plot_size_y_axis(plt, xaxisValues, **data):
