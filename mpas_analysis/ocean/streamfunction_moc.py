@@ -263,7 +263,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         make_directories(outputDirectory)
 
-        chunking = config.getExpression(self.sectionName, 'maxChunkSize')
+        if config.has_option(self.sectionName, 'maxChunkSize'):
+            chunking = config.getExpression(self.sectionName, 'maxChunkSize')
+        else:
+            chunking = None
+
         ds = open_multifile_dataset(
             fileNames=self.inputFilesClimo,
             calendar=self.calendar,
@@ -474,7 +478,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = self._load_mesh()
 
-        chunking = config.getExpression(self.sectionName, 'maxChunkSize')
+        if config.has_option(self.sectionName, 'maxChunkSize'):
+            chunking = config.getExpression(self.sectionName, 'maxChunkSize')
+        else:
+            chunking = None
+
         ds = open_multifile_dataset(
             fileNames=self.inputFilesTseries,
             calendar=self.calendar,

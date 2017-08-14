@@ -6,6 +6,7 @@ Xylar Asay-Davis, Phillip J. Wolfram
 """
 
 import pytest
+import ConfigParser
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
@@ -73,8 +74,10 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key2': -12,
                                     'key3': False})
 
-        testNone = self.config.getExpression('Test', 'doesntexist')
-        assert testNone is None
+        with self.assertRaisesRegexp(
+                ConfigParser.NoOptionError,
+                "No option 'doesntexist' in section: 'Test'"):
+            self.config.getExpression('Test', 'doesntexist')
 
     @requires_numpy
     def test_read_config_numpy(self):
