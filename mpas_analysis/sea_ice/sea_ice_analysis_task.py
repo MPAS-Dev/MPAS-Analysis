@@ -10,6 +10,15 @@ class SeaIceAnalysisTask(AnalysisTask):  # {{{
     '''
     A base class for sea-ice analysis tasks that implements common setup
 
+    Attributes
+    ----------
+    simulationStartTime : str
+        The start date of the simulation parsed from a restart file identified
+        by the contents of ``streams``.
+
+    restartFileName : str
+        Name of a restart file used for mesh information
+
     Authors
     -------
     Xylar Asay-Davis
@@ -64,7 +73,6 @@ class SeaIceAnalysisTask(AnalysisTask):  # {{{
                               'for sea ice analysis tasks')
 
         # }}}
-
 
 # }}}
 

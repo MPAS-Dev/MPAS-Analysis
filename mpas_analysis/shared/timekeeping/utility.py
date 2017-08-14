@@ -25,9 +25,9 @@ def get_simulation_start_time(streams):
 
     Returns
     -------
-    simulation_start_time : string
+    simulationStartTime : str
         The start date of the simulation parsed from a restart file identified
-        by the contents of `streams`.
+        by the contents of ``streams``.
 
     Raises
     ------

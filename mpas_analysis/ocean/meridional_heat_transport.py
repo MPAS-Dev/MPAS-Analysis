@@ -7,14 +7,9 @@ import warnings
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from ..shared.io.utility import build_config_full_path
 
-from ..shared.timekeeping.utility import get_simulation_start_time
-
-from ..shared.climatology.climatology \
-    import update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo, \
-    get_ncclimo_season_file_name
+from ..shared.climatology import MpasClimatology
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -27,6 +22,55 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     -------
     Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
+
+    @classmethod
+    def create_tasks(cls, config):  # {{{
+        """
+        For each comparison grid, construct one task for computing the
+        climatologies and one plotting task for each season.  The climatology
+        task is a prerequisite of the plotting tasks, but the plotting tasks
+        can run in parallel with one another.
+
+        Parameters
+        ----------
+        config : MpasAnalysisConfigParser object
+            Contains configuration options
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        mocTask = cls(config=config)
+
+        taskSuffix = 'MHT'
+        seasons = ['ANN']
+
+        variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
+                        'timeMonthly_avg_meridionalHeatTransportLatZ']
+
+        climatologyTask = \
+            MpasClimatology(config=config,
+                            variableList=variableList,
+                            taskSuffix=taskSuffix,
+                            componentName='ocean',
+                            seasons=seasons,
+                            tags=['climatology'])
+
+        # add climatologyTask as a prerequisite of the MOC task so
+        # plotting won't happen until we have the required
+        # climatologies
+        if mocTask.prerequisiteTasks is None:
+            mocTask.prerequisiteTasks = [climatologyTask.taskName]
+        else:
+            mocTask.prerequisiteTasks.append(climatologyTask.taskName)
+        # We want to have access to some information from the
+        # climatologyTask (namely, we need a way to find out what the
+        # names of the climatology files are that it created), so we'll
+        # keep a reference to it handy.
+        mocTask.climatologyTask = climatologyTask
+
+        tasks = [climatologyTask, mocTask]
+        return tasks  # }}}
 
     def __init__(self, config):  # {{{
         '''
@@ -48,6 +92,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             taskName='meridionalHeatTransport',
             componentName='ocean',
             tags=['climatology'])
+
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -71,39 +116,22 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         super(MeridionalHeatTransport, self).setup_and_check()
 
         config = self.config
+        climatologyTask = self.climatologyTask
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
         self.check_analysis_enabled(
             analysisOptionName='config_am_meridionalheattransport_enable',
             raiseException=True)
 
-        # Get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        #   First a list necessary for the MHT climatology
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        self.startDate = config.get('climatology', 'startDate')
-        self.endDate = config.get('climatology', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDate,
-                                         endDate=self.endDate,
-                                         calendar=self.calendar)
+        # call setup_and_check() on the climatology task because it will make
+        # sure the start and end year are set and correct.  (In parallel mode,
+        # this copy of the climatologyTask is different from the one that will
+        # actually have run to completion before this task gets run.)
+        climatologyTask.setup_and_check()
 
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
-
-        update_climatology_bounds_from_file_names(self.inputFiles,
-                                                  self.config)
-
-        self.startDate = config.get('climatology', 'startDate')
-        self.startDate = config.get('climatology', 'endDate')
-        self.startYear = config.getint('climatology', 'startYear')
-        self.endYear = config.getint('climatology', 'endYear')
+        self.startDate = climatologyTask.startDate
+        self.endDate = climatologyTask.endDate
+        self.startYear = climatologyTask.startYear
+        self.endYear = climatologyTask.endYear
 
         # Later, we will read in depth and MHT latitude points
         # from mpaso.hist.am.meridionalHeatTransport.*.nc
@@ -114,8 +142,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                           'one ')
 
         self.mhtFile = mhtFiles[0]
-
-        self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         self.sectionName = 'meridionalHeatTransport'
 
@@ -182,42 +208,15 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Then we will need to add another section for regions with a loop
         # over number of regions.
         ######################################################################
-        variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
-                        'timeMonthly_avg_meridionalHeatTransportLatZ']
 
         print '\n  Compute and plot global meridional heat transport'
 
-        outputRoot = build_config_full_path(config, 'output',
-                                            'mpasClimatologySubdirectory')
-
-        outputDirectory = '{}/mht'.format(outputRoot)
-
-        print '\n  List of files for climatologies:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
-
         print '   Load data...'
 
-        climatologyFileName = get_ncclimo_season_file_name(outputDirectory,
-                                                           'mpaso', 'ANN',
-                                                           self.startYear,
-                                                           self.endYear)
-
-        if not os.path.exists(climatologyFileName):
-            make_directories(outputDirectory)
-
-            # Compute annual climatology
-            compute_climatologies_with_ncclimo(
-                    config=config,
-                    inDirectory=self.historyDirectory,
-                    outDirectory=outputDirectory,
-                    startYear=self.startYear,
-                    endYear=self.endYear,
-                    variableList=variableList,
-                    modelName='mpaso',
-                    seasons=['ANN'],
-                    decemberMode='sdd')
+        # use the climatologyTask to get the right file name for the
+        # computed climatology
+        climatologyFileName = self.climatologyTask.get_ncclimo_file_name(
+                season='ANN', stage='unmasked')
 
         annualClimatology = xr.open_dataset(climatologyFileName)
 

@@ -16,10 +16,7 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology.climatology \
-    import update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo, \
-    get_ncclimo_season_file_name
+from ..shared.climatology import MpasClimatology
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -39,6 +36,55 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     -------
     Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
     '''
+
+    @classmethod
+    def create_tasks(cls, config):  # {{{
+        """
+        For each comparison grid, construct one task for computing the
+        climatologies and one plotting task for each season.  The climatology
+        task is a prerequisite of the plotting tasks, but the plotting tasks
+        can run in parallel with one another.
+
+        Parameters
+        ----------
+        config : MpasAnalysisConfigParser object
+            Contains configuration options
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        mocTask = cls(config=config)
+
+        taskSuffix = 'VelMOC'
+        seasons = ['ANN']
+
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
+
+        climatologyTask = \
+            MpasClimatology(config=config,
+                            variableList=variableList,
+                            taskSuffix=taskSuffix,
+                            componentName='ocean',
+                            seasons=seasons,
+                            tags=['climatology'])
+
+        # add climatologyTask as a prerequisite of the MOC task so
+        # plotting won't happen until we have the required
+        # climatologies
+        if mocTask.prerequisiteTasks is None:
+            mocTask.prerequisiteTasks = [climatologyTask.taskName]
+        else:
+            mocTask.prerequisiteTasks.append(climatologyTask.taskName)
+        # We want to have access to some information from the
+        # climatologyTask (namely, we need a way to find out what the
+        # names of the climatology files are that it created), so we'll
+        # keep a reference to it handy.
+        mocTask.climatologyTask = climatologyTask
+
+        tasks = [climatologyTask, mocTask]
+        return tasks  # }}}
 
     def __init__(self, config):  # {{{
         '''
@@ -85,42 +131,28 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         super(StreamfunctionMOC, self).setup_and_check()
 
         config = self.config
-
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
+        climatologyTask = self.climatologyTask
 
         self.mocAnalysisMemberEnabled = self.check_analysis_enabled(
             analysisOptionName='config_am_mocstreamfunction_enable',
             raiseException=False)
+
+        # call setup_and_check() on the climatology task because it will make
+        # sure the start and end year are set and correct.  (In parallel mode,
+        # this copy of the climatologyTask is different from the one that will
+        # actually have run to completion before this task gets run.)
+        climatologyTask.setup_and_check()
+
+        self.startDateClimo = climatologyTask.startDate
+        self.endDateClimo = climatologyTask.endDate
+        self.startYearClimo = climatologyTask.startYear
+        self.endYearClimo = climatologyTask.endYear
 
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
         #   First a list necessary for the streamfunctionMOC climatology
         streamName = self.historyStreams.find_stream(
             self.streamMap['timeSeriesStats'])
-        self.startDateClimo = config.get('climatology', 'startDate')
-        self.endDateClimo = config.get('climatology', 'endDate')
-        self.inputFilesClimo = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDateClimo,
-                                         endDate=self.endDateClimo,
-                                         calendar=self.calendar)
-
-        if len(self.inputFilesClimo) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDateClimo,
-                                       self.endDateClimo))
-
-        self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        update_climatology_bounds_from_file_names(self.inputFilesClimo,
-                                                  self.config)
-
-        self.startDateClimo = config.get('climatology', 'startDate')
-        self.endDateClimo = config.get('climatology', 'endDate')
-        self.startYearClimo = config.getint('climatology', 'startYear')
-        self.endYearClimo = config.getint('climatology', 'endYear')
 
         #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
         self.startDateTseries = config.get('timeSeries', 'startDate')
@@ -157,11 +189,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         print "\nPlotting streamfunction of Meridional Overturning " \
               "Circulation (MOC)..."
 
-        print '\n  List of files for climatologies:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFilesClimo[0]),
-                  os.path.basename(self.inputFilesClimo[-1]))
-
         print '\n  List of files for time series:\n' \
               '    {} through\n    {}'.format(
                   os.path.basename(self.inputFilesTseries[0]),
@@ -179,7 +206,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #                                      sectionName, dictClimo,
             #                                      dictTseries)
         else:
-            self._compute_velocity_climatologies()
             self._compute_moc_climo_postprocess()
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
 
@@ -257,39 +283,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness
         # }}}
 
-    def _compute_velocity_climatologies(self):  # {{{
-        '''compute yearly velocity climatologies and cache them'''
-
-        variableList = ['timeMonthly_avg_normalVelocity',
-                        'timeMonthly_avg_vertVelocityTop']
-
-        config = self.config
-
-        outputRoot = build_config_full_path(config, 'output',
-                                            'mpasClimatologySubdirectory')
-
-        outputDirectory = '{}/meanVelocity'.format(outputRoot)
-
-        self.velClimoFile = get_ncclimo_season_file_name(outputDirectory,
-                                                         'mpaso', 'ANN',
-                                                         self.startYearClimo,
-                                                         self.endYearClimo)
-
-        if not os.path.exists(self.velClimoFile):
-            make_directories(outputDirectory)
-
-            compute_climatologies_with_ncclimo(
-                    config=config,
-                    inDirectory=self.historyDirectory,
-                    outDirectory=outputDirectory,
-                    startYear=self.startYearClimo,
-                    endYear=self.endYearClimo,
-                    variableList=variableList,
-                    modelName='mpaso',
-                    seasons=['ANN'],
-                    decemberMode='sdd')
-        # }}}
-
     def _compute_moc_climo_postprocess(self):  # {{{
 
         '''compute mean MOC streamfunction as a post-process'''
@@ -353,8 +346,14 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         if not os.path.exists(outputFileClimo):
             print '   Load data...'
 
-            annualClimatology = xr.open_dataset(self.velClimoFile)
-            # rename some variables for convenience
+            # use the climatologyTask to get the right file name for the
+            # computed climatology
+            velClimoFile = self.climatologyTask.get_ncclimo_file_name(
+                    season='ANN', stage='unmasked')
+
+            annualClimatology = xr.open_dataset(velClimoFile)
+            # rename some variables for convenience (what the variableMap used
+            # to do before we switched ot ncclimo)
             annualClimatology = annualClimatology.rename(
                     {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
                      'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})

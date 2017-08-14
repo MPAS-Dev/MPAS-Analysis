@@ -6,20 +6,17 @@ import numpy as np
 
 import xarray as xr
 
-from ..shared.constants import constants
-
-from ..shared.climatology import get_lat_lon_comparison_descriptor, \
-    get_remapper, get_mpas_climatology_dir_name, \
+from ..shared.climatology import get_remapper, \
     get_observation_climatology_file_names, \
-    compute_climatologies_with_ncclimo, \
-    update_climatology_bounds_from_file_names, \
-    remap_and_write_climatology, get_ncclimo_season_file_name
-from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
+    remap_and_write_climatology, \
+    get_comparison_descriptor, MpasClimatology
+from ..shared.grid import LatLonGridDescriptor
 
 from ..shared.plot.plotting import plot_polar_comparison, \
     setup_colormap
 
 from ..shared.io.utility import build_config_full_path
+from ..shared.io import write_netcdf
 
 from .sea_ice_analysis_task import SeaIceAnalysisTask
 
@@ -34,68 +31,107 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config):  # {{{
+    @classmethod
+    def create_tasks(cls, config):  # {{{
         """
-        Construct the analysis task.
+        For each comparison grid, construct one task for computing the
+        climatologies and one plotting task for each season.  The climatology
+        task is a prerequisite of the plotting tasks, but the plotting tasks
+        can run in parallel with one another.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config : MpasAnalysisConfigParser object
             Contains configuration options
 
         Authors
         -------
         Xylar Asay-Davis
         """
-        # first, call the constructor from the base class (SeaIceAnalysisTask)
-        super(ClimatologyMapSeaIce, self).__init__(
-            config=config,
-            taskName='climatologyMapSeaIceConcThick',
-            componentName='seaIce',
-            tags=['climatology', 'horizontalMap'])
 
-        # }}}
+        # get the name of the class (something like ClimatologyMapSST)
+        className = cls.__name__
+        sectionPrefix = className[0].lower() + className[1:]
 
-    def setup_and_check(self):  # {{{
-        """
-        Perform steps to set up the analysis and check for errors in the setup.
+        tasks = []
 
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
-        # first, call setup_and_check from the base class (SeaIceAnalysisTask),
-        # which will perform some common setup
-        super(ClimatologyMapSeaIce, self).setup_and_check()
+        # separate climatology tasks for each hemisphere
+        for hemisphere in ['NH', 'SH']:
+            # convert the first letter to lowercase to get the corresponding
+            # seciton name in the config file
+            sectionName = '{}{}'.format(sectionPrefix, hemisphere)
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
+            # read in what seasons we want to plot
+            seasons = config.getExpression(sectionName, 'seasons')
 
-        # get a list of timeSeriesStatsMonthly output files from the streams
-        # file, reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        startDate = self.config.get('climatology', 'startDate')
-        endDate = self.config.get('climatology', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=startDate,
-                                         endDate=endDate,
-                                         calendar=self.calendar)
+            if len(seasons) == 0:
+                raise ValueError('config section {} does not contain valid '
+                                 'list of seasons'.format(sectionName))
 
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, startDate,
-                                       endDate))
+            comparisonGridNames = config.getExpression(sectionName,
+                                                       'comparisonGrids')
 
-        update_climatology_bounds_from_file_names(self.inputFiles,
-                                                  self.config)
+            if len(comparisonGridNames) == 0:
+                raise ValueError('config section {} does not contain valid '
+                                 'list of comparison grids'.format(
+                                         sectionName))
 
-        self.startYear = self.config.getint('climatology', 'startYear')
-        self.endYear = self.config.getint('climatology', 'endYear')
+            observationPrefixes = \
+                config.getExpression(sectionName, 'observationPrefixes')
 
-        # }}}
+            climatologyMapTasks = []
+            for comparisonGridName in comparisonGridNames:
+                for season in seasons:
+                    for observationPrefix in observationPrefixes:
+                        # one plotting task for each season, comparison grid,
+                        # and type of observations
+                        climatologyMapTasks.append(cls(
+                                config=config,
+                                hemisphere=hemisphere,
+                                season=season,
+                                comparisonGridName=comparisonGridName,
+                                observationPrefix=observationPrefix))
+
+            # we'll use the first task (corresponding to the first season in
+            # the list) as a way to get some information we need to build the
+            # MpasClimatology task for computing climatologies:
+            # mpasVariableName, componentName, fieldName
+            firstTask = climatologyMapTasks[0]
+
+            taskSuffix = firstTask.fieldName[0].upper() + \
+                firstTask.fieldName[1:] + hemisphere
+
+            climatologyTask = \
+                MpasClimatology(config=config,
+                                variableList=[firstTask.mpasFieldName],
+                                taskSuffix=taskSuffix,
+                                componentName=firstTask.componentName,
+                                comparisonGridNames=comparisonGridNames,
+                                seasons=seasons,
+                                tags=['climatology'],
+                                iselValues=firstTask.iselValues)
+
+            for index in range(len(climatologyMapTasks)):
+                climatologyMapTask = climatologyMapTasks[index]
+                # add climatologyTask as a prerequisite of each task so
+                # plotting won't happen until we have the required
+                # climatologies
+                if climatologyMapTask.prerequisiteTasks is None:
+                    climatologyMapTask.prerequisiteTasks = \
+                        [climatologyTask.taskName]
+                else:
+                    climatologyMapTask.prerequisiteTasks.append(
+                            climatologyTask.taskName)
+                # We want to have access to some information from the
+                # climatologyTask (namely, we need a way to find out what the
+                # names of the climatology files are that it created), so we'll
+                # keep a reference to it handy.
+                climatologyMapTask.climatologyTask = climatologyTask
+
+            tasks.append(climatologyTask)
+            tasks.extend(climatologyMapTasks)
+
+        return tasks  # }}}
 
     def run(self):  # {{{
         """
@@ -107,442 +143,387 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting 2-d maps of sea-ice concentration and thickness " \
-            "climatologies..."
+        print "\nPlotting 2-d maps of {} climatologies...".format(
+            self.fieldNameInTitle)
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        climatologyTask = self.climatologyTask
 
-        # Compute climatologies (first motnhly and then seasonally)
-        print '  Compute seasonal climatologies...'
+        # call setup_and_check() on the climatology task because it will make
+        # sure the start and end year are set and correct.  (In parallel mode,
+        # this copy of the climatologyTask is different from the one where
+        # setup_and_check was already called, and run completed successfully.)
+        climatologyTask.setup_and_check()
 
-        mpasDescriptor = MpasMeshDescriptor(
-            self.restartFileName,
-            meshName=self.config.get('input', 'mpasMeshName'))
+        self._do_ploting()  # }}}
 
-        comparisonDescriptor = get_lat_lon_comparison_descriptor(self.config)
+    def get_task_name_and_tags(self):
+        className = type(self).__name__
+        # convert the first letter to lowercase to get the corresponding
+        # seciton name in the config file
+        taskPrefix = className[0].lower() + className[1:]
 
-        parallel = self.config.getint('execute', 'parallelTaskCount') > 1
-        if parallel:
-            # avoid writing the same mapping file from multiple processes
-            mappingFilePrefix = 'map_{}'.format(self.taskName)
+        upperComparison = self.comparisonGridName[0].upper() + \
+            self.comparisonGridName[1:]
+
+        taskName = '{}{}{}{}_{}'.format(taskPrefix, self.hemisphere,
+                                        self.observationPrefix,
+                                        upperComparison, self.season)
+
+        tags = ['climatology', 'horizontalMap', self.comparisonGridName,
+                taskPrefix]
+
+        return taskName, tags
+
+    def get_section_name(self):
+        className = type(self).__name__
+        # convert the first letter to lowercase to get the corresponding
+        # seciton name in the config file
+        sectionName = className[0].lower() + className[1:]
+
+        sectionName = '{}{}'.format(sectionName, self.hemisphere)
+
+        return sectionName
+
+    def _do_ploting(self):  # {{{
+        '''
+        plots model results, observations and biases.
+
+        Authors
+        -------
+        Xylar Asay-Davis, Milena Veneziani
+        '''
+        config = self.config
+
+        mainRunName = config.get('runs', 'mainRunName')
+
+        comparisonDescriptor = \
+            get_comparison_descriptor(config, self.comparisonGridName)
+
+        remappedFileName = self.climatologyTask.get_ncclimo_file_name(
+                    self.season, 'remapped', comparisonDescriptor)
+
+        obsDescriptor = LatLonGridDescriptor.read(fileName=self.obsFileName,
+                                                  latVarName='t_lat',
+                                                  lonVarName='t_lon')
+
+        remappedClimatology = xr.open_dataset(remappedFileName)
+
+        modelOutput = remappedClimatology[self.mpasFieldName].values
+        if self.maskValue is not None:
+            modelOutput = ma.masked_values(modelOutput, self.maskValue)
+        lon = remappedClimatology['lon'].values
+        lat = remappedClimatology['lat'].values
+
+        lonTarg, latTarg = np.meshgrid(lon, lat)
+
+        if self.hemisphere == 'NH':
+            plotProjection = 'npstere'
         else:
-            mappingFilePrefix = 'map'
+            plotProjection = 'spstere'
 
-        self.mpasRemapper = get_remapper(
-            config=self.config, sourceDescriptor=mpasDescriptor,
-            comparisonDescriptor=comparisonDescriptor,
-            mappingFilePrefix=mappingFilePrefix,
-            method=self.config.get('climatology', 'mpasInterpolationMethod'))
+        sectionName = self.get_section_name()
 
-        self._compute_seasonal_climatologies(
-                seasons=['JFM', 'JAS', 'DJF', 'JJA', 'FM', 'ON'])
+        (colormapResult, colorbarLevelsResult) = setup_colormap(
+            config, sectionName, suffix='Result')
+        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+            config, sectionName, suffix='Difference')
 
-        self._compute_and_plot_concentration()
+        referenceLongitude = config.getfloat(sectionName, 'referenceLongitude')
+        minimumLatitude = config.getfloat(sectionName, 'minimumLatitude')
 
-        self._compute_and_plot_thickness()   # }}}
+        if not os.path.isfile(self.obsFileName):
+            raise OSError('Obs file {} not found.'.format(
+                self.obsFileName))
 
-    def _compute_seasonal_climatologies(self, seasons):  # {{{
-
-        config = self.config
-
-        mpasMeshName = self.mpasRemapper.sourceDescriptor.meshName
-        comparisonGridName = self.mpasRemapper.destinationDescriptor.meshName
-
-        overwriteMpasClimatology = config.getWithDefault(
-            'climatology', 'overwriteMpasClimatology', False)
-
-        self.climatologyDirectory = \
-            get_mpas_climatology_dir_name(
+        obsRemapper = get_remapper(
                 config=config,
-                fieldName='seaIceAreaVol',
-                mpasMeshName=mpasMeshName)
+                sourceDescriptor=obsDescriptor,
+                comparisonDescriptor=comparisonDescriptor,
+                mappingFilePrefix='map_obs_{}'.format(self.fieldName),
+                method=config.get('seaIceObservations',
+                                  'interpolationMethod'))
 
-        (self.maskedClimatologyDirectory, self.remappedDirectory) = \
-            get_mpas_climatology_dir_name(
-                config=config,
-                fieldName='seaIceAreaVol_masked',
-                mpasMeshName=mpasMeshName,
-                comparisonGridName=comparisonGridName)
+        (obsClimatologyFileName, obsRemappedFileName) = \
+            get_observation_climatology_file_names(
+                config=config, fieldName=self.obsFieldName,
+                monthNames=self.season, componentName=self.componentName,
+                remapper=obsRemapper)
 
-        # the last climatology produced by NCO is always the annual, so if that
-        # exists, others are also finished.
-        climatologyFileName = \
-            '{}/mpascice_ANN_climo.nc'.format(self.climatologyDirectory)
-        if (overwriteMpasClimatology or
-                not os.path.exists(climatologyFileName)):
+        if not os.path.exists(obsRemappedFileName):
 
-            compute_climatologies_with_ncclimo(
-                    config=config,
-                    inDirectory=self.historyDirectory,
-                    outDirectory=self.climatologyDirectory,
-                    startYear=self.startYear,
-                    endYear=self.endYear,
-                    variableList=['timeMonthly_avg_iceAreaCell',
-                                  'timeMonthly_avg_iceVolumeCell'],
-                    modelName='mpascice',
-                    seasons=seasons,
-                    decemberMode='sdd')
+            # load the observations the first time
+            seasonalClimatology = self._build_observational_dataset()
+            write_netcdf(seasonalClimatology, obsClimatologyFileName)
 
-        self._remap_seasonal_climatology(seasons)
-
-        # }}}
-
-    def _compute_and_plot_concentration(self):
-        '''
-        computes seasonal climatologies and plots model results, observations
-        and biases in sea-ice concentration.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
-        '''
-
-        print '  Make ice concentration plots...'
-
-        config = self.config
-
-        mainRunName = config.get('runs', 'mainRunName')
-
-        subtitle = 'Ice concentration'
-
-        hemisphereSeasons = {'JFM': ('NH', 'Winter'),
-                             'JAS': ('NH', 'Summer'),
-                             'DJF': ('SH', 'Winter'),
-                             'JJA': ('SH', 'Summer')}
-
-        obsFileNames = {}
-        remappedObsFileNames = {}
-        obsRemappers = {}
-
-        comparisonDescriptor = self.mpasRemapper.destinationDescriptor
-
-        buildObsClimatologies = False
-        for months in hemisphereSeasons:
-            hemisphere, season = hemisphereSeasons[months]
-            climFieldName = 'iceConcentration'
-            for obsName in ['NASATeam', 'Bootstrap']:
-                key = (months, obsName)
-                obsFileName = build_config_full_path(
-                    config, 'seaIceObservations',
-                    'concentration{}{}_{}'.format(obsName, hemisphere, months))
-                obsFieldName = '{}_{}_{}'.format(climFieldName, hemisphere,
-                                                 obsName)
-
-                obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
-                                                          latVarName='t_lat',
-                                                          lonVarName='t_lon')
-                obsRemapper = get_remapper(
-                        config=config, sourceDescriptor=obsDescriptor,
-                        comparisonDescriptor=comparisonDescriptor,
-                        mappingFilePrefix='map_obs_seaIce',
-                        method=config.get('seaIceObservations',
-                                          'interpolationMethod'))
-                obsRemappers[key] = obsRemapper
-
-                if not os.path.isfile(obsFileName):
-                    raise OSError('Obs file {} not found.'.format(
-                        obsFileName))
-
-                (climatologyFileName, remappedFileName) = \
-                    get_observation_climatology_file_names(
-                        config=config, fieldName=obsFieldName,
-                        monthNames=months, componentName=self.componentName,
-                        remapper=obsRemapper)
-
-                obsFileNames[key] = obsFileName
-                remappedObsFileNames[key] = remappedFileName
-
-                if not os.path.exists(remappedFileName):
-                    buildObsClimatologies = True
-
-        for months in hemisphereSeasons:
-            hemisphere, season = hemisphereSeasons[months]
-            field = 'timeMonthly_avg_iceAreaCell'
-            climFieldName = 'iceConcentration'
-
-            remappedFileName = \
-                get_ncclimo_season_file_name(self.remappedDirectory,
-                                             'mpascice', months,
-                                             self.startYear, self.endYear)
-
-            remappedClimatology = xr.open_dataset(remappedFileName)
-
-            iceConcentration = remappedClimatology[field].values
-            lon = remappedClimatology['lon'].values
-            lat = remappedClimatology['lat'].values
-
-            lonTarg, latTarg = np.meshgrid(lon, lat)
-
-            if hemisphere == 'NH':
-                plotProjection = 'npstere'
+            if obsRemapper is None:
+                # no need to remap because the observations are on the
+                # comparison grid already
+                remappedClimatology = seasonalClimatology
             else:
-                plotProjection = 'spstere'
+                remappedClimatology = \
+                    remap_and_write_climatology(
+                        config, seasonalClimatology, obsClimatologyFileName,
+                        obsRemappedFileName, obsRemapper)
 
-            (colormapResult, colorbarLevelsResult) = setup_colormap(
-                config,
-                'climatologyMapSeaIceConcThick',
-                suffix='ConcResult{}'.format(season))
-            (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-                config,
-                'climatologyMapSeaIceConcThick',
-                suffix='ConcDifference{}'.format(season))
+        else:
 
-            referenceLongitude = config.getfloat(
-                'climatologyMapSeaIceConcThick',
-                'referenceLongitude{}'.format(hemisphere))
-            minimumLatitude = config.getfloat(
-                'climatologyMapSeaIceConcThick',
-                'minimumLatitude{}'.format(hemisphere))
+            remappedClimatology = xr.open_dataset(obsRemappedFileName)
 
-            # ice concentrations from NASATeam (or Bootstrap) algorithm
-            for obsName in ['NASATeam', 'Bootstrap']:
-                obsFieldName = 'AICE'
+        observations = remappedClimatology[self.obsFieldName].values
+        if self.maskValue is not None:
+            observations = ma.masked_values(observations, self.maskValue)
 
-                key = (months, obsName)
-                remappedFileName = remappedObsFileNames[key]
+        difference = modelOutput - observations
 
-                if buildObsClimatologies:
-                    obsFileName = obsFileNames[key]
+        startYear = self.climatologyTask.startYear
+        endYear = self.climatologyTask.endYear
 
-                    seasonalClimatology = xr.open_dataset(obsFileName)
+        title = '{} ({}, years {:04d}-{:04d})'.format(
+            self.fieldNameInTitle, self.season, startYear, endYear)
+        fileout = '{}/iceconc{}{}_{}_{}_years{:04d}-{:04d}.png'.format(
+            self.plotsDirectory, self.observationPrefix, self.hemisphere,
+            mainRunName, self.season, startYear, endYear)
+        plot_polar_comparison(
+            config,
+            lonTarg,
+            latTarg,
+            modelOutput,
+            observations,
+            difference,
+            colormapResult,
+            colorbarLevelsResult,
+            colormapDifference,
+            colorbarLevelsDifference,
+            title=title,
+            fileout=fileout,
+            plotProjection=plotProjection,
+            latmin=minimumLatitude,
+            lon0=referenceLongitude,
+            modelTitle=mainRunName,
+            obsTitle=self.observationTitleLabel,
+            diffTitle='Model-Observations',
+            cbarlabel=self.unitsLabel)
+        # }}}
 
-                    remappedClimatology = remap_and_write_climatology(
-                            config, seasonalClimatology,  climatologyFileName,
-                            remappedFileName, obsRemappers[key])
 
-                obsIceConcentration = remappedClimatology[obsFieldName].values
+class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
+    """
+    An analysis task for comparison of sea ice concentration against
+    observations
 
-                difference = iceConcentration - obsIceConcentration
+    Authors
+    -------
+    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    """
+    def __init__(self, config, hemisphere, season, comparisonGridName,
+                 observationPrefix):
+        # {{{
+        """
+        Construct the analysis task.
 
-                title = '{} ({}, years {:04d}-{:04d})'.format(
-                    subtitle, months, self.startYear, self.endYear)
-                fileout = '{}/iceconc{}{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                    self.plotsDirectory, obsName, hemisphere, mainRunName,
-                    months, self.startYear, self.endYear)
-                plot_polar_comparison(
-                    config,
-                    lonTarg,
-                    latTarg,
-                    iceConcentration,
-                    obsIceConcentration,
-                    difference,
-                    colormapResult,
-                    colorbarLevelsResult,
-                    colormapDifference,
-                    colorbarLevelsDifference,
-                    title=title,
-                    fileout=fileout,
-                    plotProjection=plotProjection,
-                    latmin=minimumLatitude,
-                    lon0=referenceLongitude,
-                    modelTitle=mainRunName,
-                    obsTitle='Observations (SSM/I {})'.format(obsName),
-                    diffTitle='Model-Observations',
-                    cbarlabel='fraction')
+        Parameters
+        ----------
+        config :  instance of MpasAnalysisConfigParser
+            Contains configuration options
 
-    def _compute_and_plot_thickness(self):
-        '''
-        Computes seasonal climatologies and plots model results, observations
-        and biases in sea-ice thickness.
+        seasons : ['NH', 'SH']
+            The hemisphere to plot
+
+        seasons : str
+            A season (keys in ``shared.constants.monthDictionary``) to be
+            plotted
+
+        comparisonGridName : {'latlon', 'antarctic'}
+            The name of the comparison grid that where model data an
+            observations are compared
+
+        observationPrefix : {'NASATeam', 'Bootstrap'}
+            A prefix describing the set of observations to use
 
         Authors
         -------
-        Xylar Asay-Davis, Milena Veneziani
+        Xylar Asay-Davis
+        """
+        self.fieldName = 'seaIceConc'
+        self.fieldNameInTitle = 'Sea ice concentration'
+        self.hemisphere = hemisphere
+        self.season = season
+        self.comparisonGridName = comparisonGridName
+        self.observationPrefix = observationPrefix
+
+        self.mpasFieldName = 'timeMonthly_avg_iceAreaCell'
+        self.iselValues = None
+
+        taskName, tags = self.get_task_name_and_tags()
+
+        tags.append(self.fieldName)
+
+        # call the constructor from the base class (AnalysisTask)
+        super(ClimatologyMapSeaIceConc, self).__init__(config=config,
+                                                       taskName=taskName,
+                                                       componentName='seaIce',
+                                                       tags=tags)
+
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        # first, call setup_and_check from the base class
+        # (ClimatologyMapSeaIce), which will perform some common setup,
+        # including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        super(ClimatologyMapSeaIceConc, self).setup_and_check()
+
+        self.obsFileName = build_config_full_path(
+            self.config, 'seaIceObservations',
+            'concentration{}{}_{}'.format(self.observationPrefix,
+                                          self.hemisphere,
+                                          self.season))
+
+        self.obsFieldName = 'AICE'
+
+        self.observationTitleLabel = \
+            'Observations (SSM/I {})'.format(self.observationPrefix)
+
+        self.outFileLabel = 'iceconc{}{}'.format(self.observationPrefix,
+                                                 self.hemisphere)
+        self.unitsLabel = 'fraction'
+
+        self.maskValue = None
+
+        # }}}
+
+    def _build_observational_dataset(self):  # {{{
+        '''
+        read in the data sets for observations, and possibly rename some
+        variables and dimensions
+
+        Authors
+        -------
+        Xylar Asay-Davis
         '''
 
-        print '  Make ice thickness plots...'
+        dsObs = xr.open_mfdataset(self.obsFileName)
 
-        config = self.config
+        return dsObs  # }}}
 
-        subtitle = 'Ice thickness'
+    # }}}
 
-        plotsDirectory = build_config_full_path(config, 'output',
-                                                'plotsSubdirectory')
-        mainRunName = config.get('runs', 'mainRunName')
 
-        obsFileNames = {}
-        remappedObsFileNames = {}
-        obsRemappers = {}
+class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
+    """
+    An analysis task for comparison of sea ice thickness against observations
 
-        comparisonDescriptor = self.mpasRemapper.destinationDescriptor
+    Authors
+    -------
+    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    """
+    def __init__(self, config, hemisphere, season, comparisonGridName,
+                 observationPrefix=''):
+        # {{{
+        """
+        Construct the analysis task.
 
-        # build a list of remapped observations files
-        buildObsClimatologies = False
-        for months in ['FM', 'ON']:
-            climFieldName = 'iceThickness'
-            for hemisphere in ['NH', 'SH']:
-                key = (months, hemisphere)
-                obsFileName = build_config_full_path(
-                    config, 'seaIceObservations',
-                    'thickness{}_{}'.format(hemisphere, months))
-                if not os.path.isfile(obsFileName):
-                    raise OSError('Obs file {} not found.'.format(
-                        obsFileName))
+        Parameters
+        ----------
+        config :  instance of MpasAnalysisConfigParser
+            Contains configuration options
 
-                obsFieldName = '{}_{}'.format(climFieldName, hemisphere)
-                obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
-                                                          latVarName='t_lat',
-                                                          lonVarName='t_lon')
-                obsRemapper = get_remapper(
-                        config=config, sourceDescriptor=obsDescriptor,
-                        comparisonDescriptor=comparisonDescriptor,
-                        mappingFilePrefix='map_obs_seaIce',
-                        method=config.get('seaIceObservations',
-                                          'interpolationMethod'))
-                obsRemappers[key] = obsRemapper
+        seasons : ['NH', 'SH']
+            The hemisphere to plot
 
-                (climatologyFileName, remappedFileName) = \
-                    get_observation_climatology_file_names(
-                        config=config, fieldName=obsFieldName,
-                        monthNames=months, componentName=self.componentName,
-                        remapper=obsRemapper)
+        seasons : str
+            A season (keys in ``shared.constants.monthDictionary``) to be
+            plotted
 
-                obsFileNames[key] = obsFileName
-                remappedObsFileNames[key] = remappedFileName
+        comparisonGridName : {'latlon', 'antarctic'}
+            The name of the comparison grid that where model data an
+            observations are compared
 
-                if not os.path.exists(remappedFileName):
-                    buildObsClimatologies = True
+        observationPrefix : {''}
+            A prefix describing the set of observations to use (empty for
+            this task)
 
-        for months in ['FM', 'ON']:
-            field = 'timeMonthly_avg_iceVolumeCell'
-            climFieldName = 'iceThickness'
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        self.fieldName = 'seaIceThick'
+        self.fieldNameInTitle = 'Sea ice thickness'
+        self.hemisphere = hemisphere
+        self.season = season
+        self.comparisonGridName = comparisonGridName
+        self.observationPrefix = observationPrefix
 
-            remappedFileName = \
-                get_ncclimo_season_file_name(self.remappedDirectory,
-                                             'mpascice', months,
-                                             self.startYear, self.endYear)
+        self.mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
+        self.iselValues = None
 
-            remappedClimatology = xr.open_dataset(remappedFileName)
+        taskName, tags = self.get_task_name_and_tags()
 
-            iceThickness = remappedClimatology[field].values
-            iceThickness = ma.masked_values(iceThickness, 0)
-            lon = remappedClimatology['lon'].values
-            lat = remappedClimatology['lat'].values
+        tags.append(self.fieldName)
 
-            lonTarg, latTarg = np.meshgrid(lon, lat)
-
-            for hemisphere in ['NH', 'SH']:
-                obsFieldName = 'HI'
-
-                (colormapResult, colorbarLevelsResult) = setup_colormap(
-                    config,
-                    'climatologyMapSeaIceConcThick',
-                    suffix='ThickResult{}'.format(hemisphere))
-                (colormapDifference, colorbarLevelsDifference) = \
-                    setup_colormap(config, 'climatologyMapSeaIceConcThick',
-                                   suffix='ThickDifference{}'.format(
-                                       hemisphere))
-
-                referenceLongitude = config.getfloat(
-                    'climatologyMapSeaIceConcThick',
-                    'referenceLongitude{}'.format(hemisphere))
-                minimumLatitude = config.getfloat(
-                    'climatologyMapSeaIceConcThick',
-                    'minimumLatitude{}'.format(hemisphere))
-
-                # now the observations
-                key = (months, hemisphere)
-                remappedFileName = remappedObsFileNames[key]
-
-                if buildObsClimatologies:
-                    obsFileName = obsFileNames[key]
-
-                    seasonalClimatology = xr.open_dataset(obsFileName)
-
-                    remappedClimatology = remap_and_write_climatology(
-                            config, seasonalClimatology, climatologyFileName,
-                            remappedFileName, obsRemappers[key])
-
-                obsIceThickness = remappedClimatology[obsFieldName].values
-
-                # Mask thickness fields
-                obsIceThickness = ma.masked_values(obsIceThickness, 0)
-                if hemisphere == 'NH':
-                    # Obs thickness should be nan above 86 (ICESat data)
-                    obsIceThickness[latTarg > 86] = ma.masked
-                    plotProjection = 'npstere'
-                else:
-                    plotProjection = 'spstere'
-
-                difference = iceThickness - obsIceThickness
-
-                title = '{} ({}, years {:04d}-{:04d})'.format(subtitle, months,
-                                                              self.startYear,
-                                                              self.endYear)
-                fileout = '{}/icethick{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                    plotsDirectory, hemisphere, mainRunName, months,
-                    self.startYear, self.endYear)
-                plot_polar_comparison(
-                    config,
-                    lonTarg,
-                    latTarg,
-                    iceThickness,
-                    obsIceThickness,
-                    difference,
-                    colormapResult,
-                    colorbarLevelsResult,
-                    colormapDifference,
-                    colorbarLevelsDifference,
-                    title=title,
-                    fileout=fileout,
-                    plotProjection=plotProjection,
-                    latmin=minimumLatitude,
-                    lon0=referenceLongitude,
-                    modelTitle=mainRunName,
-                    obsTitle='Observations (ICESat)',
-                    diffTitle='Model-Observations',
-                    cbarlabel='m')
+        # call the constructor from the base class (AnalysisTask)
+        super(ClimatologyMapSeaIceThick, self).__init__(config=config,
+                                                        taskName=taskName,
+                                                        componentName='seaIce',
+                                                        tags=tags)
 
         # }}}
 
-    def _remap_seasonal_climatology(self, seasons):  # {{{
+    def setup_and_check(self):  # {{{
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
 
-        modelName = 'mpascice'
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        # first, call setup_and_check from the base class
+        # (ClimatologyMapSeaIce), which will perform some common setup,
+        # including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        super(ClimatologyMapSeaIceThick, self).setup_and_check()
 
-        for season in seasons:
+        self.obsFileName = build_config_full_path(
+            self.config, 'seaIceObservations',
+            'thickness{}_{}'.format(self.hemisphere, self.season))
 
-            overwriteMpasClimatology = self.config.getWithDefault(
-                'climatology', 'overwriteMpasClimatology', False)
+        self.obsFieldName = 'HI'
 
-            monthValues = constants.monthDictionary[season]
+        self.observationTitleLabel = 'Observations (ICESat)'
 
-            # interpolate the model results
-            climatologyFileName = \
-                get_ncclimo_season_file_name(self.climatologyDirectory,
-                                             modelName, season,
-                                             self.startYear, self.endYear)
+        self.outFileLabel = 'icethick{}'.format(self.hemisphere)
 
-            maskedClimatologyFileName = \
-                get_ncclimo_season_file_name(self.maskedClimatologyDirectory,
-                                             modelName, season,
-                                             self.startYear, self.endYear)
+        self.unitsLabel = 'm'
 
-            remappedFileName = \
-                get_ncclimo_season_file_name(self.remappedDirectory,
-                                             modelName, season,
-                                             self.startYear, self.endYear)
+        self.maskValue = 0
 
-            if (overwriteMpasClimatology or
-                    not os.path.exists(maskedClimatologyFileName)):
-                # slice the data set and set _FillValue (happens automatically)
-                print climatologyFileName
-                climatology = xr.open_dataset(climatologyFileName)
-                iselValues = {'Time': 0}
-                # select only Time=0
-                climatology = climatology.isel(**iselValues)
-
-                climatology.to_netcdf(maskedClimatologyFileName)
-
-            if (overwriteMpasClimatology or
-                    not os.path.exists(remappedFileName)):
-                self.mpasRemapper.remap_file(
-                        inFileName=maskedClimatologyFileName,
-                        outFileName=remappedFileName,
-                        overwrite=True)
         # }}}
 
+    def _build_observational_dataset(self):  # {{{
+        '''
+        read in the data sets for observations, and possibly rename some
+        variables and dimensions
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        dsObs = xr.open_mfdataset(self.obsFileName)
+
+        return dsObs  # }}}
+
+    # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

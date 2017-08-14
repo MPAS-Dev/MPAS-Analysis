@@ -60,7 +60,9 @@ def build_analysis_list(config, isSubtask):  # {{{
 
     # Sea Ice Analyses
     analyses.extend(sea_ice.TimeSeriesSeaIce.create_tasks(config))
-    analyses.extend(sea_ice.ClimatologyMapSeaIce.create_tasks(config))
+
+    analyses.extend(sea_ice.ClimatologyMapSeaIceConc.create_tasks(config))
+    analyses.extend(sea_ice.ClimatologyMapSeaIceThick.create_tasks(config))
 
     possibleAnalyses = OrderedDict()
     for analysisTask in analyses:
@@ -113,7 +115,8 @@ def add_task_and_prereqisites(analysisTask, possibleAnalyses,
                     if prereq not in analysesToGenerate.keys():
                         prereqToAdd = add_task_and_prereqisites(
                                 possibleAnalyses[prereq], possibleAnalyses,
-                                analysesToGenerate, isPrerequisite=True)
+                                analysesToGenerate, isPrerequisite=True,
+                                isSubtask=isSubtask)
                         if len(prereqToAdd.keys()) == 0:
                             # a prerequisite failed setup_and_check
                             print "ERROR: a prerequisite of analysis task {}" \

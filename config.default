@@ -109,7 +109,6 @@ scratchSubdirectory = scratch
 plotsSubdirectory = plots
 logsSubdirectory = logs
 mpasClimatologySubdirectory = clim/mpas
-mpasRemappedClimSubdirectory = clim/mpas/remapped
 mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
 timeCacheSubdirectory = timecache
@@ -156,6 +155,10 @@ endYear = 20
 # The comparison grid resolution in degrees
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
+
+# The comparison Antarctic polar stereographic grid size and resolution in km
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 10.
 
 # interpolation order for model and observation results. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -448,7 +451,10 @@ colorbarLevelsDifference = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-comparisonTimes =  ['JFM', 'JAS', 'ANN']
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 [climatologyMapSSS]
 ## options related to plotting horizontally remapped climatologies of
@@ -470,7 +476,10 @@ colorbarLevelsDifference = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-comparisonTimes =  ['JFM', 'JAS', 'ANN']
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 [climatologyMapMLD]
 ## options related to plotting horizontally remapped climatologies of
@@ -492,7 +501,142 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-comparisonTimes =  ['JFM', 'JAS', 'ANN']
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+[climatologyMapSeaIceConcNH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice concentration against reference model results and observations
+## in the northern hemisphere (NH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['JFM', 'JAS']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+[climatologyMapSeaIceConcSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice concentration against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['DJF', 'JJA']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+[climatologyMapSeaIceThickNH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the northern hemisphere (NH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
+
+[climatologyMapSeaIceThickSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
 
 [climatologyMapSeaIceConcThick]
 ## options related to plotting horizontally remapped climatologies of
