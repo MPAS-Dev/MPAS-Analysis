@@ -44,7 +44,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         method gets called in this class.  It is used to figure out the
         names of the climatology files that it created.
 
-    seasons : str
+    season : str
         A season (keys in ``shared.constants.monthDictionary``) to be plotted
 
     comparisonGridName : {'latlon', 'antarctic'}
@@ -123,57 +123,66 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        climatologyMapTasks = []
+        first = True
+        tasks = []
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # one plotting task for each season and comparison grid
-                climatologyMapTasks.append(cls(
+                climatologyMapTask = cls(
                         config=config, season=season,
-                        comparisonGridName=comparisonGridName))
+                        comparisonGridName=comparisonGridName)
 
-        # we'll use the first task (corresponding to the first season in
-        # the list) as a way to get some information we need to build the
-        # MpasClimatology task for computing climatologies:
-        # mpasVariableName, componentName, fieldName
-        firstTask = climatologyMapTasks[0]
+                if first:
+                    climatologyTask = \
+                        climatologyMapTask.create_mpas_climatology(
+                                comparisonGridNames=comparisonGridNames,
+                                seasons=seasons)
+                    tasks.append(climatologyTask)
 
-        taskSuffix = firstTask.fieldName[0].upper() + \
-            firstTask.fieldName[1:]
+                climatologyMapTask.add_prerequisite_tasks(
+                        [climatologyTask.taskName])
 
-        climatologyTask = \
-            MpasClimatology(config=config,
-                            variableList=[firstTask.mpasFieldName],
-                            taskSuffix=taskSuffix,
-                            componentName=firstTask.componentName,
-                            comparisonGridNames=comparisonGridNames,
-                            seasons=seasons,
-                            tags=['climatology'],
-                            iselValues=firstTask.iselValues)
+                climatologyMapTask.climatologyTask = climatologyTask
 
-        for index in range(len(climatologyMapTasks)):
-            climatologyMapTask = climatologyMapTasks[index]
-            # add climatologyTask as a prerequisite of each task so
-            # plotting won't happen until we have the required
-            # climatologies
-            if climatologyMapTask.prerequisiteTasks is None:
-                climatologyMapTask.prerequisiteTasks = \
-                    [climatologyTask.taskName]
-            else:
-                climatologyMapTask.prerequisiteTasks.append(
-                        climatologyTask.taskName)
-            # We want to have access to some information from the
-            # climatologyTask (namely, we need a way to find out what the
-            # names of the climatology files are that it created), so we'll
-            # keep a reference to it handy.
-            climatologyMapTask.climatologyTask = climatologyTask
+                tasks.append(climatologyMapTask)
 
-        tasks = [climatologyTask] + climatologyMapTasks
+                first = False
 
         return tasks  # }}}
 
+    def create_mpas_climatology(self, comparisonGridNames, seasons):  # {{{
+        """
+        Create an MpasClimatology task to use as a prerequisite of this task
+
+        comparisonGridNames : list of {'latlon', 'antarctic'}, optional
+            The name(s) of the comparison grid to use for remapping.
+
+        seasons : list of str, optional
+            A list of seasons (keys in ``shared.constants.monthDictionary``)
+            to be computed.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        taskSuffix = self.fieldName[0].upper() + self.fieldName[1:]
+
+        climatologyTask = MpasClimatology(
+                config=self.config,
+                variableList=[self.mpasFieldName],
+                taskSuffix=taskSuffix,
+                componentName=self.componentName,
+                comparisonGridNames=comparisonGridNames,
+                seasons=seasons,
+                tags=['climatology'],
+                iselValues=self.iselValues)
+
+        return climatologyTask  # }}}
+
     def run(self):  # {{{
         """
-        Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
+        Plots 2D map comparing ACME/MPAS ocean output to observations
 
         Authors
         -------
@@ -224,18 +233,19 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         if not os.path.exists(remappedFileName):
 
-            seasonalClimatology = compute_climatology(
-                dsObs, monthValues, maskVaries=True)
+            if 'month' in dsObs.coords:
+                # we should make a seasonal climatology
+                seasonalClimatology = compute_climatology(
+                    dsObs, monthValues, maskVaries=True)
 
-            seasonalClimatology.load()
-            seasonalClimatology.close()
-            write_netcdf(seasonalClimatology, climatologyFileName)
+                seasonalClimatology.load()
+                seasonalClimatology.close()
+                write_netcdf(seasonalClimatology, climatologyFileName)
+            else:
+                # we assume dsObs is already a seasonal climatology
+                seasonalClimatology = dsObs
+
             # make the remapper for the climatology
-            obsDescriptor = LatLonGridDescriptor.read(
-                    fileName=climatologyFileName,
-                    latVarName='lat',
-                    lonVarName='lon')
-
             obsRemapper = get_remapper(
                 config=config, sourceDescriptor=obsDescriptor,
                 comparisonDescriptor=comparisonDescriptor,
@@ -375,7 +385,11 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         modelOutput = \
             remappedModelClimatology[self.mpasFieldName].values
 
+        modelOutput = np.ma.masked_where(np.isnan(modelOutput), modelOutput)
+
         observations = remappedObsClimatology[self.obsFieldName].values
+
+        observations = np.ma.masked_where(np.isnan(observations), observations)
 
         bias = modelOutput - observations
 
@@ -383,8 +397,9 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         y = interp_extrap_corner(remappedModelClimatology['y'].values)
 
         outFileName = '{}/{}_{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                self.plotsDirectory, self.comparisonGridName, self.outFileLabel,
-                mainRunName, self.season, startYear, endYear)
+                self.plotsDirectory, self.comparisonGridName,
+                self.outFileLabel, mainRunName, self.season, startYear,
+                endYear)
 
         if config.has_option(sectionName, 'colormapIndicesResult'):
             colorMapType = 'indexed'
@@ -434,7 +449,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        seasons : str
+        season : str
             A season (keys in ``shared.constants.monthDictionary``) to be
             plotted
 
@@ -561,7 +576,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        seasons : str
+        season : str
             A season (keys in ``shared.constants.monthDictionary``) to be
             plotted
 
@@ -670,7 +685,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        seasons : str
+        season : str
             A season (keys in ``shared.constants.monthDictionary``) to be
             plotted
 
