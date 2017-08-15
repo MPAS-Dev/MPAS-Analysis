@@ -561,6 +561,28 @@ class AnalysisTask(object):  # {{{
                                                           startDate, endDate))
         return inputFileNames  # }}}
 
+    def add_prerequisite_tasks(self, prerequisiteTasks):  # {{{
+        '''
+        Add one or more task names to the list of prerequisite tasks
+
+        Parameters
+        ----------
+        prerequisiteTasks : list of str
+            The names of the tasks to add as prerequisites
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        if self.prerequisiteTasks is None:
+            self.prerequisiteTasks = prerequisiteTasks
+        else:
+            for task in prerequisiteTasks:
+                if task not in self.prerequisiteTasks:
+                    self.prerequisiteTasks.apend(task)
+
+        # }}}
 # }}}
 
 
