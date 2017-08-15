@@ -55,4 +55,7 @@ tapcoef = 1.055111111111111
 # small value to prevent division by zero
 eps = 1.E-10
 
+# density of freshwater (kg/m^3)
+rho_fw = 1000.
+
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
