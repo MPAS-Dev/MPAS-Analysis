@@ -30,7 +30,6 @@ def update_generate(config, generate):  # {{{
     Update the 'generate' config option using a string from the command line.
 
     Author: Xylar Asay-Davis
-    Last Modified: 03/07/2017
     """
 
     # overwrite the 'generate' in config with a string that parses to
@@ -85,7 +84,6 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     Launch one or more tasks
 
     Author: Xylar Asay-Davis
-    Last Modified: 03/08/2017
     """
     thisFile = os.path.realpath(__file__)
 
@@ -123,7 +121,6 @@ def wait_for_task(processes):  # {{{
     task name and the process that finished.
 
     Author: Xylar Asay-Davis
-    Last Modified: 03/08/2017
     """
 
     # first, check if any process has already finished
@@ -145,7 +142,6 @@ def is_running(process):  # {{{
     Returns whether a given process is currently running
 
     Author: Xylar Asay-Davis
-    Last Modified: 03/08/2017
     """
 
     try:
@@ -161,7 +157,6 @@ def build_analysis_list(config):  # {{{
     Build a list of analysis modules based on the 'generate' config option.
 
     Author: Xylar Asay-Davis
-    Last Modified: 03/07/2017
     """
 
     # choose the right rendering backend, depending on whether we're displaying

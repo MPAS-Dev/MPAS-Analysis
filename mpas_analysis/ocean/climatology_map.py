@@ -21,6 +21,7 @@ from ..shared.plot.plotting import plot_global_comparison, \
 from ..shared.constants import constants
 
 from ..shared.io.utility import build_config_full_path
+from ..shared.io import write_netcdf
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -92,10 +93,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         Authors
         -------
         Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
-
-        Last Modified
-        -------------
-        03/16/2017
         """
 
         print "\nPlotting 2-d maps of {} climatologies...".format(
@@ -114,12 +111,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                   os.path.basename(self.inputFiles[-1]))
 
         mainRunName = config.get('runs', 'mainRunName')
-
-        overwriteMpasClimatology = config.getWithDefault(
-            'climatology', 'overwriteMpasClimatology', False)
-
-        overwriteObsClimatology = config.getWithDefault(
-            'oceanObservations', 'overwriteObsClimatology', False)
 
         try:
             restartFileName = self.runStreams.readpath('restart')[0]
@@ -160,8 +151,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         mpasRemapper = get_remapper(
             config=config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
-            mappingFileSection='climatology',
-            mappingFileOption='mpasMappingFile',
             mappingFilePrefix=mappingFilePrefix,
             method=config.get('climatology', 'mpasInterpolationMethod'))
 
@@ -183,7 +172,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         for months in outputTimes:
             monthValues = constants.monthDictionary[months]
 
-            (climatologyFileName, climatologyPrefix, regriddedFileName) = \
+            (climatologyFileName, climatologyPrefix, remappedFileName) = \
                 get_mpas_climatology_file_names(
                     config=config,
                     fieldName=fieldName,
@@ -191,8 +180,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     mpasMeshName=mpasDescriptor.meshName,
                     comparisonGridName=comparisonDescriptor.meshName)
 
-            if (overwriteMpasClimatology or
-                    not os.path.exists(regriddedFileName)):
+            if not os.path.exists(remappedFileName):
                 seasonalClimatology = cache_climatologies(
                     ds, monthValues, config, climatologyPrefix, calendar,
                     printProgress=True)
@@ -206,11 +194,11 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
                 remappedClimatology = remap_and_write_climatology(
                     config, seasonalClimatology, climatologyFileName,
-                    regriddedFileName, mpasRemapper)
+                    remappedFileName, mpasRemapper)
 
             else:
 
-                remappedClimatology = xr.open_dataset(regriddedFileName)
+                remappedClimatology = xr.open_dataset(remappedFileName)
 
             modelOutput = remappedClimatology[fieldName].values
             lon = remappedClimatology['lon'].values
@@ -219,13 +207,12 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             lonTarg, latTarg = np.meshgrid(lon, lat)
 
             # now the observations
-            (climatologyFileName, regriddedFileName) = \
+            (climatologyFileName, remappedFileName) = \
                 get_observation_climatology_file_names(
                     config=config, fieldName=fieldName, monthNames=months,
                     componentName='ocean', remapper=origObsRemapper)
 
-            if (overwriteObsClimatology or
-                    not os.path.exists(regriddedFileName)):
+            if not os.path.exists(remappedFileName):
 
                 if dsObs is None:
                     # load the observations the first time
@@ -237,7 +224,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 if not obsRemapperBuilt:
                     seasonalClimatology.load()
                     seasonalClimatology.close()
-                    seasonalClimatology.to_netcdf(climatologyFileName)
+                    write_netcdf(seasonalClimatology, climatologyFileName)
                     # make the remapper for the climatology
                     obsDescriptor = LatLonGridDescriptor()
                     obsDescriptor.read(fileName=climatologyFileName,
@@ -247,9 +234,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
                         comparisonDescriptor=comparisonDescriptor,
-                        mappingFileSection='oceanObservations',
-                        mappingFileOption='{}ClimatologyMappingFile'.format(
-                            fieldName),
                         mappingFilePrefix='map_obs_{}'.format(fieldName),
                         method=config.get('oceanObservations',
                                           'interpolationMethod'))
@@ -264,11 +248,11 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     remappedClimatology = \
                         remap_and_write_climatology(
                             config, seasonalClimatology, climatologyFileName,
-                            regriddedFileName, obsRemapper)
+                            remappedFileName, obsRemapper)
 
             else:
 
-                remappedClimatology = xr.open_dataset(regriddedFileName)
+                remappedClimatology = xr.open_dataset(remappedFileName)
             observations = remappedClimatology[self.obsFieldName].values
 
             bias = modelOutput - observations

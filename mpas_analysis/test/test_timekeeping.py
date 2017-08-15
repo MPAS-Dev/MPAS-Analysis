@@ -4,10 +4,6 @@ Unit test infrastructure for the Date class
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-02/17/2017
 """
 
 import pytest

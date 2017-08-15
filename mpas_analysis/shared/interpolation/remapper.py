@@ -11,10 +11,6 @@ remap - perform horizontal interpolation on a data sets, given a mapping file
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/13/2017
 '''
 
 import subprocess
@@ -38,10 +34,6 @@ class Remapper(object):
     Author
     ------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     '''
 
     def __init__(self, sourceDescriptor, destinationDescriptor,
@@ -75,10 +67,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if not isinstance(sourceDescriptor,
@@ -128,10 +116,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None or \
@@ -176,7 +160,11 @@ class Remapper(object):
         # subprocess
         sys.stdout.flush()
         sys.stderr.flush()
-        subprocess.check_call(args)
+
+        # throw out the standard output from ESMF_RegridWeightGen, as it's
+        # rather verbose but keep stderr
+        DEVNULL = open(os.devnull, 'wb')
+        subprocess.check_call(args, stdout=DEVNULL)
 
         # remove the temporary SCRIP files
         os.remove(self.sourceDescriptor.scripFileName)
@@ -184,8 +172,8 @@ class Remapper(object):
 
         # }}}
 
-    def remap_file(self, inFileName, outFileName,
-                   variableList=None, overwrite=False):  # {{{
+    def remap_file(self, inFileName, outFileName, variableList=None,
+                   overwrite=False, renormalize=None):  # {{{
         '''
         Given a source file defining either an MPAS mesh or a lat-lon grid and
         a destination file or set of arrays defining a lat-lon grid, constructs
@@ -209,6 +197,9 @@ class Remapper(object):
             exists. If `False`, and the destination file is already present,
             the function does nothing and returns immediately
 
+        renormalize : float, optional
+            A threshold to use to renormalize the data
+
         Raises
         ------
         OSError
@@ -221,10 +212,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None:
@@ -256,12 +243,22 @@ class Remapper(object):
         args = ['ncremap',
                 '-i', inFileName,
                 '-m', self.mappingFileName,
+                '--vrb=1',
                 '-o', outFileName]
 
+        regridArgs = []
+
+        if renormalize is not None:
+            regridArgs.append('--renormalize={}'.format(renormalize))
+
         if isinstance(self.sourceDescriptor, LatLonGridDescriptor):
-            args.extend(['-R', '--rgr lat_nm={}  --rgr lon_nm={}'.format(
-                self.sourceDescriptor.latVarName,
-                self.sourceDescriptor.lonVarName)])
+            regridArgs.extend(['--rgr lat_nm={}'.format(
+                                   self.sourceDescriptor.latVarName),
+                               '--rgr lon_nm={}'.format(
+                                   self.sourceDescriptor.lonVarName)])
+
+        if len(regridArgs) > 0:
+            args.extend(['-R', ' '.join(regridArgs)])
 
         if isinstance(self.sourceDescriptor, MpasMeshDescriptor):
             # Note: using the -C (climatology) flag for now because otherwise
@@ -271,6 +268,7 @@ class Remapper(object):
 
         if variableList is not None:
             args.extend(['-v', ','.join(variableList)])
+
 
         # make sure any output is flushed before we add output from the
         # subprocess
@@ -315,10 +313,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/13/2017
         '''
 
         if self.mappingFileName is None:
@@ -368,10 +362,6 @@ class Remapper(object):
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/06/2017
         '''
 
         if self.mappingLoaded:
@@ -438,15 +428,11 @@ class Remapper(object):
 
     def _remap_data_array(self, dataArray, renormalizationThreshold):  # {{{
         '''
-        Regrids a single xarray data array
+        Remap a single xarray data array
 
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
 
         sourceDims = self.sourceDescriptor.dims
@@ -513,15 +499,11 @@ class Remapper(object):
     def _remap_numpy_array(self, inField, remapAxes,
                            renormalizationThreshold):  # {{{
         '''
-        Regrids a single numpy array
+        Remap a single numpy array
 
         Author
         ------
         Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/05/2017
         '''
 
         # permute the dimensions of inField so the axes to remap are first,

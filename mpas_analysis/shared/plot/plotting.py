@@ -1,17 +1,13 @@
 """
 Plotting utilities, including routines for plotting:
     * time series (and comparing with reference data sets)
-    * regridded horizontal fields (and comparing with reference data sets)
+    * remapped horizontal fields (and comparing with reference data sets)
     * vertical sections on native grid
     * NINO34 time series and spectra
 
 Authors
 -------
 Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
-
-Last Modified
--------------
-04/07/2017
 """
 
 import matplotlib.pyplot as plt
@@ -107,10 +103,6 @@ def nino34_spectra_plot(config, f, ninoSpectra,
     Author
     ------
     Luke Van Roekel
-
-    Last Modified
-    -------------
-    04/07/2017
     """
 
     fig = plt.figure(figsize=figsize, dpi=dpi)
@@ -255,10 +247,6 @@ def nino34_timeseries_plot(config, nino34Index, nino34Obs, nino3430, title,
     Author
     ------
     Luke Van Roekel
-
-    Last Modified
-    -------------
-    04/07/2017
     """
     fig = plt.figure(figsize=figsize, dpi=dpi)
 
@@ -336,10 +324,6 @@ def _plot_nino_timeseries(plt, ninoIndex, time, xlabel, ylabel,
     Author
     ------
     Luke Van Roekel
-
-    Last Modified
-    -------------
-    04/07/2017
     '''
     plt.title(panelTitle, y=1.06, **axis_font)
     y1 = ninoIndex
@@ -412,10 +396,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last Modified
-    -------------
-    03/14/2017
     """
     plt.figure(figsize=figsize, dpi=dpi)
 
@@ -504,10 +484,6 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     Authors
     -------
     Adrian K. Turner
-
-    Last Modified
-    -------------
-    03/15/2017
     """
     plt.figure(figsize=figsize, dpi=dpi)
 
@@ -649,10 +625,6 @@ def plot_polar_comparison(
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last Modified
-    -------------
-    03/17/2017
     """
 
     # set up figure
@@ -800,10 +772,6 @@ def plot_global_comparison(
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last Modified
-    -------------
-    04/20/2017
     """
 
     # set up figure
@@ -942,10 +910,6 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     Authors
     -------
     Mark Petersen, Milena Veneziani
-
-    Last Modified
-    -------------
-    04/20/2017
     """
 
     # set up figure
@@ -1081,10 +1045,6 @@ def plot_vertical_section(
     Authors
     -------
     Milena Veneziani, Mark Petersen
-
-    Last Modified
-    -------------
-    03/13/2017
     """
 
     # set up figure
@@ -1159,10 +1119,6 @@ def setup_colormap(config, configSectionName, suffix=''):
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
-
-    Last modified
-    -------------
-    03/17/2017
     '''
 
     colormap = plt.get_cmap(config.get(configSectionName,
@@ -1203,10 +1159,6 @@ def _plot_size_y_axis(plt, xaxisValues, **data):
     Author
     ------
     Luke Van Roekel
-
-    Last modified
-    -------------
-    04/07/2017
     '''
 
     ax = plt.gca()
@@ -1244,7 +1196,6 @@ def _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
     Author
     ------
     Xylar Asay-Davis
-
     '''
     ax = plt.gca()
 
