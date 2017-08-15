@@ -365,6 +365,36 @@ class MpasClimatology(AnalysisTask):  # {{{
         else:
             return fileName  # }}}
 
+    def customize_climatology(self, climatology):  # {{{
+        """
+        A function that can be overridden by child classes for purposes of
+        making custom changes to the climatology data set after slicing and
+        masking and before remapping.  By default, a field 'validMask' is added
+        to the climatology.  After remapping, this field indicates which cells
+        on the remapped grid came from valid cells on the MPAS grid, useful for
+        plotting a land mask (for example).
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset`` object
+            the climatology data set
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset`` object
+            the modified climatology data set
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        # add valid mask as a variable, useful for remapping later
+        climatology['validMask'] = \
+            xr.DataArray(numpy.ones(climatology.dims['nCells']),
+                         dims=['nCells'])
+        return climatology  # }}}
+
     def _update_climatology_bounds_from_file_names(self):  # {{{
         """
         Update the start and end years and dates for climatologies based on the
@@ -537,10 +567,7 @@ class MpasClimatology(AnalysisTask):  # {{{
             # slice
             climatology = climatology.isel(**iselValues)
 
-            # add valid mask as a variable, useful for remapping later
-            climatology['validMask'] = \
-                xr.DataArray(numpy.ones(climatology.dims['nCells']),
-                             dims=['nCells'])
+            climatology = self.customize_climatology(climatology)
 
             # mask the data set
             for variableName in self.variableList:
