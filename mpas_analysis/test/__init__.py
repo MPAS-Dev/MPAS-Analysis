@@ -59,6 +59,7 @@ def loaddatadir(request, tmpdir):
 
 
 class TestCase(unittest.TestCase):
+
     def assertEqual(self, a1, a2):
         assert a1 == a2 or (a1 != a1 and a2 != a2)
 

@@ -218,7 +218,7 @@ class MpasClimatology(AnalysisTask):  # {{{
         mpasMeshName = config.get('input', 'mpasMeshName')
 
         if self.seasons[0] is 'none':
-            seasonsToCheck = ['{:02d}'.format(month) for month in range(1, 13)]
+            seasonsToCheck = constants.abrevMonthNames
         else:
             seasonsToCheck = self.seasons
 

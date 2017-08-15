@@ -1,0 +1,61 @@
+[execute]
+parallelTaskCount = 1
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = serial
+
+[input]
+# subdirectory containing restart files
+runSubdirectory = .
+# subdirectory for ocean history files
+oceanHistorySubdirectory = .
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = .
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpas-o_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpas-cice_in
+seaIceStreamsFileName = streams.cice
+
+# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+mpasMeshName = oQU240
+
+
+[output]
+# subdirectories within baseDirectory for analysis output
+plotsSubdirectory = plots
+logsSubdirectory = logs
+mpasClimatologySubdirectory = clim/mpas
+mappingSubdirectory = mapping
+
+
+[climatology]
+# the first year over which to average climatalogies
+startYear = 1
+# the last year over which to average climatalogies
+endYear = 1
+
+# The comparison lat/lon grid resolution in degrees
+comparisonLatResolution = 2
+comparisonLonResolution = 2
+
+# The comparison Antarctic polar stereographic grid size and resolution in km
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 100.
+
+# interpolation order for model and observation results. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+mpasInterpolationMethod = bilinear
+
+# should remapping be performed with ncremap or with the Remapper class
+# directly in MPAS-Analysis
+useNcremap = True
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
