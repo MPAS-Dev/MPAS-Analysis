@@ -254,7 +254,9 @@ class MpasClimatology(AnalysisTask):  # {{{
             dsMask = mpas_xarray.subset_variables(dsMask, self.variableList)
             iselValues = {'Time': 0}
             if self.iselValues is not None:
-                iselValues.update(self.iselValues)
+                for dim in self.iselValues:
+                    # we've already hyperslabbed this dimension in ncclimo
+                    iselValues[dim] = 0
             # select only Time=0 and possibly only the desired vertical
             # slice
             dsMask = dsMask.isel(**iselValues)
@@ -480,6 +482,15 @@ class MpasClimatology(AnalysisTask):  # {{{
             args.extend(['-r', remapper.mappingFileName])
             if remappedDirectory is not None:
                 args.extend(['-O', remappedDirectory])
+
+        if self.iselValues is not None:
+            ncksOptions = ['-O', '--no_tmp_fl']
+
+            for dim in self.iselValues:
+                val = self.iselValues[dim]
+                ncksOptions.extend(['-d', '{},{},{}'.format(dim, val, val)])
+
+            args.extend(['-n', ' '.join(ncksOptions)])
 
         # make sure any output is flushed before we add output from the
         # subprocess
