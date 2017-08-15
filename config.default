@@ -703,54 +703,6 @@ referenceLongitude = 180
 # a list of prefixes describing the sources of the observations to be used
 observationPrefixes = ['']
 
-[climatologyMapSeaIceConcThick]
-## options related to plotting horizontally remapped climatologies of
-## sea ice concentration and thickness against reference model results and
-## observations
-
-# colormap for model/observations
-colormapNameConcResultWinter = inferno
-colormapNameConcResultSummer = inferno
-colormapNameThickResultNH = inferno
-colormapNameThickResultSH = inferno
-# color indices into colormapName for filled contours
-colormapIndicesConcResultWinter = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesConcResultSummer = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesThickResultNH = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesThickResultSH = [20, 80, 110, 140, 170, 200, 230, 255]
-# colormap levels/values for contour boundaries for:
-# concentration in winter and summer
-colorbarLevelsConcResultWinter = [0.15, 0.4, 0.7, 0.9, 0.94, 0.96, 0.98, 0.99, 1]
-colorbarLevelsConcResultSummer = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
-# thickness in the northern and southern hemispheres
-colorbarLevelsThickResultNH = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
-colorbarLevelsThickResultSH = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
-
-# colormap for differences
-colormapNameConcDifferenceWinter = RdBu_r
-colormapNameConcDifferenceSummer = RdBu_r
-colormapNameThickDifferenceNH = RdBu_r
-colormapNameThickDifferenceSH = RdBu_r
-# color indices into colormapName for filled contours
-colormapIndicesConcDifferenceWinter = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesConcDifferenceSummer = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesThickDifferenceNH = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesThickDifferenceSH = [0, 40, 80, 127, 127, 170, 210, 255]
-# colormap levels/values for contour boundaries for:
-# concentration in winter and summer
-colorbarLevelsConcDifferenceWinter = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
-colorbarLevelsConcDifferenceSummer = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
-# thickness in the northern and southern hemispheres
-colorbarLevelsThickDifferenceNH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
-colorbarLevelsThickDifferenceSH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
-
-# reference lat/lon for sea ice plots in the northern hemisphere
-minimumLatitudeNH = 50
-referenceLongitudeNH = 0
-# reference lat/lon for sea ice plots in the southern hemisphere
-minimumLatitudeSH = -50
-referenceLongitudeSH = 180
-
 [regions]
 ## options related to ocean regions used in several analysis modules
 
