@@ -206,7 +206,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         # we don't have any way to know the observation lat/lon and grid
         # without this, so we have to read the observational data set even
         # if it's already been remapped.
-        dsObs, obsDescriptor = self._build_observational_dataset()
+        dsObs, obsDescriptor = self.build_observational_dataset()
 
         # set the landMask to None so we know we need to compute it later
         # (if this is an antarctic projection)
@@ -526,7 +526,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
 
         # }}}
 
-    def _build_observational_dataset(self):  # {{{
+    def build_observational_dataset(self):  # {{{
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -639,7 +639,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
 
         # }}}
 
-    def _build_observational_dataset(self):  # {{{
+    def build_observational_dataset(self):  # {{{
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -750,7 +750,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
 
         # }}}
 
-    def _build_observational_dataset(self):  # {{{
+    def build_observational_dataset(self):  # {{{
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions

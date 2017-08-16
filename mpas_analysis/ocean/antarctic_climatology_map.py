@@ -246,7 +246,7 @@ class ClimatologyMapMeltAntarctic(ClimatologyMapOcean):  # {{{
 
         # }}}
 
-    def _build_observational_dataset(self):  # {{{
+    def build_observational_dataset(self):  # {{{
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -267,5 +267,7 @@ class ClimatologyMapMeltAntarctic(ClimatologyMapOcean):  # {{{
         return dsObs, obsDescriptor  # }}}
 
     # }}}
+
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
