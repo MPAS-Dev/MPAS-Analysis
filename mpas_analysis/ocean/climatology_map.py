@@ -134,7 +134,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
                 if first:
                     climatologyTask = \
-                        climatologyMapTask.create_mpas_climatology(
+                        climatologyMapTask.create_mpas_climatology_task(
                                 comparisonGridNames=comparisonGridNames,
                                 seasons=seasons)
                     tasks.append(climatologyTask)
@@ -150,7 +150,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         return tasks  # }}}
 
-    def create_mpas_climatology(self, comparisonGridNames, seasons):  # {{{
+    def create_mpas_climatology_task(self, comparisonGridNames, seasons):
+        # {{{
         """
         Create an MpasClimatology task to use as a prerequisite of this task
 
@@ -225,6 +226,10 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
 
+        remappedModelClimatology = \
+            self.post_process_remapped_mpas_climatology(
+                    remappedModelClimatology)
+
         # now the observations
         (climatologyFileName, remappedFileName) = \
             get_observation_climatology_file_names(
@@ -272,6 +277,33 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         elif self.comparisonGridName == 'antarctic':
             self._plot_antarctic(remappedModelClimatology,
                                  remappedObsClimatology)
+
+        # }}}
+
+    def post_process_remapped_mpas_climatology(self, remappedClimatology):
+        # {{{
+        '''
+        A function for post-processing the remapped MPAS climatology before
+        plotting.  For example, this might include taking slices of a 3D field
+        that cannot simply be hyperslabbed.
+
+        By default, simply returns remappedClimatology unchanged.
+
+        Parameters
+        ----------
+        remappedClimatology : ``xarray.Dataset`` object
+            The remapped climatology to be processed
+
+        Returns
+        -------
+        remappedClimatology : ``xarray.Dataset`` object
+            The remapped climatology after processing
+
+        Authors
+        -------
+        XylarAsay-Davis
+        '''
+        return remappedClimatology
 
         # }}}
 
@@ -356,7 +388,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                title=title,
                                modelTitle='{}'.format(mainRunName),
                                obsTitle=self.observationTitleLabel,
-                               diffTitle='Model - Observations',
+                               diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel)
         # }}}
 
@@ -424,7 +456,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             title=title,
             modelTitle='{}'.format(mainRunName),
             obsTitle=self.observationTitleLabel,
-            diffTitle='Model - Observations',
+            diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel)
         # }}}
 
@@ -523,6 +555,8 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
                                                                 climEndYear)
         self.outFileLabel = 'sstHADOI'
         self.unitsLabel = r'$^o$C'
+
+        self.diffTitleLabel = 'Model - Observations'
 
         # }}}
 
@@ -636,6 +670,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         self.observationTitleLabel = 'Observations (Aquarius, 2011-2014)'
         self.outFileLabel = 'sssAquarius'
         self.unitsLabel = 'PSU'
+        self.diffTitleLabel = 'Model - Observations'
 
         # }}}
 
@@ -747,6 +782,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
             'Observations (HolteTalley density threshold MLD)'
         self.outFileLabel = 'mldHolteTalleyARGO'
         self.unitsLabel = 'm'
+        self.diffTitleLabel = 'Model - Observations'
 
         # }}}
 

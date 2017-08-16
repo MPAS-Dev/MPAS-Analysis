@@ -208,6 +208,7 @@ mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
 meltSubdirectory = Melt
+soseSubdirectory = SOSE
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -603,6 +604,78 @@ normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
                       'vmax': 100.}
 colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
                            5., 10., 20., 50., 100.]
+
+[climatologyMapSoseTemperature]
+## options related to plotting climatology maps of Antarctic
+## potential temperature at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# list of depths in meters (positive up) at which to analyze, 'bot' for the
+# bottom of the ocean
+# depths = [0, -200, -400, -600, -800, 'bot']
+depths = ['bot']
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+[climatologyMapSoseSalinity]
+## options related to plotting climatology maps of Antarctic
+## salinity at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# list of depths in meters (positive up) at which to analyze, 'bot' for the
+# bottom of the ocean
+# depths = [0, -200, -400, -600, -800, 'bot']
+depths = ['bot']
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 34.2, 'vmax': 35.2}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of

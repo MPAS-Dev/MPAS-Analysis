@@ -567,13 +567,13 @@ class MpasClimatology(AnalysisTask):  # {{{
             # slice
             climatology = climatology.isel(**iselValues)
 
-            climatology = self.customize_climatology(climatology)
-
             # mask the data set
             for variableName in self.variableList:
                 climatology[variableName] = \
                     climatology[variableName].where(
                         dsMask[variableName] != self.fillValue)
+
+            climatology = self.customize_climatology(climatology)
 
             write_netcdf(climatology, maskedClimatologyFileName)
         # }}}
