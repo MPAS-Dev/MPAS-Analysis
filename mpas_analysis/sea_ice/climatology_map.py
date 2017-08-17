@@ -143,8 +143,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting 2-d maps of {} climatologies...".format(
-            self.fieldNameInTitle)
+        print "\nPlotting 2-d maps of {} climatologies for season {}" \
+              "...".format(self.fieldNameInTitle, self.season)
 
         climatologyTask = self.climatologyTask
 
