@@ -7,6 +7,7 @@
 # comment in to get the debug queue
 ##SBATCH --partition=debug
 # comment in when run on cori haswell or knl
+#SBATCH -C knl
 #SBATCH --nodes=1
 #SBATCH --time=1:00:00
 #SBATCH --account=acme
@@ -22,7 +23,7 @@ export OMP_NUM_THREADS=1
 module unload python python/base
 module use /global/project/projectdirs/acme/software/modulefiles/all
 module load python/anaconda-2.7-acme
-export PATH=/global/homes/z/zender/bin_edison:${PATH}
+export PATH=/global/homes/z/zender/bin_cori:${PATH}
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
