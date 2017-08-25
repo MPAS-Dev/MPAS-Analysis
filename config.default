@@ -602,6 +602,17 @@ normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
 colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
                            5., 10., 20., 50., 100.]
 
+[timeSeriesAntarcticMelt]
+## options related to plotting time series of melt below Antarctic ice shelves
+
+# list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
+# See "regionNames" in the ice shelf masks file in regionMaskDirectory for
+# details.
+iceShelvesToPlot = ['Antarctica']
+
+# Number of months over which to compute moving average
+movingAverageMonths = 1
+
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
 ## potential temperature at various levels, including the sea floor against

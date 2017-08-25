@@ -57,6 +57,8 @@ def build_analysis_list(config, isSubtask):  # {{{
     analyses.extend(ocean.ClimatologyMapSST.create_tasks(config))
     analyses.extend(ocean.ClimatologyMapMLD.create_tasks(config))
     analyses.extend(ocean.ClimatologyMapSSS.create_tasks(config))
+
+    analyses.extend(ocean.TimeSeriesAntarcticMelt.create_tasks(config))
     analyses.extend(ocean.ClimatologyMapMeltAntarctic.create_tasks(config))
     analyses.extend(ocean.ClimatologyMapSoseTemperature.create_tasks(config))
     analyses.extend(ocean.ClimatologyMapSoseSalinity.create_tasks(config))
