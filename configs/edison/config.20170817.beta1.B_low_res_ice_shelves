@@ -151,8 +151,9 @@ polarPlot = False
 ## circulation (MOC)
 maxChunkSize = 1000
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oEC60to30v3wLI_SingleRegionAtlanticWTransportTransects_masks.nc
+[regions]
+# Directory containing mask files for ocean basins and ice shelves
+regionMaskDirectory = /global/project/projectdirs/acme/mpas_analysis/region_masks
 
 [climatologyMapSoseTemperature]
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
@@ -171,3 +172,8 @@ seasons =  ['JFM', 'JAS', 'ANN']
 # list of depths in meters (positive up) at which to analyze, 'bot' for the
 # bottom of the ocean
 depths = [0, -200, -400, -600, -800, 'bot']
+
+[timeSeriesAntarcticMelt]
+# a list of ice shelves to plot
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
+
