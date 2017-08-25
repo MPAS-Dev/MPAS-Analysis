@@ -172,4 +172,4 @@ depths = ['top', -200, -400, -600, -800, 'bot']
 
 [timeSeriesAntarcticMelt]
 # a list of ice shelves to plot
-iceShelvesToPlot = ['Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Larsen_D', 'Ronne', 'Filchner', 'Brunt_Stancomb', 'Fimbul', 'Riiser-Larsen', 'Baudouin', 'Amery', 'West', 'Shackleton', 'Totten', 'Mertz', 'Ross_East', 'Ross_West', 'Getz', 'Dotson', 'Crosson', 'Thwaites', 'Pine_Island', 'Abbot', 'Stange', 'George_VI', 'Wilkins']
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
