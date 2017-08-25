@@ -293,17 +293,21 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                                 'regionNames')
 
         # Load basin region related variables and save them to dictionary
-        # NB: The following will need to change with new regional mapping files
-        regionMaskFiles = config.get(self.sectionName, 'regionMaskFiles')
-        if not os.path.exists(regionMaskFiles):
-            raise IOError('Regional masking file for MOC calculation '
-                          'does not exist')
+        mpasMeshName = config.get('input', 'mpasMeshName')
+        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
+
+        regionMaskFile = '{}/{}_SingleRegionAtlanticWTransportTransects_' \
+                         'masks.nc'.format(regionMaskDirectory, mpasMeshName)
+
+        if not os.path.exists(regionMaskFile):
+            raise IOError('Regional masking file {} for MOC calculation '
+                          'does not exist'.format(regionMaskFile))
         iRegion = 0
         self.dictRegion = {}
         for region in self.regionNames:
             self.logger.info('\n  Reading region and transect mask for '
                              '{}...'.format(region))
-            ncFileRegional = netCDF4.Dataset(regionMaskFiles, mode='r')
+            ncFileRegional = netCDF4.Dataset(regionMaskFile, mode='r')
             maxEdgesInTransect = \
                 ncFileRegional.dimensions['maxEdgesInTransect'].size
             transectEdgeMaskSigns = \
