@@ -371,9 +371,6 @@ compareWithObservations = True
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# Mask file for post-processing regional MOC computation
-regionMaskFiles = /path/to/MOCregional/mask/file
-
 # xarray (with dask) divides data sets into "chunks", allowing computations
 # to be made on data that is larger than the available memory.  MPAS-Analysis
 # supports setting a maximum chunk size for data sets generally, and a
@@ -819,6 +816,9 @@ regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
 # time-series stats)
 plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
               'Nino 4', 'Nino 3.4', 'Global Ocean']
+
+# Directory for region mask files
+regionMaskDirectory = /path/to/masks/
 
 [plot]
 ## options related to plotting that are the defaults across all analysis
