@@ -18,7 +18,7 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 baseDirectory = /scratch2/scratchdirs/golaz/ACME_simulations/20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison/run
 
 # names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30v3
+mpasMeshName = oEC60to30v3
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,

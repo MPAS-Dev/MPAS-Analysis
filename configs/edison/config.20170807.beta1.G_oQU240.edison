@@ -18,7 +18,7 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 baseDirectory = /scratch1/scratchdirs/xylar/acme_scratch/edison/G-QU240-master-intel/run
 
 # names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = oQU240
+mpasMeshName = oQU240v3
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -138,4 +138,4 @@ polarPlot = False
 maxChunkSize = 1000
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oQU240v3_Atlantic_region_and_southern_transect.nc
+regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oQU240v3_SingleRegionAtlanticWTransportTransects_masks.nc

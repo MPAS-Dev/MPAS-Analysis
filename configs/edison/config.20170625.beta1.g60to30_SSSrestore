@@ -152,7 +152,7 @@ polarPlot = False
 maxChunkSize = 1000
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oEC60to30wLIv3_Atlantic_region_masks_and_southern_transect.nc
+regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oEC60to30v3wLI_SingleRegionAtlanticWTransportTransects_masks.nc
 
 [climatologyMapSoseTemperature]
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
