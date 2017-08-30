@@ -20,14 +20,14 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
     Authors
     -------
-    Xylar Asay-Davis
+    Xylar Asay-Davis, Stephen Price
     """
 
     def __init__(self, config):  # {{{
         """
         Construct the analysis task.
 
-        Parameters, Milena Veneziani
+        Parameters
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
@@ -157,7 +157,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                                 'iceShelvesToPlot')
 
         dsRestart = xarray.open_dataset(self.restartFileName)
-        areaCell = dsRestart.areaCell
+        areaCell = dsRestart.landIceFraction.isel(Time=0)*dsRestart.areaCell
 
         dsRegionMask = xarray.open_dataset(self.regionMaskFileName)
         regionNames = list(dsRegionMask.regionNames.values)
