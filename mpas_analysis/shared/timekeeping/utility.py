@@ -4,10 +4,6 @@ Time keeping utility functions
 Author
 ------
 Xylar Asay-Davis
-
-Last Modified
--------------
-02/11/2017
 """
 
 import datetime
@@ -41,10 +37,6 @@ def get_simulation_start_time(streams):
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
 
     try:
@@ -99,10 +91,6 @@ def string_to_datetime(dateString):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     (year, month, day, hour, minute, second) = \
@@ -151,10 +139,6 @@ def string_to_relative_delta(dateString, calendar='gregorian'):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     (years, months, days, hours, minutes, seconds) = \
@@ -214,10 +198,6 @@ def string_to_days_since_date(dateString, calendar='gregorian',
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     isSingleString = isinstance(dateString, str)
@@ -267,10 +247,6 @@ def days_to_datetime(days, calendar='gregorian', referenceDate='0001-01-01'):
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
 
     datetimes = netCDF4.num2date(days,
@@ -324,10 +300,6 @@ def datetime_to_days(dates, calendar='gregorian', referenceDate='0001-01-01'):
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
 
     isSingleDate = False
@@ -377,10 +349,6 @@ def date_to_days(year=1, month=1, day=1, hour=0, minute=0, second=0,
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
 
     calendar = _mpas_to_netcdf_calendar(calendar)
@@ -432,10 +400,6 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
     Author
     ------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/04/2017
     """
     if isInterval:
         offset = 0

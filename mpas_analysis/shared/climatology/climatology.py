@@ -4,10 +4,6 @@ Functions for creating climatologies from monthly time series data
 Authors
 -------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/13/2017
 """
 
 import xarray as xr
@@ -19,7 +15,9 @@ from ..constants import constants
 
 from ..timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path, make_directories, fingerprint_generator
+from ..io.utility import build_config_full_path, make_directories, \
+    fingerprint_generator
+from ..io import write_netcdf
 
 from ..interpolation import Remapper
 from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
@@ -43,10 +41,6 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
     climSection = 'climatology'
 
@@ -69,8 +63,7 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
-                 mappingFileSection, mappingFileOption, mappingFilePrefix,
-                 method):  # {{{
+                 mappingFilePrefix, method):  # {{{
     """
     Given config options and descriptions of the source and comparison grids,
     returns a ``Remapper`` object that can be used to remap from source files
@@ -90,11 +83,6 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     comparisonDescriptor : ``MeshDescriptor`` subclass object
         A description of the comparison grid
 
-    mappingFileSection, mappingFileOption : str
-        Section and option in ``config`` where the name of the mapping file
-        may be given, or where it will be stored if a new mapping file is
-        created
-
     mappingFilePrefix : str
         A prefix to be prepended to the mapping file name
 
@@ -110,35 +98,38 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
 
-    if config.has_option(mappingFileSection, mappingFileOption):
-        # a mapping file was supplied, so we'll use that name
-        mappingFileName = config.get(mappingFileSection, mappingFileOption)
-    else:
-        if _matches_comparison(sourceDescriptor, comparisonDescriptor):
-            # no need to remap
-            mappingFileName = None
+    mappingFileName = None
 
-        else:
-            # we need to build the path to the mapping file and an appropriate
-            # file name
-            mappingSubdirectory = build_config_full_path(config, 'output',
-                                                         'mappingSubdirectory')
+    if not _matches_comparison(sourceDescriptor, comparisonDescriptor):
+        # we need to remap because the grids don't match
 
-            make_directories(mappingSubdirectory)
-
-            mappingFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-                mappingSubdirectory, mappingFilePrefix,
-                sourceDescriptor.meshName, comparisonDescriptor.meshName,
+        mappingBaseName = '{}_{}_to_{}_{}.nc'.format(
+                mappingFilePrefix,
+                sourceDescriptor.meshName,
+                comparisonDescriptor.meshName,
                 method)
 
-            config.set(mappingFileSection, mappingFileOption,
-                       mappingFileName)
+        if config.has_option('input', 'mappingDirectory'):
+            # a mapping directory was supplied, so we'll see if there's
+            # a mapping file there that we can use
+            mappingSubdirectory = config.get('input', 'mappingDirectory')
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
+                                             mappingBaseName)
+            if not os.path.exists(mappingFileName):
+                # nope, looks like we still need to make a mapping file
+                mappingFileName = None
+
+        if mappingFileName is None:
+            # we don't have a mapping file yet, so get ready to create one
+            # in the output subfolder if needed
+            mappingSubdirectory = \
+                build_config_full_path(config, 'output',
+                                       'mappingSubdirectory')
+            make_directories(mappingSubdirectory)
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
+                                             mappingBaseName)
 
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
@@ -154,7 +145,7 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for MPAS
-    climatology files before and after regridding.
+    climatology files before and after remapping.
 
     Parameters
     ----------
@@ -178,15 +169,15 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     -------
     climatologyFileName : str
         The absolute path to a file where the climatology should be stored
-        before regridding.
+        before remapping.
 
     climatologyPrefix : str
         The prfix including absolute path for climatology cache files before
-        regridding.
+        remapping.
 
-    regriddedFileName : str
+    remappedFileName : str
         The absolute path to a file where the climatology should be stored
-        after regridding if ``comparisonGridName`` is supplied
+        after remapping if ``comparisonGridName`` is supplied
 
     Authors
     -------
@@ -215,17 +206,17 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
     if comparisonGridName is None:
         return (climatologyFileName, climatologyPrefix)
     else:
-        regriddedDirectory = build_config_full_path(
-            config, 'output', 'mpasRegriddedClimSubdirectory')
+        remappedDirectory = build_config_full_path(
+            config, 'output', 'mpasRemappedClimSubdirectory')
 
-        make_directories(regriddedDirectory)
+        make_directories(remappedDirectory)
 
-        regriddedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
-                regriddedDirectory, fieldName, mpasMeshName,
+        remappedFileName = '{}/{}_{}_to_{}_{}_{}.nc'.format(
+                remappedDirectory, fieldName, mpasMeshName,
                 comparisonGridName, monthNames, fileSuffix)
 
         return (climatologyFileName, climatologyPrefix,
-                regriddedFileName)
+                remappedFileName)
 
     # }}}
 
@@ -235,7 +226,7 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     """
     Given config options, the name of a field and a string identifying the
     months in a seasonal climatology, returns the full path for observation
-    climatology files before and after regridding.
+    climatology files before and after remapping.
 
     Parameters
     ----------
@@ -257,19 +248,15 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
     -------
     climatologyFileName : str
         The absolute path to a file where the climatology should be stored
-        before regridding.
+        before remapping.
 
-    regriddedFileName : str
+    remappedFileName : str
         The absolute path to a file where the climatology should be stored
-        after regridding.
+        after remapping.
 
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    03/03/2017
     """
 
     obsSection = '{}Observations'.format(componentName)
@@ -279,9 +266,9 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
         relativePathOption='climatologySubdirectory',
         relativePathSection=obsSection)
 
-    regriddedDirectory = build_config_full_path(
+    remappedDirectory = build_config_full_path(
         config=config, section='output',
-        relativePathOption='regriddedClimSubdirectory',
+        relativePathOption='remappedClimSubdirectory',
         relativePathSection=obsSection)
 
     obsGridName = remapper.sourceDescriptor.meshName
@@ -289,17 +276,17 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
 
     climatologyFileName = '{}/{}_{}_{}.nc'.format(
         climatologyDirectory, fieldName, obsGridName, monthNames)
-    regriddedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-        regriddedDirectory, fieldName, obsGridName, comparisonGridName,
+    remappedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
+        remappedDirectory, fieldName, obsGridName, comparisonGridName,
         monthNames)
 
     make_directories(climatologyDirectory)
 
     if not _matches_comparison(remapper.sourceDescriptor,
                                remapper.destinationDescriptor):
-        make_directories(regriddedDirectory)
+        make_directories(remappedDirectory)
 
-    return (climatologyFileName, regriddedFileName)  # }}}
+    return (climatologyFileName, remappedFileName)  # }}}
 
 
 def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
@@ -337,10 +324,6 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     """
 
     def compute_one_month_climatology(ds):
@@ -395,10 +378,6 @@ def compute_climatology(ds, monthValues, calendar=None,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     """
 
     ds = add_years_months_days_in_month(ds, calendar)
@@ -461,10 +440,6 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/11/2017
     '''
     startYearClimo = config.getint('climatology', 'startYear')
     endYearClimo = config.getint('climatology', 'endYear')
@@ -579,10 +554,6 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     '''
 
     if ('year' in ds.coords and 'month' in ds.coords and
@@ -623,17 +594,17 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
 
 
 def remap_and_write_climatology(config, climatologyDataSet,
-                                climatologyFileName, regriddedFileName,
+                                climatologyFileName, remappedFileName,
                                 remapper):  # {{{
     """
     Given a field in a climatology data set, use the ``remapper`` to regrid
     horizontal dimensions of all fields, write the results to an output file,
-    and return the regridded data set.
+    and return the remapped data set.
 
-    Note that ``climatologyFileName`` and ``regriddedFileName`` will be
+    Note that ``climatologyFileName`` and ``remappedFileName`` will be
     overwritten if they exist, so if this behavior is not desired, the calling
     code should skip this call if the files exist and simply load the contents
-    of ``regriddedFileName``.
+    of ``remappedFileName``.
 
     Parameters
     ----------
@@ -648,10 +619,10 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     climatologyFileName : str
         The name of the output file to which the data set should be written
-        before regridding (if using ncremap).
+        before remapping (if using ncremap).
 
-    regriddedFileName : str
-        The name of the output file to which the regridded data set should
+    remappedFileName : str
+        The name of the output file to which the remapped data set should
         be written.
 
     remapper : ``Remapper`` object
@@ -666,10 +637,6 @@ def remap_and_write_climatology(config, climatologyDataSet,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/13/2017
     """
     useNcremap = config.getboolean('climatology', 'useNcremap')
 
@@ -679,18 +646,18 @@ def remap_and_write_climatology(config, climatologyDataSet,
     else:
         if useNcremap:
             if not os.path.exists(climatologyFileName):
-                climatologyDataSet.to_netcdf(climatologyFileName)
+                write_netcdf(climatologyDataSet, climatologyFileName)
             remapper.remap_file(inFileName=climatologyFileName,
-                                outFileName=regriddedFileName,
+                                outFileName=remappedFileName,
                                 overwrite=True)
-            remappedClimatology = xr.open_dataset(regriddedFileName)
+            remappedClimatology = xr.open_dataset(remappedFileName)
         else:
             renormalizationThreshold = config.getfloat(
                 'climatology', 'renormalizationThreshold')
 
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
-            remappedClimatology.to_netcdf(regriddedFileName)
+            write_netcdf(remappedClimatology, remappedFileName)
     return remappedClimatology  # }}}
 
 
@@ -703,10 +670,6 @@ def _compute_masked_mean(ds, maskVaries):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     '''
     def ds_to_weights(ds):
         # make an identical data set to ds but replacing all data arrays with
@@ -789,10 +752,6 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
     '''
 
     cacheInfo = []
@@ -856,10 +815,6 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/19/2017
     '''
 
     for cacheIndex, info in enumerate(cacheInfo):
@@ -882,7 +837,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
         climatology.attrs['totalMonths'] = monthCount
         climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
-        climatology.to_netcdf(outputFileClimo)
+        write_netcdf(climatology, outputFileClimo)
         climatology.close()
 
     # }}}
@@ -897,10 +852,6 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/19/2017
     '''
 
     yearString, fileSuffix = _get_year_string(startYearClimo, endYearClimo)
@@ -965,7 +916,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
         climatology.attrs['totalMonths'] = totalMonths
         climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
-        climatology.to_netcdf(outputFileClimo)
+        write_netcdf(climatology, outputFileClimo)
 
     return climatology  # }}}
 

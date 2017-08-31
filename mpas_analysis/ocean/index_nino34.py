@@ -457,10 +457,6 @@ class IndexNino34(AnalysisTask):  # {{{
         Author
         ------
         Luke Van Roekel
-
-        Last Modified
-        -------------
-        04/07/2017
         """
 
         fig = plt.figure(figsize=figsize, dpi=dpi)
@@ -606,10 +602,6 @@ class IndexNino34(AnalysisTask):  # {{{
         Author
         ------
         Luke Van Roekel
-
-        Last Modified
-        -------------
-        04/07/2017
         """
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
@@ -687,10 +679,6 @@ class IndexNino34(AnalysisTask):  # {{{
         Author
         ------
         Luke Van Roekel
-
-        Last Modified
-        -------------
-        04/07/2017
         '''
         plt.title(panelTitle, y=1.06, **axis_font)
         y1 = ninoIndex

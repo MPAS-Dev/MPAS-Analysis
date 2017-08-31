@@ -2,8 +2,6 @@
 IO utility functions
 
 Phillip J. Wolfram, Xylar Asay-Davis
-
-Last Modified: 03/23/2017
 """
 
 import glob
@@ -18,7 +16,6 @@ def paths(*args): # {{{
     Note, each expanded set of paths is sorted.
 
     Phillip J. Wolfram
-    10/25/2016
     """
     paths = []
     for aargs in args:
@@ -29,13 +26,12 @@ def paths(*args): # {{{
 def fingerprint_generator(size=12,
                           chars=string.ascii_uppercase + string.digits): # {{{
     """
-    Returns a random string that can be used as a unique fingerprint 
+    Returns a random string that can be used as a unique fingerprint
 
     Reference:
     http://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python
-    
+
     Phillip J. Wolfram
-    04/27/2017
     """
     return ''.join(random.choice(chars) for _ in range(size)) # }}}
 
@@ -47,7 +43,6 @@ def make_directories(path):  # {{{
     Returns the path unchanged.
 
     Author: Xylar Asay-Davis
-    Last Modified: 02/02/2017
     """
 
     try:
@@ -85,10 +80,6 @@ def build_config_full_path(config, section, relativePathOption,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    03/23/2017
     """
     if relativePathSection is None:
         relativePathSection = section
