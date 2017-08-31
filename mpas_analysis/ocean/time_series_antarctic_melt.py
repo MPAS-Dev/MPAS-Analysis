@@ -12,6 +12,7 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.io.utility import build_config_full_path, make_directories
 
+import csv	# SFP added
 
 class TimeSeriesAntarcticMelt(AnalysisTask):
     """
@@ -148,6 +149,24 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
+
+        # Load observations:
+        observationsDirectory = build_config_full_path(config, 'oceanObservations', 'meltSubdirectory')
+        obsFileName = '{}/Rignot_2013_melt_rates.csv'.format(observationsDirectory)
+        
+        obsFile = csv.reader( open(obsFileName, 'rU') )	
+        obsDict = {}
+        for line in obsFile:
+	    shelfName = line[0]         	
+            shelfArea = line[3]		# NOTE: this is in km - needs converting to m!
+ 	    meltFlux = line[11]
+            meltRate = line[12]
+            obsDict[shelfName] = { 'meltFlux': meltFlux, 'meltRate': meltRate, 'shelfArea': shelfArea}
+
+        #print(obsDict)	# SFP for debug
+
+
+        # work on data from simulations
         freshwaterFlux = ds.timeMonthly_avg_landIceFreshwaterFlux
 
         movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
