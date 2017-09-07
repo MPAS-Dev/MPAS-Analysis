@@ -78,6 +78,22 @@ class TimeSeriesOHC(AnalysisTask):
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('oceanPreprocessedReference',
                                              'baseDirectory'))
+
+        # get a list of timeSeriesStats output files from the streams file,
+        # reading only those that are between the start and end dates
+        self.streamName = self.historyStreams.find_stream(
+            self.streamMap['timeSeriesStats'])
+        self.startDate = self.config.get('timeSeries', 'startDate')
+        self.endDate = self.config.get('timeSeries', 'endDate')
+        self.inputFiles = self.historyStreams.readpath(
+                self.streamName, startDate=self.startDate,
+                endDate=self.endDate, calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(self.streamName, self.startDate,
+                                       self.endDate))
+
         return  # }}}
 
     def run(self):  # {{{
@@ -131,20 +147,10 @@ class TimeSeriesOHC(AnalysisTask):
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for OHC calculation')
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        startDate = config.get('timeSeries', 'startDate')
-        endDate = config.get('timeSeries', 'endDate')
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
-        fileNames = self.historyStreams.readpath(streamName,
-                                                 startDate=startDate,
-                                                 endDate=endDate,
-                                                 calendar=calendar)
         print '\n  Reading files:\n' \
               '    {} through\n    {}'.format(
-                  os.path.basename(fileNames[0]),
-                  os.path.basename(fileNames[-1]))
+                  os.path.basename(self.inputFiles[0]),
+                  os.path.basename(self.inputFiles[-1]))
 
         # Define/read in general variables
         print '  Read in depth and compute specific depth indexes...'
@@ -164,20 +170,20 @@ class TimeSeriesOHC(AnalysisTask):
                         'sumLayerMaskValue',
                         'avgLayerArea',
                         'avgLayerThickness']
-        ds = open_multifile_dataset(fileNames=fileNames,
+        ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
                                     timeVariableName='Time',
                                     variableList=variableList,
                                     variableMap=self.variableMap,
-                                    startDate=startDate,
-                                    endDate=endDate)
+                                    startDate=self.startDate,
+                                    endDate=self.endDate)
 
         ds = ds.isel(nOceanRegionsTmp=regionIndicesToPlot)
 
-        timeStart = string_to_datetime(startDate)
-        timeEnd = string_to_datetime(endDate)
+        timeStart = string_to_datetime(self.startDate)
+        timeEnd = string_to_datetime(self.endDate)
 
         # Select year-1 data and average it (for later computing anomalies)
         timeStartFirstYear = string_to_datetime(simulationStartTime)
@@ -186,7 +192,7 @@ class TimeSeriesOHC(AnalysisTask):
             firstYear = int(startDateFirstYear[0:4])
             endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
             filesFirstYear = \
-                self.historyStreams.readpath(streamName,
+                self.historyStreams.readpath(self.streamName,
                                              startDate=startDateFirstYear,
                                              endDate=endDateFirstYear,
                                              calendar=calendar)

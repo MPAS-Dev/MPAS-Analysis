@@ -4,10 +4,6 @@ Utility functions related to time-series data sets
 Authors
 -------
 Xylar Asay-Davis
-
-Last Modified
--------------
-04/08/2017
 """
 
 import xarray as xr
@@ -70,11 +66,6 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last Modified
-    -------------
-    04/08/2017
-
     '''
 
     timesProcessed = numpy.zeros(len(timesInDataSet), bool)

@@ -183,8 +183,9 @@ def open_multifile_dataset(fileNames, calendar, config,
 
     if ds.dims['Time'] == 0:
         raise ValueError('The data set contains no Time entries between dates\n'
-                         '{} and {}.'.format(days_to_datetime(startDate),
-                                             days_to_datetime(endDate)))
+                         '{} and {}.'.format(
+                             days_to_datetime(startDate, calendar=calendar),
+                             days_to_datetime(endDate, calendar=calendar)))
     # process chunking
     if chunking is True:
         # limit chunk size to prevent memory error

@@ -5,7 +5,6 @@ the capabilities to get an option including a default value
 that are lists, tuples, dicts, etc (`getExpression(section, option)`).
 
 Author: Xylar Asay-Davis, Phillip J. Wolfram
-Last Modified: 02/27/2017
 """
 
 import numbers
@@ -29,7 +28,6 @@ class MpasAnalysisConfigParser(ConfigParser):
         is present in the config file.
 
         Author: Xylar Asay-Davis
-        Last Modified: 02/27/2017
         """
         if self.has_section(section):
             if self.has_option(section, option):
@@ -66,29 +64,24 @@ class MpasAnalysisConfigParser(ConfigParser):
         of having selected numpy and / or np functionality available.
 
         Author: Xylar Asay-Davis, Phillip J. Wolfram
-        Last Modified: 04/10/2017
         """
-        if self.has_section(section):
-            if self.has_option(section, option):
-                expressionString = self.get(section, option)
-                if usenumpyfunc:
-                    assert '__' not in expressionString, \
-                            "'__' is not allowed in {} "\
-                            "for `usenumpyfunc=True`".format(expressionString)
-                    sanitizedstr = expressionString.replace('np.', '')\
-                                                   .replace('numpy.', '')\
-                                                   .replace('__', '')
-                    result = eval(sanitizedstr, npallow)
-                else:
-                    result = ast.literal_eval(expressionString)
-
-                if elementType is not None:
-                    if isinstance(result, (list, tuple)):
-                        result = [elementType(element) for element in result]
-                    elif isinstance(result, dict):
-                        for key in result:
-                            result[key] = elementType(result[key])
-
-                return result
+        expressionString = self.get(section, option)
+        if usenumpyfunc:
+            assert '__' not in expressionString, \
+                    "'__' is not allowed in {} "\
+                    "for `usenumpyfunc=True`".format(expressionString)
+            sanitizedstr = expressionString.replace('np.', '')\
+                                           .replace('numpy.', '')\
+                                           .replace('__', '')
+            result = eval(sanitizedstr, npallow)
         else:
-            return None
+            result = ast.literal_eval(expressionString)
+
+        if elementType is not None:
+            if isinstance(result, (list, tuple)):
+                result = [elementType(element) for element in result]
+            elif isinstance(result, dict):
+                for key in result:
+                    result[key] = elementType(result[key])
+
+        return result

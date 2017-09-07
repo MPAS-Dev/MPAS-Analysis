@@ -5,10 +5,6 @@ MPAS-O versions to those used by mpas_analysis
 Authors
 -------
 Xylar Asay-Davis
-
-Last Modified
--------------
-03/29/2017
 '''
 
 oceanNamelistMap = {

@@ -31,13 +31,13 @@ class TestAnalysisTask(TestCase):
         # Comments from config.template about how generate works:
         #
         # a list of analyses to generate.  Valid names are:
-        #   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
-        #   'regriddedSSS', 'regriddedMLD', 'timeSeriesSeaIceAreaVol',
-        #   'regriddedSeaIceConcThick'
+        #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
+        #   'climatologyMapSSS', 'climatologyMapMLD', 'timeSeriesSeaIceAreaVol',
+        #   'climatologyMapSeaIceConcThick'
         # the following shortcuts exist:
         #   'all' -- all analyses will be run
         #   'all_timeSeries' -- all time-series analyses will be run
-        #   'all_regriddedHorizontal' -- all analyses involving regridded
+        #   'all_horizontalMap' -- all analyses involving remapped
         #                                horizontal fields will be run
         #   'all_ocean' -- all ocean analyses will be run
         #   'all_seaIce' -- all sea-ice analyses will be run
