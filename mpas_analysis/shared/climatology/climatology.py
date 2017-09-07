@@ -644,16 +644,17 @@ def remap_and_write_climatology(config, climatologyDataSet,
         # no remapping is needed
         remappedClimatology = climatologyDataSet
     else:
+        renormalizationThreshold = config.getfloat(
+            'climatology', 'renormalizationThreshold')
         if useNcremap:
             if not os.path.exists(climatologyFileName):
                 write_netcdf(climatologyDataSet, climatologyFileName)
             remapper.remap_file(inFileName=climatologyFileName,
                                 outFileName=remappedFileName,
-                                overwrite=True)
+                                overwrite=True,
+                                renormalize=renormalizationThreshold)
             remappedClimatology = xr.open_dataset(remappedFileName)
         else:
-            renormalizationThreshold = config.getfloat(
-                'climatology', 'renormalizationThreshold')
 
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
