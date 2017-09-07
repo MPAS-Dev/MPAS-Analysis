@@ -150,21 +150,32 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                     endDate=self.endDate)
 
 
-        # Load observations:
+        # Load observations and put in dictionary based on shelf keyname
         observationsDirectory = build_config_full_path(config, 'oceanObservations', 'meltSubdirectory')
         obsFileName = '{}/Rignot_2013_melt_rates.csv'.format(observationsDirectory)
         
-        obsFile = csv.reader( open(obsFileName, 'rU') )	
+        obsFile = csv.reader( open(obsFileName, 'rU') )	 
         obsDict = {}
-        for line in obsFile:
-	    shelfName = line[0]         	
-            shelfArea = line[3]		# NOTE: this is in km - needs converting to m!
- 	    meltFlux = line[11]
-            meltRate = line[12]
-            obsDict[shelfName] = { 'meltFlux': meltFlux, 'meltRate': meltRate, 'shelfArea': shelfArea}
+	for line in obsFile:		# some possibly useful values are left commented out for now
+            shelfName = line[0]
+            #surveyArea = line[1]
+            #SSmeltFlux = line[2]
 
-        #print(obsDict)	# SFP for debug
-
+            #SSmeltFluxUncertainty = line[3]
+            #SSmeltRate = line[4]                                                                                 
+            #SSmeltRateUncertainty = line[5]
+            meltFlux = line[6] 
+            meltFluxUncertainty = line[7]
+            meltRate = line[8]
+            meltRateUncertainty = line[9]
+            #actualArea = line[10]
+        #    obsDict[shelfName] = { 'surveyArea': surveyArea, 'SSmeltFlux': SSmeltFlux, 'SSmeltFluxUncertainty': 
+	#	SSmeltFluxUncertainty, 'SSmeltRate': SSmeltRate, 'SSmeltRateUncertainty': SSmeltRateUncertainty,
+	#	'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 'meltRate': meltRate, 
+	#	'meltRateUncertainty': meltRateUncertainty, 'actualArea': actualArea }
+            obsDict[shelfName] = { 'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 
+		'meltRate': meltRate, 'meltRateUncertainty': meltRateUncertainty }
+	# Note that if areas from obs file are used they need to be converted from sq km to sq m
 
         # work on data from simulations
         freshwaterFlux = ds.timeMonthly_avg_landIceFreshwaterFlux
@@ -185,6 +196,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         if 'all' in iceShelvesToPlot:
             iceShelvesToPlot = regionNames
             regionIndices = [iRegion for iRegion in range(nRegions)]
+
         else:
             regionIndices = []
             for regionName in iceShelvesToPlot:
@@ -219,14 +231,22 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         print '  Make plots...'
         for iRegion in range(nRegions):
+
             regionName = iceShelvesToPlot[iRegion]
+
+            # get obs melt flux and obs melt flux unc. for shelf (similar for rates) 
+            obsMeltFlux = float( obsDict[regionName]['meltFlux'] ) 
+            obsMeltFluxUnc = float( obsDict[regionName]['meltFluxUncertainty'] ) 
+            obsMeltRate = float( obsDict[regionName]['meltRate'] ) 
+            obsMeltRateUnc = float( obsDict[regionName]['meltRateUncertainty'] ) 
 
             title = regionName.replace('_', ' ')
 
             regionName = regionName.replace(' ', '_')
 
             xLabel = 'Time (yr)'
-            yLabel = 'Melt Flux (GT/yr)'
+#            yLabel = 'Melt Flux (GT/yr)'
+            yLabel = 'Melt Flux (GT/yr) (obs={} Gt/yr)'.format(obsMeltFlux)	# SFP - test pulling obs melt flux info into fig
 
             timeSeries = totalMeltFlux.isel(nRegions=iRegion)
 
@@ -239,7 +259,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                      calendar=calendar)
 
             xLabel = 'Time (yr)'
-            yLabel = 'Melt Rate (m/yr)'
+#            yLabel = 'Melt Rate (m/yr)'
+            yLabel = 'Melt Rate (m/yr) (obs={} m/yr)'.format(obsMeltRate)	#SFP - test pulling obs melt rate info into fig
 
             timeSeries = meltRates.isel(nRegions=iRegion)
 
