@@ -205,6 +205,23 @@ class MyTask(AnalysisTask):  # {{{
                                                        startDate=startDate,
                                                        endDate=endDate,
                                                        calendar=self.calendar)
+
+        # Each analysis task generates one or more plots and writes out an
+        # associated xml file for each plot.  Once all tasks have finished,
+        # the "master" task will run through all the tasks and look at
+        # xmlFileNames to find out what XML files were written out.  Each task
+        # should provide a list of files in the order that the corresponding
+        # images should appear on the webpage.
+
+        # Note: because of the way parallel tasks are handled in MPAS-Analysis,
+        # we can't be sure that run() will be called (it might be launched
+        # as a completely separate process) so it is not safe to store a list
+        # of xml files from within run(). The recommended procedure is to
+        # create a list of XML files here during setup_and_check() and possibly
+        # use them during run()
+
+        self.xmlFileNames = []
+
         # }}}
 
     def run(self):  # {{{

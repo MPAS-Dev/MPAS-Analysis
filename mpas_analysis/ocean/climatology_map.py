@@ -22,6 +22,7 @@ from ..shared.constants import constants
 
 from ..shared.io.utility import build_config_full_path
 from ..shared.io import write_netcdf
+from ..shared.html import write_image_xml
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -87,6 +88,21 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         changed, self.startYear, self.endYear, self.startDate, self.endDate = \
             update_climatology_bounds_from_file_names(self.inputFiles,
                                                       self.config)
+        mainRunName = self.config.get('runs', 'mainRunName')
+        comparisonTimes = self.config.getExpression(self.taskName,
+                                                    'comparisonTimes')
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        for season in comparisonTimes:
+            filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
+                    self.outFileLabel, mainRunName,
+                    season, self.startYear, self.endYear)
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[season] = filePrefix
+
         # }}}
 
     def run(self):  # {{{
@@ -169,14 +185,14 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         obsRemapperBuilt = False
 
         # Interpolate and compute biases
-        for months in outputTimes:
-            monthValues = constants.monthDictionary[months]
+        for season in outputTimes:
+            monthValues = constants.monthDictionary[season]
 
             (climatologyFileName, climatologyPrefix, remappedFileName) = \
                 get_mpas_climatology_file_names(
                     config=config,
                     fieldName=fieldName,
-                    monthNames=months,
+                    monthNames=season,
                     mpasMeshName=mpasDescriptor.meshName,
                     comparisonGridName=comparisonDescriptor.meshName)
 
@@ -189,7 +205,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     # apparently, there was no data available to create the
                     # climatology
                     warnings.warn('no data to create {} climatology for '
-                                  '{}'.format(fieldName, months))
+                                  '{}'.format(fieldName, season))
                     continue
 
                 remappedClimatology = remap_and_write_climatology(
@@ -209,7 +225,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             # now the observations
             (climatologyFileName, remappedFileName) = \
                 get_observation_climatology_file_names(
-                    config=config, fieldName=fieldName, monthNames=months,
+                    config=config, fieldName=fieldName, monthNames=season,
                     componentName='ocean', remapper=origObsRemapper)
 
             if not os.path.exists(remappedFileName):
@@ -257,11 +273,10 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
             bias = modelOutput - observations
 
-            outFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                    self.plotsDirectory, self.outFileLabel, mainRunName,
-                    months, self.startYear, self.endYear)
+            filePrefix = self.filePrefixes[season]
+            outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             title = '{} ({}, years {:04d}-{:04d})'.format(
-                    self.fieldNameInTitle, months, self.startYear,
+                    self.fieldNameInTitle, season, self.startYear,
                     self.endYear)
             plot_global_comparison(config,
                                    lonTarg,
@@ -279,6 +294,20 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                    obsTitle=self.observationTitleLabel,
                                    diffTitle='Model-Observations',
                                    cbarlabel=self.unitsLabel)
+
+            caption = '{} {}'.format(season, self.imageCaption)
+            write_image_xml(
+                config,
+                filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup=self.galleryGroup,
+                groupSubtitle=self.groupSubtitle,
+                groupLink=self.groupLink,
+                gallery=self.galleryName,
+                thumbnailDescription=season,
+                imageDescription=caption,
+                imageCaption=caption)
 
         # }}}
 
@@ -327,6 +356,9 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         -------
         Xylar Asay-Davis
         """
+
+        self.outFileLabel = 'sstHADOI'
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -362,8 +394,14 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
             'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(period,
                                                                 climStartYear,
                                                                 climEndYear)
-        self.outFileLabel = 'sstHADOI'
         self.unitsLabel = r'$^o$C'
+
+        # variables for XML and webpages
+        self.galleryGroup = 'Global Sea Surface Temperature'
+        self.groupSubtitle = None
+        self.groupLink = 'sst'
+        self.galleryName = 'Observations: Hadley-NOAA-OI'
+        self.imageCaption = 'Mean Sea Surface Temperature'
 
         # }}}
 
@@ -437,6 +475,9 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         -------
         Xylar Asay-Davis
         """
+
+        self.outFileLabel = 'sssAquarius'
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -458,8 +499,14 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         self.obsFieldName = 'SSS'
 
         self.observationTitleLabel = 'Observations (Aquarius, 2011-2014)'
-        self.outFileLabel = 'sssAquarius'
         self.unitsLabel = 'PSU'
+
+        # variables for XML and webpages
+        self.galleryGroup = 'Global Sea Surface Salinity'
+        self.groupSubtitle = None
+        self.groupLink = 'sss'
+        self.galleryName = 'Observations: Aquarius'
+        self.imageCaption = 'Mean Sea Surface Salinity'
 
         # }}}
 
@@ -530,6 +577,9 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         -------
         Xylar Asay-Davis
         """
+
+        self.outFileLabel = 'mldHolteTalleyARGO'
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -553,8 +603,14 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         # Set appropriate MLD figure labels
         self.observationTitleLabel = \
             'Observations (HolteTalley density threshold MLD)'
-        self.outFileLabel = 'mldHolteTalleyARGO'
         self.unitsLabel = 'm'
+
+        # variables for XML and webpages
+        self.galleryGroup = 'Global Mixed-Layer Depth'
+        self.groupSubtitle = None
+        self.groupLink = 'mld'
+        self.galleryName = 'Observations: Holte-Talley ARGO'
+        self.imageCaption = 'Mean Mixed-Layer Depth'
 
         # }}}
 
