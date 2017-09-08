@@ -662,3 +662,6 @@ axisFontSize = 16
 titleFontSize = 20
 titleFontColor = black
 titleFontWeight = normal
+
+# the dots per inch of output figures
+dpi = 200

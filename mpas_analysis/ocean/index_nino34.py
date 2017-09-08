@@ -386,7 +386,7 @@ class IndexNino34(AnalysisTask):  # {{{
                              title, modelTitle, obsTitle,
                              fileout, linewidths, xlabel='Period (years)',
                              ylabel=r'Power ($^o$C / cycles mo$^{-1}$)',
-                             titleFontSize=None, figsize=(9, 21), dpi=300):
+                             titleFontSize=None, figsize=(9, 21), dpi=None):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -453,13 +453,16 @@ class IndexNino34(AnalysisTask):  # {{{
             the size of the figure in inches
 
         dpi : int, optional
-            the number of dots per inch of the figure
+            the number of dots per inch of the figure, taken from section
+            ``plot`` option ``dpi`` in the config file by default
 
         Author
         ------
-        Luke Van Roekel
+        Luke Van Roekel, Xylar Asay-Davis
         """
 
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if titleFontSize is None:
@@ -548,7 +551,7 @@ class IndexNino34(AnalysisTask):  # {{{
                                 title, modelTitle, obsTitle, fileout,
                                 linewidths, calendar, xlabel='Time [years]',
                                 ylabel='[$^\circ$C]', titleFontSize=None,
-                                figsize=(12, 28), dpi=300, maxXTicks=20):
+                                figsize=(12, 28), dpi=None, maxXTicks=20):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -593,7 +596,8 @@ class IndexNino34(AnalysisTask):  # {{{
             the size of the figure in inches
 
         dpi : int, optional
-            the number of dots per inch of the figure
+            the number of dots per inch of the figure, taken from section
+            ``plot`` option ``dpi`` in the config file by default
 
         maxXTicks : int, optional
             the maximum number of tick marks that will be allowed along the x
@@ -604,6 +608,8 @@ class IndexNino34(AnalysisTask):  # {{{
         ------
         Luke Van Roekel
         """
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if titleFontSize is None:

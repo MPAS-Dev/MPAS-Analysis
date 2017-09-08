@@ -27,7 +27,7 @@ from ..constants import constants
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, calendar,
-                             titleFontSize=None, figsize=(15, 6), dpi=300,
+                             titleFontSize=None, figsize=(15, 6), dpi=None,
                              maxXTicks=20):
 
     """
@@ -65,7 +65,8 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         the size of the figure in inches
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     maxXTicks : int, optional
         the maximum number of tick marks that will be allowed along the x axis.
@@ -76,6 +77,9 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
+
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
 
     minDays = []
@@ -124,7 +128,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
                                    fileout, lineStyles, lineWidths,
                                    calendar, titleFontSize=None,
-                                   figsize=(15, 6), dpi=300):
+                                   figsize=(15, 6), dpi=None):
 
     """
     Plots the list of time series data sets on a polar plot and stores
@@ -158,12 +162,15 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         the size of the figure in inches
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     Authors
     -------
-    Adrian K. Turner
+    Adrian K. Turner, Xylar Asay-Davis
     """
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
 
     minDays = []
@@ -239,7 +246,7 @@ def plot_polar_comparison(
         cbarlabel='units',
         titleFontSize=None,
         figsize=None,
-        dpi=300,
+        dpi=None,
         vertical=False):
 
     """
@@ -301,7 +308,8 @@ def plot_polar_comparison(
         ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
@@ -333,6 +341,9 @@ def plot_polar_comparison(
         cbar = m.colorbar(cs, location='right', pad="3%", spacing='uniform',
                           ticks=levels, boundaries=levels)
         cbar.set_label(cbarlabel)
+
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
 
     if vertical:
         if figsize is None:
@@ -399,7 +410,7 @@ def plot_global_comparison(
     cbarlabel='units',
     titleFontSize=None,
     figsize=(8, 12),
-    dpi=300):
+    dpi=None):
 
     """
     Plots a data set as a longitude/latitude map.
@@ -456,7 +467,8 @@ def plot_global_comparison(
         the size of the figure in inches
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     Authors
     -------
@@ -464,6 +476,8 @@ def plot_global_comparison(
     """
 
     # set up figure
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
     fig = plt.figure(figsize=figsize, dpi=dpi)
     if (title is not None):
         if titleFontSize is None:
@@ -543,7 +557,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             lineColors, lineWidths, legendText,
             title=None, xlabel=None, ylabel=None,
             fileout='plot_1D.png',
-            figsize=(10, 4), dpi=300,
+            figsize=(10, 4), dpi=None,
             xLim=None,
             yLim=None,
             invertYAxis=False):  # {{{
@@ -585,7 +599,8 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
         size of the figure in inches
 
     dpi : int, optional
-        number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     xLim : float array, optional
         x range of plot
@@ -602,7 +617,9 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     """
 
     # set up figure
-    fig = plt.figure(figsize=figsize, dpi=dpi)
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    plt.figure(figsize=figsize, dpi=dpi)
 
     for dsIndex in range(len(xArrays)):
         xArray = xArrays[dsIndex]
@@ -671,7 +688,7 @@ def plot_vertical_section(
     ylabel=None,
     fileout='moc.png',
     figsize=(10, 4),
-    dpi=300,
+    dpi=None,
     xLim=None,
     yLim=None,
     invertYAxis=True):  # {{{
@@ -682,7 +699,9 @@ def plot_vertical_section(
 
     Parameters
     ----------
-    config : instance of ConfigParser
+    conf    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+ig : instance of ConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -720,7 +739,8 @@ def plot_vertical_section(
         size of the figure in inches
 
     dpi : int, optional
-        number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     xLim : float array, optional
         x range of plot
@@ -733,11 +753,13 @@ def plot_vertical_section(
 
     Authors
     -------
-    Milena Veneziani, Mark Petersen
+    Milena Veneziani, Mark Petersen, Xylar Asay-Davis
     """
 
     # set up figure
-    fig = plt.figure(figsize=figsize, dpi=dpi)
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    plt.figure(figsize=figsize, dpi=dpi)
 
     x, y = np.meshgrid(xArray, depthArray)  # change to zMid
 
