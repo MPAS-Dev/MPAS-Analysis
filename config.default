@@ -41,7 +41,7 @@ parallelTaskCount = 1
 
 # Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
 # Default is no prefix (run_analysis.py is executed directly)
-commandPrefix = 
+commandPrefix =
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -235,11 +235,11 @@ baseDirectory = /dir/to/ocean/reference
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/ocean/reference
- 
+
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
- 
+
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
 areaNH = IceArea_timeseries/iceAreaNH_climo.nc
@@ -372,7 +372,7 @@ regionMaskFiles = /path/to/MOCregional/mask/file
 # is handled automatically.  If the MOC calculation encounters memory problems,
 # consider setting maxChunkSize to a number significantly lower than nEdges
 # in your MPAS mesh so that the calculation will be divided into smaller
-# pieces. 
+# pieces.
 # Note, need to use maxChunkSize for the 18to6
 # maxChunkSize = 1000
 
@@ -536,6 +536,9 @@ referenceLongitudeNH = 0
 # reference lat/lon for sea ice plots in the southern hemisphere
 minimumLatitudeSH = -50
 referenceLongitudeSH = 180
+
+# arrange subplots vertically?
+vertical = False
 
 [regions]
 ## options related to ocean regions used in several analysis modules
