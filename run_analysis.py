@@ -25,6 +25,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 from mpas_analysis.shared.html import generate_html
 
+
 def update_generate(config, generate):  # {{{
     """
     Update the 'generate' config option using a string from the command line.
@@ -173,22 +174,22 @@ def build_analysis_list(config):  # {{{
     analyses = []
 
     # Ocean Analyses
-    analyses.append(ocean.TimeSeriesOHC(config))
-    analyses.append(ocean.TimeSeriesSST(config))
-    analyses.append(ocean.IndexNino34(config))
-    analyses.append(ocean.MeridionalHeatTransport(config))
-    analyses.append(ocean.StreamfunctionMOC(config))
 
     analyses.append(ocean.ClimatologyMapMLD(config))
     analyses.append(ocean.ClimatologyMapSST(config))
     analyses.append(ocean.ClimatologyMapSSS(config))
+    analyses.append(ocean.TimeSeriesOHC(config))
+    analyses.append(ocean.TimeSeriesSST(config))
+    analyses.append(ocean.MeridionalHeatTransport(config))
+    analyses.append(ocean.StreamfunctionMOC(config))
+    analyses.append(ocean.IndexNino34(config))
 
     # Sea Ice Analyses
-    analyses.append(sea_ice.TimeSeriesSeaIce(config))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
+    analyses.append(sea_ice.TimeSeriesSeaIce(config))
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []
