@@ -18,8 +18,7 @@ import warnings
 import subprocess
 import time
 
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
