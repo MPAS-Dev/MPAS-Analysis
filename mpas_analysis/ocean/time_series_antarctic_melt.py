@@ -4,7 +4,7 @@ import xarray
 # SFP: the following are only needed for the stop-gap local plotting routine used here
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
-from shapely.geometry.polygon import Polygon
+from matplotlib.patches import Polygon
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -321,9 +321,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         figsize = (15, 6)
         dpi = 300
         modelLineStyle = 'b-'
-        modelLineWidth = 1.2
+        modelLineWidth = 2
         obsColor = 'gray'
-        obsLineWidth = 2
+        obsLineWidth = 1 
 
         maxXTicks = 20
         calendar = self.calendar
@@ -348,9 +348,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                         [maxDays, obsMean+obsUncertainty], [minDays, obsMean+obsUncertainty]])]
 
         # make the polygon gray and mostly transparent
-#        p = PatchCollection(patches, color=obsColor, alpha=0.4)
+        p = PatchCollection(patches, color=obsColor, alpha=0.15)
         # add it to the plot on the current axis
-#        ax.add_collection(p)
+        ax.add_collection(p)
 
         # also plot a line
         plt.plot([minDays, maxDays], [obsMean, obsMean], color=obsColor, linewidth=obsLineWidth)
