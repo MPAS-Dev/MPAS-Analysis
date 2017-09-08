@@ -18,6 +18,7 @@ from mpl_toolkits.basemap import Basemap
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
+from mpl_toolkits.axes_grid1 import make_axes_locatable, ImageGrid
 
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
@@ -217,28 +218,29 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
 
 
 def plot_polar_comparison(
-    config,
-    Lons,
-    Lats,
-    modelArray,
-    obsArray,
-    diffArray,
-    cmapModelObs,
-    clevsModelObs,
-    cmapDiff,
-    clevsDiff,
-    fileout,
-    title=None,
-    plotProjection='npstere',
-    latmin=50.0,
-    lon0=0,
-    modelTitle='Model',
-    obsTitle='Observations',
-    diffTitle='Model-Observations',
-    cbarlabel='units',
-    titleFontSize=None,
-    figsize=(8, 22),
-    dpi=300):
+        config,
+        Lons,
+        Lats,
+        modelArray,
+        obsArray,
+        diffArray,
+        cmapModelObs,
+        clevsModelObs,
+        cmapDiff,
+        clevsDiff,
+        fileout,
+        title=None,
+        plotProjection='npstere',
+        latmin=50.0,
+        lon0=0,
+        modelTitle='Model',
+        obsTitle='Observations',
+        diffTitle='Model-Observations',
+        cbarlabel='units',
+        titleFontSize=None,
+        figsize=None,
+        dpi=300,
+        vertical=False):
 
     """
     Plots a data set around either the north or south pole.
@@ -295,18 +297,54 @@ def plot_polar_comparison(
         size of the title font
 
     figsize : tuple of float, optional
-        the size of the figure in inches
+        the size of the figure in inches.  If ``None``, the figure size is
+        ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.
 
     dpi : int, optional
         the number of dots per inch of the figure
+
+    vertical : bool, optional
+        whether the subplots should be stacked vertically rather than
+        horizontally
 
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    # set up figure
+    def do_subplot(ax, field, title, cmap, norm, levels):
+        """
+        Make a subplot within the figure.
+        """
+
+        m = Basemap(projection=plotProjection, boundinglat=latmin,
+                    lon_0=lon0, resolution='l', ax=ax)
+        x, y = m(Lons, Lats)  # compute map proj coordinates
+
+        ax.set_title(title, y=1.06, **axis_font)
+        m.drawcoastlines()
+        m.fillcontinents(color='grey', lake_color='white')
+        m.drawparallels(np.arange(-80., 81., 10.))
+        m.drawmeridians(np.arange(-180., 181., 20.),
+                        labels=[True, False, True, True])
+        cs = m.contourf(x, y, field, cmap=cmap, norm=norm,
+                        spacing='uniform', levels=levels)
+
+        cbar = m.colorbar(cs, location='right', pad="3%", spacing='uniform',
+                          ticks=levels, boundaries=levels)
+        cbar.set_label(cbarlabel)
+
+    if vertical:
+        if figsize is None:
+            figsize = (8, 22)
+        subplots = [311, 312, 313]
+    else:
+        if figsize is None:
+            figsize = (22, 8.5)
+        subplots = [131, 132, 133]
+
     fig = plt.figure(figsize=figsize, dpi=dpi)
+
     if (title is not None):
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
@@ -316,51 +354,24 @@ def plot_polar_comparison(
         fig.suptitle(title, y=0.95, **title_font)
     axis_font = {'size': config.get('plot', 'axisFontSize')}
 
-    m = Basemap(projection=plotProjection, boundinglat=latmin,
-                lon_0=lon0, resolution='l')
-    x, y = m(Lons, Lats)  # compute map proj coordinates
-
     normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3, 1, 1)
-    plt.title(modelTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 81., 10.))
-    m.drawmeridians(np.arange(-180., 181., 20.),
-                    labels=[True, True, True, True])
-    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs)
-    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    ax = plt.subplot(subplots[0])
+    do_subplot(ax=ax, field=modelArray, title=modelTitle, cmap=cmapModelObs,
+               norm=normModelObs, levels=clevsModelObs)
 
-    plt.subplot(3, 1, 2)
-    plt.title(obsTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 81., 10.))
-    m.drawmeridians(np.arange(-180., 181., 20.),
-                    labels=[True, True, True, True])
-    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs)
-    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    ax = plt.subplot(subplots[1])
+    do_subplot(ax=ax, field=obsArray, title=obsTitle, cmap=cmapModelObs,
+               norm=normModelObs, levels=clevsModelObs)
 
-    plt.subplot(3, 1, 3)
-    plt.title(diffTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 81., 10.))
-    m.drawmeridians(np.arange(-180., 181., 20.),
-                    labels=[True, True, True, True])
-    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
-                    spacing='uniform', levels=clevsDiff)
-    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
-                      ticks=clevsDiff, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    ax = plt.subplot(subplots[2])
+    do_subplot(ax=ax, field=diffArray, title=diffTitle, cmap=cmapDiff,
+               norm=normDiff, levels=clevsDiff)
+
+    plt.tight_layout(pad=4.)
+    if vertical:
+        plt.subplots_adjust(top=0.9)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)

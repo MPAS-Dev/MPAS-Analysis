@@ -290,6 +290,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 'climatologyMapSeaIceConcThick',
                 'minimumLatitude{}'.format(hemisphere))
 
+            vertical = config.getboolean('climatologyMapSeaIceConcThick',
+                                         'vertical')
+
             # ice concentrations from NASATeam (or Bootstrap) algorithm
             for obsName in ['NASATeam', 'Bootstrap']:
                 obsFieldName = 'AICE'
@@ -334,7 +337,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     modelTitle=mainRunName,
                     obsTitle='Observations (SSM/I {})'.format(obsName),
                     diffTitle='Model-Observations',
-                    cbarlabel='fraction')
+                    cbarlabel='fraction',
+                    vertical=vertical)
 
     def _compute_and_plot_thickness(self):
         '''
@@ -465,6 +469,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     'climatologyMapSeaIceConcThick',
                     'minimumLatitude{}'.format(hemisphere))
 
+                vertical = config.getboolean('climatologyMapSeaIceConcThick',
+                                             'vertical')
+
                 # now the observations
                 key = (months, hemisphere)
                 remappedFileName = remappedObsFileNames[key]
@@ -516,7 +523,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     modelTitle=mainRunName,
                     obsTitle='Observations (ICESat)',
                     diffTitle='Model-Observations',
-                    cbarlabel='m')
+                    cbarlabel='m',
+                    vertical=vertical)
 
         # }}}
 
