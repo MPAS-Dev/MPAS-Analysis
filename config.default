@@ -108,6 +108,7 @@ mpasRemappedClimSubdirectory = clim/mpas/remapped
 mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
 timeCacheSubdirectory = timecache
+htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
@@ -665,3 +666,9 @@ titleFontWeight = normal
 
 # the dots per inch of output figures
 dpi = 200
+
+[html]
+## options related to generating a webpage to display the analysis
+
+# generate the webpage?
+generate = True
