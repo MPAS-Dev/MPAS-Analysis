@@ -1,18 +1,25 @@
 import os
 import xarray
 
+# SFP: the following are only needed for the stop-gap local plotting routine used here
+import matplotlib.pyplot as plt
+from matplotlib.collections import PatchCollection
+from shapely.geometry.polygon import Polygon
+
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.constants import constants
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
+from ..shared.plot.plotting import _plot_xtick_format
+
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
 from ..shared.io.utility import build_config_full_path, make_directories
 
-import csv	# SFP added
+import csv	
 
 class TimeSeriesAntarcticMelt(AnalysisTask):
     """
@@ -156,18 +163,18 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         
         obsFile = csv.reader( open(obsFileName, 'rU') )	 
         obsDict = {}
+        next(obsFile, None)  # skip the header line
 	for line in obsFile:		# some possibly useful values are left commented out for now
             shelfName = line[0]
-            #surveyArea = line[1]
-            #SSmeltFlux = line[2]
-
-            #SSmeltFluxUncertainty = line[3]
-            #SSmeltRate = line[4]                                                                                 
-            #SSmeltRateUncertainty = line[5]
-            meltFlux = line[6] 
-            meltFluxUncertainty = line[7]
-            meltRate = line[8]
-            meltRateUncertainty = line[9]
+            #surveyArea = float( line[1] )
+            #SSmeltFlux = float( line[2] )
+            #SSmeltFluxUncertainty = float( line[3] )
+            #SSmeltRate = float( line[4] )                                                                                 
+            #SSmeltRateUncertainty = float( line[5] )
+            meltFlux = float( line[6] ) 
+            meltFluxUncertainty = float( line[7] )
+            meltRate = float( line[8] )
+            meltRateUncertainty = float( line[9] )
             #actualArea = line[10]
         #    obsDict[shelfName] = { 'surveyArea': surveyArea, 'SSmeltFlux': SSmeltFlux, 'SSmeltFluxUncertainty': 
 	#	SSmeltFluxUncertainty, 'SSmeltRate': SSmeltRate, 'SSmeltRateUncertainty': SSmeltRateUncertainty,
@@ -235,42 +242,134 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             regionName = iceShelvesToPlot[iRegion]
 
             # get obs melt flux and obs melt flux unc. for shelf (similar for rates) 
-            obsMeltFlux = float( obsDict[regionName]['meltFlux'] ) 
-            obsMeltFluxUnc = float( obsDict[regionName]['meltFluxUncertainty'] ) 
-            obsMeltRate = float( obsDict[regionName]['meltRate'] ) 
-            obsMeltRateUnc = float( obsDict[regionName]['meltRateUncertainty'] ) 
+            obsMeltFlux = obsDict[regionName]['meltFlux']
+            obsMeltFluxUnc = obsDict[regionName]['meltFluxUncertainty']
+            obsMeltRate = obsDict[regionName]['meltRate']
+            obsMeltRateUnc = obsDict[regionName]['meltRateUncertainty']
 
             title = regionName.replace('_', ' ')
 
             regionName = regionName.replace(' ', '_')
 
             xLabel = 'Time (yr)'
-#            yLabel = 'Melt Flux (GT/yr)'
-            yLabel = 'Melt Flux (GT/yr) (obs={} Gt/yr)'.format(obsMeltFlux)	# SFP - test pulling obs melt flux info into fig
+            yLabel = 'Melt Flux (GT/yr)'
 
             timeSeries = totalMeltFlux.isel(nRegions=iRegion)
+
 
             figureName = '{}/melt_flux_{}.png'.format(self.plotsDirectory,
                                                          regionName)
 
-            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
-                                     title, xLabel, yLabel, figureName,
-                                     lineStyles=['b-'], lineWidths=[1.2],
-                                     calendar=calendar)
+#            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
+#                                     title, xLabel, yLabel, figureName,
+#                                     lineStyles=['b-'], lineWidths=[1.2],
+#                                     calendar=calendar)
+            self.plot(config, timeSeries, obsMeltFlux, obsMeltFluxUnc, title, xLabel, yLabel, figureName )
+            
+
 
             xLabel = 'Time (yr)'
-#            yLabel = 'Melt Rate (m/yr)'
-            yLabel = 'Melt Rate (m/yr) (obs={} m/yr)'.format(obsMeltRate)	#SFP - test pulling obs melt rate info into fig
+            yLabel = 'Melt Rate (m/yr)'
 
             timeSeries = meltRates.isel(nRegions=iRegion)
 
             figureName = '{}/melt_rate_{}.png'.format(self.plotsDirectory,
                                                          regionName)
 
-            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
-                                     title, xLabel, yLabel, figureName,
-                                     lineStyles=['b-'], lineWidths=[1.2],
-                                     calendar=calendar)
+#            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
+#                                     title, xLabel, yLabel, figureName,
+#                                     lineStyles=['b-'], lineWidths=[1.2],
+#                                     calendar=calendar)
+            self.plot(config, timeSeries, obsMeltRate, obsMeltRateUnc, title, xLabel, yLabel, figureName )
+
+
+    def plot(self, config, modelValues, obsMean, obsUncertainty, title, xlabel, ylabel, fileout):
+
+        """
+        Plots the list of time series data sets and stores the result in an image
+        file.
+        Parameters
+        ----------
+        config : instance of ConfigParser
+            the configuration, containing a [plot] section with options that
+            control plotting
+
+        modelValues : xarray DataSet
+            the data set to be plotted
+
+        obsMean : float
+            a single observed mean value to plot as a constant line
+
+        obsUncertainty : float
+            The observed uncertainty, to plot as a shaded rectangle around the mean 
+
+        title : str
+            the title of the plot
+
+        xlabel, ylabel : str
+            axis labels
+
+        fileout : str
+            the file name to be written
+
+        Authors
+        -------
+        Xylar Asay-Davis, Stephen Price
+        """
+
+        # play with these as you need
+        figsize = (15, 6)
+        dpi = 300
+        modelLineStyle = 'b-'
+        modelLineWidth = 1.2
+        obsColor = 'gray'
+        obsLineWidth = 2
+
+        maxXTicks = 20
+        calendar = self.calendar
+
+        axis_font = {'size': config.get('plot', 'axisFontSize')}
+        title_font = {'size': config.get('plot', 'titleFontSize'),
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
+
+        plt.figure(figsize=figsize, dpi=dpi)
+
+        minDays = modelValues.Time.min()
+        maxDays = modelValues.Time.max()
+        plt.plot(modelValues.Time.values, modelValues.values, modelLineStyle,
+                 linewidth=modelLineWidth)
+
+        ax = plt.gca()
+
+        # this makes a "patch" with a single rectangular polygon, where the pairs are time and melt 
+        # rate for the 4 corners, and "True" means it is a closed polygon:
+        patches = [Polygon([[minDays, obsMean-obsUncertainty], [maxDays, obsMean-obsUncertainty],
+                        [maxDays, obsMean+obsUncertainty], [minDays, obsMean+obsUncertainty]])]
+
+        # make the polygon gray and mostly transparent
+#        p = PatchCollection(patches, color=obsColor, alpha=0.4)
+        # add it to the plot on the current axis
+#        ax.add_collection(p)
+
+        # also plot a line
+        plt.plot([minDays, maxDays], [obsMean, obsMean], color=obsColor, linewidth=obsLineWidth)
+
+        # this will need to be imported from shared.plot.plotting
+        _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+
+        if title is not None:
+            plt.title(title, **title_font)
+        if xlabel is not None:
+            plt.xlabel(xlabel, **axis_font)
+        if ylabel is not None:
+            plt.ylabel(ylabel, **axis_font)
+        if fileout is not None:
+            plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+        if not config.getboolean('plot', 'displayToScreen'):
+            plt.close()
+
         # }}}
 
 # }}}
