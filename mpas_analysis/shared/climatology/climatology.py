@@ -9,7 +9,6 @@ Xylar Asay-Davis
 import xarray as xr
 import os
 import numpy
-import warnings
 
 from ..constants import constants
 
@@ -473,21 +472,18 @@ def cache_climatologies(ds, monthValues, config, cachePrefix, calendar,
     return climatology  # }}}
 
 
-def update_start_end_year(ds, config, calendar):  # {{{
+def update_climatology_bounds_from_file_names(inputFiles, config):  # {{{
     """
-    Given a monthly climatology, compute a seasonal climatology weighted by
-    the number of days in each month (on the no-leap-year calendar).
+    Update the start and end years and dates for climatologies based on the
+    years actually available in the list of files.
 
     Parameters
     ----------
-    ds : instance of xarray.Dataset
-        A data set from which start and end years will be determined
+    inputFiles : list of str
+        A list of file names ending with dates (before the '.nc' extension)
 
     config :  instance of MpasAnalysisConfigParser
         Contains configuration options
-
-    calendar : {'gregorian', 'gregorian_noleap'}
-        The name of one of the calendars supported by MPAS cores
 
     Returns
     -------
@@ -501,30 +497,50 @@ def update_start_end_year(ds, config, calendar):  # {{{
     -------
     Xylar Asay-Davis
 
-    Last Modified
-    -------------
-    03/25/2017
     """
     requestedStartYear = config.getint('climatology', 'startYear')
     requestedEndYear = config.getint('climatology', 'endYear')
 
-    startYear = days_to_datetime(ds.Time.min().values, calendar=calendar).year
-    endYear = days_to_datetime(ds.Time.max().values,  calendar=calendar).year
+    dates = sorted([fileName[-13:-6] for fileName in inputFiles])
+    years = [int(date[0:4]) for date in dates]
+    months = [int(date[5:7]) for date in dates]
+
+    # search for the start of the first full year
+    firstIndex = 0
+    while(firstIndex < len(years) and months[firstIndex] != 1):
+        firstIndex += 1
+    startYear = years[firstIndex]
+
+    # search for the end of the last full year
+    lastIndex = len(years)-1
+    while(lastIndex >= 0 and months[lastIndex] != 12):
+        lastIndex -= 1
+    endYear = years[lastIndex]
+
     changed = False
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        message = "climatology start and/or end year different from " \
-                  "requested\n" \
-                  "requestd: {:04d}-{:04d}\n" \
-                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                     requestedEndYear,
-                                                     startYear,
-                                                     endYear)
-        warnings.warn(message)
+        print "Warning:climatology start and/or end year different from " \
+               "requested\n" \
+               "requested: {:04d}-{:04d}\n" \
+               "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                  requestedEndYear,
+                                                  startYear,
+                                                  endYear)
+
         config.set('climatology', 'startYear', str(startYear))
         config.set('climatology', 'endYear', str(endYear))
+
+        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
+        config.set('climatology', 'startDate', startDate)
+        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+        config.set('climatology', 'endDate', endDate)
         changed = True
 
-    return changed, startYear, endYear  # }}}
+    else:
+        startDate = config.get('climatology', 'startDate')
+        endDate = config.get('climatology', 'endDate')
+
+    return changed, startYear, endYear, startDate, endDate  # }}}
 
 
 def add_years_months_days_in_month(ds, calendar=None):  # {{{
@@ -579,12 +595,11 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
             ds.coords['daysInMonth'] = ds.endTime - ds.startTime
         else:
             if calendar == 'gregorian':
-                message = 'The MPAS run used the Gregorian calendar but ' \
-                          'does not appear to have\n' \
-                          'supplied start and end times.  Climatologies ' \
-                          'will be computed with\n' \
-                          'month durations ignoring leap years.'
-                warnings.warn(message)
+                print 'Warning: The MPAS run used the Gregorian calendar ' \
+                      'but does not appear to have\n' \
+                      'supplied start and end times.  Climatologies ' \
+                      'will be computed with\n' \
+                      'month durations ignoring leap years.'
 
             daysInMonth = numpy.array([constants.daysInMonth[month-1] for
                                        month in ds.month.values], float)
@@ -776,9 +791,9 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
                 dsCached = xr.open_dataset(outputFileClimo)
             except IOError:
                 # assuming the cache file is corrupt, so deleting it.
-                message = 'Deleting cache file {}, which appears to have ' \
-                          'been corrupted.'.format(outputFileClimo)
-                warnings.warn(message)
+                print 'Warning: Deleting cache file {}, which appears to ' \
+                      'have been corrupted.'.format(outputFileClimo)
+
                 os.remove(outputFileClimo)
 
             monthsIfDone = len(monthValues)*len(years)
@@ -871,9 +886,8 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
         except IOError:
             # assuming the cache file is corrupt, so deleting it.
-            message = 'Deleting cache file {}, which appears to have ' \
-                      'been corrupted.'.format(outputFileClimo)
-            warnings.warn(message)
+            print 'Warning: Deleting cache file {}, which appears to have ' \
+                  'been corrupted.'.format(outputFileClimo)
             os.remove(outputFileClimo)
 
         if len(cacheInfo) == 1 and outputFileClimo == cacheInfo[0][0]:

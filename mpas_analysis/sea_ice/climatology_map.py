@@ -12,7 +12,8 @@ from ..shared.constants import constants
 from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_file_names, \
     get_observation_climatology_file_names, \
-    cache_climatologies, update_start_end_year, \
+    cache_climatologies, \
+    update_climatology_bounds_from_file_names, \
     remap_and_write_climatology
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
@@ -92,6 +93,9 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
+        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
+            update_climatology_bounds_from_file_names(self.inputFiles,
+                                                      self.config)
         return  # }}}
 
     def run(self):  # {{{
@@ -126,10 +130,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
         # Compute climatologies (first motnhly and then seasonally)
         print '  Compute seasonal climatologies...'
-
-        changed, startYear, endYear = update_start_end_year(self.ds,
-                                                            self.config,
-                                                            self.calendar)
 
         mpasDescriptor = MpasMeshDescriptor(
             self.restartFileName,

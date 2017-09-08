@@ -15,7 +15,8 @@ from ..shared.generalized_reader.generalized_reader \
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology import update_start_end_year, \
+from ..shared.climatology.climatology import \
+    update_climatology_bounds_from_file_names, \
     cache_climatologies
 
 from ..shared.analysis_task import AnalysisTask
@@ -99,6 +100,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
+        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
+            update_climatology_bounds_from_file_names(self.inputFiles,
+                                                      self.config)
+
         # Later, we will read in depth and MHT latitude points
         # from mpaso.hist.am.meridionalHeatTransport.*.nc
         mhtFiles = self.historyStreams.readpath(
@@ -110,9 +115,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.mhtFile = mhtFiles[0]
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        self.startYear = config.getint('climatology', 'startYear')
-        self.endYear = config.getint('climatology', 'endYear')
 
         self.sectionName = 'meridionalHeatTransport'
 
@@ -206,9 +208,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             startDate=self.startDate,
             endDate=self.endDate)
 
-        changed, startYear, endYear = update_start_end_year(ds, config,
-                                                            self.calendar)
-
         # Compute annual climatology
         cachePrefix = '{}/meridionalHeatTransport'.format(outputDirectory)
         annualClimatology = cache_climatologies(ds, monthDictionary['ANN'],
@@ -230,10 +229,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 startYear, endYear, mainRunName)
+                 self.startYear, self.endYear, mainRunName)
         figureName = '{}/mht_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      startYear, endYear)
+                      self.startYear, self.endYear)
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -275,10 +274,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 startYear, endYear, mainRunName)
+                 self.startYear, self.endYear, mainRunName)
         figureName = '{}/mhtZ_{}_years{:04d}-{:04d}.png'.format(
                       self.plotsDirectory, mainRunName,
-                      startYear, endYear)
+                      self.startYear, self.endYear)
         colorbarLabel = '[PW/m]'
         contourLevels = config.getExpression(self.sectionName,
                                              'contourLevelsGlobal',
