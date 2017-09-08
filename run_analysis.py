@@ -184,7 +184,10 @@ def build_analysis_list(config):  # {{{
 
     # Sea Ice Analyses
     analyses.append(sea_ice.TimeSeriesSeaIce(config))
-    analyses.append(sea_ice.ClimatologyMapSeaIce(config))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []
