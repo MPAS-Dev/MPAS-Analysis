@@ -18,6 +18,7 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 from ..shared.time_series import cache_time_series
+from ..shared.html import write_image_xml
 
 
 class TimeSeriesSeaIce(SeaIceAnalysisTask):
@@ -95,6 +96,45 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
+
+        # these are redundant for now.  Later cleanup is needed where these
+        # file names are reused in run()
+        self.xmlFileNames = []
+
+        polarPlot = config.getboolean('timeSeriesSeaIceAreaVol', 'polarPlot')
+        mainRunName = config.get('runs', 'mainRunName')
+        preprocessedReferenceRunName = \
+            config.get('runs', 'preprocessedReferenceRunName')
+        compareWithObservations = config.getboolean('timeSeriesSeaIceAreaVol',
+                                                    'compareWithObservations')
+
+        polarXMLFileNames = []
+
+        if (not compareWithObservations and
+                preprocessedReferenceRunName == 'None'):
+            for variableName in ['iceArea', 'iceVolume']:
+                filePrefix = '{}.{}'.format(mainRunName,
+                                            variableName)
+
+                self.xmlFileNames.append('{}/{}.xml'.format(
+                        self.plotsDirectory, filePrefix))
+                polarXMLFileNames.append('{}/{}_polar.xml'.format(
+                        self.plotsDirectory, filePrefix))
+        else:
+
+            for hemisphere in ['NH', 'SH']:
+                for variableName in ['iceArea', 'iceVolume']:
+                    filePrefix = '{}{}_{}'.format(variableName,
+                                                  hemisphere,
+                                                  mainRunName)
+
+                    self.xmlFileNames.append('{}/{}.xml'.format(
+                            self.plotsDirectory, filePrefix))
+                    polarXMLFileNames.append('{}/{}_polar.xml'.format(
+                            self.plotsDirectory, filePrefix))
+
+        if polarPlot:
+            self.xmlFileNames.extend(polarXMLFileNames)
         return  # }}}
 
     def run(self):  # {{{
@@ -209,6 +249,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 'iceThickness': 1.}
 
         xLabel = 'Time [years]'
+
+        galleryGroup = 'Time Series'
+        groupLink = 'timeseries'
 
         dsTimeSeries = {}
         obs = {}
@@ -348,6 +391,24 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                              lineWidths=lineWidths,
                                              titleFontSize=titleFontSize,
                                              calendar=calendar)
+                    filePrefix = '{}{}_{}'.format(variableName,
+                                                  hemisphere,
+                                                  mainRunName)
+                    thumbnailDescription = '{} {}'.format(
+                            hemisphere, plotTitles[variableName])
+                    caption = 'Running mean of {}'.format(
+                            thumbnailDescription)
+                    write_image_xml(
+                        config,
+                        filePrefix,
+                        componentName='Sea Ice',
+                        componentSubdirectory='sea_ice',
+                        galleryGroup=galleryGroup,
+                        groupLink=groupLink,
+                        thumbnailDescription=thumbnailDescription,
+                        imageDescription=caption,
+                        imageCaption=caption)
+
                     if (polarPlot):
                         timeseries_analysis_plot_polar(
                             config,
@@ -359,6 +420,21 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                             lineWidths=lineWidths,
                             titleFontSize=titleFontSize,
                             calendar=calendar)
+
+                        filePrefix = '{}{}_{}_polar'.format(variableName,
+                                                            hemisphere,
+                                                            mainRunName)
+                        write_image_xml(
+                            config,
+                            filePrefix,
+                            componentName='Sea Ice',
+                            componentSubdirectory='sea_ice',
+                            galleryGroup=galleryGroup,
+                            groupLink=groupLink,
+                            thumbnailDescription=thumbnailDescription,
+                            imageDescription=caption,
+                            imageCaption=caption)
+
         if (not compareWithObservations and
                 preprocessedReferenceRunName == 'None'):
             for variableName in ['iceArea', 'iceVolume']:
@@ -383,7 +459,21 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                          lineWidths=[1.2, 1.2],
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
-                if (polarPlot):
+                filePrefix = '{}.{}'.format(mainRunName, variableName)
+                thumbnailDescription = plotTitles[variableName]
+                caption = 'Running mean of {}'.format(
+                        thumbnailDescription)
+                write_image_xml(
+                    config,
+                    filePrefix,
+                    componentName='Sea Ice',
+                    componentSubdirectory='sea_ice',
+                    galleryGroup=galleryGroup,
+                    groupLink=groupLink,
+                    thumbnailDescription=thumbnailDescription,
+                    imageDescription=caption,
+                    imageCaption=caption)
+            if (polarPlot):
                     timeseries_analysis_plot_polar(config, varList,
                                                    movingAveragePoints,
                                                    title, figureNamePolar,
@@ -391,6 +481,18 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                                    lineWidths=[1.2, 1.2],
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
+                    filePrefix = '{}.{}_polar'.format(mainRunName,
+                                                      variableName)
+                    write_image_xml(
+                        config,
+                        filePrefix,
+                        componentName='Sea Ice',
+                        componentSubdirectory='sea_ice',
+                        galleryGroup=galleryGroup,
+                        groupLink=groupLink,
+                        thumbnailDescription=thumbnailDescription,
+                        imageDescription=caption,
+                        imageCaption=caption)
 
         # }}}
 
