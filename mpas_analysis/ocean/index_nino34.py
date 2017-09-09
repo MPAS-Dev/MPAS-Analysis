@@ -64,13 +64,12 @@ class IndexNino34(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(IndexNino34, self).setup_and_check()
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = self.config.get('index', 'startDate')
         self.endDate = self.config.get('index', 'endDate')
         self.inputFiles = self.historyStreams.readpath(
@@ -128,14 +127,16 @@ class IndexNino34(AnalysisTask):  # {{{
         regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
 
         # Load data:
-        varList = ['avgSurfaceTemperature']
+        varName = \
+            'timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'
+        varList = [varName]
         ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
+                                    timeVariableName=['xtime_startMonthly',
+                                                      'xtime_endMonthly'],
                                     variableList=varList,
-                                    variableMap=self.variableMap,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
@@ -144,7 +145,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Obs = dsObs.sst
 
         print '  Compute NINO3.4 index...'
-        regionSST = ds.avgSurfaceTemperature.isel(nOceanRegions=regionIndex)
+        regionSST = ds[varName].isel(nOceanRegions=regionIndex)
         nino34 = self._compute_nino34_index(regionSST, calendar)
 
         # Compute the observational index over the entire time range

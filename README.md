@@ -87,9 +87,7 @@ another machine to fit your needs.
 3. modify `config.default` (and possibly any machine-specific config files in
    `configs/<machine>`)
 4. import new analysis task in `mpas_analysis/<component>/__init__.py`
-5. if necessary, update variable maps in
-   `mpas_analysis/shared/variable_namelist_stream_maps/<component>_maps.py`
-6. add new analysis task to `run_analysis.py` under `build_analysis_list`:
+5. add new analysis task to `run_analysis.py` under `build_analysis_list`:
    ```python
       analyses.append(<component>.MyTask(config, myArg='argValue'))
    ```

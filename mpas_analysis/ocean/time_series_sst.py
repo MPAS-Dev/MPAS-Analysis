@@ -79,8 +79,7 @@ class TimeSeriesSST(AnalysisTask):
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = config.get('timeSeries', 'startDate')
         self.endDate = config.get('timeSeries', 'endDate')
         self.inputFiles = \
@@ -142,14 +141,16 @@ class TimeSeriesSST(AnalysisTask):
         regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
         # Load data:
-        varList = ['avgSurfaceTemperature']
+        varName = \
+            'timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'
+        varList = [varName]
         ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
+                                    timeVariableName=['xtime_startMonthly',
+                                                      'xtime_endMonthly'],
                                     variableList=varList,
-                                    variableMap=self.variableMap,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
@@ -200,7 +201,7 @@ class TimeSeriesSST(AnalysisTask):
             xLabel = 'Time [years]'
             yLabel = '[$^\circ$ C]'
 
-            SST = dsSST.avgSurfaceTemperature.isel(nOceanRegions=index)
+            SST = dsSST[varName].isel(nOceanRegions=index)
 
             figureName = '{}/sst_{}_{}.png'.format(self.plotsDirectory,
                                                    regions[regionIndex],

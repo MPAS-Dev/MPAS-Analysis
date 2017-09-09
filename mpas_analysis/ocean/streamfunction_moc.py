@@ -81,7 +81,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(StreamfunctionMOC, self).setup_and_check()
 
         config = self.config
@@ -97,8 +97,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
         #   First a list necessary for the streamfunctionMOC climatology
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDateClimo = config.get('climatology', 'startDate')
         self.endDateClimo = config.get('climatology', 'endDate')
         self.inputFilesClimo = \
@@ -255,8 +254,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     def _cache_velocity_climatologies(self):  # {{{
         '''compute yearly velocity climatologies and cache them'''
 
-        variableList = ['avgNormalVelocity',
-                        'avgVertVelocityTop']
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
 
         config = self.config
 
@@ -275,9 +274,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             calendar=self.calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
             variableList=variableList,
-            variableMap=self.variableMap,
             startDate=self.startDateClimo,
             endDate=self.endDateClimo,
             chunking=chunking)
@@ -370,8 +368,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)
-            horizontalVel = annualClimatology.avgNormalVelocity.values
-            verticalVel = annualClimatology.avgVertVelocityTop.values
+            horizontalVel = \
+                annualClimatology.timeMonthly_avg_normalVelocity.values
+            verticalVel = \
+                annualClimatology.timeMonthly_avg_vertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
 
             # Create dictionary for MOC climatology (NB: need this form
@@ -471,8 +471,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         config = self.config
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-        variableList = ['avgNormalVelocity',
-                        'avgVertVelocityTop']
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = self._load_mesh()
@@ -487,9 +487,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             calendar=self.calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
             variableList=variableList,
-            variableMap=self.variableMap,
             startDate=self.startDateTseries,
             endDate=self.endDateTseries,
             chunking=chunking)
@@ -550,8 +549,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
             print '     date: {:04d}-{:02d}'.format(date.year, date.month)
 
-            horizontalVel = dsLocal.avgNormalVelocity.values
-            verticalVel = dsLocal.avgVertVelocityTop.values
+            horizontalVel = dsLocal.timeMonthly_avg_normalVelocity.values
+            verticalVel = dsLocal.timeMonthly_avg_vertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
             transportZ = self._compute_transport(maxEdgesInTransect,
                                                  transectEdgeGlobalIDs,

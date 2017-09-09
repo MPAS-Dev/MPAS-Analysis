@@ -57,8 +57,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
         # get a list of timeSeriesStatsMonthly output files from the streams
         # file, reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = self.config.get('climatology', 'startDate')
         self.endDate = self.config.get('climatology', 'endDate')
         self.inputFiles = \
@@ -100,16 +99,14 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         varList = [self.mpasFieldName]
 
         self.ds = open_multifile_dataset(
-                fileNames=self.inputFiles,
-                calendar=self.calendar,
-                config=self.config,
-                simulationStartTime=self.simulationStartTime,
-                timeVariableName='Time',
-                variableList=varList,
-                iselValues=self.iselValues,
-                variableMap=self.variableMap,
-                startDate=self.startDate,
-                endDate=self.endDate)
+            fileNames=self.inputFiles,
+            calendar=self.calendar,
+            config=self.config,
+            simulationStartTime=self.simulationStartTime,
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
+            variableList=varList,
+            startDate=self.startDate,
+            endDate=self.endDate)
 
         # Compute climatologies (first motnhly and then seasonally)
         print '  Compute seasonal climatologies...'
@@ -345,7 +342,7 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
         self.observationPrefixes = config.getExpression(self.sectionName,
                                                         'observationPrefixes')
 
-        self.mpasFieldName = 'iceAreaCell'
+        self.mpasFieldName = 'timeMonthly_avg_iceAreaCell'
         self.iselValues = None
 
         tags = ['climatology', 'horizontalMap', self.fieldName]
@@ -453,7 +450,7 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
         self.fieldNameInTitle = 'Sea ice thickness'
         self.seasons = config.getExpression(self.sectionName, 'seasons')
 
-        self.mpasFieldName = 'iceVolumeCell'
+        self.mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
         self.iselValues = None
 
         tags = ['climatology', 'horizontalMap', self.fieldName]
