@@ -22,6 +22,9 @@ def generate_html(config, analyses):  # {{{
         the list of files to include on the webpage for the associated
         component.
 
+    Authors
+    -------
+    Xylar Asay-Davis
     """
     generateHTML = config.getboolean('html', 'generate')
     if not generateHTML:
@@ -59,7 +62,38 @@ def generate_html(config, analyses):  # {{{
 
 
 class MainPage(object):
+    """
+    Describes a main webpage containg one or more pages for components
+
+    Attributes
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    pageTemplate, componentTemplate : str
+        The contents of templates used to construct the page
+
+    components : OrederdDict of dict
+        Each component has a name, subdirectory and image name used to find
+        the appropriate thumbnail.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
     def __init__(self, config):
+        """
+        Create a MainPage object, reading in the templates
+
+        Parameters
+        ----------
+        config : ``MpasAnalysisConfigParser`` object
+            contains config options
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
 
         self.config = config
 
@@ -81,10 +115,40 @@ class MainPage(object):
         self.components = OrderedDict()
 
     def add_component(self, name, subdirectory, imageFileName):
+        """
+        Create a MainPage object, reading in the templates
+
+        Parameters
+        ----------
+        name : str
+            The name of the component as it should appear in the list of
+            components, at the top of the component webpage and in the page
+            title (e.g "Sea Ice" as opposed to "sea_ice" or "seaIce")
+
+        subdirecory : str
+            The subdirectory for the component's webpage
+
+        imageFileName : str
+            The name of an image file (without path) that will be used as the
+            thumbnail for the gallery.  Typically, this is the first image
+            from the first gallery.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
         self.components[name] = {'subdirectory': subdirectory,
                                  'imageFileName': imageFileName}
 
     def generate(self):
+        """
+        Generate the webpage from templates and components, and write it out to
+        the HTML directory.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
         runName = self.config.get('runs', 'mainRunName')
 
         componentsText = ''
@@ -138,7 +202,55 @@ class MainPage(object):
 
 
 class ComponentPage(object):
+    """
+    Describes a component with one or more gallery groups, each with one or
+    more galleries, and a list of "quick links" to the gallery groups
+
+    Attributes
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    name : str
+        The name of the component as it should appear in the list of
+        components, at the top of the component webpage and in the page
+        title (e.g "Sea Ice" as opposed to "sea_ice" or "seaIce")
+
+    subdirecory : str
+        The subdirectory for the component's webpage
+
+    templates : OrderedDict of str
+        The contents of templates used to construct the page
+
+    groups : tree of OrederdDict
+        A tree of information describing the the gallery groups in the page,
+        the galleries in each group and the images in each gallery.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
     def __init__(self, config, name, subdirectory):
+        """
+        Create a ComponentPage object, reading in the templates
+
+        Parameters
+        ----------
+        config : ``MpasAnalysisConfigParser`` object
+            contains config options
+
+        name : str
+            The name of the component as it should appear in the list of
+            components, at the top of the component webpage and in the page
+            title (e.g "Sea Ice" as opposed to "sea_ice" or "seaIce")
+
+        subdirecory : str
+            The subdirectory for the component's webpage
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
 
         self.config = config
         self.name = name
@@ -166,6 +278,29 @@ class ComponentPage(object):
 
     @staticmethod
     def add_image(xmlFileName, config, components):
+        """
+        Add the image to the appropriate component.  Note: this is a static
+        method because we do not know which component to add the image to
+        until we have read the XML file.
+
+        Parameters
+        ----------
+        xmlFileName : str
+            The full path to the XML file describing the image to be added
+
+        config : ``MpasAnalysisConfigParser`` object
+            contains config options
+
+        components : OrederdDict of dict
+            A dictionary of components to which the image will be added.  If
+            the appropriate component is not yet in the dictionary, it will
+            be added. ``components`` should be viewed as an input and output
+            parameter, since it is modified by this function.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
         xmlRoot = etree.parse(xmlFileName).getroot()
 
         componentName = ComponentPage._get_required_xml_text(xmlRoot,
@@ -224,6 +359,14 @@ class ComponentPage(object):
                 image[tag] = node.text
 
     def generate(self):
+        """
+        Generate the webpage from templates and groups, and write it out to
+        the HTML directory.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
         runName = self.config.get('runs', 'mainRunName')
 
         quickLinkText = ''
@@ -248,6 +391,19 @@ class ComponentPage(object):
             componentFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
 
     def get_first_image(self):
+        """
+        Find the first image in the first gallery in this component (typically
+        to use it as a thumbnail)
+
+        Returns
+        -------
+        firstImageFilename : str
+            The name (with out path) of the first image in the first gallery
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
         # get the first image name
         firstGroup = self.groups.itervalues().next()
         firstGallery = firstGroup['galleries'].itervalues().next()
@@ -256,6 +412,7 @@ class ComponentPage(object):
 
     @staticmethod
     def _get_required_xml_text(root, tag, fileName):
+        """read the value associated with a required tag from the XML root"""
         node = root.find(tag)
         if node is None:
             raise IOError('image descriptor file {} is missing a required'
@@ -263,6 +420,7 @@ class ComponentPage(object):
         return node.text
 
     def _generate_image_text(self, imageFileName, imageDict):
+        """fill in the template for a given image with the desired content"""
         replacements = {'@imageFileName': imageFileName}
         for tag in ['imageSize', 'imageDescription', 'imageCaption',
                     'thumbnailDescription', 'orientation']:
@@ -273,6 +431,7 @@ class ComponentPage(object):
         return imageText
 
     def _generate_gallery_text(self, galleryName, images):
+        """fill in the template for a given gallery with the desired content"""
         imagesText = ''
         for imageFileName, imageDict in images.items():
             imagesText = imagesText + \
@@ -290,6 +449,10 @@ class ComponentPage(object):
         return galleryText
 
     def _generate_subtitle_text(self, subtitle):
+        """
+        fill in the template for a given gallery subtitle with the desired
+        content
+        """
         replacements = {'@subtitle': subtitle}
 
         subtitleText = _replace_tempate_text(self.templates['subtitle'],
@@ -297,7 +460,10 @@ class ComponentPage(object):
         return subtitleText
 
     def _generate_group_text(self, groupName, groupDict):
-
+        """
+        fill in the template for a given gallery group with the desired
+        content
+        """
         galleriesText = ''
         for galleryName, galleryDict in groupDict['galleries'].items():
             galleriesText = galleriesText + \
@@ -319,6 +485,10 @@ class ComponentPage(object):
         return groupText
 
     def _generate_quick_link_text(self, groupName, groupDict):
+        """
+        fill in the template for a given quick link with the desired
+        content
+        """
 
         firstGallery = groupDict['galleries'].itervalues().next()
         firstImageFileName = firstGallery['images'].iterkeys().next()
@@ -334,6 +504,10 @@ class ComponentPage(object):
 
 
 def _replace_tempate_text(template, replacements):
+    """
+    replace substrings in a given template based on a dictionary of
+    replacements.
+    """
     output = template
     for src, target in replacements.items():
         output = output.replace(src, target)

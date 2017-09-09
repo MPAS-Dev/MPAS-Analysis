@@ -169,6 +169,11 @@ def _provenance_command(root, history):  # {{{
 
 
 def _generate_thumbnails(imageFileName, directory):
+    """
+    Generate 2 thumbnails for the given image, one with the same aspect ratio
+    and one with a fixed size. Note: The sizes are hard-coded to be consistent
+    with the css template.  (They are displayed at 2/3 full size.)
+    """
     # thumbnails with fixed size
     fixedWidth = 480
     fixedHeight = 360
