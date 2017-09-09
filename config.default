@@ -356,6 +356,9 @@ depthLimGlobal = [-1000, 0]
 # compare to observations?
 compareWithObservations = True
 
+# plot the vertical section of MHT?
+plotVerticalSection = False
+
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)

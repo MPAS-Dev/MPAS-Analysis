@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import netCDF4
 import os
@@ -16,6 +17,7 @@ from ..shared.time_series import time_series
 
 from ..shared.io.utility import build_config_full_path, make_directories, \
     check_path_exists
+from ..shared.html import write_image_xml
 
 
 class TimeSeriesOHC(AnalysisTask):
@@ -93,6 +95,22 @@ class TimeSeriesOHC(AnalysisTask):
                           '{}.'.format(self.streamName, self.startDate,
                                        self.endDate))
 
+        mainRunName = config.get('runs', 'mainRunName')
+        regions = config.getExpression('regions', 'regions')
+        regionIndicesToPlot = config.getExpression('timeSeriesOHC',
+                                                   'regionIndicesToPlot')
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        regions = [regions[index] for index in regionIndicesToPlot]
+
+        for region in regions:
+            filePrefix = 'ohc_{}_{}.png'.format(region, mainRunName)
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[region] = filePrefix
+
         return  # }}}
 
     def run(self):  # {{{
@@ -134,7 +152,6 @@ class TimeSeriesOHC(AnalysisTask):
         make_directories(outputDirectory)
 
         regionNames = config.getExpression('regions', 'regions')
-        regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
         # Note: input file, not a mesh file because we need dycore specific
         # fields such as refBottomDepth and namelist fields such as
@@ -184,8 +201,6 @@ class TimeSeriesOHC(AnalysisTask):
                                     variableList=variableList,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
-
-        ds = ds.isel(nOceanRegionsTmp=regionIndicesToPlot)
 
         timeStart = string_to_datetime(self.startDate)
         timeEnd = string_to_datetime(self.endDate)
@@ -277,9 +292,10 @@ class TimeSeriesOHC(AnalysisTask):
         unitsScalefactor = 1e-22
 
         print '  Compute OHC and make plots...'
-        for index, regionIndex in enumerate(regionIndicesToPlot):
+        for regionIndex in regionIndicesToPlot:
+            region = regions[regionIndex]
 
-            ohc = dsOHC.ohc.isel(nOceanRegionsTmp=index)
+            ohc = dsOHC.ohc.isel(nOceanRegionsTmp=regionIndex)
 
             # OHC over 0-bottom depth range:
             ohcTotal = ohc.sum('nVertLevels')
@@ -304,9 +320,8 @@ class TimeSeriesOHC(AnalysisTask):
             xLabel = 'Time [years]'
             yLabel = '[x$10^{22}$ J]'
 
-            figureName = '{}/ohc_{}_{}.png'.format(self.plotsDirectory,
-                                                   regions[regionIndex],
-                                                   mainRunName)
+            filePrefix = self.filePrefixes[region]
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             if preprocessedReferenceRunName != 'None':
                 ohcPreprocessedTotal = dsPreprocessedTimeSlice.ohc_tot
@@ -338,6 +353,19 @@ class TimeSeriesOHC(AnalysisTask):
                                          lineStyles=['r-', 'r-', 'r--', 'r-.'],
                                          lineWidths=[2, 1, 1.5, 1.5],
                                          calendar=calendar)
+
+            caption = 'Running Mean of the Anomaly in {} Ocean Heat Content ' \
+                      'from Year 0001'.format(region)
+            write_image_xml(
+                config=config,
+                filePrefix=filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup='Time Series',
+                groupLink='timeseries',
+                thumbnailDescription=u'{} ΔOHC'.format(region),
+                imageDescription=caption,
+                imageCaption=caption)
         # }}}
 
     def _compute_ohc_part(self, timeIndices, firstCall):  # {{{
