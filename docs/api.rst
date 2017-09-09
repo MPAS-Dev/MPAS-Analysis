@@ -11,13 +11,32 @@ Top-level script: run_analysis.py
 .. autosummary::
    :toctree: generated/
 
-   run_analysis.check_path_exists
-   run_analysis.check_generate
-   run_analysis.analysis
+   run_analysis.update_generate
+   run_analysis.run_parallel_tasks
+   run_analysis.launch_tasks
+   run_analysis.wait_for_task
+   run_analysis.is_running
+   run_analysis.build_analysis_list
+   run_analysis.run_analysis
 
 
 Analysis tasks
 ==============
+
+Base Class
+----------
+
+.. currentmodule:: mpas_analysis.shared.analysis_task
+
+.. autosummary::
+   :toctree: generated/
+
+   AnalysisTask
+   AnalysisTask.setup_and_check
+   AnalysisTask.run
+   AnalysisTask.check_generate
+   AnalysisTask.check_analysis_enabled
+   AnalysisTask.set_start_end_date
 
 Ocean tasks
 -----------
@@ -27,11 +46,14 @@ Ocean tasks
 .. autosummary::
    :toctree: generated/
 
-   meridional_overturning_circulation.moc_streamfunction
-   nino34_index.nino34_index
-   ocean_modelvsobs.ocn_modelvsobs
-   ohc_timeseries.ohc_timeseries
-   sst_timeseries.sst_timeseries
+   ClimatologyMapSST
+   ClimatologyMapSSS
+   ClimatologyMapMLD
+   IndexNino34
+   MeridionalHeatTransport
+   StreamfunctionMOC
+   TimeSeriesOHC
+   TimeSeriesSST
 
 Sea ice tasks
 -------------
@@ -41,8 +63,8 @@ Sea ice tasks
 .. autosummary::
    :toctree: generated/
 
-   modelvsobs.seaice_modelvsobs
-   timeseries.seaice_timeseries
+   ClimatologyMapSeaIce
+   TimeSeriesSeaIce
 
 
 Configuration
@@ -86,12 +108,27 @@ Climatology
 .. autosummary::
    :toctree: generated/
 
-   climatology.compute_monthly_climatology
-   climatology.compute_seasonal_climatology
-   climatology.get_mpas_climatology_file_names
-   climatology.get_observation_climatology_file_names
-   climatology.write_mpas_mapping_file
-   climatology.write_observations_mapping_file
+   get_lat_lon_comparison_descriptor
+   get_remapper
+   get_mpas_climatology_file_names
+   get_observation_climatology_file_names
+   compute_monthly_climatology
+   compute_climatology
+   cache_climatologies
+   update_start_end_year
+   add_years_months_days_in_month
+   remap_and_write_climatology
+
+
+Time Series
+-----------
+.. currentmodule:: mpas_analysis.shared.time_series
+
+.. autosummary::
+   :toctree: generated/
+
+    cache_time_series
+
 
 Interpolation
 -------------
@@ -100,11 +137,17 @@ Interpolation
 .. autosummary::
    :toctree: generated/
 
-   interpolate.build_remap_weights
-   interpolate.remap
-   scrip.mpas_file_to_scrip
-   scrip.lat_lon_file_to_scrip
-   scrip.lat_lon_array_to_scrip
+   Remapper
+
+.. currentmodule:: mpas_analysis.shared.grid
+
+.. autosummary::
+   :toctree: generated/
+
+   MpasMeshDescriptor
+   LatLonGridDescriptor
+   ProjectionGridDescriptor
+
 
 Namelist and Streams Files
 --------------------------
@@ -130,14 +173,17 @@ Namelist and Streams Files
 
 I/O Utilities
 -------------
-.. currentmodule:: mpas_analysis.shared
+.. currentmodule:: mpas_analysis.shared.io
 
 .. autosummary::
    :toctree: generated/
 
-   io.utility.paths
-   io.utility.make_directories
-   io.utility.build_config_full_path
+   utility.paths
+   utility.make_directories
+   utility.build_config_full_path
+   utility.check_path_exists
+   write_netcdf
+
 
 Plotting
 --------
@@ -146,14 +192,16 @@ Plotting
 .. autosummary::
    :toctree: generated/
 
-   plotting.nino34_spectra_plot
-   plotting.nino34_timeseries_plot
    plotting.timeseries_analysis_plot
    plotting.timeseries_analysis_plot_polar
    plotting.plot_polar_comparison
    plotting.plot_global_comparison
+   plotting.plot_1D
    plotting.plot_vertical_section
    plotting.setup_colormap
+   plotting.plot_size_y_axis
+   plotting.plot_xtick_format
+
 
 Timekeeping
 -----------
