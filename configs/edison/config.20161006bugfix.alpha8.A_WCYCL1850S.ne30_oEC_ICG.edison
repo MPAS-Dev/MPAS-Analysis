@@ -27,6 +27,11 @@ mpasMeshName = EC60to30
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /global/project/projectdirs/acme/www/USERNAME/RUNNAME
+htmlSubdirectory = html
+
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
@@ -133,7 +138,7 @@ baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.
 polarPlot = False
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
+## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 maxChunkSize = 1000
 
