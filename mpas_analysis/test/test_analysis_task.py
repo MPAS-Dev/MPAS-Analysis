@@ -75,8 +75,14 @@ class TestAnalysisTask(TestCase):
                 'climatologyMapMLD': ['climatology', 'horizontalMap', 'mld'],
                 'climatologyMapSSS': ['climatology', 'horizontalMap', 'sss'],
                 'timeSeriesSeaIceAreaVol': ['timeSeries'],
-                'climatologyMapSeaIceConcThick': ['climatology',
-                                                  'horizontalMap']}
+                'climatologyMapSeaIceConcNH': ['climatology',
+                                               'horizontalMap'],
+                'climatologyMapSeaIceConcSH': ['climatology',
+                                               'horizontalMap'],
+                'climatologyMapSeaIceThickNH': ['climatology',
+                                                'horizontalMap'],
+                'climatologyMapSeaIceThickSH': ['climatology',
+                                                'horizontalMap']}
 
         # test 'all'
         expectedResults = {}
