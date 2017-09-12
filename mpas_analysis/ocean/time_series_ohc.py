@@ -66,7 +66,7 @@ class TimeSeriesOHC(AnalysisTask):
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(TimeSeriesOHC, self).setup_and_check()
 
         config = self.config
@@ -81,8 +81,7 @@ class TimeSeriesOHC(AnalysisTask):
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        self.streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        self.streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = self.config.get('timeSeries', 'startDate')
         self.endDate = self.config.get('timeSeries', 'endDate')
         self.inputFiles = self.historyStreams.readpath(
@@ -166,17 +165,23 @@ class TimeSeriesOHC(AnalysisTask):
 
         # Load data
         print '  Load ocean data...'
-        variableList = ['avgLayerTemperature',
-                        'sumLayerMaskValue',
-                        'avgLayerArea',
-                        'avgLayerThickness']
+        avgTempVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature'
+        sumMaskVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue'
+        avgAreaVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerArea'
+        avgThickVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerThickness'
+        variableList = [avgTempVarName, sumMaskVarName, avgAreaVarName,
+                        avgThickVarName]
         ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
+                                    timeVariableName=['xtime_startMonthly',
+                                                      'xtime_endMonthly'],
                                     variableList=variableList,
-                                    variableMap=self.variableMap,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
@@ -201,18 +206,17 @@ class TimeSeriesOHC(AnalysisTask):
                 calendar=calendar,
                 config=config,
                 simulationStartTime=simulationStartTime,
-                timeVariableName='Time',
-                variableList=['avgLayerTemperature'],
-                variableMap=self.variableMap,
+                timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
+                variableList=[avgTempVarName],
                 startDate=startDateFirstYear,
                 endDate=endDateFirstYear)
 
             dsFirstYear = \
                 dsFirstYear.isel(nOceanRegionsTmp=regionIndicesToPlot)
 
-            firstYearAvgLayerTemperature = dsFirstYear.avgLayerTemperature
+            firstYearAvgLayerTemperature = dsFirstYear[avgTempVarName]
         else:
-            firstYearAvgLayerTemperature = ds.avgLayerTemperature
+            firstYearAvgLayerTemperature = ds[avgTempVarName]
             firstYear = timeStart.year
 
         timeStartFirstYear = date_to_days(year=firstYear, month=1, day=1,
@@ -229,7 +233,7 @@ class TimeSeriesOHC(AnalysisTask):
 
         print '  Compute temperature anomalies...'
 
-        ds['avgLayTemperatureAnomaly'] = (ds.avgLayerTemperature -
+        ds['avgLayTemperatureAnomaly'] = (ds[avgTempVarName] -
                                           firstYearAvgLayerTemperature)
 
         yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
@@ -348,8 +352,15 @@ class TimeSeriesOHC(AnalysisTask):
 
         dsLocal = self.ds.isel(Time=timeIndices)
 
-        dsLocal['ohc'] = rho*cp*dsLocal.sumLayerMaskValue * \
-            dsLocal.avgLayerArea * dsLocal.avgLayerThickness * \
+        sumMaskVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue'
+        avgAreaVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerArea'
+        avgThickVarName = \
+            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerThickness'
+
+        dsLocal['ohc'] = rho*cp*dsLocal[sumMaskVarName] * \
+            dsLocal[avgAreaVarName] * dsLocal[avgThickVarName] * \
             dsLocal.avgLayTemperatureAnomaly
         dsLocal.ohc.attrs['units'] = 'J'
         dsLocal.ohc.attrs['description'] = 'Ocean heat content in each region'

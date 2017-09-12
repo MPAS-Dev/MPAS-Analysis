@@ -70,7 +70,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(MeridionalHeatTransport, self).setup_and_check()
 
         config = self.config
@@ -85,8 +85,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
         #   First a list necessary for the MHT climatology
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = config.get('climatology', 'startDate')
         self.endDate = config.get('climatology', 'endDate')
         self.inputFiles = \
@@ -181,8 +180,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Then we will need to add another section for regions with a loop
         # over number of regions.
         ######################################################################
-        variableList = ['avgMeridionalHeatTransportLat',
-                        'avgMeridionalHeatTransportLatZ']
+        variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
+                        'timeMonthly_avg_meridionalHeatTransportLatZ']
 
         print '\n  Compute and plot global meridional heat transport'
 
@@ -202,9 +201,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             calendar=self.calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
             variableList=variableList,
-            variableMap=self.variableMap,
             startDate=self.startDate,
             endDate=self.endDate)
 
@@ -225,7 +223,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         print '   Plot global MHT...'
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
-        y = annualClimatology.avgMeridionalHeatTransportLat
+        y = annualClimatology.timeMonthly_avg_meridionalHeatTransportLat
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
@@ -263,8 +261,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Plot 2D MHT (zonally integrated)
 
         # normalize 2D MHT by layer thickness
-        MHTLatZ = \
-            annualClimatology.avgMeridionalHeatTransportLatZ.values.T[:, :]
+        MHTLatZVar = \
+            annualClimatology.timeMonthly_avg_meridionalHeatTransportLatZ
+        MHTLatZ = MHTLatZVar.values.T[:, :]
         for k in range(nVertLevels):
             MHTLatZ[k, :] = MHTLatZ[k, :]/refLayerThickness[k]
 

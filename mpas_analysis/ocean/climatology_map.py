@@ -63,7 +63,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(ClimatologyMapOcean, self).setup_and_check()
 
         self.check_analysis_enabled(
@@ -74,8 +74,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         # reading only those that are between the start and end dates
         self.startDate = self.config.get('climatology', 'startDate')
         self.endDate = self.config.get('climatology', 'endDate')
-        streamName = \
-            self.historyStreams.find_stream(self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
                 streamName, startDate=self.startDate, endDate=self.endDate,
                 calendar=self.calendar)
@@ -126,16 +125,16 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         comparisonDescriptor = get_lat_lon_comparison_descriptor(config)
 
-        varList = [fieldName]
+        varList = [self.mpasFieldName]
 
         ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
+                                    timeVariableName=['xtime_startMonthly',
+                                                      'xtime_endMonthly'],
                                     variableList=varList,
                                     iselValues=self.iselValues,
-                                    variableMap=self.variableMap,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
@@ -201,7 +200,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
                 remappedClimatology = xr.open_dataset(remappedFileName)
 
-            modelOutput = remappedClimatology[fieldName].values
+            modelOutput = remappedClimatology[self.mpasFieldName].values
             lon = remappedClimatology['lon'].values
             lat = remappedClimatology['lat'].values
 
@@ -332,7 +331,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(ClimatologyMapSST, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
@@ -343,6 +342,7 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
             "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
                 observationsDirectory)
 
+        self.mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         self.iselValues = {'nVertLevels': 0}
 
         self.obsFieldName = 'SST'
@@ -441,7 +441,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(ClimatologyMapSSS, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
@@ -452,6 +452,7 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
             '{}/Aquarius_V3_SSS_Monthly.nc'.format(
                 observationsDirectory)
 
+        self.mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
         self.iselValues = {'nVertLevels': 0}
 
         self.obsFieldName = 'SSS'
@@ -533,7 +534,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(ClimatologyMapMLD, self).setup_and_check()
 
         observationsDirectory = build_config_full_path(
@@ -544,6 +545,7 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
             '{}/holtetalley_mld_climatology.nc'.format(
                 observationsDirectory)
 
+        self.mpasFieldName = 'timeMonthly_avg_dThreshMLD'
         self.iselValues = None
 
         self.obsFieldName = 'mld_dt_mean'

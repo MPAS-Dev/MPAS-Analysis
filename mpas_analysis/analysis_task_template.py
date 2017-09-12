@@ -16,9 +16,7 @@ Instructions for creating a new analysis task:
 3. modify config.default (and possibly any machine-specific config files in
    configs/<machine>)
 4. import new analysis task in mpas_analysis/<component>/__init__.py
-5. if necessary, update variable maps in
-   mpas_analysis/shared/variable_namelist_stream_maps/<component>_maps.py
-6. add new analysis task to run_analysis.py under build_analysis_list:
+5. add new analysis task to run_analysis.py under build_analysis_list:
       analyses.append(<component>.MyTask(config, myArg='argValue'))
    This will add a new object of the MyTask class to a list of analysis tasks
    created in build_analysis_list.  Later on in run_analysis, it will first
@@ -156,7 +154,7 @@ class MyTask(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         # Here, change MyTask to the name of your task but don't make any other
         # changes
         # Again, super(MyTask, self).<method>() is a way of calling
@@ -200,8 +198,7 @@ class MyTask(AnalysisTask):  # {{{
 
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         startDate = self.config.get('climatology', 'startDate')
         endDate = self.config.get('climatology', 'endDate')
         self.inputFiles = self.historyStreams.readpath(streamName,

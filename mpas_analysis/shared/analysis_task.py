@@ -12,12 +12,6 @@ import warnings
 from .io import NameList, StreamsFile
 from .io.utility import build_config_full_path, make_directories
 
-from .variable_namelist_stream_maps.ocean_maps import oceanNamelistMap, \
-    oceanStreamMap, oceanVariableMap
-
-from .variable_namelist_stream_maps.sea_ice_maps import seaIceNamelistMap, \
-    seaIceStreamMap, seaIceVariableMap
-
 
 class AnalysisTask(object):  # {{{
     '''
@@ -82,12 +76,6 @@ class AnalysisTask(object):  # {{{
                 history directory (most streams other than restart files)
             self.calendar : the name of the calendar ('gregorian' or
                 'gregoraian_noleap')
-            self.namelistMap : a map between names of namelist options used by
-                MPAS-Analysis and those in various MPAS versions
-            self.streamMap : a map between names of streams used by
-                MPAS-Analysis and those in various MPAS versions
-            self.variableMap : a map between names of variables within streams
-                used by MPAS-Analysis and those in various MPAS versions
 
         Individual tasks (children classes of this base class) should first
         call this method to perform basic setup, then, check whether the
@@ -130,19 +118,6 @@ class AnalysisTask(object):  # {{{
         self.calendar = self.namelist.get('config_calendar_type')
 
         make_directories(self.plotsDirectory)
-
-        if self.componentName == 'ocean':
-            self.namelistMap = oceanNamelistMap
-            self.streamMap = oceanStreamMap
-            self.variableMap = oceanVariableMap
-        elif self.componentName == 'seaIce':
-            self.namelistMap = seaIceNamelistMap
-            self.streamMap = seaIceStreamMap
-            self.variableMap = seaIceVariableMap
-        else:
-            self.namelistMap = None
-            self.streamMap = None
-            self.variableMap = None
 
         # set the start and end dates for each type of analysis
         for tag in ['climatology', 'timeSeries', 'index']:
@@ -262,11 +237,7 @@ class AnalysisTask(object):  # {{{
         '''
 
         try:
-            if self.namelistMap is None:
-                optionName = analysisOptionName
-            else:
-                optionName = self.namelist.find_option(
-                    self.namelistMap[analysisOptionName])
+            optionName = analysisOptionName
             enabled = self.namelist.getbool(optionName)
         except ValueError:
             enabled = default

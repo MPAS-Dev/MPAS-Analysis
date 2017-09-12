@@ -68,7 +68,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(TimeSeriesSeaIce, self).setup_and_check()
 
         self.check_analysis_enabled(
@@ -82,8 +82,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         # get a list of timeSeriesStatsMonthly output files from the streams
         # file, reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = config.get('timeSeries', 'startDate')
         self.endDate = config.get('timeSeries', 'endDate')
         self.inputFiles = \
@@ -174,9 +173,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             calendar=calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
-            variableList=['iceAreaCell', 'iceVolumeCell'],
-            variableMap=self.variableMap,
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
+            variableList=['timeMonthly_avg_iceAreaCell',
+                          'timeMonthly_avg_iceVolumeCell'],
             startDate=self.startDate,
             endDate=self.endDate)
 
@@ -479,8 +478,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         dsLocal = dsLocal.where(mask)
 
         dsAreaSum = (dsLocal*self.dsMesh.areaCell).sum('nCells')
-        dsAreaSum = dsAreaSum.rename({'iceAreaCell': 'iceArea',
-                                      'iceVolumeCell': 'iceVolume'})
+        dsAreaSum = dsAreaSum.rename(
+                {'timeMonthly_avg_iceAreaCell': 'iceArea',
+                 'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
         dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
                                      self.dsMesh.areaCell.sum('nCells'))
 
