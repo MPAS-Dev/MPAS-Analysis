@@ -113,7 +113,9 @@ timeCacheSubdirectory = timecache
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
@@ -489,53 +491,146 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
-[climatologyMapSeaIceConcThick]
+[climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
-## sea ice concentration and thickness against reference model results and
-## observations
+## sea ice concentration against reference model results and observations
+## in the northern hemisphere (NH)
 
 # colormap for model/observations
-colormapNameConcResultWinter = inferno
-colormapNameConcResultSummer = inferno
-colormapNameThickResultNH = inferno
-colormapNameThickResultSH = inferno
+colormapNameResult = inferno
 # color indices into colormapName for filled contours
-colormapIndicesConcResultWinter = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesConcResultSummer = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesThickResultNH = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesThickResultSH = [20, 80, 110, 140, 170, 200, 230, 255]
-# colormap levels/values for contour boundaries for:
-# concentration in winter and summer
-colorbarLevelsConcResultWinter = [0.15, 0.4, 0.7, 0.9, 0.94, 0.96, 0.98, 0.99, 1]
-colorbarLevelsConcResultSummer = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
-# thickness in the northern and southern hemispheres
-colorbarLevelsThickResultNH = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
-colorbarLevelsThickResultSH = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
 
 # colormap for differences
-colormapNameConcDifferenceWinter = RdBu_r
-colormapNameConcDifferenceSummer = RdBu_r
-colormapNameThickDifferenceNH = RdBu_r
-colormapNameThickDifferenceSH = RdBu_r
+colormapNameDifference = RdBu_r
 # color indices into colormapName for filled contours
-colormapIndicesConcDifferenceWinter = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesConcDifferenceSummer = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesThickDifferenceNH = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesThickDifferenceSH = [0, 40, 80, 127, 127, 170, 210, 255]
-# colormap levels/values for contour boundaries for:
-# concentration in winter and summer
-colorbarLevelsConcDifferenceWinter = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
-colorbarLevelsConcDifferenceSummer = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
-# thickness in the northern and southern hemispheres
-colorbarLevelsThickDifferenceNH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
-colorbarLevelsThickDifferenceSH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['JFM', 'JAS']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
-minimumLatitudeNH = 50
-referenceLongitudeNH = 0
-# reference lat/lon for sea ice plots in the southern hemisphere
-minimumLatitudeSH = -50
-referenceLongitudeSH = 180
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+# arrange subplots vertically?
+vertical = False
+
+[climatologyMapSeaIceConcSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice concentration against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['DJF', 'JJA']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+# arrange subplots vertically?
+vertical = False
+
+[climatologyMapSeaIceThickNH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the northern hemisphere (NH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
+
+# arrange subplots vertically?
+vertical = False
+
+[climatologyMapSeaIceThickSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 127, 127, 170, 210, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
 
 # arrange subplots vertically?
 vertical = False

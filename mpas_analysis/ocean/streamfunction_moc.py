@@ -17,7 +17,8 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology.climatology import update_start_end_year, \
+from ..shared.climatology.climatology import \
+    update_climatology_bounds_from_file_names, \
     cache_climatologies
 
 from ..shared.analysis_task import AnalysisTask
@@ -112,8 +113,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
-        self.startYearClimo = config.getint('climatology', 'startYear')
-        self.endYearClimo = config.getint('climatology', 'endYear')
+        changed, self.startYearClimo, self.endYearClimo, self.startDateClimo, \
+            self.endDateClimo = update_climatology_bounds_from_file_names(
+                    self.inputFilesClimo, self.config)
 
         #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
         self.startDateTseries = config.get('timeSeries', 'startDate')
@@ -280,9 +282,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             endDate=self.endDateClimo,
             chunking=chunking)
 
-        # update the start and end year in config based on the real extend of
-        # ds
-        update_start_end_year(ds, config, self.calendar)
         self.startYearClimo = config.getint('climatology', 'startYear')
         self.endYearClimo = config.getint('climatology', 'endYear')
 

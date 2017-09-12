@@ -31,7 +31,8 @@ from ..shared.timekeeping.utility import get_simulation_start_time
 from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_file_names, \
     get_observation_climatology_file_names, \
-    compute_climatology, cache_climatologies, update_start_end_year, \
+    compute_climatology, cache_climatologies, \
+    update_climatology_bounds_from_file_names, \
     remap_and_write_climatology
 
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
@@ -84,6 +85,9 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
+        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
+            update_climatology_bounds_from_file_names(self.inputFiles,
+                                                      self.config)
         # }}}
 
     def run(self):  # {{{
@@ -134,9 +138,6 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                     variableMap=self.variableMap,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
-
-        changed, startYear, endYear = update_start_end_year(ds, config,
-                                                            calendar)
 
         mpasDescriptor = MpasMeshDescriptor(
             restartFileName, meshName=config.get('input', 'mpasMeshName'))
@@ -259,9 +260,10 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
             outFileName = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
                     self.plotsDirectory, self.outFileLabel, mainRunName,
-                    months, startYear, endYear)
+                    months, self.startYear, self.endYear)
             title = '{} ({}, years {:04d}-{:04d})'.format(
-                    self.fieldNameInTitle, months, startYear, endYear)
+                    self.fieldNameInTitle, months, self.startYear,
+                    self.endYear)
             plot_global_comparison(config,
                                    lonTarg,
                                    latTarg,

@@ -6,10 +6,6 @@ files.
 Authors
 -------
 Phillip Wolfram, Xylar Asay-Davis
-
-Last modified
--------------
-04/01/2017
 """
 
 from lxml import etree
@@ -18,15 +14,16 @@ import os.path
 
 from ..containers import ReadOnlyDict
 from .utility import paths
-from ..timekeeping.utility import string_to_datetime, string_to_relative_delta
+from ..timekeeping.utility import string_to_datetime
 
 
 def convert_namelist_to_dict(fname, readonly=True):
     """
     Converts a namelist file to key-value pairs in dictionary.
 
+    Authors
+    -------
     Phillip J Wolfram
-    10/22/2016
     """
     # form dictionary
     nml = dict()
@@ -52,10 +49,6 @@ class NameList:
     Authors
     -------
     Phillip Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/06/2017
     """
 
     # constructor
@@ -128,18 +121,14 @@ class NameList:
         Authors
         -------
         Xylar Asay-Davis
-
-        Last modified
-        -------------
-        04/01/2017
         """
 
         for optionName in possibleOptions:
             if optionName in self.nml.keys():
                 return optionName
 
-        raise ValueError('None of the possible options {} found in namelist file {}.'.format(
-            possibleOptions, self.fname))
+        raise ValueError('None of the possible options {} found in namelist '
+                         'file {}.'.format(possibleOptions, self.fname))
 
     # }}}
 
@@ -149,8 +138,9 @@ class StreamsFile:
     Class to read in streams configuration file, provdies
     read and write functionality
 
+    Authors
+    -------
     Phillip Wolfram, Xylar Asay-Davis
-    Last modified: 11/02/2016
     """
 
     def __init__(self, fname, streamsdir=None):
@@ -224,10 +214,6 @@ class StreamsFile:
         Author
         ------
         Xylar Asay-Davis
-
-        Last modified
-        -------------
-        02/04/2017
         """
         template = self.read(streamName, 'filename_template')
         if template is None:
@@ -300,8 +286,9 @@ class StreamsFile:
         Returns True if the streams file has a stream with the given
         streamName, otherwise returns False.
 
+        Authors
+        -------
         Xylar Asay-Davis
-        Last modified: 12/04/2016
         """
         for stream in self.root:
             # assumes streamname is unique in XML
@@ -333,16 +320,12 @@ class StreamsFile:
         Authors
         -------
         Xylar Asay-Davis
-
-        Last modified
-        -------------
-        04/01/2017
         """
         for streamName in possibleStreams:
             if self.has_stream(streamName):
                 return streamName
 
-        raise ValueError('None of the possible streams {} found in streams file {}.'.format(
-            possibleStreams, self.fname))
+        raise ValueError('None of the possible streams {} found in streams '
+                         'file {}.'.format(possibleStreams, self.fname))
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
