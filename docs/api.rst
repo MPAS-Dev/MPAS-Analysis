@@ -63,7 +63,8 @@ Sea ice tasks
 .. autosummary::
    :toctree: generated/
 
-   ClimatologyMapSeaIce
+   ClimatologyMapSeaIceConc
+   ClimatologyMapSeaIceThick
    TimeSeriesSeaIce
 
 
