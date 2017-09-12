@@ -33,7 +33,8 @@ class TestAnalysisTask(TestCase):
         # a list of analyses to generate.  Valid names are:
         #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
         #   'climatologyMapSSS', 'climatologyMapMLD', 'timeSeriesSeaIceAreaVol',
-        #   'climatologyMapSeaIceConcThick'
+        #   'climatologyMapSeaIceConcNH', 'climatologyMapSeaIceConcSH', 
+        #   'climatologyMapSeaIceThickNH', 'climatologyMapSeaIceThickSH'
         # the following shortcuts exist:
         #   'all' -- all analyses will be run
         #   'all_timeSeries' -- all time-series analyses will be run
@@ -59,7 +60,10 @@ class TestAnalysisTask(TestCase):
                  'climatologyMapMLD': 'ocean',
                  'climatologyMapSSS': 'ocean',
                  'timeSeriesSeaIceAreaVol': 'seaIce',
-                 'climatologyMapSeaIceConcThick': 'seaIce'}
+                 'climatologyMapSeaIceConcNH': 'seaIce',
+                 'climatologyMapSeaIceConcSH': 'seaIce',
+                 'climatologyMapSeaIceThickNH': 'seaIce',
+                 'climatologyMapSeaIceThickSH': 'seaIce'}
 
         tags = {'timeSeriesOHC': ['timeSeries', 'ohc'],
                 'timeSeriesSST': ['timeSeries', 'sst'],
