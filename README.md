@@ -20,6 +20,7 @@ This analysis repository presumes that the following python packages are availab
  * lxml
  * nco >= 4.5.4
  * pyproj
+ * pillow
 
 You can easily install them via the conda command:
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import xarray as xr
 import numpy as np
 import netCDF4
@@ -24,6 +25,7 @@ from ..shared.climatology.climatology import \
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.time_series import cache_time_series
+from ..shared.html import write_image_xml
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{
@@ -134,6 +136,28 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        mainRunName = config.get('runs', 'mainRunName')
+
+        regions = ['Global'] + config.getExpression(self.sectionName,
+                                                    'regionNames')
+
+        for region in regions:
+            filePrefix = 'moc{}_{}_years{:04d}-{:04d}'.format(
+                    region, mainRunName,
+                    self.startYearClimo, self.endYearClimo)
+
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[region] = filePrefix
+
+        filePrefix = 'mocTimeseries_{}'.format(mainRunName)
+        self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                    filePrefix))
+        self.filePrefixes['timeSeries'] = filePrefix
+
         # }}}
 
     def run(self):  # {{{
@@ -192,9 +216,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                      region, self.startYearClimo,
                      self.endYearClimo,
                      mainRunName)
-            figureName = '{}/moc{}_{}_years{:04d}-{:04d}.png'.format(
-                          self.plotsDirectory, region, mainRunName,
-                          self.startYearClimo, self.endYearClimo)
+            filePrefix = self.filePrefixes[region]
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             contourLevels = \
                 config.getExpression(self.sectionName,
                                      'contourLevels{}'.format(region),
@@ -210,19 +233,46 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                   colorbarLevels, contourLevels, colorbarLabel,
                                   title, xLabel, yLabel, figureName)
 
+            caption = '{} Meridional Overturning Streamfunction'.format(region)
+            write_image_xml(
+                config=config,
+                filePrefix=filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup='Meridional Overturning Streamfunction',
+                groupLink='moc',
+                thumbnailDescription=region,
+                imageDescription=caption,
+                imageCaption=caption)  # }}}
+
         # Plot time series
         print '   Plot time series of max Atlantic MOC at 26.5N...'
         xLabel = 'Time [years]'
         yLabel = '[Sv]'
         title = 'Max Atlantic MOC at $26.5^\circ$N\n {}'.format(mainRunName)
-        figureName = '{}/mocTimeseries_{}.png'.format(self.plotsDirectory,
-                                                      mainRunName)
+        filePrefix = self.filePrefixes['timeSeries']
+
+        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         timeseries_analysis_plot(config, [dsMOCTimeSeries.mocAtlantic26],
                                  movingAveragePoints, title,
                                  xLabel, yLabel, figureName,
                                  lineStyles=['k-'], lineWidths=[1.5],
                                  calendar=self.calendar)
+
+        caption = u'Time Series of maximum Meridional Overturning ' \
+                  u'Circulation at 26.5°N'
+        write_image_xml(
+            config=config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup='Meridional Overturning Streamfunction',
+            groupLink='moc',
+            thumbnailDescription='Time Series',
+            imageDescription=caption,
+            imageCaption=caption)  # }}}
+
         # }}}
 
     def _load_mesh(self):  # {{{

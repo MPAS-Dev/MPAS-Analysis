@@ -108,6 +108,9 @@ mpasRemappedClimSubdirectory = clim/mpas/remapped
 mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
 timeCacheSubdirectory = timecache
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
@@ -354,6 +357,9 @@ depthLimGlobal = [-1000, 0]
 
 # compare to observations?
 compareWithObservations = True
+
+# plot the vertical section of MHT?
+plotVerticalSection = False
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
@@ -662,3 +668,12 @@ axisFontSize = 16
 titleFontSize = 20
 titleFontColor = black
 titleFontWeight = normal
+
+# the dots per inch of output figures
+dpi = 200
+
+[html]
+## options related to generating a webpage to display the analysis
+
+# generate the webpage?
+generate = True

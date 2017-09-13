@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import xarray as xr
 import pandas as pd
@@ -17,6 +18,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time
 from ..shared.plot.plotting import plot_xtick_format, plot_size_y_axis
 
 from ..shared.analysis_task import AnalysisTask
+from ..shared.html import write_image_xml
 
 
 class IndexNino34(AnalysisTask):  # {{{
@@ -80,6 +82,14 @@ class IndexNino34(AnalysisTask):  # {{{
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
+
+        mainRunName = self.config.get('runs', 'mainRunName')
+
+        self.xmlFileNames = []
+        for filePrefix in ['NINO34_{}'.format(mainRunName),
+                           'NINO34_spectra_{}'.format(mainRunName)]:
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
 
         # }}}
 
@@ -182,6 +192,9 @@ class IndexNino34(AnalysisTask):  # {{{
                                      figureName, linewidths=2,
                                      calendar=calendar)
 
+        self._write_xml(filePrefix='NINO34_{}'.format(mainRunName),
+                        plotType='Time Series')
+
         figureName = '{}/NINO34_spectra_{}.png'.format(self.plotsDirectory,
                                                        mainRunName)
         self._nino34_spectra_plot(config, f, spectra, conf95, conf99, redNoise,
@@ -190,6 +203,10 @@ class IndexNino34(AnalysisTask):  # {{{
                                   conf9930, redNoise30,
                                   'NINO3.4 power spectrum', modelTitle,
                                   obsTitle, figureName, linewidths=2)
+
+        self._write_xml(filePrefix='NINO34_spectra_{}'.format(mainRunName),
+                        plotType='Spectra')
+
     # }}}
 
     def _compute_nino34_index(self, regionSST, calendar):  # {{{
@@ -386,7 +403,7 @@ class IndexNino34(AnalysisTask):  # {{{
                              title, modelTitle, obsTitle,
                              fileout, linewidths, xlabel='Period (years)',
                              ylabel=r'Power ($^o$C / cycles mo$^{-1}$)',
-                             titleFontSize=None, figsize=(9, 21), dpi=300):
+                             titleFontSize=None, figsize=(9, 21), dpi=None):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -453,13 +470,16 @@ class IndexNino34(AnalysisTask):  # {{{
             the size of the figure in inches
 
         dpi : int, optional
-            the number of dots per inch of the figure
+            the number of dots per inch of the figure, taken from section
+            ``plot`` option ``dpi`` in the config file by default
 
         Author
         ------
-        Luke Van Roekel
+        Luke Van Roekel, Xylar Asay-Davis
         """
 
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if titleFontSize is None:
@@ -548,7 +568,7 @@ class IndexNino34(AnalysisTask):  # {{{
                                 title, modelTitle, obsTitle, fileout,
                                 linewidths, calendar, xlabel='Time [years]',
                                 ylabel='[$^\circ$C]', titleFontSize=None,
-                                figsize=(12, 28), dpi=300, maxXTicks=20):
+                                figsize=(12, 28), dpi=None, maxXTicks=20):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -593,7 +613,8 @@ class IndexNino34(AnalysisTask):  # {{{
             the size of the figure in inches
 
         dpi : int, optional
-            the number of dots per inch of the figure
+            the number of dots per inch of the figure, taken from section
+            ``plot`` option ``dpi`` in the config file by default
 
         maxXTicks : int, optional
             the maximum number of tick marks that will be allowed along the x
@@ -604,6 +625,8 @@ class IndexNino34(AnalysisTask):  # {{{
         ------
         Luke Van Roekel
         """
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if titleFontSize is None:
@@ -701,6 +724,19 @@ class IndexNino34(AnalysisTask):  # {{{
         if ylabel is not None:
             plt.ylabel(ylabel, **axis_font)
         # }}}
+
+    def _write_xml(self, filePrefix, plotType):  # {{{
+        caption = u'{} of El Niño 3.4 Climate Index'.format(plotType)
+        write_image_xml(
+            config=self.config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup=u'El Niño 3.4 Climate Index',
+            groupLink='nino34',
+            thumbnailDescription=plotType,
+            imageDescription=caption,
+            imageCaption=caption)  # }}}
 
 # }}}
 

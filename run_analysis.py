@@ -18,11 +18,12 @@ import warnings
 import subprocess
 import time
 
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
+
+from mpas_analysis.shared.html import generate_html
 
 
 def update_generate(config, generate):  # {{{
@@ -97,7 +98,8 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     processes = {}
     logs = {}
     for taskName in taskNames:
-        args = commandPrefix + [thisFile, '--generate', taskName] + configFiles
+        args = commandPrefix + \
+            [thisFile, '--subtask', '--generate', taskName] + configFiles
 
         logFileName = '{}/{}.log'.format(logsDirectory, taskName)
 
@@ -172,22 +174,22 @@ def build_analysis_list(config):  # {{{
     analyses = []
 
     # Ocean Analyses
+
+    analyses.append(ocean.ClimatologyMapMLD(config))
+    analyses.append(ocean.ClimatologyMapSST(config))
+    analyses.append(ocean.ClimatologyMapSSS(config))
     analyses.append(ocean.TimeSeriesOHC(config))
     analyses.append(ocean.TimeSeriesSST(config))
-    analyses.append(ocean.IndexNino34(config))
     analyses.append(ocean.MeridionalHeatTransport(config))
     analyses.append(ocean.StreamfunctionMOC(config))
-
-    analyses.append(ocean.ClimatologyMapSST(config))
-    analyses.append(ocean.ClimatologyMapMLD(config))
-    analyses.append(ocean.ClimatologyMapSSS(config))
+    analyses.append(ocean.IndexNino34(config))
 
     # Sea Ice Analyses
-    analyses.append(sea_ice.TimeSeriesSeaIce(config))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
+    analyses.append(sea_ice.TimeSeriesSeaIce(config))
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []
@@ -253,6 +255,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--subtask", dest="subtask", action='store_true',
+                        help="If this is a subtask when running parallel "
+                             "tasks")
     parser.add_argument("-g", "--generate", dest="generate",
                         help="A list of analysis modules to generate "
                         "(nearly identical generate option in config file).",
@@ -293,5 +298,8 @@ if __name__ == "__main__":
         run_analysis(config, analyses)
     else:
         run_parallel_tasks(config, analyses, configFiles, parallelTaskCount)
+
+    if not args.subtask:
+        generate_html(config, analyses)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

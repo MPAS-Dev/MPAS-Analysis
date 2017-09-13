@@ -1,0 +1,153 @@
+body {
+    background:#EEE;
+    font-family:"myriad-pro","Myriad Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:18px;
+    /*line-height:26px;*/
+    color:#282B30;
+    text-rendering:optimizeLegibility;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    -moz-font-feature-settings:"liga","kern"
+}
+
+h2 {
+    display: block;
+    font-size: 1.5em;
+    -webkit-margin-before: 0.4em;
+    -webkit-margin-after: 0.4em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+
+/* unvisited link */
+a:link {
+    color: #282B30;
+    text-decoration: none;
+}
+
+/* visited link */
+a:visited {
+    color: #282B30;
+    text-decoration: none;
+}
+
+/* mouse over link */
+a:hover {
+    color: #4c525b;
+    text-decoration: none;
+}
+
+/* selected link */
+a:active {
+    color: #4c525b;
+    text-decoration: none;
+}
+
+.header {
+    clear: left;
+    text-align: center;
+    padding: 10px;
+}
+
+.content {
+    max-width:1024px;
+    margin:10px auto;
+}
+
+.logo {
+    float: right
+}
+
+div.gallery-title {
+    clear: left;
+    -webkit-padding-before: 1em;
+}
+
+div.gallery-link {
+    margin: 5px;
+    float: left;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+div.gallery-link:hover {
+    border: 1px solid #777;
+}
+
+div.desc {
+    padding: 10px;
+    text-align: center;
+}
+
+div.desc-small {
+    font-size:14px;
+    padding: 5px;
+    text-align: center;
+}
+
+
+.image-gallery {
+    width: 100%;
+    float: left;
+    -webkit-margin-after: 1em;
+}
+
+.image-gallery img {
+    border: 1px solid #ccc;
+}
+
+.image-gallery img:hover {
+    border: 1px solid #777;
+}
+
+.image-gallery figure {
+    display: block;
+    float: left;
+    margin: 0 5px 5px 0;
+}
+
+img.horiz {
+    width: auto;
+    height: 120px;
+}
+
+div.horiz {
+    width: auto;
+    height: 180px;
+}
+
+img.vert {
+    width: auto;
+    height: 320px;
+}
+
+div.vert {
+    width: auto;
+    height: 380px;
+}
+
+img.small {
+    width: 192px;
+    height: 144px;
+}
+
+div.small {
+    width: 192px;
+    height: 192px;
+}
+
+img.component {
+    width: 320px;
+    height: 240px;
+}
+
+div.component {
+    width: 320px;
+    height: 290px;
+}
+
+
+.image-gallery figcaption {
+    display: none;
+}

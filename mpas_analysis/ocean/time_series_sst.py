@@ -14,6 +14,7 @@ from ..shared.time_series import time_series
 
 from ..shared.io.utility import build_config_full_path, make_directories, \
     check_path_exists
+from ..shared.html import write_image_xml
 
 
 class TimeSeriesSST(AnalysisTask):
@@ -93,6 +94,22 @@ class TimeSeriesSST(AnalysisTask):
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
+        mainRunName = config.get('runs', 'mainRunName')
+        regions = config.getExpression('regions', 'regions')
+        regionIndicesToPlot = config.getExpression('timeSeriesSST',
+                                                   'regionIndicesToPlot')
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        regions = [regions[index] for index in regionIndicesToPlot]
+
+        for region in regions:
+            filePrefix = 'sst_{}_{}.png'.format(region, mainRunName)
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[region] = filePrefix
+
         return  # }}}
 
     def run(self):  # {{{
@@ -154,8 +171,6 @@ class TimeSeriesSST(AnalysisTask):
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
-        ds = ds.isel(nOceanRegions=regionIndicesToPlot)
-
         yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
         yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
         timeStart = date_to_days(year=yearStart, month=1, day=1,
@@ -194,18 +209,19 @@ class TimeSeriesSST(AnalysisTask):
                                               printProgress=True)
 
         print '  Make plots...'
-        for index, regionIndex in enumerate(regionIndicesToPlot):
+        for regionIndex in regionIndicesToPlot:
+            region = regions[regionIndex]
 
             title = plotTitles[regionIndex]
             title = 'SST, %s, %s (r-)' % (title, mainRunName)
             xLabel = 'Time [years]'
             yLabel = '[$^\circ$ C]'
 
-            SST = dsSST[varName].isel(nOceanRegions=index)
+            SST = dsSST[varName].isel(nOceanRegions=regionIndex)
 
-            figureName = '{}/sst_{}_{}.png'.format(self.plotsDirectory,
-                                                   regions[regionIndex],
-                                                   mainRunName)
+            filePrefix = self.filePrefixes[region]
+
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST
@@ -223,6 +239,20 @@ class TimeSeriesSST(AnalysisTask):
                                          title, xLabel, yLabel, figureName,
                                          lineStyles=['r-'], lineWidths=[1.2],
                                          calendar=calendar)
+
+            caption = 'Running Mean of {} Sea Surface Temperature'.format(
+                    region)
+            write_image_xml(
+                config=config,
+                filePrefix=filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup='Time Series',
+                groupLink='timeseries',
+                thumbnailDescription='{} SST'.format(region),
+                imageDescription=caption,
+                imageCaption=caption)
+
         # }}}
 
     def _compute_sst_part(self, timeIndices, firstCall):  # {{{

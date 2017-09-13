@@ -21,7 +21,7 @@ from ..shared.plot.plotting import plot_polar_comparison, \
 
 from ..shared.io.utility import build_config_full_path
 from ..shared.io import write_netcdf
-
+from ..shared.html import write_image_xml
 
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
@@ -74,6 +74,22 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         changed, self.startYear, self.endYear, self.startDate, self.endDate = \
             update_climatology_bounds_from_file_names(self.inputFiles,
                                                       self.config)
+
+        mainRunName = self.config.get('runs', 'mainRunName')
+
+        self.xmlFileNames = []
+
+        for info in self.obsAndPlotInfo:
+            season = info['season']
+            outFileLabel = info['outFileLabel']
+
+            filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
+                    outFileLabel, mainRunName,
+                    season, self.startYear, self.endYear)
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            info['filePrefix'] = filePrefix
+
         return  # }}}
 
     def run(self):  # {{{
@@ -272,14 +288,11 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
             startYear = self.startYear
             endYear = self.endYear
-            outFileLabel = info['outFileLabel']
             observationTitleLabel = info['observationTitleLabel']
-
+            filePrefix = info['filePrefix']
             title = '{} ({}, years {:04d}-{:04d})'.format(
                 self.fieldNameInTitle, season, startYear, endYear)
-            fileout = '{}/{}_{}_{}_years{:04d}-{:04d}.png'.format(
-                self.plotsDirectory, outFileLabel,
-                mainRunName, season, startYear, endYear)
+            fileout = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             plot_polar_comparison(
                 config,
                 lonTarg,
@@ -301,6 +314,22 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 diffTitle='Model-Observations',
                 cbarlabel=self.unitsLabel,
                 vertical=vertical)
+
+            galleryName = info['galleryName']
+            imageDescription = info['imageDescription']
+            imageCaption = info['imageCaption']
+            write_image_xml(
+                config,
+                filePrefix,
+                componentName='Sea Ice',
+                componentSubdirectory='sea_ice',
+                galleryGroup=self.galleryGroup,
+                groupSubtitle=self.groupSubtitle,
+                groupLink=self.groupLink,
+                gallery=galleryName,
+                thumbnailDescription=season,
+                imageDescription=imageDescription,
+                imageCaption=imageCaption)
         # }}}
     # }}}
 
@@ -363,15 +392,11 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
         -------
         Xylar Asay-Davis
         """
-        # first, call setup_and_check from the base class
-        # (ClimatologyMapSeaIce), which will perform some common setup,
-        # including storing:
-        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
-        #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapSeaIceConc, self).setup_and_check()
-
         hemisphere = self.hemisphere
+        if hemisphere == 'NH':
+            hemisphereLong = 'Northern'
+        else:
+            hemisphereLong = 'Southern'
 
         self.obsAndPlotInfo = []
         for prefix in self.observationPrefixes:
@@ -389,6 +414,17 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
                 localDict['outFileLabel'] = \
                     'iceconc{}{}'.format(prefix, hemisphere)
 
+                localDict['galleryName'] = \
+                    'Observations: SSM/I {}'.format(prefix)
+
+                localDict['imageDescription'] = \
+                    '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
+                    'Concentration'.format(season, hemisphereLong)
+
+                localDict['imageCaption'] = \
+                    '{}. <br> Observations: SSM/I {}'.format(
+                            localDict['imageDescription'], prefix)
+
                 self.obsAndPlotInfo.append(localDict)
 
         self.obsFieldName = 'AICE'
@@ -396,6 +432,20 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
         self.unitsLabel = 'fraction'
 
         self.maskValue = None
+
+        # variables for XML and webpages
+        self.galleryGroup = '{}-Hemisphere Sea-Ice Concentration'.format(
+                 hemisphereLong)
+        self.groupSubtitle = None
+        self.groupLink = '{}_conc'.format(hemisphere.lower())
+
+        # call setup_and_check from the base class
+        # (ClimatologyMapSeaIce), which will perform some common setup,
+        # including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        super(ClimatologyMapSeaIceConc, self).setup_and_check()
 
         # }}}
 
@@ -471,15 +521,12 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
         -------
         Xylar Asay-Davis
         """
-        # first, call setup_and_check from the base class
-        # (ClimatologyMapSeaIce), which will perform some common setup,
-        # including storing:
-        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
-        #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
-        super(ClimatologyMapSeaIceThick, self).setup_and_check()
-
         hemisphere = self.hemisphere
+
+        if hemisphere == 'NH':
+            hemisphereLong = 'Northern'
+        else:
+            hemisphereLong = 'Southern'
 
         self.obsAndPlotInfo = []
         for season in self.seasons:
@@ -492,6 +539,14 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
             localDict['observationTitleLabel'] = 'Observations (ICESat)'
             localDict['outFileLabel'] = 'icethick{}'.format(hemisphere)
 
+            localDict['galleryName'] = 'Observations: ICESat'
+
+            localDict['imageDescription'] = \
+                '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
+                'Thickness.'.format(season, hemisphereLong)
+
+            localDict['imageCaption'] = localDict['imageDescription']
+
             self.obsAndPlotInfo.append(localDict)
 
         self.obsFieldName = 'HI'
@@ -499,6 +554,20 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
         self.unitsLabel = 'm'
 
         self.maskValue = 0
+
+        # variables for XML and webpages
+        self.galleryGroup = '{}-Hemisphere Sea-Ice Thicknesss'.format(
+                 hemisphereLong)
+        self.groupSubtitle = None
+        self.groupLink = '{}_thick'.format(hemisphere.lower())
+
+        # call setup_and_check from the base class
+        # (ClimatologyMapSeaIce), which will perform some common setup,
+        # including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        super(ClimatologyMapSeaIceThick, self).setup_and_check()
 
         # }}}
 
