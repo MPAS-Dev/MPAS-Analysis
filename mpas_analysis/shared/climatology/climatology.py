@@ -9,6 +9,9 @@ Xylar Asay-Davis
 import xarray as xr
 import os
 import numpy
+from distutils.spawn import find_executable
+import sys
+import subprocess
 
 from ..constants import constants
 
@@ -218,6 +221,82 @@ def get_mpas_climatology_file_names(config, fieldName, monthNames,
                 remappedFileName)
 
     # }}}
+
+
+def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
+                                       startYear, endYear,
+                                       variableList, modelName,
+                                       decemberMode='scd'):  # {{{
+    '''
+    Uses ncclimo to compute monthly, seasonal (DJF, MAM, JJA, SON) and annual
+    climatologies.
+
+    Parameters
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    inDirectory : str
+        The run directory containing timeSeriesStatsMonthly output
+
+    outDirectory : str
+        The output directory where climatologies will be written
+
+
+    startYear, endYear : int
+        The start and end years of the climatology
+
+    variableList : list of str
+        A list of variables to include in the climatology
+
+    modeName : ['mpaso', 'mpascice']
+        The name of the component for which the climatology is to be computed
+
+    decemberMode : ['scd', 'sdd']
+        Whether years start in December (scd - seasonally continuous December)
+        or January (sdd - seasonally discontinuous December).  If the former,
+        the data set begins with December of the year before startYear and ends
+        with November of endYear.  Otherwise, goes from January of startYear to
+        December of endYear.
+
+    Raises
+    ------
+    OSError
+        If ``ncclimo`` is not in the system path.
+
+    Author
+    ------
+    Xylar Asay-Davis
+    '''
+
+    if find_executable('ncclimo') is None:
+        raise OSError('ncclimo not found. Make sure the latest nco '
+                      'package is installed: \n'
+                      'conda install nco\n'
+                      'Note: this presumes use of the conda-forge '
+                      'channel.')
+
+    parallelMode = config.get('execute', 'ncclimoParallelMode')
+
+    args = ['ncclimo',
+            '--clm_md=mth',
+            '-a', decemberMode,
+            '-m', modelName,
+            '-p', parallelMode,
+            '-v', ','.join(variableList),
+            '-s', '{:04d}'.format(startYear),
+            '-e', '{:04d}'.format(endYear),
+            '-i', inDirectory,
+            '-o', outDirectory]
+
+    print 'running: {}'.format(' '.join(args))
+
+    # make sure any output is flushed before we add output from the
+    # subprocess
+    sys.stdout.flush()
+    sys.stderr.flush()
+
+    subprocess.check_call(args)  # }}}
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,
@@ -496,7 +575,6 @@ def update_climatology_bounds_from_file_names(inputFiles, config):  # {{{
     Authors
     -------
     Xylar Asay-Davis
-
     """
     requestedStartYear = config.getint('climatology', 'startYear')
     requestedEndYear = config.getint('climatology', 'endYear')

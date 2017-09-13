@@ -43,6 +43,11 @@ parallelTaskCount = 1
 # Default is no prefix (run_analysis.py is executed directly)
 commandPrefix =
 
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = serial
+
 [input]
 ## options related to reading in the results to be analyzed
 
