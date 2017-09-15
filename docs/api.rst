@@ -116,10 +116,10 @@ Climatology
    compute_monthly_climatology
    compute_climatology
    cache_climatologies
-   update_start_end_year
+   update_climatology_bounds_from_file_names
    add_years_months_days_in_month
    remap_and_write_climatology
-
+   compute_climatologies_with_ncclimo
 
 Time Series
 -----------
