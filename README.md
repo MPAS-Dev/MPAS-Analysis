@@ -29,7 +29,7 @@ You can easily install them via the conda command:
 ```
 conda config --add channels conda-forge
 conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
-    lxml nco pyproj
+    lxml nco pyproj pillow
 ```
 
 ## Running the analysis
