@@ -7,7 +7,7 @@
 ##     into your new config file. Make sure they have the right section name
 ##     (e.g. [run] or [output]). If nothing esle, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
-##  3. run: ./run_analysis.py config.myrun.  This will read the configuraiton
+##  3. run: ./run_mpas_analysis config.myrun.  This will read the configuraiton
 ##     first from this file and then replace that configuraiton with any
 ##     changes from from config.myrun
 ##  4. If you want to run a subset of the analysis, you can either set the
@@ -40,7 +40,7 @@ preprocessedReferenceRunName = None
 parallelTaskCount = 1
 
 # Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_analysis.py is executed directly)
+# Default is no prefix (run_mpas_analysis is executed directly)
 commandPrefix =
 
 # the parallelism mode in ncclimo ("serial" or "bck")
@@ -137,7 +137,7 @@ htmlSubdirectory = html
 #                                            given category of analysis
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
 

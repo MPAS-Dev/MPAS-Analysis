@@ -6,18 +6,18 @@ This page provides an auto-generated summary of the MPAS-Analysis API. For
 more details and examples, refer to the relevant chapters in the main part of
 the documentation.
 
-Top-level script: run_analysis.py
-=================================
+Top-level script: run_mpas_analysis
+===================================
 .. autosummary::
    :toctree: generated/
 
-   run_analysis.update_generate
-   run_analysis.run_parallel_tasks
-   run_analysis.launch_tasks
-   run_analysis.wait_for_task
-   run_analysis.is_running
-   run_analysis.build_analysis_list
-   run_analysis.run_analysis
+   run_mpas_analysis.update_generate
+   run_mpas_analysis.run_parallel_tasks
+   run_mpas_analysis.launch_tasks
+   run_mpas_analysis.wait_for_task
+   run_mpas_analysis.is_running
+   run_mpas_analysis.build_analysis_list
+   run_mpas_analysis.run_analysis
 
 
 Analysis tasks
