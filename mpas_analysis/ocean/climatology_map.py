@@ -178,11 +178,16 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
         modelName = 'mpaso'
 
-        # the last climatology produced by NCO is always the annual, so if that
-        # exists, others are also finished.
-        climatologyFileName = \
-            '{}/mpaso_ANN_climo.nc'.format(climatologyDirectory)
-        if not os.path.exists(climatologyFileName):
+        allExist = True
+        for season in outputTimes:
+            climatologyFileName = get_ncclimo_season_file_name(
+                    climatologyDirectory, modelName, season, self.startYear,
+                    self.endYear)
+            if not os.path.exists(climatologyFileName):
+                allExist = False
+                break
+
+        if not allExist:
 
             compute_climatologies_with_ncclimo(
                     config=config,

@@ -15,7 +15,7 @@ from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     remap_and_write_climatology, \
     compute_climatologies_with_ncclimo, \
     get_ncclimo_season_file_name
-    
+
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
 from ..shared.plot.plotting import plot_polar_comparison, \
@@ -112,7 +112,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         mpasDescriptor = MpasMeshDescriptor(
             self.restartFileName,
             meshName=self.config.get('input', 'mpasMeshName'))
-        
+
         comparisonDescriptor = get_lat_lon_comparison_descriptor(self.config)
 
         parallel = self.config.getint('execute', 'parallelTaskCount') > 1
@@ -128,7 +128,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             mappingFilePrefix=mappingFilePrefix,
             method=self.config.get('climatology', 'mpasInterpolationMethod'))
 
-        self._compute_seasonal_climatologies()        
+        self._compute_seasonal_climatologies()
 
         self._compute_and_plot()  # }}}
 
@@ -312,11 +312,18 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 mpasMeshName=mpasMeshName,
                 comparisonGridName=comparisonGridName)
 
-        # the last climatology produced by NCO is always the annual, so if that
-        # exists, others are also finished.
-        climatologyFileName = \
-            '{}/mpascice_ANN_climo.nc'.format(self.climatologyDirectory)
-        if not os.path.exists(climatologyFileName):
+        modelName = 'mpascice'
+
+        allExist = True
+        for season in self.seasons:
+            climatologyFileName = get_ncclimo_season_file_name(
+                    self.climatologyDirectory, modelName, season,
+                    self.startYear, self.endYear)
+            if not os.path.exists(climatologyFileName):
+                allExist = False
+                break
+
+        if not allExist:
 
             compute_climatologies_with_ncclimo(
                     config=config,
@@ -326,7 +333,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                     endYear=endYear,
                     variableList=['timeMonthly_avg_iceAreaCell',
                                   'timeMonthly_avg_iceVolumeCell'],
-                    modelName='mpascice',
+                    modelName=modelName,
                     seasons=self.seasons,
                     decemberMode='sdd')
 
