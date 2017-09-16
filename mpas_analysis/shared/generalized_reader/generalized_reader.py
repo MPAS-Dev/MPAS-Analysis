@@ -11,10 +11,6 @@ open_multifile_dataset : opens a data set, maps variable names, preprocess
 Authors
 -------
 Xylar Asay-Davis
-
-Last modified
--------------
-02/23/2017
 """
 
 import xarray
@@ -52,6 +48,7 @@ def open_multifile_dataset(fileNames, calendar, config,
         expressed as days since the start of the simulation to days since the
         reference date. ``simulationStartTime`` takes one of the following
         forms::
+
             0001-01-01
             0001-01-01 00:00:00
 
@@ -71,6 +68,7 @@ def open_multifile_dataset(fileNames, calendar, config,
         values used to slice the variales in the data set.  See
         ``xarray.DataSet.sel()`` for details on how this dictonary is used.
         An example::
+
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict, optional
@@ -78,8 +76,9 @@ def open_multifile_dataset(fileNames, calendar, config,
         arrays of indices used to slice the variales in the data set.  See
         ``xarray.DataSet.isel()`` for details on how this dictonary is used.
         An example::
+
             iselValues = {'nVertLevels': slice(0, 3),
-                           'nCells': cellIDs}
+                          'nCells': cellIDs}
 
     variableMap : dict, optional
         A dictionary with keys that are variable names used by
@@ -114,15 +113,10 @@ def open_multifile_dataset(fileNames, calendar, config,
         variable is a number of days since the start of the simulation but
         simulationStartTime is None.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis, Phillip J. Wolfram
-
-    Last modified
-    -------------
-    04/06/2017
     """
-
 
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
@@ -157,8 +151,10 @@ def open_multifile_dataset(fileNames, calendar, config,
         if 'autoclose' in str(e):
             if autoclose:
                 # This indicates that xarray version doesn't support autoclose
-                print 'Warning: open_multifile_dataset is trying to use autoclose=True but\n' \
-                      'it appears your xarray version doesn\'t support this argument. Will\n' \
+                print 'Warning: open_multifile_dataset is trying to use ' \
+                      'autoclose=True but\n' \
+                      'it appears your xarray version doesn\'t support this ' \
+                      'argument. Will\n' \
                       'try again without autoclose argument.'
 
             ds = xarray.open_mfdataset(fileNames,
@@ -181,8 +177,8 @@ def open_multifile_dataset(fileNames, calendar, config,
     ds = ds.sel(Time=slice(startDate, endDate))
 
     if ds.dims['Time'] == 0:
-        raise ValueError('The data set contains no Time entries between dates\n'
-                         '{} and {}.'.format(
+        raise ValueError('The data set contains no Time entries between '
+                         'dates {} and {}.'.format(
                              days_to_datetime(startDate, calendar=calendar),
                              days_to_datetime(endDate, calendar=calendar)))
     # process chunking
@@ -222,9 +218,9 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
         The start date of the simulation, used to convert from time variables
         expressed as days since the start of the simulation to days since the
         reference date. `simulationStartTime` takes one of the following
-        forms:
-            0001-01-01
+        forms::
 
+            0001-01-01
             0001-01-01 00:00:00
 
         simulationStartTime is only required if the MPAS time variable
@@ -242,16 +238,18 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
         xarray.DataSet.sel() for details on how this dictonary is used.
-        An example:
+        An example::
+
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
         xarray.DataSet.isel() for details on how this dictonary is used.
-        An example:
+        An example::
+
             iselValues = {'nVertLevels': slice(0, 3),
-                           'nCells': cellIDs}
+                          'nCells': cellIDs}
 
     variableMap : dict
         A dictionary with keys that are variable names used by
@@ -272,10 +270,6 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
     Authors
     -------
     Xylar Asay-Davis, Phillip J. Wolfram
-
-    Last modified
-    -------------
-    04/06/2017
     """
 
     submap = variableMap
@@ -345,13 +339,9 @@ def _map_variable_name(variableName, ds, variableMap):  # {{{
         If none of the possible variable names in `variableMap[variableName]`
         can be found in `ds`.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/08/2017
     """
     possibleVariables = variableMap[variableName]
     for variable in possibleVariables:
@@ -397,13 +387,9 @@ def _rename_variables(ds, variableMap):  # {{{
     -------
     outDataSEt : A new `xarray.DataSet` object with the variable renamed.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/08/2017
     """
 
     renameDict = {}

@@ -282,7 +282,7 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     variableList : list of str
         A list of variables to include in the climatology
 
-    modelName : ['mpaso', 'mpascice']
+    modeName : {'mpaso', 'mpascice'}
         The name of the component for which the climatology is to be computed
 
     seasons : list of str
@@ -290,7 +290,7 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
         months, which will be removed automatically) over which monthly
         climatologies should be aggregated.
 
-    decemberMode : ['scd', 'sdd'], optional
+    decemberMode : {'scd', 'sdd'}, optional
         Whether years start in December (scd - seasonally continuous December)
         or January (sdd - seasonally discontinuous December).  If the former,
         the data set begins with December of the year before startYear and ends
@@ -312,8 +312,8 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     OSError
         If ``ncclimo`` is not in the system path.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     '''
 
@@ -694,7 +694,7 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01
 
-    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
+    calendar : {'gregorian', 'gregorian_noleap'}, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``year`` and ``month`` from ``Time`` coordinate
 

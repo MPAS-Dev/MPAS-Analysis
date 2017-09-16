@@ -1,8 +1,8 @@
 """
 Unit test infrastructure for the Date class
 
-Author
-------
+Authors
+-------
 Xylar Asay-Davis
 """
 

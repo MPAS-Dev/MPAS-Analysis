@@ -699,9 +699,7 @@ def plot_vertical_section(
 
     Parameters
     ----------
-    conf    if dpi is None:
-        dpi = config.getint('plot', 'dpi')
-ig : instance of ConfigParser
+    config : instance of ConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -867,8 +865,8 @@ def plot_size_y_axis(plt, xaxisValues, **data):
     data : dictionary entries must be numpy.array
        data for curves on plot
 
-    Author
-    ------
+    Authors
+    -------
     Luke Van Roekel
     '''
 
@@ -904,8 +902,8 @@ def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
 
     maxDays : end time for labels
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     '''
     ax = plt.gca()

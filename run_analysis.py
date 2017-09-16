@@ -74,8 +74,8 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
     taskCount : int
         The maximum number of tasks that are allowed to run at once
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
 
@@ -122,8 +122,8 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     configFiles : list of str
         A list of config files, passed along when each task is launched
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
     thisFile = os.path.realpath(__file__)
@@ -176,8 +176,8 @@ def wait_for_task(processes):  # {{{
     process : ``subprocess.Popen`` object
         The process that finished
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
 
@@ -209,8 +209,8 @@ def is_running(process):  # {{{
     isRunning : bool
         whether the process is running
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
 
@@ -238,8 +238,8 @@ def build_analysis_list(config):  # {{{
     analysesToGenerate : list of ``AnalysisTask`` objects
         A list of analysis tasks to run
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
 
@@ -311,8 +311,8 @@ def run_analysis(config, analyses):  # {{{
         If one or more tasks raise exceptions, re-raises the last exception
         after all tasks have completed to indicate that there was a problem
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
 

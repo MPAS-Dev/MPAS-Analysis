@@ -1,10 +1,12 @@
 """
 A configuratin parser class for MPAS analysis.  MpasAnalysisConfigParser adds
 the capabilities to get an option including a default value
-(`getWithDefault(section, option, default, ...)`) and to get options
-that are lists, tuples, dicts, etc (`getExpression(section, option)`).
+(``getWithDefault(section, option, default, ...)``) and to get options
+that are lists, tuples, dicts, etc (``getExpression(section, option)``).
 
-Author: Xylar Asay-Davis, Phillip J. Wolfram
+Authors
+-------
+Xylar Asay-Davis, Phillip J. Wolfram
 """
 
 import numbers
@@ -22,12 +24,14 @@ class MpasAnalysisConfigParser(ConfigParser):
     def getWithDefault(self, section, option, default):
         """
         Get an option, using the supplied default value if the option is not
-        present.  The type of `default` is used to determine the type of the
-        retrun value, regardless of whether `default` is returned. If `default`
-        is a list, tuple, or dict, `getExpression(...)` is used if the option
-        is present in the config file.
+        present.  The type of ``default`` is used to determine the type of the
+        retrun value, regardless of whether ``default`` is returned. If
+        ``default`` is a list, tuple, or dict, ``getExpression(...)`` is used
+        if the option is present in the config file.
 
-        Author: Xylar Asay-Davis
+        Authors
+        -------
+        Xylar Asay-Davis
         """
         if self.has_section(section):
             if self.has_option(section, option):
@@ -50,20 +54,22 @@ class MpasAnalysisConfigParser(ConfigParser):
                       usenumpyfunc=False):
         """
         Get an option as an expression (typically a list, though tuples and
-        dicts should also work).  `section` and `option` work as in `get(...)`.
-        The expression is required to have valid python syntax, so that
-        string entries are required to be in single or double quotes.
+        dicts should also work).  ``section`` and ``option`` work as in
+        ``get(...)``. The expression is required to have valid python syntax,
+        so that string entries are required to be in single or double quotes.
         If the option in the section does not exist, returns None.
 
-        If `elementType` is supplied, each element in a list or tuple, or each
-        value in a dictionary are cast to this type.  This is likely most
+        If ``elementType`` is supplied, each element in a list or tuple, or
+        each value in a dictionary are cast to this type.  This is likely most
         useful for ensuring that all elements in a list of numbers are of type
         float, rather than int, when the distinction is important.
 
-        If `usenumpyfunc` is True, expression is evaluated within the context
-        of having selected numpy and / or np functionality available.
+        If ``usenumpyfunc`` is True, expression is evaluated within the context
+        of having selected numpy and/or np functionality available.
 
-        Author: Xylar Asay-Davis, Phillip J. Wolfram
+        Authors
+        -------
+        Xylar Asay-Davis, Phillip J. Wolfram
         """
         expressionString = self.get(section, option)
         if usenumpyfunc:
