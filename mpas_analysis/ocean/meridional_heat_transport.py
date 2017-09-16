@@ -4,20 +4,17 @@ import netCDF4
 import os
 import warnings
 
-from ..shared.constants.constants import monthDictionary
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
 from ..shared.io.utility import build_config_full_path, make_directories
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
-
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology import \
-    update_climatology_bounds_from_file_names, \
-    cache_climatologies
+from ..shared.climatology.climatology \
+    import update_climatology_bounds_from_file_names, \
+    compute_climatologies_with_ncclimo, \
+    get_ncclimo_season_file_name
 
 from ..shared.analysis_task import AnalysisTask
 from ..shared.html import write_image_xml
@@ -203,33 +200,40 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         print '\n  Compute and plot global meridional heat transport'
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputRoot = build_config_full_path(config, 'output',
+                                            'mpasClimatologySubdirectory')
+
+        outputDirectory = '{}/mht'.format(outputRoot)
 
         print '\n  List of files for climatologies:\n' \
               '    {} through\n    {}'.format(
                   os.path.basename(self.inputFiles[0]),
                   os.path.basename(self.inputFiles[-1]))
 
-        make_directories(outputDirectory)
-
         print '   Load data...'
-        ds = open_multifile_dataset(
-            fileNames=self.inputFiles,
-            calendar=self.calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
-            variableList=variableList,
-            startDate=self.startDate,
-            endDate=self.endDate)
 
-        # Compute annual climatology
-        cachePrefix = '{}/meridionalHeatTransport'.format(outputDirectory)
-        annualClimatology = cache_climatologies(ds, monthDictionary['ANN'],
-                                                config, cachePrefix,
-                                                self.calendar,
-                                                printProgress=True)
+        climatologyFileName = get_ncclimo_season_file_name(outputDirectory,
+                                                           'mpaso', 'ANN',
+                                                           self.startYear,
+                                                           self.endYear)
+
+        if not os.path.exists(climatologyFileName):
+            make_directories(outputDirectory)
+
+            # Compute annual climatology
+            compute_climatologies_with_ncclimo(
+                    config=config,
+                    inDirectory=self.historyDirectory,
+                    outDirectory=outputDirectory,
+                    startYear=self.startYear,
+                    endYear=self.endYear,
+                    variableList=variableList,
+                    modelName='mpaso',
+                    seasons=['ANN'],
+                    decemberMode='sdd')
+
+        annualClimatology = xr.open_dataset(climatologyFileName)
+        annualClimatology = annualClimatology.isel(Time=0)
 
         # **** Plot MHT ****
         # Define plotting variables

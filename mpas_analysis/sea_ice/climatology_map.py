@@ -9,11 +9,13 @@ import xarray as xr
 from ..shared.constants import constants
 
 from ..shared.climatology import get_lat_lon_comparison_descriptor, \
-    get_remapper, get_mpas_climatology_file_names, \
+    get_remapper, get_mpas_climatology_dir_name, \
     get_observation_climatology_file_names, \
-    cache_climatologies, \
     update_climatology_bounds_from_file_names, \
-    remap_and_write_climatology
+    remap_and_write_climatology, \
+    compute_climatologies_with_ncclimo, \
+    get_ncclimo_season_file_name
+
 from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 
 from ..shared.plot.plotting import plot_polar_comparison, \
@@ -22,9 +24,6 @@ from ..shared.plot.plotting import plot_polar_comparison, \
 from ..shared.io.utility import build_config_full_path
 from ..shared.io import write_netcdf
 from ..shared.html import write_image_xml
-
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
 
 from .sea_ice_analysis_task import SeaIceAnalysisTask
 
@@ -90,7 +89,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                                                         filePrefix))
             info['filePrefix'] = filePrefix
 
-        return  # }}}
+        # }}}
 
     def run(self):  # {{{
         """
@@ -109,23 +108,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
               '    {} through\n    {}'.format(
                   os.path.basename(self.inputFiles[0]),
                   os.path.basename(self.inputFiles[-1]))
-        # Load data
-
-        print '  Load sea-ice data...'
-        varList = [self.mpasFieldName]
-
-        self.ds = open_multifile_dataset(
-            fileNames=self.inputFiles,
-            calendar=self.calendar,
-            config=self.config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
-            variableList=varList,
-            startDate=self.startDate,
-            endDate=self.endDate)
-
-        # Compute climatologies (first motnhly and then seasonally)
-        print '  Compute seasonal climatologies...'
 
         mpasDescriptor = MpasMeshDescriptor(
             self.restartFileName,
@@ -146,6 +128,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             mappingFilePrefix=mappingFilePrefix,
             method=self.config.get('climatology', 'mpasInterpolationMethod'))
 
+        self._compute_seasonal_climatologies()
+
         self._compute_and_plot()  # }}}
 
     def _compute_and_plot(self):  # {{{
@@ -161,8 +145,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         print '  Make ice concentration plots...'
 
         config = self.config
-        calendar = self.calendar
-        ds = self.ds
 
         mainRunName = config.get('runs', 'mainRunName')
         startYear = config.getint('climatology', 'startYear')
@@ -180,7 +162,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
         for info in self.obsAndPlotInfo:
             season = info['season']
-            monthValues = constants.monthDictionary[season]
 
             (colormapResult, colorbarLevelsResult) = setup_colormap(
                 config, sectionName, suffix='Result')
@@ -193,36 +174,12 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                                               'minimumLatitude')
 
             fieldName = '{}{}'.format(self.mpasFieldName, hemisphere)
-            # interpolate the model results
-            mpasMeshName = self.mpasRemapper.sourceDescriptor.meshName
-            comparisonGridName = \
-                self.mpasRemapper.destinationDescriptor.meshName
-            (climatologyFileName, climatologyPrefix, remappedFileName) = \
-                get_mpas_climatology_file_names(
-                    config=config,
-                    fieldName=fieldName,
-                    monthNames=season,
-                    mpasMeshName=mpasMeshName,
-                    comparisonGridName=comparisonGridName)
 
-            if not os.path.exists(climatologyFileName):
-                seasonalClimatology = cache_climatologies(
-                    ds, monthValues, config, climatologyPrefix, calendar,
-                    printProgress=True)
-                if seasonalClimatology is None:
-                    # apparently, there was no data available to create the
-                    # climatology
-                    print 'Warning: no data to create sea ice thickness ' \
-                          'climatology for {}'.format(season)
-                    continue
-
-                remappedClimatology = remap_and_write_climatology(
-                    config, seasonalClimatology, climatologyFileName,
-                    remappedFileName, self.mpasRemapper)
-
-            else:
-
-                remappedClimatology = xr.open_dataset(remappedFileName)
+            remappedFileName = \
+                get_ncclimo_season_file_name(self.remappedDirectory,
+                                             'mpascice', season,
+                                             self.startYear, self.endYear)
+            remappedClimatology = xr.open_dataset(remappedFileName)
 
             modelOutput = remappedClimatology[self.mpasFieldName].values
             if self.maskValue is not None:
@@ -330,6 +287,98 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 thumbnailDescription=season,
                 imageDescription=imageDescription,
                 imageCaption=imageCaption)
+        # }}}
+
+    def _compute_seasonal_climatologies(self):  # {{{
+
+        config = self.config
+
+        mpasMeshName = self.mpasRemapper.sourceDescriptor.meshName
+        comparisonGridName = self.mpasRemapper.destinationDescriptor.meshName
+
+        startYear = config.getint('climatology', 'startYear')
+        endYear = config.getint('climatology', 'endYear')
+
+        self.climatologyDirectory = \
+            get_mpas_climatology_dir_name(
+                config=config,
+                fieldName='seaIceAreaVol',
+                mpasMeshName=mpasMeshName)
+
+        (self.maskedClimatologyDirectory, self.remappedDirectory) = \
+            get_mpas_climatology_dir_name(
+                config=config,
+                fieldName='seaIceAreaVol_masked',
+                mpasMeshName=mpasMeshName,
+                comparisonGridName=comparisonGridName)
+
+        modelName = 'mpascice'
+
+        allExist = True
+        for season in self.seasons:
+            climatologyFileName = get_ncclimo_season_file_name(
+                    self.climatologyDirectory, modelName, season,
+                    self.startYear, self.endYear)
+            if not os.path.exists(climatologyFileName):
+                allExist = False
+                break
+
+        if not allExist:
+
+            compute_climatologies_with_ncclimo(
+                    config=config,
+                    inDirectory=self.historyDirectory,
+                    outDirectory=self.climatologyDirectory,
+                    startYear=startYear,
+                    endYear=endYear,
+                    variableList=['timeMonthly_avg_iceAreaCell',
+                                  'timeMonthly_avg_iceVolumeCell'],
+                    modelName=modelName,
+                    seasons=self.seasons,
+                    decemberMode='sdd')
+
+        self._remap_seasonal_climatology()
+
+        # }}}
+
+    def _remap_seasonal_climatology(self):  # {{{
+
+        modelName = 'mpascice'
+
+        for season in self.seasons:
+
+            monthValues = constants.monthDictionary[season]
+
+            # interpolate the model results
+            climatologyFileName = \
+                get_ncclimo_season_file_name(self.climatologyDirectory,
+                                             modelName, season,
+                                             self.startYear, self.endYear)
+
+            maskedClimatologyFileName = \
+                get_ncclimo_season_file_name(self.maskedClimatologyDirectory,
+                                             modelName, season,
+                                             self.startYear, self.endYear)
+
+            remappedFileName = \
+                get_ncclimo_season_file_name(self.remappedDirectory,
+                                             modelName, season,
+                                             self.startYear, self.endYear)
+
+            if not os.path.exists(maskedClimatologyFileName):
+                # slice the data set and set _FillValue (happens automatically)
+                climatology = xr.open_dataset(climatologyFileName)
+                iselValues = {'Time': 0}
+                # select only Time=0
+                climatology = climatology.isel(**iselValues)
+
+                write_netcdf(climatology, maskedClimatologyFileName)
+
+            if not os.path.exists(remappedFileName):
+                self.mpasRemapper.remap_file(
+                        inFileName=maskedClimatologyFileName,
+                        outFileName=remappedFileName,
+                        overwrite=True)
         # }}}
     # }}}
 

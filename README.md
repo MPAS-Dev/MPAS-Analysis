@@ -18,7 +18,7 @@ This analysis repository presumes that the following python packages are availab
  * bottleneck
  * basemap
  * lxml
- * nco >= 4.5.4
+ * nco >= 4.6.8
  * pyproj
  * pillow
 
