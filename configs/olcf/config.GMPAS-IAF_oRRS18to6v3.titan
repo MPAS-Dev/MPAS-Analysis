@@ -70,10 +70,6 @@ startYear = 11
 # the last year over which to average climatalogies
 endYear = 11
 
-# should remapping be performed with ncremap or with the Remapper class
-# directly in MPAS-Analysis
-useNcremap = True
-
 [timeSeries]
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs

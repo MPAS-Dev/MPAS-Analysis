@@ -11,14 +11,6 @@ mainRunName = 20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
 # MPAS-Analysis)
 preprocessedReferenceRunName = B1850C5_ne30_v0.4
 
-[execute]
-## options related to executing parallel tasks
-
-# the parallelism mode in ncclimo ("serial" or "bck")
-# Set this to "bck" (background parallelism) if running on a machine that can
-# handle 12 simultaneous processes, one for each monthly climatology.
-ncclimoParallelMode = bck
-
 [input]
 ## options related to reading in the results to be analyzed
 
@@ -39,7 +31,9 @@ baseDirectory = /dir/to/analysis/output
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
