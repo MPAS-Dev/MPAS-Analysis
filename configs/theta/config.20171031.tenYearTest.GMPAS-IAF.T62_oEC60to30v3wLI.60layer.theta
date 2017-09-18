@@ -135,17 +135,9 @@ baseDirectory =  /projects/OceanClimate/mpas-analysis_data/ACMEv0_lowres/B1850C5
 # plot on polar plot
 polarPlot = False
 
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
-maxChunkSize = 1000
-
-# Mask file for ocean basin regional computation
-regionMaskFiles = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks/oEC60to30v3wLI_Atlantic_region_masks_and_southern_transect.nc
-
 [regions]
 # Directory containing mask files for ocean basins and ice shelves
-regionMaskDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks/
+regionMaskDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks
 
 [climatologyMapSoseTemperature]
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,

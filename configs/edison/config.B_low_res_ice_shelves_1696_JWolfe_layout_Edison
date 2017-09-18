@@ -43,6 +43,11 @@ mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /global/project/projectdirs/acme/www/USERNAME/RUNNAME
+htmlSubdirectory = html
+
 # a list of analyses to generate.  Valid names can be seen by running:
 #   ./run_mpas_analysis --list
 # This command also lists tags for each analysis.
@@ -133,11 +138,8 @@ baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.
 # plot on polar plot
 polarPlot = False
 
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
-## circulation (MOC)
-maxChunkSize = 1000
+[regions]
+## options related to ocean regions used in several analysis modules
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oEC60to30v3wLI_SingleRegionAtlanticWTransportTransects_masks.nc
-
+# Directory for region mask files
+regionMaskDirectory = /global/project/projectdirs/acme/mpas_analysis/region_masks

@@ -57,7 +57,7 @@ htmlSubdirectory = html
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-# The climatologyMapAntarcticMelt task is disabled because this run did not 
+# The climatologyMapAntarcticMelt task is disabled because this run did not
 # include ice-shelf cavities.`
 generate = ['all', 'no_climatologyMapAntarcticMelt']
 
@@ -129,6 +129,8 @@ baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.
 # plot on polar plot
 polarPlot = False
 
-[streamfunctionMOC]
-# Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# Directory for region mask files
+regionMaskDirectory = /global/project/projectdirs/acme/mpas_analysis/region_masks

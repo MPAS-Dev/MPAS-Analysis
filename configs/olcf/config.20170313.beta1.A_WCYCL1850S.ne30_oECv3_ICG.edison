@@ -32,6 +32,11 @@ mappingDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping/
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /ccs/proj/cli115/www/USERNAME/RUNNAME
+htmlSubdirectory = html
+
 # a list of analyses to generate.  Valid names can be seen by running:
 #   ./run_mpas_analysis --list
 # This command also lists tags for each analysis.
@@ -51,7 +56,7 @@ baseDirectory = /dir/to/analysis/output
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-# The climatologyMapAntarcticMelt task is disabled because this run did not 
+# The climatologyMapAntarcticMelt task is disabled because this run did not
 # include ice-shelf cavities.`
 generate = ['all', 'no_climatologyMapAntarcticMelt']
 
@@ -122,5 +127,8 @@ baseDirectory =  /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_n
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# Directory for region mask files
+regionMaskDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/

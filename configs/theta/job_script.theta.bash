@@ -61,7 +61,7 @@ module unload python
 module use /projects/OceanClimate/modulefiles/all
 module load python/anaconda-2.7-acme
 
-$mpas_analysis_dir/run_mpas_analysis --purge \
+$mpas_analysis_dir/run_mpas_analysis \
     $run_config_file $job_config_file
 EOF
 
