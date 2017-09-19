@@ -1,0 +1,23 @@
+name: mpas-analysis-docs
+channels:
+  - conda-forge
+dependencies:
+  - python=2.7
+  - pytest
+  - numpy
+  - scipy
+  - lxml
+  - xarray
+  - matplotlib
+  - dask
+  - netcdf4
+  - hdf5
+  - hdf4
+  - nco
+  - pyproj
+  - pillow
+  - sphinx
+  - sphinx_rtd_theme
+  - numpydoc
+  - pip:
+    - recommonmark
