@@ -1,4 +1,4 @@
-name: test_env
+name: mpas-analysis-docs
 channels:
   - conda-forge
 dependencies:
@@ -16,3 +16,8 @@ dependencies:
   - nco
   - pyproj
   - pillow
+  - sphinx
+  - sphinx_rtd_theme
+  - numpydoc
+  - pip:
+    - recommonmark
