@@ -1,4 +1,7 @@
-<h2> Title: Analysis Task Template <br>
+Analysis Task Template
+======================
+
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/03/08 <br>
 </h2>
@@ -17,7 +20,7 @@ The template is needed to:
 2. ensure that tasks implement a standard set of
    functions, making it easier to perform actions (such as checking whether
    the task should be run, checking for required model and observations files,
-   purging files from a previous analysis run, and running the analysis) on 
+   purging files from a previous analysis run, and running the analysis) on
    each analysis task in sequence (and, in the future, in parallel)
 3. demonstrate the syntax and style of docstrings required to comment/document
    each task and each function
@@ -40,7 +43,7 @@ Contributors: Xylar Asay-Davis
 Validation, such as checking config options or adding new ones if they are missing,
 or checking if required data files are present, should be performed within a
 function in each task (rather than in `run_analysis.py`, as is sometimes the current
-case).  
+case).
 
 <h4> Requirement: Analysis Continues even when Analysis Task Fails <br>
 Date last modified: 2017/03/08 <br>
@@ -76,10 +79,10 @@ A base class, `AnalysisTask` will be added under `shared/analysis_task.py`.
 This class will include methods:
   * `__init__`: construct the task, including assigning variable and streams maps
     (optional).
-  * `setup_and_check`: performs common tasks to all analysis, such as reading 
+  * `setup_and_check`: performs common tasks to all analysis, such as reading
      namelist and streams files
   * `run`: the base class version does nothing
-  
+
 The template will show how to set up a child class that decends from `AnalysisTask`.
 It will show examples of:
   * `__init__`: construct the task, including assigning the `taskName`, `componentName`
@@ -88,13 +91,13 @@ It will show examples of:
      determines if the configuration is valid for running this task (e.g. if
      necessary files and config options are present)
   * `run`: runs the analysis task
-  
+
 The template will be located at:
 ```
 mpas_analysis/
     - analysis_task_template.py
 ```
-That is, it is the only file (other than `__init__.py`) in the base of the 
+That is, it is the only file (other than `__init__.py`) in the base of the
 `mpas_analysis` directory, making it easy to find.  This way, it will be the first
 file most developers see when they look in `mpas_analysis` itself.
 
@@ -132,7 +135,7 @@ Contributors: Xylar Asay-Davis
 
 By having a common base class for all analysis tasks,
 each task can be checked to see if it should be run based on
-the `generate` command-line or config option.  If so, its `setup_and_check` 
+the `generate` command-line or config option.  If so, its `setup_and_check`
 function will be run to make sure the configuration is right (and will
 print a warning if not).  If `setup_and_check` passes, the analysis can be added
 to a list of functions to be run.  Later, a loop through the list
@@ -153,7 +156,7 @@ Date last modified: 2017/03/16 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-Here is the suggested base class `AnalysisTask` in full, intended to make discussion 
+Here is the suggested base class `AnalysisTask` in full, intended to make discussion
 of individual lines easier:
 
 ```python
@@ -280,7 +283,7 @@ class AnalysisTask(object):  # {{{
         03/16/2017
         """
         return  # }}}
-        
+
     def check_generate(self):
         # {{{
         """
@@ -425,7 +428,7 @@ class MyTask(AnalysisTask):  # {{{
         self.taskName = 'myTask'
         self.componentName = 'component'
         self.categories = ['category1', 'category2']
-        
+
         # then, store any additional arguments for use later on.  These would
         # likely include things like the name of a field, region, month,
         # season, etc. to be analyzed so that the same subclass of AnalysisTask
@@ -530,7 +533,7 @@ Date last modified: 2017/03/08 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-Here is an example (from `ocean.climatology_map.ClimatologyMap`) of what 
+Here is an example (from `ocean.climatology_map.ClimatologyMap`) of what
 the new `__init__` and `setup_and_check` methods :
 ```python
 def __init__(self, config, streamMap=None, variableMap=None,
@@ -632,8 +635,8 @@ Date last modified: 2017/03/16 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-Calls to `check` and `run` methods in `run_analysis.py` are inside of 
-`try/except` blocks, which catch the exceptions and print the stack trace 
+Calls to `check` and `run` methods in `run_analysis.py` are inside of
+`try/except` blocks, which catch the exceptions and print the stack trace
 but don't cause the code to exit.
 ```python
 try:

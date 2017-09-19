@@ -1,8 +1,12 @@
-<h1> Title: Moving variable mapping outside of mpas_xarray <br>
+Moving variable mapping outside of mpas_xarray
+==============================================
+
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/02/10 <br>
-</h1>
-<h2> Summary </h2>
+</h2>
+<h3> Summary </h3>
+
 In discussions with @pwolfram, it became clear that we would like to keep
 mpas_xarray as general as possible, rather than adding code specific to
 MPAS-Analysis.  In particular, the capability for mapping variable names
@@ -20,48 +24,48 @@ The solution will be tested by making sure it produces bit-for-bit identical
 results to those from the develop branch for typical test cases on LANL IC
 and Edison.
 
-<h1> Requirements </h1>
+<h2> Requirements </h2>
 
-<h2> Requirement: mpas_xarray does not include MPAS-Analysis specific
+<h3> Requirement: mpas_xarray does not include MPAS-Analysis specific
 functionality <br>
 Date last modified: 2017/02/10 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
-MPAS-Analysis specific functionality such as variable mapping should be 
+MPAS-Analysis specific functionality such as variable mapping should be
 removed from mpas_xarray so it can remain an independent module, requiring
 minimal modification to accommodate MPAS-Analysis' needs.
 
-<h2> Requirement: MPAS-Analysis specific functionality should be supported in
+<h3> Requirement: MPAS-Analysis specific functionality should be supported in
 xarray preprossing <br>
 Date last modified: 2017/02/10 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 There should be a way to perform MPAS-Analysis specific functionality such as
 mapping variables during preprocessing.  This functionality should be
 relatively easy to add to as new preprocessing needs arise.
 
 
-<h1> Algorithmic Formulations (optional) </h1>
+<h2> Algorithmic Formulations (optional) </h2>
 
-<h2> Algorithm: mpas_xarray does not include MPAS-Analysis specific
+<h3> Algorithm: mpas_xarray does not include MPAS-Analysis specific
 functionality <br>
 Date last modified: 2017/02/10 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 All functions and function arguments related to variable mapping will
 be removed from mpas_xarray and moved elsewhere.
 
-<h2> Algorithm: MPAS-Analysis specific functionality should be supported in
+<h3> Algorithm: MPAS-Analysis specific functionality should be supported in
 xarray preprossing <br>
 Date last modified: 2017/02/15 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
-A new utility function, `open_multifile_dataset` will added to `mpas_xarray` 
-that simplifies current calls to `xarray.open_mfdataset` to hide the 
+A new utility function, `open_multifile_dataset` will added to `mpas_xarray`
+that simplifies current calls to `xarray.open_mfdataset` to hide the
 preprocessor and take care of removing redundant time indices once the dataset
 has been built. (This function doesn't directly address the requirement but
 is meant to make `mpas_xarray` easier to use and made sense because it
@@ -74,14 +78,14 @@ including a variable map and start and end dates for the dataset.
 `generalized_reader.open_multifile_dataset` will create a data set
 by calling `xarray.open_mfdataset` with its own preprocessing function,
 `generalized_reader._preprocess` that first maps variable names, then
-calls `mpas_xarray.preprocess` to finish the job.  Once the dataset has 
+calls `mpas_xarray.preprocess` to finish the job.  Once the dataset has
 been constructed, redundant time indices are removed and the 'Time'
 coordinate is sliced to be between the supplied start and end dates.
 
 This solution may add some confusion in terms of which reader should
 be used to open xarray datasets.  It is my sense that most developers
 adding new functionality will do so by modifying existing scripts, and
-these examples should make it clear which version of 
+these examples should make it clear which version of
 `open_multifile_dataset` is most appropriate.  Nevertheless, clear
 documentation of `generalized_reader` and `mpas_xarray`, and their
 differences are needed.
@@ -90,7 +94,7 @@ Here is a typical usage of `generalized_reader.open_multifile_dataset`:
 ```python
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-    
+
 file_name = 'example_jan_feb.nc'
 timestr = ['xtime_start', 'xtime_end']
 var_list = ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
@@ -113,12 +117,12 @@ ds = open_multifile_dataset(file_names=file_name,
                             year_offset=1850)
 ```
 
-Here is the same for `mpas_xarray.open_multifile_dataset` without the 
+Here is the same for `mpas_xarray.open_multifile_dataset` without the
 variable map, start and end dates:
 ```python
 from mpas_analysis.shared.mpas_xarray.mpas_xarray \
     import open_multifile_dataset
-    
+
 file_name = 'example_jan_feb.nc'
 timestr = ['xtime_start', 'xtime_end']
 var_list = ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
@@ -131,15 +135,15 @@ ds = open_multifile_dataset(file_names=file_name,
 ```
 
 
-<h1> Design and Implementation </h1>
+<h2> Design and Implementation </h2>
 
-<h2> Implementation: mpas_xarray does not include MPAS-Analysis specific
+<h3> Implementation: mpas_xarray does not include MPAS-Analysis specific
 functionality <br>
 Date last modified: 2017/02/15 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
-A test branch can be found here 
+A test branch can be found here
 [xylar/MPAS-Analysis/variable_mapping_reorg](https://github.com/xylar/MPAS-Analysis/tree/variable_mapping_reorg)
 
 I have removed `map_variable` and `rename_variables` from `mpas_xarray`.
@@ -169,11 +173,11 @@ addressing any requirements.  These include:
    - I have update unit testing to work with the new inerface, notably the
      `open_multifile_dataset` function.
 
-<h2> Implementation: MPAS-Analysis specific functionality should be supported in
+<h3> Implementation: MPAS-Analysis specific functionality should be supported in
 xarray preprossing <br>
 Date last modified: 2017/02/15 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 In the same branch as above, I have added a `generalized_reader` module that
 extends the capabilities of `mpas_xarray` to include mapping of variable names.
@@ -193,32 +197,32 @@ This function performs the same steps as `mpas_xarray.open_multifile_dataset`
 but uses the local preprocessing function, `_preprocess`, and also slices
 the 'Time' coordinate using the given start and end dates as a final step.
 
-The `generalized_reader._preprocess` funciton first maps variable names, then calls 
+The `generalized_reader._preprocess` funciton first maps variable names, then calls
 `mpas_xarray.preprocess` to do the rest of the preprocessing as normal.
 
 Two private functions, `_map_variable_name` and `_rename_variables` (take out of
 `mpas_xarray`) are used to perform variable-name mapping.
 
-<h1> Testing </h1>
+<h2> Testing </h2>
 
-<h2> Testing and Validation: MPAS-Analysis specific functionality should be supported in
+<h3> Testing and Validation: MPAS-Analysis specific functionality should be supported in
 xarray preprossing <br>
 Date last modified: 2017/02/15 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 In [xylar/MPAS-Analysis/variable_mapping_reorg](https://github.com/xylar/MPAS-Analysis/tree/variable_mapping_reorg),
 the unit testing for mpas_xarray has been updated.  This includes moving unit testing for
 variable mapping elsewhere.
 
-I will make sure all tests with config files in the `configs/lanl` and `configs/edison` 
+I will make sure all tests with config files in the `configs/lanl` and `configs/edison`
 directories produce bit-for-bit results with the current `develop`.
 
-<h2> Testing and Validation: MPAS-Analysis specific functionality should be supported in
+<h3> Testing and Validation: MPAS-Analysis specific functionality should be supported in
 xarray preprossing <br>
 Date last modified: 2017/02/10 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 Largely, the same as above.
 

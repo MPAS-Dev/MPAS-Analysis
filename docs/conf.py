@@ -45,16 +45,22 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+# source_suffix = '.rst'
+
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
 
 # The master toctree document.
 master_doc = 'index'
 
 # General information about the project.
 project = u'MPAS-Analysis'
-copyright = u'2016-2017, Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, Luke Van Roekel'
-author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, Luke Van Roekel'
+copyright = u'2016-2017, Xylar Asay-Davis, Milena Veneziani, ' \
+            u'Phillip Wolfram, Luke Van Roekel, Mark Petersen'
+author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, ' \
+         u'Luke Van Roekel, Mark Petersen'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -75,7 +81,8 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
+                    'design_docs/template.md']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -142,7 +149,9 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'MPAS-Analysis.tex', u'MPAS-Analysis Documentation',
-     u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, Luke Van Roekel', 'manual'),
+     u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, Luke Van Roekel,'
+     u'Mark Petersen',
+     'manual'),
 ]
 
 

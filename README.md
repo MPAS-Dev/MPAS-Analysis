@@ -107,6 +107,7 @@ another machine to fit your needs.
 To generate the `sphinx` documentation, run:
 ```bash
 conda install sphinx sphinx_rtd_theme numpydoc
+pip install recommonmark
 cd docs
 make html
 ```

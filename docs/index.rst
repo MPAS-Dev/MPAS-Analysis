@@ -21,6 +21,7 @@ Documentation
    :maxdepth: 2
 
    api
+   design_docs
 
 Indices and tables
 ==================
