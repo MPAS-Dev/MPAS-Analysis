@@ -17,6 +17,48 @@ class AnalysisTask(object):  # {{{
     '''
     The base class for analysis tasks.
 
+    Attributes
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    taskName :  str
+        The name of the task, typically the same as the class name except
+        starting with lowercase (e.g. 'myTask' for class 'MyTask')
+
+    componentName :  {'ocean', 'seaIce'}
+        The name of the component (same as the folder where the task
+        resides)
+
+    tags :  list of str
+        Tags used to describe the task (e.g. 'timeSeries', 'climatology',
+        horizontalMap', 'index', 'transect').  These are used to determine
+        which tasks are generated (e.g. 'all_transect' or 'no_climatology'
+        in the 'generate' flags)
+
+    runDirectory : str
+        The base input directory for namelists, streams files and restart files
+
+    historyDirectory : str
+        The base input directory for history files
+
+    plotsDirectory : str
+        The directory for writing plots (which is also created if it doesn't
+        exist)
+
+    namelist : ``shared.io.NameList`` object
+        the namelist reader
+
+    runStreams : ``shared.io.StreamsFile`` object
+        the streams file reader for streams in the run directory (e.g. restart
+        files)
+
+    historyStreams : ``shared.io.StreamsFile`` object
+        the streams file reader for streams in the history directory (most
+        streams other than restart files)
+
+    calendar : the name of the calendar ('gregorian' or 'gregoraian_noleap')
+
     Authors
     -------
     Xylar Asay-Davis
@@ -28,7 +70,7 @@ class AnalysisTask(object):  # {{{
 
         Individual tasks (children classes of this base class) should first
         call this method to perform basic initialization, then, define the
-        `taskName`, `componentName` and list of `tags` for the task.
+        ``taskName``, ``componentName`` and list of ``tags`` for the task.
 
         Parameters
         ----------
@@ -63,19 +105,10 @@ class AnalysisTask(object):  # {{{
         Perform steps to set up the analysis (e.g. reading namelists and
         streams files).
 
-        After this call, the following member variables are set:
-            self.runDirectory : the base input directory for namelists, streams
-                files and restart files
-            self.historyDirectory : the base input directory for history files
-            self.plotsDirectory : the directory for writing plots (which is
-                also created if it doesn't exist)
-            self.namelist : the namelist reader
-            self.runStreams : the streams file reader for streams in the run
-                directory (e.g. restart files)
-            self.historyStreams : the streams file reader for streams in the
-                history directory (most streams other than restart files)
-            self.calendar : the name of the calendar ('gregorian' or
-                'gregoraian_noleap')
+        After this call, the following attributes are set (see documentation
+        for the class):
+        runDirectory, historyDirectory, plotsDirectory, namelist, runStreams,
+        historyStreams, calendar
 
         Individual tasks (children classes of this base class) should first
         call this method to perform basic setup, then, check whether the
@@ -144,8 +177,8 @@ class AnalysisTask(object):  # {{{
         # {{{
         '''
         Determines if this analysis should be generated, based on the
-        `generate` config option and `taskName`, `componentName` and
-        `tags`.
+        ``generate`` config option and ``taskName``, ``componentName`` and
+        ``tags``.
 
         Individual tasks do not need to create their own versions of this
         function.
@@ -157,8 +190,8 @@ class AnalysisTask(object):  # {{{
 
         Raises
         ------
-        ValueError : If one of `self.taskName`, `self.componentName`
-            or `self.tags` has not been set.
+        ValueError : If one of ``self.taskName``, ``self.componentName``
+            or ``self.tags`` has not been set.
 
         Authors
         -------

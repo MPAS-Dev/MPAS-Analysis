@@ -1,8 +1,12 @@
-<h2> Title: Support Parallel Tasks <br>
+Support Parallel Tasks
+======================
+
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/02/22 <br>
 </h2>
 <h3> Summary </h3>
+
 Currently, the full analysis suite includes 7 tasks, 5 for the ocean and 2 for sea ice.
 The number of tasks is expected to grow over time.  Task parallelism in some
 form is needed to allow as many tasks as desired to be run simultaneiously.
@@ -48,9 +52,9 @@ rather than on the management node(s).  For example, on Edison and Cori, the
 Date last modified: 2017/02/22 <br>
 Contributors: Phillip J. Wolfram, Xylar Asay-Davis
 </h4>
-It may be that `xarray-dask` with subprocess (or similar) may need to be some 
+It may be that `xarray-dask` with subprocess (or similar) may need to be some
 initialization of xarray corresponding to reduced memory available.  For example,
-with 10 processes on a node, `xarray` / `dask` should be initialized to use only 
+with 10 processes on a node, `xarray` / `dask` should be initialized to use only
 1/10th of the memory and CPUs per task. `xarray-dask` may require special
 initialization for efficiency and to avoid crashes.
 
@@ -63,16 +67,16 @@ Contributors: Xylar Asay-Davis
 
 I propose to have a config option, `parallelTaskCount`, that is the number of concurrent
 tasks that are to be performed. If this flag is set to a number greater than 1, analysis
-tasks will run concurrently.  To accomplish this, I propose to use `subprocess.call` or 
-one of its variants within `run_analysis.py`to call itself but with only one task at a 
+tasks will run concurrently.  To accomplish this, I propose to use `subprocess.call` or
+one of its variants within `run_analysis.py`to call itself but with only one task at a
 time.  Thus, if `run_analysis.py` gets called with only a single task (whether directly
-from the command line or through `subprocess.call`), it would execute that task without 
+from the command line or through `subprocess.call`), it would execute that task without
 spawning additional subprocesses.
 
 This approach would require having a method for creating a list of individual tasks
-to be performed, launching `parallelTaskCount` of those tasks, and then waiting for 
+to be performed, launching `parallelTaskCount` of those tasks, and then waiting for
 them to complete, launching additional tasks as previous tasks complete.  The approach
-would also require individual log files for each task, each stored in the log directory 
+would also require individual log files for each task, each stored in the log directory
 (already a config option).
 
 <h4> Design solution: Select maximum number of tasks <br>
@@ -80,12 +84,12 @@ Date last modified: 2017/02/23 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-This is accomplished with the `parallelTaskCount` flag above.  A value of 
+This is accomplished with the `parallelTaskCount` flag above.  A value of
 `parallelTaskCount = 1` would indicate serial execution, though likely still
-via launching subprocesses for each task.  
+via launching subprocesses for each task.
 
-The command `subprocess.Popen` allows enough flexibility that it will be possible 
-to launch several jobs, andthen to farm out additional jobs as each returns. It should 
+The command `subprocess.Popen` allows enough flexibility that it will be possible
+to launch several jobs, andthen to farm out additional jobs as each returns. It should
 be possible to use a combination of `os.kill(pid, 0)`, which checks if a
 process is running, and `os.waitpid(-1,0)`, which waits for any subprocess to finish,
 to accomplish launching several processes and waiting until the first one finishes
@@ -116,7 +120,7 @@ Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-Teh design solution is based on the process lock in the fasteners package: 
+Teh design solution is based on the process lock in the fasteners package:
 http://fasteners.readthedocs.io/en/latest/examples.html#interprocess-locks
 
 Currently, only mapping files should be written by multiple tasks, requiring locks.
@@ -357,7 +361,7 @@ Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-So far, I have tested extensively on my laptop (`parallelTaskCount = 1`, `2`, `4` and `8`) 
+So far, I have tested extensively on my laptop (`parallelTaskCount = 1`, `2`, `4` and `8`)
 with the expected results. Later, I will test on Edison and Wolf as well.
 
 <h4> Testing and Validation: Select maximum number of tasks <br>

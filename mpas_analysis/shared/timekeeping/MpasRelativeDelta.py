@@ -5,16 +5,17 @@ from calendar import monthrange, isleap
 
 class MpasRelativeDelta(relativedelta):
     """
-    MpasRelativeDelta is a subclass of dateutil.relativedelta for relative time
-    intervals with different MPAS calendars.
+    ``MpasRelativeDelta`` is a subclass of ``dateutil.relativedelta`` for
+    relative time intervals with different MPAS calendars.
 
     Only relative intervals (years, months, etc.) are supported and not the
     absolute date specifications (year, month, etc.).  Addition/subtraction
-    of datetime.datetime objects or other MpasRelativeDelta (but currently not
-    datetime.date, datetime.timedelta or other related objects) is supported.
+    of ``datetime.datetime`` objects or other ``MpasRelativeDelta`` (but
+    currently not ``datetime.date``, ``datetime.timedelta`` or other related
+    objects) is supported.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     """
 

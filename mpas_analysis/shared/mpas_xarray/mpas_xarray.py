@@ -16,10 +16,6 @@ remove_repeated_time_index : remove redundant indices in the 'Time' coordinate
 Authors
 -------
 Phillip J. Wolfram, Xylar Asay-Davis
-
-Last modified
--------------
-02/22/2017
 """
 
 
@@ -37,25 +33,24 @@ def open_multifile_dataset(fileNames, calendar,
     fileNames : list of strings
         A lsit of file paths to read
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
     simulationStartTime : string, optional
         The start date of the simulation, used to convert from time variables
         expressed as days since the start of the simulation to days since the
-        reference date. `simulationStartTime` takes one of the following
-        forms:
-            0001-01-01
+        reference date. ``simulationStartTime`` takes one of the following
+        forms::
 
+            0001-01-01
             0001-01-01 00:00:00
 
-        simulationStartTime is only required if the MPAS time variable
-        (identified by timeVariableName) is a number of days since the
+        ``simulationStartTime`` is only required if the MPAS time variable
+        (identified by ``timeVariableName``) is a number of days since the
         start of the simulation.
 
     timeVariableName : string, optional
-        The name of the time variable (typically 'Time' if using a variableMap
-        or 'xtime' if not using a variableMap)
+        The name of the time variable (typically ``'xtime'`` or ``'Time'``).
 
     variableList : list of strings, optional
         If present, a list of variables to be included in the data set
@@ -63,17 +58,19 @@ def open_multifile_dataset(fileNames, calendar,
     selectCorrdValues : dict, optional
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
-        xarray.dataset.sel() for details on how this dictonary is used.
-        An example:
+        ``xarray.dataset.sel()`` for details on how this dictonary is used.
+        An example::
+
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict, optional
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
-        xarray.dataset.isel() for details on how this dictonary is used.
-        An example:
+        ``xarray.dataset.isel()`` for details on how this dictonary is used.
+        An example::
+
             iselValues = {'nVertLevels': slice(0, 3),
-                           'nCells': cellIDs}
+                          'nCells': cellIDs}
 
     Returns
     -------
@@ -90,13 +87,9 @@ def open_multifile_dataset(fileNames, calendar,
         variable is a number of days since the start of the simulation but
         simulationStartTime is None.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/17/2017
     """
 
     preprocess_partial = partial(preprocess,
@@ -123,7 +116,7 @@ def subset_variables(ds, variableList):  # {{{
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set from which a subset of variables is to be extracted.
 
     variableList : string or list of strings
@@ -131,7 +124,7 @@ def subset_variables(ds, variableList):  # {{{
 
     Returns
     -------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         A copy of the original data set with only the variables in
         variableList.
 
@@ -143,10 +136,6 @@ def subset_variables(ds, variableList):  # {{{
     Authors
     -------
     Phillip J. Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/16/2017
     """
 
     allvars = ds.data_vars.keys()
@@ -187,29 +176,28 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set containing an MPAS time variable to be used to build
         an xarray time coordinate.
 
-    calendar : {'gregorian', 'gregorian_noleap'}
+    calendar : {``'gregorian'``, ``'gregorian_noleap'``}
         The name of one of the calendars supported by MPAS cores
 
     simulationStartTime : string, optinal
         The start date of the simulation, used to convert from time
         variables expressed as days since the start of the simulation to
-        days since the reference date. `simulationStartTime` takes one
-        of the following forms:
-            0001-01-01
+        days since the reference date. ``simulationStartTime`` takes one
+        of the following forms::
 
+            0001-01-01
             0001-01-01 00:00:00
 
-        simulationStartTime is only required if the MPAS time variable
-        (identified by timeVariableName) is a number of days since the
+        ``simulationStartTime`` is only required if the MPAS time variable
+        (identified by ``timeVariableName``) is a number of days since the
         start of the simulation.
 
-    timeVariableName : string
-        The name of the time variable (typically 'Time' if using a variableMap
-        or 'xtime' if not using a variableMap)
+    timeVariableName : string, optional
+        The name of the time variable (typically ``'xtime'`` or ``'Time'``).
 
     variableList : list of strings
         If present, a list of variables to be included in the data set
@@ -217,21 +205,23 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
     selectCorrdValues : dict
         A dictionary of coordinate names (keys) and values or arrays of
         values used to slice the variales in the data set.  See
-        xarray.DataSet.sel() for details on how this dictonary is used.
-        An example:
+        ``xarray.DataSet.sel()`` for details on how this dictonary is used.
+        An example::
+
             selectCorrdValues = {'cellLon': 180.0}
 
     iselValues : dict
         A dictionary of coordinate names (keys) and indices, slices or
         arrays of indices used to slice the variales in the data set.  See
-        xarray.DataSet.isel() for details on how this dictonary is used.
-        An example:
+        ``xarray.DataSet.isel()`` for details on how this dictonary is used.
+        An example::
+
             iselValues = {'nVertLevels': slice(0, 3),
-                           'nCells': cellIDs}
+                          'nCells': cellIDs}
 
     Returns
     -------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         A copy of the data set with the time coordinate set and which
         has been sliced.
 
@@ -239,10 +229,6 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
     -------
     Phillip J. Wolfram, Milena Veneziani, Luke van Roekel
     and Xylar Asay-Davis
-
-    Last modified
-    -------------
-    04/06/2017
     """
 
     ds = _parse_dataset_time(ds=ds,
@@ -274,21 +260,17 @@ def remove_repeated_time_index(ds):  # {{{
 
     Parameters
     ----------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         The data set potentially containing repeated time indices.
 
     Returns
     -------
-    ds : xarray.DataSet object
+    ds : ``xarray.DataSet`` object
         A copy of the original data set with any repeated time indices removed.
 
     Authors
     -------
     Phillip J. Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/11/2017
     """
     # get repeated indices
     times = ds.Time.values
@@ -326,10 +308,6 @@ def _assert_valid_selections(ds, selvals, iselvals):  # {{{
     Authors
     -------
     Phillip J. Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/10/2017
     """
     def test_vals_in_ds(vals, dims):
         if vals is not None:
@@ -358,10 +336,6 @@ def _ensure_list(alist):  # {{{
     Authors
     -------
     Phillip J. Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/10/2017
     """
 
     if isinstance(alist, str):
@@ -405,9 +379,9 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         The start date of the simulation, used to convert from time variables
         expressed as days since the start of the simulation to days since the
         reference date. `simulationStartTime` takes one of the following
-        forms:
-            0001-01-01
+        forms::
 
+            0001-01-01
             0001-01-01 00:00:00
 
         simulationStartTime is only required if the MPAS time variable
@@ -419,9 +393,9 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
 
     referenceDate : string
         The reference date for the time variable, typically '0001-01-01',
-        taking one of the following forms:
-            0001-01-01
+        taking one of the following forms::
 
+            0001-01-01
             0001-01-01 00:00:00
 
     Returns
@@ -443,10 +417,6 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
     Authors
     -------
     Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/16/2017
     """
 
     if isinstance(inTimeVariableName, (tuple, list)):
@@ -504,8 +474,10 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
             # 'daysSinceStartOfSim'
 
             if simulationStartTime is None:
-                raise ValueError('MPAS time variable {} appears to be a number of days since start \n'
-                                 'of sim but simulationStartTime was not  supplied.'.format(inTimeVariableName))
+                raise ValueError('MPAS time variable {} appears to be a '
+                                 'number of days since start \n'
+                                 'of sim but simulationStartTime was not'
+                                 '  supplied.'.format(inTimeVariableName))
 
             if (string_to_datetime(referenceDate) ==
                     string_to_datetime(simulationStartTime)):
@@ -520,8 +492,10 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
                                         calendar=calendar)
 
         elif timeVar.dtype == 'timedelta64[ns]':
-            raise TypeError('timeVar of unsupported type {}.  This is likely because xarray.open_dataset \n'
-                            'was called with decode_times=True, which can mangle MPAS times.'.format(timeVar.dtype))
+            raise TypeError('timeVar of unsupported type {}.  This is likely '
+                            'because xarray.open_dataset \n'
+                            'was called with decode_times=True, which can '
+                            'mangle MPAS times.'.format(timeVar.dtype))
         else:
             raise TypeError("timeVar of unsupported type {}".format(
                 timeVar.dtype))
@@ -556,13 +530,9 @@ def process_chunking(ds, chunking):  # {{{
     ValueError
         If chunking value used is not an acceptable value.
 
-    Author
-    ------
+    Authors
+    -------
     Phillip J. Wolfram
-
-    Last modified
-    -------------
-    04/06/2017
     """
 
     if isinstance(chunking, int):

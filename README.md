@@ -3,6 +3,8 @@
 
 A repository for the development and maintenance of MPAS analysis tools.
 
+![sea surface temperature](docs/_static/sst_example.png)
+
 Analysis is stored in a directory corresponding to each core component, e.g., `ocean` for
 MPAS-Ocean. Shared functionality is contained within the `shared` directory.
 
@@ -27,7 +29,7 @@ You can easily install them via the conda command:
 ```
 conda config --add channels conda-forge
 conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
-    lxml nco pyproj
+    lxml nco pyproj pillow
 ```
 
 ## Running the analysis
@@ -99,3 +101,13 @@ another machine to fit your needs.
    call `setup_and_check` on each task (to make sure the appropriate AM is on
    and files are present), and will finally call `run` on each task that is
    to be generated and is set up properly.
+
+## Generating Documentation
+
+To generate the `sphinx` documentation, run:
+```bash
+conda install sphinx sphinx_rtd_theme numpydoc
+pip install recommonmark
+cd docs
+make html
+```

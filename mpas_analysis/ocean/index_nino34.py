@@ -23,11 +23,12 @@ from ..shared.html import write_image_xml
 
 class IndexNino34(AnalysisTask):  # {{{
     '''
-    <Describe the analysis task here.>
+    A task for computing and plotting time series and spectra of the El Nino
+    3.4 climate index
 
     Authors
     -------
-    <List of authors>
+    Luke Van Roekel, Xylar Asay-Davis
     '''
 
     def __init__(self, config):  # {{{
@@ -234,8 +235,8 @@ class IndexNino34(AnalysisTask):  # {{{
         -------
         xarray.DataArray object containing the nino34index
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -295,8 +296,8 @@ class IndexNino34(AnalysisTask):  # {{{
         mkov*scale*xHigh : numpy.array
             99% confidence threshold from chi-squared test
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -360,8 +361,8 @@ class IndexNino34(AnalysisTask):  # {{{
         Single value giving the lag one auto-correlation
             If t != 1, this is no longer a lag one auto-correlation
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel
         """
 
@@ -382,8 +383,8 @@ class IndexNino34(AnalysisTask):  # {{{
            for the nino power spectra this is a modified Daniell window (see
            https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -473,8 +474,8 @@ class IndexNino34(AnalysisTask):  # {{{
             the number of dots per inch of the figure, taken from section
             ``plot`` option ``dpi`` in the config file by default
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -621,8 +622,8 @@ class IndexNino34(AnalysisTask):  # {{{
             axis. This may need to be adjusted depending on the figure size and
             aspect ratio.
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel
         """
         if dpi is None:
@@ -700,8 +701,8 @@ class IndexNino34(AnalysisTask):  # {{{
         ylabel : string
             string for y-axis label
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel
         '''
         plt.title(panelTitle, y=1.06, **axis_font)

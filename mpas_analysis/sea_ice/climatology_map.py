@@ -402,7 +402,7 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        hemisphere : ['NH', 'SH']
+        hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
         Authors
@@ -533,7 +533,7 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        hemisphere : ['NH', 'SH']
+        hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
         Authors

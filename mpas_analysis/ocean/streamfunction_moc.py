@@ -32,10 +32,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     '''
     Computation and plotting of model meridional overturning circulation.
     Will eventually support:
-      * MOC streamfunction, post-processed (currently supported)
-      * MOC streamfunction, from MOC analysis member
-      * MOC time series (max value at 24.5N), post-processed
-      * MOC time series (max value at 24.5N), from MOC analysis member
+
+        * MOC streamfunction, post-processed (currently supported)
+        * MOC streamfunction, from MOC analysis member
+        * MOC time series (max value at 24.5N), post-processed
+        * MOC time series (max value at 24.5N), from MOC analysis member
 
     Authors
     -------
