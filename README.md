@@ -1,15 +1,27 @@
 # MPAS-Analysis
 [![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=develop)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
+[![Documentation Status](https://readthedocs.org/projects/mpas-analysis/badge/?version=latest)](http://mpas-analysis.readthedocs.io/en/latest/?badge=latest)
 
-A repository for the development and maintenance of MPAS analysis tools.
+
+Analysis for simulations produced with Model for Prediction Across Scales
+(MPAS) components and the Accelerated Climate Model for Energy (ACME), which
+used those components.
 
 ![sea surface temperature](docs/_static/sst_example.png)
 
-Analysis is stored in a directory corresponding to each core component, e.g., `ocean` for
-MPAS-Ocean. Shared functionality is contained within the `shared` directory.
+Analysis is stored in a directory corresponding to each core component, e.g.,
+`ocean` for MPAS-Ocean. Shared functionality is contained within the `shared`
+directory.
+
+
+## Documentation
+
+[http://mpas-analysis.readthedocs.io](http://mpas-analysis.readthedocs.io)
+
 
 ## Installation
-This analysis repository presumes that the following python packages are available:
+This analysis repository presumes that the following python packages are
+available:
 
  * numpy
  * scipy
@@ -62,17 +74,18 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
 
 ## Running in parallel
   1. Copy the appropriate job script file from `configs/<machine_name>` to
-     the same directory as `run_analysis.py` (or another directory if preferred).
-     The default script, `configs/job_script.default.bash`, is appropriate for
-     a laptop or desktop computer with multiple cores.
+     the same directory as `run_analysis.py` (or another directory if
+     preferred). The default script, `configs/job_script.default.bash`, is
+     appropriate for a laptop or desktop computer with multiple cores.
   2. Modify the number of nodes (equal to the number of parallel tasks), the
      run name and optionally the output directory and the path to the config
      file for the run (default: `./configs/<machine_name>/config.<run_name>`)
      Note: in `job_script.default.bash`, the number of parallel tasks is set
      manually, since there are no nodes.
-  3. Note: the number of parallel tasks can be anything between 1 and the number
-     of analysis tasks to be performed.  If there are more tasks than parallel
-     tasks, later tasks will simply wait until earlier tasks have finished.
+  3. Note: the number of parallel tasks can be anything between 1 and the
+     number of analysis tasks to be performed.  If there are more tasks than
+     parallel tasks, later tasks will simply wait until earlier tasks have
+     finished.
   4. Submit the job using the modified job script
 
 If a job script for your machine is not available, try modifying the default
@@ -97,9 +110,9 @@ another machine to fit your needs.
    This will add a new object of the `MyTask` class to a list of analysis tasks
    created in `build_analysis_list`.  Later on in `run_analysis`, it will first
    go through the list to make sure each task needs to be generated
-   (by calling `check_generate`, which is defined in `AnalysisTask`), then, will
-   call `setup_and_check` on each task (to make sure the appropriate AM is on
-   and files are present), and will finally call `run` on each task that is
+   (by calling `check_generate`, which is defined in `AnalysisTask`), then,
+   will call `setup_and_check` on each task (to make sure the appropriate AM is
+   on and files are present), and will finally call `run` on each task that is
    to be generated and is set up properly.
 
 ## Generating Documentation
