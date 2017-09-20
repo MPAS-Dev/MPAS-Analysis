@@ -42,8 +42,9 @@ class TestInterp(TestCase):
 
     def get_latlon_file_descriptor(self):
         latLonGridFileName = str(self.datadir.join('SST_annual_1870-1900.nc'))
-        descriptor = LatLonGridDescriptor()
-        descriptor.read(latLonGridFileName, latVarName='lat', lonVarName='lon')
+        descriptor = LatLonGridDescriptor.read(latLonGridFileName,
+                                               latVarName='lat',
+                                               lonVarName='lon')
 
         return (descriptor, latLonGridFileName)
 
@@ -57,8 +58,7 @@ class TestInterp(TestCase):
         lon = numpy.array(config.getExpression('interpolate', 'lon',
                                                usenumpyfunc=True))
 
-        descriptor = LatLonGridDescriptor()
-        descriptor.create(lat, lon, units='degrees')
+        descriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
         return descriptor
 
     def get_stereographic_array_descriptor(self):
@@ -73,9 +73,9 @@ class TestInterp(TestCase):
         res = 100e3
         nx = 2*int(xMax/res)+1
         x = numpy.linspace(-xMax, xMax, nx)
-        descriptor = ProjectionGridDescriptor(projection)
         meshName = '{}km_Antarctic_stereo'.format(int(res*1e-3))
-        descriptor.create(x, x, meshName)
+        descriptor = ProjectionGridDescriptor.create(projection, x, x,
+                                                     meshName)
         return descriptor
 
     def get_file_names(self, suffix):
