@@ -308,7 +308,7 @@ regionIndicesToPlot = [6]
 # Number of points over which to compute moving average for time series (e.g., 
 #for monthly output, movingAveragePoints=12 corresponds to a 12-month moving
 # average window)
-movingAveragePoints = 12
+movingAveragePointsTimeSeries = 12
 # Number of points over which to compute moving average for Hovmoller plots
 movingAveragePointsHovmoller = 12
 
@@ -345,7 +345,7 @@ colormapNameTemperatureAnomaly = RdBu_r
 colormapIndicesTemperatureAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsTemperatureAnomaly = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
-#contour line levels
+# contour line levels
 contourLevelsTemperatureAnomaly = np.arange(-1.0, 1.26, 0.25)
 
 # colormap for salinity
@@ -363,9 +363,8 @@ colormapNameSalinityAnomaly = RdBu_r
 colormapIndicesSalinityAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsSalinityAnomaly = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
-#contour line levels
+# contour line levels
 contourLevelsSalinityAnomaly = np.arange(-0.1, 0.11, 0.02)
-
 
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)

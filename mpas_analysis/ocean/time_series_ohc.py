@@ -107,25 +107,11 @@ class TimeSeriesOHC(AnalysisTask):
         regions = [regions[index] for index in regionIndicesToPlot]
 
         for region in regions:
-            filePrefix = 'TAnomalyZ_{}_{}'.format(region, mainRunName)
-            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                            filePrefix))
-            self.filePrefixes[0, region] = filePrefix
+            for plotType in ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ', 'OHCAnomalyZ', 'OHC', 'OHCAnomaly']:
+                filePrefix = '{}_{}_{}'.format(plotType, region, mainRunName)
+                self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory, filePrefix))
+                self.filePrefixes[plotType, region] = filePrefix
 
-            filePrefix = 'SAnomalyZ_{}_{}'.format(region, mainRunName)
-            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                            filePrefix))
-            self.filePrefixes[1, region] = filePrefix
-
-            filePrefix = 'OHCAnomalyZ_{}_{}'.format(region, mainRunName)
-            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                            filePrefix))
-            self.filePrefixes[2, region] = filePrefix
-
-            filePrefix = 'OHCAnomaly_{}_{}'.format(region, mainRunName)
-            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                        filePrefix))
-            self.filePrefixes[3, region] = filePrefix
         return  # }}}
 
     def run(self):  # {{{
@@ -158,8 +144,8 @@ class TimeSeriesOHC(AnalysisTask):
         compareWithObservations = config.getboolean(configSectionName,
                                                     'compareWithObservations')
 
-        movingAveragePoints = config.getint(configSectionName,
-                                            'movingAveragePoints')
+        movingAveragePointsTimeSeries = config.getint(configSectionName,
+                                                      'movingAveragePointsTimeSeries')
 
         movingAveragePointsHovmoller = config.getint(configSectionName,
                                                      'movingAveragePointsHovmoller')
@@ -250,7 +236,6 @@ class TimeSeriesOHC(AnalysisTask):
                 variableList=[avgTemperatureVarName, avgSalinityVarName],
                 startDate=startDateFirstYear,
                 endDate=endDateFirstYear)
-
             firstYearAvgLayerTemperature = dsFirstYear[avgTemperatureVarName]
             firstYearAvgLayerSalinity = dsFirstYear[avgSalinityVarName]
         else:
@@ -339,9 +324,7 @@ class TimeSeriesOHC(AnalysisTask):
 
             title = 'Temperature Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
-            figureName = '{}/TAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
-                                                         region,
-                                                         mainRunName)
+            figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['TAnomalyZ', region])
 
             (colormapName, colorbarLevels) = setup_colormap(config,
                                                             configSectionName,
@@ -358,11 +341,10 @@ class TimeSeriesOHC(AnalysisTask):
                                   figureName, linewidths=1, xArrayIsTime=True,
                                   N=movingAveragePointsHovmoller, calendar=calendar)
 
-            filePrefix = self.filePrefixes[0, region]
             caption = 'Trend of {} Temperature Anomaly vs depth from Year 0001'.format(region)
             write_image_xml(
                 config=config,
-                filePrefix=filePrefix,
+                filePrefix=self.filePrefixes['TAnomalyZ', region],
                 componentName='Ocean',
                 componentSubdirectory='ocean',
                 galleryGroup='Trends vs Depth',
@@ -377,9 +359,7 @@ class TimeSeriesOHC(AnalysisTask):
 
                 title = 'Temperature, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
-                figureName = '{}/TZ_{}_{}.png'.format(self.plotsDirectory,
-                                                      region,
-                                                      mainRunName)
+                figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['TZ', region])
 
                 (colormap, colorbarLevels) = setup_colormap(config,
                                                             configSectionName,
@@ -403,9 +383,7 @@ class TimeSeriesOHC(AnalysisTask):
 
             colorbarLabel = '[PSU]'
 
-            figureName = '{}/SAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
-                                                         region,
-                                                         mainRunName)
+            figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['SAnomalyZ', region])
 
             (colormapName, colorbarLevels) = setup_colormap(config,
                                                             configSectionName,
@@ -422,11 +400,10 @@ class TimeSeriesOHC(AnalysisTask):
                                   figureName, linewidths=1, xArrayIsTime=True,
                                   N=movingAveragePointsHovmoller, calendar=calendar)
 
-            filePrefix = self.filePrefixes[1, region]
             caption = 'Trend of {} Salinity Anomaly vs depth from Year 0001'.format(region)
             write_image_xml(
                 config=config,
-                filePrefix=filePrefix,
+                filePrefix=self.filePrefixes['SAnomalyZ', region],
                 componentName='Ocean',
                 componentSubdirectory='ocean',
                 galleryGroup='Trends vs Depth',
@@ -441,9 +418,7 @@ class TimeSeriesOHC(AnalysisTask):
 
                 title = 'Salinity, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
-                figureName = '{}/SZ_{}_{}.png'.format(self.plotsDirectory,
-                                                      region,
-                                                      mainRunName)
+                figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['SZ', region])
 
                 (colormapName, colorbarLevels) = setup_colormap(config,
                                                                 configSectionName,
@@ -468,9 +443,7 @@ class TimeSeriesOHC(AnalysisTask):
 
             colorbarLabel = '[x$10^{22}$ J]'
 
-            figureName = '{}/OHCAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
-                                                   region,
-                                                   mainRunName)
+            figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['OHCAnomalyZ', region])
             
             (colormap, colorbarLevels) = setup_colormap(config,
                                                         configSectionName,
@@ -487,11 +460,10 @@ class TimeSeriesOHC(AnalysisTask):
                                   figureName, linewidths=1, xArrayIsTime=True,
                                   N=movingAveragePointsHovmoller, calendar=calendar)
 
-            filePrefix = self.filePrefixes[2, region]
             caption = 'Trend of {} OHC Anomaly vs depth from Year 0001'.format(region)
             write_image_xml(
                 config=config,
-                filePrefix=filePrefix,
+                filePrefix=self.filePrefixes['OHCAnomalyZ', region],
                 componentName='Ocean',
                 componentSubdirectory='ocean',
                 galleryGroup='Trends vs Depth',
@@ -507,9 +479,7 @@ class TimeSeriesOHC(AnalysisTask):
 
                 title = 'OHC, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
-                figureName = '{}/OHCZ_{}_{}.png'.format(self.plotsDirectory,
-                                                        region,
-                                                        mainRunName)
+                figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['OHCZ', region])
             
                 (colormap, colorbarLevels) = setup_colormap(config,
                                                             configSectionName,
@@ -524,6 +494,7 @@ class TimeSeriesOHC(AnalysisTask):
                                       colorbarLabel, title, xLabel, yLabel,
                                       figureName, linewidths=1, xArrayIsTime=True,
                                       N=movingAveragePointsHovmoller, calendar=calendar)
+
 
             # Now plot OHC timeseries
 
@@ -548,9 +519,7 @@ class TimeSeriesOHC(AnalysisTask):
                     ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
                                                       mainRunName)
 
-            figureName = '{}/OHCAnomaly_{}_{}.png'.format(self.plotsDirectory,
-                                                   region,
-                                                   mainRunName)
+            figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['OHCAnomaly', region])
 
             if preprocessedReferenceRunName != 'None':
                 # these preprocessed data are OHC *anomalies*
@@ -566,7 +535,7 @@ class TimeSeriesOHC(AnalysisTask):
                                                   ohcPreprocessed700m,
                                                   ohcPreprocessed2000m,
                                                   ohcPreprocessedBottom],
-                                         movingAveragePoints, title,
+                                         movingAveragePointsTimeSeries, title,
                                          xLabel, yLabel, figureName,
                                          lineStyles=['r-', 'r-', 'r--', 'r-.',
                                                      'b-', 'b-', 'b--', 'b-.'],
@@ -578,18 +547,17 @@ class TimeSeriesOHC(AnalysisTask):
                     preprocessedReferenceRunName == 'None'):
                 timeseries_analysis_plot(config, [ohcAnomalyTotal, ohcAnomaly700m, ohcAnomaly2000m,
                                                   ohcAnomalyBottom],
-                                         movingAveragePoints, title,
+                                         movingAveragePointsTimeSeries, title,
                                          xLabel, yLabel, figureName,
                                          lineStyles=['r-', 'r-', 'r--', 'r-.'],
                                          lineWidths=[2, 1, 1.5, 1.5],
                                          calendar=calendar)
 
-            filePrefix = self.filePrefixes[3, region]
             caption = 'Running Mean of the Anomaly in {} Ocean Heat Content ' \
                       'from Year 0001'.format(region)
             write_image_xml(
                 config=config,
-                filePrefix=filePrefix,
+                filePrefix=self.filePrefixes['OHCAnomaly', region],
                 componentName='Ocean',
                 componentSubdirectory='ocean',
                 galleryGroup='Time Series',
@@ -610,13 +578,11 @@ class TimeSeriesOHC(AnalysisTask):
                         ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
                                                           mainRunName)
                         
-                figureName = '{}/OHC_{}_{}.png'.format(self.plotsDirectory,
-                                                       region,
-                                                       mainRunName)
+                figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['OHC', region])
 
                 timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
                                                   ohcBottom],
-                                         movingAveragePoints, title,
+                                         movingAveragePointsTimeSeries, title,
                                          xLabel, yLabel, figureName,
                                          lineStyles=['r-', 'r-', 'r--', 'r-.'],
                                          lineWidths=[2, 1, 1.5, 1.5],

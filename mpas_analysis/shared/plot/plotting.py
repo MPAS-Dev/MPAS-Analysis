@@ -24,6 +24,8 @@ from ..timekeeping.utility import days_to_datetime, date_to_days
 
 from ..constants import constants
 
+import ConfigParser
+
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, calendar,
@@ -897,9 +899,12 @@ def setup_colormap(config, configSectionName, suffix=''):
                                    'colormapIndices{}'.format(suffix),
                                    usenumpyfunc=True)
 
-    colorbarLevels = config.getExpression(configSectionName,
-                                          'colorbarLevels{}'.format(suffix),
-                                          usenumpyfunc=True)
+    try:
+        colorbarLevels = config.getExpression(configSectionName,
+                                              'colorbarLevels{}'.format(suffix),
+                                              usenumpyfunc=True)
+    except(ConfigParser.NoOptionError):
+        colorbarLevels = None
 
     if colorbarLevels is not None:
         # set under/over values based on the first/last indices in the colormap
