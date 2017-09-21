@@ -6,7 +6,7 @@ run_config_file="config.run_name_here"
 # no prefix is needed for jobs running on a laptop or desktop computer
 command_prefix=""
 # change this if not submitting this script from the directory
-# containing run_analysis.py
+# containing run_mpas_analysis
 mpas_analysis_dir="."
 # the number of parallel tasks (anything between 1 and the total number
 # of tasks to run)
@@ -16,8 +16,8 @@ if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
     exit 1
 fi
-if [ ! -f $mpas_analysis_dir/run_analysis.py ]; then
-    echo "run_analysis.py not found in $mpas_analysis_dir!"
+if [ ! -f $mpas_analysis_dir/run_mpas_analysis ]; then
+    echo "run_mpas_analysis not found in $mpas_analysis_dir!"
     exit 1
 fi
 
@@ -34,12 +34,12 @@ cat <<EOF > $job_config_file
 parallelTaskCount = $parallel_task_count
 
 # Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_analysis.py is executed directly)
+# Default is no prefix (run_mpas_analysis is executed directly)
 commandPrefix = $command_prefix
 
 EOF
 
-$mpas_analysis_dir/run_analysis.py $run_config_file \
+$mpas_analysis_dir/run_mpas_analysis $run_config_file \
     $job_config_file
 
 # commend this out if you want to keep the config file, e.g. for debugging

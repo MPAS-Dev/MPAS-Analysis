@@ -48,7 +48,7 @@ class TestAnalysisTask(TestCase):
         #                                        the given category of analysis
         # an equivalent syntax can be used on the command line to override this
         # option:
-        #    ./run_analysis.py config.analysis --generate \
+        #    ./run_mpas_analysis config.analysis --generate \
         #         all,no_ocean,all_timeSeries
 
         cores = {'timeSeriesOHC': 'ocean',

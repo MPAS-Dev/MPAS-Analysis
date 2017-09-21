@@ -48,7 +48,7 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
   1. Create and empty config file (say `config.myrun`) or copy one of the
      example files in the `configs` directory.
   2. Copy and modify any config options you want to change from
-     `config.default` into your new config file.
+     `mpas_analysis/config.default` into your new config file.
 
      **Requirements for custom config files:**
      * At minimum you should set `baseDirectory` under `[output]` to the folder
@@ -58,23 +58,23 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
        updated correctly.
      * Any options you copy into the config file **must** include the
        appropriate section header (e.g. '[run]' or '[output]')
-     * The entire `config.default` does not need to be used.  This fill will
-       automatically be used for any options you do not include in your custom
-       config file.
-     * Given the automatic sourcing of `config.default` you should **not**
-       alter `config.default` directly.
-  3. run: `./run_analysis.py config.myrun`.  This will read the configuraiton
-     first from `config.default` and then replace that configuraiton with any
-     changes from from `config.myrun`
+     * The entire `mpas_analysis/config.default` does not need to be used.
+       This file will automatically be used for any options you do not include
+       in your custom config file.
+     * Given the automatic sourcing of `mpas_analysis/config.default` you
+       should **not** alter that file directly.
+  3. run: `./run_mpas_analysis config.myrun`.  This will read the configuraiton
+     first from `mpas_analysis/config.default` and then replace that
+     configuraiton with any changes from from `config.myrun`
   4. If you want to run a subset of the analysis, you can either set the
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
-     `config.default` for more details on this option.
+     `mpas_analysis/config.default` for more details on this option.
 
 
 ## Running in parallel
   1. Copy the appropriate job script file from `configs/<machine_name>` to
-     the same directory as `run_analysis.py` (or another directory if
+     the same directory as `run_mpas_analysis` (or another directory if
      preferred). The default script, `configs/job_script.default.bash`, is
      appropriate for a laptop or desktop computer with multiple cores.
   2. Modify the number of nodes (equal to the number of parallel tasks), the
@@ -100,10 +100,10 @@ another machine to fit your needs.
    described in the template.  Take a look at
    `mpas_analysis/shared/analysis_task.py` for additional guidance.
 2. note, no changes need to be made to `mpas_analysis/shared/analysis_task.py`
-3. modify `config.default` (and possibly any machine-specific config files in
-   `configs/<machine>`)
+3. modify `mpas_analysis/config.default` (and possibly any machine-specific
+   config files in `configs/<machine>`)
 4. import new analysis task in `mpas_analysis/<component>/__init__.py`
-5. add new analysis task to `run_analysis.py` under `build_analysis_list`:
+5. add new analysis task to `run_mpas_analysis` under `build_analysis_list`:
    ```python
       analyses.append(<component>.MyTask(config, myArg='argValue'))
    ```

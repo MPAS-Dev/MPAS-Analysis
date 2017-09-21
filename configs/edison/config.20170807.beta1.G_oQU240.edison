@@ -52,7 +52,7 @@ htmlSubdirectory = html
 #                                            given category of analysis
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
 
@@ -145,4 +145,4 @@ polarPlot = False
 maxChunkSize = 1000
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oQU240v3_Atlantic_region_and_southern_transect.nc
+regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oQU240v3_SingleRegionAtlanticWTransportTransects_masks.nc

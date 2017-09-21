@@ -93,9 +93,9 @@ class TestClimatology(TestCase):
         comparisonDescriptor = \
             get_lat_lon_comparison_descriptor(config)
 
-        obsDescriptor = LatLonGridDescriptor()
-        obsDescriptor.read(fileName=gridFileName, latVarName='lat',
-                           lonVarName='lon')
+        obsDescriptor = LatLonGridDescriptor.read(fileName=gridFileName,
+                                                  latVarName='lat',
+                                                  lonVarName='lon')
 
         remapper = \
             get_remapper(

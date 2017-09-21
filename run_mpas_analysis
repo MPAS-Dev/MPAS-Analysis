@@ -14,9 +14,9 @@ import matplotlib as mpl
 import argparse
 import traceback
 import sys
-import warnings
 import subprocess
 import time
+import pkg_resources
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -86,6 +86,7 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
     (processes, logs) = launch_tasks(taskNames[0:taskCount], config,
                                      configFiles)
     remainingTasks = taskNames[taskCount:]
+    tasksWithErrors = []
     while len(processes) > 0:
         (taskName, process) = wait_for_task(processes)
         if process.returncode == 0:
@@ -93,6 +94,7 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
         else:
             print "ERROR in task {}.  See log file {} for details".format(
                 taskName, logs[taskName].name)
+            tasksWithErrors.append(taskName)
         logs[taskName].close()
         # remove the process from the process dictionary (no need to bother)
         processes.pop(taskName)
@@ -104,6 +106,16 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
             processes.update(process)
             logs.update(log)
             remainingTasks = remainingTasks[1:]
+
+    # raise the last exception so the process exits with an error
+    errorCount = len(tasksWithErrors)
+    if errorCount == 1:
+        print "There were errors in task {}".format(tasksWithErrors[0])
+        sys.exit(1)
+    elif errorCount > 0:
+        print "There were errors in {} tasks: {}".format(
+                errorCount, ', '.join(tasksWithErrors))
+        sys.exit(1)
     # }}}
 
 
@@ -317,7 +329,8 @@ def run_analysis(config, analyses):  # {{{
     """
 
     # run each analysis task
-    lastException = None
+    tasksWithErrors = []
+    lastStacktrace = None
     for analysisTask in analyses:
         # write out a copy of the configuration to document the run
         logsDirectory = build_config_full_path(config, 'output',
@@ -332,10 +345,11 @@ def run_analysis(config, analyses):  # {{{
         except (Exception, BaseException) as e:
             if isinstance(e, KeyboardInterrupt):
                 raise e
-            traceback.print_exc(file=sys.stdout)
-            print "ERROR: analysis module {} failed during run".format(
+            lastStacktrace = traceback.format_exc()
+            print "ERROR: analysis task {} failed during run".format(
                 analysisTask.taskName)
-            lastException = e
+            print lastStacktrace
+            tasksWithErrors.append(analysisTask.taskName)
 
         configFileName = '{}/configs/config.{}'.format(logsDirectory,
                                                        analysisTask.taskName)
@@ -348,10 +362,21 @@ def run_analysis(config, analyses):  # {{{
         plt.show()
 
     # raise the last exception so the process exits with an error
-    if lastException is not None:
-        raise lastException
+    errorCount = len(tasksWithErrors)
+    if errorCount == 1:
+        if len(analyses) > 1:
+            print "There were errors in task {}".format(tasksWithErrors[0])
+            print "The stacktrace was:"
+            print lastStacktrace
+        sys.exit(1)
+    elif errorCount > 0:
+        print "There were errors in {} tasks: {}".format(
+                errorCount, ', '.join(tasksWithErrors))
+        print "The last stacktrace was:"
+        print lastStacktrace
+        sys.exit(1)
 
-    return  # }}}
+    # }}}
 
 
 if __name__ == "__main__":
@@ -371,14 +396,14 @@ if __name__ == "__main__":
 
     # add config.default to cover default not included in the config files
     # provided on the command line
-    defaultConfig = '{}/config.default'.format(
-        os.path.dirname(os.path.realpath(__file__)))
-    if os.path.exists(defaultConfig):
+    if pkg_resources.resource_exists('mpas_analysis', 'config.default'):
+        defaultConfig = pkg_resources.resource_filename('mpas_analysis',
+                                                        'config.default')
         configFiles = [defaultConfig] + args.configFiles
     else:
-        warnings.warn('WARNING: Did not find config.default.  Assuming other '
-                      'config file(s) contain a\n'
-                      'full set of configuration options.')
+        print 'WARNING: Did not find config.default.  Assuming other config ' \
+              'file(s) contain a\n' \
+              'full set of configuration options.'
         configFiles = args.configFiles
 
     config = MpasAnalysisConfigParser()

@@ -146,9 +146,9 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             mappingFilePrefix=mappingFilePrefix,
             method=config.get('climatology', 'mpasInterpolationMethod'))
 
-        obsDescriptor = LatLonGridDescriptor()
-        obsDescriptor.read(fileName=self.obsFileName, latVarName='lat',
-                           lonVarName='lon')
+        obsDescriptor = LatLonGridDescriptor.read(fileName=self.obsFileName,
+                                                  latVarName='lat',
+                                                  lonVarName='lon')
 
         origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
 
@@ -274,10 +274,10 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     seasonalClimatology.close()
                     write_netcdf(seasonalClimatology, climatologyFileName)
                     # make the remapper for the climatology
-                    obsDescriptor = LatLonGridDescriptor()
-                    obsDescriptor.read(fileName=climatologyFileName,
-                                       latVarName='lat',
-                                       lonVarName='lon')
+                    obsDescriptor = LatLonGridDescriptor.read(
+                            fileName=climatologyFileName,
+                            latVarName='lat',
+                            lonVarName='lon')
 
                     obsRemapper = get_remapper(
                         config=config, sourceDescriptor=obsDescriptor,
