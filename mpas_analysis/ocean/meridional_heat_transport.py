@@ -165,6 +165,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         config = self.config
 
+        movingAveragePoints = config.getint('meridionalHeatTransport',
+                                            'movingAveragePoints')
+
         # Read in depth and MHT latitude points
         # Latitude is from binBoundaryMerHeatTrans written in
         #  mpaso.hist.am.meridionalHeatTransport.*.nc
@@ -312,7 +315,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                   contourLevels, colorbarLabel,
                                   title, xLabel, yLabel, figureName,
                                   xLim=xLimGlobal, yLim=depthLimGlobal,
-                                  invertYAxis=False)
+                                  invertYAxis=False, N=movingAveragePoints)
 
             self._write_xml(filePrefix)
 

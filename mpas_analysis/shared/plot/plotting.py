@@ -7,7 +7,7 @@ Plotting utilities, including routines for plotting:
 
 Authors
 -------
-Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
+Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 """
 
 import matplotlib.pyplot as plt
@@ -691,11 +691,19 @@ def plot_vertical_section(
     dpi=None,
     xLim=None,
     yLim=None,
-    invertYAxis=True):  # {{{
+    linewidths=2,
+    invertYAxis=True,
+    xArrayIsTime=False,
+    N=None,
+    maxXTicks=20,
+    calendar='gregorian'):  # {{{
 
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
+
+    Or, if xArrayIsTime is True, plots data set on a vertical
+    Hovmoller plot (depth vs. time).
 
     Parameters
     ----------
@@ -704,7 +712,7 @@ def plot_vertical_section(
         control plotting
 
     xArray : float array
-        x array (latitude, longitude, or spherical distance)
+        x array (latitude, longitude, or spherical distance; or, time for a Hovmoller plot)
 
     depthArray : float array
         depth array [m]
@@ -746,29 +754,76 @@ def plot_vertical_section(
     yLim : float array, optional
         y range of plot
 
+    linewidths : int, optional
+        linewidths for contours
+
     invertYAxis : logical, optional
         if True, invert Y axis
 
+    xArrayIsTime : logical, optional
+        if True, format X axis for time
+
+    N : int, optional
+        the number of points over which to perform a moving average
+        NOTE: this option is mostly intended for use when xArrayIsTime is True,
+        although it will work with other data as well.  Also, the moving average
+        calculation is based on number of points, not actual x axis values, so for
+        best results, the values in the xArray should be equally spaced.
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+
+    calendar : the calendar to use for formatting the time axis
+        NOTE:  calendar is only used if xArrayIsTime is True
+
     Authors
     -------
-    Milena Veneziani, Mark Petersen, Xylar Asay-Davis
+    Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
     """
+
+    # verify that the dimensions of fieldArray are consistent with those of xArray and depthArray
+    if len(xArray) != fieldArray.shape[1]:
+        raise ValueError('size mismatch between xArray and fieldArray')
+    elif len(depthArray) != fieldArray.shape[0]: 
+        raise ValueError('size mismatch between depthArray and fieldArray')
 
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
 
+    if N is not None and N != 1:   # compute moving averages with respect to the x dimension
+        movingAverageDepthSlices = []
+        for nVertLevel in range(len(depthArray)):
+            depthSlice = fieldArray[[nVertLevel]][0]
+            depthSlice = xr.DataArray(depthSlice)  # in case it's not an xarray already
+            mean = pd.Series.rolling(depthSlice.to_series(), N, center=True).mean()
+            mean = xr.DataArray.from_series(mean)
+            mean = mean[int(N/2.0):-int(round(N/2.0)-1)]            
+            movingAverageDepthSlices.append(mean)
+        xArray = xArray[int(N/2.0):-int(round(N/2.0)-1)]
+        fieldArray = xr.DataArray(movingAverageDepthSlices)    
+
     x, y = np.meshgrid(xArray, depthArray)  # change to zMid
 
-    normModelObs = cols.BoundaryNorm(colorbarLevels, colormapName.N)
+    if colorbarLevels is None:
+        normModelObs = None
+    else:
+        normModelObs = cols.BoundaryNorm(colorbarLevels, colormapName.N)
 
     cs = plt.contourf(x, y, fieldArray, cmap=colormapName, norm=normModelObs,
                       spacing='uniform', levels=colorbarLevels, extend='both')
-    plt.contour(x, y, fieldArray, levels=contourLevels[::2], colors='k')
+
+    if contourLevels is not None:
+        if len(contourLevels) == 0:
+            contourLevels = None   # automatic calculation of contour levels
+        plt.contour(x, y, fieldArray, levels=contourLevels, colors='k', linewidths=linewidths)
 
     cbar = plt.colorbar(cs, orientation='vertical', spacing='uniform',
                         ticks=colorbarLevels, boundaries=colorbarLevels)
+
     if colorbarLabel is not None:
         cbar.set_label(colorbarLabel)
 
@@ -790,6 +845,11 @@ def plot_vertical_section(
         plt.xlim(xLim)
     if yLim:
         plt.ylim(yLim)
+
+    if xArrayIsTime:
+        minDays = [xArray[0]]
+        maxDays = [xArray[-1]]
+        plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -827,27 +887,37 @@ def setup_colormap(config, configSectionName, suffix=''):
 
     Authors
     -------
-    Xylar Asay-Davis, Milena Veneziani
+    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     '''
 
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
-    indices = config.getExpression(configSectionName,
-                                   'colormapIndices{}'.format(suffix))
-    colorbarLevels = config.getExpression(configSectionName,
-                                          'colorbarLevels{}'.format(suffix))
 
-    # set under/over values based on the first/last indices in the colormap
-    underColor = colormap(indices[0])
-    overColor = colormap(indices[-1])
-    if len(colorbarLevels)+1 == len(indices):
-        # we have 2 extra values for the under/over so make the colormap
-        # without these values
-        indices = indices[1:-1]
-    colormap = cols.ListedColormap(colormap(indices),
-                                   'colormapName{}'.format(suffix))
-    colormap.set_under(underColor)
-    colormap.set_over(overColor)
+    indices = config.getExpression(configSectionName,
+                                   'colormapIndices{}'.format(suffix),
+                                   usenumpyfunc=True)
+
+    colorbarLevels = config.getExpression(configSectionName,
+                                          'colorbarLevels{}'.format(suffix),
+                                          usenumpyfunc=True)
+
+    if colorbarLevels is not None:
+        # set under/over values based on the first/last indices in the colormap
+        underColor = colormap(indices[0])
+        overColor = colormap(indices[-1])
+        if len(colorbarLevels)+1 == len(indices):
+            # we have 2 extra values for the under/over so make the colormap
+            # without these values
+            indices = indices[1:-1]
+        elif len(colorbarLevels)-1 != len(indices):
+            # indices list must be either one element shorter
+            # or one element longer than colorbarLevels list
+            raise ValueError('length mismatch between indices and colorbarLevels')
+        colormap = cols.ListedColormap(colormap(indices),
+                                       'colormapName{}'.format(suffix))
+        colormap.set_under(underColor)
+        colormap.set_over(overColor)
+
     return (colormap, colorbarLevels)
 
 
