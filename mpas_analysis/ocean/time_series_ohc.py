@@ -226,9 +226,6 @@ class TimeSeriesOHC(AnalysisTask):
                 startDate=startDateFirstYear,
                 endDate=endDateFirstYear)
 
-            dsFirstYear = \
-                dsFirstYear.isel(nOceanRegionsTmp=regionIndicesToPlot)
-
             firstYearAvgLayerTemperature = dsFirstYear[avgTempVarName]
         else:
             firstYearAvgLayerTemperature = ds[avgTempVarName]
