@@ -64,7 +64,7 @@ def get_lat_lon_comparison_descriptor(config):  # {{{
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
-                 mappingFilePrefix, method):  # {{{
+                 mappingFilePrefix, method, logger=None):  # {{{
     """
     Given config options and descriptions of the source and comparison grids,
     returns a ``Remapper`` object that can be used to remap from source files
@@ -89,6 +89,9 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
     method : {'bilinear', 'neareststod', 'conserve'}
         The method of interpolation used.
+
+    logger : ``logging.Logger``, optional
+        A logger to which ncclimo output should be redirected
 
     Returns
     -------
@@ -135,7 +138,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
 
-    remapper.build_mapping_file(method=method)
+    remapper.build_mapping_file(method=method, logger=logger)
 
     return remapper  # }}}
 
@@ -258,7 +261,8 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
                                        seasons='none',
                                        decemberMode='sdd',
                                        remapper=None,
-                                       remappedDirectory=None):  # {{{
+                                       remappedDirectory=None,
+                                       logger=None):  # {{{
     '''
     Uses ncclimo to compute monthly, seasonal (DJF, MAM, JJA, SON) and annual
     climatologies.
@@ -306,6 +310,9 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
         climatologies on the source grid.  Has no effect if ``remapper`` is
         ``None``.
 
+    logger : ``logging.Logger``, optional
+        A logger to which ncclimo output should be redirected
+
     Raises
     ------
     OSError
@@ -346,19 +353,38 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     if remappedDirectory is not None:
         args.extend(['-O', remappedDirectory])
 
-    print 'running: {}'.format(' '.join(args))
-
-    # make sure any output is flushed before we add output from the
-    # subprocess
-    sys.stdout.flush()
-    sys.stderr.flush()
-
     # set an environment variable to make sure we're not using czender's
     # local version of NCO instead of one we have intentionally loaded
     env = os.environ.copy()
     env['NCO_PATH_OVERRIDE'] = 'No'
 
-    subprocess.check_call(args, env=env)  # }}}
+    if logger is None:
+        print 'running: {}'.format(' '.join(args))
+        # make sure any output is flushed before we add output from the
+        # subprocess
+        sys.stdout.flush()
+        sys.stderr.flush()
+
+        subprocess.check_call(args, env=env)
+    else:
+        logger.info('running: {}'.format(' '.join(args)))
+        for handler in logger.handlers:
+            handler.flush()
+
+        process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, env=env)
+        stdout, stderr = process.communicate()
+
+        if stdout:
+            logger.info(stdout)
+        if stderr:
+            for line in stderr.split('\n'):
+                logger.error(line)
+
+        if process.returncode != 0:
+            raise subprocess.CalledProcessError(process.returncode,
+                                                ' '.join(args))
+    # }}}
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,
@@ -751,7 +777,7 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
 
 def remap_and_write_climatology(config, climatologyDataSet,
                                 climatologyFileName, remappedFileName,
-                                remapper):  # {{{
+                                remapper, logger=None):  # {{{
     """
     Given a field in a climatology data set, use the ``remapper`` to remap
     horizontal dimensions of all fields, write the results to an output file,
@@ -785,6 +811,9 @@ def remap_and_write_climatology(config, climatologyDataSet,
         A remapper that can be used to remap files or data sets to a
         comparison grid.
 
+    logger : ``logging.Logger``, optional
+        A logger to which ncclimo output should be redirected
+
     Returns
     -------
     remappedClimatology : ``xarray.DataSet`` or ``xarray.DataArray`` object
@@ -808,7 +837,8 @@ def remap_and_write_climatology(config, climatologyDataSet,
             remapper.remap_file(inFileName=climatologyFileName,
                                 outFileName=remappedFileName,
                                 overwrite=True,
-                                renormalize=renormalizationThreshold)
+                                renormalize=renormalizationThreshold,
+                                logger=logger)
             remappedClimatology = xr.open_dataset(remappedFileName)
         else:
 

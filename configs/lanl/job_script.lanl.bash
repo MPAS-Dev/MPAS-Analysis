@@ -2,7 +2,7 @@
 
 # change number of nodes to change the number of parallel tasks
 # (anything between 1 and the total number of tasks to run)
-#SBATCH --nodes=10
+#SBATCH --nodes=1
 #SBATCH --time=1:00:00
 #SBATCH --account=climateacme
 #SBATCH --job-name=mpas_analysis
@@ -11,6 +11,8 @@
 #SBATCH --qos=interactive
 
 cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
+
+export OMP_NUM_THREADS=1
 
 module unload python
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
@@ -25,7 +27,9 @@ command_prefix=""
 # containing run_mpas_analysis
 mpas_analysis_dir="."
 # one parallel task per node by default
-parallel_task_count=$SLURM_JOB_NUM_NODES
+parallel_task_count=12
+# ncclimo can run with 1 (serial) or 12 (bck) threads
+ncclimo_mode=bck
 
 if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
@@ -49,12 +53,13 @@ cat <<EOF > $job_config_file
 # the number of parallel tasks (1 means tasks run in serial, the default)
 parallelTaskCount = $parallel_task_count
 
-# Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_mpas_analysis is executed directly)
-commandPrefix = $command_prefix
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-$mpas_analysis_dir/run_mpas_analysis $run_config_file \
+$command_prefix $mpas_analysis_dir/run_mpas_analysis $run_config_file \
     $job_config_file
 

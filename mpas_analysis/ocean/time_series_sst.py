@@ -1,6 +1,6 @@
 import os
 
-from ..shared.analysis_task import AnalysisTask
+from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
@@ -112,7 +112,7 @@ class TimeSeriesSST(AnalysisTask):
 
         return  # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Performs analysis of the time-series output of sea-surface temperature
         (SST).
@@ -122,18 +122,18 @@ class TimeSeriesSST(AnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting SST time series..."
+        self.logger.info("\nPlotting SST time series...")
 
-        print '  Load SST data...'
+        self.logger.info('  Load SST data...')
 
         simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
         calendar = self.calendar
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  Reading files:\n'
+                         '    {} through\n    {}'.format(
+                             os.path.basename(self.inputFiles[0]),
+                             os.path.basename(self.inputFiles[-1])))
 
         mainRunName = config.get('runs', 'mainRunName')
         preprocessedReferenceRunName = \
@@ -179,7 +179,8 @@ class TimeSeriesSST(AnalysisTask):
                                calendar=calendar)
 
         if preprocessedReferenceRunName != 'None':
-            print '  Load in SST for a preprocesses reference run...'
+            self.logger.info('  Load in SST for a preprocesses reference '
+                             'run...')
             inFilesPreprocessed = '{}/SST.{}.year*.nc'.format(
                 preprocessedInputDirectory, preprocessedReferenceRunName)
             dsPreprocessed = open_multifile_dataset(
@@ -194,8 +195,9 @@ class TimeSeriesSST(AnalysisTask):
                 dsPreprocessedTimeSlice = \
                     dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
             else:
-                print '   Warning: Preprocessed time series ends before the ' \
-                    'timeSeries startYear and will not be plotted.'
+                self.logger.warning('Preprocessed time series ends before the '
+                                    'timeSeries startYear and will not be '
+                                    'plotted.')
                 preprocessedReferenceRunName = 'None'
 
         cacheFileName = '{}/sstTimeSeries.nc'.format(outputDirectory)
@@ -206,9 +208,9 @@ class TimeSeriesSST(AnalysisTask):
                                               self._compute_sst_part,
                                               cacheFileName, calendar,
                                               yearsPerCacheUpdate=10,
-                                              printProgress=True)
+                                              logger=self.logger)
 
-        print '  Make plots...'
+        self.logger.info('  Make plots...')
         for regionIndex in regionIndicesToPlot:
             region = regions[regionIndex]
 

@@ -16,7 +16,7 @@ from ..timekeeping.utility import days_to_datetime
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
                       calendar, yearsPerCacheUpdate=1,
-                      printProgress=False):  # {{{
+                      logger=None):  # {{{
     '''
     Create or update a NetCDF file ``cacheFileName`` containing the given time
     series, calculated with ``timeSeriesCalcFunction`` over the given times,
@@ -52,9 +52,8 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         output the file frequently.  If not, there will be needless overhead
         in caching the file too frequently.
 
-    printProgress: bool, optional
-        Whether progress messages should be printed as the climatology is
-        computed
+    logger : ``logging.Logger``, optional
+        A logger to which to write output as the time series is computed
 
     Returns
     -------
@@ -73,8 +72,8 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
     continueOutput = os.path.exists(cacheFileName)
     cacheDataSetExists = False
     if continueOutput:
-        if printProgress:
-            print '   Read in previously computed time series'
+        if logger is not None:
+            logger.info('   Read in previously computed time series')
         # read in what we have so far
 
         try:
@@ -84,7 +83,10 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
             # assuming the cache file is corrupt, so deleting it.
             message = 'Deleting cache file {}, which appears to have ' \
                       'been corrupted.'.format(cacheFileName)
-            warnings.warn(message)
+            if logger is None:
+                warnings.warn(message)
+            else:
+                logger.warning(message)
             os.remove(cacheFileName)
 
         if cacheDataSetExists:
@@ -116,13 +118,13 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
             # no unprocessed time entries in this data range
             continue
 
-        if printProgress:
+        if logger is not None:
             if firstProcessed:
-                print '   Process and save time series'
+                logger.info('   Process and save time series')
             if yearsPerCacheUpdate == 1:
-                print '     {:04d}'.format(years[0])
+                logger.info('     {:04d}'.format(years[0]))
             else:
-                print '     {:04d}-{:04d}'.format(years[0], years[-1])
+                logger.info('     {:04d}-{:04d}'.format(years[0], years[-1]))
 
         ds = timeSeriesCalcFunction(timeIndices, firstProcessed)
         firstProcessed = False

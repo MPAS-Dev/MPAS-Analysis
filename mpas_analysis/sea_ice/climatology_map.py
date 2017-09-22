@@ -6,8 +6,6 @@ import numpy as np
 
 import xarray as xr
 
-from ..shared.constants import constants
-
 from ..shared.climatology import get_lat_lon_comparison_descriptor, \
     get_remapper, get_mpas_climatology_dir_name, \
     get_observation_climatology_file_names, \
@@ -21,7 +19,7 @@ from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 from ..shared.plot.plotting import plot_polar_comparison, \
     setup_colormap
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io.utility import build_config_full_path, make_directories
 from ..shared.io import write_netcdf
 from ..shared.html import write_image_xml
 
@@ -88,7 +86,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
             config=self.config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
             mappingFilePrefix='map',
-            method=self.config.get('climatology', 'mpasInterpolationMethod'))
+            method=self.config.get('climatology', 'mpasInterpolationMethod'),
+            logger=self.logger)
 
         info = self.obsAndPlotInfo[0]
         season = info['season']
@@ -108,7 +107,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 comparisonDescriptor=comparisonDescriptor,
                 mappingFilePrefix='map_obs_{}'.format(fieldName),
                 method=config.get('seaIceObservations',
-                                  'interpolationMethod'))
+                                  'interpolationMethod'),
+                logger=self.logger)
 
         self.xmlFileNames = []
 
@@ -123,9 +123,16 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                                                         filePrefix))
             info['filePrefix'] = filePrefix
 
+        # make the mapping directory, because doing so within each process
+        # seems to be giving ESMF_RegridWeightGen some trouble
+        mappingSubdirectory = \
+            build_config_full_path(self.config, 'output',
+                                   'mappingSubdirectory')
+        make_directories(mappingSubdirectory)
+
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Performs analysis of sea-ice properties by comparing with
         previous model results and/or observations.
@@ -135,13 +142,13 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting 2-d maps of {} climatologies...".format(
-            self.fieldNameInTitle)
+        self.logger.info("\nPlotting 2-d maps of {} climatologies...".format(
+            self.fieldNameInTitle))
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  Reading files:\n'
+                         '    {} through\n    {}'.format(
+                                 os.path.basename(self.inputFiles[0]),
+                                 os.path.basename(self.inputFiles[-1])))
 
         self._compute_seasonal_climatologies()
 
@@ -157,7 +164,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         '''
 
-        print '  Make ice concentration plots...'
+        self.logger.info('  Make ice concentration plots...')
 
         config = self.config
 
@@ -232,7 +239,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                         remap_and_write_climatology(
                             config, seasonalClimatology,
                             obsClimatologyFileName,
-                            obsRemappedFileName, self.obsRemapper)
+                            obsRemappedFileName, self.obsRemapper,
+                            logger=self.logger)
 
             else:
 
@@ -338,7 +346,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                                   'timeMonthly_avg_iceVolumeCell'],
                     modelName=modelName,
                     seasons=self.seasons,
-                    decemberMode='sdd')
+                    decemberMode='sdd',
+                    logger=self.logger)
 
         self._remap_seasonal_climatology()
 
@@ -379,7 +388,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 self.mpasRemapper.remap_file(
                         inFileName=maskedClimatologyFileName,
                         outFileName=remappedFileName,
-                        overwrite=True)
+                        overwrite=True,
+                        logger=self.logger)
         # }}}
     # }}}
 

@@ -8,29 +8,34 @@ Xylar Asay-Davis
 '''
 
 import warnings
+from multiprocessing import Process, Value
+import time
+import traceback
+import logging
+import sys
 
 from .io import NameList, StreamsFile
 from .io.utility import build_config_full_path, make_directories
 
 
-class AnalysisTask(object):  # {{{
+class AnalysisTask(Process):  # {{{
     '''
     The base class for analysis tasks.
 
     Attributes
     ----------
-    config :  instance of MpasAnalysisConfigParser
+    config : ``MpasAnalysisConfigParser``
         Contains configuration options
 
-    taskName :  str
+    taskName : str
         The name of the task, typically the same as the class name except
         starting with lowercase (e.g. 'myTask' for class 'MyTask')
 
-    componentName :  {'ocean', 'seaIce'}
+    componentName : {'ocean', 'seaIce'}
         The name of the component (same as the folder where the task
         resides)
 
-    tags :  list of str
+    tags : list of str
         Tags used to describe the task (e.g. 'timeSeries', 'climatology',
         horizontalMap', 'index', 'transect').  These are used to determine
         which tasks are generated (e.g. 'all_transect' or 'no_climatology'
@@ -46,24 +51,37 @@ class AnalysisTask(object):  # {{{
         The directory for writing plots (which is also created if it doesn't
         exist)
 
-    namelist : ``shared.io.NameList`` object
+    namelist : ``shared.io.NameList``
         the namelist reader
 
-    runStreams : ``shared.io.StreamsFile`` object
+    runStreams : ``shared.io.StreamsFile``
         the streams file reader for streams in the run directory (e.g. restart
         files)
 
-    historyStreams : ``shared.io.StreamsFile`` object
+    historyStreams : ``shared.io.StreamsFile``
         the streams file reader for streams in the history directory (most
         streams other than restart files)
 
-    calendar : the name of the calendar ('gregorian' or 'gregoraian_noleap')
+    calendar : {'gregorian', 'gregoraian_noleap'}
+        The calendar used in the MPAS run
+
+    logger : ``logging.Logger``
+        A logger for output during the run phase of an analysis task
 
     Authors
     -------
     Xylar Asay-Davis
 
     '''
+
+    # flags for run status
+    UNSET = 0
+    READY = 1
+    BLOCKED = 2
+    RUNNING = 3
+    SUCCESS = 4
+    FAIL = 5
+
     def __init__(self, config, taskName, componentName, tags=[]):  # {{{
         '''
         Construct the analysis task.
@@ -95,10 +113,24 @@ class AnalysisTask(object):  # {{{
         -------
         Xylar Asay-Davis
         '''
+        # This will include a subtask name as well in the future
+        self.fullTaskName = taskName
+
+        # call the constructor from the base class (Process)
+        super(AnalysisTask, self).__init__(name=self.fullTaskName)
+
         self.config = config
         self.taskName = taskName
         self.componentName = componentName
-        self.tags = tags  # }}}
+        self.tags = tags
+        self.logger = None
+
+        # non-public attributes related to multiprocessing and logging
+        self.daemon = True
+        self._runStatus = Value('i', AnalysisTask.UNSET)
+        self._stackTrace = None
+        self._logFileName = None
+        # }}}
 
     def setup_and_check(self):  # {{{
         '''
@@ -157,21 +189,90 @@ class AnalysisTask(object):  # {{{
             if tag in self.tags:
                 self.set_start_end_date(section=tag)
 
+        # redirect output to a log file
+        logsDirectory = build_config_full_path(self.config, 'output',
+                                               'logsSubdirectory')
+
+        self._logFileName = '{}/{}.log'.format(logsDirectory,
+                                               self.fullTaskName)
+
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         '''
-        Runs the analysis task.
-
-        Individual tasks (children classes of this base class) should first
-        call this method to perform any common steps in an analysis task,
-        then, perform the steps required to run the analysis task.
+        Run the analysis.  Each task should override this function to do the
+        work of computing and/or plotting analysis
 
         Authors
         -------
         Xylar Asay-Davis
         '''
         return  # }}}
+
+    def run(self, writeLogFile=True):  # {{{
+        '''
+        Sets up logging and then runs the analysis task.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+        # redirect output to a log file
+        logsDirectory = build_config_full_path(self.config, 'output',
+                                               'logsSubdirectory')
+
+        configFileName = '{}/configs/config.{}'.format(logsDirectory,
+                                                       self.fullTaskName)
+        configFile = open(configFileName, 'w')
+        self.config.write(configFile)
+        configFile.close()
+
+        if writeLogFile:
+            self.logger = logging.getLogger(self.fullTaskName)
+            handler = logging.FileHandler(self._logFileName)
+        else:
+            self.logger = logging.getLogger()
+            handler = logging.StreamHandler(sys.stdout)
+
+        formatter = AnalysisFormatter()
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.INFO)
+
+        if writeLogFile:
+            oldStdout = sys.stdout
+            oldStderr = sys.stderr
+            sys.stdout = StreamToLogger(self.logger, logging.INFO)
+            sys.stderr = StreamToLogger(self.logger, logging.ERROR)
+
+        self._runStatus.value = AnalysisTask.RUNNING
+        startTime = time.time()
+        try:
+            self.run_task()
+            self._runStatus.value = AnalysisTask.SUCCESS
+        except (Exception, BaseException) as e:
+            if isinstance(e, KeyboardInterrupt):
+                raise e
+            self._stackTrace = traceback.format_exc()
+            self.logger.error("analysis task {} failed during run \n"
+                              "{}".format(self.taskName, self._stackTrace))
+            self._runStatus.value = AnalysisTask.FAIL
+
+        runDuration = time.time() - startTime
+        m, s = divmod(runDuration, 60)
+        h, m = divmod(int(m), 60)
+        self.logger.info('Execution time: {}:{:02d}:{:05.2f}'.format(h, m, s))
+
+        if writeLogFile:
+            # restore stdout and stderr
+            sys.stdout = oldStdout
+            sys.stderr = oldStderr
+
+        # remove the handlers from the logger (probably only necessary if
+        # writeLogFile==False)
+        self.logger.handlers = []
+
+        # }}}
 
     def check_generate(self):
         # {{{
@@ -317,6 +418,80 @@ class AnalysisTask(object):  # {{{
             self.config.set(section, 'endDate', endDate)  # }}}
 
 # }}}
+
+
+class AnalysisFormatter(logging.Formatter):  # {{{
+    """
+    A custom formatter for logging
+
+    Modified from:
+    https://stackoverflow.com/a/8349076/7728169
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    # printing error messages without a prefix because they are sometimes
+    # errors and sometimes only warnings sent to stderr
+    err_fmt = "%(msg)s"
+    dbg_fmt = "DEBUG: %(module)s: %(lineno)d: %(msg)s"
+    info_fmt = "%(msg)s"
+
+    def __init__(self, fmt="%(levelno)s: %(msg)s"):
+        logging.Formatter.__init__(self, fmt)
+
+    def format(self, record):
+
+        # Save the original format configured by the user
+        # when the logger formatter was instantiated
+        format_orig = self._fmt
+
+        # Replace the original format with one customized by logging level
+        if record.levelno == logging.DEBUG:
+            self._fmt = AnalysisFormatter.dbg_fmt
+
+        elif record.levelno == logging.INFO:
+            self._fmt = AnalysisFormatter.info_fmt
+
+        elif record.levelno == logging.ERROR:
+            self._fmt = AnalysisFormatter.err_fmt
+
+        # Call the original formatter class to do the grunt work
+        result = logging.Formatter.format(self, record)
+
+        # Restore the original format configured by the user
+        self._fmt = format_orig
+
+        return result
+# }}}
+
+
+class StreamToLogger(object):  # {{{
+    """
+    Modified based on code by:
+    https://www.electricmonk.nl/log/2011/08/14/redirect-stdout-and-stderr-to-a-logger-in-python/
+
+    Copyright (C) 2011 Ferry Boender
+
+    License: "available under the GPL" (the author does not provide more
+    details)
+
+    Fake file-like stream object that redirects writes to a logger instance.
+    """
+    def __init__(self, logger, log_level=logging.INFO):
+        self.logger = logger
+        self.log_level = log_level
+        self.linebuf = ''
+
+    def write(self, buf):
+        for line in buf.rstrip().splitlines():
+            self.logger.log(self.log_level, line.rstrip())
+
+    def flush(self):
+        pass
+
+    # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

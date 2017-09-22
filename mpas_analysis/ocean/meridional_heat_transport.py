@@ -16,7 +16,7 @@ from ..shared.climatology.climatology \
     compute_climatologies_with_ncclimo, \
     get_ncclimo_season_file_name
 
-from ..shared.analysis_task import AnalysisTask
+from ..shared import AnalysisTask
 from ..shared.html import write_image_xml
 
 
@@ -150,7 +150,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Process MHT analysis member data if available.
         Plots MHT as:
@@ -161,7 +161,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         -------
         Mark Petersen, Milena Veneziani, Xylar Asay-Davis
         """
-        print "\nPlotting meridional heat transport (MHT)..."
+        self.logger.info("\nPlotting meridional heat transport (MHT)...")
 
         config = self.config
 
@@ -174,7 +174,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Depth is from refZMid, also in
         # mpaso.hist.am.meridionalHeatTransport.*.nc
 
-        print '  Read in depth and latitude...'
+        self.logger.info('  Read in depth and latitude...')
         ncFile = netCDF4.Dataset(self.mhtFile, mode='r')
         # reference depth [m]
         refZMid = ncFile.variables['refZMid'][:]
@@ -201,19 +201,20 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
                         'timeMonthly_avg_meridionalHeatTransportLatZ']
 
-        print '\n  Compute and plot global meridional heat transport'
+        self.logger.info('\n  Compute and plot global meridional heat '
+                         'transport')
 
         outputRoot = build_config_full_path(config, 'output',
                                             'mpasClimatologySubdirectory')
 
         outputDirectory = '{}/mht'.format(outputRoot)
 
-        print '\n  List of files for climatologies:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  List of files for climatologies:\n'
+                         '    {} through\n    {}'.format(
+                                 os.path.basename(self.inputFiles[0]),
+                                 os.path.basename(self.inputFiles[-1])))
 
-        print '   Load data...'
+        self.logger.info('   Load data...')
 
         climatologyFileName = get_ncclimo_season_file_name(outputDirectory,
                                                            'mpaso', 'ANN',
@@ -233,7 +234,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                     variableList=variableList,
                     modelName='mpaso',
                     seasons=['ANN'],
-                    decemberMode='sdd')
+                    decemberMode='sdd',
+                    logger=self.logger)
 
         annualClimatology = xr.open_dataset(climatologyFileName)
         annualClimatology = annualClimatology.isel(Time=0)
@@ -245,7 +247,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         depthLimGlobal = config.getExpression(self.sectionName,
                                               'depthLimGlobal')
 
-        print '   Plot global MHT...'
+        self.logger.info('   Plot global MHT...')
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
         y = annualClimatology.timeMonthly_avg_meridionalHeatTransportLat

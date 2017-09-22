@@ -17,7 +17,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time
 
 from ..shared.plot.plotting import plot_xtick_format, plot_size_y_axis
 
-from ..shared.analysis_task import AnalysisTask
+from ..shared import AnalysisTask
 from ..shared.html import write_image_xml
 
 
@@ -94,7 +94,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         '''
         Computes NINO34 index and plots the time series and power spectrum with
         95 and 99% confidence bounds
@@ -104,9 +104,10 @@ class IndexNino34(AnalysisTask):  # {{{
         Luke Van Roekel, Xylar Asay-Davis
         '''
 
-        print "\nPlotting Nino3.4 time series and power spectrum...."
+        self.logger.info("\nPlotting Nino3.4 time series and power "
+                         "spectrum....")
 
-        print '  Load SST data...'
+        self.logger.info('  Load SST data...')
         fieldName = 'nino'
 
         simulationStartTime = get_simulation_start_time(self.runStreams)
@@ -127,10 +128,10 @@ class IndexNino34(AnalysisTask):  # {{{
             dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
             obsTitle = 'ERS SSTv4'
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  Reading files:\n'
+                         '    {} through\n    {}'.format(
+                                 os.path.basename(self.inputFiles[0]),
+                                 os.path.basename(self.inputFiles[-1])))
         mainRunName = config.get('runs', 'mainRunName')
 
         # regionIndex should correspond to NINO34 in surface weighted Average
@@ -155,14 +156,14 @@ class IndexNino34(AnalysisTask):  # {{{
         dsObs = xr.open_dataset(dataPath)
         nino34Obs = dsObs.sst
 
-        print '  Compute NINO3.4 index...'
+        self.logger.info('  Compute NINO3.4 index...')
         regionSST = ds[varName].isel(nOceanRegions=regionIndex)
         nino34 = self._compute_nino34_index(regionSST, calendar)
 
         # Compute the observational index over the entire time range
         # nino34Obs = compute_nino34_index(dsObs.sst, calendar)
 
-        print ' Computing NINO3.4 power spectra...'
+        self.logger.info(' Computing NINO3.4 power spectra...')
         f, spectra, conf99, conf95, redNoise = \
             self._compute_nino34_spectra(nino34)
 
@@ -183,7 +184,7 @@ class IndexNino34(AnalysisTask):  # {{{
         fObs = 1.0 / (constants.eps + fObs*constants.sec_per_year)
         f30 = 1.0 / (constants.eps + f30*constants.sec_per_year)
 
-        print ' Plot NINO3.4 index and spectra...'
+        self.logger.info(' Plot NINO3.4 index and spectra...')
 
         figureName = '{}/NINO34_{}.png'.format(self.plotsDirectory,
                                                mainRunName)
@@ -281,7 +282,6 @@ class IndexNino34(AnalysisTask):  # {{{
         pxxSmooth : xarray.DataArray object
             nino34Index power spectra that has been smoothed with a modified
             Daniell window (https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)
-
 
         f : numpy.array
             array of frequencies corresponding to the center of the spectral
@@ -493,7 +493,7 @@ class IndexNino34(AnalysisTask):  # {{{
         if title is not None:
             fig.suptitle(title, y=0.92, **title_font)
 
-        ax1 = plt.subplot(3, 1, 1)
+        plt.subplot(3, 1, 1)
 
         plt.plot(fObs[2:-3], ninoObs[2:-3], 'k', linewidth=linewidths)
         plt.plot(fObs[2:-3], redNoiseObs[2:-3], 'r', linewidth=linewidths)
@@ -519,7 +519,7 @@ class IndexNino34(AnalysisTask):  # {{{
         if ylabel is not None:
             plt.ylabel(ylabel, **axis_font)
 
-        ax2 = plt.subplot(3, 1, 2)
+        plt.subplot(3, 1, 2)
 
         plt.plot(f30[2:-3], nino30yr[2:-3], 'k', linewidth=linewidths)
         plt.plot(f30[2:-3], redNoise30[2:-3], 'r', linewidth=linewidths)
@@ -539,7 +539,7 @@ class IndexNino34(AnalysisTask):  # {{{
         if ylabel is not None:
             plt.ylabel(ylabel, **axis_font)
 
-        ax3 = plt.subplot(3, 1, 3)
+        plt.subplot(3, 1, 3)
         plt.plot(f[2:-3], ninoSpectra[2:-3], 'k', linewidth=linewidths)
         plt.plot(f[2:-3], redNoiseSpectra[2:-3], 'r', linewidth=linewidths)
         plt.plot(f[2:-3], confidence95[2:-3], 'b', linewidth=linewidths)
