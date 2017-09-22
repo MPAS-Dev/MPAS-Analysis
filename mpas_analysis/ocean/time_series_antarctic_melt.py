@@ -338,22 +338,33 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         minDays = modelValues.Time.min()
         maxDays = modelValues.Time.max()
         plt.plot(modelValues.Time.values, modelValues.values, modelLineStyle,
-                 linewidth=modelLineWidth)
+                 linewidth=modelLineWidth, label='model')
 
         ax = plt.gca()
 
         # this makes a "patch" with a single rectangular polygon, where the pairs are time and melt 
         # rate for the 4 corners, and "True" means it is a closed polygon:
-        patches = [Polygon([[minDays, obsMean-obsUncertainty], [maxDays, obsMean-obsUncertainty],
-                        [maxDays, obsMean+obsUncertainty], [minDays, obsMean+obsUncertainty]])]
+#        patches = [Polygon([[minDays, obsMean-obsUncertainty], [maxDays, obsMean-obsUncertainty],
+#                        [maxDays, obsMean+obsUncertainty], [minDays, obsMean+obsUncertainty]])]
 
         # make the polygon gray and mostly transparent
-        p = PatchCollection(patches, color=obsColor, alpha=0.15)
+#        p = PatchCollection(patches, color=obsColor, alpha=0.15)
         # add it to the plot on the current axis
-        ax.add_collection(p)
+#        ax.add_collection(p)
 
         # also plot a line
-        plt.plot([minDays, maxDays], [obsMean, obsMean], color=obsColor, linewidth=obsLineWidth)
+#        plt.plot([minDays, maxDays], [obsMean, obsMean], color=obsColor, linewidth=obsLineWidth)
+
+	# plot error bars rather than the "patch" used above
+	plt.errorbar( (maxDays - minDays)/3+minDays, obsMean, yerr=obsUncertainty, fmt='o', ecolor='k', 
+			capthick=2, label='obs1')
+	plt.errorbar( (maxDays - minDays)/3+minDays+1.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/3.0, 
+			fmt='s', ecolor='g', capthick=2, label='obs2')  # example of a 2nd set of obs error bars
+	plt.errorbar( (maxDays - minDays)/3+minDays+2.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/2.0, 
+			fmt='^', ecolor='r', capthick=2, label='obs3')  # example of a 3rd set of obs error bars
+
+        # add legend
+	plt.legend( loc='lower right' )
 
         # this will need to be imported from shared.plot.plotting
         _plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
