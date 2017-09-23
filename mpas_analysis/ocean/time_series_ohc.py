@@ -310,108 +310,20 @@ class TimeSeriesOHC(AnalysisTask):
         for regionIndex in regionIndicesToPlot:
             region = regions[regionIndex]
 
-            # Plot OHC, temperature, and salinity (and their anomalies) as
-            # heatmaps on time/depth plots
+            # Plot temperature, salinity and OHC anomalies (and full fields)
+            # trends with depth
 
+            #  First T vs depth/time
             x = ds.Time.values
             y = depth
-
-            if plotOriginalFields:
-                #ohc = dsOHC.ohc.isel(nOceanRegionsTmp=0)  #.isel(nOceanRegionsTmp=regionIndex)
-                ohc = dsOHC.ohc.isel(nOceanRegionsTmp=regionIndex)
-                ohcScaled = unitsScalefactor*ohc
-
-                title = 'OHC, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
-
-                colorbarLabel = '[x$10^{22}$ J]'
-                xLabel = 'Time [years]'
-                yLabel = 'Depth [m]'
-
-                figureName = '{}/OHCZ_{}_{}.png'.format(self.plotsDirectory,
-                                                        region,
-                                                        mainRunName)
-            
-                (colormap, colorbarLevels) = setup_colormap(config,
-                                                            configSectionName,
-                                                            suffix='OHC')
-
-                contourLevels = config.getExpression(configSectionName,
-                                                     'contourLevels{}'.format('OHC'),
-                                                     usenumpyfunc=True)
-
-                z = ohcScaled.transpose()
-
-                plot_vertical_section(config, x, y, z,
-                                      colormap, colorbarLevels, contourLevels,
-                                      colorbarLabel, title, xLabel, yLabel,
-                                      figureName, linewidths=1, xArrayIsTime=True,
-                                      N=movingAveragePointsHovmoller, calendar=calendar)
-
-            #ohcAnomaly = dsOHC.ohcAnomaly.isel(nOceanRegionsTmp=0)  #.isel(nOceanRegionsTmp=regionIndex)
-            ohcAnomaly = dsOHC.ohcAnomaly.isel(nOceanRegionsTmp=regionIndex)
-            ohcAnomalyScaled = unitsScalefactor*ohcAnomaly            
-
-            title = 'OHC Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
-
-            colorbarLabel = '[x$10^{22}$ J]'
-            xLabel = 'Time [years]'
-            yLabel = 'Depth [m]'
-
-            figureName = '{}/OHCAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
-                                                   region,
-                                                   mainRunName)
-            
-            (colormap, colorbarLevels) = setup_colormap(config,
-                                                        configSectionName,
-                                                        suffix='OHCAnomaly')
-
-            contourLevels = \
-                config.getExpression(configSectionName,
-                                     'contourLevels{}'.format('OHCAnomaly'),
-                                     usenumpyfunc=True)
-
-            z = ohcAnomalyScaled.transpose()
-
-            plot_vertical_section(config, x, y, z,
-                                  colormap, colorbarLevels, contourLevels,
-                                  colorbarLabel, title, xLabel, yLabel,
-                                  figureName, linewidths=1, xArrayIsTime=True,
-                                  N=movingAveragePointsHovmoller, calendar=calendar)
-
-            if plotOriginalFields:
-                title = 'Average Layer Temperature, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
-
-                colorbarLabel = '[$^\circ$ C]'
-                xLabel = 'Time [years]'
-                yLabel = 'Depth [m]'
-
-                figureName = '{}/TZ_{}_{}.png'.format(self.plotsDirectory,
-                                                      region,
-                                                      mainRunName)
-
-                (colormap, colorbarLevels) = setup_colormap(config,
-                                                            configSectionName,
-                                                            suffix='Temperature')
-
-                contourLevels = config.getExpression(configSectionName,
-                                                     'contourLevels{}'.format('Temperature'),
-                                                     usenumpyfunc=True)
-
-                #z = ds[avgTemperatureVarName].isel(nOceanRegionsTmp=0)  #.isel(nOceanRegionsTmp=regionIndex)
-                z = ds[avgTemperatureVarName].isel(nOceanRegionsTmp=regionIndex)
-                z = z.transpose()
-
-                plot_vertical_section(config, x, y, z,
-                                      colormap, colorbarLevels, contourLevels,
-                                      colorbarLabel, title, xLabel, yLabel,
-                                      figureName, linewidths=1, xArrayIsTime=True,
-                                      N=movingAveragePointsHovmoller, calendar=calendar)
-            
-            title = 'Average Layer Temperature Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
+            z = ds.avgLayerTemperatureAnomaly.isel(nOceanRegionsTmp=regionIndex)
+            z = z.transpose()
 
             colorbarLabel = '[$^\circ$ C]'
             xLabel = 'Time [years]'
             yLabel = 'Depth [m]'
+
+            title = 'Temperature Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
             figureName = '{}/TAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
                                                          region,
@@ -426,10 +338,6 @@ class TimeSeriesOHC(AnalysisTask):
                                      'contourLevels{}'.format('TemperatureAnomaly'),
                                      usenumpyfunc=True)
    
-            #z = ds.avgLayerTemperatureAnomaly.isel(nOceanRegionsTmp=0)  #.isel(nOceanRegionsTmp=regionIndex)
-            z = ds.avgLayerTemperatureAnomaly.isel(nOceanRegionsTmp=regionIndex)
-            z = z.transpose()
-
             plot_vertical_section(config, x, y, z,
                                   colormapName, colorbarLevels, contourLevels,
                                   colorbarLabel, title, xLabel, yLabel,
@@ -437,40 +345,36 @@ class TimeSeriesOHC(AnalysisTask):
                                   N=movingAveragePointsHovmoller, calendar=calendar)
              
             if plotOriginalFields:
-                title = 'Average Layer Salinity, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
+                z = ds[avgTemperatureVarName].isel(nOceanRegionsTmp=regionIndex)
+                z = z.transpose()
 
-                colorbarLabel = '[PSU]'
-                xLabel = 'Time [years]'
-                yLabel = 'Depth [m]'
+                title = 'Temperature, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
-                figureName = '{}/SZ_{}_{}.png'.format(self.plotsDirectory,
+                figureName = '{}/TZ_{}_{}.png'.format(self.plotsDirectory,
                                                       region,
                                                       mainRunName)
 
-                (colormapName, colorbarLevels) = setup_colormap(config,
-                                                                configSectionName,
-                                                                suffix='Salinity')
-  
+                (colormap, colorbarLevels) = setup_colormap(config,
+                                                            configSectionName,
+                                                            suffix='Temperature')
+
                 contourLevels = config.getExpression(configSectionName,
-                                                     'contourLevels{}'.format('Salinity'),
+                                                     'contourLevels{}'.format('Temperature'),
                                                      usenumpyfunc=True)
 
-                #z = ds[avgSalinityVarName].isel(nOceanRegionsTmp=0)  #.isel(nOceanRegionsTmp=regionIndex)
-                z = ds[avgSalinityVarName].isel(nOceanRegionsTmp=regionIndex)
-                z = z.transpose()
-
                 plot_vertical_section(config, x, y, z,
-                                      colormapName, colorbarLevels, contourLevels,
+                                      colormap, colorbarLevels, contourLevels,
                                       colorbarLabel, title, xLabel, yLabel,
                                       figureName, linewidths=1, xArrayIsTime=True,
                                       N=movingAveragePointsHovmoller, calendar=calendar)
             
+            #  Second S vs depth/time
+            z = ds.avgLayerSalinityAnomaly.isel(nOceanRegionsTmp=regionIndex)
+            z = z.transpose()
 
-            title = 'Average Layer Salinity Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
+            title = 'Salinity Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
 
             colorbarLabel = '[PSU]'
-            xLabel = 'Time [years]'
-            yLabel = 'Depth [m]'
 
             figureName = '{}/SAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
                                                          region,
@@ -485,58 +389,106 @@ class TimeSeriesOHC(AnalysisTask):
                                      'contourLevels{}'.format('SalinityAnomaly'),
                                      usenumpyfunc=True)
 
-            #z = ds.avgLayerSalinityAnomaly.isel(nOceanRegionsTmp=0)  #.isel(nOceanRegionsTmp=regionIndex)
-            z = ds.avgLayerSalinityAnomaly.isel(nOceanRegionsTmp=regionIndex)
-            z = z.transpose()
-
             plot_vertical_section(config, x, y, z,
                                   colormapName, colorbarLevels, contourLevels,
                                   colorbarLabel, title, xLabel, yLabel,
                                   figureName, linewidths=1, xArrayIsTime=True,
                                   N=movingAveragePointsHovmoller, calendar=calendar)
 
+            if plotOriginalFields:
+                z = ds[avgSalinityVarName].isel(nOceanRegionsTmp=regionIndex)
+                z = z.transpose()
+
+                title = 'Salinity, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
+
+                figureName = '{}/SZ_{}_{}.png'.format(self.plotsDirectory,
+                                                      region,
+                                                      mainRunName)
+
+                (colormapName, colorbarLevels) = setup_colormap(config,
+                                                                configSectionName,
+                                                                suffix='Salinity')
+  
+                contourLevels = config.getExpression(configSectionName,
+                                                     'contourLevels{}'.format('Salinity'),
+                                                     usenumpyfunc=True)
+
+                plot_vertical_section(config, x, y, z,
+                                      colormapName, colorbarLevels, contourLevels,
+                                      colorbarLabel, title, xLabel, yLabel,
+                                      figureName, linewidths=1, xArrayIsTime=True,
+                                      N=movingAveragePointsHovmoller, calendar=calendar)
+
+            #  Third OHC vs depth/time
+            ohcAnomaly = dsOHC.ohcAnomaly.isel(nOceanRegionsTmp=regionIndex)
+            ohcAnomalyScaled = unitsScalefactor*ohcAnomaly            
+            z = ohcAnomalyScaled.transpose()
+
+            title = 'OHC Anomaly, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
+
+            colorbarLabel = '[x$10^{22}$ J]'
+
+            figureName = '{}/OHCAnomalyZ_{}_{}.png'.format(self.plotsDirectory,
+                                                   region,
+                                                   mainRunName)
+            
+            (colormap, colorbarLevels) = setup_colormap(config,
+                                                        configSectionName,
+                                                        suffix='OHCAnomaly')
+
+            contourLevels = \
+                config.getExpression(configSectionName,
+                                     'contourLevels{}'.format('OHCAnomaly'),
+                                     usenumpyfunc=True)
+
+            plot_vertical_section(config, x, y, z,
+                                  colormap, colorbarLevels, contourLevels,
+                                  colorbarLabel, title, xLabel, yLabel,
+                                  figureName, linewidths=1, xArrayIsTime=True,
+                                  N=movingAveragePointsHovmoller, calendar=calendar)
+
+            if plotOriginalFields:
+                ohc = dsOHC.ohc.isel(nOceanRegionsTmp=regionIndex)
+                ohcScaled = unitsScalefactor*ohc
+                z = ohcScaled.transpose()
+
+                title = 'OHC, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
+
+                figureName = '{}/OHCZ_{}_{}.png'.format(self.plotsDirectory,
+                                                        region,
+                                                        mainRunName)
+            
+                (colormap, colorbarLevels) = setup_colormap(config,
+                                                            configSectionName,
+                                                            suffix='OHC')
+
+                contourLevels = config.getExpression(configSectionName,
+                                                     'contourLevels{}'.format('OHC'),
+                                                     usenumpyfunc=True)
+
+                plot_vertical_section(config, x, y, z,
+                                      colormap, colorbarLevels, contourLevels,
+                                      colorbarLabel, title, xLabel, yLabel,
+                                      figureName, linewidths=1, xArrayIsTime=True,
+                                      N=movingAveragePointsHovmoller, calendar=calendar)
+
             # Now plot OHC timeseries
 
             # OHC over 0-bottom depth range:
-            ohcTotal = unitsScalefactor*ohc.sum('nVertLevels')
             ohcAnomalyTotal = unitsScalefactor*ohcAnomaly.sum('nVertLevels')
 
             # OHC over 0-700m depth range:
-            ohc700m = unitsScalefactor*ohc[:, 0:k700m].sum('nVertLevels')
             ohcAnomaly700m = unitsScalefactor*ohcAnomaly[:, 0:k700m].sum('nVertLevels')
 
             # OHC over 700m-2000m depth range:
-            ohc2000m = \
-                unitsScalefactor*ohc[:, k700m+1:k2000m].sum('nVertLevels')
             ohcAnomaly2000m = \
                 unitsScalefactor*ohcAnomaly[:, k700m+1:k2000m].sum('nVertLevels')
 
             # OHC over 2000m-bottom depth range:
-            ohcBottom = unitsScalefactor*ohc[:, k2000m+1:kbtm].sum('nVertLevels')
             ohcAnomalyBottom = unitsScalefactor*ohcAnomaly[:, k2000m+1:kbtm].sum('nVertLevels')
 
             xLabel = 'Time [years]'
             yLabel = '[x$10^{22}$ J]'
-
-            if plotOriginalFields:
-
-                title = 'OHC, {}, 0-bottom (thick-),' \
-                        ' 0-700m (thin-), 700-2000m (--),' \
-                        ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
-                                                          mainRunName)
-                        
-                figureName = '{}/OHC_{}_{}.png'.format(self.plotsDirectory,
-                                                       region,
-                                                       mainRunName)
-
-                timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
-                                                  ohcBottom],
-                                         movingAveragePoints, title,
-                                         xLabel, yLabel, figureName,
-                                         lineStyles=['r-', 'r-', 'r--', 'r-.'],
-                                         lineWidths=[2, 1, 1.5, 1.5],
-                                         calendar=calendar)
-
 
             title = 'OHC Anomaly, {}, 0-bottom (thick-),' \
                     ' 0-700m (thin-), 700-2000m (--),' \
@@ -592,6 +544,30 @@ class TimeSeriesOHC(AnalysisTask):
                 thumbnailDescription=u'{} ΔOHC'.format(region),
                 imageDescription=caption,
                 imageCaption=caption)
+
+            if plotOriginalFields:
+                ohcTotal = unitsScalefactor*ohc.sum('nVertLevels')
+                ohc700m = unitsScalefactor*ohc[:, 0:k700m].sum('nVertLevels')
+                ohc2000m = \
+                    unitsScalefactor*ohc[:, k700m+1:k2000m].sum('nVertLevels')
+                ohcBottom = unitsScalefactor*ohc[:, k2000m+1:kbtm].sum('nVertLevels')
+
+                title = 'OHC, {}, 0-bottom (thick-),' \
+                        ' 0-700m (thin-), 700-2000m (--),' \
+                        ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
+                                                          mainRunName)
+                        
+                figureName = '{}/OHC_{}_{}.png'.format(self.plotsDirectory,
+                                                       region,
+                                                       mainRunName)
+
+                timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
+                                                  ohcBottom],
+                                         movingAveragePoints, title,
+                                         xLabel, yLabel, figureName,
+                                         lineStyles=['r-', 'r-', 'r--', 'r-.'],
+                                         lineWidths=[2, 1, 1.5, 1.5],
+                                         calendar=calendar)
         # }}}
 
 
