@@ -310,7 +310,7 @@ regionIndicesToPlot = [6]
 # average window)
 movingAveragePoints = 12
 # Number of points over which to compute moving average for Hovmoller plots
-movingAveragePointsHovmoller = 1
+movingAveragePointsHovmoller = 12
 
 # colormap for OHC
 colormapNameOHC = RdYlBu_r
