@@ -328,7 +328,7 @@ colormapIndicesOHCAnomaly = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevelsOHCAnomaly = [-2.4, -0.8, -0.4, -0.2, 0.2, 0.4, 0.8, 2.4]
 # contour line levels
-contourLevelsOHCAnomaly = np.arange(-2.5, 2.5, 0.25)
+contourLevelsOHCAnomaly = np.arange(-2.5, 2.6, 0.5)
 
 # colormap for temperature
 colormapNameTemperature = RdYlBu_r
@@ -346,7 +346,7 @@ colormapIndicesTemperatureAnomaly = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsTemperatureAnomaly = [-1.0, -0.20, -0.07, -0.02, 0.02, 0.07, 0.20, 1.0]
 #contour line levels
-contourLevelsTemperatureAnomaly = np.arange(-1.0, 1.1, 0.1)
+contourLevelsTemperatureAnomaly = np.arange(-1.0, 1.26, 0.25)
 
 # colormap for salinity
 colormapNameSalinity = RdYlBu_r
