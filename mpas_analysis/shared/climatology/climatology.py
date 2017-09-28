@@ -353,7 +353,12 @@ def compute_climatologies_with_ncclimo(config, inDirectory, outDirectory,
     sys.stdout.flush()
     sys.stderr.flush()
 
-    subprocess.check_call(args)  # }}}
+    # set an environment variable to make sure we're not using czender's
+    # local version of NCO instead of one we have intentionally loaded
+    env = os.environ.copy()
+    env['NCO_PATH_OVERRIDE'] = 'No'
+
+    subprocess.check_call(args, env=env)  # }}}
 
 
 def get_observation_climatology_file_names(config, fieldName, monthNames,

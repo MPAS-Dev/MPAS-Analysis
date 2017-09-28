@@ -161,6 +161,7 @@ class Remapper(object):
         # throw out the standard output from ESMF_RegridWeightGen, as it's
         # rather verbose but keep stderr
         DEVNULL = open(os.devnull, 'wb')
+
         subprocess.check_call(args, stdout=DEVNULL)
 
         # remove the temporary SCRIP files
@@ -272,7 +273,12 @@ class Remapper(object):
         sys.stdout.flush()
         sys.stderr.flush()
 
-        subprocess.check_call(args)  # }}}
+        # set an environment variable to make sure we're not using czender's
+        # local version of NCO instead of one we have intentionally loaded
+        env = os.environ.copy()
+        env['NCO_PATH_OVERRIDE'] = 'No'
+
+        subprocess.check_call(args, env=env)  # }}}
 
     def remap(self, ds, renormalizationThreshold=None):  # {{{
         '''
