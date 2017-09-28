@@ -180,6 +180,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 	#	SSmeltFluxUncertainty, 'SSmeltRate': SSmeltRate, 'SSmeltRateUncertainty': SSmeltRateUncertainty,
 	#	'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 'meltRate': meltRate, 
 	#	'meltRateUncertainty': meltRateUncertainty, 'actualArea': actualArea }
+        #    obsDict[shelfName] = { 'SSmeltFlux': SSmeltFlux, 'SSmeltFluxUncertainty': 
+	#	SSmeltFluxUncertainty, 'SSmeltRate': SSmeltRate, 'SSmeltRateUncertainty': SSmeltRateUncertainty,
+	#	'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 'meltRate': meltRate, 
+	#	'meltRateUncertainty': meltRateUncertainty }
             obsDict[shelfName] = { 'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 
 		'meltRate': meltRate, 'meltRateUncertainty': meltRateUncertainty }
 	# Note that if areas from obs file are used they need to be converted from sq km to sq m
@@ -242,6 +246,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             regionName = iceShelvesToPlot[iRegion]
 
             # get obs melt flux and obs melt flux unc. for shelf (similar for rates) 
+            #SSMeltFlux = obsDict[regionName]['SSmeltFlux']
+            #SSMeltFluxUnc = obsDict[regionName]['SSmeltFluxUncertainty']
+            #SSMeltRate = obsDict[regionName]['SSmeltRate']
+            #SSMeltRateUnc = obsDict[regionName]['SSmeltRateUncertainty']
+            
             obsMeltFlux = obsDict[regionName]['meltFlux']
             obsMeltFluxUnc = obsDict[regionName]['meltFluxUncertainty']
             obsMeltRate = obsDict[regionName]['meltRate']
@@ -357,11 +366,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
 	# plot error bars rather than the "patch" used above
 	plt.errorbar( (maxDays - minDays)/3+minDays, obsMean, yerr=obsUncertainty, fmt='o', ecolor='k', 
-			capthick=2, label='obs1')
-	plt.errorbar( (maxDays - minDays)/3+minDays+1.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/3.0, 
-			fmt='s', ecolor='g', capthick=2, label='obs2')  # example of a 2nd set of obs error bars
-	plt.errorbar( (maxDays - minDays)/3+minDays+2.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/2.0, 
-			fmt='^', ecolor='r', capthick=2, label='obs3')  # example of a 3rd set of obs error bars
+			capthick=2, label='Rignot et al. (2013)')
+#	plt.errorbar( (maxDays - minDays)/3+minDays+1.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/3.0, 
+#			fmt='s', ecolor='g', capthick=2, label='obs2')  # example of a 2nd set of obs error bars
+#	plt.errorbar( (maxDays - minDays)/3+minDays+2.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/2.0, 
+#			fmt='^', ecolor='r', capthick=2, label='obs3')  # example of a 3rd set of obs error bars
 
         # add legend
 	plt.legend( loc='lower right' )
