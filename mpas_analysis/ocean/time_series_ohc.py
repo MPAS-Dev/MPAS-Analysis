@@ -106,11 +106,16 @@ class TimeSeriesOHC(AnalysisTask):
 
         regions = [regions[index] for index in regionIndicesToPlot]
 
+        configSectionName = 'timeSeriesOHC'
+        plotOriginalFields = config.getboolean(configSectionName,
+                                               'plotOriginalFields')
+
+        if plotOriginalFields:
+            plotTypes = ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ', 'OHCAnomalyZ', 'OHC', 'OHCAnomaly']
+        else:
+            plotTypes = ['TAnomalyZ', 'SAnomalyZ', 'OHCAnomalyZ', 'OHCAnomaly']
+
         for region in regions:
-            if plotOriginalFields:
-                plotType = ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ', 'OHCAnomalyZ', 'OHC', 'OHCAnomaly']
-            else:
-                plotTypes = ['TAnomalyZ', 'SAnomalyZ', 'OHCAnomalyZ', 'OHCAnomaly']
             for plotType in plotTypes:
                 filePrefix = '{}_{}_{}'.format(plotType, region, mainRunName)
                 self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory, filePrefix))
@@ -378,6 +383,19 @@ class TimeSeriesOHC(AnalysisTask):
                                       colorbarLabel, title, xLabel, yLabel,
                                       figureName, linewidths=1, xArrayIsTime=True,
                                       N=movingAveragePointsHovmoller, calendar=calendar)
+
+                caption = 'Trend of {} Temperature vs depth'.format(region)
+                write_image_xml(
+                    config=config,
+                    filePrefix=self.filePrefixes['TZ', region],
+                    componentName='Ocean',
+                    componentSubdirectory='ocean',
+                    galleryGroup='Trends vs Depth',
+                    groupLink='trendsvsdepth',
+                    thumbnailDescription=u'{} ΔT'.format(region),
+                    imageDescription=caption,
+                    imageCaption=caption)
+
             
             #  Second S vs depth/time
             z = ds.avgLayerSalinityAnomaly.isel(nOceanRegionsTmp=regionIndex)
@@ -437,6 +455,19 @@ class TimeSeriesOHC(AnalysisTask):
                                       colorbarLabel, title, xLabel, yLabel,
                                       figureName, linewidths=1, xArrayIsTime=True,
                                       N=movingAveragePointsHovmoller, calendar=calendar)
+
+                caption = 'Trend of {} Salinity vs depth'.format(region)
+                write_image_xml(
+                    config=config,
+                    filePrefix=self.filePrefixes['SZ', region],
+                    componentName='Ocean',
+                    componentSubdirectory='ocean',
+                    galleryGroup='Trends vs Depth',
+                    groupLink='trendsvsdepth',
+                    thumbnailDescription=u'{} ΔS'.format(region),
+                    imageDescription=caption,
+                    imageCaption=caption)
+
 
             #  Third OHC vs depth/time
             ohcAnomaly = dsOHC.ohcAnomaly.isel(nOceanRegionsTmp=regionIndex)
@@ -498,6 +529,18 @@ class TimeSeriesOHC(AnalysisTask):
                                       colorbarLabel, title, xLabel, yLabel,
                                       figureName, linewidths=1, xArrayIsTime=True,
                                       N=movingAveragePointsHovmoller, calendar=calendar)
+
+                caption = 'Trend of {} OHC vs depth'.format(region)
+                write_image_xml(
+                    config=config,
+                    filePrefix=self.filePrefixes['OHCZ', region],
+                    componentName='Ocean',
+                    componentSubdirectory='ocean',
+                    galleryGroup='Trends vs Depth',
+                    groupLink='trendsvsdepth',
+                    thumbnailDescription=u'{} ΔOHC'.format(region),
+                    imageDescription=caption,
+                    imageCaption=caption)
 
 
             # Now plot OHC timeseries
@@ -591,6 +634,20 @@ class TimeSeriesOHC(AnalysisTask):
                                          lineStyles=['r-', 'r-', 'r--', 'r-.'],
                                          lineWidths=[2, 1, 1.5, 1.5],
                                          calendar=calendar)
+
+                caption = 'Running Mean of {} Ocean Heat Content'.format(region)
+                write_image_xml(
+                    config=config,
+                    filePrefix=self.filePrefixes['OHC', region],
+                    componentName='Ocean',
+                    componentSubdirectory='ocean',
+                    galleryGroup='Time Series',
+                    groupLink='timeseries',
+                    thumbnailDescription=u'{} ΔOHC'.format(region),
+                    imageDescription=caption,
+                    imageCaption=caption)
+
+
         # }}}
 
 
