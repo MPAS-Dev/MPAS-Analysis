@@ -107,7 +107,11 @@ class TimeSeriesOHC(AnalysisTask):
         regions = [regions[index] for index in regionIndicesToPlot]
 
         for region in regions:
-            for plotType in ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ', 'OHCAnomalyZ', 'OHC', 'OHCAnomaly']:
+            if plotOriginalFields:
+                plotType = ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ', 'OHCAnomalyZ', 'OHC', 'OHCAnomaly']
+            else:
+                plotTypes = ['TAnomalyZ', 'SAnomalyZ', 'OHCAnomalyZ', 'OHCAnomaly']
+            for plotType in plotTypes:
                 filePrefix = '{}_{}_{}'.format(plotType, region, mainRunName)
                 self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory, filePrefix))
                 self.filePrefixes[plotType, region] = filePrefix
