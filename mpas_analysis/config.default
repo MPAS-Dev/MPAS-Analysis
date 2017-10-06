@@ -299,14 +299,72 @@ baseDirectory = /dir/to/seaice/reference
 [timeSeriesOHC]
 ## options related to plotting time series of ocean heat content (OHC)
 
+# plot S, T, and OHC fields themselves, in addition to their anomalies?
+plotOriginalFields = False
 # compare to observations?
 compareWithObservations = False
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
-# Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
-# window)
-movingAveragePoints = 12
+# Number of points over which to compute moving average for time series (e.g., 
+#for monthly output, movingAveragePoints=12 corresponds to a 12-month moving
+# average window)
+movingAveragePointsTimeSeries = 12
+# Number of points over which to compute moving average for Hovmoller plots
+movingAveragePointsHovmoller = 12
+
+# colormap for OHC
+colormapNameOHC = RdYlBu_r
+# colormap indices for contour color
+colormapIndicesOHC = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsOHC = [0, 5, 10, 15, 20, 25, 30, 35, 40]
+# contour line levels
+contourLevelsOHC = np.arange(0, 41, 4)
+
+# colormap for OHC anomaly
+colormapNameOHCAnomaly = RdBu_r
+# colormap indices for contour color
+colormapIndicesOHCAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsOHCAnomaly = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
+# contour line levels
+contourLevelsOHCAnomaly = np.arange(-2.5, 2.6, 0.5)
+
+# colormap for temperature
+colormapNameTemperature = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesTemperature = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsTemperature = [0, 0.6, 1.2, 2, 4, 6, 8, 10, 20]
+# contour line levels
+contourLevelsTemperature = np.arange(1, 21, 2)
+
+# colormap for temperature anomaly
+colormapNameTemperatureAnomaly = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesTemperatureAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsTemperatureAnomaly = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
+# contour line levels
+contourLevelsTemperatureAnomaly = np.arange(-1.0, 1.26, 0.25)
+
+# colormap for salinity
+colormapNameSalinity = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesSalinity = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsSalinity = [34.5, 34.6, 34.65, 34.7, 34.72, 34.74, 34.76, 34.78, 34.8]
+# contour line levels
+contourLevelsSalinity = np.arange(34.51, 34.82, 0.02)
+
+# colormap for salinity anomaly
+colormapNameSalinityAnomaly = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesSalinityAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsSalinityAnomaly = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+# contour line levels
+contourLevelsSalinityAnomaly = np.arange(-0.1, 0.11, 0.02)
 
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
@@ -366,6 +424,10 @@ compareWithObservations = True
 # plot the vertical section of MHT?
 plotVerticalSection = False
 
+# Number of points over which to compute moving average (with respect to latitude)
+# for MHT vertical section plots
+movingAveragePoints = 1
+
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
@@ -418,6 +480,10 @@ compareWithObservations = True
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
 # corresponds to a 12-month moving average window)
 movingAveragePoints = 12
+
+# Number of points over which to compute moving average (with respect to
+# latitude) for climatological MOC plots
+movingAveragePointsClimatological = 1
 
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume

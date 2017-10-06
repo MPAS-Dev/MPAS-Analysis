@@ -212,6 +212,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint(self.sectionName,
                                             'movingAveragePoints')
+        movingAveragePointsClimatological = \
+                        config.getint(self.sectionName,
+                                      'movingAveragePointsClimatological')
         colorbarLabel = '[Sv]'
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
@@ -237,7 +240,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             z = self.moc[region]
             plot_vertical_section(config, x, y, z, colormapName,
                                   colorbarLevels, contourLevels, colorbarLabel,
-                                  title, xLabel, yLabel, figureName)
+                                  title, xLabel, yLabel, figureName,
+                                  N=movingAveragePointsClimatological)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
             write_image_xml(
