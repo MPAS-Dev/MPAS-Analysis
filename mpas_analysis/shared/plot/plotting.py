@@ -338,7 +338,7 @@ def plot_polar_comparison(
         m.drawmeridians(np.arange(-180., 181., 20.),
                         labels=[True, False, True, True])
         cs = m.contourf(x, y, field, cmap=cmap, norm=norm,
-                        spacing='uniform', levels=levels)
+                        levels=levels)
 
         cbar = m.colorbar(cs, location='right', pad="3%", spacing='uniform',
                           ticks=levels, boundaries=levels)
@@ -506,7 +506,7 @@ def plot_global_comparison(
     m.drawmeridians(np.arange(-180., 180., 60.),
                     labels=[False, False, False, True])
     cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs, extend='both')
+                    levels=clevsModelObs, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
                       ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
@@ -520,7 +520,7 @@ def plot_global_comparison(
     m.drawmeridians(np.arange(-180., 180., 40.),
                     labels=[False, False, False, True])
     cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs, extend='both')
+                    levels=clevsModelObs, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
                       ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
@@ -534,7 +534,7 @@ def plot_global_comparison(
     m.drawmeridians(np.arange(-180., 180., 40.),
                     labels=[False, False, False, True])
     cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
-                    spacing='uniform', levels=clevsDiff, extend='both')
+                    levels=clevsDiff, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
                       ticks=clevsDiff, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
@@ -788,7 +788,7 @@ def plot_vertical_section(
     # verify that the dimensions of fieldArray are consistent with those of xArray and depthArray
     if len(xArray) != fieldArray.shape[1]:
         raise ValueError('size mismatch between xArray and fieldArray')
-    elif len(depthArray) != fieldArray.shape[0]: 
+    elif len(depthArray) != fieldArray.shape[0]:
         raise ValueError('size mismatch between depthArray and fieldArray')
 
     # set up figure
@@ -803,10 +803,10 @@ def plot_vertical_section(
             depthSlice = xr.DataArray(depthSlice)  # in case it's not an xarray already
             mean = pd.Series.rolling(depthSlice.to_series(), N, center=True).mean()
             mean = xr.DataArray.from_series(mean)
-            mean = mean[int(N/2.0):-int(round(N/2.0)-1)]            
+            mean = mean[int(N/2.0):-int(round(N/2.0)-1)]
             movingAverageDepthSlices.append(mean)
         xArray = xArray[int(N/2.0):-int(round(N/2.0)-1)]
-        fieldArray = xr.DataArray(movingAverageDepthSlices)    
+        fieldArray = xr.DataArray(movingAverageDepthSlices)
 
     x, y = np.meshgrid(xArray, depthArray)  # change to zMid
 
@@ -816,7 +816,7 @@ def plot_vertical_section(
         normModelObs = cols.BoundaryNorm(colorbarLevels, colormapName.N)
 
     cs = plt.contourf(x, y, fieldArray, cmap=colormapName, norm=normModelObs,
-                      spacing='uniform', levels=colorbarLevels, extend='both')
+                      levels=colorbarLevels, extend='both')
 
     if contourLevels is not None:
         if len(contourLevels) == 0:
