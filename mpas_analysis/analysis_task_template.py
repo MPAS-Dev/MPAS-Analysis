@@ -85,7 +85,7 @@ class MyTask(AnalysisTask):  # {{{
     #        def __init__(self, config, fieldName):...
     #    and yu would then make a new task something like this:
     #        myTask = MyTask(config, fieldName='seaIceArea')
-    def __init__(self, config, myArg='myDefaultValue'):  # {{{
+    def __init__(self, config, prerequsiteTask, myArg='myDefaultValue'):  # {{{
         '''
         Construct the analysis task.
         <Add any additional description of what happens during construction>
@@ -95,8 +95,14 @@ class MyTask(AnalysisTask):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
+        prerequsiteTask : ``AnotherTaskClass``
+            <This could be a task that needs to run before this task, a
+            prerequisite.  For example, a task for computing a climatology
+            that this task will then plot.>
+
         myArg : str, optional
             <Describe the arg, or just remove remove it>
+
 
         Authors
         -------
@@ -135,6 +141,40 @@ class MyTask(AnalysisTask):  # {{{
         self.myArg = myArg
         # Example:
         # self.fieldName = fieldName
+
+        # If you need to, you can add task that needs to run before this task
+        # (a prerequisite), just add it as follows:
+        self.prerequsiteTask = prerequsiteTask
+        self.run_after(prerequsiteTask)
+
+        # You may want to break this task into several subtasks that can run
+        # in parallel with one another or one after the other, depending on
+        # how you set them up.
+        #
+        # An example where the subtasks run in parallel with one another:
+        for season in ['JFM', 'JAS', 'ANN']:
+            subtask = MySubtask(parentTask=self, season=season)
+            self.add_subtask(subtask)
+
+        # An example where the subtasks run in sequence because each one
+        # depends on the previous one
+        remapObservations = MyRemapObservationsSubtask(parentTask=self)
+        # You can make sure MyRemapObservationsSubtask also runs after the
+        # prerequisite task:
+        remapObservations.run_after(prerequsiteTask)
+        self.add_subtask(remapObservations)
+
+        plotObservations = MyPlotObservationsSubtask(
+                remapObservations=remapObservations)
+        # This is the part that makes sure MyPlotObservationsSubtask runs after
+        # MyRemapObservationsSubtask.  Note: you might do this inside of
+        # MyPlotObservationsSubtask instead of here.
+        plotObservations.run_after(remapObservations)
+        self.add_subtask(plotObservations)
+
+        # Note: I have not included stubs for MyRemapObservationsSubtask and
+        # MyPlotObservationsSubtask but they would be qualitatively similar
+        # to MySubtask below.
 
         # }}}
 
@@ -349,9 +389,34 @@ class MyTask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
-
-        #
         # }}}
+
+
+class MySubtask(AnalysisTask):
+    def __init__(self, parentTask, season):
+        self.parentTask = parentTask
+        self.season = season
+        super(MySubtask, self).__init__(
+                config=parentTask.config,
+                taskName=parentTask.taskName,
+                subtaskName=season,
+                componentName=parentTask.component,
+                tags=parentTask.tags)
+
+    def setup_and_check(self):
+        # do whatever setup is needed for the subtask.  You don't have
+        # to redundantly do setup that happened in parentTask because
+        # you can access its fields if needed
+        assert(self.parentTask.streamName ==
+               'timeSeriesStatsMonthlyOutput')
+
+    def run_analsysis(self):
+        # do the main action of the subplot.  Note: you can't access any
+        # fields created when parentTask runs for 2 reasions: 1) parentTask
+        # runs after this task and 2) parentTask and all other tasks may
+        # run in a separate process from this task so the data will not be
+        # communicated to this process.
+        pass
 
 # }}}
 
