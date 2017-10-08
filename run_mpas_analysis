@@ -56,26 +56,40 @@ def build_analysis_list(config):  # {{{
     # analysis can only be imported after the right MPL renderer is selected
     from mpas_analysis import ocean
     from mpas_analysis import sea_ice
+    from mpas_analysis.shared.climatology import MpasClimatologyTask
 
     # analyses will be a list of analysis classes
     analyses = []
 
     # Ocean Analyses
-
-    analyses.append(ocean.ClimatologyMapMLD(config))
-    analyses.append(ocean.ClimatologyMapSST(config))
-    analyses.append(ocean.ClimatologyMapSSS(config))
+    oceanClimatolgyTask = MpasClimatologyTask(config=config,
+                                              componentName='ocean')
+    analyses.append(oceanClimatolgyTask)
+    analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask))
+    analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask))
+    analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask))
     analyses.append(ocean.TimeSeriesOHC(config))
     analyses.append(ocean.TimeSeriesSST(config))
-    analyses.append(ocean.MeridionalHeatTransport(config))
-    analyses.append(ocean.StreamfunctionMOC(config))
+    analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask))
+    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
     analyses.append(ocean.IndexNino34(config))
 
     # Sea Ice Analyses
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
+    seaIceClimatolgyTask = MpasClimatologyTask(config=config,
+                                               componentName='seaIce')
+    analyses.append(seaIceClimatolgyTask)
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
+                                                     seaIceClimatolgyTask,
+                                                     hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
+                                                      seaIceClimatolgyTask,
+                                                      hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
+                                                     seaIceClimatolgyTask,
+                                                     hemisphere='SH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
+                                                      seaIceClimatolgyTask,
+                                                      hemisphere='SH'))
     analyses.append(sea_ice.TimeSeriesSeaIce(config))
 
     return analyses  # }}}

@@ -522,7 +522,10 @@ colorbarLevelsDifference = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-comparisonTimes =  ['JFM', 'JAS', 'ANN']
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 [climatologyMapSSS]
 ## options related to plotting horizontally remapped climatologies of
@@ -544,7 +547,10 @@ colorbarLevelsDifference = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-comparisonTimes =  ['JFM', 'JAS', 'ANN']
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 [climatologyMapMLD]
 ## options related to plotting horizontally remapped climatologies of
@@ -566,7 +572,10 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-comparisonTimes =  ['JFM', 'JAS', 'ANN']
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of

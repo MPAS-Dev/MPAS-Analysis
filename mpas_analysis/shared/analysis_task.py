@@ -145,6 +145,7 @@ class AnalysisTask(Process):  # {{{
         self.subtasks = []
         self.logger = None
         self.runAfterTasks = []
+        self.xmlFileNames = []
 
         # non-public attributes related to multiprocessing and logging
         self.daemon = True
@@ -318,7 +319,7 @@ class AnalysisTask(Process):  # {{{
                 raise e
             self._stackTrace = traceback.format_exc()
             self.logger.error("analysis task {} failed during run \n"
-                              "{}".format(self.taskName, self._stackTrace))
+                              "{}".format(self.fullTaskName, self._stackTrace))
             self._runStatus.value = AnalysisTask.FAIL
 
         runDuration = time.time() - startTime
@@ -555,6 +556,5 @@ class StreamToLogger(object):  # {{{
         pass
 
     # }}}
-
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
