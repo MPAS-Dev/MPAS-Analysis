@@ -166,9 +166,7 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
 
     make_directories(climatologyDirectory)
 
-    if not _matches_comparison(remapper.sourceDescriptor,
-                               remapper.destinationDescriptor):
-        make_directories(remappedDirectory)
+    make_directories(remappedDirectory)
 
     return (climatologyFileName, remappedFileName)  # }}}
 
