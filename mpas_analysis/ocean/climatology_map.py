@@ -22,7 +22,8 @@ from ..shared.plot.plotting import plot_global_comparison, \
     setup_colormap
 from ..shared.constants import constants
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from ..shared.io.utility import build_config_full_path
+from ..shared.io import write_netcdf
 from ..shared.html import write_image_xml
 
 from ..shared.climatology import get_comparison_descriptor, \
@@ -43,6 +44,7 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
 
     Attributes
     ----------
+
     fieldName : str
         A short name of the field being analyzed
 
@@ -88,17 +90,21 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         the name of the gallery (or possibly a subtitle for the gallery group
         if there is only one gallery in the group)
 
-    remapClimatologySubtask : ``RemapMpasClimatologySubtask``
-        The subtask that remaps the climatologies this task will plot.
-        The ``remapClimatologySubtask`` is needed to determine the file names
-        of the climatology output.
-
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
+    remapClimatologySubtask : ``RemapMpasClimatologySubtask``
+        The subtask that remaps the model climatologies this task will plot.
+        The ``remapClimatologySubtask`` is needed to determine the file names
+        of the climatology output.
+
+    remapObservationsSubtask : ``RemapObservationsSubtask``
+        The subtask that remaps the observational climatologies this task will
+        plot.
+
     Authors
     -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    Xylar Asay-Davis
     """
 
     def __init__(self, config, mpasClimatologyTask, taskName, tags):  # {{{
@@ -147,12 +153,12 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        # comparisonGridNames = config.getExpression(sectionName,
-        #                                           'comparisonGrids')
+        comparisonGridNames = config.getExpression(sectionName,
+                                                   'comparisonGrids')
 
-        # if len(comparisonGridNames) == 0:
-        #     raise ValueError('config section {} does not contain valid list '
-        #                      'of comparison grids'.format(sectionName))
+        if len(comparisonGridNames) == 0:
+            raise ValueError('config section {} does not contain valid list '
+                             'of comparison grids'.format(sectionName))
 
         # the variable self.mpasFieldName will be added to mpasClimatologyTask
         # along with the seasons.
@@ -161,10 +167,83 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             parentTask=self,
             climatologyName=self.fieldName,
             variableList=[self.mpasFieldName],
-            # comparisonGridNames=comparisonGridNames,
+            comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=self.iselValues)
 
+        # add a subtask for remapping the observations
+        self.remapObservationsSubtask = RemapObservationsSubtask(
+                self, seasons, comparisonGridNames)
+        self.add_subtask(self.remapObservationsSubtask)
+
+        for season in seasons:
+            for comparisonGridName in comparisonGridNames:
+                # make a new subtask for this season and comparison grid
+                subtask = PlotClimatologyMapSubtask(self, season,
+                                                    comparisonGridName)
+                self.add_subtask(subtask)
+
+        # }}}
+
+
+class RemapObservationsSubtask(AnalysisTask):  # {{{
+    """
+    An analysis task for comparison of 2D model fields against observations.
+
+    Attributes
+    ----------
+    parentTask :  ``ClimatologyMapOcean``
+        The parent (master) task for this subtask
+
+    seasons : list of str
+        A list of seasons (keys in ``shared.constants.monthDictionary``)
+        over which the climatology should be computed or ['none'] if only
+        monthly climatologies are needed.
+
+    comparisonGridNames : list of {'latlon', 'antarctic'}
+        The name(s) of the comparison grid to use for remapping.
+
+    Authors
+    -------
+    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    """
+
+    def __init__(self, parentTask, seasons, comparisonGridNames):  # {{{
+        '''
+        Construct one analysis subtask for each plot (i.e. each season and
+        comparison grid) and a subtask for computing climatologies.
+
+        Parameters
+        ----------
+        parentTask :  ``ClimatologyMapOcean``
+            The parent (master) task for this subtask
+
+        seasons : list of str, optional
+            A list of seasons (keys in ``shared.constants.monthDictionary``)
+            to be computed or ['none'] (not ``None``) if only monthly
+            climatologies are needed.
+
+        comparisonGridNames : list of {'latlon', 'antarctic'}
+            The name(s) of the comparison grid to use for remapping.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+
+        '''
+
+        self.parentTask = parentTask
+        self.seasons = seasons
+        self.comparisonGridNames = comparisonGridNames
+        subtaskName = 'remapObservations'
+        config = parentTask.config
+        taskName = parentTask.taskName
+        tags = parentTask.tags
+
+        # call the constructor from the base class (AnalysisTask)
+        super(RemapObservationsSubtask, self).__init__(
+                config=config, taskName=taskName, subtaskName=subtaskName,
+                componentName='ocean', tags=tags)
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -180,162 +259,82 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar
-        super(ClimatologyMapOcean, self).setup_and_check()
-
-        config = self.config
-        self.startYear = self.mpasClimatologyTask.startYear
-        self.startDate = self.mpasClimatologyTask.startDate
-        self.endYear = self.mpasClimatologyTask.endYear
-        self.endDate = self.mpasClimatologyTask.endDate
-
-        mainRunName = config.get('runs', 'mainRunName')
-        seasons = config.getExpression(self.taskName, 'seasons')
+        super(RemapObservationsSubtask, self).setup_and_check()
 
         # we set up the remapper here because ESFM_RegridWeightGen seems to
         # have trouble if it runs in another process (or in several at once)
         self._setup_obs_remapper()
 
-        self.xmlFileNames = []
-        self.filePrefixes = {}
-
-        for season in seasons:
-            filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
-                    self.outFileLabel, mainRunName,
-                    season, self.startYear, self.endYear)
-            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                        filePrefix))
-            self.filePrefixes[season] = filePrefix
-
-        # make the mapping directory, because doing so within each process
-        # seems to be giving ESMF_RegridWeightGen some trouble
-        mappingSubdirectory = build_config_full_path(config, 'output',
-                                                     'mappingSubdirectory')
-        make_directories(mappingSubdirectory)
-
         # }}}
 
     def run_task(self):  # {{{
         """
-        Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
+        Compute and remap climatologies of observations to the comparison
+        grid(s)
 
         Authors
         -------
         Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
         """
 
-        self.logger.info("\nPlotting 2-d maps of {} climatologies...".format(
-            self.fieldNameInTitle))
-
-        # get local versions of member variables for convenience
+        parentTask = self.parentTask
         config = self.config
-        fieldName = self.fieldName
-
-        try:
-            restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for ocn_modelvsobs calculation')
-
-        mainRunName = self.config.get('runs', 'mainRunName')
-
-        seasons = config.getExpression(self.taskName, 'seasons')
-
-        (colormapResult, colorbarLevelsResult) = setup_colormap(
-            config, self.taskName, suffix='Result')
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-            config, self.taskName, suffix='Difference')
-
-        dsRestart = xr.open_dataset(restartFileName)
-        dsRestart = mpas_xarray.subset_variables(dsRestart, ['maxLevelCell'])
+        fieldName = parentTask.fieldName
 
         dsObs = None
 
-        # Interpolate and compute biases
-        for season in seasons:
+        obsDescriptor = LatLonGridDescriptor.read(
+                fileName=parentTask.obsFileName, latVarName='lat',
+                lonVarName='lon')
 
-            monthValues = constants.monthDictionary[season]
+        for comparisonGridName in self.comparisonGridNames:
+            comparisonDescriptor = get_comparison_descriptor(
+                    config, comparisonGridName)
 
-            remappedFileName = self.remapClimatologySubtask.get_file_name(
-                season=season, stage='remapped', comparisonGridName='latlon')
+            origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
 
-            remappedClimatology = xr.open_dataset(remappedFileName)
+            for season in self.seasons:
+                monthValues = constants.monthDictionary[season]
 
-            modelOutput = \
-                remappedClimatology[self.mpasFieldName].values
+                (climatologyFileName, remappedFileName) = \
+                    get_observation_climatology_file_names(
+                        config=config, fieldName=fieldName, monthNames=season,
+                        componentName='ocean', remapper=origObsRemapper)
 
-            lon = remappedClimatology['lon'].values
-            lat = remappedClimatology['lat'].values
+                if not os.path.exists(remappedFileName):
 
-            lonTarg, latTarg = np.meshgrid(lon, lat)
+                    if dsObs is None:
+                        # load the observations the first time
+                        dsObs = parentTask._build_observational_dataset()
 
-            # now the observations
-            (climatologyFileName, remappedFileName) = \
-                get_observation_climatology_file_names(
-                    config=config, fieldName=fieldName, monthNames=season,
-                    componentName='ocean', remapper=self.obsRemapper)
+                    seasonalClimatology = compute_climatology(
+                        dsObs, monthValues, maskVaries=True)
 
-            if not os.path.exists(remappedFileName):
+                    seasonalClimatology.load()
+                    seasonalClimatology.close()
+                    write_netcdf(seasonalClimatology, climatologyFileName)
+                    # make the remapper for the climatology
+                    obsDescriptor = LatLonGridDescriptor.read(
+                            fileName=climatologyFileName,
+                            latVarName='lat',
+                            lonVarName='lon')
 
-                if dsObs is None:
-                    # load the observations the first time
-                    dsObs = self._build_observational_dataset()
+                    obsRemapper = get_remapper(
+                        config=config, sourceDescriptor=obsDescriptor,
+                        comparisonDescriptor=comparisonDescriptor,
+                        mappingFilePrefix='map_obs_{}'.format(fieldName),
+                        method=config.get('oceanObservations',
+                                          'interpolationMethod'),
+                        logger=self.logger)
 
-                seasonalClimatology = compute_climatology(
-                    dsObs, monthValues, maskVaries=True)
-
-                if self.obsRemapper is None:
-                    # no need to remap because the observations are on the
-                    # comparison grid already
-                    remappedClimatology = seasonalClimatology
-                else:
-                    remappedClimatology = \
+                    if obsRemapper is None:
+                        # no need to remap because the observations are on the
+                        # comparison grid already
+                        os.symlink(climatologyFileName, remappedFileName)
+                    else:
                         remap_and_write_climatology(
                             config, seasonalClimatology, climatologyFileName,
-                            remappedFileName, self.obsRemapper,
-                            logger=self.logger)
-
-            else:
-
-                remappedClimatology = xr.open_dataset(remappedFileName)
-            observations = remappedClimatology[self.obsFieldName].values
-
-            bias = modelOutput - observations
-
-            filePrefix = self.filePrefixes[season]
-            outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-            title = '{} ({}, years {:04d}-{:04d})'.format(
-                    self.fieldNameInTitle, season, self.startYear,
-                    self.endYear)
-            plot_global_comparison(config,
-                                   lonTarg,
-                                   latTarg,
-                                   modelOutput,
-                                   observations,
-                                   bias,
-                                   colormapResult,
-                                   colorbarLevelsResult,
-                                   colormapDifference,
-                                   colorbarLevelsDifference,
-                                   fileout=outFileName,
-                                   title=title,
-                                   modelTitle='{}'.format(mainRunName),
-                                   obsTitle=self.observationTitleLabel,
-                                   diffTitle='Model-Observations',
-                                   cbarlabel=self.unitsLabel)
-
-            caption = '{} {}'.format(season, self.imageCaption)
-            write_image_xml(
-                config,
-                filePrefix,
-                componentName='Ocean',
-                componentSubdirectory='ocean',
-                galleryGroup=self.galleryGroup,
-                groupSubtitle=self.groupSubtitle,
-                groupLink=self.groupLink,
-                gallery=self.galleryName,
-                thumbnailDescription=season,
-                imageDescription=caption,
-                imageCaption=caption)
+                            remappedFileName, obsRemapper, logger=self.logger)
 
         # }}}
 
@@ -349,7 +348,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         Xylar Asay-Davis
         """
         config = self.config
-        fieldName = self.fieldName
+        parentTask = self.parentTask
+        fieldName = parentTask.fieldName
 
         seasons = config.getExpression(self.taskName, 'seasons')
 
@@ -358,9 +358,10 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 config=config, comparisonGridName='latlon')
         self.comparisonGridName = comparisonDescriptor.meshName
 
-        obsDescriptor = LatLonGridDescriptor.read(fileName=self.obsFileName,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+        obsDescriptor = LatLonGridDescriptor.read(
+                fileName=parentTask.obsFileName,
+                latVarName='lat',
+                lonVarName='lon')
 
         origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
 
@@ -382,6 +383,203 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             logger=self.logger)
 
         # }}}
+    # }}}
+
+
+class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
+    """
+    An analysis task for plotting 2D model fields against observations.
+
+    Attributes
+    ----------
+    parentTask :  ``ClimatologyMapOcean``
+        The parent (master) task for this subtask
+
+    season : str
+        A season (key in ``shared.constants.monthDictionary``) to be
+        plotted.
+
+    comparisonGridName : {'latlon', 'antarctic'}
+        The name of the comparison grid to plot.
+
+    Authors
+    -------
+    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    """
+
+    def __init__(self, parentTask, season, comparisonGridName):  # {{{
+        '''
+        Construct one analysis subtask for each plot (i.e. each season and
+        comparison grid) and a subtask for computing climatologies.
+
+        Parameters
+        ----------
+        parentTask :  ``ClimatologyMapOcean``
+            The parent (master) task for this subtask
+
+        season : str
+            A season (key in ``shared.constants.monthDictionary``) to be
+            plotted.
+
+        comparisonGridName : {'latlon', 'antarctic'}
+            The name of the comparison grid to plot.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+
+        '''
+
+        self.parentTask = parentTask
+        self.season = season
+        self.comparisonGridName = comparisonGridName
+        subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
+        config = parentTask.config
+        taskName = parentTask.taskName
+        tags = parentTask.tags
+
+        # call the constructor from the base class (AnalysisTask)
+        super(PlotClimatologyMapSubtask, self).__init__(
+                config=config, taskName=taskName, subtaskName=subtaskName,
+                componentName='ocean', tags=tags)
+
+        # this task should not run until the remapping subtasks are done, since
+        # it relies on data from those subtasks
+        self.run_after(parentTask.remapClimatologySubtask)
+        self.run_after(parentTask.remapObservationsSubtask)
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(PlotClimatologyMapSubtask, self).setup_and_check()
+
+        config = self.config
+        parentTask = self.parentTask
+        self.startYear = config.getint('climatology', 'startYear')
+        self.endYear = config.getint('climatology', 'endYear')
+        self.startDate = config.get('climatology', 'startDate')
+        self.endDate = config.get('climatology', 'endDate')
+
+        mainRunName = config.get('runs', 'mainRunName')
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        self.filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
+                parentTask.outFileLabel, mainRunName,
+                self.season, self.startYear, self.endYear)
+        self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                    self.filePrefix))
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
+
+        Authors
+        -------
+        Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+        """
+
+        parentTask = self.parentTask
+        season = self.season
+        comparisonGridName = self.comparisonGridName
+        config = self.config
+        fieldName = parentTask.fieldName
+        configSectionName = self.taskName
+        self.logger.info("\nPlotting 2-d maps of {} climatologies for {} on "
+                         "the {} grid...".format(parentTask.fieldNameInTitle,
+                                                 season, comparisonGridName))
+
+        mainRunName = config.get('runs', 'mainRunName')
+
+        (colormapResult, colorbarLevelsResult) = setup_colormap(
+            config, configSectionName, suffix='Result')
+        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
+            config, configSectionName, suffix='Difference')
+
+        # first read the model climatology
+        remappedFileName = parentTask.remapClimatologySubtask.get_file_name(
+            season=season, stage='remapped', comparisonGridName='latlon')
+
+        remappedClimatology = xr.open_dataset(remappedFileName)
+
+        modelOutput = \
+            remappedClimatology[parentTask.mpasFieldName].values
+
+        lon = remappedClimatology['lon'].values
+        lat = remappedClimatology['lat'].values
+
+        lonTarg, latTarg = np.meshgrid(lon, lat)
+
+        # now the observations
+        comparisonDescriptor = get_comparison_descriptor(config,
+                                                         comparisonGridName)
+
+        obsDescriptor = LatLonGridDescriptor.read(
+                fileName=parentTask.obsFileName, latVarName='lat',
+                lonVarName='lon')
+
+        origObsRemapper = Remapper(comparisonDescriptor, obsDescriptor)
+        (climatologyFileName, remappedFileName) = \
+            get_observation_climatology_file_names(
+                config=config, fieldName=fieldName, monthNames=season,
+                componentName='ocean', remapper=origObsRemapper)
+
+        remappedClimatology = xr.open_dataset(remappedFileName)
+        observations = remappedClimatology[parentTask.obsFieldName].values
+
+        bias = modelOutput - observations
+
+        filePrefix = self.filePrefix
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        title = '{} ({}, years {:04d}-{:04d})'.format(
+                parentTask.fieldNameInTitle, season, self.startYear,
+                self.endYear)
+        plot_global_comparison(config,
+                               lonTarg,
+                               latTarg,
+                               modelOutput,
+                               observations,
+                               bias,
+                               colormapResult,
+                               colorbarLevelsResult,
+                               colormapDifference,
+                               colorbarLevelsDifference,
+                               fileout=outFileName,
+                               title=title,
+                               modelTitle='{}'.format(mainRunName),
+                               obsTitle=parentTask.observationTitleLabel,
+                               diffTitle='Model-Observations',
+                               cbarlabel=parentTask.unitsLabel)
+
+        caption = '{} {}'.format(season, parentTask.imageCaption)
+        write_image_xml(
+            config,
+            filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup=parentTask.galleryGroup,
+            groupSubtitle=parentTask.groupSubtitle,
+            groupLink=parentTask.groupLink,
+            gallery=parentTask.galleryName,
+            thumbnailDescription=season,
+            imageDescription=caption,
+            imageCaption=caption)
+
+        # }}}
+
     # }}}
 
 
@@ -435,6 +633,13 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
 
         self.outFileLabel = 'sstHADOI'
 
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(ClimatologyMapSST, self).setup_and_check()
+
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
             '{}Subdirectory'.format(self.fieldName))
@@ -468,13 +673,6 @@ class ClimatologyMapSST(ClimatologyMapOcean):  # {{{
         self.groupLink = 'sst'
         self.galleryName = 'Observations: Hadley-NOAA-OI'
         self.imageCaption = 'Mean Sea Surface Temperature'
-
-        # call setup_and_check from the base class (AnalysisTask),
-        # which will perform some common setup, including storing:
-        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
-        #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar
-        super(ClimatologyMapSST, self).setup_and_check()
 
         # }}}
 
@@ -556,6 +754,13 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
 
         self.outFileLabel = 'sssAquarius'
 
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(ClimatologyMapSSS, self).setup_and_check()
+
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
             '{}Subdirectory'.format(self.fieldName))
@@ -575,13 +780,6 @@ class ClimatologyMapSSS(ClimatologyMapOcean):  # {{{
         self.groupLink = 'sss'
         self.galleryName = 'Observations: Aquarius'
         self.imageCaption = 'Mean Sea Surface Salinity'
-
-        # call setup_and_check from the base class (AnalysisTask),
-        # which will perform some common setup, including storing:
-        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
-        #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar
-        super(ClimatologyMapSSS, self).setup_and_check()
 
         # }}}
 
@@ -660,6 +858,13 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
 
         self.outFileLabel = 'mldHolteTalleyARGO'
 
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(ClimatologyMapMLD, self).setup_and_check()
+
         observationsDirectory = build_config_full_path(
             self.config, 'oceanObservations',
             '{}Subdirectory'.format(self.fieldName))
@@ -681,13 +886,6 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         self.groupLink = 'mld'
         self.galleryName = 'Observations: Holte-Talley ARGO'
         self.imageCaption = 'Mean Mixed-Layer Depth'
-
-        # call setup_and_check from the base class (AnalysisTask),
-        # which will perform some common setup, including storing:
-        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
-        #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar
-        super(ClimatologyMapMLD, self).setup_and_check()
 
         # }}}
 

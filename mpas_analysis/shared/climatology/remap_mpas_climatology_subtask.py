@@ -89,7 +89,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
 
-        comparisonGridNames : list of {'latlon', 'antarctic'}, optinal
+        comparisonGridNames : list of {'latlon', 'antarctic'}, optional
             The name(s) of the comparison grid to use for remapping.
 
         iselValues : dict, optional
