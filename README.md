@@ -44,7 +44,19 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
     lxml nco pyproj pillow
 ```
 
+## List Analysis
+
+To list the available analysis tasks, run:
+
+```
+./run_mpas_analysis --list
+```
+This lists all tasks and their tags.  These can be used in the `generate`
+command-line option or config option.  See `mpas_analysis/config.default`
+for more details.
+
 ## Running the analysis
+
   1. Create and empty config file (say `config.myrun`) or copy one of the
      example files in the `configs` directory.
   2. Copy and modify any config options you want to change from
@@ -71,8 +83,19 @@ conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
      `--generate` flag on the command line.  See the comments in
      `mpas_analysis/config.default` for more details on this option.
 
+## Purge Old Analysis
+
+To purge old analysis (delete the whole output directory) before running run
+the analysis, add the `--purge` flag:
+
+```
+./run_mpas_analysis --purge <config.file>
+````
+The directory to delete is the `baseDirectory` option in the `output`
+section.
 
 ## Running in parallel
+
   1. Copy the appropriate job script file from `configs/<machine_name>` to
      the same directory as `run_mpas_analysis` (or another directory if
      preferred). The default script, `configs/job_script.default.bash`, is

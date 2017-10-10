@@ -17,6 +17,7 @@ Top-level script: run_mpas_analysis
    run_mpas_analysis.wait_for_task
    run_mpas_analysis.is_running
    run_mpas_analysis.build_analysis_list
+   run_mpas_analysis.determine_analyses_to_generate
    run_mpas_analysis.run_analysis
 
 
