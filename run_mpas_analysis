@@ -17,6 +17,7 @@ import sys
 import subprocess
 import time
 import pkg_resources
+import shutil
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -236,9 +237,8 @@ def is_running(process):  # {{{
 
 def build_analysis_list(config):  # {{{
     """
-    Build a list of analysis modules based on the 'generate' config option.
-    New tasks should be added here, following the approach used for existing
-    analysis tasks.
+    Build a list of analysis tasks. New tasks should be added here, following
+    the approach used for existing analysis tasks.
 
     Parameters
     ----------
@@ -247,8 +247,8 @@ def build_analysis_list(config):  # {{{
 
     Returns
     -------
-    analysesToGenerate : list of ``AnalysisTask`` objects
-        A list of analysis tasks to run
+    analyses : list of ``AnalysisTask`` objects
+        A list of all analysis tasks
 
     Authors
     -------
@@ -284,6 +284,31 @@ def build_analysis_list(config):  # {{{
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
     analyses.append(sea_ice.TimeSeriesSeaIce(config))
+
+    return analyses  # }}}
+
+
+def determine_analyses_to_generate(analyses):  # {{{
+    """
+    Build a list of analysis tasks to run based on the 'generate' config
+    option (or command-line flag) and prerequisites and subtasks of each
+    requested task.  Each task's ``setup_and_check`` method is called in the
+    process.
+
+    Parameters
+    ----------
+    analyses : list of ``AnalysisTask`` objects
+        A list of all analysis tasks
+
+    Returns
+    -------
+    analysesToGenerate : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []
@@ -390,8 +415,13 @@ if __name__ == "__main__":
                         help="A list of analysis modules to generate "
                         "(nearly identical generate option in config file).",
                         metavar="ANALYSIS1[,ANALYSIS2,ANALYSIS3,...]")
+    parser.add_argument("-l", "--list", dest="list", action='store_true',
+                        help="List the available analysis tasks")
+    parser.add_argument("-p", "--purge", dest="purge", action='store_true',
+                        help="Purge the analysis by deleting the output"
+                        "directory before running")
     parser.add_argument('configFiles', metavar='CONFIG',
-                        type=str, nargs='+', help='config file')
+                        type=str, nargs='*', help='config file')
     args = parser.parse_args()
 
     # add config.default to cover default not included in the config files
@@ -409,6 +439,22 @@ if __name__ == "__main__":
     config = MpasAnalysisConfigParser()
     config.read(configFiles)
 
+    if args.list:
+        analyses = build_analysis_list(config)
+        for analysisTask in analyses:
+            print '{}\n    tags: {}'.format(analysisTask.taskName,
+                                            ', '.join(analysisTask.tags))
+        sys.exit(0)
+
+    if args.purge:
+        outputDirectory = config.get('output', 'baseDirectory')
+        if not os.path.exists(outputDirectory):
+            print 'Output directory {} does not exist.\n' \
+                  'No purge necessary.'.format(outputDirectory)
+        else:
+            print 'Deleting contents of {}'.format(outputDirectory)
+            shutil.rmtree(outputDirectory)
+
     if args.generate:
         update_generate(config, args.generate)
 
@@ -418,6 +464,7 @@ if __name__ == "__main__":
     make_directories('{}/configs/'.format(logsDirectory))
 
     analyses = build_analysis_list(config)
+    analyses = determine_analyses_to_generate(analyses)
 
     parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
                                               default=1)
