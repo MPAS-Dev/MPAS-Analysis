@@ -46,7 +46,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         -------
         Xylar Asay-Davis
         """
-        # first, call setup_and_check from the base class (SeaIceAnalysisTask),
+        # call setup_and_check from the base class (SeaIceAnalysisTask),
         # which will perform some common setup
         super(ClimatologyMapSeaIce, self).setup_and_check()
 
@@ -75,6 +75,40 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                                                       self.config)
 
         mainRunName = self.config.get('runs', 'mainRunName')
+        config = self.config
+        hemisphere = self.hemisphere
+
+        mpasDescriptor = MpasMeshDescriptor(
+            self.restartFileName,
+            meshName=self.config.get('input', 'mpasMeshName'))
+
+        comparisonDescriptor = get_lat_lon_comparison_descriptor(self.config)
+
+        self.mpasRemapper = get_remapper(
+            config=self.config, sourceDescriptor=mpasDescriptor,
+            comparisonDescriptor=comparisonDescriptor,
+            mappingFilePrefix='map',
+            method=self.config.get('climatology', 'mpasInterpolationMethod'))
+
+        info = self.obsAndPlotInfo[0]
+        season = info['season']
+
+        fieldName = '{}{}'.format(self.mpasFieldName, hemisphere)
+
+        obsFileName = info['obsFileName']
+
+        obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
+                                                  latVarName='t_lat',
+                                                  lonVarName='t_lon')
+
+        fieldName = '{}{}'.format(self.obsFieldName, hemisphere)
+        self.obsRemapper = get_remapper(
+                config=config,
+                sourceDescriptor=obsDescriptor,
+                comparisonDescriptor=comparisonDescriptor,
+                mappingFilePrefix='map_obs_{}'.format(fieldName),
+                method=config.get('seaIceObservations',
+                                  'interpolationMethod'))
 
         self.xmlFileNames = []
 
@@ -109,25 +143,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                   os.path.basename(self.inputFiles[0]),
                   os.path.basename(self.inputFiles[-1]))
 
-        mpasDescriptor = MpasMeshDescriptor(
-            self.restartFileName,
-            meshName=self.config.get('input', 'mpasMeshName'))
-
-        comparisonDescriptor = get_lat_lon_comparison_descriptor(self.config)
-
-        parallel = self.config.getint('execute', 'parallelTaskCount') > 1
-        if parallel:
-            # avoid writing the same mapping file from multiple processes
-            mappingFilePrefix = 'map_{}'.format(self.taskName)
-        else:
-            mappingFilePrefix = 'map'
-
-        self.mpasRemapper = get_remapper(
-            config=self.config, sourceDescriptor=mpasDescriptor,
-            comparisonDescriptor=comparisonDescriptor,
-            mappingFilePrefix=mappingFilePrefix,
-            method=self.config.get('climatology', 'mpasInterpolationMethod'))
-
         self._compute_seasonal_climatologies()
 
         self._compute_and_plot()  # }}}
@@ -149,8 +164,6 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         mainRunName = config.get('runs', 'mainRunName')
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
-
-        comparisonDescriptor = self.mpasRemapper.destinationDescriptor
 
         hemisphere = self.hemisphere
         sectionName = self.sectionName
@@ -191,28 +204,17 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
             obsFileName = info['obsFileName']
 
-            obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
-                                                      latVarName='t_lat',
-                                                      lonVarName='t_lon')
-
             if not os.path.isfile(obsFileName):
                 raise OSError('Obs file {} not found.'.format(
                     obsFileName))
 
             fieldName = '{}{}'.format(self.obsFieldName, hemisphere)
-            obsRemapper = get_remapper(
-                    config=config,
-                    sourceDescriptor=obsDescriptor,
-                    comparisonDescriptor=comparisonDescriptor,
-                    mappingFilePrefix='map_obs_{}'.format(fieldName),
-                    method=config.get('seaIceObservations',
-                                      'interpolationMethod'))
 
             (obsClimatologyFileName, obsRemappedFileName) = \
                 get_observation_climatology_file_names(
                     config=config, fieldName=fieldName,
                     monthNames=season, componentName=self.componentName,
-                    remapper=obsRemapper)
+                    remapper=self.obsRemapper)
 
             if not os.path.exists(obsRemappedFileName):
 
@@ -221,7 +223,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                         obsFileName)
                 write_netcdf(seasonalClimatology, obsClimatologyFileName)
 
-                if obsRemapper is None:
+                if self.obsRemapper is None:
                     # no need to remap because the observations are on the
                     # comparison grid already
                     remappedClimatology = seasonalClimatology
@@ -230,7 +232,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                         remap_and_write_climatology(
                             config, seasonalClimatology,
                             obsClimatologyFileName,
-                            obsRemappedFileName, obsRemapper)
+                            obsRemappedFileName, self.obsRemapper)
 
             else:
 
