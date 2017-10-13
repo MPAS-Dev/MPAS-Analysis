@@ -290,22 +290,22 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 figureNameStd[key] = '{}.png'.format(prefix)
                 figureNamePolar[key] = '{}_polar.png'.format(prefix)
 
-                title[key] = '{} ({}), {} (r)'.format(
+                title[key] = '{} ({}) \n {} (black)'.format(
                     plotTitles[variableName], hemisphere, mainRunName)
 
             if compareWithObservations:
                 key = (hemisphere, 'iceArea')
-                title[key] = '{}\nSSM/I observations, annual cycle (k)'.format(
+                title[key] = '{}\nSSM/I observations, annual cycle (blue)'.format(
                     title[key])
                 if hemisphere == 'NH':
                     key = (hemisphere, 'iceVolume')
                     title[key] = \
-                        '{}\nPIOMAS, annual cycle (k)'.format(title[key])
+                        '{}\nPIOMAS, annual cycle (blue)'.format(title[key])
 
             if preprocessedReferenceRunName != 'None':
                 for variableName in ['iceArea', 'iceVolume']:
                     key = (hemisphere, variableName)
-                    title[key] = '{}\n {} (b)'.format(
+                    title[key] = '{}\n {} (red)'.format(
                         title[key], preprocessedReferenceRunName)
 
             if compareWithObservations:
@@ -366,18 +366,21 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                     if preprocessedReferenceRunName != 'None':
                         plotVars[key] = [plotVars[key], obs[key],
                                          preprocessed[key]]
-                        lineStyles = ['r-', 'k-', 'b-']
-                        lineWidths = [1.2, 1.2, 1.2]
+                        lineStyles = ['k-', 'b-', 'r-']
+                        lineWidths = [3, 1.2, 1.2]
+                        legendText = [None, None, None]
                     else:
                         # just v1 model and obs
                         plotVars[key] = [plotVars[key], obs[key]]
-                        lineStyles = ['r-', 'k-']
-                        lineWidths = [1.2, 1.2]
+                        lineStyles = ['k-', 'b-']
+                        lineWidths = [3, 1.2]
+                        legendText = [None, None]
                 elif preprocessedReferenceRunName != 'None':
                     # just v1 and v0 models
                     plotVars[key] = [plotVars[key], preprocessed[key]]
-                    lineStyles = ['r-', 'b-']
-                    lineWidths = [1.2, 1.2]
+                    lineStyles = ['k-', 'r-']
+                    lineWidths = [3, 1.2]
+                    legendText = [None, None]
 
                 if (compareWithObservations or
                         preprocessedReferenceRunName != 'None'):
@@ -389,6 +392,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                              figureNameStd[key],
                                              lineStyles=lineStyles,
                                              lineWidths=lineWidths,
+                                             legendText=legendText,
                                              titleFontSize=titleFontSize,
                                              calendar=calendar)
                     filePrefix = '{}{}_{}'.format(variableName,
@@ -418,6 +422,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                             figureNamePolar[key],
                             lineStyles=lineStyles,
                             lineWidths=lineWidths,
+                            legendText=legendText,
                             titleFontSize=titleFontSize,
                             calendar=calendar)
 
@@ -447,7 +452,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                                 mainRunName,
                                                 variableName)
                 title = \
-                    '{}, NH (r), SH (k)\n{}'.format(plotTitles[variableName],
+                    '{}, NH (black), SH (blue)\n{}'.format(plotTitles[variableName],
                                                     mainRunName)
                 varList = [plotVars[('NH', variableName)],
                            plotVars[('SH', variableName)]]
@@ -455,8 +460,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                          movingAveragePoints,
                                          title, xLabel, units[variableName],
                                          figureNameStd,
-                                         lineStyles=['r-', 'k-'],
-                                         lineWidths=[1.2, 1.2],
+                                         lineStyles=['k-', 'b-'],
+                                         lineWidths=[2, 2],
+                                         legendText=[None, None],
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
                 filePrefix = '{}.{}'.format(mainRunName, variableName)
@@ -477,8 +483,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                     timeseries_analysis_plot_polar(config, varList,
                                                    movingAveragePoints,
                                                    title, figureNamePolar,
-                                                   lineStyles=['r-', 'k-'],
-                                                   lineWidths=[1.2, 1.2],
+                                                   lineStyles=['k-', 'b-'],
+                                                   lineWidths=[2, 2],
+                                                   legendText=[None, None],
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
                     filePrefix = '{}.{}_polar'.format(mainRunName,

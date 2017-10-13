@@ -267,8 +267,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         timeseries_analysis_plot(config, [dsMOCTimeSeries.mocAtlantic26],
                                  movingAveragePoints, title,
                                  xLabel, yLabel, figureName,
-                                 lineStyles=['k-'], lineWidths=[1.5],
-                                 calendar=self.calendar)
+                                 lineStyles=['k-'], lineWidths=[2],
+                                 legendText=[None], calendar=self.calendar)
 
         caption = u'Time Series of maximum Meridional Overturning ' \
                   u'Circulation at 26.5°N'
