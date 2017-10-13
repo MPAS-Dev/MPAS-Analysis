@@ -28,9 +28,9 @@ import ConfigParser
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
-                             fileout, lineStyles, lineWidths, calendar,
-                             titleFontSize=None, figsize=(15, 6), dpi=None,
-                             maxXTicks=20):
+                             fileout, lineStyles, lineWidths, legendText,
+                             calendar, titleFontSize=None, figsize=(15, 6),
+                             dpi=None, maxXTicks=20):
 
     """
     Plots the list of time series data sets and stores the result in an image
@@ -57,8 +57,11 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     fileout : str
         the file name to be written
 
-    lineStyles, lineWidths : list of str
-        control line style/width
+    lineStyles, lineWidths, legendText : list of str
+        control line style/width and corresponding legend text
+
+    calendar : str
+        the calendar to use for formatting the time axis
 
     titleFontSize : int, optional
         the size of the title font
@@ -96,8 +99,19 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         maxDays.append(mean.Time.max())
         plt.plot(mean['Time'], mean,
                  lineStyles[dsIndex],
-                 linewidth=lineWidths[dsIndex])
+                 linewidth=lineWidths[dsIndex],
+                 label=legendText[dsIndex])
+    plt.legend(loc='lower left')
+
     ax = plt.gca()
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+
     # Add a y=0 line if y ranges between positive and negative values
     yaxLimits = ax.get_ylim()
     if yaxLimits[0]*yaxLimits[1] < 0:
@@ -107,13 +121,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
-    if titleFontSize is None:
-        titleFontSize = config.get('plot', 'titleFontSize')
-
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
-    title_font = {'size': titleFontSize,
-                  'color': config.get('plot', 'titleFontColor'),
-                  'weight': config.get('plot', 'titleFontWeight')}
     if title is not None:
         plt.title(title, **title_font)
     if xlabel is not None:
@@ -129,7 +136,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
                                    fileout, lineStyles, lineWidths,
-                                   calendar, titleFontSize=None,
+                                   legendText, titleFontSize=None,
                                    figsize=(15, 6), dpi=None):
 
     """
@@ -154,8 +161,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     fileout : str
         the file name to be written
 
-    lineStyles, lineWidths : list of str
-        control line style/width
+    lineStyles, lineWidths, legendText : list of str
+        control line style/width and corresponding legend text
 
     titleFontSize : int, optional
         the size of the title font
@@ -187,7 +194,9 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         maxDays.append(mean.Time.max())
         plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
                   lineStyles[dsIndex],
-                  linewidth=lineWidths[dsIndex])
+                  linewidth=lineWidths[dsIndex],
+                  label=legendText[dsIndex])
+    plt.legend(loc='lower left')
 
     ax = plt.gca()
 
@@ -777,7 +786,8 @@ def plot_vertical_section(
         This may need to be adjusted depending on the figure size and aspect
         ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
 
-    calendar : the calendar to use for formatting the time axis
+    calendar : str, optional
+        the calendar to use for formatting the time axis
         NOTE:  calendar is only used if xArrayIsTime is True
 
     Authors

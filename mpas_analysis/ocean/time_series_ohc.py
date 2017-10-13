@@ -562,14 +562,13 @@ class TimeSeriesOHC(AnalysisTask):
             ohcAnomalyBottom = unitsScalefactor*ohcAnomaly[:, k2000m+1:kbtm].sum('nVertLevels')
 
             xLabel = 'Time [years]'
-            yLabel = '[x$10^{22}$ J]'
+            yLabel = '$\Delta$OHC  [x$10^{22}$ J]'
 
-            title = 'OHC Anomaly, {}, 0-bottom (thick-),' \
-                    ' 0-700m (thin-), 700-2000m (--),' \
-                    ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
-                                                      mainRunName)
+            title = 'OHC anomaly, {} \n {}'.format(plotTitles[regionIndex],
+                                                   mainRunName)
 
-            figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['OHCAnomaly', region])
+            figureName = '{}/{}.png'.format(self.plotsDirectory,
+                                            self.filePrefixes['OHCAnomaly', region])
 
             if preprocessedReferenceRunName != 'None':
                 # these preprocessed data are OHC *anomalies*
@@ -577,9 +576,11 @@ class TimeSeriesOHC(AnalysisTask):
                 ohcPreprocessed700m = dsPreprocessedTimeSlice.ohc_700m
                 ohcPreprocessed2000m = dsPreprocessedTimeSlice.ohc_2000m
                 ohcPreprocessedBottom = dsPreprocessedTimeSlice.ohc_btm
-                title = '{} (r), {} (b)'.format(title,
-                                                preprocessedReferenceRunName)
-                timeseries_analysis_plot(config, [ohcAnomalyTotal, ohcAnomaly700m, ohcAnomaly2000m,
+                title = '{} (black lines) \n {} (red lines)'.format(title,
+                                                                    preprocessedReferenceRunName)
+                timeseries_analysis_plot(config, [ohcAnomalyTotal,
+                                                  ohcAnomaly700m,
+                                                  ohcAnomaly2000m,
                                                   ohcAnomalyBottom,
                                                   ohcPreprocessedTotal,
                                                   ohcPreprocessed700m,
@@ -587,20 +588,27 @@ class TimeSeriesOHC(AnalysisTask):
                                                   ohcPreprocessedBottom],
                                          movingAveragePointsTimeSeries, title,
                                          xLabel, yLabel, figureName,
-                                         lineStyles=['r-', 'r-', 'r--', 'r-.',
-                                                     'b-', 'b-', 'b--', 'b-.'],
-                                         lineWidths=[2, 1, 1.5, 1.5, 2, 1, 1.5,
-                                                     1.5],
+                                         lineStyles=['k-', 'k-', 'k--', 'k+',
+                                                     'r-', 'r-', 'r--', 'r+'],
+                                         lineWidths=[5, 3, 3, 3,
+                                                     5, 3, 3, 3],
+                                         legendText=['0-bottom', '0-700m',
+                                                     '700-2000m', '2000m-bottom',
+                                                     None, None, None, None],
                                          calendar=calendar)
 
             if (not compareWithObservations and
                     preprocessedReferenceRunName == 'None'):
-                timeseries_analysis_plot(config, [ohcAnomalyTotal, ohcAnomaly700m, ohcAnomaly2000m,
+                timeseries_analysis_plot(config, [ohcAnomalyTotal,
+                                                  ohcAnomaly700m,
+                                                  ohcAnomaly2000m,
                                                   ohcAnomalyBottom],
                                          movingAveragePointsTimeSeries, title,
                                          xLabel, yLabel, figureName,
-                                         lineStyles=['r-', 'r-', 'r--', 'r-.'],
-                                         lineWidths=[2, 1, 1.5, 1.5],
+                                         lineStyles=['k-', 'k-', 'k--', 'k+'],
+                                         lineWidths=[5, 3, 3, 3],
+                                         legendText=['0-bottom', '0-700m',
+                                                     '700-2000m', '2000m-bottom'],
                                          calendar=calendar)
 
             caption = 'Running Mean of the Anomaly in {} Ocean Heat Content ' \
@@ -623,19 +631,22 @@ class TimeSeriesOHC(AnalysisTask):
                     unitsScalefactor*ohc[:, k700m+1:k2000m].sum('nVertLevels')
                 ohcBottom = unitsScalefactor*ohc[:, k2000m+1:kbtm].sum('nVertLevels')
 
-                title = 'OHC, {}, 0-bottom (thick-),' \
-                        ' 0-700m (thin-), 700-2000m (--),' \
-                        ' 2000m-bottom (-.) \n {}'.format(plotTitles[regionIndex],
-                                                          mainRunName)
+                title = 'OHC, {} \n {}'.format(plotTitles[regionIndex],
+                                               mainRunName)
 
-                figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefixes['OHC', region])
+                figureName = '{}/{}.png'.format(self.plotsDirectory,
+                                                self.filePrefixes['OHC', region])
 
-                timeseries_analysis_plot(config, [ohcTotal, ohc700m, ohc2000m,
+                timeseries_analysis_plot(config, [ohcTotal,
+                                                  ohc700m,
+                                                  ohc2000m,
                                                   ohcBottom],
                                          movingAveragePointsTimeSeries, title,
                                          xLabel, yLabel, figureName,
-                                         lineStyles=['r-', 'r-', 'r--', 'r-.'],
-                                         lineWidths=[2, 1, 1.5, 1.5],
+                                         lineStyles=['k-', 'k-', 'k--', 'k+'],
+                                         lineWidths=[5, 3, 3, 3],
+                                         legendText=['0-bottom', '0-700m',
+                                                     '700-2000m', '2000m-bottom'],
                                          calendar=calendar)
 
                 caption = 'Running Mean of {} Ocean Heat Content'.format(region)

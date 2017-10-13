@@ -213,7 +213,7 @@ class TimeSeriesSST(AnalysisTask):
             region = regions[regionIndex]
 
             title = plotTitles[regionIndex]
-            title = 'SST, %s, %s (r-)' % (title, mainRunName)
+            title = 'SST, %s \n %s (black)' % (title, mainRunName)
             xLabel = 'Time [years]'
             yLabel = '[$^\circ$ C]'
 
@@ -226,19 +226,20 @@ class TimeSeriesSST(AnalysisTask):
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST
 
-                title = '{}\n {} (b-)'.format(title,
+                title = '{}\n {} (red)'.format(title,
                                               preprocessedReferenceRunName)
                 timeseries_analysis_plot(config, [SST, SST_v0],
                                          movingAveragePoints,
                                          title, xLabel, yLabel, figureName,
-                                         lineStyles=['r-', 'b-'],
-                                         lineWidths=[1.2, 1.2],
+                                         lineStyles=['k-', 'r-'],
+                                         lineWidths=[3, 1.5],
+                                         legendText=[None, None],
                                          calendar=calendar)
             else:
                 timeseries_analysis_plot(config, [SST], movingAveragePoints,
                                          title, xLabel, yLabel, figureName,
-                                         lineStyles=['r-'], lineWidths=[1.2],
-                                         calendar=calendar)
+                                         lineStyles=['k-'], lineWidths=[3],
+                                         legendText=[None], calendar=calendar)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                     region)
