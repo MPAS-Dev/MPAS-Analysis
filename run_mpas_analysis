@@ -57,6 +57,7 @@ def build_analysis_list(config):  # {{{
     from mpas_analysis import ocean
     from mpas_analysis import sea_ice
     from mpas_analysis.shared.climatology import MpasClimatologyTask
+    from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
     # analyses will be a list of analysis classes
     analyses = []
@@ -64,19 +65,23 @@ def build_analysis_list(config):  # {{{
     # Ocean Analyses
     oceanClimatolgyTask = MpasClimatologyTask(config=config,
                                               componentName='ocean')
+    oceanTimeSeriesTask = MpasTimeSeriesTask(config=config,
+                                             componentName='ocean')
     analyses.append(oceanClimatolgyTask)
     analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask))
     analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask))
     analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask))
-    analyses.append(ocean.TimeSeriesOHC(config))
-    analyses.append(ocean.TimeSeriesSST(config))
+    analyses.append(ocean.TimeSeriesOHC(config, oceanTimeSeriesTask))
+    analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask))
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
-    analyses.append(ocean.IndexNino34(config))
+    analyses.append(ocean.IndexNino34(config, oceanTimeSeriesTask))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
                                                componentName='seaIce')
+    seaIceTimeSeriesTask = MpasTimeSeriesTask(config=config,
+                                              componentName='seaIce')
     analyses.append(seaIceClimatolgyTask)
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
                                                      seaIceClimatolgyTask,
@@ -90,7 +95,7 @@ def build_analysis_list(config):  # {{{
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
                                                       seaIceClimatolgyTask,
                                                       hemisphere='SH'))
-    analyses.append(sea_ice.TimeSeriesSeaIce(config))
+    analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask))
 
     return analyses  # }}}
 
