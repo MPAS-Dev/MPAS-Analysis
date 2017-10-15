@@ -19,7 +19,7 @@ from ..shared.timekeeping.utility import get_simulation_start_time, \
 
 from ..shared import AnalysisTask
 
-from ..shared.time_series import cache_time_series
+from ..shared.time_series import MpasTimeSeriesTask
 from ..shared.html import write_image_xml
 
 
@@ -70,6 +70,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
+
+        self.mpasTimeSeriesTask = MpasTimeSeriesTask(
+                config=config,  componentName=self.componentName,
+                taskName=self.taskName, subtaskName='mpasTimeSeries')
+        self.run_after(self.mpasTimeSeriesTask)
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -104,26 +109,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             analysisOptionName='config_am_mocstreamfunction_enable',
             raiseException=False)
 
-        # Get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        #   First a list necessary for the streamfunctionMOC climatology
-        streamName = 'timeSeriesStatsMonthlyOutput'
-
-        self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
         self.startDateTseries = config.get('timeSeries', 'startDate')
         self.endDateTseries = config.get('timeSeries', 'endDate')
-        self.inputFilesTseries = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDateTseries,
-                                         endDate=self.endDateTseries,
-                                         calendar=self.calendar)
-        if len(self.inputFilesTseries) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDateTseries,
-                                       self.endDateTseries))
-
         self.startYearTseries = config.getint('timeSeries', 'startYear')
         self.endYearTseries = config.getint('timeSeries', 'endYear')
 
@@ -134,6 +121,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
+        self.mpasTimeSeriesTask.add_variables(variableList=variableList)
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -173,11 +161,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.logger.info("\nPlotting streamfunction of Meridional Overturning "
                          "Circulation (MOC)...")
-
-        self.logger.info('\n  List of files for time series:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFilesTseries[0]),
-                                 os.path.basename(self.inputFilesTseries[-1])))
 
         config = self.config
 
@@ -490,8 +473,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         else:
             chunking = None
 
+        fileName = self.mpasTimeSeriesTask.outputFile
         ds = open_multifile_dataset(
-            fileNames=self.inputFilesTseries,
+            fileNames=fileName,
             calendar=self.calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
@@ -523,35 +507,25 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         if continueOutput:
             self.logger.info('   Read in previously computed MOC time series')
 
-        # add all the other arguments to the function
-        comp_moc_part = partial(self._compute_moc_time_series_part, ds,
-                                areaCell, latCell, indlat26,
-                                maxEdgesInTransect, transectEdgeGlobalIDs,
-                                transectEdgeMaskSigns,  nVertLevels, dvEdge,
-                                refLayerThickness, latAtlantic, regionCellMask)
-
-        dsMOCTimeSeries = cache_time_series(
-            ds.Time.values,  comp_moc_part, outputFileTseries,
-            self.calendar, yearsPerCacheUpdate=1,  logger=self.logger)
+        dsMOCTimeSeries = self._compute_moc_time_series(
+                ds, areaCell, latCell, indlat26, maxEdgesInTransect,
+                transectEdgeGlobalIDs, transectEdgeMaskSigns,  nVertLevels,
+                dvEdge, refLayerThickness, latAtlantic, regionCellMask)
 
         return dsMOCTimeSeries  # }}}
 
-    def _compute_moc_time_series_part(self, ds, areaCell, latCell, indlat26,
-                                      maxEdgesInTransect,
-                                      transectEdgeGlobalIDs,
-                                      transectEdgeMaskSigns, nVertLevels,
-                                      dvEdge, refLayerThickness, latAtlantic,
-                                      regionCellMask, timeIndices, firstCall):
+    def _compute_moc_time_series(self, ds, areaCell, latCell, indlat26,
+                                 maxEdgesInTransect,
+                                 transectEdgeGlobalIDs,
+                                 transectEdgeMaskSigns, nVertLevels,
+                                 dvEdge, refLayerThickness, latAtlantic,
+                                 regionCellMask):
         # computes a subset of the MOC time series
 
-        if firstCall:
-            self.logger.info('   Process and save time series')
+        times = ds.Time.values
+        mocRegion = np.zeros(times.shape)
 
-        times = ds.Time[timeIndices].values
-        mocRegion = np.zeros(timeIndices.shape)
-
-        for localIndex, timeIndex in enumerate(timeIndices):
-            time = times[localIndex]
+        for timeIndex, time in enumerate(times):
             dsLocal = ds.isel(Time=timeIndex)
             date = days_to_datetime(time, calendar=self.calendar)
 
@@ -569,7 +543,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                                  horizontalVel)
             mocTop = self._compute_moc(latAtlantic, nVertLevels, latCell,
                                        regionCellMask, transportZ, velArea)
-            mocRegion[localIndex] = np.amax(mocTop[:, indlat26])
+            mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
             'Array latitude (26.5N)'
