@@ -298,16 +298,18 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
 
+        fieldName = '{}{}'.format(self.fieldName, self.hemisphere)
+
         self.climatologyDirectory = \
             get_mpas_climatology_dir_name(
                 config=config,
-                fieldName='seaIceAreaVol',
+                fieldName=fieldName,
                 mpasMeshName=mpasMeshName)
 
         (self.maskedClimatologyDirectory, self.remappedDirectory) = \
             get_mpas_climatology_dir_name(
                 config=config,
-                fieldName='seaIceAreaVol_masked',
+                fieldName='{}_masked'.format(fieldName),
                 mpasMeshName=mpasMeshName,
                 comparisonGridName=comparisonGridName)
 
