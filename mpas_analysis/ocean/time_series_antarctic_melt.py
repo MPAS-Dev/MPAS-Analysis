@@ -157,25 +157,25 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                     endDate=self.endDate)
 
 
-        # Load observations and put in dictionary based on shelf keyname
+        # Load observations from multiple files and put in dictionary based on shelf keyname
         observationsDirectory = build_config_full_path(config, 'oceanObservations', 'meltSubdirectory')
-        obsFileName = '{}/Rignot_2013_melt_rates.csv'.format(observationsDirectory)
-        
-        obsFile = csv.reader( open(obsFileName, 'rU') )	 
-        obsDict = {}
-        next(obsFile, None)  # skip the header line
-	for line in obsFile:		# some possibly useful values are left commented out for now
-            shelfName = line[0]
-            #surveyArea = float( line[1] )
-            #SSmeltFlux = float( line[2] )
-            #SSmeltFluxUncertainty = float( line[3] )
-            #SSmeltRate = float( line[4] )                                                                                 
-            #SSmeltRateUncertainty = float( line[5] )
-            meltFlux = float( line[6] ) 
-            meltFluxUncertainty = float( line[7] )
-            meltRate = float( line[8] )
-            meltRateUncertainty = float( line[9] )
-            #actualArea = line[10]
+        #obsFileNameList = [ 'Rignot_2013_melt_rates.csv' ]
+        obsFileNameList = [ 'Rignot_2013_melt_rates.csv', 'Rignot_2013_melt_rates_SS.csv' ]
+        obsDictDict = {}	# dict for storing dict of obs data
+        fileCount = 0		# counter for uniquely identifying obs data set
+        while len(obsFileNameList)>0:
+	    obsFileName = '{}/{}'.format( observationsDirectory, obsFileNameList.pop() )
+            fileCount = fileCount + 1
+            obsDictTemp = {}
+            obsFile = csv.reader( open(obsFileName, 'rU') )	 
+            next(obsFile, None)  # skip the header line
+    	    for line in obsFile:		# some possibly useful values are left commented out for now
+            	shelfName = line[0]
+            	#surveyArea = line[1]
+                meltFlux = float( line[2] ) 
+                meltFluxUncertainty = float( line[3] )
+                meltRate = float( line[4] )
+                meltRateUncertainty = float( line[5] )
         #    obsDict[shelfName] = { 'surveyArea': surveyArea, 'SSmeltFlux': SSmeltFlux, 'SSmeltFluxUncertainty': 
 	#	SSmeltFluxUncertainty, 'SSmeltRate': SSmeltRate, 'SSmeltRateUncertainty': SSmeltRateUncertainty,
 	#	'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 'meltRate': meltRate, 
@@ -184,8 +184,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 	#	SSmeltFluxUncertainty, 'SSmeltRate': SSmeltRate, 'SSmeltRateUncertainty': SSmeltRateUncertainty,
 	#	'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 'meltRate': meltRate, 
 	#	'meltRateUncertainty': meltRateUncertainty }
-            obsDict[shelfName] = { 'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 
-		'meltRate': meltRate, 'meltRateUncertainty': meltRateUncertainty }
+                obsDictTemp[shelfName] = { 'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty, 
+		    'meltRate': meltRate, 'meltRateUncertainty': meltRateUncertainty }
+		obsDictDict[ 'obsDict{}'.format(fileCount) ] = obsDictTemp	# ultimately, the subdict name here should correspond to the obs filename (?)
+
 	# Note that if areas from obs file are used they need to be converted from sq km to sq m
 
         # work on data from simulations
@@ -240,21 +242,24 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         make_directories(outputDirectory)
 
+
+## SFP: temp hack to get multiple obs dict working. First try with single dict ...
+#        obsDict = obsDictDict[ 'obsDict1' ]
+        obsCount = len( obsDictDict )  
+        print obsCount
         print '  Make plots...'
         for iRegion in range(nRegions):
 
             regionName = iceShelvesToPlot[iRegion]
 
             # get obs melt flux and obs melt flux unc. for shelf (similar for rates) 
-            #SSMeltFlux = obsDict[regionName]['SSmeltFlux']
-            #SSMeltFluxUnc = obsDict[regionName]['SSmeltFluxUncertainty']
-            #SSMeltRate = obsDict[regionName]['SSmeltRate']
-            #SSMeltRateUnc = obsDict[regionName]['SSmeltRateUncertainty']
-            
-            obsMeltFlux = obsDict[regionName]['meltFlux']
-            obsMeltFluxUnc = obsDict[regionName]['meltFluxUncertainty']
-            obsMeltRate = obsDict[regionName]['meltRate']
-            obsMeltRateUnc = obsDict[regionName]['meltRateUncertainty']
+            obsMeltFlux = []; obsMeltFluxUnc = []; obsMeltRate = []; obsMeltRateUnc = []
+            for iObs in range( obsCount ):
+                dictName = 'obsDict{}'.format( iObs+1 )
+                obsMeltFlux.append( obsDictDict[dictName][regionName]['meltFlux'] )
+                obsMeltFluxUnc.append( obsDictDict[dictName][regionName]['meltFluxUncertainty'] )
+                obsMeltRate.append( obsDictDict[dictName][regionName]['meltRate'] )
+                obsMeltRateUnc.append( obsDictDict[dictName][regionName]['meltRateUncertainty'] )
 
             title = regionName.replace('_', ' ')
 
@@ -273,7 +278,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 #                                     title, xLabel, yLabel, figureName,
 #                                     lineStyles=['b-'], lineWidths=[1.2],
 #                                     calendar=calendar)
-            self.plot(config, timeSeries, obsMeltFlux, obsMeltFluxUnc, title, xLabel, yLabel, figureName )
+            self.plot(config, timeSeries, obsCount, obsMeltFlux, obsMeltFluxUnc, title, xLabel, yLabel, figureName )
             
 
 
@@ -289,10 +294,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 #                                     title, xLabel, yLabel, figureName,
 #                                     lineStyles=['b-'], lineWidths=[1.2],
 #                                     calendar=calendar)
-            self.plot(config, timeSeries, obsMeltRate, obsMeltRateUnc, title, xLabel, yLabel, figureName )
+            self.plot(config, timeSeries, obsCount, obsMeltRate, obsMeltRateUnc, title, xLabel, yLabel, figureName )
 
 
-    def plot(self, config, modelValues, obsMean, obsUncertainty, title, xlabel, ylabel, fileout):
+    def plot(self, config, modelValues, obsCount, obsMean, obsUncertainty, title, xlabel, ylabel, fileout):
 
         """
         Plots the list of time series data sets and stores the result in an image
@@ -365,12 +370,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 #        plt.plot([minDays, maxDays], [obsMean, obsMean], color=obsColor, linewidth=obsLineWidth)
 
 	# plot error bars rather than the "patch" used above
-	plt.errorbar( (maxDays - minDays)/3+minDays, obsMean, yerr=obsUncertainty, fmt='o', ecolor='k', 
-			capthick=2, label='Rignot et al. (2013)')
-#	plt.errorbar( (maxDays - minDays)/3+minDays+1.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/3.0, 
-#			fmt='s', ecolor='g', capthick=2, label='obs2')  # example of a 2nd set of obs error bars
-#	plt.errorbar( (maxDays - minDays)/3+minDays+2.0*(maxDays - minDays)/10, obsMean, yerr=obsUncertainty/2.0, 
-#			fmt='^', ecolor='r', capthick=2, label='obs3')  # example of a 3rd set of obs error bars
+        for iObs in range( obsCount ):
+	    plt.errorbar( ((maxDays - minDays)/4)*(iObs+1)+minDays, obsMean[iObs], yerr=obsUncertainty[iObs], fmt='o', ecolor='k', 
+	    		capthick=2, label='obs{}'.format(iObs+1))
 
         # add legend
 	plt.legend( loc='lower right' )
