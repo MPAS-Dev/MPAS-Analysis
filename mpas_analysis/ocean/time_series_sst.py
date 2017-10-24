@@ -105,7 +105,7 @@ class TimeSeriesSST(AnalysisTask):
         regions = [regions[index] for index in regionIndicesToPlot]
 
         for region in regions:
-            filePrefix = 'sst_{}_{}.png'.format(region, mainRunName)
+            filePrefix = 'sst_{}_{}'.format(region, mainRunName)
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
             self.filePrefixes[region] = filePrefix
@@ -215,7 +215,7 @@ class TimeSeriesSST(AnalysisTask):
             title = plotTitles[regionIndex]
             title = 'SST, %s \n %s (black)' % (title, mainRunName)
             xLabel = 'Time [years]'
-            yLabel = '[$^\circ$ C]'
+            yLabel = '[$^\circ$C]'
 
             SST = dsSST[varName].isel(nOceanRegions=regionIndex)
 
