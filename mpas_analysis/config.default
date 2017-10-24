@@ -7,7 +7,7 @@
 ##     into your new config file. Make sure they have the right section name
 ##     (e.g. [run] or [output]). If nothing esle, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
-##  3. run: ./run_analysis.py config.myrun.  This will read the configuraiton
+##  3. run: ./run_mpas_analysis config.myrun.  This will read the configuraiton
 ##     first from this file and then replace that configuraiton with any
 ##     changes from from config.myrun
 ##  4. If you want to run a subset of the analysis, you can either set the
@@ -40,8 +40,13 @@ preprocessedReferenceRunName = None
 parallelTaskCount = 1
 
 # Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_analysis.py is executed directly)
-commandPrefix = 
+# Default is no prefix (run_mpas_analysis is executed directly)
+commandPrefix =
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = serial
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -108,12 +113,17 @@ mpasRemappedClimSubdirectory = clim/mpas/remapped
 mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
 timeCacheSubdirectory = timecache
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
+#   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
@@ -127,7 +137,7 @@ timeCacheSubdirectory = timecache
 #                                            given category of analysis
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
 
@@ -235,11 +245,11 @@ baseDirectory = /dir/to/ocean/reference
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/ocean/reference
- 
+
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
- 
+
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
 areaNH = IceArea_timeseries/iceAreaNH_climo.nc
@@ -289,14 +299,72 @@ baseDirectory = /dir/to/seaice/reference
 [timeSeriesOHC]
 ## options related to plotting time series of ocean heat content (OHC)
 
+# plot S, T, and OHC fields themselves, in addition to their anomalies?
+plotOriginalFields = False
 # compare to observations?
 compareWithObservations = False
 # list of region indices to plot from the region list in [regions] below
 regionIndicesToPlot = [6]
-# Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
-# window)
-movingAveragePoints = 12
+# Number of points over which to compute moving average for time series (e.g.,
+#for monthly output, movingAveragePoints=12 corresponds to a 12-month moving
+# average window)
+movingAveragePointsTimeSeries = 12
+# Number of points over which to compute moving average for Hovmoller plots
+movingAveragePointsHovmoller = 12
+
+# colormap for OHC
+colormapNameOHC = RdYlBu_r
+# colormap indices for contour color
+colormapIndicesOHC = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsOHC = [0, 5, 10, 15, 20, 25, 30, 35, 40]
+# contour line levels
+contourLevelsOHC = np.arange(0, 41, 4)
+
+# colormap for OHC anomaly
+colormapNameOHCAnomaly = RdBu_r
+# colormap indices for contour color
+colormapIndicesOHCAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsOHCAnomaly = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
+# contour line levels
+contourLevelsOHCAnomaly = np.arange(-2.5, 2.6, 0.5)
+
+# colormap for temperature
+colormapNameTemperature = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesTemperature = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsTemperature = [0, 0.6, 1.2, 2, 4, 6, 8, 10, 20]
+# contour line levels
+contourLevelsTemperature = np.arange(1, 21, 2)
+
+# colormap for temperature anomaly
+colormapNameTemperatureAnomaly = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesTemperatureAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsTemperatureAnomaly = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
+# contour line levels
+contourLevelsTemperatureAnomaly = np.arange(-1.0, 1.26, 0.25)
+
+# colormap for salinity
+colormapNameSalinity = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesSalinity = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsSalinity = [34.5, 34.6, 34.65, 34.7, 34.72, 34.74, 34.76, 34.78, 34.8]
+# contour line levels
+contourLevelsSalinity = np.arange(34.51, 34.82, 0.02)
+
+# colormap for salinity anomaly
+colormapNameSalinityAnomaly = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesSalinityAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsSalinityAnomaly = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+# contour line levels
+contourLevelsSalinityAnomaly = np.arange(-0.1, 0.11, 0.02)
 
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
@@ -353,6 +421,13 @@ depthLimGlobal = [-1000, 0]
 # compare to observations?
 compareWithObservations = True
 
+# plot the vertical section of MHT?
+plotVerticalSection = False
+
+# Number of points over which to compute moving average (with respect to latitude)
+# for MHT vertical section plots
+movingAveragePoints = 1
+
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
@@ -372,7 +447,7 @@ regionMaskFiles = /path/to/MOCregional/mask/file
 # is handled automatically.  If the MOC calculation encounters memory problems,
 # consider setting maxChunkSize to a number significantly lower than nEdges
 # in your MPAS mesh so that the calculation will be divided into smaller
-# pieces. 
+# pieces.
 # Note, need to use maxChunkSize for the 18to6
 # maxChunkSize = 1000
 
@@ -405,6 +480,10 @@ compareWithObservations = True
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
 # corresponds to a 12-month moving average window)
 movingAveragePoints = 12
+
+# Number of points over which to compute moving average (with respect to
+# latitude) for climatological MOC plots
+movingAveragePointsClimatological = 1
 
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
@@ -489,53 +568,149 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 comparisonTimes =  ['JFM', 'JAS', 'ANN']
 
-[climatologyMapSeaIceConcThick]
+[climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
-## sea ice concentration and thickness against reference model results and
-## observations
+## sea ice concentration against reference model results and observations
+## in the northern hemisphere (NH)
 
 # colormap for model/observations
-colormapNameConcResultWinter = inferno
-colormapNameConcResultSummer = inferno
-colormapNameThickResultNH = inferno
-colormapNameThickResultSH = inferno
+colormapNameResult = inferno
 # color indices into colormapName for filled contours
-colormapIndicesConcResultWinter = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesConcResultSummer = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesThickResultNH = [20, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesThickResultSH = [20, 80, 110, 140, 170, 200, 230, 255]
-# colormap levels/values for contour boundaries for:
-# concentration in winter and summer
-colorbarLevelsConcResultWinter = [0.15, 0.4, 0.7, 0.9, 0.94, 0.96, 0.98, 0.99, 1]
-colorbarLevelsConcResultSummer = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
-# thickness in the northern and southern hemispheres
-colorbarLevelsThickResultNH = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
-colorbarLevelsThickResultSH = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
 
 # colormap for differences
-colormapNameConcDifferenceWinter = RdBu_r
-colormapNameConcDifferenceSummer = RdBu_r
-colormapNameThickDifferenceNH = RdBu_r
-colormapNameThickDifferenceSH = RdBu_r
+colormapNameDifference = RdBu_r
 # color indices into colormapName for filled contours
-colormapIndicesConcDifferenceWinter = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesConcDifferenceSummer = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesThickDifferenceNH = [0, 40, 80, 127, 127, 170, 210, 255]
-colormapIndicesThickDifferenceSH = [0, 40, 80, 127, 127, 170, 210, 255]
-# colormap levels/values for contour boundaries for:
-# concentration in winter and summer
-colorbarLevelsConcDifferenceWinter = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
-colorbarLevelsConcDifferenceSummer = [-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8]
-# thickness in the northern and southern hemispheres
-colorbarLevelsThickDifferenceNH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
-colorbarLevelsThickDifferenceSH = [-2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5]
+colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1.]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['JFM', 'JAS']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
-minimumLatitudeNH = 50
-referenceLongitudeNH = 0
-# reference lat/lon for sea ice plots in the southern hemisphere
-minimumLatitudeSH = -50
-referenceLongitudeSH = 180
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+# arrange subplots vertically?
+vertical = False
+
+[climatologyMapSeaIceConcSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice concentration against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1.]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['DJF', 'JJA']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+# arrange subplots vertically?
+vertical = False
+
+[climatologyMapSeaIceThickNH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the northern hemisphere (NH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
+
+# arrange subplots vertically?
+vertical = False
+
+[climatologyMapSeaIceThickSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = inferno
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
+
+# Times for comparison times (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
+
+# arrange subplots vertically?
+vertical = False
 
 [regions]
 ## options related to ocean regions used in several analysis modules
@@ -564,3 +739,12 @@ axisFontSize = 16
 titleFontSize = 20
 titleFontColor = black
 titleFontWeight = normal
+
+# the dots per inch of output figures
+dpi = 200
+
+[html]
+## options related to generating a webpage to display the analysis
+
+# generate the webpage?
+generate = True

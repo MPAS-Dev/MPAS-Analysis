@@ -18,6 +18,7 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 from ..shared.time_series import cache_time_series
+from ..shared.html import write_image_xml
 
 
 class TimeSeriesSeaIce(SeaIceAnalysisTask):
@@ -68,7 +69,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(TimeSeriesSeaIce, self).setup_and_check()
 
         self.check_analysis_enabled(
@@ -82,8 +83,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         # get a list of timeSeriesStatsMonthly output files from the streams
         # file, reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = config.get('timeSeries', 'startDate')
         self.endDate = config.get('timeSeries', 'endDate')
         self.inputFiles = \
@@ -96,6 +96,45 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
+
+        # these are redundant for now.  Later cleanup is needed where these
+        # file names are reused in run()
+        self.xmlFileNames = []
+
+        polarPlot = config.getboolean('timeSeriesSeaIceAreaVol', 'polarPlot')
+        mainRunName = config.get('runs', 'mainRunName')
+        preprocessedReferenceRunName = \
+            config.get('runs', 'preprocessedReferenceRunName')
+        compareWithObservations = config.getboolean('timeSeriesSeaIceAreaVol',
+                                                    'compareWithObservations')
+
+        polarXMLFileNames = []
+
+        if (not compareWithObservations and
+                preprocessedReferenceRunName == 'None'):
+            for variableName in ['iceArea', 'iceVolume']:
+                filePrefix = '{}.{}'.format(mainRunName,
+                                            variableName)
+
+                self.xmlFileNames.append('{}/{}.xml'.format(
+                        self.plotsDirectory, filePrefix))
+                polarXMLFileNames.append('{}/{}_polar.xml'.format(
+                        self.plotsDirectory, filePrefix))
+        else:
+
+            for hemisphere in ['NH', 'SH']:
+                for variableName in ['iceArea', 'iceVolume']:
+                    filePrefix = '{}{}_{}'.format(variableName,
+                                                  hemisphere,
+                                                  mainRunName)
+
+                    self.xmlFileNames.append('{}/{}.xml'.format(
+                            self.plotsDirectory, filePrefix))
+                    polarXMLFileNames.append('{}/{}_polar.xml'.format(
+                            self.plotsDirectory, filePrefix))
+
+        if polarPlot:
+            self.xmlFileNames.extend(polarXMLFileNames)
         return  # }}}
 
     def run(self):  # {{{
@@ -174,9 +213,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             calendar=calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
-            variableList=['iceAreaCell', 'iceVolumeCell'],
-            variableMap=self.variableMap,
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
+            variableList=['timeMonthly_avg_iceAreaCell',
+                          'timeMonthly_avg_iceVolumeCell'],
             startDate=self.startDate,
             endDate=self.endDate)
 
@@ -210,6 +249,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 'iceThickness': 1.}
 
         xLabel = 'Time [years]'
+
+        galleryGroup = 'Time Series'
+        groupLink = 'timeseries'
 
         dsTimeSeries = {}
         obs = {}
@@ -248,22 +290,22 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 figureNameStd[key] = '{}.png'.format(prefix)
                 figureNamePolar[key] = '{}_polar.png'.format(prefix)
 
-                title[key] = '{} ({}), {} (r)'.format(
+                title[key] = '{} ({}) \n {} (black)'.format(
                     plotTitles[variableName], hemisphere, mainRunName)
 
             if compareWithObservations:
                 key = (hemisphere, 'iceArea')
-                title[key] = '{}\nSSM/I observations, annual cycle (k)'.format(
+                title[key] = '{}\nSSM/I observations, annual cycle (blue)'.format(
                     title[key])
                 if hemisphere == 'NH':
                     key = (hemisphere, 'iceVolume')
                     title[key] = \
-                        '{}\nPIOMAS, annual cycle (k)'.format(title[key])
+                        '{}\nPIOMAS, annual cycle (blue)'.format(title[key])
 
             if preprocessedReferenceRunName != 'None':
                 for variableName in ['iceArea', 'iceVolume']:
                     key = (hemisphere, variableName)
-                    title[key] = '{}\n {} (b)'.format(
+                    title[key] = '{}\n {} (red)'.format(
                         title[key], preprocessedReferenceRunName)
 
             if compareWithObservations:
@@ -324,18 +366,21 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                     if preprocessedReferenceRunName != 'None':
                         plotVars[key] = [plotVars[key], obs[key],
                                          preprocessed[key]]
-                        lineStyles = ['r-', 'k-', 'b-']
-                        lineWidths = [1.2, 1.2, 1.2]
+                        lineStyles = ['k-', 'b-', 'r-']
+                        lineWidths = [3, 1.2, 1.2]
+                        legendText = [None, None, None]
                     else:
                         # just v1 model and obs
                         plotVars[key] = [plotVars[key], obs[key]]
-                        lineStyles = ['r-', 'k-']
-                        lineWidths = [1.2, 1.2]
+                        lineStyles = ['k-', 'b-']
+                        lineWidths = [3, 1.2]
+                        legendText = [None, None]
                 elif preprocessedReferenceRunName != 'None':
                     # just v1 and v0 models
                     plotVars[key] = [plotVars[key], preprocessed[key]]
-                    lineStyles = ['r-', 'b-']
-                    lineWidths = [1.2, 1.2]
+                    lineStyles = ['k-', 'r-']
+                    lineWidths = [3, 1.2]
+                    legendText = [None, None]
 
                 if (compareWithObservations or
                         preprocessedReferenceRunName != 'None'):
@@ -347,8 +392,27 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                              figureNameStd[key],
                                              lineStyles=lineStyles,
                                              lineWidths=lineWidths,
+                                             legendText=legendText,
                                              titleFontSize=titleFontSize,
                                              calendar=calendar)
+                    filePrefix = '{}{}_{}'.format(variableName,
+                                                  hemisphere,
+                                                  mainRunName)
+                    thumbnailDescription = '{} {}'.format(
+                            hemisphere, plotTitles[variableName])
+                    caption = 'Running mean of {}'.format(
+                            thumbnailDescription)
+                    write_image_xml(
+                        config,
+                        filePrefix,
+                        componentName='Sea Ice',
+                        componentSubdirectory='sea_ice',
+                        galleryGroup=galleryGroup,
+                        groupLink=groupLink,
+                        thumbnailDescription=thumbnailDescription,
+                        imageDescription=caption,
+                        imageCaption=caption)
+
                     if (polarPlot):
                         timeseries_analysis_plot_polar(
                             config,
@@ -358,8 +422,24 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                             figureNamePolar[key],
                             lineStyles=lineStyles,
                             lineWidths=lineWidths,
+                            legendText=legendText,
                             titleFontSize=titleFontSize,
                             calendar=calendar)
+
+                        filePrefix = '{}{}_{}_polar'.format(variableName,
+                                                            hemisphere,
+                                                            mainRunName)
+                        write_image_xml(
+                            config,
+                            filePrefix,
+                            componentName='Sea Ice',
+                            componentSubdirectory='sea_ice',
+                            galleryGroup=galleryGroup,
+                            groupLink=groupLink,
+                            thumbnailDescription=thumbnailDescription,
+                            imageDescription=caption,
+                            imageCaption=caption)
+
         if (not compareWithObservations and
                 preprocessedReferenceRunName == 'None'):
             for variableName in ['iceArea', 'iceVolume']:
@@ -372,7 +452,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                                 mainRunName,
                                                 variableName)
                 title = \
-                    '{}, NH (r), SH (k)\n{}'.format(plotTitles[variableName],
+                    '{}, NH (black), SH (blue)\n{}'.format(plotTitles[variableName],
                                                     mainRunName)
                 varList = [plotVars[('NH', variableName)],
                            plotVars[('SH', variableName)]]
@@ -380,18 +460,46 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                          movingAveragePoints,
                                          title, xLabel, units[variableName],
                                          figureNameStd,
-                                         lineStyles=['r-', 'k-'],
-                                         lineWidths=[1.2, 1.2],
+                                         lineStyles=['k-', 'b-'],
+                                         lineWidths=[2, 2],
+                                         legendText=[None, None],
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
-                if (polarPlot):
+                filePrefix = '{}.{}'.format(mainRunName, variableName)
+                thumbnailDescription = plotTitles[variableName]
+                caption = 'Running mean of {}'.format(
+                        thumbnailDescription)
+                write_image_xml(
+                    config,
+                    filePrefix,
+                    componentName='Sea Ice',
+                    componentSubdirectory='sea_ice',
+                    galleryGroup=galleryGroup,
+                    groupLink=groupLink,
+                    thumbnailDescription=thumbnailDescription,
+                    imageDescription=caption,
+                    imageCaption=caption)
+            if (polarPlot):
                     timeseries_analysis_plot_polar(config, varList,
                                                    movingAveragePoints,
                                                    title, figureNamePolar,
-                                                   lineStyles=['r-', 'k-'],
-                                                   lineWidths=[1.2, 1.2],
+                                                   lineStyles=['k-', 'b-'],
+                                                   lineWidths=[2, 2],
+                                                   legendText=[None, None],
                                                    titleFontSize=titleFontSize,
                                                    calendar=calendar)
+                    filePrefix = '{}.{}_polar'.format(mainRunName,
+                                                      variableName)
+                    write_image_xml(
+                        config,
+                        filePrefix,
+                        componentName='Sea Ice',
+                        componentSubdirectory='sea_ice',
+                        galleryGroup=galleryGroup,
+                        groupLink=groupLink,
+                        thumbnailDescription=thumbnailDescription,
+                        imageDescription=caption,
+                        imageCaption=caption)
 
         # }}}
 
@@ -479,8 +587,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         dsLocal = dsLocal.where(mask)
 
         dsAreaSum = (dsLocal*self.dsMesh.areaCell).sum('nCells')
-        dsAreaSum = dsAreaSum.rename({'iceAreaCell': 'iceArea',
-                                      'iceVolumeCell': 'iceVolume'})
+        dsAreaSum = dsAreaSum.rename(
+                {'timeMonthly_avg_iceAreaCell': 'iceArea',
+                 'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
         dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
                                      self.dsMesh.areaCell.sum('nCells'))
 

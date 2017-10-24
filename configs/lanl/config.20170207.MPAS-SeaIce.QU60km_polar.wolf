@@ -31,7 +31,9 @@ baseDirectory = /dir/to/analysis/output
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
@@ -45,7 +47,7 @@ baseDirectory = /dir/to/analysis/output
 #                                            given category of analysis
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all_seaIce']
 

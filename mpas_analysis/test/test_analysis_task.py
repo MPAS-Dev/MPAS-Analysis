@@ -33,7 +33,8 @@ class TestAnalysisTask(TestCase):
         # a list of analyses to generate.  Valid names are:
         #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
         #   'climatologyMapSSS', 'climatologyMapMLD', 'timeSeriesSeaIceAreaVol',
-        #   'climatologyMapSeaIceConcThick'
+        #   'climatologyMapSeaIceConcNH', 'climatologyMapSeaIceConcSH', 
+        #   'climatologyMapSeaIceThickNH', 'climatologyMapSeaIceThickSH'
         # the following shortcuts exist:
         #   'all' -- all analyses will be run
         #   'all_timeSeries' -- all time-series analyses will be run
@@ -47,7 +48,7 @@ class TestAnalysisTask(TestCase):
         #                                        the given category of analysis
         # an equivalent syntax can be used on the command line to override this
         # option:
-        #    ./run_analysis.py config.analysis --generate \
+        #    ./run_mpas_analysis config.analysis --generate \
         #         all,no_ocean,all_timeSeries
 
         cores = {'timeSeriesOHC': 'ocean',
@@ -59,7 +60,10 @@ class TestAnalysisTask(TestCase):
                  'climatologyMapMLD': 'ocean',
                  'climatologyMapSSS': 'ocean',
                  'timeSeriesSeaIceAreaVol': 'seaIce',
-                 'climatologyMapSeaIceConcThick': 'seaIce'}
+                 'climatologyMapSeaIceConcNH': 'seaIce',
+                 'climatologyMapSeaIceConcSH': 'seaIce',
+                 'climatologyMapSeaIceThickNH': 'seaIce',
+                 'climatologyMapSeaIceThickSH': 'seaIce'}
 
         tags = {'timeSeriesOHC': ['timeSeries', 'ohc'],
                 'timeSeriesSST': ['timeSeries', 'sst'],
@@ -71,8 +75,14 @@ class TestAnalysisTask(TestCase):
                 'climatologyMapMLD': ['climatology', 'horizontalMap', 'mld'],
                 'climatologyMapSSS': ['climatology', 'horizontalMap', 'sss'],
                 'timeSeriesSeaIceAreaVol': ['timeSeries'],
-                'climatologyMapSeaIceConcThick': ['climatology',
-                                                  'horizontalMap']}
+                'climatologyMapSeaIceConcNH': ['climatology',
+                                               'horizontalMap'],
+                'climatologyMapSeaIceConcSH': ['climatology',
+                                               'horizontalMap'],
+                'climatologyMapSeaIceThickNH': ['climatology',
+                                                'horizontalMap'],
+                'climatologyMapSeaIceThickSH': ['climatology',
+                                                'horizontalMap']}
 
         # test 'all'
         expectedResults = {}

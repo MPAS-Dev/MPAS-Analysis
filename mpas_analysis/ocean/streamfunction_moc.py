@@ -1,11 +1,11 @@
+# -*- coding: utf-8 -*-
 import xarray as xr
 import numpy as np
 import netCDF4
 import os
 from functools import partial
 
-from ..shared.constants.constants import m3ps_to_Sv, \
-    monthDictionary
+from ..shared.constants.constants import m3ps_to_Sv
 from ..shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
@@ -17,22 +17,26 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology.climatology import update_start_end_year, \
-    cache_climatologies
+from ..shared.climatology.climatology \
+    import update_climatology_bounds_from_file_names, \
+    compute_climatologies_with_ncclimo, \
+    get_ncclimo_season_file_name
 
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.time_series import cache_time_series
+from ..shared.html import write_image_xml
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{
     '''
     Computation and plotting of model meridional overturning circulation.
     Will eventually support:
-      * MOC streamfunction, post-processed (currently supported)
-      * MOC streamfunction, from MOC analysis member
-      * MOC time series (max value at 24.5N), post-processed
-      * MOC time series (max value at 24.5N), from MOC analysis member
+
+        * MOC streamfunction, post-processed (currently supported)
+        * MOC streamfunction, from MOC analysis member
+        * MOC time series (max value at 24.5N), post-processed
+        * MOC time series (max value at 24.5N), from MOC analysis member
 
     Authors
     -------
@@ -80,7 +84,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(StreamfunctionMOC, self).setup_and_check()
 
         config = self.config
@@ -96,8 +100,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
         #   First a list necessary for the streamfunctionMOC climatology
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDateClimo = config.get('climatology', 'startDate')
         self.endDateClimo = config.get('climatology', 'endDate')
         self.inputFilesClimo = \
@@ -105,6 +108,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                          startDate=self.startDateClimo,
                                          endDate=self.endDateClimo,
                                          calendar=self.calendar)
+
         if len(self.inputFilesClimo) == 0:
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDateClimo,
@@ -112,6 +116,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
+        update_climatology_bounds_from_file_names(self.inputFilesClimo,
+                                                  self.config)
+
+        self.startDateClimo = config.get('climatology', 'startDate')
+        self.endDateClimo = config.get('climatology', 'endDate')
         self.startYearClimo = config.getint('climatology', 'startYear')
         self.endYearClimo = config.getint('climatology', 'endYear')
 
@@ -132,6 +141,28 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.endYearTseries = config.getint('timeSeries', 'endYear')
 
         self.sectionName = 'streamfunctionMOC'
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        mainRunName = config.get('runs', 'mainRunName')
+
+        regions = ['Global'] + config.getExpression(self.sectionName,
+                                                    'regionNames')
+
+        for region in regions:
+            filePrefix = 'moc{}_{}_years{:04d}-{:04d}'.format(
+                    region, mainRunName,
+                    self.startYearClimo, self.endYearClimo)
+
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[region] = filePrefix
+
+        filePrefix = 'mocTimeseries_{}'.format(mainRunName)
+        self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                    filePrefix))
+        self.filePrefixes['timeSeries'] = filePrefix
 
         # }}}
 
@@ -172,7 +203,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #                                      sectionName, dictClimo,
             #                                      dictTseries)
         else:
-            self._cache_velocity_climatologies()
+            self._compute_velocity_climatologies()
             self._compute_moc_climo_postprocess()
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
 
@@ -181,6 +212,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint(self.sectionName,
                                             'movingAveragePoints')
+        movingAveragePointsClimatological = \
+                        config.getint(self.sectionName,
+                                      'movingAveragePointsClimatological')
         colorbarLabel = '[Sv]'
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
@@ -191,9 +225,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                      region, self.startYearClimo,
                      self.endYearClimo,
                      mainRunName)
-            figureName = '{}/moc{}_{}_years{:04d}-{:04d}.png'.format(
-                          self.plotsDirectory, region, mainRunName,
-                          self.startYearClimo, self.endYearClimo)
+            filePrefix = self.filePrefixes[region]
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             contourLevels = \
                 config.getExpression(self.sectionName,
                                      'contourLevels{}'.format(region),
@@ -207,21 +240,49 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             z = self.moc[region]
             plot_vertical_section(config, x, y, z, colormapName,
                                   colorbarLevels, contourLevels, colorbarLabel,
-                                  title, xLabel, yLabel, figureName)
+                                  title, xLabel, yLabel, figureName,
+                                  N=movingAveragePointsClimatological)
+
+            caption = '{} Meridional Overturning Streamfunction'.format(region)
+            write_image_xml(
+                config=config,
+                filePrefix=filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup='Meridional Overturning Streamfunction',
+                groupLink='moc',
+                thumbnailDescription=region,
+                imageDescription=caption,
+                imageCaption=caption)  # }}}
 
         # Plot time series
         print '   Plot time series of max Atlantic MOC at 26.5N...'
         xLabel = 'Time [years]'
         yLabel = '[Sv]'
         title = 'Max Atlantic MOC at $26.5^\circ$N\n {}'.format(mainRunName)
-        figureName = '{}/mocTimeseries_{}.png'.format(self.plotsDirectory,
-                                                      mainRunName)
+        filePrefix = self.filePrefixes['timeSeries']
+
+        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         timeseries_analysis_plot(config, [dsMOCTimeSeries.mocAtlantic26],
                                  movingAveragePoints, title,
                                  xLabel, yLabel, figureName,
-                                 lineStyles=['k-'], lineWidths=[1.5],
-                                 calendar=self.calendar)
+                                 lineStyles=['k-'], lineWidths=[2],
+                                 legendText=[None], calendar=self.calendar)
+
+        caption = u'Time Series of maximum Meridional Overturning ' \
+                  u'Circulation at 26.5°N'
+        write_image_xml(
+            config=config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup='Meridional Overturning Streamfunction',
+            groupLink='moc',
+            thumbnailDescription='Time Series',
+            imageDescription=caption,
+            imageCaption=caption)  # }}}
+
         # }}}
 
     def _load_mesh(self):  # {{{
@@ -250,48 +311,37 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness
         # }}}
 
-    def _cache_velocity_climatologies(self):  # {{{
+    def _compute_velocity_climatologies(self):  # {{{
         '''compute yearly velocity climatologies and cache them'''
 
-        variableList = ['avgNormalVelocity',
-                        'avgVertVelocityTop']
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
 
         config = self.config
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputRoot = build_config_full_path(config, 'output',
+                                            'mpasClimatologySubdirectory')
 
-        make_directories(outputDirectory)
+        outputDirectory = '{}/meanVelocity'.format(outputRoot)
 
-        if config.has_option(self.sectionName, 'maxChunkSize'):
-            chunking = config.getExpression(self.sectionName, 'maxChunkSize')
-        else:
-            chunking = None
+        self.velClimoFile = get_ncclimo_season_file_name(outputDirectory,
+                                                         'mpaso', 'ANN',
+                                                         self.startYearClimo,
+                                                         self.endYearClimo)
 
-        ds = open_multifile_dataset(
-            fileNames=self.inputFilesClimo,
-            calendar=self.calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
-            variableList=variableList,
-            variableMap=self.variableMap,
-            startDate=self.startDateClimo,
-            endDate=self.endDateClimo,
-            chunking=chunking)
+        if not os.path.exists(self.velClimoFile):
+            make_directories(outputDirectory)
 
-        # update the start and end year in config based on the real extend of
-        # ds
-        update_start_end_year(ds, config, self.calendar)
-        self.startYearClimo = config.getint('climatology', 'startYear')
-        self.endYearClimo = config.getint('climatology', 'endYear')
-
-        cachePrefix = '{}/meanVelocity'.format(outputDirectory)
-
-        # compute and cache the velocity climatology
-        cache_climatologies(ds, monthDictionary['ANN'],
-                            config, cachePrefix, self.calendar,
-                            printProgress=True)
+            compute_climatologies_with_ncclimo(
+                    config=config,
+                    inDirectory=self.historyDirectory,
+                    outDirectory=outputDirectory,
+                    startYear=self.startYearClimo,
+                    endYear=self.endYearClimo,
+                    variableList=variableList,
+                    modelName='mpaso',
+                    seasons=['ANN'],
+                    decemberMode='sdd')
         # }}}
 
     def _compute_moc_climo_postprocess(self):  # {{{
@@ -357,17 +407,12 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         if not os.path.exists(outputFileClimo):
             print '   Load data...'
 
-            cachePrefix = '{}/meanVelocity'.format(outputDirectory)
-
-            if self.startYearClimo == self.endYearClimo:
-                yearString = '{:04d}'.format(self.startYearClimo)
-                velClimoFile = '{}_year{}.nc'.format(cachePrefix, yearString)
-            else:
-                yearString = '{:04d}-{:04d}'.format(self.startYearClimo,
-                                                    self.endYearClimo)
-                velClimoFile = '{}_years{}.nc'.format(cachePrefix, yearString)
-
-            annualClimatology = xr.open_dataset(velClimoFile)
+            annualClimatology = xr.open_dataset(self.velClimoFile)
+            # rename some variables for convenience
+            annualClimatology = annualClimatology.rename(
+                    {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+                     'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+            annualClimatology = annualClimatology.isel(Time=0)
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)
@@ -472,8 +517,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         config = self.config
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-        variableList = ['avgNormalVelocity',
-                        'avgVertVelocityTop']
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = self._load_mesh()
@@ -488,9 +533,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             calendar=self.calendar,
             config=config,
             simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
+            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
             variableList=variableList,
-            variableMap=self.variableMap,
             startDate=self.startDateTseries,
             endDate=self.endDateTseries,
             chunking=chunking)
@@ -551,8 +595,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
             print '     date: {:04d}-{:02d}'.format(date.year, date.month)
 
-            horizontalVel = dsLocal.avgNormalVelocity.values
-            verticalVel = dsLocal.avgVertVelocityTop.values
+            horizontalVel = dsLocal.timeMonthly_avg_normalVelocity.values
+            verticalVel = dsLocal.timeMonthly_avg_vertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
             transportZ = self._compute_transport(maxEdgesInTransect,
                                                  transectEdgeGlobalIDs,

@@ -1,8 +1,11 @@
-<h1> Title: Remapper for "online" remapping of data sets<br>
+Remapper for "online" remapping of data sets
+============================================
+
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/04/15 <br>
-</h1>
-<h2> Summary </h2>
+</h2>
+<h3> Summary </h3>
 
 This document describes the design and implementation of a `Remapper` class
 for performing either "online" (in memory) or "offline" (through files
@@ -11,7 +14,7 @@ order to support remapping to and from grids grids not currently supported by
 `ncremap` such as polar stereographic grids commonly used for polar data sets.
 
 
-<h2> Requirements </h2>
+<h3> Requirements </h3>
 
 <h3> Requirement: Support for remapping to and from stereographic grids <br>
 Date last modified: 2017/04/15 <br>
@@ -22,13 +25,13 @@ There should exist a method for interpolating from stereographic grids to
 the comparison grid used in MPAS-Analysis.  This is needed to support
 observations that are stored on stereographic grids.
 
-It would often be more efficient (in terms of the size of data sets) and more 
-practical to perform analysis of polar data sets on a stereographic grid 
+It would often be more efficient (in terms of the size of data sets) and more
+practical to perform analysis of polar data sets on a stereographic grid
 centered at that pole.  Support for mapping to stereographic grids should be
 included, if feasible.
 
 
-<h2> Algorithmic Formulations</h2>
+<h3> Algorithmic Formulations</h3>
 
 <h3> Design solution: Support for remapping to and from stereographic grids <br>
 Date last modified: 2017/04/15 <br>
@@ -74,7 +77,7 @@ array and a mask are remapped, and renormalization is performed anywhere the
 remapped mask exceeds a given threshold.
 
 
-<h2> Design and Implementation </h2>
+<h3> Design and Implementation </h3>
 
 <h3> Implementation: Support for remapping to and from stereographic grids <br>
 Date last modified: 2017/04/15 <br>
@@ -85,7 +88,7 @@ The implementation is on the branch [xylar/MPAS-Analysis/add_polar_stereographic
 
 <h4> MeshDescriptor classes </h4>
 
-Each `MeshDescriptor` subclass includes the following member variables or 
+Each `MeshDescriptor` subclass includes the following member variables or
 methods:
   * `meshName`: a name of the mesh or grid, used for naming mapping files and
      climatologies

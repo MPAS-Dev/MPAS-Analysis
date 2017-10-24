@@ -6,10 +6,6 @@ files.
 Authors
 -------
 Phillip Wolfram, Xylar Asay-Davis
-
-Last modified
--------------
-04/01/2017
 """
 
 from lxml import etree
@@ -18,15 +14,16 @@ import os.path
 
 from ..containers import ReadOnlyDict
 from .utility import paths
-from ..timekeeping.utility import string_to_datetime, string_to_relative_delta
+from ..timekeeping.utility import string_to_datetime
 
 
 def convert_namelist_to_dict(fname, readonly=True):
     """
     Converts a namelist file to key-value pairs in dictionary.
 
+    Authors
+    -------
     Phillip J Wolfram
-    10/22/2016
     """
     # form dictionary
     nml = dict()
@@ -52,18 +49,25 @@ class NameList:
     Authors
     -------
     Phillip Wolfram, Xylar Asay-Davis
-
-    Last modified
-    -------------
-    02/06/2017
     """
 
     # constructor
     def __init__(self, fname, path=None):
         """
-        parse the namelist file given by fname. If the optional argument
-        path is provided, and fname contains a relative path, fname is
-        relative to path, rather than the current working directory.
+        Parse the namelist file
+
+        Parameters
+        ----------
+        fname : str
+            The file name of the namelist file
+
+        path : str, optional
+            If ``fname`` contains a relative path, ``fname`` is
+            relative to ``path``, rather than the current working directory
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
         """
         if not os.path.isabs(fname) and path is not None:
             # only the file name was given, not the absolute path, and
@@ -78,27 +82,126 @@ class NameList:
 
     # note following accessors do not do type casting
     def __getattr__(self, key):
-        """ Accessor for dot noation, e.g., nml.field, returns string """
+        """
+        Accessor for dot noation, e.g., nml.field
+
+        Parameters
+        ----------
+        key : str
+            The key to get a value for
+
+        Returns
+        -------
+        value : str
+            The value associated with ``key``
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
+        """
         return self.nml[key]
 
     # provide accessor for dictionary notation (returns string)
     def __getitem__(self, key):
-        """ Accessor for bracket noation, e.g., nml['field'], returns string
+        """
+        Accessor for bracket noation, e.g., nml['field']
+
+        Parameters
+        ----------
+        key : str
+            The key to get a value for
+
+        Returns
+        -------
+        value : str
+            The value associated with ``key``
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
         """
         return self.nml[key]
 
     # provide accessors for get, getint, getfloat, getbool with appropriate
     # casting for comparable behavior with config files #{{{
     def get(self, key):
+        """
+        Get the value associated with a given key
+
+        Parameters
+        ----------
+        key : str
+            The key to get a value for
+
+        Returns
+        -------
+        value : str
+            The value associated with ``key``
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
+        """
         return self.nml[key]
 
     def getint(self, key):
+        """
+        Get the integer value associated with a given key
+
+        Parameters
+        ----------
+        key : str
+            The key to get a value for
+
+        Returns
+        -------
+        value : int
+            The value associated with ``key``
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
+        """
         return int(self.nml[key])
 
     def getfloat(self, key):
+        """
+        Get the float value associated with a given key
+
+        Parameters
+        ----------
+        key : str
+            The key to get a value for
+
+        Returns
+        -------
+        value : float
+            The value associated with ``key``
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
+        """
         return float(self.nml[key])
 
     def getbool(self, key):
+        """
+        Get the boolean value associated with a given key
+
+        Parameters
+        ----------
+        key : str
+            The key to get a value for
+
+        Returns
+        -------
+        value : bool
+            The value associated with ``key``
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
+        """
         if 'True' in self.nml[key] or 'true' in self.nml[key]:
             return True
         else:
@@ -128,18 +231,14 @@ class NameList:
         Authors
         -------
         Xylar Asay-Davis
-
-        Last modified
-        -------------
-        04/01/2017
         """
 
         for optionName in possibleOptions:
             if optionName in self.nml.keys():
                 return optionName
 
-        raise ValueError('None of the possible options {} found in namelist file {}.'.format(
-            possibleOptions, self.fname))
+        raise ValueError('None of the possible options {} found in namelist '
+                         'file {}.'.format(possibleOptions, self.fname))
 
     # }}}
 
@@ -149,15 +248,27 @@ class StreamsFile:
     Class to read in streams configuration file, provdies
     read and write functionality
 
+    Authors
+    -------
     Phillip Wolfram, Xylar Asay-Davis
-    Last modified: 11/02/2016
     """
 
     def __init__(self, fname, streamsdir=None):
         """
-        parse the streams file given by fname. If the optional argument
-        streamsdir is provided, it is the base path to both the output streams
-        data and the sreams file (the latter only if fname is a relative path).
+        Parse the streams file.
+
+        Parameters
+        ----------
+        fname : str
+            The file name the stream file
+
+        streamsdir : str, optional
+            The base path to both the output streams data and the sreams file
+            (the latter only if ``fname`` is a relative path).
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
         """
         if not os.path.isabs(fname) and streamsdir is not None:
             # only the file name was given, not the absolute path, and
@@ -178,7 +289,27 @@ class StreamsFile:
             self.streamsdir = streamsdir
 
     def read(self, streamname, attribname):
-        """ name is a list of name entries terminanting in some value
+        """
+        Get the value of the given attribute in the given stream
+
+        Parameters
+        ----------
+        streamname : str
+            The name of the stream
+
+        attribname : str
+            The name of the attribute within the stream
+
+
+        Returns
+        -------
+        value : str
+            The value associated with the attribute, or ``None`` if the
+            attribute was not found
+
+        Authors
+        -------
+        Phillip Wolfram, Xylar Asay-Davis
         """
         for stream in self.root:
             # assumes streamname is unique in XML
@@ -221,13 +352,9 @@ class StreamsFile:
         ValueError
             If no files from the stream are found.
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
-
-        Last modified
-        -------------
-        02/04/2017
         """
         template = self.read(streamName, 'filename_template')
         if template is None:
@@ -297,11 +424,25 @@ class StreamsFile:
 
     def has_stream(self, streamName):
         """
+        Does the stream file have the given stream?
+
         Returns True if the streams file has a stream with the given
         streamName, otherwise returns False.
 
+        Parameters
+        ----------
+        streamName : str
+            The name of the stream
+
+        Returns
+        -------
+        streamFound : bool
+            ``True`` if the stream was found in the stream file, ``False``
+            otherwise
+
+        Authors
+        -------
         Xylar Asay-Davis
-        Last modified: 12/04/2016
         """
         for stream in self.root:
             # assumes streamname is unique in XML
@@ -333,16 +474,12 @@ class StreamsFile:
         Authors
         -------
         Xylar Asay-Davis
-
-        Last modified
-        -------------
-        04/01/2017
         """
         for streamName in possibleStreams:
             if self.has_stream(streamName):
                 return streamName
 
-        raise ValueError('None of the possible streams {} found in streams file {}.'.format(
-            possibleStreams, self.fname))
+        raise ValueError('None of the possible streams {} found in streams '
+                         'file {}.'.format(possibleStreams, self.fname))
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

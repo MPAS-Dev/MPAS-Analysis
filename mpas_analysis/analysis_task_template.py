@@ -16,9 +16,7 @@ Instructions for creating a new analysis task:
 3. modify config.default (and possibly any machine-specific config files in
    configs/<machine>)
 4. import new analysis task in mpas_analysis/<component>/__init__.py
-5. if necessary, update variable maps in
-   mpas_analysis/shared/variable_namelist_stream_maps/<component>_maps.py
-6. add new analysis task to run_analysis.py under build_analysis_list:
+5. add new analysis task to run_mpas_analysis under build_analysis_list:
       analyses.append(<component>.MyTask(config, myArg='argValue'))
    This will add a new object of the MyTask class to a list of analysis tasks
    created in build_analysis_list.  Later on in run_analysis, it will first
@@ -36,10 +34,16 @@ Xylar Asay-Davis
 '''
 
 # import python modules here
+import numpy
+import matplotlib.pyplot as plt
 
 # import mpas_analysis module here (those with relative paths starting with
 # dots)
 from ..shared.analysis_task import AnalysisTask
+
+from ..shared.html import write_image_xml
+
+from ..shared.climatology import update_climatology_bounds_from_file_names
 
 
 # Everywhere in this template, change MyTask to the name of your task, starting
@@ -156,7 +160,7 @@ class MyTask(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         # Here, change MyTask to the name of your task but don't make any other
         # changes
         # Again, super(MyTask, self).<method>() is a way of calling
@@ -199,15 +203,65 @@ class MyTask(AnalysisTask):  # {{{
         # short-term archiving capabilities
 
         # Get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        # reading only those that are between the start and end dates.
+        # These use the appropriate start and end date from the "climatology"
+        # config section, but could be changed to "timeSeries" or "index"
+        streamName = 'timeSeriesStatsMonthlyOutput'
         startDate = self.config.get('climatology', 'startDate')
         endDate = self.config.get('climatology', 'endDate')
         self.inputFiles = self.historyStreams.readpath(streamName,
                                                        startDate=startDate,
                                                        endDate=endDate,
                                                        calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
+        # For climatologies, update the start and end year based on the files
+        # that are actually available 
+        # If not analyzing climatologies, delete this line
+        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
+            update_climatology_bounds_from_file_names(self.inputFiles,
+                                                      self.config)
+
+        # Each analysis task generates one or more plots and writes out an
+        # associated xml file for each plot.  Once all tasks have finished,
+        # the "master" task will run through all the tasks and look at
+        # xmlFileNames to find out what XML files were written out.  Each task
+        # should provide a list of files in the order that the corresponding
+        # images should appear on the webpage.
+
+        # Note: because of the way parallel tasks are handled in MPAS-Analysis,
+        # we can't be sure that run() will be called (it might be launched
+        # as a completely separate process) so it is not safe to store a list
+        # of xml files from within run(). The recommended procedure is to
+        # create a list of XML files here during setup_and_check() and possibly
+        # use them during run()
+
+        self.xmlFileNames = []
+        
+        # we also show how to store file prefixes for later use in creating
+        # plots
+        self.filePrefixes = {}
+
+        # plotParameters is a list of parameters, a stand-ins for whatever 
+        # you might want to include in each plot name, for example, seasons or
+        # types of observation.
+        self.plotParameters = self.config.getExpression(self.taskName,
+                                                        'plotParameters')
+
+        mainRunName = self.config.get('runs', 'mainRunName')
+
+        for plotParameter in self.plotParameters:
+            filePrefix = 'myPrefix_{}_{}_years{:04d}-{:04d}'.format(
+                    mainRunName, plotParameter, self.startYear, self.endYear)
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[plotParameter] = filePrefix
+
+
         # }}}
 
     def run(self):  # {{{
@@ -225,8 +279,10 @@ class MyTask(AnalysisTask):  # {{{
         # so we don't call super(MyTask, self).run(), as we do for other
         # methods above.
 
-        # Here is an example of a call to a local helper method (function):
-        self._my_sub_task('someText', arg2='differentText')
+        # Here is an example of a call to a local helper method (function),
+        # one for each of our plotParameters (e.g. seasons)
+        for plotParameter in self.plotParameters:
+            self._make_plot(plotParameter)
         # }}}
 
     # here is where you add helper methods that are meant to be non-public
@@ -237,8 +293,18 @@ class MyTask(AnalysisTask):  # {{{
     # you can either pass arguments (with or without defaults) or you can
     # 'save' arguments as member variables of `self` and then get them back
     # (like `self.myArg` here).
-    def _my_sub_task(self, arg1, arg2=None):  # {{{
+    def _make_plot(self, plotParameter, optionalArgument=None):  # {{{
         '''
+        Make a simple plot
+        
+        Parameters
+        ----------
+        plotParameter : str
+            The name of a parameter that is specific to this plot
+            
+        optionalArgument : <type_goes_here>, optional
+            An optional argument
+        
         <Performs my favorite subtask>
         '''
 
@@ -247,9 +313,45 @@ class MyTask(AnalysisTask):  # {{{
         # built the task.  It is available in any method after that for us to
         # use as needed.
         print 'myArg:', self.myArg
-        print 'arg1:', arg1
-        if arg2 is not None:
-            print 'arg2:', arg2
+        print 'plotParameter:', plotParameter
+        if optionalArgument is not None:
+            print 'optionalArgument:', optionalArgument
+
+        # get the file name based on the plot parameter
+        filePrefix = self.filePrefixes[plotParameter]
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+       
+        # make the plot
+        x = numpy.linspace(0, 1, 1000)
+        plt.plot(x, x**2)
+        # save the plot to the output file
+        plt.savefig(outFileName)
+        
+        # here's an example of how you would create an XML file for this plot
+        # with the appropriate entries.  Some notes:
+        # * Gallery groups typically represent all the analysis from a task,
+        #   or sometimes from multiple tasks
+        # * A gallery might be for just for one set of observations, one
+        #   season, etc., depending on what makes sense
+        # * Within each gallery, there is one plot for each value in 
+        #   'plotParameters', with a corresponding caption and short thumbnail
+        #   description
+        caption = 'Plot of x^2 with plotParamter: {}'.format(plotParameter)
+        write_image_xml(
+            self.config,
+            filePrefix,
+            componentName='Ocean',  # 'Ocean', 'Sea Ice', etc.
+            componentSubdirectory='ocean',  # 'ocean', 'sea_ice', etc.
+            galleryGroup='Title of My Gallery Group',
+            groupSubtitle='Observations: totally made up',
+            groupLink='my_grp',  # a short link name for the gallery group
+            gallery='Name of Gallery',
+            thumbnailDescription=plotParameter,
+            imageDescription=caption,
+            imageCaption=caption)
+
+        
+        # 
         # }}}
 
 # }}}

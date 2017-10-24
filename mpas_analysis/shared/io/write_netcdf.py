@@ -6,8 +6,8 @@ Functions
 write_netcdf - write an xarray data set to a NetCDF file using finite fill
     values
 
-Author
-------
+Authors
+-------
 Xylar Asay-Davis
 
 '''
@@ -33,8 +33,8 @@ def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
         this is the dictionary used by the netCDF4 package.  Key entries should
         be of the form 'f8' (for float64), 'i4' (for int32), etc.
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
 
     '''

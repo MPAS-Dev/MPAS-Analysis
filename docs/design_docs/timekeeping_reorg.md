@@ -1,13 +1,17 @@
-<h1> Reorganize Timekeeping <br>
+Reorganize Timekeeping
+======================
+
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/02/06 <br>
-</h1>
-<h2> Summary </h2>
+</h2>
+<h3> Summary </h3>
+
 Currently, the `Date` class is used to parse a date object from a date string
 (e.g. '0001-01-01_00:00:00') taken from MPAS namelists, streams files or time
 variables (e.g. `xtime`).  However, this class assumes a 365-day calendar and
 cannot easily be adapted to the Gregorian calendar also supported by MPAS
-components (`config_calendar_type = 'gregorian'`).  Furthermore, existing 
+components (`config_calendar_type = 'gregorian'`).  Furthermore, existing
 routines exist to handle most of the capabilites
 of the `Date` class.  The proposed reorganization would eliminate the `Date` class
 in favor of a numer of helper functions that can be used to convert between various
@@ -19,21 +23,21 @@ used by most existing ACME and MPAS runs and the `'gregorian'` calendar also sup
 in MPAS components.
 
 
-<h1> Requirements </h1>
+<h2> Requirements </h2>
 
-<h2> Requirement: Date string parsing supports both MPAS calendars <br>
+<h3> Requirement: Date string parsing supports both MPAS calendars <br>
 Date last modified: 2017/02/06 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
-There must be a way to parse dates from MPAS that is aware of the appropriate calendar 
-stored in the `config_calendar_type` namelist option, either `'gregorian'` or 
+There must be a way to parse dates from MPAS that is aware of the appropriate calendar
+stored in the `config_calendar_type` namelist option, either `'gregorian'` or
 `'gregorian_noleap'`.
 
-<h2> Requirement: Capability of incrementing dates by a number of years and/or months <br>
+<h3> Requirement: Capability of incrementing dates by a number of years and/or months <br>
 Date last modified: 2017/02/06 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 The analysis requires a way of incrementing a given date by an interval specified in
 not only days, hours, minutes and seconds but also months and years.  The standard
@@ -44,12 +48,12 @@ A method must exist to increment dates on either calendar by a given number of y
 and/or months (in addition to days, hours, etc.).
 
 
-<h1> Design and Implementation </h1>
+<h2> Design and Implementation </h2>
 
-<h2> Implementation: Date string parsing supports both MPAS calendars <br>
+<h3> Implementation: Date string parsing supports both MPAS calendars <br>
 Date last modified: 2017/02/06 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 The implementation is on the branch:
 https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg
@@ -103,17 +107,17 @@ As long as `relativedelta` objects rather than `datetime.timedelta` objects are 
 `datetime.datetime` objects, `datetime.datetime` can be used to represent dates on either the Gregorian
 or the 365-day calendar.
 
-<h2> Implementation: Capability of incrementing dates by a number of years and/or months <br>
+<h3> Implementation: Capability of incrementing dates by a number of years and/or months <br>
 Date last modified: 2017/02/09 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 The implementation is on the branch:
 https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg
 and in PR #102
 
-The proposed implementation adds a new class MpasRelativeDelta derived from 
-`dateutil.relativedelta.relativedelta` to compute the expected 
+The proposed implementation adds a new class MpasRelativeDelta derived from
+`dateutil.relativedelta.relativedelta` to compute the expected
 increments in years and months (as well as days, hours, minutes and seconds, as needed).
 The class is documented as follows
 ```python
@@ -186,12 +190,12 @@ def stringToRelativedelta(dateString, calendar='gregorian'):
     """
 ```
 
-<h1> Testing </h1>
+<h2> Testing </h2>
 
-<h2> Testing and Validation: Date string parsing supports both MPAS calendars <br>
+<h3> Testing and Validation: Date string parsing supports both MPAS calendars <br>
 Date last modified: 2017/02/08 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 Analysis will be run on Edison with all available configurations found in `configs/edison`.  As there
 are currently no plans to run with the `gregorian` calendar option, we do not have test runs that use this
 calendar.  If this situation changes in the future, we'll test at that time.
@@ -200,10 +204,10 @@ Regression tests previously for `Date` has been modified to test the new utility
 have been added to test that dates with both `gregorian` and `gregorian_noleap` calendars behave as
 expected, particularly around the leap day.
 
-<h1> Testing </h1>
-<h2> Testing and Validation: Capability of incrementing dates by a number of years and/or months <br>
+<h2> Testing </h2>
+<h3> Testing and Validation: Capability of incrementing dates by a number of years and/or months <br>
 Date last modified: 2017/02/06 <br>
 Contributors: Xylar Asay-Davis
-</h2>
+</h3>
 
 Same as above.

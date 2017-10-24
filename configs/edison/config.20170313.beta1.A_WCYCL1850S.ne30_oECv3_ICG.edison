@@ -27,11 +27,18 @@ mpasMeshName = EC60to30v3
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /global/project/projectdirs/acme/www/USERNAME/RUNNAME
+htmlSubdirectory = html
+
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
 #   'all_timeSeries' -- all time-series analyses will be run
@@ -45,7 +52,7 @@ baseDirectory = /dir/to/analysis/output
 #                                            given category of analysis
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
 
@@ -133,7 +140,7 @@ baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.
 polarPlot = False
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
+## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 maxChunkSize = 1000
 

@@ -7,7 +7,7 @@ Plotting utilities, including routines for plotting:
 
 Authors
 -------
-Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel
+Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 """
 
 import matplotlib.pyplot as plt
@@ -18,16 +18,19 @@ from mpl_toolkits.basemap import Basemap
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
+from mpl_toolkits.axes_grid1 import make_axes_locatable, ImageGrid
 
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
 from ..constants import constants
 
+import ConfigParser
+
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
-                             fileout, lineStyles, lineWidths, calendar,
-                             titleFontSize=None, figsize=(15, 6), dpi=300,
-                             maxXTicks=20):
+                             fileout, lineStyles, lineWidths, legendText,
+                             calendar, titleFontSize=None, figsize=(15, 6),
+                             dpi=None, maxXTicks=20):
 
     """
     Plots the list of time series data sets and stores the result in an image
@@ -54,8 +57,11 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     fileout : str
         the file name to be written
 
-    lineStyles, lineWidths : list of str
-        control line style/width
+    lineStyles, lineWidths, legendText : list of str
+        control line style/width and corresponding legend text
+
+    calendar : str
+        the calendar to use for formatting the time axis
 
     titleFontSize : int, optional
         the size of the title font
@@ -64,7 +70,8 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         the size of the figure in inches
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     maxXTicks : int, optional
         the maximum number of tick marks that will be allowed along the x axis.
@@ -75,6 +82,9 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
+
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
 
     minDays = []
@@ -89,8 +99,19 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         maxDays.append(mean.Time.max())
         plt.plot(mean['Time'], mean,
                  lineStyles[dsIndex],
-                 linewidth=lineWidths[dsIndex])
+                 linewidth=lineWidths[dsIndex],
+                 label=legendText[dsIndex])
+    plt.legend(loc='lower left')
+
     ax = plt.gca()
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+
     # Add a y=0 line if y ranges between positive and negative values
     yaxLimits = ax.get_ylim()
     if yaxLimits[0]*yaxLimits[1] < 0:
@@ -100,13 +121,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
-    if titleFontSize is None:
-        titleFontSize = config.get('plot', 'titleFontSize')
-
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
-    title_font = {'size': titleFontSize,
-                  'color': config.get('plot', 'titleFontColor'),
-                  'weight': config.get('plot', 'titleFontWeight')}
     if title is not None:
         plt.title(title, **title_font)
     if xlabel is not None:
@@ -122,8 +136,8 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
                                    fileout, lineStyles, lineWidths,
-                                   calendar, titleFontSize=None,
-                                   figsize=(15, 6), dpi=300):
+                                   legendText, titleFontSize=None,
+                                   figsize=(15, 6), dpi=None):
 
     """
     Plots the list of time series data sets on a polar plot and stores
@@ -147,8 +161,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     fileout : str
         the file name to be written
 
-    lineStyles, lineWidths : list of str
-        control line style/width
+    lineStyles, lineWidths, legendText : list of str
+        control line style/width and corresponding legend text
 
     titleFontSize : int, optional
         the size of the title font
@@ -157,12 +171,15 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         the size of the figure in inches
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     Authors
     -------
-    Adrian K. Turner
+    Adrian K. Turner, Xylar Asay-Davis
     """
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
 
     minDays = []
@@ -177,7 +194,9 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         maxDays.append(mean.Time.max())
         plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
                   lineStyles[dsIndex],
-                  linewidth=lineWidths[dsIndex])
+                  linewidth=lineWidths[dsIndex],
+                  label=legendText[dsIndex])
+    plt.legend(loc='lower left')
 
     ax = plt.gca()
 
@@ -217,28 +236,29 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
 
 
 def plot_polar_comparison(
-    config,
-    Lons,
-    Lats,
-    modelArray,
-    obsArray,
-    diffArray,
-    cmapModelObs,
-    clevsModelObs,
-    cmapDiff,
-    clevsDiff,
-    fileout,
-    title=None,
-    plotProjection='npstere',
-    latmin=50.0,
-    lon0=0,
-    modelTitle='Model',
-    obsTitle='Observations',
-    diffTitle='Model-Observations',
-    cbarlabel='units',
-    titleFontSize=None,
-    figsize=(8, 22),
-    dpi=300):
+        config,
+        Lons,
+        Lats,
+        modelArray,
+        obsArray,
+        diffArray,
+        cmapModelObs,
+        clevsModelObs,
+        cmapDiff,
+        clevsDiff,
+        fileout,
+        title=None,
+        plotProjection='npstere',
+        latmin=50.0,
+        lon0=0,
+        modelTitle='Model',
+        obsTitle='Observations',
+        diffTitle='Model-Observations',
+        cbarlabel='units',
+        titleFontSize=None,
+        figsize=None,
+        dpi=None,
+        vertical=False):
 
     """
     Plots a data set around either the north or south pole.
@@ -295,18 +315,58 @@ def plot_polar_comparison(
         size of the title font
 
     figsize : tuple of float, optional
-        the size of the figure in inches
+        the size of the figure in inches.  If ``None``, the figure size is
+        ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
+
+    vertical : bool, optional
+        whether the subplots should be stacked vertically rather than
+        horizontally
 
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    # set up figure
+    def do_subplot(ax, field, title, cmap, norm, levels):
+        """
+        Make a subplot within the figure.
+        """
+
+        m = Basemap(projection=plotProjection, boundinglat=latmin,
+                    lon_0=lon0, resolution='l', ax=ax)
+        x, y = m(Lons, Lats)  # compute map proj coordinates
+
+        ax.set_title(title, y=1.06, **axis_font)
+        m.drawcoastlines()
+        m.fillcontinents(color='grey', lake_color='white')
+        m.drawparallels(np.arange(-80., 81., 10.))
+        m.drawmeridians(np.arange(-180., 181., 20.),
+                        labels=[True, False, True, True])
+        cs = m.contourf(x, y, field, cmap=cmap, norm=norm,
+                        levels=levels)
+
+        cbar = m.colorbar(cs, location='right', pad="3%", spacing='uniform',
+                          ticks=levels, boundaries=levels)
+        cbar.set_label(cbarlabel)
+
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+
+    if vertical:
+        if figsize is None:
+            figsize = (8, 22)
+        subplots = [311, 312, 313]
+    else:
+        if figsize is None:
+            figsize = (22, 8.5)
+        subplots = [131, 132, 133]
+
     fig = plt.figure(figsize=figsize, dpi=dpi)
+
     if (title is not None):
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
@@ -316,51 +376,24 @@ def plot_polar_comparison(
         fig.suptitle(title, y=0.95, **title_font)
     axis_font = {'size': config.get('plot', 'axisFontSize')}
 
-    m = Basemap(projection=plotProjection, boundinglat=latmin,
-                lon_0=lon0, resolution='l')
-    x, y = m(Lons, Lats)  # compute map proj coordinates
-
     normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3, 1, 1)
-    plt.title(modelTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 81., 10.))
-    m.drawmeridians(np.arange(-180., 181., 20.),
-                    labels=[True, True, True, True])
-    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs)
-    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    ax = plt.subplot(subplots[0])
+    do_subplot(ax=ax, field=modelArray, title=modelTitle, cmap=cmapModelObs,
+               norm=normModelObs, levels=clevsModelObs)
 
-    plt.subplot(3, 1, 2)
-    plt.title(obsTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 81., 10.))
-    m.drawmeridians(np.arange(-180., 181., 20.),
-                    labels=[True, True, True, True])
-    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs)
-    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    ax = plt.subplot(subplots[1])
+    do_subplot(ax=ax, field=obsArray, title=obsTitle, cmap=cmapModelObs,
+               norm=normModelObs, levels=clevsModelObs)
 
-    plt.subplot(3, 1, 3)
-    plt.title(diffTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 81., 10.))
-    m.drawmeridians(np.arange(-180., 181., 20.),
-                    labels=[True, True, True, True])
-    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
-                    spacing='uniform', levels=clevsDiff)
-    cbar = m.colorbar(cs, location='right', pad="15%", spacing='uniform',
-                      ticks=clevsDiff, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    ax = plt.subplot(subplots[2])
+    do_subplot(ax=ax, field=diffArray, title=diffTitle, cmap=cmapDiff,
+               norm=normDiff, levels=clevsDiff)
+
+    plt.tight_layout(pad=4.)
+    if vertical:
+        plt.subplots_adjust(top=0.9)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -388,7 +421,7 @@ def plot_global_comparison(
     cbarlabel='units',
     titleFontSize=None,
     figsize=(8, 12),
-    dpi=300):
+    dpi=None):
 
     """
     Plots a data set as a longitude/latitude map.
@@ -445,7 +478,8 @@ def plot_global_comparison(
         the size of the figure in inches
 
     dpi : int, optional
-        the number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     Authors
     -------
@@ -453,6 +487,8 @@ def plot_global_comparison(
     """
 
     # set up figure
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
     fig = plt.figure(figsize=figsize, dpi=dpi)
     if (title is not None):
         if titleFontSize is None:
@@ -479,7 +515,7 @@ def plot_global_comparison(
     m.drawmeridians(np.arange(-180., 180., 60.),
                     labels=[False, False, False, True])
     cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs, extend='both')
+                    levels=clevsModelObs, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
                       ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
@@ -493,7 +529,7 @@ def plot_global_comparison(
     m.drawmeridians(np.arange(-180., 180., 40.),
                     labels=[False, False, False, True])
     cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
-                    spacing='uniform', levels=clevsModelObs, extend='both')
+                    levels=clevsModelObs, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
                       ticks=clevsModelObs, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
@@ -507,7 +543,7 @@ def plot_global_comparison(
     m.drawmeridians(np.arange(-180., 180., 40.),
                     labels=[False, False, False, True])
     cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
-                    spacing='uniform', levels=clevsDiff, extend='both')
+                    levels=clevsDiff, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
                       ticks=clevsDiff, boundaries=clevsModelObs)
     cbar.set_label(cbarlabel)
@@ -532,7 +568,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             lineColors, lineWidths, legendText,
             title=None, xlabel=None, ylabel=None,
             fileout='plot_1D.png',
-            figsize=(10, 4), dpi=300,
+            figsize=(10, 4), dpi=None,
             xLim=None,
             yLim=None,
             invertYAxis=False):  # {{{
@@ -574,7 +610,8 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
         size of the figure in inches
 
     dpi : int, optional
-        number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     xLim : float array, optional
         x range of plot
@@ -591,7 +628,9 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     """
 
     # set up figure
-    fig = plt.figure(figsize=figsize, dpi=dpi)
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    plt.figure(figsize=figsize, dpi=dpi)
 
     for dsIndex in range(len(xArrays)):
         xArray = xArrays[dsIndex]
@@ -660,14 +699,22 @@ def plot_vertical_section(
     ylabel=None,
     fileout='moc.png',
     figsize=(10, 4),
-    dpi=300,
+    dpi=None,
     xLim=None,
     yLim=None,
-    invertYAxis=True):  # {{{
+    linewidths=2,
+    invertYAxis=True,
+    xArrayIsTime=False,
+    N=None,
+    maxXTicks=20,
+    calendar='gregorian'):  # {{{
 
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
+
+    Or, if xArrayIsTime is True, plots data set on a vertical
+    Hovmoller plot (depth vs. time).
 
     Parameters
     ----------
@@ -676,7 +723,7 @@ def plot_vertical_section(
         control plotting
 
     xArray : float array
-        x array (latitude, longitude, or spherical distance)
+        x array (latitude, longitude, or spherical distance; or, time for a Hovmoller plot)
 
     depthArray : float array
         depth array [m]
@@ -709,7 +756,8 @@ def plot_vertical_section(
         size of the figure in inches
 
     dpi : int, optional
-        number of dots per inch of the figure
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
 
     xLim : float array, optional
         x range of plot
@@ -717,27 +765,77 @@ def plot_vertical_section(
     yLim : float array, optional
         y range of plot
 
+    linewidths : int, optional
+        linewidths for contours
+
     invertYAxis : logical, optional
         if True, invert Y axis
 
+    xArrayIsTime : logical, optional
+        if True, format X axis for time
+
+    N : int, optional
+        the number of points over which to perform a moving average
+        NOTE: this option is mostly intended for use when xArrayIsTime is True,
+        although it will work with other data as well.  Also, the moving average
+        calculation is based on number of points, not actual x axis values, so for
+        best results, the values in the xArray should be equally spaced.
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+
+    calendar : str, optional
+        the calendar to use for formatting the time axis
+        NOTE:  calendar is only used if xArrayIsTime is True
+
     Authors
     -------
-    Milena Veneziani, Mark Petersen
+    Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
     """
 
+    # verify that the dimensions of fieldArray are consistent with those of xArray and depthArray
+    if len(xArray) != fieldArray.shape[1]:
+        raise ValueError('size mismatch between xArray and fieldArray')
+    elif len(depthArray) != fieldArray.shape[0]:
+        raise ValueError('size mismatch between depthArray and fieldArray')
+
     # set up figure
-    fig = plt.figure(figsize=figsize, dpi=dpi)
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    plt.figure(figsize=figsize, dpi=dpi)
+
+    if N is not None and N != 1:   # compute moving averages with respect to the x dimension
+        movingAverageDepthSlices = []
+        for nVertLevel in range(len(depthArray)):
+            depthSlice = fieldArray[[nVertLevel]][0]
+            depthSlice = xr.DataArray(depthSlice)  # in case it's not an xarray already
+            mean = pd.Series.rolling(depthSlice.to_series(), N, center=True).mean()
+            mean = xr.DataArray.from_series(mean)
+            mean = mean[int(N/2.0):-int(round(N/2.0)-1)]
+            movingAverageDepthSlices.append(mean)
+        xArray = xArray[int(N/2.0):-int(round(N/2.0)-1)]
+        fieldArray = xr.DataArray(movingAverageDepthSlices)
 
     x, y = np.meshgrid(xArray, depthArray)  # change to zMid
 
-    normModelObs = cols.BoundaryNorm(colorbarLevels, colormapName.N)
+    if colorbarLevels is None:
+        normModelObs = None
+    else:
+        normModelObs = cols.BoundaryNorm(colorbarLevels, colormapName.N)
 
     cs = plt.contourf(x, y, fieldArray, cmap=colormapName, norm=normModelObs,
-                      spacing='uniform', levels=colorbarLevels, extend='both')
-    plt.contour(x, y, fieldArray, levels=contourLevels[::2], colors='k')
+                      levels=colorbarLevels, extend='both')
+
+    if contourLevels is not None:
+        if len(contourLevels) == 0:
+            contourLevels = None   # automatic calculation of contour levels
+        plt.contour(x, y, fieldArray, levels=contourLevels, colors='k', linewidths=linewidths)
 
     cbar = plt.colorbar(cs, orientation='vertical', spacing='uniform',
                         ticks=colorbarLevels, boundaries=colorbarLevels)
+
     if colorbarLabel is not None:
         cbar.set_label(colorbarLabel)
 
@@ -759,6 +857,11 @@ def plot_vertical_section(
         plt.xlim(xLim)
     if yLim:
         plt.ylim(yLim)
+
+    if xArrayIsTime:
+        minDays = [xArray[0]]
+        maxDays = [xArray[-1]]
+        plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -796,27 +899,40 @@ def setup_colormap(config, configSectionName, suffix=''):
 
     Authors
     -------
-    Xylar Asay-Davis, Milena Veneziani
+    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     '''
 
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
-    indices = config.getExpression(configSectionName,
-                                   'colormapIndices{}'.format(suffix))
-    colorbarLevels = config.getExpression(configSectionName,
-                                          'colorbarLevels{}'.format(suffix))
 
-    # set under/over values based on the first/last indices in the colormap
-    underColor = colormap(indices[0])
-    overColor = colormap(indices[-1])
-    if len(colorbarLevels)+1 == len(indices):
-        # we have 2 extra values for the under/over so make the colormap
-        # without these values
-        indices = indices[1:-1]
-    colormap = cols.ListedColormap(colormap(indices),
-                                   'colormapName{}'.format(suffix))
-    colormap.set_under(underColor)
-    colormap.set_over(overColor)
+    indices = config.getExpression(configSectionName,
+                                   'colormapIndices{}'.format(suffix),
+                                   usenumpyfunc=True)
+
+    try:
+        colorbarLevels = config.getExpression(configSectionName,
+                                              'colorbarLevels{}'.format(suffix),
+                                              usenumpyfunc=True)
+    except(ConfigParser.NoOptionError):
+        colorbarLevels = None
+
+    if colorbarLevels is not None:
+        # set under/over values based on the first/last indices in the colormap
+        underColor = colormap(indices[0])
+        overColor = colormap(indices[-1])
+        if len(colorbarLevels)+1 == len(indices):
+            # we have 2 extra values for the under/over so make the colormap
+            # without these values
+            indices = indices[1:-1]
+        elif len(colorbarLevels)-1 != len(indices):
+            # indices list must be either one element shorter
+            # or one element longer than colorbarLevels list
+            raise ValueError('length mismatch between indices and colorbarLevels')
+        colormap = cols.ListedColormap(colormap(indices),
+                                       'colormapName{}'.format(suffix))
+        colormap.set_under(underColor)
+        colormap.set_over(overColor)
+
     return (colormap, colorbarLevels)
 
 
@@ -834,8 +950,8 @@ def plot_size_y_axis(plt, xaxisValues, **data):
     data : dictionary entries must be numpy.array
        data for curves on plot
 
-    Author
-    ------
+    Authors
+    -------
     Luke Van Roekel
     '''
 
@@ -871,8 +987,8 @@ def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
 
     maxDays : end time for labels
 
-    Author
-    ------
+    Authors
+    -------
     Xylar Asay-Davis
     '''
     ax = plt.gca()

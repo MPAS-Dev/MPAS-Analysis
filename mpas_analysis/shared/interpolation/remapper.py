@@ -8,8 +8,8 @@ build_remap_weights - constructs a mapping file containing the indices and
 
 remap - perform horizontal interpolation on a data sets, given a mapping file
 
-Author
-------
+Authors
+-------
 Xylar Asay-Davis
 '''
 
@@ -31,8 +31,9 @@ class Remapper(object):
     A class for remapping fields using a given mapping file.  The weights and
     indices from the mapping file can be loaded once and reused multiple times
     to map several fields between the same source and destination grids.
-    Author
-    ------
+
+    Authors
+    -------
     Xylar Asay-Davis
     '''
 
@@ -44,15 +45,11 @@ class Remapper(object):
 
         Parameters
         ----------
-        sourceDescriptor : an instance of {MpasMeshDescriptor,
-                                           LatLonGridDescriptor,
-                                           ProjectionGridDescriptor}
+        sourceDescriptor : ``shared.grid.MeshDescriptor``
             An object used to write a scrip file and to determine the type of
             the source mesh or grid.
 
-        destinationDescriptor : an instance of {MpasMeshDescriptor,
-                                                LatLonGridDescriptor,
-                                                ProjectionGridDescriptor}
+        destinationDescriptor : ``shared.grid.MeshDescriptor``
             An object used to write a scrip files and to determine the type of
             the destination mesh or grid.
 
@@ -64,8 +61,8 @@ class Remapper(object):
             to be the same (though the Remapper does not attempt to determine
             if this is the case).
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -113,8 +110,8 @@ class Remapper(object):
         ValueError
             If sourceDescriptor or destinationDescriptor is of an unknown type
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -164,6 +161,7 @@ class Remapper(object):
         # throw out the standard output from ESMF_RegridWeightGen, as it's
         # rather verbose but keep stderr
         DEVNULL = open(os.devnull, 'wb')
+
         subprocess.check_call(args, stdout=DEVNULL)
 
         # remove the temporary SCRIP files
@@ -209,8 +207,8 @@ class Remapper(object):
             If ``mappingFileName`` is ``None`` (meaning no remapping is
             needed).
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -275,7 +273,12 @@ class Remapper(object):
         sys.stdout.flush()
         sys.stderr.flush()
 
-        subprocess.check_call(args)  # }}}
+        # set an environment variable to make sure we're not using czender's
+        # local version of NCO instead of one we have intentionally loaded
+        env = os.environ.copy()
+        env['NCO_PATH_OVERRIDE'] = 'No'
+
+        subprocess.check_call(args, env=env)  # }}}
 
     def remap(self, ds, renormalizationThreshold=None):  # {{{
         '''
@@ -284,7 +287,7 @@ class Remapper(object):
 
         Parameters
         ----------
-        ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+        ds : ``xarray.Dataset`` or ``xarray.DataArray``
             The dimention(s) along ``self.sourceDimNames`` must match
             ``self.src_grid_dims`` read from the mapping file.
 
@@ -295,7 +298,7 @@ class Remapper(object):
 
         Returns
         -------
-        remappedDs : `xarray.Dataset`` or ``xarray.DataArray`` object
+        remappedDs : `xarray.Dataset`` or ``xarray.DataArray``
             Returns a remapped data set (or data array) where dimensions other
             than ``self.sourceDimNames`` are the same as in ``ds`` and the
             dimension(s) given by ``self.sourceDimNames`` have been replaced by
@@ -310,8 +313,8 @@ class Remapper(object):
         TypeError
             If ds is not an ``xarray.Dataset`` or ``xarray.DataArray`` object
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -359,8 +362,8 @@ class Remapper(object):
         Load weights and indices from a mapping file, if this has not already
         been done
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -430,8 +433,8 @@ class Remapper(object):
         '''
         Remap a single xarray data array
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -501,8 +504,8 @@ class Remapper(object):
         '''
         Remap a single numpy array
 
-        Author
-        ------
+        Authors
+        -------
         Xylar Asay-Davis
         '''
 
@@ -561,16 +564,6 @@ class Remapper(object):
         outField = numpy.transpose(outField, axes=unpermuteAxes)
 
         return outField  # }}}
-
-
-def _get_lock_path(fileName):  # {{{
-    '''Returns the name of a temporary lock file unique to a given file name'''
-    directory = '{}/.locks/'.format(os.path.dirname(fileName))
-    try:
-        os.makedirs(directory)
-    except OSError:
-        pass
-    return '{}/{}.lock'.format(directory, os.path.basename(fileName))  # }}}
 
 
 def _get_temp_path():  # {{{

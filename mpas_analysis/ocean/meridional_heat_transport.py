@@ -4,21 +4,20 @@ import netCDF4
 import os
 import warnings
 
-from ..shared.constants.constants import monthDictionary
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
 from ..shared.io.utility import build_config_full_path, make_directories
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
-
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology import update_start_end_year, \
-    cache_climatologies
+from ..shared.climatology.climatology \
+    import update_climatology_bounds_from_file_names, \
+    compute_climatologies_with_ncclimo, \
+    get_ncclimo_season_file_name
 
 from ..shared.analysis_task import AnalysisTask
+from ..shared.html import write_image_xml
 
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
@@ -69,7 +68,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(MeridionalHeatTransport, self).setup_and_check()
 
         config = self.config
@@ -84,8 +83,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
         #   First a list necessary for the MHT climatology
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = config.get('climatology', 'startDate')
         self.endDate = config.get('climatology', 'endDate')
         self.inputFiles = \
@@ -99,6 +97,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
+        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
+            update_climatology_bounds_from_file_names(self.inputFiles,
+                                                      self.config)
+
         # Later, we will read in depth and MHT latitude points
         # from mpaso.hist.am.meridionalHeatTransport.*.nc
         mhtFiles = self.historyStreams.readpath(
@@ -110,9 +112,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.mhtFile = mhtFiles[0]
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        self.startYear = config.getint('climatology', 'startYear')
-        self.endYear = config.getint('climatology', 'endYear')
 
         self.sectionName = 'meridionalHeatTransport'
 
@@ -132,6 +131,23 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                 warnings.warn('No MHT observations file found: skip plotting '
                               'obs')
 
+        mainRunName = self.config.get('runs', 'mainRunName')
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        prefixes = ['mht']
+        if config.getboolean(self.sectionName, 'plotVerticalSection'):
+            prefixes.append('mhtZ')
+
+        for prefix in prefixes:
+            filePrefix = '{}_{}_years{:04d}-{:04d}'.format(
+                    prefix, mainRunName,
+                    self.startYear, self.endYear)
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
+            self.filePrefixes[prefix] = filePrefix
+
         # }}}
 
     def run(self):  # {{{
@@ -148,6 +164,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         print "\nPlotting meridional heat transport (MHT)..."
 
         config = self.config
+
+        movingAveragePoints = config.getint('meridionalHeatTransport',
+                                            'movingAveragePoints')
 
         # Read in depth and MHT latitude points
         # Latitude is from binBoundaryMerHeatTrans written in
@@ -179,42 +198,45 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Then we will need to add another section for regions with a loop
         # over number of regions.
         ######################################################################
-        variableList = ['avgMeridionalHeatTransportLat',
-                        'avgMeridionalHeatTransportLatZ']
+        variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
+                        'timeMonthly_avg_meridionalHeatTransportLatZ']
 
         print '\n  Compute and plot global meridional heat transport'
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputRoot = build_config_full_path(config, 'output',
+                                            'mpasClimatologySubdirectory')
+
+        outputDirectory = '{}/mht'.format(outputRoot)
 
         print '\n  List of files for climatologies:\n' \
               '    {} through\n    {}'.format(
                   os.path.basename(self.inputFiles[0]),
                   os.path.basename(self.inputFiles[-1]))
 
-        make_directories(outputDirectory)
-
         print '   Load data...'
-        ds = open_multifile_dataset(
-            fileNames=self.inputFiles,
-            calendar=self.calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName='Time',
-            variableList=variableList,
-            variableMap=self.variableMap,
-            startDate=self.startDate,
-            endDate=self.endDate)
 
-        changed, startYear, endYear = update_start_end_year(ds, config,
-                                                            self.calendar)
+        climatologyFileName = get_ncclimo_season_file_name(outputDirectory,
+                                                           'mpaso', 'ANN',
+                                                           self.startYear,
+                                                           self.endYear)
 
-        # Compute annual climatology
-        cachePrefix = '{}/meridionalHeatTransport'.format(outputDirectory)
-        annualClimatology = cache_climatologies(ds, monthDictionary['ANN'],
-                                                config, cachePrefix,
-                                                self.calendar,
-                                                printProgress=True)
+        if not os.path.exists(climatologyFileName):
+            make_directories(outputDirectory)
+
+            # Compute annual climatology
+            compute_climatologies_with_ncclimo(
+                    config=config,
+                    inDirectory=self.historyDirectory,
+                    outDirectory=outputDirectory,
+                    startYear=self.startYear,
+                    endYear=self.endYear,
+                    variableList=variableList,
+                    modelName='mpaso',
+                    seasons=['ANN'],
+                    decemberMode='sdd')
+
+        annualClimatology = xr.open_dataset(climatologyFileName)
+        annualClimatology = annualClimatology.isel(Time=0)
 
         # **** Plot MHT ****
         # Define plotting variables
@@ -226,14 +248,13 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         print '   Plot global MHT...'
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
-        y = annualClimatology.avgMeridionalHeatTransportLat
+        y = annualClimatology.timeMonthly_avg_meridionalHeatTransportLat
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 startYear, endYear, mainRunName)
-        figureName = '{}/mht_{}_years{:04d}-{:04d}.png'.format(
-                      self.plotsDirectory, mainRunName,
-                      startYear, endYear)
+                 self.startYear, self.endYear, mainRunName)
+        filePrefix = self.filePrefixes['mht']
+        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -261,38 +282,56 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                     title, xLabel, yLabel, figureName,
                     xLim=xLimGlobal)
 
-        # Plot 2D MHT (zonally integrated)
+        self._write_xml(filePrefix)
 
-        # normalize 2D MHT by layer thickness
-        MHTLatZ = \
-            annualClimatology.avgMeridionalHeatTransportLatZ.values.T[:, :]
-        for k in range(nVertLevels):
-            MHTLatZ[k, :] = MHTLatZ[k, :]/refLayerThickness[k]
+        if config.getboolean(self.sectionName, 'plotVerticalSection'):
+            # Plot 2D MHT (zonally integrated)
 
-        x = binBoundaryMerHeatTrans
-        y = refZMid
-        z = MHTLatZ
-        xLabel = 'latitude [deg]'
-        yLabel = 'depth [m]'
-        title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 startYear, endYear, mainRunName)
-        figureName = '{}/mhtZ_{}_years{:04d}-{:04d}.png'.format(
-                      self.plotsDirectory, mainRunName,
-                      startYear, endYear)
-        colorbarLabel = '[PW/m]'
-        contourLevels = config.getExpression(self.sectionName,
-                                             'contourLevelsGlobal',
-                                             usenumpyfunc=True)
-        (colormapName, colorbarLevels) = setup_colormap(config,
-                                                        self.sectionName,
-                                                        suffix='Global')
-        plot_vertical_section(config, x, y, z,
-                              colormapName, colorbarLevels,
-                              contourLevels, colorbarLabel,
-                              title, xLabel, yLabel, figureName,
-                              xLim=xLimGlobal, yLim=depthLimGlobal,
-                              invertYAxis=False)
+            # normalize 2D MHT by layer thickness
+            MHTLatZVar = \
+                annualClimatology.timeMonthly_avg_meridionalHeatTransportLatZ
+            MHTLatZ = MHTLatZVar.values.T[:, :]
+            for k in range(nVertLevels):
+                MHTLatZ[k, :] = MHTLatZ[k, :]/refLayerThickness[k]
+
+            x = binBoundaryMerHeatTrans
+            y = refZMid
+            z = MHTLatZ
+            xLabel = 'latitude [deg]'
+            yLabel = 'depth [m]'
+            title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
+                     self.startYear, self.endYear, mainRunName)
+            filePrefix = self.filePrefixes['mhtZ']
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+            colorbarLabel = '[PW/m]'
+            contourLevels = config.getExpression(self.sectionName,
+                                                 'contourLevelsGlobal',
+                                                 usenumpyfunc=True)
+            (colormapName, colorbarLevels) = setup_colormap(config,
+                                                            self.sectionName,
+                                                            suffix='Global')
+            plot_vertical_section(config, x, y, z,
+                                  colormapName, colorbarLevels,
+                                  contourLevels, colorbarLabel,
+                                  title, xLabel, yLabel, figureName,
+                                  xLim=xLimGlobal, yLim=depthLimGlobal,
+                                  invertYAxis=False, N=movingAveragePoints)
+
+            self._write_xml(filePrefix)
+
         # }}}
+
+    def _write_xml(self, filePrefix):  # {{{
+        caption = 'Meridional Heat Transport'
+        write_image_xml(
+            config=self.config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup='Meridional Heat Transport',
+            groupLink='mht',
+            imageDescription=caption,
+            imageCaption=caption)  # }}}
 
     # }}}
 

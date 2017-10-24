@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import xarray as xr
 import pandas as pd
@@ -17,15 +18,17 @@ from ..shared.timekeeping.utility import get_simulation_start_time
 from ..shared.plot.plotting import plot_xtick_format, plot_size_y_axis
 
 from ..shared.analysis_task import AnalysisTask
+from ..shared.html import write_image_xml
 
 
 class IndexNino34(AnalysisTask):  # {{{
     '''
-    <Describe the analysis task here.>
+    A task for computing and plotting time series and spectra of the El Nino
+    3.4 climate index
 
     Authors
     -------
-    <List of authors>
+    Luke Van Roekel, Xylar Asay-Davis
     '''
 
     def __init__(self, config):  # {{{
@@ -64,13 +67,12 @@ class IndexNino34(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(IndexNino34, self).setup_and_check()
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        streamName = self.historyStreams.find_stream(
-            self.streamMap['timeSeriesStats'])
+        streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = self.config.get('index', 'startDate')
         self.endDate = self.config.get('index', 'endDate')
         self.inputFiles = self.historyStreams.readpath(
@@ -81,6 +83,14 @@ class IndexNino34(AnalysisTask):  # {{{
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
+
+        mainRunName = self.config.get('runs', 'mainRunName')
+
+        self.xmlFileNames = []
+        for filePrefix in ['NINO34_{}'.format(mainRunName),
+                           'NINO34_spectra_{}'.format(mainRunName)]:
+            self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
+                                                        filePrefix))
 
         # }}}
 
@@ -128,14 +138,16 @@ class IndexNino34(AnalysisTask):  # {{{
         regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
 
         # Load data:
-        varList = ['avgSurfaceTemperature']
+        varName = \
+            'timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'
+        varList = [varName]
         ds = open_multifile_dataset(fileNames=self.inputFiles,
                                     calendar=calendar,
                                     config=config,
                                     simulationStartTime=simulationStartTime,
-                                    timeVariableName='Time',
+                                    timeVariableName=['xtime_startMonthly',
+                                                      'xtime_endMonthly'],
                                     variableList=varList,
-                                    variableMap=self.variableMap,
                                     startDate=self.startDate,
                                     endDate=self.endDate)
 
@@ -144,7 +156,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Obs = dsObs.sst
 
         print '  Compute NINO3.4 index...'
-        regionSST = ds.avgSurfaceTemperature.isel(nOceanRegions=regionIndex)
+        regionSST = ds[varName].isel(nOceanRegions=regionIndex)
         nino34 = self._compute_nino34_index(regionSST, calendar)
 
         # Compute the observational index over the entire time range
@@ -181,6 +193,9 @@ class IndexNino34(AnalysisTask):  # {{{
                                      figureName, linewidths=2,
                                      calendar=calendar)
 
+        self._write_xml(filePrefix='NINO34_{}'.format(mainRunName),
+                        plotType='Time Series')
+
         figureName = '{}/NINO34_spectra_{}.png'.format(self.plotsDirectory,
                                                        mainRunName)
         self._nino34_spectra_plot(config, f, spectra, conf95, conf99, redNoise,
@@ -189,6 +204,10 @@ class IndexNino34(AnalysisTask):  # {{{
                                   conf9930, redNoise30,
                                   'NINO3.4 power spectrum', modelTitle,
                                   obsTitle, figureName, linewidths=2)
+
+        self._write_xml(filePrefix='NINO34_spectra_{}'.format(mainRunName),
+                        plotType='Spectra')
+
     # }}}
 
     def _compute_nino34_index(self, regionSST, calendar):  # {{{
@@ -216,8 +235,8 @@ class IndexNino34(AnalysisTask):  # {{{
         -------
         xarray.DataArray object containing the nino34index
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -277,8 +296,8 @@ class IndexNino34(AnalysisTask):  # {{{
         mkov*scale*xHigh : numpy.array
             99% confidence threshold from chi-squared test
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -342,8 +361,8 @@ class IndexNino34(AnalysisTask):  # {{{
         Single value giving the lag one auto-correlation
             If t != 1, this is no longer a lag one auto-correlation
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel
         """
 
@@ -364,8 +383,8 @@ class IndexNino34(AnalysisTask):  # {{{
            for the nino power spectra this is a modified Daniell window (see
            https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel, Xylar Asay-Davis
         """
 
@@ -385,7 +404,7 @@ class IndexNino34(AnalysisTask):  # {{{
                              title, modelTitle, obsTitle,
                              fileout, linewidths, xlabel='Period (years)',
                              ylabel=r'Power ($^o$C / cycles mo$^{-1}$)',
-                             titleFontSize=None, figsize=(9, 21), dpi=300):
+                             titleFontSize=None, figsize=(9, 21), dpi=None):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -452,13 +471,16 @@ class IndexNino34(AnalysisTask):  # {{{
             the size of the figure in inches
 
         dpi : int, optional
-            the number of dots per inch of the figure
+            the number of dots per inch of the figure, taken from section
+            ``plot`` option ``dpi`` in the config file by default
 
-        Author
-        ------
-        Luke Van Roekel
+        Authors
+        -------
+        Luke Van Roekel, Xylar Asay-Davis
         """
 
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if titleFontSize is None:
@@ -547,7 +569,7 @@ class IndexNino34(AnalysisTask):  # {{{
                                 title, modelTitle, obsTitle, fileout,
                                 linewidths, calendar, xlabel='Time [years]',
                                 ylabel='[$^\circ$C]', titleFontSize=None,
-                                figsize=(12, 28), dpi=300, maxXTicks=20):
+                                figsize=(12, 28), dpi=None, maxXTicks=20):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -592,17 +614,20 @@ class IndexNino34(AnalysisTask):  # {{{
             the size of the figure in inches
 
         dpi : int, optional
-            the number of dots per inch of the figure
+            the number of dots per inch of the figure, taken from section
+            ``plot`` option ``dpi`` in the config file by default
 
         maxXTicks : int, optional
             the maximum number of tick marks that will be allowed along the x
             axis. This may need to be adjusted depending on the figure size and
             aspect ratio.
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel
         """
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
         fig = plt.figure(figsize=figsize, dpi=dpi)
 
         if titleFontSize is None:
@@ -676,8 +701,8 @@ class IndexNino34(AnalysisTask):  # {{{
         ylabel : string
             string for y-axis label
 
-        Author
-        ------
+        Authors
+        -------
         Luke Van Roekel
         '''
         plt.title(panelTitle, y=1.06, **axis_font)
@@ -700,6 +725,19 @@ class IndexNino34(AnalysisTask):  # {{{
         if ylabel is not None:
             plt.ylabel(ylabel, **axis_font)
         # }}}
+
+    def _write_xml(self, filePrefix, plotType):  # {{{
+        caption = u'{} of El Niño 3.4 Climate Index'.format(plotType)
+        write_image_xml(
+            config=self.config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup=u'El Niño 3.4 Climate Index',
+            groupLink='nino34',
+            thumbnailDescription=plotType,
+            imageDescription=caption,
+            imageCaption=caption)  # }}}
 
 # }}}
 

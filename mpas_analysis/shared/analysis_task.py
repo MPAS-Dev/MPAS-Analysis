@@ -12,16 +12,52 @@ import warnings
 from .io import NameList, StreamsFile
 from .io.utility import build_config_full_path, make_directories
 
-from .variable_namelist_stream_maps.ocean_maps import oceanNamelistMap, \
-    oceanStreamMap, oceanVariableMap
-
-from .variable_namelist_stream_maps.sea_ice_maps import seaIceNamelistMap, \
-    seaIceStreamMap, seaIceVariableMap
-
 
 class AnalysisTask(object):  # {{{
     '''
     The base class for analysis tasks.
+
+    Attributes
+    ----------
+    config :  instance of MpasAnalysisConfigParser
+        Contains configuration options
+
+    taskName :  str
+        The name of the task, typically the same as the class name except
+        starting with lowercase (e.g. 'myTask' for class 'MyTask')
+
+    componentName :  {'ocean', 'seaIce'}
+        The name of the component (same as the folder where the task
+        resides)
+
+    tags :  list of str
+        Tags used to describe the task (e.g. 'timeSeries', 'climatology',
+        horizontalMap', 'index', 'transect').  These are used to determine
+        which tasks are generated (e.g. 'all_transect' or 'no_climatology'
+        in the 'generate' flags)
+
+    runDirectory : str
+        The base input directory for namelists, streams files and restart files
+
+    historyDirectory : str
+        The base input directory for history files
+
+    plotsDirectory : str
+        The directory for writing plots (which is also created if it doesn't
+        exist)
+
+    namelist : ``shared.io.NameList`` object
+        the namelist reader
+
+    runStreams : ``shared.io.StreamsFile`` object
+        the streams file reader for streams in the run directory (e.g. restart
+        files)
+
+    historyStreams : ``shared.io.StreamsFile`` object
+        the streams file reader for streams in the history directory (most
+        streams other than restart files)
+
+    calendar : the name of the calendar ('gregorian' or 'gregoraian_noleap')
 
     Authors
     -------
@@ -34,7 +70,7 @@ class AnalysisTask(object):  # {{{
 
         Individual tasks (children classes of this base class) should first
         call this method to perform basic initialization, then, define the
-        `taskName`, `componentName` and list of `tags` for the task.
+        ``taskName``, ``componentName`` and list of ``tags`` for the task.
 
         Parameters
         ----------
@@ -69,25 +105,10 @@ class AnalysisTask(object):  # {{{
         Perform steps to set up the analysis (e.g. reading namelists and
         streams files).
 
-        After this call, the following member variables are set:
-            self.runDirectory : the base input directory for namelists, streams
-                files and restart files
-            self.historyDirectory : the base input directory for history files
-            self.plotsDirectory : the directory for writing plots (which is
-                also created if it doesn't exist)
-            self.namelist : the namelist reader
-            self.runStreams : the streams file reader for streams in the run
-                directory (e.g. restart files)
-            self.historyStreams : the streams file reader for streams in the
-                history directory (most streams other than restart files)
-            self.calendar : the name of the calendar ('gregorian' or
-                'gregoraian_noleap')
-            self.namelistMap : a map between names of namelist options used by
-                MPAS-Analysis and those in various MPAS versions
-            self.streamMap : a map between names of streams used by
-                MPAS-Analysis and those in various MPAS versions
-            self.variableMap : a map between names of variables within streams
-                used by MPAS-Analysis and those in various MPAS versions
+        After this call, the following attributes are set (see documentation
+        for the class):
+        runDirectory, historyDirectory, plotsDirectory, namelist, runStreams,
+        historyStreams, calendar
 
         Individual tasks (children classes of this base class) should first
         call this method to perform basic setup, then, check whether the
@@ -131,19 +152,6 @@ class AnalysisTask(object):  # {{{
 
         make_directories(self.plotsDirectory)
 
-        if self.componentName == 'ocean':
-            self.namelistMap = oceanNamelistMap
-            self.streamMap = oceanStreamMap
-            self.variableMap = oceanVariableMap
-        elif self.componentName == 'seaIce':
-            self.namelistMap = seaIceNamelistMap
-            self.streamMap = seaIceStreamMap
-            self.variableMap = seaIceVariableMap
-        else:
-            self.namelistMap = None
-            self.streamMap = None
-            self.variableMap = None
-
         # set the start and end dates for each type of analysis
         for tag in ['climatology', 'timeSeries', 'index']:
             if tag in self.tags:
@@ -169,8 +177,8 @@ class AnalysisTask(object):  # {{{
         # {{{
         '''
         Determines if this analysis should be generated, based on the
-        `generate` config option and `taskName`, `componentName` and
-        `tags`.
+        ``generate`` config option and ``taskName``, ``componentName`` and
+        ``tags``.
 
         Individual tasks do not need to create their own versions of this
         function.
@@ -182,8 +190,8 @@ class AnalysisTask(object):  # {{{
 
         Raises
         ------
-        ValueError : If one of `self.taskName`, `self.componentName`
-            or `self.tags` has not been set.
+        ValueError : If one of ``self.taskName``, ``self.componentName``
+            or ``self.tags`` has not been set.
 
         Authors
         -------
@@ -262,11 +270,7 @@ class AnalysisTask(object):  # {{{
         '''
 
         try:
-            if self.namelistMap is None:
-                optionName = analysisOptionName
-            else:
-                optionName = self.namelist.find_option(
-                    self.namelistMap[analysisOptionName])
+            optionName = analysisOptionName
             enabled = self.namelist.getbool(optionName)
         except ValueError:
             enabled = default

@@ -30,7 +30,7 @@ class SeaIceAnalysisTask(AnalysisTask):  # {{{
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar, self.namelistMap, self.streamMap, self.variableMap
+        #     self.calendar
         super(SeaIceAnalysisTask, self).setup_and_check()
 
         try:

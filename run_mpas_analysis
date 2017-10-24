@@ -14,22 +14,36 @@ import matplotlib as mpl
 import argparse
 import traceback
 import sys
-import warnings
 import subprocess
 import time
+import pkg_resources
+import shutil
 
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
+
+from mpas_analysis.shared.html import generate_html
 
 
 def update_generate(config, generate):  # {{{
     """
     Update the 'generate' config option using a string from the command line.
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    generate : str
+        a comma-separated string of generate flags: either names of analysis
+        tasks or commands of the form ``all_<tag>`` or ``no_<tag>`` indicating
+        that analysis with a given tag should be included or excluded).
+
+    Authors
+    -------
+    Xylar Asay-Davis
     """
 
     # overwrite the 'generate' in config with a string that parses to
@@ -44,10 +58,25 @@ def update_generate(config, generate):  # {{{
 def run_parallel_tasks(config, analyses, configFiles, taskCount):
     # {{{
     """
-    Run this script once each for several parallel tasks.
+    Launch new processes for parallel tasks, allowing up to ``taskCount``
+    tasks to run at once.
 
-    Author
-    ------
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    analyses : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    configFiles : list of str
+        A list of config files, passed on to each parallel task
+
+    taskCount : int
+        The maximum number of tasks that are allowed to run at once
+
+    Authors
+    -------
     Xylar Asay-Davis
     """
 
@@ -58,6 +87,7 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
     (processes, logs) = launch_tasks(taskNames[0:taskCount], config,
                                      configFiles)
     remainingTasks = taskNames[taskCount:]
+    tasksWithErrors = []
     while len(processes) > 0:
         (taskName, process) = wait_for_task(processes)
         if process.returncode == 0:
@@ -65,6 +95,7 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
         else:
             print "ERROR in task {}.  See log file {} for details".format(
                 taskName, logs[taskName].name)
+            tasksWithErrors.append(taskName)
         logs[taskName].close()
         # remove the process from the process dictionary (no need to bother)
         processes.pop(taskName)
@@ -76,6 +107,16 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
             processes.update(process)
             logs.update(log)
             remainingTasks = remainingTasks[1:]
+
+    # raise the last exception so the process exits with an error
+    errorCount = len(tasksWithErrors)
+    if errorCount == 1:
+        print "There were errors in task {}".format(tasksWithErrors[0])
+        sys.exit(1)
+    elif errorCount > 0:
+        print "There were errors in {} tasks: {}".format(
+                errorCount, ', '.join(tasksWithErrors))
+        sys.exit(1)
     # }}}
 
 
@@ -83,7 +124,20 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     """
     Launch one or more tasks
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    taskNames : list of str
+        the names of the tasks to launch
+
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    configFiles : list of str
+        A list of config files, passed along when each task is launched
+
+    Authors
+    -------
+    Xylar Asay-Davis
     """
     thisFile = os.path.realpath(__file__)
 
@@ -97,7 +151,8 @@ def launch_tasks(taskNames, config, configFiles):  # {{{
     processes = {}
     logs = {}
     for taskName in taskNames:
-        args = commandPrefix + [thisFile, '--generate', taskName] + configFiles
+        args = commandPrefix + \
+            [thisFile, '--subtask', '--generate', taskName] + configFiles
 
         logFileName = '{}/{}.log'.format(logsDirectory, taskName)
 
@@ -120,7 +175,23 @@ def wait_for_task(processes):  # {{{
     Wait for the next process to finish and check its status.  Returns both the
     task name and the process that finished.
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    processes : list of ``subprocess.Popen`` objects
+        Processes to wait for
+
+
+    Returns
+    -------
+    taskName : str
+        The name of the task that finished
+
+    process : ``subprocess.Popen`` object
+        The process that finished
+
+    Authors
+    -------
+    Xylar Asay-Davis
     """
 
     # first, check if any process has already finished
@@ -141,7 +212,19 @@ def is_running(process):  # {{{
     """
     Returns whether a given process is currently running
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    process : ``subprocess.Popen`` object
+        The process to check
+
+    Returns
+    -------
+    isRunning : bool
+        whether the process is running
+
+    Authors
+    -------
+    Xylar Asay-Davis
     """
 
     try:
@@ -154,9 +237,22 @@ def is_running(process):  # {{{
 
 def build_analysis_list(config):  # {{{
     """
-    Build a list of analysis modules based on the 'generate' config option.
+    Build a list of analysis tasks. New tasks should be added here, following
+    the approach used for existing analysis tasks.
 
-    Author: Xylar Asay-Davis
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    Returns
+    -------
+    analyses : list of ``AnalysisTask`` objects
+        A list of all analysis tasks
+
+    Authors
+    -------
+    Xylar Asay-Davis
     """
 
     # choose the right rendering backend, depending on whether we're displaying
@@ -172,19 +268,47 @@ def build_analysis_list(config):  # {{{
     analyses = []
 
     # Ocean Analyses
+
+    analyses.append(ocean.ClimatologyMapMLD(config))
+    analyses.append(ocean.ClimatologyMapSST(config))
+    analyses.append(ocean.ClimatologyMapSSS(config))
     analyses.append(ocean.TimeSeriesOHC(config))
     analyses.append(ocean.TimeSeriesSST(config))
-    analyses.append(ocean.IndexNino34(config))
     analyses.append(ocean.MeridionalHeatTransport(config))
     analyses.append(ocean.StreamfunctionMOC(config))
-
-    analyses.append(ocean.ClimatologyMapSST(config))
-    analyses.append(ocean.ClimatologyMapMLD(config))
-    analyses.append(ocean.ClimatologyMapSSS(config))
+    analyses.append(ocean.IndexNino34(config))
 
     # Sea Ice Analyses
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
     analyses.append(sea_ice.TimeSeriesSeaIce(config))
-    analyses.append(sea_ice.ClimatologyMapSeaIce(config))
+
+    return analyses  # }}}
+
+
+def determine_analyses_to_generate(analyses):  # {{{
+    """
+    Build a list of analysis tasks to run based on the 'generate' config
+    option (or command-line flag) and prerequisites and subtasks of each
+    requested task.  Each task's ``setup_and_check`` method is called in the
+    process.
+
+    Parameters
+    ----------
+    analyses : list of ``AnalysisTask`` objects
+        A list of all analysis tasks
+
+    Returns
+    -------
+    analysesToGenerate : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
 
     # check which analysis we actually want to generate and only keep those
     analysesToGenerate = []
@@ -196,7 +320,7 @@ def build_analysis_list(config):  # {{{
             try:
                 analysisTask.setup_and_check()
                 add = True
-            except:
+            except (Exception, BaseException):
                 traceback.print_exc(file=sys.stdout)
                 print "ERROR: analysis module {} failed during check and " \
                     "will not be run".format(analysisTask.taskName)
@@ -207,9 +331,31 @@ def build_analysis_list(config):  # {{{
 
 
 def run_analysis(config, analyses):  # {{{
+    """
+    Run one or more analysis tasks
+
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    analyses : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    Raises
+    ------
+    Exception:
+        If one or more tasks raise exceptions, re-raises the last exception
+        after all tasks have completed to indicate that there was a problem
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
 
     # run each analysis task
-    lastException = None
+    tasksWithErrors = []
+    lastStacktrace = None
     for analysisTask in analyses:
         # write out a copy of the configuration to document the run
         logsDirectory = build_config_full_path(config, 'output',
@@ -224,10 +370,11 @@ def run_analysis(config, analyses):  # {{{
         except (Exception, BaseException) as e:
             if isinstance(e, KeyboardInterrupt):
                 raise e
-            traceback.print_exc(file=sys.stdout)
-            print "ERROR: analysis module {} failed during run".format(
+            lastStacktrace = traceback.format_exc()
+            print "ERROR: analysis task {} failed during run".format(
                 analysisTask.taskName)
-            lastException = e
+            print lastStacktrace
+            tasksWithErrors.append(analysisTask.taskName)
 
         configFileName = '{}/configs/config.{}'.format(logsDirectory,
                                                        analysisTask.taskName)
@@ -240,38 +387,73 @@ def run_analysis(config, analyses):  # {{{
         plt.show()
 
     # raise the last exception so the process exits with an error
-    if lastException is not None:
-        raise lastException
+    errorCount = len(tasksWithErrors)
+    if errorCount == 1:
+        if len(analyses) > 1:
+            print "There were errors in task {}".format(tasksWithErrors[0])
+            print "The stacktrace was:"
+            print lastStacktrace
+        sys.exit(1)
+    elif errorCount > 0:
+        print "There were errors in {} tasks: {}".format(
+                errorCount, ', '.join(tasksWithErrors))
+        print "The last stacktrace was:"
+        print lastStacktrace
+        sys.exit(1)
 
-    return  # }}}
+    # }}}
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--subtask", dest="subtask", action='store_true',
+                        help="If this is a subtask when running parallel "
+                             "tasks")
     parser.add_argument("-g", "--generate", dest="generate",
                         help="A list of analysis modules to generate "
                         "(nearly identical generate option in config file).",
                         metavar="ANALYSIS1[,ANALYSIS2,ANALYSIS3,...]")
+    parser.add_argument("-l", "--list", dest="list", action='store_true',
+                        help="List the available analysis tasks")
+    parser.add_argument("-p", "--purge", dest="purge", action='store_true',
+                        help="Purge the analysis by deleting the output"
+                        "directory before running")
     parser.add_argument('configFiles', metavar='CONFIG',
-                        type=str, nargs='+', help='config file')
+                        type=str, nargs='*', help='config file')
     args = parser.parse_args()
 
     # add config.default to cover default not included in the config files
     # provided on the command line
-    defaultConfig = '{}/config.default'.format(
-        os.path.dirname(os.path.realpath(__file__)))
-    if os.path.exists(defaultConfig):
+    if pkg_resources.resource_exists('mpas_analysis', 'config.default'):
+        defaultConfig = pkg_resources.resource_filename('mpas_analysis',
+                                                        'config.default')
         configFiles = [defaultConfig] + args.configFiles
     else:
-        warnings.warn('WARNING: Did not find config.default.  Assuming other '
-                      'config file(s) contain a\n'
-                      'full set of configuration options.')
+        print 'WARNING: Did not find config.default.  Assuming other config ' \
+              'file(s) contain a\n' \
+              'full set of configuration options.'
         configFiles = args.configFiles
 
     config = MpasAnalysisConfigParser()
     config.read(configFiles)
+
+    if args.list:
+        analyses = build_analysis_list(config)
+        for analysisTask in analyses:
+            print '{}\n    tags: {}'.format(analysisTask.taskName,
+                                            ', '.join(analysisTask.tags))
+        sys.exit(0)
+
+    if args.purge:
+        outputDirectory = config.get('output', 'baseDirectory')
+        if not os.path.exists(outputDirectory):
+            print 'Output directory {} does not exist.\n' \
+                  'No purge necessary.'.format(outputDirectory)
+        else:
+            print 'Deleting contents of {}'.format(outputDirectory)
+            shutil.rmtree(outputDirectory)
 
     if args.generate:
         update_generate(config, args.generate)
@@ -282,6 +464,7 @@ if __name__ == "__main__":
     make_directories('{}/configs/'.format(logsDirectory))
 
     analyses = build_analysis_list(config)
+    analyses = determine_analyses_to_generate(analyses)
 
     parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
                                               default=1)
@@ -290,5 +473,8 @@ if __name__ == "__main__":
         run_analysis(config, analyses)
     else:
         run_parallel_tasks(config, analyses, configFiles, parallelTaskCount)
+
+    if not args.subtask:
+        generate_html(config, analyses)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

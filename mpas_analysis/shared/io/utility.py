@@ -10,39 +10,62 @@ import random
 import string
 
 
-def paths(*args): # {{{
+def paths(*args):  # {{{
     """
     Returns glob'd paths in list for arbitrary number of function arguments.
     Note, each expanded set of paths is sorted.
 
+    Parameters
+    ----------
+    *args
+        A list of arguments to pass to ``glob.glob``
+
+    Authors
+    -------
     Phillip J. Wolfram
     """
     paths = []
     for aargs in args:
         paths += sorted(glob.glob(aargs))
-    return paths # }}}
+    return paths  # }}}
 
 
 def fingerprint_generator(size=12,
-                          chars=string.ascii_uppercase + string.digits): # {{{
+                          chars=string.ascii_uppercase + string.digits):  # {{{
     """
     Returns a random string that can be used as a unique fingerprint
 
-    Reference:
+    Parameters
+    ----------
+    size : int, optional
+        The number of characters in the fingerprint
+
+    chars : list of char, optional
+        The fingerprint
+
+    Reference
+    ---------
     http://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python
 
+    Authors
+    -------
     Phillip J. Wolfram
     """
-    return ''.join(random.choice(chars) for _ in range(size)) # }}}
+    return ''.join(random.choice(chars) for _ in range(size))  # }}}
 
 
 def make_directories(path):  # {{{
     """
     Make the given path if it does not already exist.
 
-    Returns the path unchanged.
+    Returns
+    -------
+    path : str
+        the path unchanged
 
-    Author: Xylar Asay-Davis
+    Authors
+    -------
+    Xylar Asay-Davis
     """
 
     try:
