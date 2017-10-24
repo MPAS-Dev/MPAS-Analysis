@@ -327,7 +327,7 @@ class TimeSeriesOHC(AnalysisTask):
             z = ds.avgLayerTemperatureAnomaly.isel(nOceanRegionsTmp=regionIndex)
             z = z.transpose()
 
-            colorbarLabel = '[$^\circ$ C]'
+            colorbarLabel = '[$^\circ$C]'
             xLabel = 'Time [years]'
             yLabel = 'Depth [m]'
 
