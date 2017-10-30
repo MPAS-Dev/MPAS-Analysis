@@ -411,6 +411,12 @@ if __name__ == "__main__":
     parser.add_argument("--subtask", dest="subtask", action='store_true',
                         help="If this is a subtask when running parallel "
                              "tasks")
+    parser.add_argument("--setup_only", dest="setup_only", action='store_true',
+                        help="If only the setup phase, not the run or HTML "
+                        "generation phases, should be executed.")
+    parser.add_argument("--html_only", dest="html_only", action='store_true',
+                        help="If only the setup and HTML generation phases, "
+                        "not the run phase, should be executed.")
     parser.add_argument("-g", "--generate", dest="generate",
                         help="A list of analysis modules to generate "
                         "(nearly identical generate option in config file).",
@@ -469,12 +475,14 @@ if __name__ == "__main__":
     parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
                                               default=1)
 
-    if parallelTaskCount <= 1 or len(analyses) == 1:
-        run_analysis(config, analyses)
-    else:
-        run_parallel_tasks(config, analyses, configFiles, parallelTaskCount)
+    if not args.setup_only and not args.html_only:
+        if parallelTaskCount <= 1 or len(analyses) == 1:
+            run_analysis(config, analyses)
+        else:
+            run_parallel_tasks(config, analyses, configFiles,
+                               parallelTaskCount)
 
-    if not args.subtask:
+    if not args.subtask and not args.setup_only:
         generate_html(config, analyses)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
