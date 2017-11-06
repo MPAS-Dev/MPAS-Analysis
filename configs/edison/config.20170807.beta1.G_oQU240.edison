@@ -17,8 +17,13 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # directory containing model results
 baseDirectory = /scratch1/scratchdirs/xylar/acme_scratch/edison/G-QU240-master-intel/run
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oQU240
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+# mappingDirectory = /dir/for/mapping/files
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -36,8 +41,8 @@ htmlSubdirectory = html
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
 #   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -72,13 +77,6 @@ generate = ['all']
 startYear = 2
 # the last year over which to average climatalogies
 endYear = 5
-
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-# mpasMappingFile = 
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against

@@ -17,8 +17,13 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # directory containing model results
 baseDirectory = /net/scratch2/akt/MPAS/rundirs/rundir_QU60km_polar
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = QU60
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+# mappingDirectory = /dir/for/mapping/files
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -31,8 +36,8 @@ baseDirectory = /dir/to/analysis/output
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
 #   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
