@@ -1,3 +1,4 @@
+import xarray
 import os
 import warnings
 import subprocess
@@ -198,6 +199,16 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             if not os.path.exists(climatologyFileName):
                 allExist = False
                 break
+
+        if allExist:
+            # make sure all the necessary variables are also present
+            ds = xarray.open_dataset(self.get_file_name(seasonsToCheck[0],
+                                                        returnDir=False))
+
+            for variableName in self.variableList:
+                if variableName not in ds.variables:
+                    allExist = False
+                    break
 
         if not allExist:
             self._compute_climatologies_with_ncclimo(
