@@ -86,7 +86,7 @@ class Remapper(object):
         # }}}
 
     def build_mapping_file(self, method='bilinear',
-                           additionalArgs=None):  # {{{
+                           additionalArgs=None, logger=None):  # {{{
         '''
         Given a source file defining either an MPAS mesh or a lat-lon grid and
         a destination file or set of arrays defining a lat-lon grid, constructs
@@ -101,6 +101,9 @@ class Remapper(object):
 
         additionalArgs : list of str, optional
             A list of additional arguments to ``ESMF_RegridWeightGen``
+
+        logger : ``logging.Logger``, optional
+            A logger to which ncclimo output should be redirected
 
         Raises
         ------
@@ -153,16 +156,36 @@ class Remapper(object):
         if additionalArgs is not None:
             args.extend(additionalArgs)
 
-        # make sure any output is flushed before we add output from the
-        # subprocess
-        sys.stdout.flush()
-        sys.stderr.flush()
+        if logger is None:
+            print 'running: {}'.format(' '.join(args))
+            # make sure any output is flushed before we add output from the
+            # subprocess
+            sys.stdout.flush()
+            sys.stderr.flush()
 
-        # throw out the standard output from ESMF_RegridWeightGen, as it's
-        # rather verbose but keep stderr
-        DEVNULL = open(os.devnull, 'wb')
+            # throw out the standard output from ESMF_RegridWeightGen, as it's
+            # rather verbose but keep stderr
+            DEVNULL = open(os.devnull, 'wb')
+            subprocess.check_call(args, stdout=DEVNULL)
 
-        subprocess.check_call(args, stdout=DEVNULL)
+        else:
+            logger.info('running: {}'.format(' '.join(args)))
+            for handler in logger.handlers:
+                handler.flush()
+
+            process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+
+            # throw out the standard output from ESMF_RegridWeightGen, as it's
+            # rather verbose but keep stderr
+            if stderr:
+                for line in stderr.split('\n'):
+                    logger.error(line)
+
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode,
+                                                    ' '.join(args))
 
         # remove the temporary SCRIP files
         os.remove(self.sourceDescriptor.scripFileName)
@@ -171,7 +194,7 @@ class Remapper(object):
         # }}}
 
     def remap_file(self, inFileName, outFileName, variableList=None,
-                   overwrite=False, renormalize=None):  # {{{
+                   overwrite=False, renormalize=None, logger=None):  # {{{
         '''
         Given a source file defining either an MPAS mesh or a lat-lon grid and
         a destination file or set of arrays defining a lat-lon grid, constructs
@@ -197,6 +220,9 @@ class Remapper(object):
 
         renormalize : float, optional
             A threshold to use to renormalize the data
+
+        logger : ``logging.Logger``, optional
+            A logger to which ncclimo output should be redirected
 
         Raises
         ------
@@ -267,18 +293,38 @@ class Remapper(object):
         if variableList is not None:
             args.extend(['-v', ','.join(variableList)])
 
-
-        # make sure any output is flushed before we add output from the
-        # subprocess
-        sys.stdout.flush()
-        sys.stderr.flush()
-
         # set an environment variable to make sure we're not using czender's
         # local version of NCO instead of one we have intentionally loaded
         env = os.environ.copy()
         env['NCO_PATH_OVERRIDE'] = 'No'
 
-        subprocess.check_call(args, env=env)  # }}}
+        if logger is None:
+            print 'running: {}'.format(' '.join(args))
+            # make sure any output is flushed before we add output from the
+            # subprocess
+            sys.stdout.flush()
+            sys.stderr.flush()
+
+            subprocess.check_call(args, env=env)
+        else:
+            logger.info('running: {}'.format(' '.join(args)))
+            for handler in logger.handlers:
+                handler.flush()
+
+            process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, env=env)
+            stdout, stderr = process.communicate()
+
+            if stdout:
+                logger.info(stdout)
+            if stderr:
+                for line in stderr.split('\n'):
+                    logger.error(line)
+
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode,
+                                                    ' '.join(args))
+        # }}}
 
     def remap(self, ds, renormalizationThreshold=None):  # {{{
         '''

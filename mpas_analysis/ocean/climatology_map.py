@@ -13,13 +13,13 @@ import datetime
 import numpy as np
 import os
 
-from ..shared.analysis_task import AnalysisTask
+from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import plot_global_comparison, \
     setup_colormap
 from ..shared.constants import constants
 
-from ..shared.io.utility import build_config_full_path
+from ..shared.io.utility import build_config_full_path, make_directories
 from ..shared.io import write_netcdf
 from ..shared.html import write_image_xml
 
@@ -105,7 +105,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             config=config, sourceDescriptor=mpasDescriptor,
             comparisonDescriptor=comparisonDescriptor,
             mappingFilePrefix=mappingFilePrefix,
-            method=config.get('climatology', 'mpasInterpolationMethod'))
+            method=config.get('climatology', 'mpasInterpolationMethod'),
+            logger=self.logger)
 
         obsDescriptor = LatLonGridDescriptor.read(fileName=self.obsFileName,
                                                   latVarName='lat',
@@ -127,7 +128,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
             comparisonDescriptor=comparisonDescriptor,
             mappingFilePrefix='map_obs_{}'.format(fieldName),
             method=config.get('oceanObservations',
-                              'interpolationMethod'))
+                              'interpolationMethod'),
+            logger=self.logger)
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -140,9 +142,16 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                                                         filePrefix))
             self.filePrefixes[season] = filePrefix
 
+        # make the mapping directory, because doing so within each process
+        # seems to be giving ESMF_RegridWeightGen some trouble
+        mappingSubdirectory = \
+            build_config_full_path(self.config, 'output',
+                                   'mappingSubdirectory')
+        make_directories(mappingSubdirectory)
+
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
 
@@ -151,17 +160,17 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
         Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting 2-d maps of {} climatologies...".format(
-            self.fieldNameInTitle)
+        self.logger.info("\nPlotting 2-d maps of {} climatologies...".format(
+            self.fieldNameInTitle))
 
         # get local versions of member variables for convenience
         config = self.config
         fieldName = self.fieldName
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  Reading files:\n'
+                         '    {} through\n    {}'.format(
+                                 os.path.basename(self.inputFiles[0]),
+                                 os.path.basename(self.inputFiles[-1])))
 
         mainRunName = config.get('runs', 'mainRunName')
 
@@ -213,7 +222,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     variableList=[self.mpasFieldName],
                     modelName=modelName,
                     seasons=outputTimes,
-                    decemberMode='sdd')
+                    decemberMode='sdd',
+                    logger=self.logger)
 
         dsObs = None
 
@@ -254,10 +264,12 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                 write_netcdf(climatology, maskedClimatologyFileName)
 
             if not os.path.exists(remappedFileName):
+
                 self.mpasRemapper.remap_file(
                         inFileName=maskedClimatologyFileName,
                         outFileName=remappedFileName,
-                        overwrite=True)
+                        overwrite=True,
+                        logger=self.logger)
 
             remappedClimatology = xr.open_dataset(remappedFileName)
 
@@ -292,7 +304,8 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     remappedClimatology = \
                         remap_and_write_climatology(
                             config, seasonalClimatology, climatologyFileName,
-                            remappedFileName, self.obsRemapper)
+                            remappedFileName, self.obsRemapper,
+                            logger=self.logger)
 
             else:
 

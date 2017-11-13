@@ -13,9 +13,7 @@ Top-level script: run_mpas_analysis
 
    run_mpas_analysis.update_generate
    run_mpas_analysis.run_parallel_tasks
-   run_mpas_analysis.launch_tasks
    run_mpas_analysis.wait_for_task
-   run_mpas_analysis.is_running
    run_mpas_analysis.build_analysis_list
    run_mpas_analysis.determine_analyses_to_generate
    run_mpas_analysis.run_analysis
@@ -34,6 +32,7 @@ Base Class
 
    AnalysisTask
    AnalysisTask.setup_and_check
+   AnalysisTask.run_analysis
    AnalysisTask.run
    AnalysisTask.check_generate
    AnalysisTask.check_analysis_enabled

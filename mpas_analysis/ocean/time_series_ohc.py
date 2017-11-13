@@ -3,7 +3,7 @@ import numpy as np
 import netCDF4
 import os
 
-from ..shared.analysis_task import AnalysisTask
+from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     plot_vertical_section, setup_colormap
@@ -123,7 +123,7 @@ class TimeSeriesOHC(AnalysisTask):
 
         return  # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Performs analysis of ocean heat content (OHC) from time-series output.
 
@@ -132,7 +132,8 @@ class TimeSeriesOHC(AnalysisTask):
         Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
 
-        print "\nPlotting OHC time series and T, S, and OHC vertical trends..."
+        self.logger.info("\nPlotting OHC time series and T, S, and OHC "
+                         "vertical trends...")
 
         simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
@@ -181,13 +182,14 @@ class TimeSeriesOHC(AnalysisTask):
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for OHC calculation')
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  Reading files:\n'
+                         '    {} through\n    {}'.format(
+                                 os.path.basename(self.inputFiles[0]),
+                                 os.path.basename(self.inputFiles[-1])))
 
         # Define/read in general variables
-        print '  Read in depth and compute specific depth indexes...'
+        self.logger.info('  Read in depth and compute specific depth '
+                         'indexes...')
         ncFile = netCDF4.Dataset(restartFile, mode='r')
         # reference depth [m]
         depth = ncFile.variables['refBottomDepth'][:]
@@ -199,7 +201,7 @@ class TimeSeriesOHC(AnalysisTask):
         kbtm = len(depth)-1
 
         # Load data
-        print '  Load ocean data...'
+        self.logger.info('  Load ocean data...')
         avgTemperatureVarName = \
             'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature'
         avgSalinityVarName = \
@@ -268,7 +270,7 @@ class TimeSeriesOHC(AnalysisTask):
         firstYearAvgLayerSalinity = \
             firstYearAvgLayerSalinity.mean('Time')
 
-        print '  Compute temperature and salinity anomalies...'
+        self.logger.info('  Compute temperature and salinity anomalies...')
 
         ds['avgLayerTemperatureAnomaly'] = (ds[avgTemperatureVarName] - firstYearAvgLayerTemperature)
 
@@ -282,7 +284,8 @@ class TimeSeriesOHC(AnalysisTask):
                                calendar=calendar)
 
         if preprocessedReferenceRunName != 'None':
-            print '  Load in OHC from preprocessed reference run...'
+            self.logger.info('  Load in OHC from preprocessed reference '
+                             'run...')
             inFilesPreprocessed = '{}/OHC.{}.year*.nc'.format(
                 preprocessedInputDirectory, preprocessedReferenceRunName)
             dsPreprocessed = open_multifile_dataset(
@@ -297,8 +300,9 @@ class TimeSeriesOHC(AnalysisTask):
                 dsPreprocessedTimeSlice = \
                     dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
             else:
-                print '   Warning: Preprocessed time series ends before the ' \
-                    'timeSeries startYear and will not be plotted.'
+                self.logger.warning('Preprocessed time series ends before the '
+                                    'timeSeries startYear and will not be '
+                                    'plotted.')
                 preprocessedReferenceRunName = 'None'
 
         cacheFileName = '{}/ohcTimeSeries.nc'.format(outputDirectory)
@@ -310,11 +314,11 @@ class TimeSeriesOHC(AnalysisTask):
                                               self._compute_ohc_part,
                                               cacheFileName, calendar,
                                               yearsPerCacheUpdate=10,
-                                              printProgress=True)
+                                              logger=self.logger)
 
         unitsScalefactor = 1e-22
 
-        print '  Compute OHC and make plots...'
+        self.logger.info('  Compute OHC and make plots...')
         for regionIndex in regionIndicesToPlot:
             region = regions[regionIndex]
 

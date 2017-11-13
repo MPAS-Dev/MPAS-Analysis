@@ -9,15 +9,13 @@ Authors
 Xylar Asay-Davis, Phillip J. Wolfram
 """
 
-import os
 import matplotlib as mpl
 import argparse
 import traceback
 import sys
-import subprocess
-import time
 import pkg_resources
 import shutil
+import os
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -25,6 +23,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
 
 from mpas_analysis.shared.html import generate_html
+
+from mpas_analysis.shared import AnalysisTask
 
 
 def update_generate(config, generate):  # {{{
@@ -55,7 +55,7 @@ def update_generate(config, generate):  # {{{
     config.set('output', 'generate', generateString)  # }}}
 
 
-def run_parallel_tasks(config, analyses, configFiles, taskCount):
+def run_parallel_tasks(config, analyses, taskCount):
     # {{{
     """
     Launch new processes for parallel tasks, allowing up to ``taskCount``
@@ -69,9 +69,6 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
     analyses : list of ``AnalysisTask`` objects
         A list of analysis tasks to run
 
-    configFiles : list of str
-        A list of config files, passed on to each parallel task
-
     taskCount : int
         The maximum number of tasks that are allowed to run at once
 
@@ -80,33 +77,38 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
     Xylar Asay-Davis
     """
 
-    taskNames = [analysisTask.taskName for analysisTask in analyses]
+    taskCount = min(taskCount, len(analyses))
 
-    taskCount = min(taskCount, len(taskNames))
+    runningTasks = {}
+    for analysisTask in analyses[0:taskCount]:
+        print 'Running {}'.format(analysisTask.taskName)
+        analysisTask.start()
+        runningTasks[analysisTask.taskName] = analysisTask
 
-    (processes, logs) = launch_tasks(taskNames[0:taskCount], config,
-                                     configFiles)
-    remainingTasks = taskNames[taskCount:]
+    remainingTasks = analyses[taskCount:]
     tasksWithErrors = []
-    while len(processes) > 0:
-        (taskName, process) = wait_for_task(processes)
-        if process.returncode == 0:
-            print "Task {} has finished successfully.".format(taskName)
-        else:
+    while len(runningTasks.keys()) > 0:
+        analysisTask = wait_for_task(runningTasks)
+        taskName = analysisTask.taskName
+        if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
+            print "   Task {} has finished successfully.".format(taskName)
+        elif analysisTask._runStatus.value == AnalysisTask.FAIL:
             print "ERROR in task {}.  See log file {} for details".format(
-                taskName, logs[taskName].name)
+                taskName, analysisTask._logFileName)
             tasksWithErrors.append(taskName)
-        logs[taskName].close()
+        else:
+            print "Unexpected status from in task {}.  This may be a " \
+                  "bug.".format(taskName)
         # remove the process from the process dictionary (no need to bother)
-        processes.pop(taskName)
+        runningTasks.pop(taskName)
 
         if len(remainingTasks) > 0:
-            (process, log) = launch_tasks(remainingTasks[0:1], config,
-                                          configFiles)
-            # merge the new process and log into these dictionaries
-            processes.update(process)
-            logs.update(log)
+            analysisTask = remainingTasks[0]
             remainingTasks = remainingTasks[1:]
+
+            print 'Running {}'.format(analysisTask.taskName)
+            analysisTask.start()
+            runningTasks[analysisTask.taskName] = analysisTask
 
     # raise the last exception so the process exits with an error
     errorCount = len(tasksWithErrors)
@@ -120,119 +122,33 @@ def run_parallel_tasks(config, analyses, configFiles, taskCount):
     # }}}
 
 
-def launch_tasks(taskNames, config, configFiles):  # {{{
+def wait_for_task(runningTasks, timeout=0.1):  # {{{
     """
-    Launch one or more tasks
+    Build a list of analysis modules based on the 'generate' config option.
+    New tasks should be added here, following the approach used for existing
+    analysis tasks.
 
     Parameters
     ----------
-    taskNames : list of str
-        the names of the tasks to launch
-
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
-
-    configFiles : list of str
-        A list of config files, passed along when each task is launched
-
-    Authors
-    -------
-    Xylar Asay-Davis
-    """
-    thisFile = os.path.realpath(__file__)
-
-    commandPrefix = config.getWithDefault('execute', 'commandPrefix',
-                                          default='')
-    if commandPrefix == '':
-        commandPrefix = []
-    else:
-        commandPrefix = commandPrefix.split(' ')
-
-    processes = {}
-    logs = {}
-    for taskName in taskNames:
-        args = commandPrefix + \
-            [thisFile, '--subtask', '--generate', taskName] + configFiles
-
-        logFileName = '{}/{}.log'.format(logsDirectory, taskName)
-
-        # write the command to the log file
-        logFile = open(logFileName, 'w')
-        logFile.write('Command: {}\n'.format(' '.join(args)))
-        # make sure the command gets written before the rest of the log
-        logFile.flush()
-        print 'Running {}'.format(taskName)
-        process = subprocess.Popen(args, stdout=logFile,
-                                   stderr=subprocess.STDOUT)
-        processes[taskName] = process
-        logs[taskName] = logFile
-
-    return (processes, logs)  # }}}
-
-
-def wait_for_task(processes):  # {{{
-    """
-    Wait for the next process to finish and check its status.  Returns both the
-    task name and the process that finished.
-
-    Parameters
-    ----------
-    processes : list of ``subprocess.Popen`` objects
-        Processes to wait for
-
+    runningTasks : dict of ``AnalysisTasks``
+        The tasks that are currently running, with task names as keys
 
     Returns
     -------
-    taskName : str
-        The name of the task that finished
-
-    process : ``subprocess.Popen`` object
-        The process that finished
+    analysisTask : ``AnalysisTasks``
+        A task that finished
 
     Authors
     -------
     Xylar Asay-Davis
     """
-
-    # first, check if any process has already finished
-    for taskName, process in processes.iteritems():  # python 2.7!
-        if(not is_running(process)):
-            return (taskName, process)
-
-    # No process has already finished, so wait for the next one
-    (pid, status) = os.waitpid(-1, 0)
-    for taskName, process in processes.iteritems():
-        if pid == process.pid:
-            process.returncode = status
-            # since we used waitpid, this won't happen automatically
-            return (taskName, process)  # }}}
-
-
-def is_running(process):  # {{{
-    """
-    Returns whether a given process is currently running
-
-    Parameters
-    ----------
-    process : ``subprocess.Popen`` object
-        The process to check
-
-    Returns
-    -------
-    isRunning : bool
-        whether the process is running
-
-    Authors
-    -------
-    Xylar Asay-Davis
-    """
-
-    try:
-        os.kill(process.pid, 0)
-    except OSError:
-        return False
-    else:
-        return True  # }}}
+    # necessary to have a timeout so we can kill the whole thing
+    # with a keyboard interrupt
+    while True:
+        for analysisTask in runningTasks.itervalues():
+            analysisTask.join(timeout=timeout)
+            if not analysisTask.is_alive():
+                return analysisTask  # }}}
 
 
 def build_analysis_list(config):  # {{{
@@ -357,36 +273,16 @@ def run_analysis(config, analyses):  # {{{
     tasksWithErrors = []
     lastStacktrace = None
     for analysisTask in analyses:
-        # write out a copy of the configuration to document the run
-        logsDirectory = build_config_full_path(config, 'output',
-                                               'logsSubdirectory')
-        try:
-            startTime = time.clock()
-            analysisTask.run()
-            runDuration = time.clock() - startTime
-            m, s = divmod(runDuration, 60)
-            h, m = divmod(int(m), 60)
-            print 'Execution time: {}:{:02d}:{:05.2f}'.format(h, m, s)
-        except (Exception, BaseException) as e:
-            if isinstance(e, KeyboardInterrupt):
-                raise e
-            lastStacktrace = traceback.format_exc()
-            print "ERROR: analysis task {} failed during run".format(
-                analysisTask.taskName)
-            print lastStacktrace
+        analysisTask.run(writeLogFile=False)
+        if analysisTask._runStatus.value == AnalysisTask.FAIL:
+            lastStacktrace = analysisTask._stackTrace
             tasksWithErrors.append(analysisTask.taskName)
-
-        configFileName = '{}/configs/config.{}'.format(logsDirectory,
-                                                       analysisTask.taskName)
-        configFile = open(configFileName, 'w')
-        config.write(configFile)
-        configFile.close()
 
     if config.getboolean('plot', 'displayToScreen'):
         import matplotlib.pyplot as plt
         plt.show()
 
-    # raise the last exception so the process exits with an error
+    # See if there were errors; exit(1) if so
     errorCount = len(tasksWithErrors)
     if errorCount == 1:
         if len(analyses) > 1:
@@ -408,9 +304,6 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("--subtask", dest="subtask", action='store_true',
-                        help="If this is a subtask when running parallel "
-                             "tasks")
     parser.add_argument("--setup_only", dest="setup_only", action='store_true',
                         help="If only the setup phase, not the run or HTML "
                         "generation phases, should be executed.")
@@ -479,10 +372,9 @@ if __name__ == "__main__":
         if parallelTaskCount <= 1 or len(analyses) == 1:
             run_analysis(config, analyses)
         else:
-            run_parallel_tasks(config, analyses, configFiles,
-                               parallelTaskCount)
+            run_parallel_tasks(config, analyses, parallelTaskCount)
 
-    if not args.subtask and not args.setup_only:
+    if not args.setup_only:
         generate_html(config, analyses)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

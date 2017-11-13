@@ -137,7 +137,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             self.xmlFileNames.extend(polarXMLFileNames)
         return  # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Performs analysis of time series of sea-ice properties.
 
@@ -146,15 +146,15 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting sea-ice area and volume time series..."
+        self.logger.info("\nPlotting sea-ice area and volume time series...")
 
         config = self.config
         calendar = self.calendar
 
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
+        self.logger.info('\n  Reading files:\n'
+                         '    {} through\n    {}'.format(
+                                 os.path.basename(self.inputFiles[0]),
+                                 os.path.basename(self.inputFiles[-1])))
 
         plotTitles = {'iceArea': 'Sea-ice area',
                       'iceVolume': 'Sea-ice volume',
@@ -200,7 +200,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         make_directories(outputDirectory)
 
-        print '  Load sea-ice data...'
+        self.logger.info('  Load sea-ice data...')
         # Load mesh
         self.dsMesh = xr.open_dataset(self.restartFileName)
         self.dsMesh = subset_variables(self.dsMesh,
@@ -240,8 +240,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 dsPreprocessedTimeSlice = \
                     dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
             else:
-                print '   Warning: Preprocessed time series ends before the ' \
-                    'timeSeries startYear and will not be plotted.'
+                self.logger.warning('Preprocessed time series ends before the '
+                                    'timeSeries startYear and will not be '
+                                    'plotted.')
                 preprocessedReferenceRunName = 'None'
 
         norm = {'iceArea': 1e-6,  # m^2 to km^2
@@ -262,7 +263,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         plotVars = {}
 
         for hemisphere in ['NH', 'SH']:
-            print '   Caching {} data'.format(hemisphere)
+            self.logger.info('   Caching {} data'.format(hemisphere))
             cacheFileName = '{}/seaIceAreaVolumeTimeSeries_{}.nc'.format(
                 outputDirectory, hemisphere)
 
@@ -271,9 +272,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             self.ds = ds
             dsTimeSeries[hemisphere] = cache_time_series(
                 ds.Time.values, self._compute_area_vol_part, cacheFileName,
-                calendar, yearsPerCacheUpdate=10, printProgress=True)
+                calendar, yearsPerCacheUpdate=10, logger=self.logger)
 
-            print '  Make {} plots...'.format(hemisphere)
+            self.logger.info('  Make {} plots...'.format(hemisphere))
 
             for variableName in ['iceArea', 'iceVolume']:
                 key = (hemisphere, variableName)
