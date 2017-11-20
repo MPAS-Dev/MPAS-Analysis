@@ -13,8 +13,8 @@ from ..shared.io.utility import build_config_full_path
 from ..shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time
-
+from ..shared.timekeeping.utility import get_simulation_start_time, \
+    datetime_to_days, string_to_days_since_date
 from ..shared.plot.plotting import plot_xtick_format, plot_size_y_axis
 
 from ..shared import AnalysisTask
@@ -124,9 +124,11 @@ class IndexNino34(AnalysisTask):  # {{{
         if dataSource == 'HADIsst':
             dataPath = "{}/HADIsst_nino34.nc".format(observationsDirectory)
             obsTitle = 'HADSST'
+            refDate = '1870-01-01'
         else:
             dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
             obsTitle = 'ERS SSTv4'
+            refDate = '1800-01-01'
 
         self.logger.info('\n  Reading files:\n'
                          '    {} through\n    {}'.format(
@@ -153,7 +155,11 @@ class IndexNino34(AnalysisTask):  # {{{
                                     endDate=self.endDate)
 
         # Observations have been processed to the nino34Index prior to reading
-        dsObs = xr.open_dataset(dataPath)
+        dsObs = xr.open_dataset(dataPath, decode_cf=False, decode_times=False)
+        # add the days between 0001-01-01 and the refDate so we have a new
+        # reference date of 0001-01-01 (like for the model Time)
+        dsObs["Time"] = dsObs.Time + \
+            string_to_days_since_date(dateString=refDate, calendar=calendar)
         nino34Obs = dsObs.sst
 
         self.logger.info('  Compute NINO3.4 index...')
@@ -173,8 +179,10 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # Compute the observational spectra over the last 30 years for
         # comparison. Only saving the spectra
-        time_start = datetime.datetime(1976, 1, 1)
-        time_end = datetime.datetime(2016, 12, 31)
+        time_start = datetime_to_days(datetime.datetime(1976, 1, 1),
+                                      calendar=calendar)
+        time_end = datetime_to_days(datetime.datetime(2016, 12, 31),
+                                    calendar=calendar)
         nino3430 = nino34Obs.sel(Time=slice(time_start, time_end))
         f30, spectra30yrs, conf9930, conf9530, redNoise30 = \
             self._compute_nino34_spectra(nino3430)
@@ -558,6 +566,9 @@ class IndexNino34(AnalysisTask):  # {{{
             plt.xlabel(xlabel, **axis_font)
         if ylabel is not None:
             plt.ylabel(ylabel, **axis_font)
+
+        plt.tight_layout(rect=[0, 0.03, 1, 0.90])
+
         if fileout is not None:
             fig.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
@@ -567,9 +578,9 @@ class IndexNino34(AnalysisTask):  # {{{
 
     def _nino34_timeseries_plot(self, config, nino34Index, nino34Obs, nino3430,
                                 title, modelTitle, obsTitle, fileout,
-                                linewidths, calendar, xlabel='Time [years]',
-                                ylabel='[$^\circ$C]', titleFontSize=None,
-                                figsize=(12, 28), dpi=None, maxXTicks=20):
+                                linewidths, calendar, xlabel='Time (years)',
+                                ylabel='($^\circ$C)', titleFontSize=None,
+                                figsize=(9, 21), dpi=None, maxXTicks=20):
         # {{{
         """
         Plots the nino34 time series and power spectra in an image file
@@ -617,14 +628,9 @@ class IndexNino34(AnalysisTask):  # {{{
             the number of dots per inch of the figure, taken from section
             ``plot`` option ``dpi`` in the config file by default
 
-        maxXTicks : int, optional
-            the maximum number of tick marks that will be allowed along the x
-            axis. This may need to be adjusted depending on the figure size and
-            aspect ratio.
-
         Authors
         -------
-        Luke Van Roekel
+        Luke Van Roekel, Xylar Asay-Davis
         """
         if dpi is None:
             dpi = config.getint('plot', 'dpi')
@@ -642,27 +648,43 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # Plot Nino34 Observation Time series
         plt.subplot(3, 1, 1)
-        self._plot_nino_timeseries(plt, nino34Obs[2:-3].values,
-                                   nino34Obs.Time[2:-3].values,
-                                   xlabel, ylabel, obsTitle+' (Full Record)',
-                                   calendar, axis_font, linewidths, maxXTicks)
+        index = nino34Obs[2:-3].values
+        time = nino34Obs.Time[2:-3].values
+        self._plot_nino_timeseries(index, time, xlabel, ylabel,
+                                   obsTitle+' (Full Record)', calendar,
+                                   title_font, axis_font, linewidths)
+
+        minDays = time.min()
+        maxDays = time.max()
+
+        plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
         # Plot subset of the observational data set
         plt.subplot(3, 1, 2)
-        self._plot_nino_timeseries(plt, nino3430.values, nino3430.Time.values,
-                                   xlabel, ylabel, obsTitle+' (1976 - 2016)',
-                                   calendar, axis_font, linewidths, maxXTicks)
+        index = nino3430.values
+        time = nino3430.Time.values
+        self._plot_nino_timeseries(index, time, xlabel, ylabel,
+                                   obsTitle+' (1976 - 2016)',  calendar,
+                                   title_font, axis_font, linewidths)
+
+        minDays = time.min()
+        maxDays = time.max()
+
+        plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
         # Plot Nino34 model time series
         plt.subplot(3, 1, 3)
-        self._plot_nino_timeseries(plt, nino34Index[2:-3].values,
-                                   nino34Index.Time[2:-3].values,
-                                   xlabel, ylabel, modelTitle, calendar,
-                                   axis_font, linewidths, maxXTicks)
-        minDays = nino34Index.Time[2:-3].values.min()
-        maxDays = nino34Index.Time[2:-3].values.max()
+        index = nino34Index[2:-3].values
+        time = nino34Index.Time[2:-3].values
+        self._plot_nino_timeseries(index, time, xlabel, ylabel,
+                                   modelTitle, calendar, title_font, axis_font,
+                                   linewidths)
+        minDays = time.min()
+        maxDays = time.max()
 
         plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+
+        plt.tight_layout(rect=[0, 0.03, 1, 0.90])
 
         if fileout is not None:
             plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -671,9 +693,9 @@ class IndexNino34(AnalysisTask):  # {{{
             plt.close()
         # }}}
 
-    def _plot_nino_timeseries(self, plt, ninoIndex, time, xlabel, ylabel,
-                              panelTitle, calendar, axis_font, linewidths,
-                              maxXTicks):  # {{{
+    def _plot_nino_timeseries(self, ninoIndex, time, xlabel, ylabel,
+                              panelTitle, calendar, title_font, axis_font,
+                              linewidths):  # {{{
         '''
         Plot the nino time series on a subplot
 
@@ -685,27 +707,26 @@ class IndexNino34(AnalysisTask):  # {{{
         time : numpy.array
           time values for the nino index
 
-        calendar : specified calendar for the plot
-
-        maxXTicks : int, optional
-            the maximum number of tick marks that will be allowed along the
-            x axis. This may need to be adjusted depending on the figure size
-            and aspect ratio.
-
-        panelTitle : string
-            string to label the subplot with
-
         xlabel : string
             string for x-axis label
 
         ylabel : string
             string for y-axis label
 
+        panelTitle : string
+            string to label the subplot with
+
+        calendar : str
+            specified calendar for the plot
+
+        lineWidths : list of str
+            control line width
+
         Authors
         -------
-        Luke Van Roekel
+        Luke Van Roekel, Xylar Asay-Davis
         '''
-        plt.title(panelTitle, y=1.06, **axis_font)
+        plt.title(panelTitle, y=1.06, **title_font)
         y1 = ninoIndex
         nt = np.size(ninoIndex)
 
