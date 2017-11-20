@@ -17,8 +17,13 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # directory containing model results
 baseDirectory = /lustre/scratch3/turquoise/lvanroekel/ACME/cases/MatchBoth_orig/run
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30v3
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+mpasMeshName = oEC60to30v3
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/mapping/
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -31,8 +36,8 @@ baseDirectory = /dir/to/analysis/output
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
 #   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -67,13 +72,6 @@ generate = ['all']
 startYear = 9
 # the last year over which to average climatalogies
 endYear = 10
-
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-mpasMappingFile = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/mapping/map_oEC60to30wLI_to_0.5x0.5degree_blin.170328.nc
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -123,7 +121,7 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations/SeaIce
 baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
+## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 
 # Mask file for ocean basin regional computation

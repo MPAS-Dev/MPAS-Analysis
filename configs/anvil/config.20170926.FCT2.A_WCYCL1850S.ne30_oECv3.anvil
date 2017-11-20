@@ -17,8 +17,13 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # directory containing model results
 baseDirectory = /lcrc/group/acme/jwolfe/acme_scratch/20170926.FCT2.A_WCYCL1850S.ne30_oECv3.anvil/run
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingDirectory = /lcrc/group/acme/mapping
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -35,8 +40,8 @@ htmlSubdirectory = html
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
 #   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -72,13 +77,6 @@ startYear = 11
 # the last year over which to average climatalogies
 endYear = 20
 
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-mpasMappingFile = /lcrc/group/acme/lvanroe/APrime_Files/mapping/maps/map_oEC60to30v3_TO_0.5x0.5degree_blin.nc
-
 [timeSeries]
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs
@@ -103,7 +101,7 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /lcrc/group/acme/lvanroe/APrime_Files/observations/Ocean
+baseDirectory = /lcrc/group/acme/mpas_analysis/observations/Ocean
 sstSubdirectory = SST
 sssSubdirectory = SSS
 mldSubdirectory = MLD
@@ -116,21 +114,21 @@ mhtSubdirectory = MHT
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /lcrc/group/acme/lvanroe/APrime_Files/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /lcrc/group/acme/mpas_analysis/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /lcrc/group/acme/lvanroe/APrime_Files/observations/SeaIce
+baseDirectory = /lcrc/group/acme/mpas_analysis/observations/SeaIce
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /lcrc/group/acme/lvanroe/APrime_Files/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
+baseDirectory = /lcrc/group/acme/mpas_analysis/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
@@ -144,4 +142,4 @@ polarPlot = False
 maxChunkSize = 1000
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /lcrc/group/acme/lvanroe/APrime_Files/mpas_analysis/region_masks/oEC60to30v3_Atlantic_region_and_southern_transect.nc
+regionMaskFiles = /lcrc/group/acme/mpas_analysis/region_masks/oEC60to30v3_Atlantic_region_and_southern_transect.nc

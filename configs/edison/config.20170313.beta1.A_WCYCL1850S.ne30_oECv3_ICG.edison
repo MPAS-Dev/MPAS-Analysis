@@ -17,8 +17,13 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # directory containing model results
 baseDirectory = /scratch2/scratchdirs/golaz/ACME_simulations/20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison/run
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30v3
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+mpasMeshName = oEC60to30v3
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -36,8 +41,8 @@ htmlSubdirectory = html
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
 #   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -72,13 +77,6 @@ generate = ['all']
 startYear = 11
 # the last year over which to average climatalogies
 endYear = 20
-
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-mpasMappingFile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30v3_TO_0.5x0.5degree_blin.nc
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -145,4 +143,4 @@ polarPlot = False
 maxChunkSize = 1000
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/EC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc

@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20170807.beta1.G_oQU240.edison
+mainRunName = 20170915.beta2.A_WCYCL1850S.ne30_oECv3_ICG.edison
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
@@ -15,15 +15,34 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /scratch1/scratchdirs/xylar/acme_scratch/edison/G-QU240-master-intel/run
+baseDirectory = /lustre/atlas1/cli115/proj-shared/ACME_simulations/20170915.beta2.A_WCYCL1850S.ne30_oECv3_ICG.edison
 
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oQU240
+# Note: an absolute path can be supplied for any of these subdirectories.
+# A relative path is assumed to be relative to baseDirectory.
+# By default, results are assumed to be directly in baseDirectory,
+# i.e. <baseDirecory>/./
+
+# subdirectory containing restart files
+runSubdirectory = run
+# subdirectory for ocean history files
+oceanHistorySubdirectory = archive/ocn/hist
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = archive/ice/hist
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = run/mpas-o_in
+oceanStreamsFileName = run/streams.ocean
+seaIceNamelistFileName = run/mpas-cice_in
+seaIceStreamsFileName = run/streams.cice
+
+# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+mpasMeshName = EC60to30v3
 
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-# mappingDirectory = /dir/for/mapping/files
+mappingDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping/
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -31,11 +50,6 @@ mpasMeshName = oQU240
 
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
-
-# provide an absolute path to put HTML in an alternative location (e.g. a web
-# portal)
-# htmlSubdirectory = /global/project/projectdirs/acme/www/USERNAME/RUNNAME
-htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
@@ -74,9 +88,9 @@ generate = ['all']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 2
+startYear = 6
 # the last year over which to average climatalogies
-endYear = 5
+endYear = 10
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -86,7 +100,7 @@ endYear = 5
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 9999
+endYear = 10
 
 [index]
 ## options related to producing nino index.
@@ -102,45 +116,39 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /global/project/projectdirs/acme/observations/Ocean/
+baseDirectory = /lustre/atlas/proj-shared/cli115/observations
 sstSubdirectory = SST
 sssSubdirectory = SSS
 mldSubdirectory = MLD
-ninoSubdirectory = Nino
-mhtSubdirectory = MHT
-
 
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /global/project/projectdirs/acme/observations/SeaIce
+baseDirectory = /lustre/atlas/proj-shared/cli115/observations/SeaIce
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[timeSeriesSeaIceAreaVol]
-## options related to plotting time series of sea ice area and volume
-
-# plot on polar plot
-polarPlot = False
+baseDirectory =  /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
-maxChunkSize = 1000
+
+# Region names for basin MOC calculation.
+# Supported options are Atlantic and IndoPacific
+regionNames = ['Atlantic']
 
 # Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mpas_analysis/region_masks/oQU240v3_SingleRegionAtlanticWTransportTransects_masks.nc
+regionMaskFiles = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
