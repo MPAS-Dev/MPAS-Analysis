@@ -94,7 +94,7 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         self.remapClimatologySubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask=self.mpasClimatologyTask,
             parentTask=self,
-            climatologyName=self.fieldName,
+            climatologyName='{}{}'.format(self.fieldName, self.hemisphere),
             variableList=[self.mpasFieldName],
             seasons=seasons,
             iselValues=self.iselValues)
