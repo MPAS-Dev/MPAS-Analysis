@@ -190,6 +190,12 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #     self._compute_moc_analysismember(config, streams, calendar,
             #                                      sectionName, dictClimo,
             #                                      dictTseries)
+
+            # delete the following 3 lines after analysis of the MOC AM is
+            # supported
+            self.logger.info('...but not yet supported. Using offline MOC')
+            self._compute_moc_climo_postprocess()
+            dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
         else:
             self._compute_moc_climo_postprocess()
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
