@@ -83,6 +83,33 @@ for more details.
      `--generate` flag on the command line.  See the comments in
      `mpas_analysis/config.default` for more details on this option.
 
+## List of MPAS output files that are needed by MPAS-Analysis:
+
+  * mpas-o files:
+      * `mpaso.hist.am.timeSeriesStatsMonthly.*.nc` (Note: since OHC
+        anomalies are computed wrt the first year of the simulation,
+        if OHC diagnostics is activated, the analysis will need the
+        first full year of `mpaso.hist.am.timeSeriesStatsMonthly.*.nc`
+        files, no matter what `[timeSeries]/startYear` and
+        `[timeSeries]/endYear`  are. This is especially important to know if
+        short term archiving is used in the run to analyze: in that case, set
+        `[input]/runSubdirectory`, `[input]/oceanHistorySubdirectory` and
+        `[input]/seaIceHistorySubdirectory` to the appropriate run and archive
+        directories and choose `[timeSeries]/startYear` and
+        `[timeSeries]/endYear` to include only data that have been short-term
+        archived).
+      * `mpaso.hist.am.meridionalHeatTransport.0001-03-01.nc` (or any
+        `hist.am.meridionalHeatTransport` file)
+      * `mpaso.rst.0002-01-01_00000.nc` (or any other mpas-o restart file)
+      * `streams.ocean`
+      * `mpas-o_in`
+  * mpas-cice files:
+      * `mpascice.hist.am.timeSeriesStatsMonthly.*.nc`
+      * `mpascice.rst.0002-01-01_00000.nc` (or any other mpas-cice restart
+        file)
+      * `streams.cice`
+      * `mpas-cice_in`
+
 ## Purge Old Analysis
 
 To purge old analysis (delete the whole output directory) before running run
