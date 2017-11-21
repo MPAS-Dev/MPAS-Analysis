@@ -3,7 +3,6 @@ import xarray as xr
 import numpy as np
 import netCDF4
 import os
-from functools import partial
 
 from ..shared.constants.constants import m3ps_to_Sv
 from ..shared.plot.plotting import plot_vertical_section,\
@@ -13,12 +12,10 @@ from ..shared.io.utility import build_config_full_path, make_directories
 
 from ..shared.io import open_mpas_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    days_to_datetime
+from ..shared.timekeeping.utility import days_to_datetime
 
 from ..shared import AnalysisTask
 
-from ..shared.time_series import MpasTimeSeriesTask
 from ..shared.html import write_image_xml
 
 
@@ -69,11 +66,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
-
-        self.mpasTimeSeriesTask = MpasTimeSeriesTask(
-                config=config,  componentName=self.componentName,
-                taskName=self.taskName, subtaskName='mpasTimeSeries')
-        self.run_after(self.mpasTimeSeriesTask)
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -115,12 +107,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        variableList = ['timeMonthly_avg_normalVelocity',
-                        'timeMonthly_avg_vertVelocityTop']
+        self.variableList = ['timeMonthly_avg_normalVelocity',
+                             'timeMonthly_avg_vertVelocityTop']
 
-        self.mpasClimatologyTask.add_variables(variableList=variableList,
+        self.mpasClimatologyTask.add_variables(variableList=self.variableList,
                                                seasons=['ANN'])
-        self.mpasTimeSeriesTask.add_variables(variableList=variableList)
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -460,19 +451,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         config = self.config
 
-        variableList = ['timeMonthly_avg_normalVelocity',
-                        'timeMonthly_avg_vertVelocityTop']
-
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = self._load_mesh()
 
-        fileName = self.mpasTimeSeriesTask.outputFile
-        ds = open_mpas_dataset(
-            fileName=fileName,
-            calendar=self.calendar,
-            variableList=variableList,
-            startDate=self.startDateTseries,
-            endDate=self.endDateTseries)
         latAtlantic = self.lat['Atlantic']
         dLat = latAtlantic - 26.5
         indlat26 = np.where(dLat == np.amin(np.abs(dLat)))
@@ -497,25 +478,39 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             self.logger.info('   Read in previously computed MOC time series')
 
         dsMOCTimeSeries = self._compute_moc_time_series(
-                ds, areaCell, latCell, indlat26, maxEdgesInTransect,
+                areaCell, latCell, indlat26, maxEdgesInTransect,
                 transectEdgeGlobalIDs, transectEdgeMaskSigns,  nVertLevels,
                 dvEdge, refLayerThickness, latAtlantic, regionCellMask)
 
         return dsMOCTimeSeries  # }}}
 
-    def _compute_moc_time_series(self, ds, areaCell, latCell, indlat26,
+    def _compute_moc_time_series(self, areaCell, latCell, indlat26,
                                  maxEdgesInTransect,
                                  transectEdgeGlobalIDs,
                                  transectEdgeMaskSigns, nVertLevels,
                                  dvEdge, refLayerThickness, latAtlantic,
                                  regionCellMask):
-        # computes a subset of the MOC time series
 
-        times = ds.Time.values
-        mocRegion = np.zeros(times.shape)
+        streamName = 'timeSeriesStatsMonthlyOutput'
+        inputFilesTseries = \
+            self.historyStreams.readpath(streamName,
+                                         startDate=self.startDateTseries,
+                                         endDate=self.endDateTseries,
+                                         calendar=self.calendar)
 
-        for timeIndex, time in enumerate(times):
-            dsLocal = ds.isel(Time=timeIndex)
+        mocRegion = np.zeros(len(inputFilesTseries))
+        times = np.zeros(len(inputFilesTseries))
+
+        for timeIndex, fileName in enumerate(inputFilesTseries):
+            dsLocal = open_mpas_dataset(
+                fileName=fileName,
+                calendar=self.calendar,
+                variableList=self.variableList,
+                startDate=self.startDateTseries,
+                endDate=self.endDateTseries)
+            dsLocal = dsLocal.isel(Time=0)
+            time = dsLocal.Time.values
+            times[timeIndex] = time
             date = days_to_datetime(time, calendar=self.calendar)
 
             self.logger.info('     date: {:04d}-{:02d}'.format(date.year,
