@@ -6,11 +6,13 @@ dependencies:
   - pytest
   - numpy
   - scipy
-  - lxml
-  - xarray
   - matplotlib
-  - dask
   - netcdf4
+  - xarray
+  - dask
+  - bottleneck
+  - basemap
+  - lxml
   - hdf5
   - hdf4
   - nco
