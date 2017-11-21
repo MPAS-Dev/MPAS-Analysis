@@ -2,11 +2,10 @@ from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.generalized_reader import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    date_to_days, days_to_datetime
+from ..shared.timekeeping.utility import date_to_days, days_to_datetime
 
 from ..shared.io.utility import build_config_full_path, make_directories, \
     check_path_exists
@@ -124,7 +123,6 @@ class TimeSeriesSST(AnalysisTask):
 
         self.logger.info('  Load SST data...')
 
-        simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
         calendar = self.calendar
 
@@ -150,15 +148,11 @@ class TimeSeriesSST(AnalysisTask):
         regionNames = config.getExpression('regions', 'regions')
         regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
-        dsSST = open_multifile_dataset(fileNames=self.inputFile,
-                                       calendar=calendar,
-                                       config=config,
-                                       simulationStartTime=simulationStartTime,
-                                       timeVariableName=['xtime_startMonthly',
-                                                         'xtime_endMonthly'],
-                                       variableList=self.variableList,
-                                       startDate=self.startDate,
-                                       endDate=self.endDate)
+        dsSST = open_mpas_dataset(fileName=self.inputFile,
+                                  calendar=calendar,
+                                  variableList=self.variableList,
+                                  startDate=self.startDate,
+                                  endDate=self.endDate)
 
         yearStart = days_to_datetime(dsSST.Time.min(), calendar=calendar).year
         yearEnd = days_to_datetime(dsSST.Time.max(), calendar=calendar).year
@@ -176,7 +170,6 @@ class TimeSeriesSST(AnalysisTask):
                 fileNames=inFilesPreprocessed,
                 calendar=calendar,
                 config=config,
-                simulationStartTime=simulationStartTime,
                 timeVariableName='xtime')
             yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year
@@ -209,7 +202,7 @@ class TimeSeriesSST(AnalysisTask):
                 SST_v0 = dsPreprocessedTimeSlice.SST
 
                 title = '{}\n {} (red)'.format(title,
-                                              preprocessedReferenceRunName)
+                                               preprocessedReferenceRunName)
                 timeseries_analysis_plot(config, [SST, SST_v0],
                                          movingAveragePoints,
                                          title, xLabel, yLabel, figureName,

@@ -12,8 +12,8 @@ from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
     datetime_to_days
 from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.generalized_reader import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 from ..shared.html import write_image_xml
@@ -204,12 +204,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                                      'areaCell'])
 
         # Load data
-        ds = open_multifile_dataset(
-            fileNames=self.inputFile,
+        ds = open_mpas_dataset(
+            fileName=self.inputFile,
             calendar=calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
             variableList=self.variableList,
             startDate=self.startDate,
             endDate=self.endDate)

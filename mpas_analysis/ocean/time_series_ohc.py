@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import netCDF4
-import os
 
 from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     plot_vertical_section, setup_colormap
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.generalized_reader import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     date_to_days, days_to_datetime, string_to_datetime
@@ -211,15 +210,11 @@ class TimeSeriesOHC(AnalysisTask):
 
         # Load data
         self.logger.info('  Load ocean data...')
-        ds = open_multifile_dataset(fileNames=self.inputFile,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName=['xtime_startMonthly',
-                                                      'xtime_endMonthly'],
-                                    variableList=self.variables.values(),
-                                    startDate=self.startDate,
-                                    endDate=self.endDate)
+        ds = open_mpas_dataset(fileName=self.inputFile,
+                               calendar=calendar,
+                               variableList=self.variables.values(),
+                               startDate=self.startDate,
+                               endDate=self.endDate)
         # rename the variables to shorter names for convenience
         renameDict = dict((v, k) for k, v in variables.iteritems())
         ds.rename(renameDict, inplace=True)
@@ -233,17 +228,9 @@ class TimeSeriesOHC(AnalysisTask):
             startDateFirstYear = simulationStartTime
             firstYear = int(startDateFirstYear[0:4])
             endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
-            filesFirstYear = \
-                self.historyStreams.readpath(self.streamName,
-                                             startDate=startDateFirstYear,
-                                             endDate=endDateFirstYear,
-                                             calendar=calendar)
-            dsFirstYear = open_multifile_dataset(
-                fileNames=filesFirstYear,
+            dsFirstYear = open_mpas_dataset(
+                fileName=self.inputFile,
                 calendar=calendar,
-                config=config,
-                simulationStartTime=simulationStartTime,
-                timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
                 variableList=[variables['avgLayerTemperature'],
                               variables['avgLayerSalinity']],
                 startDate=startDateFirstYear,
@@ -298,7 +285,6 @@ class TimeSeriesOHC(AnalysisTask):
                 fileNames=inFilesPreprocessed,
                 calendar=calendar,
                 config=config,
-                simulationStartTime=simulationStartTime,
                 timeVariableName='xtime')
             yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year

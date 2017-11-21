@@ -11,8 +11,7 @@ from ..shared.plot.plotting import plot_vertical_section,\
 
 from ..shared.io.utility import build_config_full_path, make_directories
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
@@ -461,29 +460,19 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         config = self.config
 
-        self.simulationStartTime = get_simulation_start_time(self.runStreams)
         variableList = ['timeMonthly_avg_normalVelocity',
                         'timeMonthly_avg_vertVelocityTop']
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = self._load_mesh()
 
-        if config.has_option(self.sectionName, 'maxChunkSize'):
-            chunking = config.getExpression(self.sectionName, 'maxChunkSize')
-        else:
-            chunking = None
-
         fileName = self.mpasTimeSeriesTask.outputFile
-        ds = open_multifile_dataset(
-            fileNames=fileName,
+        ds = open_mpas_dataset(
+            fileName=fileName,
             calendar=self.calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
             variableList=variableList,
             startDate=self.startDateTseries,
-            endDate=self.endDateTseries,
-            chunking=chunking)
+            endDate=self.endDateTseries)
         latAtlantic = self.lat['Atlantic']
         dLat = latAtlantic - 26.5
         indlat26 = np.where(dLat == np.amin(np.abs(dLat)))

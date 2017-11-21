@@ -4,17 +4,17 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 from scipy import signal, stats
-import os
 import matplotlib.pyplot as plt
 
 from ..shared.climatology import climatology
 from ..shared.constants import constants
 from ..shared.io.utility import build_config_full_path
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     datetime_to_days, string_to_days_since_date
+
+from ..shared.io import open_mpas_dataset
+
 from ..shared.plot.plotting import plot_xtick_format, plot_size_y_axis
 
 from ..shared import AnalysisTask
@@ -118,7 +118,6 @@ class IndexNino34(AnalysisTask):  # {{{
         self.logger.info('  Load SST data...')
         fieldName = 'nino'
 
-        simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
         calendar = self.calendar
 
@@ -145,15 +144,11 @@ class IndexNino34(AnalysisTask):  # {{{
         regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
 
         # Load data:
-        ds = open_multifile_dataset(fileNames=self.inputFile,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName=['xtime_startMonthly',
-                                                      'xtime_endMonthly'],
-                                    variableList=self.variableList,
-                                    startDate=self.startDate,
-                                    endDate=self.endDate)
+        ds = open_mpas_dataset(fileName=self.inputFile,
+                               calendar=calendar,
+                               variableList=self.variableList,
+                               startDate=self.startDate,
+                               endDate=self.endDate)
 
         # Observations have been processed to the nino34Index prior to reading
         dsObs = xr.open_dataset(dataPath, decode_cf=False, decode_times=False)
