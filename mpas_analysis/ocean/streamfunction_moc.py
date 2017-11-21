@@ -17,11 +17,6 @@ from ..shared.generalized_reader.generalized_reader \
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     days_to_datetime
 
-from ..shared.climatology.climatology \
-    import update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo, \
-    get_ncclimo_season_file_name
-
 from ..shared import AnalysisTask
 
 from ..shared.time_series import cache_time_series
@@ -38,12 +33,18 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         * MOC time series (max value at 24.5N), post-processed
         * MOC time series (max value at 24.5N), from MOC analysis member
 
+    Attributes
+    ----------
+
+    mpasClimatologyTask : ``MpasClimatologyTask``
+        The task that produced the climatology to be remapped and plotted
+
     Authors
     -------
     Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
     '''
 
-    def __init__(self, config):  # {{{
+    def __init__(self, config, mpasClimatologyTask):  # {{{
         '''
         Construct the analysis task.
 
@@ -51,6 +52,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
 
         Authors
         -------
@@ -64,6 +68,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['streamfunction', 'moc', 'climatology', 'timeSeries'])
 
+        self.mpasClimatologyTask = mpasClimatologyTask
+        self.run_after(mpasClimatologyTask)
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -87,11 +93,12 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         #     self.calendar
         super(StreamfunctionMOC, self).setup_and_check()
 
-        config = self.config
+        self.startYearClimo = self.mpasClimatologyTask.startYear
+        self.startDateClimo = self.mpasClimatologyTask.startDate
+        self.endYearClimo = self.mpasClimatologyTask.endYear
+        self.endDateClimo = self.mpasClimatologyTask.endDate
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
+        config = self.config
 
         self.mocAnalysisMemberEnabled = self.check_analysis_enabled(
             analysisOptionName='config_am_mocstreamfunction_enable',
@@ -101,28 +108,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # reading only those that are between the start and end dates
         #   First a list necessary for the streamfunctionMOC climatology
         streamName = 'timeSeriesStatsMonthlyOutput'
-        self.startDateClimo = config.get('climatology', 'startDate')
-        self.endDateClimo = config.get('climatology', 'endDate')
-        self.inputFilesClimo = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDateClimo,
-                                         endDate=self.endDateClimo,
-                                         calendar=self.calendar)
-
-        if len(self.inputFilesClimo) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDateClimo,
-                                       self.endDateClimo))
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
-        update_climatology_bounds_from_file_names(self.inputFilesClimo,
-                                                  self.config)
-
-        self.startDateClimo = config.get('climatology', 'startDate')
-        self.endDateClimo = config.get('climatology', 'endDate')
-        self.startYearClimo = config.getint('climatology', 'startYear')
-        self.endYearClimo = config.getint('climatology', 'endYear')
 
         #   Then a list necessary for the streamfunctionMOC Atlantic timeseries
         self.startDateTseries = config.get('timeSeries', 'startDate')
@@ -141,6 +128,12 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.endYearTseries = config.getint('timeSeries', 'endYear')
 
         self.sectionName = 'streamfunctionMOC'
+
+        variableList = ['timeMonthly_avg_normalVelocity',
+                        'timeMonthly_avg_vertVelocityTop']
+
+        self.mpasClimatologyTask.add_variables(variableList=variableList,
+                                               seasons=['ANN'])
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -181,11 +174,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.logger.info("\nPlotting streamfunction of Meridional Overturning "
                          "Circulation (MOC)...")
 
-        self.logger.info('\n  List of files for climatologies:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFilesClimo[0]),
-                                 os.path.basename(self.inputFilesClimo[-1])))
-
         self.logger.info('\n  List of files for time series:\n'
                          '    {} through\n    {}'.format(
                                  os.path.basename(self.inputFilesTseries[0]),
@@ -203,7 +191,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #                                      sectionName, dictClimo,
             #                                      dictTseries)
         else:
-            self._compute_velocity_climatologies()
             self._compute_moc_climo_postprocess()
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
 
@@ -212,9 +199,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint(self.sectionName,
                                             'movingAveragePoints')
-        movingAveragePointsClimatological = \
-                        config.getint(self.sectionName,
-                                      'movingAveragePointsClimatological')
+        movingAveragePointsClimatological = config.getint(
+                self.sectionName, 'movingAveragePointsClimatological')
         colorbarLabel = '[Sv]'
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
@@ -311,40 +297,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness
         # }}}
 
-    def _compute_velocity_climatologies(self):  # {{{
-        '''compute yearly velocity climatologies and cache them'''
-
-        variableList = ['timeMonthly_avg_normalVelocity',
-                        'timeMonthly_avg_vertVelocityTop']
-
-        config = self.config
-
-        outputRoot = build_config_full_path(config, 'output',
-                                            'mpasClimatologySubdirectory')
-
-        outputDirectory = '{}/meanVelocity'.format(outputRoot)
-
-        self.velClimoFile = get_ncclimo_season_file_name(outputDirectory,
-                                                         'mpaso', 'ANN',
-                                                         self.startYearClimo,
-                                                         self.endYearClimo)
-
-        if not os.path.exists(self.velClimoFile):
-            make_directories(outputDirectory)
-
-            compute_climatologies_with_ncclimo(
-                    config=config,
-                    inDirectory=self.historyDirectory,
-                    outDirectory=outputDirectory,
-                    startYear=self.startYearClimo,
-                    endYear=self.endYearClimo,
-                    variableList=variableList,
-                    modelName='mpaso',
-                    seasons=['ANN'],
-                    decemberMode='sdd',
-                    logger=self.logger)
-        # }}}
-
     def _compute_moc_climo_postprocess(self):  # {{{
 
         '''compute mean MOC streamfunction as a post-process'''
@@ -408,7 +360,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         if not os.path.exists(outputFileClimo):
             self.logger.info('   Load data...')
 
-            annualClimatology = xr.open_dataset(self.velClimoFile)
+            climatologyFileName = self.mpasClimatologyTask.get_file_name(
+                season='ANN')
+            annualClimatology = xr.open_dataset(climatologyFileName)
             # rename some variables for convenience
             annualClimatology = annualClimatology.rename(
                     {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',

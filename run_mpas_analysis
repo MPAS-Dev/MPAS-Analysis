@@ -16,6 +16,7 @@ import sys
 import pkg_resources
 import shutil
 import os
+from collections import OrderedDict
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -25,6 +26,196 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.html import generate_html
 
 from mpas_analysis.shared import AnalysisTask
+
+
+def build_analysis_list(config):  # {{{
+    """
+    Build a list of analysis tasks. New tasks should be added here, following
+    the approach used for existing analysis tasks.
+
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    Returns
+    -------
+    analyses : list of ``AnalysisTask`` objects
+        A list of all analysis tasks
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    # choose the right rendering backend, depending on whether we're displaying
+    # to the screen
+    if not config.getboolean('plot', 'displayToScreen'):
+        mpl.use('Agg')
+
+    # analysis can only be imported after the right MPL renderer is selected
+    from mpas_analysis import ocean
+    from mpas_analysis import sea_ice
+    from mpas_analysis.shared.climatology import MpasClimatologyTask
+
+    # analyses will be a list of analysis classes
+    analyses = []
+
+    # Ocean Analyses
+    oceanClimatolgyTask = MpasClimatologyTask(config=config,
+                                              componentName='ocean')
+    analyses.append(oceanClimatolgyTask)
+    analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask))
+    analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask))
+    analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask))
+    analyses.append(ocean.TimeSeriesOHC(config))
+    analyses.append(ocean.TimeSeriesSST(config))
+    analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask))
+    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
+    analyses.append(ocean.IndexNino34(config))
+
+    # Sea Ice Analyses
+    seaIceClimatolgyTask = MpasClimatologyTask(config=config,
+                                               componentName='seaIce')
+    analyses.append(seaIceClimatolgyTask)
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
+                                                     seaIceClimatolgyTask,
+                                                     hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
+                                                      seaIceClimatolgyTask,
+                                                      hemisphere='NH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
+                                                     seaIceClimatolgyTask,
+                                                     hemisphere='SH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
+                                                      seaIceClimatolgyTask,
+                                                      hemisphere='SH'))
+    analyses.append(sea_ice.TimeSeriesSeaIce(config))
+
+    return analyses  # }}}
+
+
+def determine_analyses_to_generate(analyses):  # {{{
+    """
+    Build a list of analysis tasks to run based on the 'generate' config
+    option (or command-line flag) and prerequisites and subtasks of each
+    requested task.  Each task's ``setup_and_check`` method is called in the
+    process.
+
+    Parameters
+    ----------
+    analyses : list of ``AnalysisTask`` objects
+        A list of all analysis tasks
+
+    Returns
+    -------
+    analysesToGenerate : list of ``AnalysisTask`` objects
+        A list of analysis tasks to run
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    analysesToGenerate = OrderedDict()
+    # check which analysis we actually want to generate and only keep those
+    for analysisTask in analyses:
+        # update the dictionary with this task and perhaps its subtasks
+        add_task_and_subtasks(analysisTask, analysesToGenerate)
+
+    return analysesToGenerate  # }}}
+
+
+def add_task_and_subtasks(analysisTask, analysesToGenerate,
+                          callCheckGenerate=True):
+    # {{{
+    """
+    If a task has been requested through the generate config option or
+    if it is a prerequisite of a requested task, add it to the dictionary of
+    tasks to generate.
+
+    Parameters
+    ----------
+    analysisTask : ``AnalysisTask``
+        A task to be added
+
+    analysesToGenerate : ``OrderedDict`` of ``AnalysisTask``
+        The list of analysis tasks to be generated, which this call may
+        update to include this task and its subtasks
+
+    callCheckGenerate : bool
+        Whether the ``check_generate`` method should be call for this task to
+        see if it has been requested.  We skip this for subtasks and
+        prerequisites, since they are needed by another task regardless of
+        whether the user specifically requested them.
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    key = (analysisTask.taskName, analysisTask.subtaskName)
+    if key in analysesToGenerate.keys():
+        # The task was already added
+        assert(analysisTask._setupStatus == 'success')
+        return
+
+    # for each anlaysis task, check if we want to generate this task
+    # and if the analysis task has a valid configuration
+    taskTitle = analysisTask.printTaskName
+    if callCheckGenerate and not analysisTask.check_generate():
+        # we don't need to add this task -- it wasn't requested
+        return
+
+    # first, we should try to add the prerequisites of this task and its
+    # subtasks (if they aren't also subtasks for this task)
+    prereqs = analysisTask.runAfterTasks
+    for subtask in analysisTask.subtasks:
+        for prereq in subtask.runAfterTasks:
+            if prereq not in analysisTask.subtasks:
+                prereqs.extend(subtask.runAfterTasks)
+
+    for prereq in prereqs:
+        add_task_and_subtasks(prereq, analysesToGenerate,
+                              callCheckGenerate=False)
+        if prereq._setupStatus != 'success':
+            print prereq._setupStatus
+            # a prereq failed setup_and_check
+            print "ERROR: prerequisite task {} of analysis task {}" \
+                  " failed during check,\n" \
+                  "       so this task will not be run".format(
+                          prereq.printTaskName, taskTitle)
+            analysisTask._setupStatus = 'fail'
+            return
+
+    # make sure all prereqs have been set up successfully before trying to
+    # set up this task -- this task's setup may depend on setup in the prereqs
+    try:
+        analysisTask.setup_and_check()
+    except (Exception, BaseException):
+        traceback.print_exc(file=sys.stdout)
+        print "ERROR: analysis task {} failed during check and " \
+            "will not be run".format(taskTitle)
+        analysisTask._setupStatus = 'fail'
+        return
+
+    # next, we should try to add the subtasks.  This is done after the current
+    # analysis task has been set up in case subtasks depend on information
+    # from the parent task
+    for subtask in analysisTask.subtasks:
+        add_task_and_subtasks(subtask, analysesToGenerate,
+                              callCheckGenerate=False)
+        if subtask._setupStatus != 'success':
+            # a subtask failed setup_and_check
+            print "ERROR: a subtask of analysis task {}" \
+                  " failed during check,\n" \
+                  "       so this task will not be run".format(taskTitle)
+            analysisTask._setupStatus = 'fail'
+            return
+
+    analysesToGenerate[key] = analysisTask
+    analysisTask._setupStatus = 'success'
+    # }}}
 
 
 def update_generate(config, generate):  # {{{
@@ -55,60 +246,98 @@ def update_generate(config, generate):  # {{{
     config.set('output', 'generate', generateString)  # }}}
 
 
-def run_parallel_tasks(config, analyses, taskCount):
-    # {{{
+def run_analysis(config, analyses):  # {{{
     """
-    Launch new processes for parallel tasks, allowing up to ``taskCount``
-    tasks to run at once.
+    Run all the tasks, either in serial or in parallel
 
     Parameters
     ----------
     config : ``MpasAnalysisConfigParser`` object
         contains config options
 
-    analyses : list of ``AnalysisTask`` objects
-        A list of analysis tasks to run
-
-    taskCount : int
-        The maximum number of tasks that are allowed to run at once
+    analyses : OrderedDict of ``AnalysisTask`` objects
+        A dictionary of analysis tasks to run with (task, subtask) names as
+        keys
 
     Authors
     -------
     Xylar Asay-Davis
     """
 
-    taskCount = min(taskCount, len(analyses))
+    taskCount = config.getWithDefault('execute', 'parallelTaskCount',
+                                      default=1)
 
-    runningTasks = {}
-    for analysisTask in analyses[0:taskCount]:
-        print 'Running {}'.format(analysisTask.taskName)
-        analysisTask.start()
-        runningTasks[analysisTask.taskName] = analysisTask
+    isParallel = taskCount > 1 and len(analyses) > 1
 
-    remainingTasks = analyses[taskCount:]
-    tasksWithErrors = []
-    while len(runningTasks.keys()) > 0:
-        analysisTask = wait_for_task(runningTasks)
-        taskName = analysisTask.taskName
-        if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
-            print "   Task {} has finished successfully.".format(taskName)
-        elif analysisTask._runStatus.value == AnalysisTask.FAIL:
-            print "ERROR in task {}.  See log file {} for details".format(
-                taskName, analysisTask._logFileName)
-            tasksWithErrors.append(taskName)
+    for analysisTask in analyses.itervalues():
+        if not analysisTask.runAfterTasks and not analysisTask.subtasks:
+            analysisTask._runStatus.value = AnalysisTask.READY
         else:
-            print "Unexpected status from in task {}.  This may be a " \
-                  "bug.".format(taskName)
-        # remove the process from the process dictionary (no need to bother)
-        runningTasks.pop(taskName)
+            analysisTask._runStatus.value = AnalysisTask.BLOCKED
 
-        if len(remainingTasks) > 0:
-            analysisTask = remainingTasks[0]
-            remainingTasks = remainingTasks[1:]
+    tasksWithErrors = []
+    runningTasks = {}
 
-            print 'Running {}'.format(analysisTask.taskName)
-            analysisTask.start()
-            runningTasks[analysisTask.taskName] = analysisTask
+    # run each analysis task
+    while True:
+        # we still have tasks to run
+        for analysisTask in analyses.itervalues():
+            if analysisTask._runStatus.value == AnalysisTask.BLOCKED:
+                prereqs = analysisTask.runAfterTasks + analysisTask.subtasks
+                prereqStatus = [prereq._runStatus.value for prereq in prereqs]
+                if any([runStatus == AnalysisTask.FAIL for runStatus in
+                        prereqStatus]):
+                    # a prerequisite failed so this task cannot succeed
+                    analysisTask._runStatus.value = AnalysisTask.FAIL
+                if all([runStatus == AnalysisTask.SUCCESS for runStatus in
+                        prereqStatus]):
+                    # no unfinished prerequisites so we can run this task
+                    analysisTask._runStatus.value = AnalysisTask.READY
+
+        unfinishedCount = 0
+        for analysisTask in analyses.itervalues():
+            if analysisTask._runStatus.value not in [AnalysisTask.SUCCESS,
+                                                     AnalysisTask.FAIL]:
+                unfinishedCount += 1
+
+        if unfinishedCount <= 0:
+            # we're done
+            break
+
+        # launch new tasks
+        for key, analysisTask in analyses.items():
+            if analysisTask._runStatus.value == AnalysisTask.READY:
+                if isParallel:
+                    print 'Running {}'.format(analysisTask.printTaskName)
+                    analysisTask._runStatus.value = AnalysisTask.RUNNING
+                    analysisTask.start()
+                    runningTasks[key] = analysisTask
+                    if len(runningTasks.keys()) >= taskCount:
+                        break
+                else:
+                    analysisTask.run(writeLogFile=False)
+
+        if isParallel:
+            # wait for a task to finish
+            analysisTask = wait_for_task(runningTasks)
+            key = (analysisTask.taskName, analysisTask.subtaskName)
+            runningTasks.pop(key)
+
+            taskTitle = analysisTask.printTaskName
+
+            if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
+                print "   Task {} has finished successfully.".format(taskTitle)
+            elif analysisTask._runStatus.value == AnalysisTask.FAIL:
+                print "ERROR in task {}.  See log file {} for details".format(
+                    taskTitle, analysisTask._logFileName)
+                tasksWithErrors.append(taskTitle)
+            else:
+                print "Unexpected status from in task {}.  This may be a " \
+                      "bug.".format(taskTitle)
+
+    if not isParallel and config.getboolean('plot', 'displayToScreen'):
+        import matplotlib.pyplot as plt
+        plt.show()
 
     # raise the last exception so the process exits with an error
     errorCount = len(tasksWithErrors)
@@ -149,155 +378,6 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
             analysisTask.join(timeout=timeout)
             if not analysisTask.is_alive():
                 return analysisTask  # }}}
-
-
-def build_analysis_list(config):  # {{{
-    """
-    Build a list of analysis tasks. New tasks should be added here, following
-    the approach used for existing analysis tasks.
-
-    Parameters
-    ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
-
-    Returns
-    -------
-    analyses : list of ``AnalysisTask`` objects
-        A list of all analysis tasks
-
-    Authors
-    -------
-    Xylar Asay-Davis
-    """
-
-    # choose the right rendering backend, depending on whether we're displaying
-    # to the screen
-    if not config.getboolean('plot', 'displayToScreen'):
-        mpl.use('Agg')
-
-    # analysis can only be imported after the right MPL renderer is selected
-    from mpas_analysis import ocean
-    from mpas_analysis import sea_ice
-
-    # analyses will be a list of analysis classes
-    analyses = []
-
-    # Ocean Analyses
-
-    analyses.append(ocean.ClimatologyMapMLD(config))
-    analyses.append(ocean.ClimatologyMapSST(config))
-    analyses.append(ocean.ClimatologyMapSSS(config))
-    analyses.append(ocean.TimeSeriesOHC(config))
-    analyses.append(ocean.TimeSeriesSST(config))
-    analyses.append(ocean.MeridionalHeatTransport(config))
-    analyses.append(ocean.StreamfunctionMOC(config))
-    analyses.append(ocean.IndexNino34(config))
-
-    # Sea Ice Analyses
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config, hemisphere='SH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config, hemisphere='SH'))
-    analyses.append(sea_ice.TimeSeriesSeaIce(config))
-
-    return analyses  # }}}
-
-
-def determine_analyses_to_generate(analyses):  # {{{
-    """
-    Build a list of analysis tasks to run based on the 'generate' config
-    option (or command-line flag) and prerequisites and subtasks of each
-    requested task.  Each task's ``setup_and_check`` method is called in the
-    process.
-
-    Parameters
-    ----------
-    analyses : list of ``AnalysisTask`` objects
-        A list of all analysis tasks
-
-    Returns
-    -------
-    analysesToGenerate : list of ``AnalysisTask`` objects
-        A list of analysis tasks to run
-
-    Authors
-    -------
-    Xylar Asay-Davis
-    """
-
-    # check which analysis we actually want to generate and only keep those
-    analysesToGenerate = []
-    for analysisTask in analyses:
-        # for each anlaysis module, check if we want to generate this task
-        # and if the analysis task has a valid configuration
-        if analysisTask.check_generate():
-            add = False
-            try:
-                analysisTask.setup_and_check()
-                add = True
-            except (Exception, BaseException):
-                traceback.print_exc(file=sys.stdout)
-                print "ERROR: analysis module {} failed during check and " \
-                    "will not be run".format(analysisTask.taskName)
-            if add:
-                analysesToGenerate.append(analysisTask)
-
-    return analysesToGenerate  # }}}
-
-
-def run_analysis(config, analyses):  # {{{
-    """
-    Run one or more analysis tasks
-
-    Parameters
-    ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
-
-    analyses : list of ``AnalysisTask`` objects
-        A list of analysis tasks to run
-
-    Raises
-    ------
-    Exception:
-        If one or more tasks raise exceptions, re-raises the last exception
-        after all tasks have completed to indicate that there was a problem
-
-    Authors
-    -------
-    Xylar Asay-Davis
-    """
-
-    # run each analysis task
-    tasksWithErrors = []
-    lastStacktrace = None
-    for analysisTask in analyses:
-        analysisTask.run(writeLogFile=False)
-        if analysisTask._runStatus.value == AnalysisTask.FAIL:
-            lastStacktrace = analysisTask._stackTrace
-            tasksWithErrors.append(analysisTask.taskName)
-
-    if config.getboolean('plot', 'displayToScreen'):
-        import matplotlib.pyplot as plt
-        plt.show()
-
-    # See if there were errors; exit(1) if so
-    errorCount = len(tasksWithErrors)
-    if errorCount == 1:
-        if len(analyses) > 1:
-            print "There were errors in task {}".format(tasksWithErrors[0])
-            print "The stacktrace was:"
-            print lastStacktrace
-        sys.exit(1)
-    elif errorCount > 0:
-        print "There were errors in {} tasks: {}".format(
-                errorCount, ', '.join(tasksWithErrors))
-        print "The last stacktrace was:"
-        print lastStacktrace
-        sys.exit(1)
-
-    # }}}
 
 
 if __name__ == "__main__":
@@ -365,14 +445,8 @@ if __name__ == "__main__":
     analyses = build_analysis_list(config)
     analyses = determine_analyses_to_generate(analyses)
 
-    parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
-                                              default=1)
-
     if not args.setup_only and not args.html_only:
-        if parallelTaskCount <= 1 or len(analyses) == 1:
-            run_analysis(config, analyses)
-        else:
-            run_parallel_tasks(config, analyses, parallelTaskCount)
+        run_analysis(config, analyses)
 
     if not args.setup_only:
         generate_html(config, analyses)

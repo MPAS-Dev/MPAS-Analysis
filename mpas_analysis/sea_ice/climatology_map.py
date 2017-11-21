@@ -6,15 +6,11 @@ import numpy as np
 
 import xarray as xr
 
-from ..shared.climatology import get_lat_lon_comparison_descriptor, \
-    get_remapper, get_mpas_climatology_dir_name, \
-    get_observation_climatology_file_names, \
-    update_climatology_bounds_from_file_names, \
-    remap_and_write_climatology, \
-    compute_climatologies_with_ncclimo, \
-    get_ncclimo_season_file_name
+from ..shared.climatology import get_comparison_descriptor, \
+    get_remapper, get_observation_climatology_file_names, \
+    remap_and_write_climatology, RemapMpasClimatologySubtask
 
-from ..shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
+from ..shared.grid import LatLonGridDescriptor
 
 from ..shared.plot.plotting import plot_polar_comparison, \
     setup_colormap
@@ -31,10 +27,79 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
     General comparison of 2-d model fields against data.  Currently only
     supports sea ice concentration and sea ice thickness
 
+    Attributes
+    ----------
+    remapClimatologySubtask : ``RemapMpasClimatologySubtask``
+        The subtask that remaps the climatologies this task will plot.
+        The ``remapClimatologySubtask`` is needed to determine the file names
+        of the climatology output.
+
+    mpasClimatologyTask : ``MpasClimatologyTask``
+        The task that produced the climatology to be remapped and plotted
+
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
+
+    def __init__(self, config, mpasClimatologyTask, taskName, tags):  # {{{
+        '''
+        Construct one analysis subtask for each plot (i.e. each season and
+        comparison grid) and a subtask for computing climatologies.
+
+        Parameters
+        ----------
+        config :  instance of MpasAnalysisConfigParser
+            Contains configuration options
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
+
+        taskName :  str
+            The name of the task, typically the same as the subclass name
+            except starting with lowercase (e.g. 'climatologyMapSST' for class
+            'ClimatologyMapSST')
+
+        tags :  list of str
+            Tags used to describe the task (e.g. 'climatology',
+            'horizontalMap').  These are used to determine which tasks are
+            generated (e.g. 'all_transect' or 'no_climatology' in the
+            'generate' flags)
+
+        Authors
+        -------
+        Xylar Asay-Davis
+
+        '''
+        # call the constructor from the base class (AnalysisTask)
+        super(ClimatologyMapSeaIce, self).__init__(config=config,
+                                                   taskName=taskName,
+                                                   componentName='seaIce',
+                                                   tags=tags)
+
+        self.mpasClimatologyTask = mpasClimatologyTask
+
+        sectionName = self.taskName
+
+        # read in what seasons we want to plot
+        seasons = config.getExpression(sectionName, 'seasons')
+
+        if len(seasons) == 0:
+            raise ValueError('config section {} does not contain valid list '
+                             'of seasons'.format(sectionName))
+
+        # the variable self.mpasFieldName will be added to mpasClimatologyTask
+        # along with the seasons.
+        self.remapClimatologySubtask = RemapMpasClimatologySubtask(
+            mpasClimatologyTask=self.mpasClimatologyTask,
+            parentTask=self,
+            climatologyName=self.fieldName,
+            variableList=[self.mpasFieldName],
+            seasons=seasons,
+            iselValues=self.iselValues)
+
+        # }}}
 
     def setup_and_check(self):  # {{{
         """
@@ -44,71 +109,20 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         -------
         Xylar Asay-Davis
         """
-        # call setup_and_check from the base class (SeaIceAnalysisTask),
+        # first, call setup_and_check from the base class (SeaIceAnalysisTask),
         # which will perform some common setup
         super(ClimatologyMapSeaIce, self).setup_and_check()
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
-
-        # get a list of timeSeriesStatsMonthly output files from the streams
-        # file, reading only those that are between the start and end dates
-        streamName = 'timeSeriesStatsMonthlyOutput'
-        self.startDate = self.config.get('climatology', 'startDate')
-        self.endDate = self.config.get('climatology', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDate,
-                                         endDate=self.endDate,
-                                         calendar=self.calendar)
-
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
-
-        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
-            update_climatology_bounds_from_file_names(self.inputFiles,
-                                                      self.config)
+        self.startYear = self.mpasClimatologyTask.startYear
+        self.startDate = self.mpasClimatologyTask.startDate
+        self.endYear = self.mpasClimatologyTask.endYear
+        self.endDate = self.mpasClimatologyTask.endDate
 
         mainRunName = self.config.get('runs', 'mainRunName')
-        config = self.config
-        hemisphere = self.hemisphere
 
-        mpasDescriptor = MpasMeshDescriptor(
-            self.restartFileName,
-            meshName=self.config.get('input', 'mpasMeshName'))
-
-        comparisonDescriptor = get_lat_lon_comparison_descriptor(self.config)
-
-        self.mpasRemapper = get_remapper(
-            config=self.config, sourceDescriptor=mpasDescriptor,
-            comparisonDescriptor=comparisonDescriptor,
-            mappingFilePrefix='map',
-            method=self.config.get('climatology', 'mpasInterpolationMethod'),
-            logger=self.logger)
-
-        info = self.obsAndPlotInfo[0]
-        season = info['season']
-
-        fieldName = '{}{}'.format(self.mpasFieldName, hemisphere)
-
-        obsFileName = info['obsFileName']
-
-        obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
-                                                  latVarName='t_lat',
-                                                  lonVarName='t_lon')
-
-        fieldName = '{}{}'.format(self.obsFieldName, hemisphere)
-        self.obsRemapper = get_remapper(
-                config=config,
-                sourceDescriptor=obsDescriptor,
-                comparisonDescriptor=comparisonDescriptor,
-                mappingFilePrefix='map_obs_{}'.format(fieldName),
-                method=config.get('seaIceObservations',
-                                  'interpolationMethod'),
-                logger=self.logger)
+        # we set up the remapper here because ESFM_RegridWeightGen seems to
+        # have trouble if it runs in another process (or in several at once)
+        self._setup_obs_remapper()
 
         self.xmlFileNames = []
 
@@ -145,32 +159,11 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
         self.logger.info("\nPlotting 2-d maps of {} climatologies...".format(
             self.fieldNameInTitle))
 
-        self.logger.info('\n  Reading files:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFiles[0]),
-                                 os.path.basename(self.inputFiles[-1])))
-
-        self._compute_seasonal_climatologies()
-
-        self._compute_and_plot()  # }}}
-
-    def _compute_and_plot(self):  # {{{
-        '''
-        computes seasonal climatologies and plots model results, observations
-        and biases.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
-        '''
-
-        self.logger.info('  Make ice concentration plots...')
-
         config = self.config
 
         mainRunName = config.get('runs', 'mainRunName')
-        startYear = config.getint('climatology', 'startYear')
-        endYear = config.getint('climatology', 'endYear')
+        startYear = self.startYear
+        endYear = self.endYear
 
         hemisphere = self.hemisphere
         sectionName = self.sectionName
@@ -195,10 +188,8 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
 
             fieldName = '{}{}'.format(self.mpasFieldName, hemisphere)
 
-            remappedFileName = \
-                get_ncclimo_season_file_name(self.remappedDirectory,
-                                             'mpascice', season,
-                                             self.startYear, self.endYear)
+            remappedFileName = self.remapClimatologySubtask.get_file_name(
+                season=season, stage='remapped', comparisonGridName='latlon')
             remappedClimatology = xr.open_dataset(remappedFileName)
 
             modelOutput = remappedClimatology[self.mpasFieldName].values
@@ -298,98 +289,40 @@ class ClimatologyMapSeaIce(SeaIceAnalysisTask):
                 imageCaption=imageCaption)
         # }}}
 
-    def _compute_seasonal_climatologies(self):  # {{{
+    def _setup_obs_remapper(self):  # {{{
+        """
+        Set up the remapper for remapping from the MPAS to the comparison
+        grid.
 
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
         config = self.config
+        hemisphere = self.hemisphere
 
-        mpasMeshName = self.mpasRemapper.sourceDescriptor.meshName
-        comparisonGridName = self.mpasRemapper.destinationDescriptor.meshName
+        info = self.obsAndPlotInfo[0]
 
-        startYear = config.getint('climatology', 'startYear')
-        endYear = config.getint('climatology', 'endYear')
+        fieldName = '{}{}'.format(self.mpasFieldName, hemisphere)
 
-        fieldName = '{}{}'.format(self.fieldName, self.hemisphere)
+        obsFileName = info['obsFileName']
 
-        self.climatologyDirectory = \
-            get_mpas_climatology_dir_name(
+        obsDescriptor = LatLonGridDescriptor.read(fileName=obsFileName,
+                                                  latVarName='t_lat',
+                                                  lonVarName='t_lon')
+
+        comparisonDescriptor = get_comparison_descriptor(
+                config=config, comparisonGridName='latlon')
+
+        fieldName = '{}{}'.format(self.obsFieldName, hemisphere)
+        self.obsRemapper = get_remapper(
                 config=config,
-                fieldName=fieldName,
-                mpasMeshName=mpasMeshName)
-
-        (self.maskedClimatologyDirectory, self.remappedDirectory) = \
-            get_mpas_climatology_dir_name(
-                config=config,
-                fieldName='{}_masked'.format(fieldName),
-                mpasMeshName=mpasMeshName,
-                comparisonGridName=comparisonGridName)
-
-        modelName = 'mpascice'
-
-        allExist = True
-        for season in self.seasons:
-            climatologyFileName = get_ncclimo_season_file_name(
-                    self.climatologyDirectory, modelName, season,
-                    self.startYear, self.endYear)
-            if not os.path.exists(climatologyFileName):
-                allExist = False
-                break
-
-        if not allExist:
-
-            compute_climatologies_with_ncclimo(
-                    config=config,
-                    inDirectory=self.historyDirectory,
-                    outDirectory=self.climatologyDirectory,
-                    startYear=startYear,
-                    endYear=endYear,
-                    variableList=['timeMonthly_avg_iceAreaCell',
-                                  'timeMonthly_avg_iceVolumeCell'],
-                    modelName=modelName,
-                    seasons=self.seasons,
-                    decemberMode='sdd',
-                    logger=self.logger)
-
-        self._remap_seasonal_climatology()
-
-        # }}}
-
-    def _remap_seasonal_climatology(self):  # {{{
-
-        modelName = 'mpascice'
-
-        for season in self.seasons:
-
-            # interpolate the model results
-            climatologyFileName = \
-                get_ncclimo_season_file_name(self.climatologyDirectory,
-                                             modelName, season,
-                                             self.startYear, self.endYear)
-
-            maskedClimatologyFileName = \
-                get_ncclimo_season_file_name(self.maskedClimatologyDirectory,
-                                             modelName, season,
-                                             self.startYear, self.endYear)
-
-            remappedFileName = \
-                get_ncclimo_season_file_name(self.remappedDirectory,
-                                             modelName, season,
-                                             self.startYear, self.endYear)
-
-            if not os.path.exists(maskedClimatologyFileName):
-                # slice the data set and set _FillValue (happens automatically)
-                climatology = xr.open_dataset(climatologyFileName)
-                iselValues = {'Time': 0}
-                # select only Time=0
-                climatology = climatology.isel(**iselValues)
-
-                write_netcdf(climatology, maskedClimatologyFileName)
-
-            if not os.path.exists(remappedFileName):
-                self.mpasRemapper.remap_file(
-                        inFileName=maskedClimatologyFileName,
-                        outFileName=remappedFileName,
-                        overwrite=True,
-                        logger=self.logger)
+                sourceDescriptor=obsDescriptor,
+                comparisonDescriptor=comparisonDescriptor,
+                mappingFilePrefix='map_obs_{}'.format(fieldName),
+                method=config.get('seaIceObservations',
+                                  'interpolationMethod'),
+                logger=self.logger)
         # }}}
     # }}}
 
@@ -403,7 +336,7 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, hemisphere):
+    def __init__(self, config, mpasClimatologyTask, hemisphere):
         # {{{
         """
         Construct the analysis task.
@@ -412,6 +345,9 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
 
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
@@ -437,10 +373,9 @@ class ClimatologyMapSeaIceConc(ClimatologyMapSeaIce):  # {{{
         tags = ['climatology', 'horizontalMap', self.fieldName]
 
         # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSeaIceConc, self).__init__(config=config,
-                                                       taskName=taskName,
-                                                       componentName='seaIce',
-                                                       tags=tags)
+        super(ClimatologyMapSeaIceConc, self).__init__(
+                config=config, mpasClimatologyTask=mpasClimatologyTask,
+                taskName=taskName, tags=tags)
 
         # }}}
 
@@ -534,7 +469,7 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, hemisphere):
+    def __init__(self, config, mpasClimatologyTask, hemisphere):
         # {{{
         """
         Construct the analysis task.
@@ -543,6 +478,9 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
 
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
@@ -566,10 +504,9 @@ class ClimatologyMapSeaIceThick(ClimatologyMapSeaIce):  # {{{
         tags = ['climatology', 'horizontalMap', self.fieldName]
 
         # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSeaIceThick, self).__init__(config=config,
-                                                        taskName=taskName,
-                                                        componentName='seaIce',
-                                                        tags=tags)
+        super(ClimatologyMapSeaIceThick, self).__init__(
+                config=config, mpasClimatologyTask=mpasClimatologyTask,
+                taskName=taskName, tags=tags)
 
         # }}}
 

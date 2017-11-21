@@ -65,6 +65,16 @@ class AnalysisTask(Process):  # {{{
     calendar : {'gregorian', 'gregoraian_noleap'}
         The calendar used in the MPAS run
 
+    runAfterTasks : list of ``AnalysisTasks``
+        tasks that must be complete before this task can run
+
+    subtasks : ``OrderedDict`` of ``AnalysisTasks``
+        Subtasks of this task, with subtask names as keys
+
+    xmlFileNames : list of strings
+        The XML file associated with each plot produced by this analysis, empty
+        if no plots were produced
+
     logger : ``logging.Logger``
         A logger for output during the run phase of an analysis task
 
@@ -82,7 +92,8 @@ class AnalysisTask(Process):  # {{{
     SUCCESS = 4
     FAIL = 5
 
-    def __init__(self, config, taskName, componentName, tags=[]):  # {{{
+    def __init__(self, config, taskName, componentName, tags=[],
+                 subtaskName=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -109,24 +120,36 @@ class AnalysisTask(Process):  # {{{
             which tasks are generated (e.g. 'all_transect' or 'no_climatology'
             in the 'generate' flags)
 
+        subtaskName : str, optional
+            If this is a subtask of ``taskName``, the name of the subtask
+
         Authors
         -------
         Xylar Asay-Davis
         '''
-        # This will include a subtask name as well in the future
-        self.fullTaskName = taskName
+        if subtaskName is None:
+            self.fullTaskName = taskName
+            self.printTaskName = taskName
+        else:
+            self.fullTaskName = '{}_{}'.format(taskName, subtaskName)
+            self.printTaskName = '{}: {}'.format(taskName, subtaskName)
 
         # call the constructor from the base class (Process)
         super(AnalysisTask, self).__init__(name=self.fullTaskName)
 
         self.config = config
         self.taskName = taskName
+        self.subtaskName = subtaskName
         self.componentName = componentName
         self.tags = tags
+        self.subtasks = []
         self.logger = None
+        self.runAfterTasks = []
+        self.xmlFileNames = []
 
         # non-public attributes related to multiprocessing and logging
         self.daemon = True
+        self._setupStatus = None
         self._runStatus = Value('i', AnalysisTask.UNSET)
         self._stackTrace = None
         self._logFileName = None
@@ -209,6 +232,48 @@ class AnalysisTask(Process):  # {{{
         '''
         return  # }}}
 
+    def run_after(self, task):  # {{{
+        '''
+        Only run this task after the given task has completed.  This allows a
+        task to be constructed of multiple subtasks, some of which may block
+        later tasks, while allowing some subtasks to run in parallel.  It also
+        allows for tasks to depend on other tasks (e.g. for computing
+        climatologies or extracting time series for many variables at once).
+
+        Parameters
+        ----------
+        task : ``AnalysisTask``
+            The task that should finish before this one begins
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        self.runAfterTasks.append(task)
+        # }}}
+
+    def add_subtask(self, subtask):  # {{{
+        '''
+        Add a subtask to this tasks.  This task always runs after the subtask
+        has finished.  However, this task gets set up *before* the subtask,
+        so the setup of the subtask can depend on fields defined during the
+        setup of this task (the parent).
+
+        Parameters
+        ----------
+        subtask : ``AnalysisTask``
+            The subtask to run as part of this task
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        if subtask not in self.subtasks:
+            self.subtasks.append(subtask)
+        # }}}
+
     def run(self, writeLogFile=True):  # {{{
         '''
         Sets up logging and then runs the analysis task.
@@ -245,7 +310,6 @@ class AnalysisTask(Process):  # {{{
             sys.stdout = StreamToLogger(self.logger, logging.INFO)
             sys.stderr = StreamToLogger(self.logger, logging.ERROR)
 
-        self._runStatus.value = AnalysisTask.RUNNING
         startTime = time.time()
         try:
             self.run_task()
@@ -255,7 +319,7 @@ class AnalysisTask(Process):  # {{{
                 raise e
             self._stackTrace = traceback.format_exc()
             self.logger.error("analysis task {} failed during run \n"
-                              "{}".format(self.taskName, self._stackTrace))
+                              "{}".format(self.fullTaskName, self._stackTrace))
             self._runStatus.value = AnalysisTask.FAIL
 
         runDuration = time.time() - startTime
@@ -492,6 +556,5 @@ class StreamToLogger(object):  # {{{
         pass
 
     # }}}
-
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
