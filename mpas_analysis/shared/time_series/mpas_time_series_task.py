@@ -259,7 +259,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             totalMonths = 12*inYears + inMonths
 
             with xr.open_dataset(self.outputFile) as ds:
-                lastDate = ds.xtime_startMonthly.values[-1]
+                lastDate = str(ds.xtime_startMonthly[-1].values)
 
             lastYear = int(lastDate[0:4])
             lastMonth = int(lastDate[5:7])
@@ -269,6 +269,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             for index, inputFile in enumerate(self.inputFiles):
                 if totalMonths[index] > lastTotalMonths:
                     inputFiles.append(inputFile)
+		
+            if len(inputFiles) == 0:
+                # nothing to do
+                return
         else:
             inputFiles = self.inputFiles
 
