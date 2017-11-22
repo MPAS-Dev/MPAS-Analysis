@@ -87,6 +87,13 @@ Shared modules
 
 Reading MPAS Datasets
 ---------------------
+.. currentmodule:: mpas_analysis.shared.io
+
+.. autosummary::
+   :toctree: generated/
+
+   open_mpas_dataset
+
 .. currentmodule:: mpas_analysis.shared.mpas_xarray
 
 .. autosummary::

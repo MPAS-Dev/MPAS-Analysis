@@ -28,7 +28,7 @@ def open_mpas_dataset(fileName, calendar,
     calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
-    timeVariableName : string, optional
+    timeVariableNames : str or list of 2 str, optional
         The name of the time variable (typically ``'xtime'``
         or ``['xtime_startMonthly', 'xtime_endMonthly']``)
 
@@ -46,9 +46,7 @@ def open_mpas_dataset(fileName, calendar,
     Raises
     ------
     TypeError
-        If the time variable has an unsupported type (not a date string,
-        a floating-pont number of days since the start of the simulation
-        or a ``numpy.datatime64`` object).
+        If the time variable has an unsupported type (not a date string).
 
     ValueError
         If the time variable is not found in the data set
@@ -146,7 +144,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
                         referenceDate='0001-01-01'):  # {{{
     """
     A helper function for computing a time coordinate from an MPAS time
-    variable.  Given a data set and a time variable name (or tuple of 2
+    variable.  Given a data set and a time variable name (or list of 2
     time names), returns a new data set with time coordinate
     `outTimeVariableName` filled with days since `referenceDate`
 
