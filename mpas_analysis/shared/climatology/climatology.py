@@ -188,7 +188,7 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
 
-    maskVaries: bool, optional
+    maskVaries : bool, optional
         If the mask (where variables in ``ds`` are ``NaN``) varies with time.
         If not, the weighted average does not need make extra effort to account
         for the mask.  Most MPAS fields will have masks that don't vary in
@@ -242,7 +242,7 @@ def compute_climatology(ds, monthValues, calendar=None,
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
 
-    maskVaries: bool, optional
+    maskVaries : bool, optional
         If the mask (where variables in ``ds`` are ``NaN``) varies with time.
         If not, the weighted average does not need make extra effort to account
         for the mask.  Most MPAS fields will have masks that don't vary in

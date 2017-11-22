@@ -24,10 +24,21 @@ class MpasAnalysisConfigParser(ConfigParser):
     def getWithDefault(self, section, option, default):
         """
         Get an option, using the supplied default value if the option is not
-        present.  The type of ``default`` is used to determine the type of the
-        retrun value, regardless of whether ``default`` is returned. If
-        ``default`` is a list, tuple, or dict, ``getExpression(...)`` is used
-        if the option is present in the config file.
+        present.
+
+        Parameters
+        ----------
+        section : str
+            The section in the config file
+
+        option : str
+            The option in the config file
+
+        default : one of bool, int, float, list, tuple, dict, str
+            The default value if the option and/or section is not found, used
+            to determine the type of the option if it *is* found. If
+            ``default`` is a list, tuple, or dict, ``getExpression(...)`` is
+            used if the option is present in the config file.
 
         Authors
         -------
@@ -54,18 +65,28 @@ class MpasAnalysisConfigParser(ConfigParser):
                       usenumpyfunc=False):
         """
         Get an option as an expression (typically a list, though tuples and
-        dicts should also work).  ``section`` and ``option`` work as in
-        ``get(...)``. The expression is required to have valid python syntax,
-        so that string entries are required to be in single or double quotes.
-        If the option in the section does not exist, returns None.
+        dicts are also availabe).  The expression is required to have valid
+        python syntax, so that string entries are required to be in single or
+        double quotes.
 
-        If ``elementType`` is supplied, each element in a list or tuple, or
-        each value in a dictionary are cast to this type.  This is likely most
-        useful for ensuring that all elements in a list of numbers are of type
-        float, rather than int, when the distinction is important.
+        Parameters
+        ----------
+        section : str
+            The section in the config file
 
-        If ``usenumpyfunc`` is True, expression is evaluated within the context
-        of having selected numpy and/or np functionality available.
+        option : str
+            The option in the config file
+
+        elementType : (bool, int, float, etc.), optional
+            If supplied, each element in a list or tuple, or
+            each value in a dictionary are cast to this type.  This is likely
+            most useful for ensuring that all elements in a list of numbers are
+            of type float, rather than int, when the distinction is important.
+
+        usenumpyfunc : bool, optional
+            If ``True``, the expression is evaluated including functionality
+            from the numpy package (which can be referenced either as ``numpy``
+            or ``np``).
 
         Authors
         -------

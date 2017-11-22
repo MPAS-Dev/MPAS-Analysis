@@ -278,6 +278,14 @@ class AnalysisTask(Process):  # {{{
         '''
         Sets up logging and then runs the analysis task.
 
+        Parameters
+        ----------
+        writeLogFile : bool, optional
+            If ``True``, output to stderr and stdout get written to a log file.
+            Otherwise, the internal logger ``self.logger`` points to stdout
+            and no log file is created.  The intention is for logging to take
+            place in parallel mode but not in serial mode.
+
         Authors
         -------
         Xylar Asay-Davis

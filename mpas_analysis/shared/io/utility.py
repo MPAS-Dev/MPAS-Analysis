@@ -17,8 +17,13 @@ def paths(*args):  # {{{
 
     Parameters
     ----------
-    *args
+    *args : list
         A list of arguments to pass to ``glob.glob``
+
+    Returns
+    -------
+    paths : list of str
+        A list of file paths
 
     Authors
     -------
@@ -43,6 +48,11 @@ def fingerprint_generator(size=12,
     chars : list of char, optional
         The fingerprint
 
+    Returns
+    -------
+    fingerprint : str
+        A random string
+
     Reference
     ---------
     http://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python
@@ -57,6 +67,11 @@ def fingerprint_generator(size=12,
 def make_directories(path):  # {{{
     """
     Make the given path if it does not already exist.
+
+    Parameters
+    ----------
+    path : str
+        the path to make
 
     Returns
     -------
