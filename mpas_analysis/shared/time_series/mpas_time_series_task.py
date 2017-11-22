@@ -269,7 +269,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             for index, inputFile in enumerate(self.inputFiles):
                 if totalMonths[index] > lastTotalMonths:
                     inputFiles.append(inputFile)
-		
+
             if len(inputFiles) == 0:
                 # nothing to do
                 return
@@ -282,10 +282,13 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         args = ['ncrcat', '--record_append', '--no_tmp_fl',
                 '-v', ','.join(variableList)]
 
+        printCommand = '{} {} ... {} {}'.format(' '.join(args), inputFiles[0],
+                                                inputFiles[-1],
+                                                self.outputFile)
         args.extend(inputFiles)
         args.append(self.outputFile)
 
-        self.logger.info('running: {}'.format(' '.join(args)))
+        self.logger.info('running: {}'.format(printCommand))
         for handler in self.logger.handlers:
             handler.flush()
 
