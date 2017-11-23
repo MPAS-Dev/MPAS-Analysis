@@ -3,11 +3,12 @@ import warnings
 import subprocess
 from distutils.spawn import find_executable
 import xarray as xr
+import numpy
 
 from ..analysis_task import AnalysisTask
 
 from ..io.utility import build_config_full_path, make_directories
-
+from ..timekeeping.utility import get_simulation_start_time
 
 class MpasTimeSeriesTask(AnalysisTask):  # {{{
     '''
@@ -145,6 +146,20 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         self._update_time_series_bounds_from_file_names()
 
+        # Make sure first year of data is included for computing anomalies
+        simulationStartTime = get_simulation_start_time(self.runStreams)
+        firstYear = int(simulationStartTime[0:4])
+        endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
+        firstYearInputFiles = self.historyStreams.readpath(
+                streamName, startDate=simulationStartTime,
+                endDate=endDateFirstYear,
+                calendar=self.calendar)
+        for fileName in firstYearInputFiles:
+            if fileName not in self.inputFiles:
+                self.inputFiles.append(fileName)
+
+        self.inputFiles = sorted(self.inputFiles)
+
         # }}}
 
     def run_task(self):  # {{{
@@ -243,6 +258,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         Xylar Asay-Davis
         '''
 
+
         if find_executable('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '
                           'package is installed: \n'
@@ -254,8 +270,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             # add only input files wiht times that aren't already in the
             # output file
             dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-            inYears = [int(date[0:4]) for date in dates]
-            inMonths = [int(date[5:7]) for date in dates]
+            inYears = numpy.array([int(date[0:4]) for date in dates])
+            inMonths = numpy.array([int(date[5:7]) for date in dates])
             totalMonths = 12*inYears + inMonths
 
             with xr.open_dataset(self.outputFile) as ds:
