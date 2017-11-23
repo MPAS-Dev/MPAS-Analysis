@@ -231,8 +231,7 @@ class TimeSeriesOHC(AnalysisTask):
             dsFirstYear = open_mpas_dataset(
                 fileName=self.inputFile,
                 calendar=calendar,
-                variableList=[variables['avgLayerTemperature'],
-                              variables['avgLayerSalinity']],
+                variableList=self.variables.values(),
                 startDate=startDateFirstYear,
                 endDate=endDateFirstYear)
 
