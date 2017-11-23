@@ -77,6 +77,7 @@ Configuration
 .. autosummary::
    :toctree: generated/
 
+   MpasAnalysisConfigParser
    MpasAnalysisConfigParser.getWithDefault
    MpasAnalysisConfigParser.getExpression
 
