@@ -10,6 +10,7 @@ from ..analysis_task import AnalysisTask
 from ..io.utility import build_config_full_path, make_directories
 from ..timekeeping.utility import get_simulation_start_time
 
+
 class MpasTimeSeriesTask(AnalysisTask):  # {{{
     '''
     An analysis tasks for computing time series from output from the
@@ -257,7 +258,6 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         ------
         Xylar Asay-Davis
         '''
-
 
         if find_executable('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '

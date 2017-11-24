@@ -449,7 +449,14 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                          'time series...')
         self.logger.info('   Load data...')
 
-        config = self.config
+        outputDirectory = build_config_full_path(self.config, 'output',
+                                                 'timeseriesSubdirectory')
+        try:
+            os.makedirs(outputDirectory)
+        except OSError:
+            pass
+
+        outputFileTseries = '{}/mocTimeSeries.nc'.format(outputDirectory)
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = self._load_mesh()
@@ -464,44 +471,46 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         transectEdgeMaskSigns = dictRegion['transectEdgeMaskSigns']
         regionCellMask = dictRegion['cellMask']
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'timeseriesSubdirectory')
-        try:
-            os.makedirs(outputDirectory)
-        except OSError:
-            pass
+        streamName = 'timeSeriesStatsMonthlyOutput'
+        inputFilesTseries = sorted(self.historyStreams.readpath(
+                streamName, startDate=self.startDateTseries,
+                endDate=self.endDateTseries, calendar=self.calendar))
 
-        outputFileTseries = '{}/mocTimeSeries.nc'.format(outputDirectory)
+        dates = sorted([fileName[-13:-6] for fileName in inputFilesTseries])
+        years = np.array([int(date[0:4]) for date in dates])
+        months = np.array([int(date[5:7]) for date in dates])
+
+        mocRegion = np.zeros(len(inputFilesTseries))
+        times = np.zeros(len(inputFilesTseries))
+        computed = np.zeros(len(inputFilesTseries), bool)
 
         continueOutput = os.path.exists(outputFileTseries)
         if continueOutput:
             self.logger.info('   Read in previously computed MOC time series')
+            dsMOCIn = xr.open_dataset(outputFileTseries, decode_times=False)
 
-        dsMOCTimeSeries = self._compute_moc_time_series(
-                areaCell, latCell, indlat26, maxEdgesInTransect,
-                transectEdgeGlobalIDs, transectEdgeMaskSigns,  nVertLevels,
-                dvEdge, refLayerThickness, latAtlantic, regionCellMask)
+            # first, copy all computed data
+            for inIndex in range(dsMOCIn.dims['Time']):
+                mask = np.logical_and(
+                        dsMOCIn.year[inIndex].values == years,
+                        dsMOCIn.month[inIndex].values == months)
 
-        return dsMOCTimeSeries  # }}}
+                outIndex = np.where(mask)[0][0]
 
-    def _compute_moc_time_series(self, areaCell, latCell, indlat26,
-                                 maxEdgesInTransect,
-                                 transectEdgeGlobalIDs,
-                                 transectEdgeMaskSigns, nVertLevels,
-                                 dvEdge, refLayerThickness, latAtlantic,
-                                 regionCellMask):
+                mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                times[outIndex] = dsMOCIn.Time[inIndex]
+                computed[outIndex] = True
 
-        streamName = 'timeSeriesStatsMonthlyOutput'
-        inputFilesTseries = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDateTseries,
-                                         endDate=self.endDateTseries,
-                                         calendar=self.calendar)
+            if np.all(computed):
+                # no need to waste time writing out the data set again
+                return dsMOCIn
 
-        mocRegion = np.zeros(len(inputFilesTseries))
-        times = np.zeros(len(inputFilesTseries))
+            dsMOCIn.close()
 
         for timeIndex, fileName in enumerate(inputFilesTseries):
+            if computed[timeIndex]:
+                continue
+
             dsLocal = open_mpas_dataset(
                 fileName=fileName,
                 calendar=self.calendar,
@@ -536,14 +545,24 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                      'coords': {'Time':
                                 {'dims': ('Time'),
                                  'data': times,
-                                 'attrs': {'units': 'days since 0001-01-01'}}},
+                                 'attrs': {'units': 'days since 0001-01-01'}},
+                                'year':
+                                {'dims': ('Time'),
+                                 'data': years,
+                                 'attrs': {'units': 'year'}},
+                                'month':
+                                {'dims': ('Time'),
+                                 'data': months,
+                                 'attrs': {'units': 'month'}}},
                      'data_vars': {'mocAtlantic26':
                                    {'dims': ('Time'),
                                     'data': mocRegion,
                                     'attrs': {'units': 'Sv (10^6 m^3/s)',
                                               'description': description}}}}
-        dsMOC = xr.Dataset.from_dict(dictonary)
-        return dsMOC
+        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
+        dsMOCTimeSeries.to_netcdf(outputFileTseries)
+
+        return dsMOCTimeSeries
 
     # def _compute_moc_analysismember(self):
     #
