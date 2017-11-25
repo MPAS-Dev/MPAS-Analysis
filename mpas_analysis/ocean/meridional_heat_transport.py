@@ -7,16 +7,11 @@ import warnings
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from ..shared.io.utility import build_config_full_path
 
 from ..shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.climatology.climatology \
-    import update_climatology_bounds_from_file_names, \
-    compute_climatologies_with_ncclimo, \
-    get_ncclimo_season_file_name
-
-from ..shared.analysis_task import AnalysisTask
+from ..shared import AnalysisTask
 from ..shared.html import write_image_xml
 
 
@@ -24,12 +19,18 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     '''
     Plot meridional heat transport from the analysis member output.
 
+    Attributes
+    ----------
+
+    mpasClimatologyTask : ``MpasClimatologyTask``
+        The task that produced the climatology to be remapped and plotted
+
     Authors
     -------
     Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
 
-    def __init__(self, config):  # {{{
+    def __init__(self, config, mpasClimatologyTask):  # {{{
         '''
         Construct the analysis task.
 
@@ -37,6 +38,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
 
         Authors
         -------
@@ -49,6 +53,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             taskName='meridionalHeatTransport',
             componentName='ocean',
             tags=['climatology'])
+
+        self.mpasClimatologyTask = mpasClimatologyTask
+        self.run_after(mpasClimatologyTask)
+
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -71,35 +79,16 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         #     self.calendar
         super(MeridionalHeatTransport, self).setup_and_check()
 
+        self.startYear = self.mpasClimatologyTask.startYear
+        self.startDate = self.mpasClimatologyTask.startDate
+        self.endYear = self.mpasClimatologyTask.endYear
+        self.endDate = self.mpasClimatologyTask.endDate
+
         config = self.config
 
         self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
-        self.check_analysis_enabled(
             analysisOptionName='config_am_meridionalheattransport_enable',
             raiseException=True)
-
-        # Get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        #   First a list necessary for the MHT climatology
-        streamName = 'timeSeriesStatsMonthlyOutput'
-        self.startDate = config.get('climatology', 'startDate')
-        self.endDate = config.get('climatology', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDate,
-                                         endDate=self.endDate,
-                                         calendar=self.calendar)
-
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
-
-        changed, self.startYear, self.endYear, self.startDate, self.endDate = \
-            update_climatology_bounds_from_file_names(self.inputFiles,
-                                                      self.config)
 
         # Later, we will read in depth and MHT latitude points
         # from mpaso.hist.am.meridionalHeatTransport.*.nc
@@ -110,8 +99,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                           'one ')
 
         self.mhtFile = mhtFiles[0]
-
-        self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
         self.sectionName = 'meridionalHeatTransport'
 
@@ -133,6 +120,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         mainRunName = self.config.get('runs', 'mainRunName')
 
+        variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
+                        'timeMonthly_avg_meridionalHeatTransportLatZ']
+
+        self.mpasClimatologyTask.add_variables(variableList=variableList,
+                                               seasons=['ANN'])
+
         self.xmlFileNames = []
         self.filePrefixes = {}
 
@@ -150,7 +143,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Process MHT analysis member data if available.
         Plots MHT as:
@@ -161,7 +154,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         -------
         Mark Petersen, Milena Veneziani, Xylar Asay-Davis
         """
-        print "\nPlotting meridional heat transport (MHT)..."
+        self.logger.info("\nPlotting meridional heat transport (MHT)...")
 
         config = self.config
 
@@ -174,7 +167,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Depth is from refZMid, also in
         # mpaso.hist.am.meridionalHeatTransport.*.nc
 
-        print '  Read in depth and latitude...'
+        self.logger.info('  Read in depth and latitude...')
         ncFile = netCDF4.Dataset(self.mhtFile, mode='r')
         # reference depth [m]
         refZMid = ncFile.variables['refZMid'][:]
@@ -198,42 +191,13 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         # Then we will need to add another section for regions with a loop
         # over number of regions.
         ######################################################################
-        variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
-                        'timeMonthly_avg_meridionalHeatTransportLatZ']
 
-        print '\n  Compute and plot global meridional heat transport'
+        self.logger.info('\n   Plotting global meridional heat transport')
 
-        outputRoot = build_config_full_path(config, 'output',
-                                            'mpasClimatologySubdirectory')
+        self.logger.info('   Load data...')
 
-        outputDirectory = '{}/mht'.format(outputRoot)
-
-        print '\n  List of files for climatologies:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
-
-        print '   Load data...'
-
-        climatologyFileName = get_ncclimo_season_file_name(outputDirectory,
-                                                           'mpaso', 'ANN',
-                                                           self.startYear,
-                                                           self.endYear)
-
-        if not os.path.exists(climatologyFileName):
-            make_directories(outputDirectory)
-
-            # Compute annual climatology
-            compute_climatologies_with_ncclimo(
-                    config=config,
-                    inDirectory=self.historyDirectory,
-                    outDirectory=outputDirectory,
-                    startYear=self.startYear,
-                    endYear=self.endYear,
-                    variableList=variableList,
-                    modelName='mpaso',
-                    seasons=['ANN'],
-                    decemberMode='sdd')
+        climatologyFileName = self.mpasClimatologyTask.get_file_name(
+                season='ANN')
 
         annualClimatology = xr.open_dataset(climatologyFileName)
         annualClimatology = annualClimatology.isel(Time=0)
@@ -245,7 +209,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         depthLimGlobal = config.getExpression(self.sectionName,
                                               'depthLimGlobal')
 
-        print '   Plot global MHT...'
+        self.logger.info('   Plot global MHT...')
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
         y = annualClimatology.timeMonthly_avg_meridionalHeatTransportLat

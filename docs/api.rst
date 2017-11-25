@@ -11,14 +11,12 @@ Top-level script: run_mpas_analysis
 .. autosummary::
    :toctree: generated/
 
-   run_mpas_analysis.update_generate
-   run_mpas_analysis.run_parallel_tasks
-   run_mpas_analysis.launch_tasks
-   run_mpas_analysis.wait_for_task
-   run_mpas_analysis.is_running
    run_mpas_analysis.build_analysis_list
    run_mpas_analysis.determine_analyses_to_generate
+   run_mpas_analysis.add_task_and_subtasks
+   run_mpas_analysis.update_generate
    run_mpas_analysis.run_analysis
+   run_mpas_analysis.wait_for_task
 
 
 Analysis tasks
@@ -34,6 +32,9 @@ Base Class
 
    AnalysisTask
    AnalysisTask.setup_and_check
+   AnalysisTask.run_task
+   AnalysisTask.run_after
+   AnalysisTask.add_subtask
    AnalysisTask.run
    AnalysisTask.check_generate
    AnalysisTask.check_analysis_enabled
@@ -76,6 +77,7 @@ Configuration
 .. autosummary::
    :toctree: generated/
 
+   MpasAnalysisConfigParser
    MpasAnalysisConfigParser.getWithDefault
    MpasAnalysisConfigParser.getExpression
 
@@ -85,6 +87,13 @@ Shared modules
 
 Reading MPAS Datasets
 ---------------------
+.. currentmodule:: mpas_analysis.shared.io
+
+.. autosummary::
+   :toctree: generated/
+
+   open_mpas_dataset
+
 .. currentmodule:: mpas_analysis.shared.mpas_xarray
 
 .. autosummary::
@@ -110,17 +119,20 @@ Climatology
 .. autosummary::
    :toctree: generated/
 
-   get_lat_lon_comparison_descriptor
+   get_comparison_descriptor
+   get_antarctic_stereographic_projection
    get_remapper
-   get_mpas_climatology_dir_name
    get_observation_climatology_file_names
    compute_monthly_climatology
    compute_climatology
-   cache_climatologies
-   update_climatology_bounds_from_file_names
    add_years_months_days_in_month
-   remap_and_write_climatology
-   compute_climatologies_with_ncclimo
+
+   MpasClimatologyTask
+   MpasClimatologyTask.add_variables
+   MpasClimatologyTask.get_file_name
+
+   RemapMpasClimatologySubtask
+   RemapMpasClimatologySubtask.get_file_name
 
 Time Series
 -----------

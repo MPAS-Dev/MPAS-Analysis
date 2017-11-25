@@ -6,7 +6,7 @@
 ##PBS -q debug
 # change number of nodes to change the number of parallel tasks
 # (anything between 1 and the total number of tasks to run)
-#PBS -l nodes=10
+#PBS -l nodes=1
 #PBS -l walltime=1:00:00
 #PBS -A cli115
 #PBS -N mpas_analysis
@@ -28,7 +28,9 @@ command_prefix="aprun -b -N 1 -n 1"
 # containing run_mpas_analysis
 mpas_analysis_dir="."
 # one parallel task per node by default
-parallel_task_count=$PBS_NUM_NODES
+parallel_task_count=12
+# ncclimo can run with 1 (serial) or 12 (bck) threads
+ncclimo_mode=bck
 
 if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
@@ -52,12 +54,13 @@ cat <<EOF > $job_config_file
 # the number of parallel tasks (1 means tasks run in serial, the default)
 parallelTaskCount = $parallel_task_count
 
-# Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_mpas_analysis is executed directly)
-commandPrefix = $command_prefix
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-$mpas_analysis_dir/run_mpas_analysis $run_config_file \
+$command_prefix $mpas_analysis_dir/run_mpas_analysis $run_config_file \
     $job_config_file
 

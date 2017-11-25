@@ -3,7 +3,8 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
+mainRunName = 20171102.beta3rc02_1850.ne30_oECv3_ICG.edison
+
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
@@ -15,10 +16,15 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /scratch2/scratchdirs/golaz/ACME_simulations/20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison/run
+baseDirectory = /global/cscratch1/sd/golaz/ACME_simulations/20171102.beta3rc02_1850.ne30_oECv3_ICG.edison/run
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30v3
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+mpasMeshName = oEC60to30v3
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -36,8 +42,8 @@ htmlSubdirectory = html
 #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
 #   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
 #   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
+#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
+#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
 #   'climatologyMapSeaIceThickSH'
 # the following shortcuts exist:
 #   'all' -- all analyses will be run
@@ -69,16 +75,9 @@ generate = ['all']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 11
+startYear = 5
 # the last year over which to average climatalogies
-endYear = 20
-
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-mpasMappingFile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30v3_TO_0.5x0.5degree_blin.nc
+endYear = 10
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -88,7 +87,7 @@ mpasMappingFile = /global/project/projectdirs/acme/mapping/maps/map_oEC60to30v3_
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 22
+endYear = 10
 
 [index]
 ## options related to producing nino index.
@@ -98,7 +97,7 @@ endYear = 22
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 9999
+endYear = 10
 
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
@@ -140,9 +139,5 @@ baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.
 polarPlot = False
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
-maxChunkSize = 1000
-
 # Mask file for ocean basin regional computation
-regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/EC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+regionMaskFiles = /global/project/projectdirs/acme/mapping/grids/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc

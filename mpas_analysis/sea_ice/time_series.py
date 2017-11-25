@@ -1,5 +1,4 @@
 import xarray as xr
-import os
 
 from .sea_ice_analysis_task import SeaIceAnalysisTask
 
@@ -13,11 +12,10 @@ from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
     datetime_to_days
 from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.generalized_reader import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
-from ..shared.time_series import cache_time_series
 from ..shared.html import write_image_xml
 
 
@@ -25,12 +23,18 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
     """
     Performs analysis of time series of sea-ice properties.
 
+    Attributes
+    ----------
+
+    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+        The task that extracts the time series from MPAS monthly output
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask):  # {{{
         """
         Construct the analysis task.
 
@@ -38,6 +42,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+            The task that extracts the time series from MPAS monthly output
 
         Authors
         -------
@@ -49,6 +56,10 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             taskName='timeSeriesSeaIceAreaVol',
             componentName='seaIce',
             tags=['timeSeries'])
+
+        self.mpasTimeSeriesTask = mpasTimeSeriesTask
+
+        self.run_after(mpasTimeSeriesTask)
 
         # }}}
 
@@ -72,30 +83,20 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         #     self.calendar
         super(TimeSeriesSeaIce, self).setup_and_check()
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
-
         config = self.config
+
+        self.startDate = self.config.get('timeSeries', 'startDate')
+        self.endDate = self.config.get('timeSeries', 'endDate')
+
+        self.variableList = ['timeMonthly_avg_iceAreaCell',
+                             'timeMonthly_avg_iceVolumeCell']
+        self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
+
+        self.inputFile = self.mpasTimeSeriesTask.outputFile
+
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('seaIcePreprocessedReference',
                                              'baseDirectory'))
-
-        # get a list of timeSeriesStatsMonthly output files from the streams
-        # file, reading only those that are between the start and end dates
-        streamName = 'timeSeriesStatsMonthlyOutput'
-        self.startDate = config.get('timeSeries', 'startDate')
-        self.endDate = config.get('timeSeries', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDate,
-                                         endDate=self.endDate,
-                                         calendar=self.calendar)
-
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
 
         # these are redundant for now.  Later cleanup is needed where these
         # file names are reused in run()
@@ -137,7 +138,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
             self.xmlFileNames.extend(polarXMLFileNames)
         return  # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         """
         Performs analysis of time series of sea-ice properties.
 
@@ -146,15 +147,10 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         Xylar Asay-Davis, Milena Veneziani
         """
 
-        print "\nPlotting sea-ice area and volume time series..."
+        self.logger.info("\nPlotting sea-ice area and volume time series...")
 
         config = self.config
         calendar = self.calendar
-
-        print '\n  Reading files:\n' \
-              '    {} through\n    {}'.format(
-                  os.path.basename(self.inputFiles[0]),
-                  os.path.basename(self.inputFiles[-1]))
 
         plotTitles = {'iceArea': 'Sea-ice area',
                       'iceVolume': 'Sea-ice volume',
@@ -200,7 +196,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         make_directories(outputDirectory)
 
-        print '  Load sea-ice data...'
+        self.logger.info('  Load sea-ice data...')
         # Load mesh
         self.dsMesh = xr.open_dataset(self.restartFileName)
         self.dsMesh = subset_variables(self.dsMesh,
@@ -208,14 +204,10 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                                                      'areaCell'])
 
         # Load data
-        ds = open_multifile_dataset(
-            fileNames=self.inputFiles,
+        ds = open_mpas_dataset(
+            fileName=self.inputFile,
             calendar=calendar,
-            config=config,
-            simulationStartTime=self.simulationStartTime,
-            timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
-            variableList=['timeMonthly_avg_iceAreaCell',
-                          'timeMonthly_avg_iceVolumeCell'],
+            variableList=self.variableList,
             startDate=self.startDate,
             endDate=self.endDate)
 
@@ -240,8 +232,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                 dsPreprocessedTimeSlice = \
                     dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
             else:
-                print '   Warning: Preprocessed time series ends before the ' \
-                    'timeSeries startYear and will not be plotted.'
+                self.logger.warning('Preprocessed time series ends before the '
+                                    'timeSeries startYear and will not be '
+                                    'plotted.')
                 preprocessedReferenceRunName = 'None'
 
         norm = {'iceArea': 1e-6,  # m^2 to km^2
@@ -262,18 +255,10 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         plotVars = {}
 
         for hemisphere in ['NH', 'SH']:
-            print '   Caching {} data'.format(hemisphere)
-            cacheFileName = '{}/seaIceAreaVolumeTimeSeries_{}.nc'.format(
-                outputDirectory, hemisphere)
 
-            # store some variables for use in _compute_area_vol_part
-            self.hemisphere = hemisphere
-            self.ds = ds
-            dsTimeSeries[hemisphere] = cache_time_series(
-                ds.Time.values, self._compute_area_vol_part, cacheFileName,
-                calendar, yearsPerCacheUpdate=10, printProgress=True)
+            dsTimeSeries[hemisphere] = self._compute_area_vol(ds, hemisphere)
 
-            print '  Make {} plots...'.format(hemisphere)
+            self.logger.info('  Make {} plots...'.format(hemisphere))
 
             for variableName in ['iceArea', 'iceVolume']:
                 key = (hemisphere, variableName)
@@ -573,20 +558,19 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         return dsShift  # }}}
 
-    def _compute_area_vol_part(self, timeIndices, firstCall):  # {{{
+    def _compute_area_vol(self, ds, hemisphere):  # {{{
         '''
         Compute part of the time series of sea ice volume and area, given time
         indices to process.
         '''
-        dsLocal = self.ds.isel(Time=timeIndices)
 
-        if self.hemisphere == 'NH':
+        if hemisphere == 'NH':
             mask = self.dsMesh.latCell > 0
         else:
             mask = self.dsMesh.latCell < 0
-        dsLocal = dsLocal.where(mask)
+        ds = ds.where(mask)
 
-        dsAreaSum = (dsLocal*self.dsMesh.areaCell).sum('nCells')
+        dsAreaSum = (ds*self.dsMesh.areaCell).sum('nCells')
         dsAreaSum = dsAreaSum.rename(
                 {'timeMonthly_avg_iceAreaCell': 'iceArea',
                  'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
@@ -595,13 +579,13 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
         dsAreaSum['iceArea'].attrs['description'] = \
-            'Total {} sea ice area'.format(self.hemisphere)
+            'Total {} sea ice area'.format(hemisphere)
         dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
         dsAreaSum['iceVolume'].attrs['description'] = \
-            'Total {} sea ice volume'.format(self.hemisphere)
+            'Total {} sea ice volume'.format(hemisphere)
         dsAreaSum['iceThickness'].attrs['units'] = 'm'
         dsAreaSum['iceThickness'].attrs['description'] = \
-            'Mean {} sea ice volume'.format(self.hemisphere)
+            'Mean {} sea ice volume'.format(hemisphere)
 
         return dsAreaSum  # }}}
 

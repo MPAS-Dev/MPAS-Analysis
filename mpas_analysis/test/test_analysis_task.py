@@ -1,5 +1,5 @@
 """
-Unit tests for utility functions in run_analysis
+Unit tests for utility functions in run_mpas_analysis
 
 Xylar Asay-Davis
 """
@@ -33,7 +33,7 @@ class TestAnalysisTask(TestCase):
         # a list of analyses to generate.  Valid names are:
         #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
         #   'climatologyMapSSS', 'climatologyMapMLD', 'timeSeriesSeaIceAreaVol',
-        #   'climatologyMapSeaIceConcNH', 'climatologyMapSeaIceConcSH', 
+        #   'climatologyMapSeaIceConcNH', 'climatologyMapSeaIceConcSH',
         #   'climatologyMapSeaIceThickNH', 'climatologyMapSeaIceThickSH'
         # the following shortcuts exist:
         #   'all' -- all analyses will be run

@@ -19,7 +19,7 @@ Instructions for creating a new analysis task:
 5. add new analysis task to run_mpas_analysis under build_analysis_list:
       analyses.append(<component>.MyTask(config, myArg='argValue'))
    This will add a new object of the MyTask class to a list of analysis tasks
-   created in build_analysis_list.  Later on in run_analysis, it will first
+   created in build_analysis_list.  Later on in run_task, it will first
    go through the list to make sure each task needs to be generated
    (by calling check_generate, which is defined in AnalysisTask), then, will
    call setup_and_check on each task (to make sure the appropriate AM is on
@@ -85,7 +85,7 @@ class MyTask(AnalysisTask):  # {{{
     #        def __init__(self, config, fieldName):...
     #    and yu would then make a new task something like this:
     #        myTask = MyTask(config, fieldName='seaIceArea')
-    def __init__(self, config, myArg='myDefaultValue'):  # {{{
+    def __init__(self, config, prerequsiteTask, myArg='myDefaultValue'):  # {{{
         '''
         Construct the analysis task.
         <Add any additional description of what happens during construction>
@@ -95,8 +95,14 @@ class MyTask(AnalysisTask):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
+        prerequsiteTask : ``AnotherTaskClass``
+            <This could be a task that needs to run before this task, a
+            prerequisite.  For example, a task for computing a climatology
+            that this task will then plot.>
+
         myArg : str, optional
             <Describe the arg, or just remove remove it>
+
 
         Authors
         -------
@@ -135,6 +141,40 @@ class MyTask(AnalysisTask):  # {{{
         self.myArg = myArg
         # Example:
         # self.fieldName = fieldName
+
+        # If you need to, you can add task that needs to run before this task
+        # (a prerequisite), just add it as follows:
+        self.prerequsiteTask = prerequsiteTask
+        self.run_after(prerequsiteTask)
+
+        # You may want to break this task into several subtasks that can run
+        # in parallel with one another or one after the other, depending on
+        # how you set them up.
+        #
+        # An example where the subtasks run in parallel with one another:
+        for season in ['JFM', 'JAS', 'ANN']:
+            subtask = MySubtask(parentTask=self, season=season)
+            self.add_subtask(subtask)
+
+        # An example where the subtasks run in sequence because each one
+        # depends on the previous one
+        remapObservations = MyRemapObservationsSubtask(parentTask=self)
+        # You can make sure MyRemapObservationsSubtask also runs after the
+        # prerequisite task:
+        remapObservations.run_after(prerequsiteTask)
+        self.add_subtask(remapObservations)
+
+        plotObservations = MyPlotObservationsSubtask(
+                remapObservations=remapObservations)
+        # This is the part that makes sure MyPlotObservationsSubtask runs after
+        # MyRemapObservationsSubtask.  Note: you might do this inside of
+        # MyPlotObservationsSubtask instead of here.
+        plotObservations.run_after(remapObservations)
+        self.add_subtask(plotObservations)
+
+        # Note: I have not included stubs for MyRemapObservationsSubtask and
+        # MyPlotObservationsSubtask but they would be qualitatively similar
+        # to MySubtask below.
 
         # }}}
 
@@ -220,7 +260,7 @@ class MyTask(AnalysisTask):  # {{{
                                        self.endDate))
 
         # For climatologies, update the start and end year based on the files
-        # that are actually available 
+        # that are actually available
         # If not analyzing climatologies, delete this line
         changed, self.startYear, self.endYear, self.startDate, self.endDate = \
             update_climatology_bounds_from_file_names(self.inputFiles,
@@ -234,19 +274,19 @@ class MyTask(AnalysisTask):  # {{{
         # images should appear on the webpage.
 
         # Note: because of the way parallel tasks are handled in MPAS-Analysis,
-        # we can't be sure that run() will be called (it might be launched
-        # as a completely separate process) so it is not safe to store a list
-        # of xml files from within run(). The recommended procedure is to
-        # create a list of XML files here during setup_and_check() and possibly
-        # use them during run()
+        # we can't be sure that run_task() will be called (it might be
+        # launched as a completely separate process) so it is not safe to store
+        # a list of xml files from within run_task(). The recommended
+        # procedure is to create a list of XML files here during
+        # setup_and_check() and possibly use them during run_task()
 
         self.xmlFileNames = []
-        
+
         # we also show how to store file prefixes for later use in creating
         # plots
         self.filePrefixes = {}
 
-        # plotParameters is a list of parameters, a stand-ins for whatever 
+        # plotParameters is a list of parameters, a stand-ins for whatever
         # you might want to include in each plot name, for example, seasons or
         # types of observation.
         self.plotParameters = self.config.getExpression(self.taskName,
@@ -261,10 +301,9 @@ class MyTask(AnalysisTask):  # {{{
                                                         filePrefix))
             self.filePrefixes[plotParameter] = filePrefix
 
-
         # }}}
 
-    def run(self):  # {{{
+    def run_task(self):  # {{{
         '''
         The main method of the task that performs the analysis task.
 
@@ -275,9 +314,9 @@ class MyTask(AnalysisTask):  # {{{
 
         # Add the main contents of the analysis task below
 
-        # No need to call AnalysisTask.run() because it doesn't do anything,
-        # so we don't call super(MyTask, self).run(), as we do for other
-        # methods above.
+        # No need to call AnalysisTask.run_task() because it doesn't do
+        # anything, so we don't call super(MyTask, self).run_task(), as we
+        # do for other methods above.
 
         # Here is an example of a call to a local helper method (function),
         # one for each of our plotParameters (e.g. seasons)
@@ -296,15 +335,15 @@ class MyTask(AnalysisTask):  # {{{
     def _make_plot(self, plotParameter, optionalArgument=None):  # {{{
         '''
         Make a simple plot
-        
+
         Parameters
         ----------
         plotParameter : str
             The name of a parameter that is specific to this plot
-            
+
         optionalArgument : <type_goes_here>, optional
             An optional argument
-        
+
         <Performs my favorite subtask>
         '''
 
@@ -320,20 +359,20 @@ class MyTask(AnalysisTask):  # {{{
         # get the file name based on the plot parameter
         filePrefix = self.filePrefixes[plotParameter]
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-       
+
         # make the plot
         x = numpy.linspace(0, 1, 1000)
         plt.plot(x, x**2)
         # save the plot to the output file
         plt.savefig(outFileName)
-        
+
         # here's an example of how you would create an XML file for this plot
         # with the appropriate entries.  Some notes:
         # * Gallery groups typically represent all the analysis from a task,
         #   or sometimes from multiple tasks
         # * A gallery might be for just for one set of observations, one
         #   season, etc., depending on what makes sense
-        # * Within each gallery, there is one plot for each value in 
+        # * Within each gallery, there is one plot for each value in
         #   'plotParameters', with a corresponding caption and short thumbnail
         #   description
         caption = 'Plot of x^2 with plotParamter: {}'.format(plotParameter)
@@ -350,9 +389,34 @@ class MyTask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
-        
-        # 
         # }}}
+
+
+class MySubtask(AnalysisTask):
+    def __init__(self, parentTask, season):
+        self.parentTask = parentTask
+        self.season = season
+        super(MySubtask, self).__init__(
+                config=parentTask.config,
+                taskName=parentTask.taskName,
+                subtaskName=season,
+                componentName=parentTask.component,
+                tags=parentTask.tags)
+
+    def setup_and_check(self):
+        # do whatever setup is needed for the subtask.  You don't have
+        # to redundantly do setup that happened in parentTask because
+        # you can access its fields if needed
+        assert(self.parentTask.streamName ==
+               'timeSeriesStatsMonthlyOutput')
+
+    def run_analsysis(self):
+        # do the main action of the subplot.  Note: you can't access any
+        # fields created when parentTask runs for 2 reasions: 1) parentTask
+        # runs after this task and 2) parentTask and all other tasks may
+        # run in a separate process from this task so the data will not be
+        # communicated to this process.
+        pass
 
 # }}}
 

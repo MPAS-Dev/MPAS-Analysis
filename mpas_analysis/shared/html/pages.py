@@ -16,7 +16,7 @@ def generate_html(config, analyses):  # {{{
     config : ``MpasAnalysisConfigParser`` object
         contains config options
 
-    analysis : list of ``AnalysisTask`` objects
+    analysis : ``OrderedDict`` of ``AnalysisTask`` objects
         the analysis tasks that generated the plots to include in the webpages.
         The ``list_xml_files()`` method will be called on each task to get
         the list of files to include on the webpage for the associated
@@ -38,7 +38,7 @@ def generate_html(config, analyses):  # {{{
 
     # add images from each analysis task, creating ga dictionary of components
     missingCount = 0
-    for analysisTask in analyses:
+    for analysisTask in analyses.itervalues():
         for fileName in analysisTask.xmlFileNames:
             try:
                 ComponentPage.add_image(fileName, config, components)
