@@ -4,17 +4,17 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 from scipy import signal, stats
-import os
 import matplotlib.pyplot as plt
 
 from ..shared.climatology import climatology
 from ..shared.constants import constants
 from ..shared.io.utility import build_config_full_path
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     datetime_to_days, string_to_days_since_date
+
+from ..shared.io import open_mpas_dataset
+
 from ..shared.plot.plotting import plot_xtick_format, plot_size_y_axis
 
 from ..shared import AnalysisTask
@@ -26,12 +26,18 @@ class IndexNino34(AnalysisTask):  # {{{
     A task for computing and plotting time series and spectra of the El Nino
     3.4 climate index
 
+    Attributes
+    ----------
+
+    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+        The task that extracts the time series from MPAS monthly output
+
     Authors
     -------
     Luke Van Roekel, Xylar Asay-Davis
     '''
 
-    def __init__(self, config):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask):  # {{{
         '''
         Construct the analysis task.
 
@@ -39,6 +45,9 @@ class IndexNino34(AnalysisTask):  # {{{
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+            The task that extracts the time series from MPAS monthly output
 
         Authors
         -------
@@ -51,6 +60,10 @@ class IndexNino34(AnalysisTask):  # {{{
             taskName='indexNino34',
             componentName='ocean',
             tags=['index', 'nino'])
+
+        self.mpasTimeSeriesTask = mpasTimeSeriesTask
+
+        self.run_after(mpasTimeSeriesTask)
 
         # }}}
 
@@ -70,19 +83,14 @@ class IndexNino34(AnalysisTask):  # {{{
         #     self.calendar
         super(IndexNino34, self).setup_and_check()
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        streamName = 'timeSeriesStatsMonthlyOutput'
-        self.startDate = self.config.get('index', 'startDate')
-        self.endDate = self.config.get('index', 'endDate')
-        self.inputFiles = self.historyStreams.readpath(
-                streamName, startDate=self.startDate, endDate=self.endDate,
-                calendar=self.calendar)
+        self.startDate = self.config.get('timeSeries', 'startDate')
+        self.endDate = self.config.get('timeSeries', 'endDate')
 
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
+        self.variableList = \
+            ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
+        self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
+
+        self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         mainRunName = self.config.get('runs', 'mainRunName')
 
@@ -110,7 +118,6 @@ class IndexNino34(AnalysisTask):  # {{{
         self.logger.info('  Load SST data...')
         fieldName = 'nino'
 
-        simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
         calendar = self.calendar
 
@@ -130,10 +137,6 @@ class IndexNino34(AnalysisTask):  # {{{
             obsTitle = 'ERS SSTv4'
             refDate = '1800-01-01'
 
-        self.logger.info('\n  Reading files:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFiles[0]),
-                                 os.path.basename(self.inputFiles[-1])))
         mainRunName = config.get('runs', 'mainRunName')
 
         # regionIndex should correspond to NINO34 in surface weighted Average
@@ -141,18 +144,11 @@ class IndexNino34(AnalysisTask):  # {{{
         regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
 
         # Load data:
-        varName = \
-            'timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'
-        varList = [varName]
-        ds = open_multifile_dataset(fileNames=self.inputFiles,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName=['xtime_startMonthly',
-                                                      'xtime_endMonthly'],
-                                    variableList=varList,
-                                    startDate=self.startDate,
-                                    endDate=self.endDate)
+        ds = open_mpas_dataset(fileName=self.inputFile,
+                               calendar=calendar,
+                               variableList=self.variableList,
+                               startDate=self.startDate,
+                               endDate=self.endDate)
 
         # Observations have been processed to the nino34Index prior to reading
         dsObs = xr.open_dataset(dataPath, decode_cf=False, decode_times=False)
@@ -163,6 +159,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Obs = dsObs.sst
 
         self.logger.info('  Compute NINO3.4 index...')
+        varName = self.variableList[0]
         regionSST = ds[varName].isel(nOceanRegions=regionIndex)
         nino34 = self._compute_nino34_index(regionSST, calendar)
 

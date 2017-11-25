@@ -23,7 +23,7 @@ mpasMeshName = oEC60to30v3
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-mappingDirectory = /lcrc/group/acme/mapping
+mappingDirectory = /lcrc/group/acme/mpas_analysis/mapping
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,

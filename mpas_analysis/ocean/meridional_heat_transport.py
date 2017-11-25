@@ -100,8 +100,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         self.mhtFile = mhtFiles[0]
 
-        self.simulationStartTime = get_simulation_start_time(self.runStreams)
-
         self.sectionName = 'meridionalHeatTransport'
 
         # Read in obs file information

@@ -1,16 +1,11 @@
-import os
-
 from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.generalized_reader import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 
-from ..shared.timekeeping.utility import get_simulation_start_time, \
-    date_to_days, days_to_datetime
-
-from ..shared.time_series import time_series
+from ..shared.timekeeping.utility import date_to_days, days_to_datetime
 
 from ..shared.io.utility import build_config_full_path, make_directories, \
     check_path_exists
@@ -22,12 +17,18 @@ class TimeSeriesSST(AnalysisTask):
     Performs analysis of the time-series output of sea-surface temperature
     (SST).
 
+    Attributes
+    ----------
+
+    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+        The task that extracts the time series from MPAS monthly output
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask):  # {{{
         """
         Construct the analysis task.
 
@@ -35,6 +36,9 @@ class TimeSeriesSST(AnalysisTask):
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+            The task that extracts the time series from MPAS monthly output
 
         Authors
         -------
@@ -46,6 +50,10 @@ class TimeSeriesSST(AnalysisTask):
             taskName='timeSeriesSST',
             componentName='ocean',
             tags=['timeSeries', 'sst'])
+
+        self.mpasTimeSeriesTask = mpasTimeSeriesTask
+
+        self.run_after(mpasTimeSeriesTask)
 
         # }}}
 
@@ -68,31 +76,20 @@ class TimeSeriesSST(AnalysisTask):
         #   self.calendar
         super(TimeSeriesSST, self).setup_and_check()
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
-
         config = self.config
+
+        self.startDate = self.config.get('timeSeries', 'startDate')
+        self.endDate = self.config.get('timeSeries', 'endDate')
+
+        self.variableList = \
+            ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
+        self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('oceanPreprocessedReference',
                                              'baseDirectory'))
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        streamName = 'timeSeriesStatsMonthlyOutput'
-        self.startDate = config.get('timeSeries', 'startDate')
-        self.endDate = config.get('timeSeries', 'endDate')
-        self.inputFiles = \
-            self.historyStreams.readpath(streamName,
-                                         startDate=self.startDate,
-                                         endDate=self.endDate,
-                                         calendar=self.calendar)
-
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
-                                       self.endDate))
+        self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         mainRunName = config.get('runs', 'mainRunName')
         regions = config.getExpression('regions', 'regions')
@@ -126,14 +123,8 @@ class TimeSeriesSST(AnalysisTask):
 
         self.logger.info('  Load SST data...')
 
-        simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
         calendar = self.calendar
-
-        self.logger.info('\n  Reading files:\n'
-                         '    {} through\n    {}'.format(
-                             os.path.basename(self.inputFiles[0]),
-                             os.path.basename(self.inputFiles[-1])))
 
         mainRunName = config.get('runs', 'mainRunName')
         preprocessedReferenceRunName = \
@@ -157,22 +148,14 @@ class TimeSeriesSST(AnalysisTask):
         regionNames = config.getExpression('regions', 'regions')
         regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
-        # Load data:
-        varName = \
-            'timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'
-        varList = [varName]
-        ds = open_multifile_dataset(fileNames=self.inputFiles,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName=['xtime_startMonthly',
-                                                      'xtime_endMonthly'],
-                                    variableList=varList,
-                                    startDate=self.startDate,
-                                    endDate=self.endDate)
+        dsSST = open_mpas_dataset(fileName=self.inputFile,
+                                  calendar=calendar,
+                                  variableList=self.variableList,
+                                  startDate=self.startDate,
+                                  endDate=self.endDate)
 
-        yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
-        yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+        yearStart = days_to_datetime(dsSST.Time.min(), calendar=calendar).year
+        yearEnd = days_to_datetime(dsSST.Time.max(), calendar=calendar).year
         timeStart = date_to_days(year=yearStart, month=1, day=1,
                                  calendar=calendar)
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
@@ -187,7 +170,6 @@ class TimeSeriesSST(AnalysisTask):
                 fileNames=inFilesPreprocessed,
                 calendar=calendar,
                 config=config,
-                simulationStartTime=simulationStartTime,
                 timeVariableName='xtime')
             yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year
@@ -200,16 +182,6 @@ class TimeSeriesSST(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
-        cacheFileName = '{}/sstTimeSeries.nc'.format(outputDirectory)
-
-        # save ds so it's avaliable in _compute_sst_part
-        self.ds = ds
-        dsSST = time_series.cache_time_series(ds.Time.values,
-                                              self._compute_sst_part,
-                                              cacheFileName, calendar,
-                                              yearsPerCacheUpdate=10,
-                                              logger=self.logger)
-
         self.logger.info('  Make plots...')
         for regionIndex in regionIndicesToPlot:
             region = regions[regionIndex]
@@ -219,6 +191,7 @@ class TimeSeriesSST(AnalysisTask):
             xLabel = 'Time [years]'
             yLabel = '[$^\circ$C]'
 
+            varName = self.variableList[0]
             SST = dsSST[varName].isel(nOceanRegions=regionIndex)
 
             filePrefix = self.filePrefixes[region]
@@ -229,7 +202,7 @@ class TimeSeriesSST(AnalysisTask):
                 SST_v0 = dsPreprocessedTimeSlice.SST
 
                 title = '{}\n {} (red)'.format(title,
-                                              preprocessedReferenceRunName)
+                                               preprocessedReferenceRunName)
                 timeseries_analysis_plot(config, [SST, SST_v0],
                                          movingAveragePoints,
                                          title, xLabel, yLabel, figureName,
@@ -256,14 +229,6 @@ class TimeSeriesSST(AnalysisTask):
                 imageDescription=caption,
                 imageCaption=caption)
 
-        # }}}
-
-    def _compute_sst_part(self, timeIndices, firstCall):  # {{{
-        '''
-        Compute part of the SST time series, given time indices to process.
-        '''
-        dsLocal = self.ds.isel(Time=timeIndices)
-        return dsLocal
         # }}}
 
 # }}}

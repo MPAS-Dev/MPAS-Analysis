@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import netCDF4
-import os
 
 from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     plot_vertical_section, setup_colormap
 
-from ..shared.generalized_reader.generalized_reader \
-    import open_multifile_dataset
+from ..shared.generalized_reader import open_multifile_dataset
+from ..shared.io import open_mpas_dataset
 
 from ..shared.timekeeping.utility import get_simulation_start_time, \
     date_to_days, days_to_datetime, string_to_datetime
-
-from ..shared.time_series import time_series
 
 from ..shared.io.utility import build_config_full_path, make_directories, \
     check_path_exists
@@ -25,12 +22,18 @@ class TimeSeriesOHC(AnalysisTask):
     """
     Performs analysis of ocean heat content (OHC) from time-series output.
 
+    Attributes
+    ----------
+
+    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+        The task that extracts the time series from MPAS monthly output
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
 
-    def __init__(self, config):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask):  # {{{
         """
         Construct the analysis task.
 
@@ -38,6 +41,9 @@ class TimeSeriesOHC(AnalysisTask):
         ----------
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
+
+        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+            The task that extracts the time series from MPAS monthly output
 
         Authors
         -------
@@ -49,6 +55,10 @@ class TimeSeriesOHC(AnalysisTask):
             taskName='timeSeriesOHC',
             componentName='ocean',
             tags=['timeSeries', 'ohc'])
+
+        self.mpasTimeSeriesTask = mpasTimeSeriesTask
+
+        self.run_after(mpasTimeSeriesTask)
 
         # }}}
 
@@ -74,27 +84,27 @@ class TimeSeriesOHC(AnalysisTask):
 
         config = self.config
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
+        self.startDate = self.config.get('timeSeries', 'startDate')
+        self.endDate = self.config.get('timeSeries', 'endDate')
+
+        self.variables = {}
+        for suffix in ['avgLayerTemperature', 'avgLayerSalinity',
+                       'sumLayerMaskValue', 'avgLayerArea',
+                       'avgLayerThickness']:
+            self.variables[suffix] = \
+                    'timeMonthly_avg_avgValueWithinOceanLayerRegion_' + suffix
+
+        self.mpasTimeSeriesTask.add_variables(
+                variableList=self.variables.values())
+
+        self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('oceanPreprocessedReference',
                                              'baseDirectory'))
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        self.streamName = 'timeSeriesStatsMonthlyOutput'
         self.startDate = self.config.get('timeSeries', 'startDate')
         self.endDate = self.config.get('timeSeries', 'endDate')
-        self.inputFiles = self.historyStreams.readpath(
-                self.streamName, startDate=self.startDate,
-                endDate=self.endDate, calendar=self.calendar)
-
-        if len(self.inputFiles) == 0:
-            raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(self.streamName, self.startDate,
-                                       self.endDate))
 
         mainRunName = config.get('runs', 'mainRunName')
         regions = config.getExpression('regions', 'regions')
@@ -111,14 +121,16 @@ class TimeSeriesOHC(AnalysisTask):
                                                'plotOriginalFields')
 
         if plotOriginalFields:
-            plotTypes = ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ', 'OHCAnomalyZ', 'OHC', 'OHCAnomaly']
+            plotTypes = ['TZ', 'TAnomalyZ', 'SZ', 'SAnomalyZ', 'OHCZ',
+                         'OHCAnomalyZ', 'OHC', 'OHCAnomaly']
         else:
             plotTypes = ['TAnomalyZ', 'SAnomalyZ', 'OHCAnomalyZ', 'OHCAnomaly']
 
         for region in regions:
             for plotType in plotTypes:
                 filePrefix = '{}_{}_{}'.format(plotType, region, mainRunName)
-                self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory, filePrefix))
+                self.xmlFileNames.append('{}/{}.xml'.format(
+                        self.plotsDirectory, filePrefix))
                 self.filePrefixes[plotType, region] = filePrefix
 
         return  # }}}
@@ -138,6 +150,7 @@ class TimeSeriesOHC(AnalysisTask):
         simulationStartTime = get_simulation_start_time(self.runStreams)
         config = self.config
         calendar = self.calendar
+        variables = self.variables
 
         # read parameters from config file
         mainRunName = config.get('runs', 'mainRunName')
@@ -154,11 +167,11 @@ class TimeSeriesOHC(AnalysisTask):
         compareWithObservations = config.getboolean(configSectionName,
                                                     'compareWithObservations')
 
-        movingAveragePointsTimeSeries = config.getint(configSectionName,
-                                                      'movingAveragePointsTimeSeries')
+        movingAveragePointsTimeSeries = config.getint(
+                configSectionName, 'movingAveragePointsTimeSeries')
 
-        movingAveragePointsHovmoller = config.getint(configSectionName,
-                                                     'movingAveragePointsHovmoller')
+        movingAveragePointsHovmoller = config.getint(
+                configSectionName, 'movingAveragePointsHovmoller')
 
         regions = config.getExpression('regions', 'regions')
         plotTitles = config.getExpression('regions', 'plotTitles')
@@ -182,11 +195,6 @@ class TimeSeriesOHC(AnalysisTask):
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for OHC calculation')
 
-        self.logger.info('\n  Reading files:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFiles[0]),
-                                 os.path.basename(self.inputFiles[-1])))
-
         # Define/read in general variables
         self.logger.info('  Read in depth and compute specific depth '
                          'indexes...')
@@ -202,27 +210,14 @@ class TimeSeriesOHC(AnalysisTask):
 
         # Load data
         self.logger.info('  Load ocean data...')
-        avgTemperatureVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature'
-        avgSalinityVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerSalinity'
-        sumMaskVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue'
-        avgAreaVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerArea'
-        avgThickVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerThickness'
-        variableList = [avgTemperatureVarName, avgSalinityVarName, sumMaskVarName,
-                        avgAreaVarName, avgThickVarName]
-        ds = open_multifile_dataset(fileNames=self.inputFiles,
-                                    calendar=calendar,
-                                    config=config,
-                                    simulationStartTime=simulationStartTime,
-                                    timeVariableName=['xtime_startMonthly',
-                                                      'xtime_endMonthly'],
-                                    variableList=variableList,
-                                    startDate=self.startDate,
-                                    endDate=self.endDate)
+        ds = open_mpas_dataset(fileName=self.inputFile,
+                               calendar=calendar,
+                               variableList=self.variables.values(),
+                               startDate=self.startDate,
+                               endDate=self.endDate)
+        # rename the variables to shorter names for convenience
+        renameDict = dict((v, k) for k, v in variables.iteritems())
+        ds.rename(renameDict, inplace=True)
 
         timeStart = string_to_datetime(self.startDate)
         timeEnd = string_to_datetime(self.endDate)
@@ -233,25 +228,20 @@ class TimeSeriesOHC(AnalysisTask):
             startDateFirstYear = simulationStartTime
             firstYear = int(startDateFirstYear[0:4])
             endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
-            filesFirstYear = \
-                self.historyStreams.readpath(self.streamName,
-                                             startDate=startDateFirstYear,
-                                             endDate=endDateFirstYear,
-                                             calendar=calendar)
-            dsFirstYear = open_multifile_dataset(
-                fileNames=filesFirstYear,
+            dsFirstYear = open_mpas_dataset(
+                fileName=self.inputFile,
                 calendar=calendar,
-                config=config,
-                simulationStartTime=simulationStartTime,
-                timeVariableName=['xtime_startMonthly', 'xtime_endMonthly'],
-                variableList=[avgTemperatureVarName, avgSalinityVarName],
+                variableList=self.variables.values(),
                 startDate=startDateFirstYear,
                 endDate=endDateFirstYear)
-            firstYearAvgLayerTemperature = dsFirstYear[avgTemperatureVarName]
-            firstYearAvgLayerSalinity = dsFirstYear[avgSalinityVarName]
+
+            dsFirstYear.rename(renameDict, inplace=True)
+
+            firstYearAvgLayerTemperature = dsFirstYear['avgLayerTemperature']
+            firstYearavgLayerSalinity = dsFirstYear['avgLayerSalinity']
         else:
-            firstYearAvgLayerTemperature = ds[avgTemperatureVarName]
-            firstYearAvgLayerSalinity = ds[avgSalinityVarName]
+            firstYearAvgLayerTemperature = ds['avgLayerTemperature']
+            firstYearavgLayerSalinity = ds['avgLayerSalinity']
             firstYear = timeStart.year
 
         timeStartFirstYear = date_to_days(year=firstYear, month=1, day=1,
@@ -265,16 +255,18 @@ class TimeSeriesOHC(AnalysisTask):
         firstYearAvgLayerTemperature = \
             firstYearAvgLayerTemperature.mean('Time')
 
-        firstYearAvgLayerSalinity = firstYearAvgLayerSalinity.sel(
+        firstYearavgLayerSalinity = firstYearavgLayerSalinity.sel(
             Time=slice(timeStartFirstYear, timeEndFirstYear))
-        firstYearAvgLayerSalinity = \
-            firstYearAvgLayerSalinity.mean('Time')
+        firstYearavgLayerSalinity = \
+            firstYearavgLayerSalinity.mean('Time')
 
         self.logger.info('  Compute temperature and salinity anomalies...')
 
-        ds['avgLayerTemperatureAnomaly'] = (ds[avgTemperatureVarName] - firstYearAvgLayerTemperature)
+        ds['avgLayerTemperatureAnomaly'] = \
+            (ds['avgLayerTemperature'] - firstYearAvgLayerTemperature)
 
-        ds['avgLayerSalinityAnomaly'] = (ds[avgSalinityVarName] - firstYearAvgLayerSalinity)
+        ds['avgLayerSalinityAnomaly'] = \
+            (ds['avgLayerSalinity'] - firstYearavgLayerSalinity)
 
         yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
         yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -292,7 +284,6 @@ class TimeSeriesOHC(AnalysisTask):
                 fileNames=inFilesPreprocessed,
                 calendar=calendar,
                 config=config,
-                simulationStartTime=simulationStartTime,
                 timeVariableName='xtime')
             yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year
@@ -305,16 +296,8 @@ class TimeSeriesOHC(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
-        cacheFileName = '{}/ohcTimeSeries.nc'.format(outputDirectory)
-
-        # store fields needed by _compute_ohc_part
-        self.ds = ds
-        self.regionNames = regionNames
-        dsOHC = time_series.cache_time_series(ds.Time.values,
-                                              self._compute_ohc_part,
-                                              cacheFileName, calendar,
-                                              yearsPerCacheUpdate=10,
-                                              logger=self.logger)
+        # Add the OHC to the data set
+        ds = self._compute_ohc(ds, regionNames)
 
         unitsScalefactor = 1e-22
 
@@ -328,7 +311,8 @@ class TimeSeriesOHC(AnalysisTask):
             #  First T vs depth/time
             x = ds.Time.values
             y = depth
-            z = ds.avgLayerTemperatureAnomaly.isel(nOceanRegionsTmp=regionIndex)
+            z = ds.avgLayerTemperatureAnomaly.isel(
+                    nOceanRegionsTmp=regionIndex)
             z = z.transpose()
 
             colorbarLabel = '[$^\circ$C]'
@@ -368,7 +352,7 @@ class TimeSeriesOHC(AnalysisTask):
                 imageCaption=caption)
 
             if plotOriginalFields:
-                z = ds[avgTemperatureVarName].isel(nOceanRegionsTmp=regionIndex)
+                z = ds['avgLayerTemperature'].isel(nOceanRegionsTmp=regionIndex)
                 z = z.transpose()
 
                 title = 'Temperature, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
@@ -441,7 +425,7 @@ class TimeSeriesOHC(AnalysisTask):
                 imageCaption=caption)
 
             if plotOriginalFields:
-                z = ds[avgSalinityVarName].isel(nOceanRegionsTmp=regionIndex)
+                z = ds['avgLayerSalinity'].isel(nOceanRegionsTmp=regionIndex)
                 z = z.transpose()
 
                 title = 'Salinity, {} \n {}'.format(plotTitles[regionIndex], mainRunName)
@@ -476,7 +460,7 @@ class TimeSeriesOHC(AnalysisTask):
 
 
             #  Third OHC vs depth/time
-            ohcAnomaly = dsOHC.ohcAnomaly.isel(nOceanRegionsTmp=regionIndex)
+            ohcAnomaly = ds.ohcAnomaly.isel(nOceanRegionsTmp=regionIndex)
             ohcAnomalyScaled = unitsScalefactor*ohcAnomaly
             z = ohcAnomalyScaled.transpose()
 
@@ -515,7 +499,7 @@ class TimeSeriesOHC(AnalysisTask):
                 imageCaption=caption)
 
             if plotOriginalFields:
-                ohc = dsOHC.ohc.isel(nOceanRegionsTmp=regionIndex)
+                ohc = ds.ohc.isel(nOceanRegionsTmp=regionIndex)
                 ohcScaled = unitsScalefactor*ohc
                 z = ohcScaled.transpose()
 
@@ -665,13 +649,11 @@ class TimeSeriesOHC(AnalysisTask):
                     imageDescription=caption,
                     imageCaption=caption)
 
-
         # }}}
 
-
-    def _compute_ohc_part(self, timeIndices, firstCall):  # {{{
+    def _compute_ohc(self, ds, regionNames):  # {{{
         '''
-        Compute part of the OHC time series, given time indices to process.
+        Compute the OHC time series.
         '''
 
         # specific heat [J/(kg*degC)]
@@ -679,34 +661,22 @@ class TimeSeriesOHC(AnalysisTask):
         # [kg/m3]
         rho = self.namelist.getfloat('config_density0')
 
-        dsLocal = self.ds.isel(Time=timeIndices)
+        ds['ohc'] = rho*cp*ds['sumLayerMaskValue'] * \
+            ds['avgLayerArea'] * ds['avgLayerThickness'] * \
+            ds['avgLayerTemperature']
+        ds.ohc.attrs['units'] = 'J'
+        ds.ohc.attrs['description'] = 'Ocean heat content in each region'
 
+        ds['ohcAnomaly'] = rho*cp*ds['sumLayerMaskValue'] * \
+            ds['avgLayerArea'] * ds['avgLayerThickness'] * \
+            ds.avgLayerTemperatureAnomaly
+        ds.ohcAnomaly.attrs['units'] = 'J'
+        ds.ohcAnomaly.attrs['description'] = \
+            'Ocean heat content anomaly in each region'
 
-        avgTemperatureVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature'
-        sumMaskVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue'
-        avgAreaVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerArea'
-        avgThickVarName = \
-            'timeMonthly_avg_avgValueWithinOceanLayerRegion_avgLayerThickness'
+        ds['regionNames'] = ('nOceanRegionsTmp', regionNames)
 
-
-        dsLocal['ohc'] = rho*cp*dsLocal[sumMaskVarName] * \
-            dsLocal[avgAreaVarName] * dsLocal[avgThickVarName] * \
-            dsLocal[avgTemperatureVarName]
-        dsLocal.ohc.attrs['units'] = 'J'
-        dsLocal.ohc.attrs['description'] = 'Ocean heat content in each region'
-
-        dsLocal['ohcAnomaly'] = rho*cp*dsLocal[sumMaskVarName] * \
-            dsLocal[avgAreaVarName] * dsLocal[avgThickVarName] * \
-            dsLocal.avgLayerTemperatureAnomaly
-        dsLocal.ohcAnomaly.attrs['units'] = 'J'
-        dsLocal.ohcAnomaly.attrs['description'] = 'Ocean heat content anomaly in each region'
-
-        dsLocal['regionNames'] = ('nOceanRegionsTmp', self.regionNames)
-
-        return dsLocal  # }}}
+        return ds  # }}}
 
     # }}}
 
