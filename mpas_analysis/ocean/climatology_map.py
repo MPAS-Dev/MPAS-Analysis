@@ -277,8 +277,11 @@ class ClimatologyMapOcean(AnalysisTask):  # {{{
                     # load the observations the first time
                     dsObs = self._build_observational_dataset()
 
-                seasonalClimatology = compute_climatology(
-                    dsObs, monthValues, maskVaries=True)
+                if 'Time' in dsObs.dims:
+                    seasonalClimatology = compute_climatology(
+                        dsObs, monthValues, maskVaries=True)
+                else:
+                    seasonalClimatology = dsObs
 
                 if self.obsRemapper is None:
                     # no need to remap because the observations are on the
@@ -721,6 +724,105 @@ class ClimatologyMapMLD(ClimatologyMapOcean):  # {{{
         dsObs = mpas_xarray.subset_variables(dsObs, [self.obsFieldName,
                                                      'month'])
 
+        return dsObs  # }}}
+
+
+class ClimatologyMapSSH(ClimatologyMapOcean):  # {{{
+    """
+    An analysis task for comparison of sea surface height (ssh) against
+    observations
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+    def __init__(self, config, mpasClimatologyTask):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        config :  instance of MpasAnalysisConfigParser
+            Contains configuration options
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        self.fieldName = 'ssh'
+        self.fieldNameInTitle = 'SSH'
+        self.mpasFieldName = 'timeMonthly_avg_ssh'
+        self.iselValues = None
+
+        # call the constructor from the base class (ClimatologyMapOcean)
+        super(ClimatologyMapSSH, self).__init__(
+            config=config,
+            mpasClimatologyTask=mpasClimatologyTask,
+            taskName='climatologyMapSSH',
+            tags=['climatology', 'horizontalMap', self.fieldName])
+
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        self.outFileLabel = 'sshAVISO'
+
+        observationsDirectory = build_config_full_path(
+            self.config, 'oceanObservations',
+            '{}Subdirectory'.format(self.fieldName))
+
+        self.obsFileName = \
+            '{}/zos_AVISO_L4_199210-201012.nc'.format(
+                observationsDirectory)
+
+        self.obsFieldName = 'zos'
+
+        # Set appropriate MLD figure labels
+        self.observationTitleLabel = \
+            'Observations (AVISO sea-level anomaly)'
+        self.unitsLabel = 'm'
+
+        # variables for XML and webpages
+        self.galleryGroup = 'Global Sea Surface Height'
+        self.groupSubtitle = None
+        self.groupLink = 'ssh'
+        self.galleryName = 'Observations: AVISO'
+        self.imageCaption = 'Mean S'
+
+        # call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(ClimatologyMapSSH, self).setup_and_check()
+
+        # }}}
+
+    def _build_observational_dataset(self):  # {{{
+        '''
+        read in the data sets for observations, and possibly rename some
+        variables and dimensions
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        '''
+
+        dsObs = xr.open_mfdataset(self.obsFileName)
+        dsObs.rename({'time': 'Time'}, inplace=True)
+        dsObs.coords['month'] = dsObs['Time.month']
+        dsObs.coords['year'] = dsObs['Time.year']
         return dsObs  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
