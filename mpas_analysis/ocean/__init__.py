@@ -1,6 +1,7 @@
 from mpas_analysis.ocean.climatology_map_sst import ClimatologyMapSST
 from mpas_analysis.ocean.climatology_map_mld import ClimatologyMapMLD
 from mpas_analysis.ocean.climatology_map_sss import ClimatologyMapSSS
+from mpas_analysis.ocean.climatology_map_ssh import ClimatologyMapSSH
 from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
 from mpas_analysis.ocean.climatology_map_sose import \
