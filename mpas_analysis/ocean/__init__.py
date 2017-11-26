@@ -1,5 +1,5 @@
 from climatology_map import ClimatologyMapSST, ClimatologyMapMLD, \
-    ClimatologyMapSSS
+    ClimatologyMapSSS, ClimatologyMapSSH
 from time_series_ohc import TimeSeriesOHC
 from time_series_sst import TimeSeriesSST
 from index_nino34 import IndexNino34
