@@ -1,1 +1,1 @@
-from analysis_task import AnalysisTask
+from .analysis_task import AnalysisTask
