@@ -4,6 +4,8 @@ Unit tests for utility functions in run_mpas_analysis
 Xylar Asay-Davis
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import pytest
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.analysis_task import AnalysisTask

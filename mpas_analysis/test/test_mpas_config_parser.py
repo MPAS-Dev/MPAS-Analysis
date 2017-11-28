@@ -5,7 +5,10 @@ Xylar Asay-Davis, Phillip J. Wolfram
 01/31/2017
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import pytest
+import six
 from six.moves import configparser
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration.MpasAnalysisConfigParser \

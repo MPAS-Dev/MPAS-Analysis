@@ -1,5 +1,3 @@
-import numpy as np
-
 """
 Constants that are common to all analysis tasks
 
@@ -11,6 +9,10 @@ Last modified
 -------------
 03/15/2017
 """
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import numpy as np
 
 # set parameters for default climatology comparison grid
 dLongitude = 0.5
