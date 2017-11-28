@@ -468,7 +468,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         if timeVar.dtype == '|S64':
             # this is an array of date strings like 'xtime'
             # convert to string
-            timeStrings = [''.join(xtime).strip() for xtime in timeVar.values]
+            timeStrings = [''.join(str(xtime.astype('U'))).strip() for xtime in timeVar.values]
             days = string_to_days_since_date(dateString=timeStrings,
                                              referenceDate=referenceDate,
                                              calendar=calendar)

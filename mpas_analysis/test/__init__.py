@@ -55,7 +55,7 @@ def loaddatadir(request, tmpdir):
     test_dir, _ = os.path.splitext(filename)
 
     if os.path.isdir(test_dir):
-        dir_util.copy_tree(test_dir, bytes(tmpdir))
+        dir_util.copy_tree(test_dir, str(tmpdir))
 
     request.cls.datadir = tmpdir
 

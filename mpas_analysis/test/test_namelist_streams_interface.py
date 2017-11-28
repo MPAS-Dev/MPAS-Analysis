@@ -17,11 +17,11 @@ from mpas_analysis.shared.io import NameList, StreamsFile
 class TestNamelist(TestCase):
     def setup_namelist(self):
         nlpath = self.datadir.join('namelist.ocean')
-        self.nl = NameList(bytes(nlpath))
+        self.nl = NameList(str(nlpath))
 
     def setup_streams(self):
         sfpath = self.datadir.join('streams.ocean')
-        self.sf = StreamsFile(bytes(sfpath))
+        self.sf = StreamsFile(str(sfpath))
 
     def test_open_files(self):
         self.setup_namelist()
