@@ -420,7 +420,7 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
         offset = 1
 
     # change underscores to spaces so both can be supported
-    dateString = dateString.replace('_', ' ')
+    dateString = dateString.replace('_', ' ').strip()
     if ' ' in dateString:
         ymd, hms = dateString.split(' ')
     else:
