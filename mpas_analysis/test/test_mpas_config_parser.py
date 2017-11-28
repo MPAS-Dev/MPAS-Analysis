@@ -6,7 +6,7 @@ Xylar Asay-Davis, Phillip J. Wolfram
 """
 
 import pytest
-import ConfigParser
+from six.moves import configparser
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
@@ -75,7 +75,7 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key3': False})
 
         with self.assertRaisesRegexp(
-                ConfigParser.NoOptionError,
+                configparser.NoOptionError,
                 "No option 'doesntexist' in section: 'Test'"):
             self.config.getExpression('Test', 'doesntexist')
 
