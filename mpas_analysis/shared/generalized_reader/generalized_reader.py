@@ -151,11 +151,11 @@ def open_multifile_dataset(fileNames, calendar, config,
         if 'autoclose' in str(e):
             if autoclose:
                 # This indicates that xarray version doesn't support autoclose
-                print 'Warning: open_multifile_dataset is trying to use ' \
-                      'autoclose=True but\n' \
-                      'it appears your xarray version doesn\'t support this ' \
-                      'argument. Will\n' \
-                      'try again without autoclose argument.'
+                print('Warning: open_multifile_dataset is trying to use '
+                      'autoclose=True but\n'
+                      'it appears your xarray version doesn\'t support this '
+                      'argument. Will\n'
+                      'try again without autoclose argument.')
 
             ds = xarray.open_mfdataset(fileNames,
                                        preprocess=preprocess_partial,

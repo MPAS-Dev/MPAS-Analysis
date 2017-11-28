@@ -157,7 +157,7 @@ class Remapper(object):
             args.extend(additionalArgs)
 
         if logger is None:
-            print 'running: {}'.format(' '.join(args))
+            print('running: {}'.format(' '.join(args)))
             # make sure any output is flushed before we add output from the
             # subprocess
             sys.stdout.flush()
@@ -299,7 +299,7 @@ class Remapper(object):
         env['NCO_PATH_OVERRIDE'] = 'No'
 
         if logger is None:
-            print 'running: {}'.format(' '.join(args))
+            print('running: {}'.format(' '.join(args)))
             # make sure any output is flushed before we add output from the
             # subprocess
             sys.stdout.flush()

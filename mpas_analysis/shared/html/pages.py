@@ -30,7 +30,7 @@ def generate_html(config, analyses):  # {{{
     if not generateHTML:
         return
 
-    print "Generating webpage for viewing results..."
+    print("Generating webpage for viewing results...")
 
     page = MainPage(config)
 
@@ -46,8 +46,8 @@ def generate_html(config, analyses):  # {{{
                 missingCount += 1
 
     if missingCount > 0:
-        print 'Warning: {} XML files were missing and the analysis website' \
-              ' will be incomplete.'.format(missingCount)
+        print('Warning: {} XML files were missing and the analysis website'
+              ' will be incomplete.'.format(missingCount))
     # generate the page for each component and add the component to the main
     # page
     for componentName, component in components.items():
