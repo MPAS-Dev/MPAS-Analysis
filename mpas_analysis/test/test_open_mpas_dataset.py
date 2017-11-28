@@ -27,7 +27,7 @@ class TestOpenMpasDataset(TestCase):
                 calendar=calendar,
                 timeVariableNames=timestr,
                 variableList=variableList)
-            self.assertEqual(ds.data_vars.keys(), variableList)
+            self.assertEqual(list(ds.data_vars.keys()), variableList)
 
     def test_start_end(self):
         fileName = str(self.datadir.join('example_jan_feb.nc'))

@@ -278,7 +278,7 @@ def remove_repeated_time_index(ds):  # {{{
     """
     # get repeated indices
     times = ds.Time.values
-    indices = range(len(times))
+    indices = list(range(len(times)))
     uniqueTimes = set()
     remove = []
     for timeIndex, time in enumerate(times):

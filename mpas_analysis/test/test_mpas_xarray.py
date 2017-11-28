@@ -40,7 +40,7 @@ class TestMpasXarray(TestCase):
                                                 calendar=calendar,
                                                 timeVariableName=timestr,
                                                 variableList=variableList)
-        self.assertEqual(ds.data_vars.keys(), variableList)
+        self.assertEqual(list(ds.data_vars.keys()), variableList)
 
         with self.assertRaisesRegexp(ValueError,
                                      'Empty dataset is returned.'):
@@ -149,7 +149,7 @@ class TestMpasXarray(TestCase):
                 variableList=variableList,
                 selValues=selvals)
 
-            self.assertEqual(ds.data_vars.keys(), variableList)
+            self.assertEqual(list(ds.data_vars.keys()), variableList)
             self.assertEqual(ds[variableList[0]].shape, (1, 7))
             self.assertEqual(ds['refBottomDepth'],
                              dsRef['refBottomDepth'][vertIndex])
