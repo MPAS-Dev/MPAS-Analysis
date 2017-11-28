@@ -38,7 +38,7 @@ def generate_html(config, analyses):  # {{{
 
     # add images from each analysis task, creating ga dictionary of components
     missingCount = 0
-    for analysisTask in analyses.itervalues():
+    for analysisTask in analyses.values():
         for fileName in analysisTask.xmlFileNames:
             try:
                 ComponentPage.add_image(fileName, config, components)
@@ -405,9 +405,9 @@ class ComponentPage(object):
         Xylar Asay-Davis
         """
         # get the first image name
-        firstGroup = self.groups.itervalues().next()
-        firstGallery = firstGroup['galleries'].itervalues().next()
-        firstImageFileName = firstGallery['images'].iterkeys().next()
+        firstGroup = self.groups.values().next()
+        firstGallery = firstGroup['galleries'].values().next()
+        firstImageFileName = firstGallery['images'].keys().next()
         return firstImageFileName
 
     @staticmethod
@@ -490,8 +490,8 @@ class ComponentPage(object):
         content
         """
 
-        firstGallery = groupDict['galleries'].itervalues().next()
-        firstImageFileName = firstGallery['images'].iterkeys().next()
+        firstGallery = groupDict['galleries'].values().next()
+        firstImageFileName = firstGallery['images'].keys().next()
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],

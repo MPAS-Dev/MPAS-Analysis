@@ -274,7 +274,7 @@ def run_analysis(config, analyses):  # {{{
 
     isParallel = taskCount > 1 and len(analyses) > 1
 
-    for analysisTask in analyses.itervalues():
+    for analysisTask in analyses.values():
         if not analysisTask.runAfterTasks and not analysisTask.subtasks:
             analysisTask._runStatus.value = AnalysisTask.READY
         else:
@@ -286,7 +286,7 @@ def run_analysis(config, analyses):  # {{{
     # run each analysis task
     while True:
         # we still have tasks to run
-        for analysisTask in analyses.itervalues():
+        for analysisTask in analyses.values():
             if analysisTask._runStatus.value == AnalysisTask.BLOCKED:
                 prereqs = analysisTask.runAfterTasks + analysisTask.subtasks
                 prereqStatus = [prereq._runStatus.value for prereq in prereqs]
@@ -300,7 +300,7 @@ def run_analysis(config, analyses):  # {{{
                     analysisTask._runStatus.value = AnalysisTask.READY
 
         unfinishedCount = 0
-        for analysisTask in analyses.itervalues():
+        for analysisTask in analyses.values():
             if analysisTask._runStatus.value not in [AnalysisTask.SUCCESS,
                                                      AnalysisTask.FAIL]:
                 unfinishedCount += 1
@@ -379,7 +379,7 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
     # necessary to have a timeout so we can kill the whole thing
     # with a keyboard interrupt
     while True:
-        for analysisTask in runningTasks.itervalues():
+        for analysisTask in runningTasks.values():
             analysisTask.join(timeout=timeout)
             if not analysisTask.is_alive():
                 return analysisTask  # }}}

@@ -127,7 +127,7 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
 
     _provenance_command(root, history)
 
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
         etree.SubElement(root, key).text = str(value)
 
     tree = etree.ElementTree(root)
