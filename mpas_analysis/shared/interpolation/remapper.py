@@ -319,8 +319,11 @@ class Remapper(object):
             stdout, stderr = process.communicate()
 
             if stdout:
-                logger.info(stdout)
+                stdout = stdout.decode('utf-8')
+                for line in stdout.split('\n'):
+                    logger.info(line)
             if stderr:
+                stderr = stderr.decode('utf-8')
                 for line in stderr.split('\n'):
                     logger.error(line)
 

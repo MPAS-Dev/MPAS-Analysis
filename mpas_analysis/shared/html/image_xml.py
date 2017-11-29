@@ -164,6 +164,7 @@ def _provenance_command(root, history):  # {{{
     p = subprocess.Popen(['git', 'describe', '--always', '--dirty'],
                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
+    stdout = stdout.decode('utf-8')
     if p.returncode == 0:
         githash = stdout.strip('\n')
     else:
