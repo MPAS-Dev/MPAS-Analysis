@@ -554,9 +554,9 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
         # clip dsShift to the range of ds
         dsStartTime = dsShift.Time.sel(Time=ds.Time.min(),
-                                       method='nearest').values
+                                       method=str('nearest')).values
         dsEndTime = dsShift.Time.sel(Time=ds.Time.max(),
-                                     method='nearest').values
+                                     method=str('nearest')).values
         dsShift = dsShift.sel(Time=slice(dsStartTime, dsEndTime))
 
         return dsShift  # }}}
