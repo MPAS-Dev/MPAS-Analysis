@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 
 import numpy as np
+import six
 import xarray
 from functools import partial
 
@@ -342,7 +343,7 @@ def _ensure_list(alist):  # {{{
     Phillip J. Wolfram, Xylar Asay-Davis
     """
 
-    if isinstance(alist, str):
+    if isinstance(alist, six.string_types):
         # print 'Warning, converting %s to a list'%(alist)
         alist = [alist]
 

@@ -80,7 +80,7 @@ class TestMPASAnalysisConfigParser(TestCase):
         with self.assertRaisesRegexp(
                 configparser.NoOptionError,
                 "No option 'doesntexist' in section: 'Test'"):
-            self.config.getExpression('Test', 'doesntexist')
+            self.config.getExpression(str('Test'), str('doesntexist'))
 
     @requires_numpy
     def test_read_config_numpy(self):
@@ -118,18 +118,13 @@ class TestMPASAnalysisConfigParser(TestCase):
             assert isinstance(var, dtype)
             self.assertEqual(var, value)
 
-        if six.PY3:
-            integer_types = (int,)
-        else:
-            integer_types = (int, long,)
-
         # test several types with getWithDefault
         check_get_with_default(name='aBool', value=True, dtype=bool)
-        check_get_with_default(name='anInt', value=1, dtype=integer_types)
+        check_get_with_default(name='anInt', value=1, dtype=six.integer_types)
         check_get_with_default(name='aFloat', value=1.0, dtype=float)
         check_get_with_default(name='aList', value=[1, 2, 3], dtype=list)
         check_get_with_default(name='aTuple', value=(1, 2, 3), dtype=tuple)
         check_get_with_default(name='aDict', value={'blah': 1}, dtype=dict)
-        check_get_with_default(name='aStr', value='blah', dtype=str)
+        check_get_with_default(name='aStr', value='blah', dtype=six.string_types)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

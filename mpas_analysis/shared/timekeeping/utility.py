@@ -11,6 +11,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import datetime
 import netCDF4
 import numpy
+import six
 
 from .MpasRelativeDelta import MpasRelativeDelta
 
@@ -207,7 +208,7 @@ def string_to_days_since_date(dateString, calendar='gregorian',
     Xylar Asay-Davis
     """
 
-    isSingleString = isinstance(dateString, str)
+    isSingleString = isinstance(dateString, six.string_types)
 
     if isSingleString:
         dateString = [dateString]
