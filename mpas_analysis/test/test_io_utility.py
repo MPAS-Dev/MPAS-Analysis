@@ -5,7 +5,8 @@ Phillip J. Wolfram
 10/07/2016
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 
 import os
 import pytest

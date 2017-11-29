@@ -5,7 +5,8 @@ Xylar Asay-Davis, Phillip J. Wolfram
 02/15/2017
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
