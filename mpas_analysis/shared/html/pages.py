@@ -408,9 +408,9 @@ class ComponentPage(object):
         Xylar Asay-Davis
         """
         # get the first image name
-        firstGroup = self.groups.values().next()
-        firstGallery = firstGroup['galleries'].values().next()
-        firstImageFileName = firstGallery['images'].keys().next()
+        firstGroup = next(iter(self.groups.values()))
+        firstGallery = next(iter(firstGroup['galleries'].values()))
+        firstImageFileName = next(iter(firstGallery['images']))
         return firstImageFileName
 
     @staticmethod
@@ -493,8 +493,8 @@ class ComponentPage(object):
         content
         """
 
-        firstGallery = groupDict['galleries'].values().next()
-        firstImageFileName = firstGallery['images'].keys().next()
+        firstGallery = next(iter(groupDict['galleries'].values()))
+        firstImageFileName = next(iter(firstGallery['images']))
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],
