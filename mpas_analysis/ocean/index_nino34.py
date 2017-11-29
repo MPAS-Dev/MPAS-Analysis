@@ -397,7 +397,7 @@ class IndexNino34(AnalysisTask):  # {{{
         """
 
         nt = len(inputData)
-        sp = (len(wgts) - 1)/2
+        sp = (len(wgts) - 1) // 2
         runningMean = inputData.copy()
         for k in range(sp, nt-(sp+1)):
             runningMean[k] = sum(wgts*inputData[k-sp:k+sp+1].values)
