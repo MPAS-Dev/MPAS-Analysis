@@ -185,8 +185,10 @@ class MainPage(object):
 
         outFileName = '{}/index.html'.format(htmlBaseDirectory)
 
-        with open(outFileName, 'w') as mainFile:
-            mainFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
+        with open(outFileName, mode='w') as mainFile:
+            mainFile.write(
+                    pageText.encode('ascii',
+                                    'xmlcharrefreplace').decode('ascii'))
 
         # copy the css and js files
         fileName = \
@@ -391,8 +393,10 @@ class ComponentPage(object):
 
         outFileName = '{}/index.html'.format(self.directory)
 
-        with open(outFileName, 'w') as componentFile:
-            componentFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
+        with open(outFileName, mode='w') as componentFile:
+            componentFile.write(
+                    pageText.encode('ascii',
+                                    'xmlcharrefreplace').decode('ascii'))
 
     def get_first_image(self):
         """
