@@ -52,7 +52,7 @@ def get_simulation_start_time(streams):
     ncFile = netCDF4.Dataset(restartFile, mode='r')
     simulationStartTime = ncFile.variables['simulationStartTime'][:]
     # convert from character array to str
-    simulationStartTime = ''.join(simulationStartTime).strip()
+    simulationStartTime = ''.join(simulationStartTime.astype('U')).strip()
     # replace underscores so it works as a CF-compliant reference date
     simulationStartTime = simulationStartTime.replace('_', ' ')
     ncFile.close()
