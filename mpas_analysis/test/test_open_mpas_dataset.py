@@ -5,6 +5,9 @@ Xylar Asay-Davis
 02/16/2017
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.io import open_mpas_dataset
@@ -25,7 +28,7 @@ class TestOpenMpasDataset(TestCase):
                 calendar=calendar,
                 timeVariableNames=timestr,
                 variableList=variableList)
-            self.assertEqual(ds.data_vars.keys(), variableList)
+            self.assertEqual(list(ds.data_vars.keys()), variableList)
 
     def test_start_end(self):
         fileName = str(self.datadir.join('example_jan_feb.nc'))

@@ -1,1 +1,1 @@
-from generalized_reader import open_multifile_dataset
+from .generalized_reader import open_multifile_dataset

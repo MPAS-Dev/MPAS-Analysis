@@ -7,6 +7,9 @@ Xylar Asay-Davis
 
 '''
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import warnings
 from multiprocessing import Process, Value
 import time
@@ -506,11 +509,11 @@ class AnalysisFormatter(logging.Formatter):  # {{{
 
     # printing error messages without a prefix because they are sometimes
     # errors and sometimes only warnings sent to stderr
-    err_fmt = "%(msg)s"
     dbg_fmt = "DEBUG: %(module)s: %(lineno)d: %(msg)s"
     info_fmt = "%(msg)s"
+    err_fmt = info_fmt
 
-    def __init__(self, fmt="%(levelno)s: %(msg)s"):
+    def __init__(self, fmt=info_fmt):
         logging.Formatter.__init__(self, fmt)
 
     def format(self, record):
@@ -558,7 +561,7 @@ class StreamToLogger(object):  # {{{
 
     def write(self, buf):
         for line in buf.rstrip().splitlines():
-            self.logger.log(self.log_level, line.rstrip())
+            self.logger.log(self.log_level, str(line.rstrip()))
 
     def flush(self):
         pass

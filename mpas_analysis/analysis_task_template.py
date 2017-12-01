@@ -33,6 +33,9 @@ Authors
 Xylar Asay-Davis
 '''
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 # import python modules here
 import numpy
 import matplotlib.pyplot as plt
@@ -351,10 +354,10 @@ class MyTask(AnalysisTask):  # {{{
         # self.myArg is a copy of the argument we passed in to __init__ when we
         # built the task.  It is available in any method after that for us to
         # use as needed.
-        print 'myArg:', self.myArg
-        print 'plotParameter:', plotParameter
+        print('myArg: {}'.format(self.myArg))
+        print('plotParameter: {}'.format(plotParameter))
         if optionalArgument is not None:
-            print 'optionalArgument:', optionalArgument
+            print('optionalArgument: {}'.format(optionalArgument))
 
         # get the file name based on the plot parameter
         filePrefix = self.filePrefixes[plotParameter]

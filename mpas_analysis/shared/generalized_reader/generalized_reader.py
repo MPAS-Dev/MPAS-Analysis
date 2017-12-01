@@ -13,6 +13,10 @@ Authors
 Xylar Asay-Davis
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
+import six
 import xarray
 from functools import partial
 import resource
@@ -151,11 +155,11 @@ def open_multifile_dataset(fileNames, calendar, config,
         if 'autoclose' in str(e):
             if autoclose:
                 # This indicates that xarray version doesn't support autoclose
-                print 'Warning: open_multifile_dataset is trying to use ' \
-                      'autoclose=True but\n' \
-                      'it appears your xarray version doesn\'t support this ' \
-                      'argument. Will\n' \
-                      'try again without autoclose argument.'
+                print('Warning: open_multifile_dataset is trying to use '
+                      'autoclose=True but\n'
+                      'it appears your xarray version doesn\'t support this '
+                      'argument. Will\n'
+                      'try again without autoclose argument.')
 
             ds = xarray.open_mfdataset(fileNames,
                                        preprocess=preprocess_partial,
@@ -166,10 +170,10 @@ def open_multifile_dataset(fileNames, calendar, config,
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, str):
+        if isinstance(startDate, six.string_types):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, str):
+        if isinstance(endDate, six.string_types):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 

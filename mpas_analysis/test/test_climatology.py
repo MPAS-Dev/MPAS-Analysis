@@ -5,6 +5,9 @@ Xylar Asay-Davis
 04/11/2017
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pytest
 import tempfile
 import shutil
@@ -233,7 +236,7 @@ class TestClimatology(TestCase):
 
         assert('Time' not in dsClimatology.dims.keys())
 
-        self.assertEqual(dsClimatology.data_vars.keys(), ['mld'])
+        self.assertEqual(list(dsClimatology.data_vars.keys()), ['mld'])
 
         climFileName = '{}/refSeasonalClim.nc'.format(self.datadir)
         refClimatology = xarray.open_dataset(climFileName)
@@ -261,7 +264,7 @@ class TestClimatology(TestCase):
 
         assert(len(monthlyClimatology.month) == 3)
 
-        self.assertEqual(monthlyClimatology.data_vars.keys(), ['mld'])
+        self.assertEqual(list(monthlyClimatology.data_vars.keys()), ['mld'])
 
         climFileName = '{}/refMonthlyClim.nc'.format(self.datadir)
         refClimatology = xarray.open_dataset(climFileName)

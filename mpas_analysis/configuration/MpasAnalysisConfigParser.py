@@ -9,11 +9,18 @@ Authors
 Xylar Asay-Davis, Phillip J. Wolfram
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import numbers
 import ast
+import six
 import numpy as np
-from ConfigParser import ConfigParser
 
+from six.moves.configparser import ConfigParser
+
+if six.PY3:
+    xrange = range
 
 npallow = dict(linspace=np.linspace, xrange=xrange, range=range,
                arange=np.arange, pi=np.pi, Pi=np.pi, __builtins__=None)

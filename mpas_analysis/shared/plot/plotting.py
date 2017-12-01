@@ -10,6 +10,9 @@ Authors
 Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 import xarray as xr
@@ -24,7 +27,7 @@ from ..timekeeping.utility import days_to_datetime, date_to_days
 
 from ..constants import constants
 
-import ConfigParser
+from six.moves import configparser
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
@@ -913,7 +916,7 @@ def setup_colormap(config, configSectionName, suffix=''):
         colorbarLevels = config.getExpression(configSectionName,
                                               'colorbarLevels{}'.format(suffix),
                                               usenumpyfunc=True)
-    except(ConfigParser.NoOptionError):
+    except(configparser.NoOptionError):
         colorbarLevels = None
 
     if colorbarLevels is not None:

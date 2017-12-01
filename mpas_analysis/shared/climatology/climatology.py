@@ -6,6 +6,9 @@ Authors
 Xylar Asay-Davis
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import xarray as xr
 import os
 import numpy
@@ -327,11 +330,11 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
             ds.coords['daysInMonth'] = ds.endTime - ds.startTime
         else:
             if calendar == 'gregorian':
-                print 'Warning: The MPAS run used the Gregorian calendar ' \
-                      'but does not appear to have\n' \
-                      'supplied start and end times.  Climatologies ' \
-                      'will be computed with\n' \
-                      'month durations ignoring leap years.'
+                print('Warning: The MPAS run used the Gregorian calendar '
+                      'but does not appear to have\n'
+                      'supplied start and end times.  Climatologies '
+                      'will be computed with\n'
+                      'month durations ignoring leap years.')
 
             daysInMonth = numpy.array([constants.daysInMonth[month-1] for
                                        month in ds.month.values], float)
@@ -527,8 +530,8 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
                 dsCached = xr.open_dataset(outputFileClimo)
             except IOError:
                 # assuming the cache file is corrupt, so deleting it.
-                print 'Warning: Deleting cache file {}, which appears to ' \
-                      'have been corrupted.'.format(outputFileClimo)
+                print('Warning: Deleting cache file {}, which appears to '
+                      'have been corrupted.'.format(outputFileClimo))
 
                 os.remove(outputFileClimo)
 
@@ -576,7 +579,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
         dsYear = ds.where(ds.cacheIndices == cacheIndex, drop=True)
 
         if printProgress:
-            print '     {}'.format(yearString)
+            print('     {}'.format(yearString))
 
         totalDays = dsYear.daysInMonth.sum(dim='Time').values
 
@@ -622,8 +625,8 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
         except IOError:
             # assuming the cache file is corrupt, so deleting it.
-            print 'Warning: Deleting cache file {}, which appears to have ' \
-                  'been corrupted.'.format(outputFileClimo)
+            print('Warning: Deleting cache file {}, which appears to have '
+                  'been corrupted.'.format(outputFileClimo))
             os.remove(outputFileClimo)
 
         if len(cacheInfo) == 1 and outputFileClimo == cacheInfo[0][0]:
@@ -641,8 +644,8 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
     if not done:
         if printProgress:
-            print '   Computing aggregated climatology ' \
-                  '{}...'.format(yearString)
+            print('   Computing aggregated climatology '
+                  '{}...'.format(yearString))
 
         first = True
         for cacheIndex, info in enumerate(cacheInfo):

@@ -6,9 +6,13 @@ Authors
 Xylar Asay-Davis
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import datetime
 import netCDF4
 import numpy
+import six
 
 from .MpasRelativeDelta import MpasRelativeDelta
 
@@ -48,7 +52,7 @@ def get_simulation_start_time(streams):
     ncFile = netCDF4.Dataset(restartFile, mode='r')
     simulationStartTime = ncFile.variables['simulationStartTime'][:]
     # convert from character array to str
-    simulationStartTime = ''.join(simulationStartTime).strip()
+    simulationStartTime = ''.join(simulationStartTime.astype('U')).strip()
     # replace underscores so it works as a CF-compliant reference date
     simulationStartTime = simulationStartTime.replace('_', ' ')
     ncFile.close()
@@ -205,7 +209,7 @@ def string_to_days_since_date(dateString, calendar='gregorian',
     Xylar Asay-Davis
     """
 
-    isSingleString = isinstance(dateString, str)
+    isSingleString = isinstance(dateString, six.string_types)
 
     if isSingleString:
         dateString = [dateString]
@@ -418,7 +422,7 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
         offset = 1
 
     # change underscores to spaces so both can be supported
-    dateString = dateString.replace('_', ' ')
+    dateString = dateString.replace('_', ' ').strip()
     if ' ' in dateString:
         ymd, hms = dateString.split(' ')
     else:

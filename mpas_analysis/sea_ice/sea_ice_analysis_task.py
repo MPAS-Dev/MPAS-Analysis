@@ -1,3 +1,7 @@
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.io import StreamsFile

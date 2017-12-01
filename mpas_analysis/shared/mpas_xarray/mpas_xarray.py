@@ -1,4 +1,9 @@
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import numpy as np
+import six
 import xarray
 from functools import partial
 
@@ -274,7 +279,7 @@ def remove_repeated_time_index(ds):  # {{{
     """
     # get repeated indices
     times = ds.Time.values
-    indices = range(len(times))
+    indices = list(range(len(times)))
     uniqueTimes = set()
     remove = []
     for timeIndex, time in enumerate(times):
@@ -338,7 +343,7 @@ def _ensure_list(alist):  # {{{
     Phillip J. Wolfram, Xylar Asay-Davis
     """
 
-    if isinstance(alist, str):
+    if isinstance(alist, six.string_types):
         # print 'Warning, converting %s to a list'%(alist)
         alist = [alist]
 
@@ -464,7 +469,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         if timeVar.dtype == '|S64':
             # this is an array of date strings like 'xtime'
             # convert to string
-            timeStrings = [''.join(xtime).strip() for xtime in timeVar.values]
+            timeStrings = [''.join(str(xtime.astype('U'))).strip() for xtime in timeVar.values]
             days = string_to_days_since_date(dateString=timeStrings,
                                              referenceDate=referenceDate,
                                              calendar=calendar)

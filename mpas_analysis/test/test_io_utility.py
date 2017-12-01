@@ -5,6 +5,9 @@ Phillip J. Wolfram
 10/07/2016
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import os
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
@@ -14,7 +17,7 @@ from mpas_analysis.shared.io import paths
 @pytest.mark.usefixtures("loaddatadir")
 class TestPaths(TestCase):
     def test_paths(self):
-        os.chdir(bytes(self.datadir))
+        os.chdir(str(self.datadir))
         self.assertEquals(paths('[0-9]*', '[a-z]*'),
                           ['0.txt', '1.txt', '2.txt', 'a.txt', 'b.txt',
                            'c.txt'])
