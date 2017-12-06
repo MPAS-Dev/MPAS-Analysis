@@ -1,3 +1,7 @@
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pkg_resources
 from os import makedirs
 from shutil import copyfile
@@ -30,7 +34,7 @@ def generate_html(config, analyses):  # {{{
     if not generateHTML:
         return
 
-    print "Generating webpage for viewing results..."
+    print("Generating webpage for viewing results...")
 
     page = MainPage(config)
 
@@ -38,7 +42,7 @@ def generate_html(config, analyses):  # {{{
 
     # add images from each analysis task, creating ga dictionary of components
     missingCount = 0
-    for analysisTask in analyses.itervalues():
+    for analysisTask in analyses.values():
         for fileName in analysisTask.xmlFileNames:
             try:
                 ComponentPage.add_image(fileName, config, components)
@@ -46,8 +50,8 @@ def generate_html(config, analyses):  # {{{
                 missingCount += 1
 
     if missingCount > 0:
-        print 'Warning: {} XML files were missing and the analysis website' \
-              ' will be incomplete.'.format(missingCount)
+        print('Warning: {} XML files were missing and the analysis website'
+              ' will be incomplete.'.format(missingCount))
     # generate the page for each component and add the component to the main
     # page
     for componentName, component in components.items():
@@ -181,8 +185,10 @@ class MainPage(object):
 
         outFileName = '{}/index.html'.format(htmlBaseDirectory)
 
-        with open(outFileName, 'w') as mainFile:
-            mainFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
+        with open(outFileName, mode='w') as mainFile:
+            mainFile.write(
+                    pageText.encode('ascii',
+                                    'xmlcharrefreplace').decode('ascii'))
 
         # copy the css and js files
         fileName = \
@@ -387,8 +393,10 @@ class ComponentPage(object):
 
         outFileName = '{}/index.html'.format(self.directory)
 
-        with open(outFileName, 'w') as componentFile:
-            componentFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
+        with open(outFileName, mode='w') as componentFile:
+            componentFile.write(
+                    pageText.encode('ascii',
+                                    'xmlcharrefreplace').decode('ascii'))
 
     def get_first_image(self):
         """
@@ -405,9 +413,9 @@ class ComponentPage(object):
         Xylar Asay-Davis
         """
         # get the first image name
-        firstGroup = self.groups.itervalues().next()
-        firstGallery = firstGroup['galleries'].itervalues().next()
-        firstImageFileName = firstGallery['images'].iterkeys().next()
+        firstGroup = next(iter(self.groups.values()))
+        firstGallery = next(iter(firstGroup['galleries'].values()))
+        firstImageFileName = next(iter(firstGallery['images']))
         return firstImageFileName
 
     @staticmethod
@@ -490,8 +498,8 @@ class ComponentPage(object):
         content
         """
 
-        firstGallery = groupDict['galleries'].itervalues().next()
-        firstImageFileName = firstGallery['images'].iterkeys().next()
+        firstGallery = next(iter(groupDict['galleries'].values()))
+        firstImageFileName = next(iter(firstGallery['images']))
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],

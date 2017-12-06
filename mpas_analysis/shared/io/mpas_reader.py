@@ -7,6 +7,10 @@ Authors
 Xylar Asay-Davis
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
+import six
 import xarray
 
 from ..timekeeping.utility import string_to_days_since_date, days_to_datetime
@@ -62,10 +66,10 @@ def open_mpas_dataset(fileName, calendar,
     ds = _parse_dataset_time(ds, timeVariableNames, calendar)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, str):
+        if isinstance(startDate, six.string_types):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, str):
+        if isinstance(endDate, six.string_types):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 
@@ -237,7 +241,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
 
         # this is an array of date strings like 'xtime'
         # convert to string
-        timeStrings = [''.join(xtime).strip() for xtime in timeVar.values]
+        timeStrings = [''.join(xtime.astype('U')).strip() for xtime in timeVar.values]
         days = string_to_days_since_date(dateString=timeStrings,
                                          referenceDate=referenceDate,
                                          calendar=calendar)

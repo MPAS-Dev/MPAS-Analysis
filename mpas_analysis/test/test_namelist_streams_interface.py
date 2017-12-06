@@ -6,6 +6,9 @@ Phillip J. Wolfram, Xylar Asay-Davis
 10/26/2016
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.io import NameList, StreamsFile
@@ -15,11 +18,11 @@ from mpas_analysis.shared.io import NameList, StreamsFile
 class TestNamelist(TestCase):
     def setup_namelist(self):
         nlpath = self.datadir.join('namelist.ocean')
-        self.nl = NameList(bytes(nlpath))
+        self.nl = NameList(str(nlpath))
 
     def setup_streams(self):
         sfpath = self.datadir.join('streams.ocean')
-        self.sf = StreamsFile(bytes(sfpath))
+        self.sf = StreamsFile(str(sfpath))
 
     def test_open_files(self):
         self.setup_namelist()

@@ -13,6 +13,9 @@ Authors
 Xylar Asay-Davis
 '''
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import subprocess
 import tempfile
 import os
@@ -157,7 +160,7 @@ class Remapper(object):
             args.extend(additionalArgs)
 
         if logger is None:
-            print 'running: {}'.format(' '.join(args))
+            print('running: {}'.format(' '.join(args)))
             # make sure any output is flushed before we add output from the
             # subprocess
             sys.stdout.flush()
@@ -299,7 +302,7 @@ class Remapper(object):
         env['NCO_PATH_OVERRIDE'] = 'No'
 
         if logger is None:
-            print 'running: {}'.format(' '.join(args))
+            print('running: {}'.format(' '.join(args)))
             # make sure any output is flushed before we add output from the
             # subprocess
             sys.stdout.flush()
@@ -316,8 +319,11 @@ class Remapper(object):
             stdout, stderr = process.communicate()
 
             if stdout:
-                logger.info(stdout)
+                stdout = stdout.decode('utf-8')
+                for line in stdout.split('\n'):
+                    logger.info(line)
             if stderr:
+                stderr = stderr.decode('utf-8')
                 for line in stderr.split('\n'):
                     logger.error(line)
 

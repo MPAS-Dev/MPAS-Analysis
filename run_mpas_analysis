@@ -9,6 +9,8 @@ Authors
 Xylar Asay-Davis, Phillip J. Wolfram
 """
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import matplotlib as mpl
 import argparse
 import traceback
@@ -184,12 +186,12 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
         add_task_and_subtasks(prereq, analysesToGenerate,
                               callCheckGenerate=False)
         if prereq._setupStatus != 'success':
-            print prereq._setupStatus
+            print(prereq._setupStatus)
             # a prereq failed setup_and_check
-            print "ERROR: prerequisite task {} of analysis task {}" \
-                  " failed during check,\n" \
+            print("ERROR: prerequisite task {} of analysis task {}"
+                  " failed during check,\n"
                   "       so this task will not be run".format(
-                          prereq.printTaskName, taskTitle)
+                prereq.printTaskName, taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -199,8 +201,8 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
         analysisTask.setup_and_check()
     except (Exception, BaseException):
         traceback.print_exc(file=sys.stdout)
-        print "ERROR: analysis task {} failed during check and " \
-            "will not be run".format(taskTitle)
+        print("ERROR: analysis task {} failed during check and "
+              "will not be run".format(taskTitle))
         analysisTask._setupStatus = 'fail'
         return
 
@@ -212,9 +214,9 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
                               callCheckGenerate=False)
         if subtask._setupStatus != 'success':
             # a subtask failed setup_and_check
-            print "ERROR: a subtask of analysis task {}" \
-                  " failed during check,\n" \
-                  "       so this task will not be run".format(taskTitle)
+            print("ERROR: a subtask of analysis task {}"
+                  " failed during check,\n"
+                  "       so this task will not be run".format(taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -274,7 +276,7 @@ def run_analysis(config, analyses):  # {{{
 
     isParallel = taskCount > 1 and len(analyses) > 1
 
-    for analysisTask in analyses.itervalues():
+    for analysisTask in analyses.values():
         if not analysisTask.runAfterTasks and not analysisTask.subtasks:
             analysisTask._runStatus.value = AnalysisTask.READY
         else:
@@ -286,7 +288,7 @@ def run_analysis(config, analyses):  # {{{
     # run each analysis task
     while True:
         # we still have tasks to run
-        for analysisTask in analyses.itervalues():
+        for analysisTask in analyses.values():
             if analysisTask._runStatus.value == AnalysisTask.BLOCKED:
                 prereqs = analysisTask.runAfterTasks + analysisTask.subtasks
                 prereqStatus = [prereq._runStatus.value for prereq in prereqs]
@@ -300,7 +302,7 @@ def run_analysis(config, analyses):  # {{{
                     analysisTask._runStatus.value = AnalysisTask.READY
 
         unfinishedCount = 0
-        for analysisTask in analyses.itervalues():
+        for analysisTask in analyses.values():
             if analysisTask._runStatus.value not in [AnalysisTask.SUCCESS,
                                                      AnalysisTask.FAIL]:
                 unfinishedCount += 1
@@ -313,7 +315,7 @@ def run_analysis(config, analyses):  # {{{
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
-                    print 'Running {}'.format(analysisTask.printTaskName)
+                    print('Running {}'.format(analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
@@ -331,14 +333,17 @@ def run_analysis(config, analyses):  # {{{
             taskTitle = analysisTask.printTaskName
 
             if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
-                print "   Task {} has finished successfully.".format(taskTitle)
+                print("   Task {} has finished successfully.".format(taskTitle))
             elif analysisTask._runStatus.value == AnalysisTask.FAIL:
-                print "ERROR in task {}.  See log file {} for details".format(
-                    taskTitle, analysisTask._logFileName)
+                print("ERROR in task {}.  See log file {} for details".format(
+                    taskTitle, analysisTask._logFileName))
                 tasksWithErrors.append(taskTitle)
             else:
-                print "Unexpected status from in task {}.  This may be a " \
-                      "bug.".format(taskTitle)
+                print("Unexpected status from in task {}.  This may be a "
+                      "bug.".format(taskTitle))
+        else:
+            if analysisTask._runStatus.value == AnalysisTask.FAIL:
+                sys.exit(1)
 
     if not isParallel and config.getboolean('plot', 'displayToScreen'):
         import matplotlib.pyplot as plt
@@ -347,11 +352,11 @@ def run_analysis(config, analyses):  # {{{
     # raise the last exception so the process exits with an error
     errorCount = len(tasksWithErrors)
     if errorCount == 1:
-        print "There were errors in task {}".format(tasksWithErrors[0])
+        print("There were errors in task {}".format(tasksWithErrors[0]))
         sys.exit(1)
     elif errorCount > 0:
-        print "There were errors in {} tasks: {}".format(
-                errorCount, ', '.join(tasksWithErrors))
+        print("There were errors in {} tasks: {}".format(
+            errorCount, ', '.join(tasksWithErrors)))
         sys.exit(1)
     # }}}
 
@@ -379,7 +384,7 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
     # necessary to have a timeout so we can kill the whole thing
     # with a keyboard interrupt
     while True:
-        for analysisTask in runningTasks.itervalues():
+        for analysisTask in runningTasks.values():
             analysisTask.join(timeout=timeout)
             if not analysisTask.is_alive():
                 return analysisTask  # }}}
@@ -415,9 +420,9 @@ if __name__ == "__main__":
                                                         'config.default')
         configFiles = [defaultConfig] + args.configFiles
     else:
-        print 'WARNING: Did not find config.default.  Assuming other config ' \
-              'file(s) contain a\n' \
-              'full set of configuration options.'
+        print('WARNING: Did not find config.default.  Assuming other config '
+              'file(s) contain a\n'
+              'full set of configuration options.')
         configFiles = args.configFiles
 
     config = MpasAnalysisConfigParser()
@@ -426,17 +431,17 @@ if __name__ == "__main__":
     if args.list:
         analyses = build_analysis_list(config)
         for analysisTask in analyses:
-            print '{}\n    tags: {}'.format(analysisTask.taskName,
-                                            ', '.join(analysisTask.tags))
+            print('{}\n    tags: {}'.format(analysisTask.taskName,
+                                            ', '.join(analysisTask.tags)))
         sys.exit(0)
 
     if args.purge:
         outputDirectory = config.get('output', 'baseDirectory')
         if not os.path.exists(outputDirectory):
-            print 'Output directory {} does not exist.\n' \
-                  'No purge necessary.'.format(outputDirectory)
+            print('Output directory {} does not exist.\n'
+                  'No purge necessary.'.format(outputDirectory))
         else:
-            print 'Deleting contents of {}'.format(outputDirectory)
+            print('Deleting contents of {}'.format(outputDirectory))
             shutil.rmtree(outputDirectory)
 
     if args.generate:

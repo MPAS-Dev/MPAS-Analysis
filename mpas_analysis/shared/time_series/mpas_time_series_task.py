@@ -1,3 +1,7 @@
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import os
 import warnings
 import subprocess
@@ -313,8 +317,11 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         stdout, stderr = process.communicate()
 
         if stdout:
-            self.logger.info(stdout)
+            stdout = stdout.decode('utf-8')
+            for line in stdout.split('\n'):
+                self.logger.info(line)
         if stderr:
+            stderr = stderr.decode('utf-8')
             for line in stderr.split('\n'):
                 self.logger.error(line)
 

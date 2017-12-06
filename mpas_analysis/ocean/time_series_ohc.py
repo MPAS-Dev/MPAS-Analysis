@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import numpy as np
 import netCDF4
 
@@ -216,7 +220,7 @@ class TimeSeriesOHC(AnalysisTask):
                                startDate=self.startDate,
                                endDate=self.endDate)
         # rename the variables to shorter names for convenience
-        renameDict = dict((v, k) for k, v in variables.iteritems())
+        renameDict = dict((v, k) for k, v in variables.items())
         ds.rename(renameDict, inplace=True)
 
         timeStart = string_to_datetime(self.startDate)

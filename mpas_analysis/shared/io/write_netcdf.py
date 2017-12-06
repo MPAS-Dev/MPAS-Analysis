@@ -12,6 +12,9 @@ Xylar Asay-Davis
 
 '''
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import netCDF4
 import numpy
 
@@ -39,7 +42,8 @@ def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
 
     '''
     encodingDict = {}
-    for variableName in ds:
+    variableNames = list(ds.data_vars.keys()) + list(ds.coords.keys())
+    for variableName in variableNames:
         dtype = ds[variableName].dtype
         for fillType in fillValues:
             if dtype == numpy.dtype(fillType):

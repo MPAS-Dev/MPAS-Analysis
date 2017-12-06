@@ -5,8 +5,12 @@ Xylar Asay-Davis, Phillip J. Wolfram
 01/31/2017
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pytest
-import ConfigParser
+import six
+from six.moves import configparser
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration.MpasAnalysisConfigParser \
     import MpasAnalysisConfigParser
@@ -75,9 +79,9 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key3': False})
 
         with self.assertRaisesRegexp(
-                ConfigParser.NoOptionError,
+                configparser.NoOptionError,
                 "No option 'doesntexist' in section: 'Test'"):
-            self.config.getExpression('Test', 'doesntexist')
+            self.config.getExpression(str('Test'), str('doesntexist'))
 
     @requires_numpy
     def test_read_config_numpy(self):
@@ -117,11 +121,11 @@ class TestMPASAnalysisConfigParser(TestCase):
 
         # test several types with getWithDefault
         check_get_with_default(name='aBool', value=True, dtype=bool)
-        check_get_with_default(name='anInt', value=1, dtype=(int, long))
+        check_get_with_default(name='anInt', value=1, dtype=six.integer_types)
         check_get_with_default(name='aFloat', value=1.0, dtype=float)
         check_get_with_default(name='aList', value=[1, 2, 3], dtype=list)
         check_get_with_default(name='aTuple', value=(1, 2, 3), dtype=tuple)
         check_get_with_default(name='aDict', value={'blah': 1}, dtype=dict)
-        check_get_with_default(name='aStr', value='blah', dtype=str)
+        check_get_with_default(name='aStr', value='blah', dtype=six.string_types)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
