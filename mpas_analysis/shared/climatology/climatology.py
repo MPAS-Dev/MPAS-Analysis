@@ -334,7 +334,7 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
                       'will be computed with\n'
                       'month durations ignoring leap years.')
 
-            daysInMonth = numpy.array([constants.daysInMonth[month-1] for
+            daysInMonth = numpy.array([constants.daysInMonth[int(month)-1] for
                                        month in ds.month.values], float)
             ds.coords['daysInMonth'] = ('Time', daysInMonth)
 

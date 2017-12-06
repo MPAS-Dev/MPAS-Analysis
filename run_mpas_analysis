@@ -9,7 +9,8 @@ Authors
 Xylar Asay-Davis, Phillip J. Wolfram
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 
 import matplotlib as mpl
 import argparse
@@ -191,7 +192,7 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
             print("ERROR: prerequisite task {} of analysis task {}"
                   " failed during check,\n"
                   "       so this task will not be run".format(
-                prereq.printTaskName, taskTitle))
+                      prereq.printTaskName, taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -333,7 +334,8 @@ def run_analysis(config, analyses):  # {{{
             taskTitle = analysisTask.printTaskName
 
             if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
-                print("   Task {} has finished successfully.".format(taskTitle))
+                print("   Task {} has finished successfully.".format(
+                        taskTitle))
             elif analysisTask._runStatus.value == AnalysisTask.FAIL:
                 print("ERROR in task {}.  See log file {} for details".format(
                     taskTitle, analysisTask._logFileName))

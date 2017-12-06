@@ -1,2 +1,3 @@
-from .climatology_map import ClimatologyMapSeaIceConc, ClimatologyMapSeaIceThick
+from .climatology_map_sea_ice_conc import ClimatologyMapSeaIceConc
+from .climatology_map_sea_ice_thick import ClimatologyMapSeaIceThick
 from .time_series import TimeSeriesSeaIce
