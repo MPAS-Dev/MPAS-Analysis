@@ -341,6 +341,9 @@ def run_analysis(config, analyses):  # {{{
             else:
                 print("Unexpected status from in task {}.  This may be a "
                       "bug.".format(taskTitle))
+        else:
+            if analysisTask._runStatus.value == AnalysisTask.FAIL:
+                sys.exit(1)
 
     if not isParallel and config.getboolean('plot', 'displayToScreen'):
         import matplotlib.pyplot as plt
