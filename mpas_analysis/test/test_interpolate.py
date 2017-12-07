@@ -20,8 +20,7 @@ from mpas_analysis.shared.interpolation import Remapper
 from mpas_analysis.shared.grid import MpasMeshDescriptor, \
     LatLonGridDescriptor, ProjectionGridDescriptor
 from mpas_analysis.test import TestCase, loaddatadir
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures('loaddatadir')

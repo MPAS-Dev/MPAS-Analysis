@@ -12,8 +12,7 @@ import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures("loaddatadir")

@@ -12,8 +12,7 @@ import pytest
 import six
 from six.moves import configparser
 from mpas_analysis.test import TestCase, loaddatadir
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 from . import requires_numpy
 
 
