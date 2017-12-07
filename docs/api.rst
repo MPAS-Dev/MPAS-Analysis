@@ -57,6 +57,15 @@ Ocean tasks
    TimeSeriesOHC
    TimeSeriesSST
 
+.. currentmodule:: mpas_analysis.ocean.plot_climatology_map_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotClimatologyMapSubtask
+   PlotClimatologyMapSubtask.set_plot_info
+
+
 Sea ice tasks
 -------------
 
@@ -69,10 +78,18 @@ Sea ice tasks
    ClimatologyMapSeaIceThick
    TimeSeriesSeaIce
 
+.. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotClimatologyMapSubtask
+   PlotClimatologyMapSubtask.set_plot_info
+
 
 Configuration
 ==============
-.. currentmodule:: mpas_analysis.configuration.MpasAnalysisConfigParser
+.. currentmodule:: mpas_analysis.configuration
 
 .. autosummary::
    :toctree: generated/
@@ -122,7 +139,6 @@ Climatology
    get_comparison_descriptor
    get_antarctic_stereographic_projection
    get_remapper
-   get_observation_climatology_file_names
    compute_monthly_climatology
    compute_climatology
    add_years_months_days_in_month
@@ -133,6 +149,11 @@ Climatology
 
    RemapMpasClimatologySubtask
    RemapMpasClimatologySubtask.get_file_name
+
+   RemapObservedClimatologySubtask
+   RemapObservedClimatologySubtask.get_observation_descriptor
+   RemapObservedClimatologySubtask.build_observational_dataset
+   RemapObservedClimatologySubtask.get_file_name
 
 Time Series
 -----------
