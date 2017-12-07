@@ -1,0 +1,28 @@
+[input]
+baseDirectory = /dir/for/model/output
+runSubdirectory = .
+oceanHistorySubdirectory = .
+oceanNamelistFileName = mpas-o_in
+oceanStreamsFileName = streams.ocean
+
+[output]
+baseDirectory = /dir/for/analysis/output
+plotsSubdirectory = plots
+logsSubdirectory = logs
+mappingSubdirectory = mapping
+
+[climatology]
+startYear = 2
+endYear = 2
+comparisonLatResolution = 0.5
+comparisonLonResolution = 0.5
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 10.
+useNcremap = True
+renormalizationThreshold = 0.01
+
+[oceanObservations]
+baseDirectory = /dir/to/ocean/observations
+interpolationMethod = bilinear
+climatologySubdirectory = clim/obs
+remappedClimSubdirectory = clim/obs/remapped
