@@ -129,10 +129,12 @@ htmlSubdirectory = html
 #   'no_<task_name>' -- skip the given task
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
-#                                   the given tag
+#                                   the given tag.  Do
+#                                      ./run_mpas_analysis --list
+#                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
 

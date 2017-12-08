@@ -52,37 +52,28 @@ baseDirectory = /dir/to/analysis/output
 # htmlSubdirectory = /global/project/projectdirs/acme/www/USERNAME/RUNNAME
 htmlSubdirectory = html
 
-# a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
-#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
-#   'climatologyMapSeaIceThickSH'
-# the following shortcuts exist:
+# a list of analyses to generate.  Valid names can be seen by running:
+#   ./run_mpas_analysis --list
+# This command also lists tags for each analysis.
+# Shortcuts exist to generate (or not generate) several types of analysis.
+# These include:
 #   'all' -- all analyses will be run
-#   'all_timeSeries' -- all time-series analyses will be run
-#   'all_climatology' -- all analyses involving climatologies
-#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
-#   'all_ocean' -- all ocean analyses will be run
-#   'all_seaIce' -- all sea-ice analyses will be run
-#   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
-#                             other analyses).
-#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
-#                                            given category of analysis
+#   'all_<tag>' -- all analysis with a particular tag will be run
+#   'all_<component>' -- all analyses from a given component (either 'ocean'
+#                        or 'seaIce') will be run
+#   'no_<task_name>' -- skip the given task
+#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
+#                                   tasks from the given compoonent or with
+#                                   the given tag.  Do
+#                                      ./run_mpas_analysis --list
+#                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all']
-
-# alternative examples that would perform all analysis except
-#   'timeSeriesOHC'
-#generate = ['all', 'no_timeSeriesOHC']
-# Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would run all tasks that aren't ocean analyses,
-# except that it would also run ocean time series tasks:
-#generate = ['all', 'no_ocean', 'all_timeSeries']
+# The climatologyMapAntarcticMelt task is disabled because this run did not 
+# include ice-shelf cavities.`
+generate = ['all', 'no_climatologyMapAntarcticMelt']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
