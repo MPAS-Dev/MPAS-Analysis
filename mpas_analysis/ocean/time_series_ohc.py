@@ -568,8 +568,8 @@ class TimeSeriesOHC(AnalysisTask):
                 ohcPreprocessed700m = dsPreprocessedTimeSlice.ohc_700m
                 ohcPreprocessed2000m = dsPreprocessedTimeSlice.ohc_2000m
                 ohcPreprocessedBottom = dsPreprocessedTimeSlice.ohc_btm
-                title = '{} (black lines) \n {} (red lines)'.format(title,
-                                                                    preprocessedReferenceRunName)
+                title = '{} (black lines) \n {} (red lines)'.format(
+                        title, preprocessedReferenceRunName)
                 timeseries_analysis_plot(config, [ohcAnomalyTotal,
                                                   ohcAnomaly700m,
                                                   ohcAnomaly2000m,
@@ -584,6 +584,8 @@ class TimeSeriesOHC(AnalysisTask):
                                                      'r-', 'r-', 'r--', 'r+'],
                                          lineWidths=[5, 3, 3, 3,
                                                      5, 3, 3, 3],
+                                         maxPoints=[None, None, None, 300,
+                                                    None, None, None, 300],
                                          legendText=['0-bottom', '0-700m',
                                                      '700-2000m', '2000m-bottom',
                                                      None, None, None, None],
@@ -599,6 +601,7 @@ class TimeSeriesOHC(AnalysisTask):
                                          xLabel, yLabel, figureName,
                                          lineStyles=['k-', 'k-', 'k--', 'k+'],
                                          lineWidths=[5, 3, 3, 3],
+                                         maxPoints=[None, None, None, 300],
                                          legendText=['0-bottom', '0-700m',
                                                      '700-2000m', '2000m-bottom'],
                                          calendar=calendar)
