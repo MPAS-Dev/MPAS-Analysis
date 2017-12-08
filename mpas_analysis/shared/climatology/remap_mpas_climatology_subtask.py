@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import numpy
 import os
 
 from ..analysis_task import AnalysisTask
@@ -89,7 +90,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
 
-        comparisonGridNames : list of {'latlon', 'antarctic'}, optinal
+        comparisonGridNames : list of {'latlon', 'antarctic'}, optional
             The name(s) of the comparison grid to use for remapping.
 
         iselValues : dict, optional
@@ -390,6 +391,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             # slice
             climatology = climatology.isel(**iselValues)
 
+            # add valid mask as a variable, useful for remapping later
+            climatology['validMask'] = \
+                xr.DataArray(numpy.ones(climatology.dims['nCells']),
+                             dims=['nCells'])
             # mask the data set
             for variableName in self.variableList:
                 climatology[variableName] = \
@@ -431,8 +436,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         useNcremap = self.config.getboolean('climatology', 'useNcremap')
 
-        if comparisonGridName == 'antarctic':
-            # ncremap doesn't support polar stereographic grids
+        if comparisonGridName != 'latlon':
+            # ncremap doesn't support grids other than lat/lon
             useNcremap = False
 
         renormalizationThreshold = self.config.getfloat(

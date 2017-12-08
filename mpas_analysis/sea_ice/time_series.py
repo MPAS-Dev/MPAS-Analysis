@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 
-from .sea_ice_analysis_task import SeaIceAnalysisTask
+from ..shared import AnalysisTask
 
 from ..shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
@@ -13,7 +13,7 @@ from ..shared.io.utility import build_config_full_path, check_path_exists, \
     make_directories
 
 from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
-    datetime_to_days
+    datetime_to_days, get_simulation_start_time
 from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
 from ..shared.generalized_reader import open_multifile_dataset
@@ -23,7 +23,7 @@ from ..shared.mpas_xarray.mpas_xarray import subset_variables
 from ..shared.html import write_image_xml
 
 
-class TimeSeriesSeaIce(SeaIceAnalysisTask):
+class TimeSeriesSeaIce(AnalysisTask):
     """
     Performs analysis of time series of sea-ice properties.
 
@@ -54,7 +54,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         -------
         Xylar Asay-Davis
         """
-        # first, call the constructor from the base class (SeaIceAnalysisTask)
+        # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesSeaIce, self).__init__(
             config=config,
             taskName='timeSeriesSeaIceAreaVol',
@@ -80,7 +80,7 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         -------
         Xylar Asay-Davis
         """
-        # first, call setup_and_check from the base class (SeaIceAnalysisTask),
+        # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
         #     self.namelist, self.runStreams, self.historyStreams,
@@ -101,6 +101,31 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('seaIcePreprocessedReference',
                                              'baseDirectory'))
+
+        # get a list of timeSeriesStatsMonthly output files from the streams
+        # file, reading only those that are between the start and end dates
+        streamName = 'timeSeriesStatsMonthlyOutput'
+        self.startDate = config.get('timeSeries', 'startDate')
+        self.endDate = config.get('timeSeries', 'endDate')
+        self.inputFiles = \
+            self.historyStreams.readpath(streamName,
+                                         startDate=self.startDate,
+                                         endDate=self.endDate,
+                                         calendar=self.calendar)
+
+        if len(self.inputFiles) == 0:
+            raise IOError('No files were found in stream {} between {} and '
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
+
+        self.simulationStartTime = get_simulation_start_time(self.runStreams)
+
+        try:
+            self.restartFileName = self.runStreams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-SeaIce restart file found: need at least '
+                          'one restart file to perform remapping of '
+                          'climatologies.')
 
         # these are redundant for now.  Later cleanup is needed where these
         # file names are reused in run()
@@ -284,8 +309,8 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
 
             if compareWithObservations:
                 key = (hemisphere, 'iceArea')
-                title[key] = '{}\nSSM/I observations, annual cycle (blue)'.format(
-                    title[key])
+                title[key] = '{}\nSSM/I observations, annual cycle ' \
+                             '(blue)'.format(title[key])
                 if hemisphere == 'NH':
                     key = (hemisphere, 'iceVolume')
                     title[key] = \
@@ -440,9 +465,8 @@ class TimeSeriesSeaIce(SeaIceAnalysisTask):
                     '{}/{}.{}_polar.png'.format(self.plotsDirectory,
                                                 mainRunName,
                                                 variableName)
-                title = \
-                    '{}, NH (black), SH (blue)\n{}'.format(plotTitles[variableName],
-                                                    mainRunName)
+                title = '{}, NH (black), SH (blue)\n' \
+                    '{}'.format(plotTitles[variableName],  mainRunName)
                 varList = [plotVars[('NH', variableName)],
                            plotVars[('SH', variableName)]]
                 timeseries_analysis_plot(config, varList,

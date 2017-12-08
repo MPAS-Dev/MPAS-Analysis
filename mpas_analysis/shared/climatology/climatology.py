@@ -166,9 +166,7 @@ def get_observation_climatology_file_names(config, fieldName, monthNames,
 
     make_directories(climatologyDirectory)
 
-    if not _matches_comparison(remapper.sourceDescriptor,
-                               remapper.destinationDescriptor):
-        make_directories(remappedDirectory)
+    make_directories(remappedDirectory)
 
     return (climatologyFileName, remappedFileName)  # }}}
 
@@ -336,7 +334,7 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
                       'will be computed with\n'
                       'month durations ignoring leap years.')
 
-            daysInMonth = numpy.array([constants.daysInMonth[month-1] for
+            daysInMonth = numpy.array([constants.daysInMonth[int(month)-1] for
                                        month in ds.month.values], float)
             ds.coords['daysInMonth'] = ('Time', daysInMonth)
 
@@ -392,6 +390,11 @@ def remap_and_write_climatology(config, climatologyDataSet,
     Xylar Asay-Davis
     """
     useNcremap = config.getboolean('climatology', 'useNcremap')
+
+    if (isinstance(remapper.sourceDescriptor, ProjectionGridDescriptor) or
+        isinstance(remapper.destinationDescriptor, ProjectionGridDescriptor)):
+        # ncremap doesn't support projection grids
+        useNcremap = False
 
     if remapper.mappingFileName is None:
         # no remapping is needed

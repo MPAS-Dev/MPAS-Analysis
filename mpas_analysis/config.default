@@ -158,9 +158,13 @@ startYear = 11
 # the last year over which to average climatalogies
 endYear = 20
 
-# The comparison grid resolution in degrees
+# The comparison lat/lon grid resolution in degrees
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
+
+# The comparison Antarctic polar stereographic grid size and resolution in km
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 10.
 
 # interpolation order for model and observation results. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -524,7 +528,7 @@ colorbarLevelsDifference = [-5, -3, -2, -1, 0, 1, 2, 3, 5]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 [climatologyMapSSS]
@@ -549,7 +553,7 @@ colorbarLevelsDifference = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 [climatologyMapMLD]
@@ -574,7 +578,7 @@ colorbarLevelsDifference = [-150, -80, -30, -10, 0, 10, 30, 80, 150]
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 [climatologyMapSeaIceConcNH]
@@ -600,7 +604,7 @@ colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 
 # observations are only available for these seasons)
 seasons =  ['JFM', 'JAS']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
@@ -636,7 +640,7 @@ colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 
 # observations are only available for these seasons)
 seasons =  ['DJF', 'JJA']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
@@ -672,7 +676,7 @@ colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
 # observations are only available for these seasons)
 seasons =  ['FM', 'ON']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
@@ -708,7 +712,7 @@ colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
 # observations are only available for these seasons)
 seasons =  ['FM', 'ON']
 
-# comparison grid(s) ('lonlat', 'anatarctic') on which to plot analysis
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
 # reference lat/lon for sea ice plots in the northern hemisphere
