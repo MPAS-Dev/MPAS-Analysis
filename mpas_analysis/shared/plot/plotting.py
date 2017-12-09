@@ -32,8 +32,8 @@ from six.moves import configparser
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, legendText,
-                             calendar, titleFontSize=None, figsize=(15, 6),
-                             dpi=None, maxXTicks=20):
+                             calendar, maxPoints=None, titleFontSize=None,
+                             figsize=(15, 6), dpi=None, maxXTicks=20):
 
     """
     Plots the list of time series data sets and stores the result in an image
@@ -65,6 +65,12 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     calendar : str
         the calendar to use for formatting the time axis
+
+    maxPoints : list of {None, int}
+        the approximate maximum number of time points to use in a time series.
+        This can be helpful for reducing the number of symbols plotted if
+        plotting with markers.  Otherwise the markers become indistinguishable
+        from each other.
 
     titleFontSize : int, optional
         the size of the title font
@@ -100,6 +106,13 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
+
+        if maxPoints is not None and maxPoints[dsIndex] is not None:
+            nTime = mean.sizes['Time']
+            if maxPoints[dsIndex] < nTime:
+                stride = int(round(nTime/float(maxPoints[dsIndex])))
+                mean = mean.isel(Time=slice(0, None, stride))
+
         plt.plot(mean['Time'], mean,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex],
