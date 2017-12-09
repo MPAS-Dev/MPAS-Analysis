@@ -117,37 +117,26 @@ timeCacheSubdirectory = timecache
 # portal)
 htmlSubdirectory = html
 
-# a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
-#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH',
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH',
-#   'climatologyMapSeaIceThickSH'
-# the following shortcuts exist:
+# a list of analyses to generate.  Valid names can be seen by running:
+#   ./run_mpas_analysis --list
+# This command also lists tags for each analysis.
+# Shortcuts exist to generate (or not generate) several types of analysis.
+# These include:
 #   'all' -- all analyses will be run
-#   'all_timeSeries' -- all time-series analyses will be run
-#   'all_climatology' -- all analyses involving climatologies
-#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
-#   'all_ocean' -- all ocean analyses will be run
-#   'all_seaIce' -- all sea-ice analyses will be run
-#   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
-#                             other analyses).
-#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
-#                                            given category of analysis
+#   'all_<tag>' -- all analysis with a particular tag will be run
+#   'all_<component>' -- all analyses from a given component (either 'ocean'
+#                        or 'seaIce') will be run
+#   'no_<task_name>' -- skip the given task
+#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
+#                                   tasks from the given compoonent or with
+#                                   the given tag.  Do
+#                                      ./run_mpas_analysis --list
+#                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
-
-# alternative examples that would perform all analysis except
-#   'timeSeriesOHC'
-#generate = ['all', 'no_timeSeriesOHC']
-# Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would run all tasks that aren't ocean analyses,
-# except that it would also run ocean time series tasks:
-#generate = ['all', 'no_ocean', 'all_timeSeries']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
@@ -213,6 +202,7 @@ sssSubdirectory = SSS
 mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
+meltSubdirectory = Melt
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -580,6 +570,38 @@ seasons =  ['JFM', 'JAS', 'ANN']
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
+
+[climatologyMapAntarcticMelt]
+## options related to plotting horizontally regridded maps of Antarctic
+## sub-ice-shelf melt rates against reference model results and observations
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# colormap for model/observations
+colormapNameResult = erdc_iceFire_H
+# the type of norm used in the colormap
+normTypeResult = symLog
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                  'vmax': 100.}
+colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,
+                       10., 20., 50., 100.]
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = symLog
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                      'vmax': 100.}
+colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
+                           5., 10., 20., 50., 100.]
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of

@@ -285,6 +285,52 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         # }}}
 
+    def customize_masked_climatology(self, climatology):  # {{{
+        """
+        Override this function to customize the climatology during the masking
+        phase (before remapping)
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset```
+            The MPAS climatology data set that has had a mask added but has
+            not yet been remapped
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset```
+            The same data set with any custom fields added or modifications
+            made
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        return climatology  # }}}
+
+    def customize_remapped_climatology(self, climatology):  # {{{
+        """
+        Override this function to customize the climatology after remapping
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset```
+            The MPAS climatology data set that has been remapped
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset```
+            The same data set with any custom fields added or modifications
+            made
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        return climatology  # }}}
+
     def _setup_file_names(self):  # {{{
         """
         Create a dictionary of file names and directories for this climatology
@@ -401,6 +447,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
                     climatology[variableName].where(
                         dsMask[variableName] != self._fillValue)
 
+            # customize (if this function has been overridden)
+            climatology = self.customize_masked_climatology(climatology)
+
             write_netcdf(climatology, maskedClimatologyFileName)
         # }}}
 
@@ -449,13 +498,22 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
                                 overwrite=True,
                                 renormalize=renormalizationThreshold,
                                 logger=self.logger)
+
+            remappedClimatology = xr.open_dataset(outFileName)
+            remappedClimatology.load()
+            remappedClimatology.close()
         else:
 
             climatologyDataSet = xr.open_dataset(inFileName)
 
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
-            write_netcdf(remappedClimatology, outFileName)
+
+        # customize (if this function has been overridden)
+        remappedClimatology = self.customize_remapped_climatology(
+                remappedClimatology)
+
+        write_netcdf(remappedClimatology, outFileName)
         # }}}
 
     # }}}

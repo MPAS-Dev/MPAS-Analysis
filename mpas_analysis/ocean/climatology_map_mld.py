@@ -150,11 +150,15 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         Xylar Asay-Davis
         '''
 
+        # Load MLD observational data
+        dsObs = self.build_observational_dataset(fileName)
+
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
                                                   latVarName='lat',
                                                   lonVarName='lon')
+        dsObs.close()
         return obsDescriptor  # }}}
 
     def build_observational_dataset(self, fileName):  # {{{
