@@ -23,6 +23,12 @@ from ..shared.html import write_image_xml
 from ..shared.grid import interp_extrap_corner
 
 
+def nans_to_numpy_mask(field):
+    field = np.ma.masked_array(
+        field, np.isnan(field))
+    return field
+
+
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     """
     An analysis task for plotting 2D model fields against observations.
@@ -289,15 +295,16 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         (colormapDifference, colorbarLevelsDifference) = setup_colormap(
             config, configSectionName, suffix='Difference')
 
-        modelOutput = \
-            remappedModelClimatology[self.mpasFieldName].values
+        modelOutput = nans_to_numpy_mask(
+            remappedModelClimatology[self.mpasFieldName].values)
 
         lon = remappedModelClimatology['lon'].values
         lat = remappedModelClimatology['lat'].values
 
         lonTarg, latTarg = np.meshgrid(lon, lat)
 
-        observations = remappedObsClimatology[self.obsFieldName].values
+        observations = nans_to_numpy_mask(
+            remappedObsClimatology[self.obsFieldName].values)
 
         bias = modelOutput - observations
 
@@ -355,10 +362,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             np.ones(oceanMask.shape),
             mask=np.logical_not(np.isnan(oceanMask)))
 
-        modelOutput = \
-            remappedModelClimatology[self.mpasFieldName].values
+        modelOutput = nans_to_numpy_mask(
+            remappedModelClimatology[self.mpasFieldName].values)
 
-        observations = remappedObsClimatology[self.obsFieldName].values
+        observations = nans_to_numpy_mask(
+            remappedObsClimatology[self.obsFieldName].values)
 
         bias = modelOutput - observations
 
