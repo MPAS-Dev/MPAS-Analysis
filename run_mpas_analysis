@@ -79,6 +79,11 @@ def build_analysis_list(config):  # {{{
     analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask))
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
                                                       oceanClimatolgyTask))
+    analyses.append(ocean.ClimatologyMapSoseTemperature(config,
+                                                        oceanClimatolgyTask))
+    analyses.append(ocean.ClimatologyMapSoseSalinity(config,
+                                                     oceanClimatolgyTask))
+
     analyses.append(oceanTimeSeriesTask)
     analyses.append(ocean.TimeSeriesOHC(config, oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask))
