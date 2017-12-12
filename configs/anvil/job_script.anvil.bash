@@ -54,7 +54,7 @@ ncclimoParallelMode = $ncclimo_mode
 EOF
 
 # first, perform setup only without mpirun to create the mapping files
-$mpas_analysis_dir/run_mpas_analysis --purge --setup_only $run_config_file \
+$mpas_analysis_dir/run_mpas_analysis --setup_only $run_config_file \
     $job_config_file
 # next, do the full run now tht we have mapping files, but this time launching
 # with mpirun

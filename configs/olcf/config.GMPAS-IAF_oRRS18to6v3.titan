@@ -19,12 +19,14 @@ preprocessedReferenceRunName = None
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lustre/atlas1/cli115/scratch/vanroek/GMPAS-IAF_oRRS18to6v3/run
+baseDirectory = /lustre/atlas1/cli115/proj-shared/vanroek/run
+
+mpasMeshName = oRRS18to6v3
 
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-# mappingDirectory = /dir/for/mapping/files
+mappingDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -33,6 +35,11 @@ baseDirectory = /lustre/atlas1/cli115/scratch/vanroek/GMPAS-IAF_oRRS18to6v3/run
 # directory where analysis should be written
 # NOTE: This directory path must be specific to each test case.
 baseDirectory = /dir/to/analysis/output
+
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /ccs/proj/cli115/www/USERNAME/RUNNAME
+htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   ./run_mpas_analysis --list
@@ -53,7 +60,7 @@ baseDirectory = /dir/to/analysis/output
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-# The climatologyMapAntarcticMelt task is disabled because this run did not 
+# The climatologyMapAntarcticMelt task is disabled because this run did not
 # include ice-shelf cavities.`
 generate = ['all', 'no_climatologyMapAntarcticMelt']
 
@@ -148,20 +155,8 @@ baseDirectory = /dir/to/seaice/reference
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/seaice/reference
 
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
+[regions]
+## options related to ocean regions used in several analysis modules
 
-# Mask file for post-processing regional MOC computation
-regionMaskFiles = /lustre/atlas1/cli115/proj-shared/mpas_analysis/region_masks/oRRS18to6v3.170111.SingleRegionAtlanticWTransportTransects_masks.nc
-
-# xarray (with dask) divides data sets into "chunks", allowing computations
-# to be made on data that is larger than the available memory.  MPAS-Analysis
-# supports setting a maximum chunk size for data sets generally, and a
-# separate option specific to loading the 3D velocity field in the MOC
-# specifically.  By default, maxChunkSize is left undefined, so that chunking
-# is handled automatically.  If the MOC calculation encounters memory problems,
-# consider setting maxChunkSize to a number significantly lower than nEdges
-# in your MPAS mesh so that the calculation will be divided into smaller
-# pieces.
-maxChunkSize = 500
+# Directory for region mask files
+regionMaskDirectory = /lustre/atlas1/cli115/proj-shared/mpas_analysis/region_masks

@@ -37,7 +37,7 @@ seaIceNamelistFileName = run/mpas-cice_in
 seaIceStreamsFileName = run/streams.cice
 
 # names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30v3
+mpasMeshName = oEC60to30v3
 
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
@@ -50,6 +50,11 @@ mappingDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping/
 
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
+
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /ccs/proj/cli115/www/USERNAME/RUNNAME
+htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   ./run_mpas_analysis --list
@@ -139,5 +144,8 @@ baseDirectory =  /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_n
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# Directory for region mask files
+regionMaskDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks

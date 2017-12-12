@@ -51,7 +51,7 @@ baseDirectory = /dir/to/analysis/output
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-# The climatologyMapAntarcticMelt task is disabled because this run did not 
+# The climatologyMapAntarcticMelt task is disabled because this run did not
 # include ice-shelf cavities.`
 generate = ['all', 'no_climatologyMapAntarcticMelt']
 
@@ -111,9 +111,8 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations/SeaIce
 # directory where ocean reference simulation results are stored
 baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
+[regions]
+## options related to ocean regions used in several analysis modules
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks/oEC60to30v3_Atlantic_region_and_southern_transect.nc
+# Directory for region mask files
+regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks
