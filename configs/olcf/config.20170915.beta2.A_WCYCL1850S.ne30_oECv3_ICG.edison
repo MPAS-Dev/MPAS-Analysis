@@ -77,9 +77,9 @@ htmlSubdirectory = html
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_mpas_analysis config.analysis --generate \
-#         all,no_ocean,all_timeSeries
-generate = ['all', 'no_climatologyMapAntarcticMelt']
+# All tasks with tag "landIceCavities" are disabled because this run did not
+# include land-ice cavities.
+generate = ['all', 'no_landIceCavities']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

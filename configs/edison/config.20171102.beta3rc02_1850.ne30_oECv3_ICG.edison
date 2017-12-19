@@ -61,9 +61,9 @@ htmlSubdirectory = html
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-# The climatologyMapAntarcticMelt task is disabled because this run did not
-# include ice-shelf cavities.`
-generate = ['all', 'no_climatologyMapAntarcticMelt']
+# All tasks with tag "landIceCavities" are disabled because this run did not
+# include land-ice cavities.
+generate = ['all', 'no_landIceCavities']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
