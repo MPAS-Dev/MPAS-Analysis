@@ -6,8 +6,6 @@ import xarray
 
 # SFP: the following are only needed for the stop-gap local plotting routine used here
 import matplotlib.pyplot as plt
-from matplotlib.collections import PatchCollection
-from matplotlib.patches import Polygon
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -20,6 +18,8 @@ from ..shared.plot.plotting import plot_xtick_format
 from ..shared.io import open_mpas_dataset
 
 from ..shared.io.utility import build_config_full_path, make_directories
+
+from ..shared.html import write_image_xml
 
 import csv
 
@@ -131,6 +131,38 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             ['timeMonthly_avg_landIceFreshwaterFlux']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
+        iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
+                                                'iceShelvesToPlot')
+
+        with xarray.open_dataset(self.regionMaskFileName) as dsRegionMask:
+            regionNames = [bytes.decode(name) for name in
+                           dsRegionMask.regionNames.values]
+            nRegions = dsRegionMask.dims['nRegions']
+
+        if 'all' in iceShelvesToPlot:
+            iceShelvesToPlot = regionNames
+            regionIndices = [iRegion for iRegion in range(nRegions)]
+
+        else:
+            regionIndices = []
+            for regionName in iceShelvesToPlot:
+                if regionName not in regionNames:
+                    raise ValueError('Unknown ice shelf name {}'.format(
+                            regionName))
+
+                iRegion = regionNames.index(regionName)
+                regionIndices.append(iRegion)
+
+        self.regionIndices = regionIndices
+        self.iceShelvesToPlot = iceShelvesToPlot
+        self.xmlFileNames = []
+
+        for prefix in ['melt_flux', 'melt_rate']:
+            for regionName in iceShelvesToPlot:
+                regionName = regionName.replace(' ', '_')
+                self.xmlFileNames.append(
+                    '{}/{}_{}.xml'.format(self.plotsDirectory, prefix,
+                                          regionName))
         return  # }}}
 
     def run_task(self):  # {{{
@@ -193,33 +225,15 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
                                             'movingAverageMonths')
 
-        iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
-                                                'iceShelvesToPlot')
+        iceShelvesToPlot = self.iceShelvesToPlot
 
         dsRestart = xarray.open_dataset(self.restartFileName)
         areaCell = dsRestart.landIceFraction.isel(Time=0)*dsRestart.areaCell
 
         dsRegionMask = xarray.open_dataset(self.regionMaskFileName)
-        regionNames = [bytes.decode(name) for name in
-                       dsRegionMask.regionNames.values]
-        nRegions = dsRegionMask.dims['nRegions']
-
-        if 'all' in iceShelvesToPlot:
-            iceShelvesToPlot = regionNames
-            regionIndices = [iRegion for iRegion in range(nRegions)]
-
-        else:
-            regionIndices = []
-            for regionName in iceShelvesToPlot:
-                if regionName not in regionNames:
-                    raise ValueError('Unknown ice shelf name {}'.format(
-                            regionName))
-
-                iRegion = regionNames.index(regionName)
-                regionIndices.append(iRegion)
 
         # select only those regions we want to plot
-        dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+        dsRegionMask = dsRegionMask.isel(nRegions=self.regionIndices)
         cellMasks = dsRegionMask.regionCellMasks
         nRegions = dsRegionMask.dims['nRegions']
 
@@ -266,8 +280,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             timeSeries = totalMeltFlux.isel(nRegions=iRegion)
 
 
-            figureName = '{}/melt_flux_{}.png'.format(self.plotsDirectory,
-                                                         regionName)
+            filePrefix = 'melt_flux_{}'.format(regionName)
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
 #            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
 #                                     title, xLabel, yLabel, figureName,
@@ -275,6 +289,19 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 #                                     calendar=calendar)
             self.plot(config, timeSeries, obsFileNameDesc,  obsCount, obsMeltFlux, obsMeltFluxUnc, title, xLabel, yLabel, figureName )
 
+            caption = 'Running Mean of Total Melt Flux  under Ice ' \
+                      'Shelves in the {} Region'.format(title)
+            write_image_xml(
+                config=config,
+                filePrefix=filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup='Antarctic Melt Time Series',
+                groupLink='antmelttime',
+                gallery='Total Melt Flux',
+                thumbnailDescription=title,
+                imageDescription=caption,
+                imageCaption=caption)
 
 
             xLabel = 'Time (yr)'
@@ -282,8 +309,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
             timeSeries = meltRates.isel(nRegions=iRegion)
 
-            figureName = '{}/melt_rate_{}.png'.format(self.plotsDirectory,
-                                                         regionName)
+
+            filePrefix = 'melt_rate_{}'.format(regionName)
+            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
 #            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
 #                                     title, xLabel, yLabel, figureName,
@@ -291,8 +319,23 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 #                                     calendar=calendar)
             self.plot(config, timeSeries, obsFileNameDesc, obsCount, obsMeltRate, obsMeltRateUnc, title, xLabel, yLabel, figureName )
 
+            caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
+                      'Shelves in the {} Region'.format(title)
+            write_image_xml(
+                config=config,
+                filePrefix=filePrefix,
+                componentName='Ocean',
+                componentSubdirectory='ocean',
+                galleryGroup='Antarctic Melt Time Series',
+                groupLink='antmelttime',
+                gallery='Area-averaged Melt Rate',
+                thumbnailDescription=title,
+                imageDescription=caption,
+                imageCaption=caption)
 
-    def plot(self, config, modelValues, obsFileNameDesc, obsCount, obsMean, obsUncertainty, title, xlabel, ylabel, fileout):
+
+    def plot(self, config, modelValues, obsFileNameDesc, obsCount, obsMean,
+             obsUncertainty, title, xlabel, ylabel, fileout):
 
         """
         Plots the list of time series data sets and stores the result in an image
