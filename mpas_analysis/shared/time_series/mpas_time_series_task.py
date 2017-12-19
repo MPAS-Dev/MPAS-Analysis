@@ -279,7 +279,9 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             totalMonths = 12*inYears + inMonths
 
             with xr.open_dataset(self.outputFile) as ds:
-                lastDate = str(ds.xtime_startMonthly[-1].values)
+                dates = [bytes.decode(name) for name in
+                           ds.xtime_startMonthly.values]
+                lastDate = dates[-1]
 
             lastYear = int(lastDate[0:4])
             lastMonth = int(lastDate[5:7])
