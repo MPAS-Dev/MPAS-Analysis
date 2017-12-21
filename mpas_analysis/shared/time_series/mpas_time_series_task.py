@@ -151,6 +151,12 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         self._update_time_series_bounds_from_file_names()
 
+        self.runMessage = '\nComputing MPAS time series from first year ' \
+                          'plus files:\n' \
+                          '    {} through\n    {}'.format(
+                                  os.path.basename(self.inputFiles[0]),
+                                  os.path.basename(self.inputFiles[-1]))
+
         # Make sure first year of data is included for computing anomalies
         simulationStartTime = get_simulation_start_time(self.runStreams)
         firstYear = int(simulationStartTime[0:4])
@@ -180,10 +186,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             # nothing to do
             return
 
-        self.logger.info('\nComputing MPAS time series from files:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFiles[0]),
-                                 os.path.basename(self.inputFiles[-1])))
+        self.logger.info(self.runMessage)
 
         self._compute_time_series_with_ncrcat()
 
