@@ -4,10 +4,7 @@
 
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = GMPAS-IAF_oRRS18to6v3
-# referenceRunName is the name of a reference run to compare against (or None
-# to turn off comparison with a reference, e.g. if no reference case is
-# available)
-referenceRunName = None
+
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
