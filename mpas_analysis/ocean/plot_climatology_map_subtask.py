@@ -50,6 +50,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         The subtask for remapping the observational climatology that this
         subtask will plot
 
+    remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``
+        The subtask for remapping the MPAS climatology for the reference
+        run that this subtask will plot
+
     outFileLabel : str
         The prefix on each plot and associated XML file
 
@@ -98,8 +102,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     """
 
     def __init__(self, parentTask, season, comparisonGridName,
-                 remapMpasClimatologySubtask, remapObsClimatologySubtask,
-                 depth=None):
+                 remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
+                 remapMpasRefClimatologySubtask=None, depth=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -121,9 +125,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the MPAS climatology that this subtask
             will plot
 
-        remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``
+        remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``, optional
             The subtask for remapping the observational climatology that this
             subtask will plot
+
+        remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``, optional
+            The subtask for remapping the MPAS climatology for the reference
+            run that this subtask will plot
 
         depth : {float, 'top', 'bot'}, optional
             Depth the data is being plotted, 'top' for the sea surface
@@ -140,6 +148,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.comparisonGridName = comparisonGridName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
+        self.remapMpasRefClimatologySubtask = remapMpasRefClimatologySubtask
         subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
 
         if depth is None:
@@ -160,11 +169,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
         self.run_after(remapMpasClimatologySubtask)
-        self.run_after(remapObsClimatologySubtask)
+        if remapObsClimatologySubtask is not None:
+            self.run_after(remapObsClimatologySubtask)
+        if remapMpasRefClimatologySubtask is not None:
+            self.run_after(remapMpasRefClimatologySubtask)
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
-                      obsFieldName, observationTitleLabel, unitsLabel,
+                      refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations'):
         # {{{
@@ -182,11 +194,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         mpasFieldName : str
             The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-        obsFieldName : str
-            The name of the variable to use from the observations file
+        refFieldName : str
+            The name of the variable to use from the observations or reference
+            file
 
-        observationTitleLabel : str
-            the title of the observations subplot
+        refTitleLabel : str
+            the title of the observations or reference subplot
 
         unitsLabel : str
             the units of the plotted field, to be displayed on color bars
@@ -218,8 +231,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
-        self.obsFieldName = obsFieldName
-        self.observationTitleLabel = observationTitleLabel
+        self.refFieldName = refFieldName
+        self.refTitleLabel = refTitleLabel
         self.diffTitleLabel = diffTitleLabel
         self.unitsLabel = unitsLabel
 
@@ -290,6 +303,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
+        or a reference run
 
         Authors
         -------
@@ -320,31 +334,47 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             remappedModelClimatology = remappedModelClimatology.sel(
                     depthSlice=str(depth), drop=True)
 
-        # now the observations
-        remappedFileName = self.remapObsClimatologySubtask.get_file_name(
-            stage='remapped', season=season,
-            comparisonGridName=comparisonGridName)
+        # now the observations or reference run
+        if self.remapObsClimatologySubtask is not None:
+            remappedFileName = self.remapObsClimatologySubtask.get_file_name(
+                stage='remapped', season=season,
+                comparisonGridName=comparisonGridName)
 
-        remappedObsClimatology = xr.open_dataset(remappedFileName)
+            remappedRefClimatology = xr.open_dataset(remappedFileName)
+        elif self.remapMpasRefClimatologySubtask is not None:
+            remappedFileName = \
+                self.remapMpasRefClimatologySubtask.get_file_name(
+                        season=season, stage='remapped',
+                        comparisonGridName=comparisonGridName)
+            remappedRefClimatology = xr.open_dataset(remappedFileName)
+            refConfig = self.remapMpasRefClimatologySubtask.config
+            refStartYear = refConfig.getint('climatology', 'startYear')
+            refEndYear = refConfig.getint('climatology', 'endYear')
+            if refStartYear != self.startYear or refEndYear != self.endYear:
+                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
+                        self.refTitleLabel, refStartYear, refEndYear)
 
-        if depth is not None:
-            if str(depth) not in remappedObsClimatology.depthSlice.values:
+        else:
+            remappedRefClimatology = None
+
+        if remappedRefClimatology is not None and depth is not None:
+            if str(depth) not in remappedRefClimatology.depthSlice.values:
                 raise KeyError('The climatology you are attempting to perform '
                                'depth slices of was originally created\n'
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
-            remappedObsClimatology = remappedObsClimatology.sel(
+            remappedRefClimatology = remappedRefClimatology.sel(
                     depthSlice=str(depth), drop=True)
 
         if self.comparisonGridName == 'latlon':
-            self._plot_latlon(remappedModelClimatology, remappedObsClimatology)
+            self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
         elif self.comparisonGridName == 'antarctic':
             self._plot_antarctic(remappedModelClimatology,
-                                 remappedObsClimatology)
+                                 remappedRefClimatology)
         # }}}
 
-    def _plot_latlon(self, remappedModelClimatology, remappedObsClimatology):
+    def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology):
         # {{{
         """ plotting a global lat-lon data set """
 
@@ -367,10 +397,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         lonTarg, latTarg = np.meshgrid(lon, lat)
 
-        observations = nans_to_numpy_mask(
-            remappedObsClimatology[self.obsFieldName].values)
+        if remappedRefClimatology is None:
+            refOutput = None
+            bias = None
+        else:
+            refOutput = nans_to_numpy_mask(
+                remappedRefClimatology[self.refFieldName].values)
 
-        bias = modelOutput - observations
+            bias = modelOutput - refOutput
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -381,7 +415,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                lonTarg,
                                latTarg,
                                modelOutput,
-                               observations,
+                               refOutput,
                                bias,
                                colormapResult,
                                colorbarLevelsResult,
@@ -390,7 +424,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                fileout=outFileName,
                                title=title,
                                modelTitle='{}'.format(mainRunName),
-                               obsTitle=self.observationTitleLabel,
+                               refTitle=self.refTitleLabel,
                                diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel)
 
@@ -411,7 +445,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # }}}
 
     def _plot_antarctic(self, remappedModelClimatology,
-                        remappedObsClimatology):  # {{{
+                        remappedRefClimatology):  # {{{
         """ plotting an Antarctic data set """
 
         season = self.season
@@ -429,10 +463,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
 
-        observations = nans_to_numpy_mask(
-            remappedObsClimatology[self.obsFieldName].values)
+        if remappedRefClimatology is None:
+            refOutput = None
+            bias = None
+        else:
+            refOutput = nans_to_numpy_mask(
+                remappedRefClimatology[self.refFieldName].values)
 
-        bias = modelOutput - observations
+            bias = modelOutput - refOutput
 
         x = interp_extrap_corner(remappedModelClimatology['x'].values)
         y = interp_extrap_corner(remappedModelClimatology['y'].values)
@@ -458,14 +496,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             y,
             self.landMask,
             modelOutput,
-            observations,
+            refOutput,
             bias,
             fileout=outFileName,
             colorMapSectionName=configSectionName,
             colorMapType=colorMapType,
             title=title,
             modelTitle='{}'.format(mainRunName),
-            obsTitle=self.observationTitleLabel,
+            refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel)
 
