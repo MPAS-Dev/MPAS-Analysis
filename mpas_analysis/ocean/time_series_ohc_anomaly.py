@@ -20,7 +20,8 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
     Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask, mpasRefTimeSeriesTask=None):
+        # {{{
         """
         Construct the analysis task.
 
@@ -31,6 +32,10 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``, optional
+            A task for extracting the same time series from the reference run
+            (if any)
 
         Authors
         -------
@@ -65,6 +70,12 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
                 movingAveragePoints=movingAveragePoints,
                 alter_dataset=self._compute_ohc)
         self.add_subtask(anomalyTask)
+
+        if mpasRefTimeSeriesTask is None:
+            refConfig = None
+        else:
+            refConfig = mpasRefTimeSeriesTask.config
+            self.run_after(mpasRefTimeSeriesTask)
 
         for regionName in regionNames:
             caption = 'Trend of {} OHC Anomaly vs depth'.format(
@@ -104,7 +115,8 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
                     galleryGroup='Time Series',
                     groupSubtitle=None,
                     groupLink='timeseries',
-                    galleryName=None)
+                    galleryName=None,
+                    refConfig=refConfig)
 
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)

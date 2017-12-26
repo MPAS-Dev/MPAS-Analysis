@@ -27,12 +27,17 @@ class TimeSeriesSST(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
+    mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``
+        A task for extracting the same time series from the reference run
+        or ``None`` if no reference run is specified
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask, mpasRefTimeSeriesTask=None):
+        # {{{
         """
         Construct the analysis task.
 
@@ -43,6 +48,10 @@ class TimeSeriesSST(AnalysisTask):
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``, optional
+            A task for extracting the same time series from the reference run
+            (if any)
 
         Authors
         -------
@@ -56,8 +65,11 @@ class TimeSeriesSST(AnalysisTask):
             tags=['timeSeries', 'sst'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
+        self.mpasRefTimeSeriesTask = mpasRefTimeSeriesTask
 
         self.run_after(mpasTimeSeriesTask)
+        if mpasRefTimeSeriesTask is not None:
+            self.run_after(mpasRefTimeSeriesTask)
 
         # }}}
 
@@ -88,6 +100,10 @@ class TimeSeriesSST(AnalysisTask):
         self.variableList = \
             ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
+
+        if self.mpasRefTimeSeriesTask is not None:
+            self.mpasRefTimeSeriesTask.add_variables(
+                    variableList=self.variableList)
 
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('oceanPreprocessedReference',
@@ -160,6 +176,16 @@ class TimeSeriesSST(AnalysisTask):
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
                                calendar=calendar)
 
+        if self.mpasRefTimeSeriesTask is not None:
+            dsRefSST = open_mpas_dataset(
+                    fileName=self.mpasRefTimeSeriesTask.outputFile,
+                    calendar=calendar,
+                    variableList=self.variableList,
+                    startDate=self.startDate,
+                    endDate=self.endDate)
+        else:
+            dsRefSST = None
+
         if preprocessedReferenceRunName != 'None':
             self.logger.info('  Load in SST for a preprocesses reference '
                              'run...')
@@ -185,8 +211,7 @@ class TimeSeriesSST(AnalysisTask):
         for regionIndex in regionIndicesToPlot:
             region = regions[regionIndex]
 
-            title = plotTitles[regionIndex]
-            title = 'SST, %s \n %s (black)' % (title, mainRunName)
+            title = '{} SST'.format(plotTitles[regionIndex])
             xLabel = 'Time [years]'
             yLabel = '[$^\circ$C]'
 
@@ -197,23 +222,33 @@ class TimeSeriesSST(AnalysisTask):
 
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
+            lineStyles = ['k-']
+            lineWidths = [3]
+
+            fields = [SST]
+            legendText = [mainRunName]
+
+            if dsRefSST is not None:
+                refSST = dsRefSST[varName].isel(nOceanRegions=regionIndex)
+                fields.append(refSST)
+                lineStyles.append('b-')
+                lineWidths.append(1.5)
+                refRunName = self.mpasRefTimeSeriesTask.config.get(
+                        'runs', 'mainRunName')
+                legendText.append(refRunName)
+
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST
+                fields.append(SST_v0)
+                lineStyles.append('r-')
+                lineWidths.append(1.5)
+                legendText.append(preprocessedReferenceRunName)
 
-                title = '{}\n {} (red)'.format(title,
-                                               preprocessedReferenceRunName)
-                timeseries_analysis_plot(config, [SST, SST_v0],
-                                         movingAveragePoints,
-                                         title, xLabel, yLabel, figureName,
-                                         lineStyles=['k-', 'r-'],
-                                         lineWidths=[3, 1.5],
-                                         legendText=[None, None],
-                                         calendar=calendar)
-            else:
-                timeseries_analysis_plot(config, [SST], movingAveragePoints,
-                                         title, xLabel, yLabel, figureName,
-                                         lineStyles=['k-'], lineWidths=[3],
-                                         legendText=[None], calendar=calendar)
+            timeseries_analysis_plot(config, fields, movingAveragePoints,
+                                     title, xLabel, yLabel, figureName,
+                                     lineStyles=lineStyles,
+                                     lineWidths=lineWidths,
+                                     legendText=legendText, calendar=calendar)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                     region)

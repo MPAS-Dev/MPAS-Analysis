@@ -25,12 +25,17 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
+    mpasRefClimatologyTask : ``MpasReferenceClimatologyTask``
+        The task that produced the climatology from a reference run to be
+        remapped and plotted, including anomalies with respect to the main run
+
     Authors
     -------
     Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
 
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask,
+                 mpasRefClimatologyTask=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -41,6 +46,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        mpasRefClimatologyTask : ``MpasClimatologyTask``, optional
+            The task that produced the climatology from a reference run to be
+            remapped and plotted, including anomalies with respect to the main
+            run
 
         Authors
         -------
@@ -57,15 +67,15 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
 
+        self.mpasRefClimatologyTask = mpasRefClimatologyTask
+        if mpasRefClimatologyTask is not None:
+            self.run_after(mpasRefClimatologyTask)
+
         # }}}
 
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Raises
-        ------
-        ValueError: if myArg has an invalid value
 
         Authors
         -------
@@ -115,6 +125,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
+
+        if self.mpasRefClimatologyTask is not None:
+            self.mpasRefClimatologyTask.add_variables(
+                    variableList=variableList, seasons=['ANN'])
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -229,6 +243,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                  self.startYear, self.endYear, mainRunName)
         filePrefix = self.filePrefixes['mht']
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        lineColors = ['r']
+        lineWidths = [1.6]
+        legendText = [mainRunName]
+        xArrays = [x]
+        fieldArrays = [y]
+        errArrays = [None]
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -238,23 +258,37 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             ecmwfGlobal = dsObs.GLOBALECMWF_ADJUSTED
             ecmwfErrGlobal = dsObs.GLOBALECMWF_ERR
 
-            lineColors = ['r', 'b', 'g']
-            lineWidths = [1.6, 1.2, 1.2]
-            legendText = ['model', 'NCEP', 'ECMWF']
-            plot_1D(config, [x, xObs, xObs],
-                    [y, ncepGlobal, ecmwfGlobal],
-                    [None, ncepErrGlobal, ecmwfErrGlobal],
-                    lineColors, lineWidths, legendText,
-                    title, xLabel, yLabel, figureName,
-                    xLim=xLimGlobal)
-        else:
-            lineColors = ['r']
-            lineWidths = [1.6]
+            lineColors.extend(['b', 'g'])
+            lineWidths.extend([1.2, 1.2])
+            legendText.extend(['NCEP', 'ECMWF'])
+            xArrays.extend([xObs, xObs])
+            fieldArrays.extend([ncepGlobal, ecmwfGlobal])
+            errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
+
+        if self.mpasRefClimatologyTask is not None:
+            dsRef = xr.open_dataset(self.mpasRefClimatologyTask.get_file_name(
+                season='ANN'))
+            dsRef = dsRef.isel(Time=0)
+
+            yRef = dsRef.timeMonthly_avg_meridionalHeatTransportLat
+            refRunName = self.mpasRefClimatologyTask.config.get(
+                    'runs', 'mainRunName')
+
+            lineColors.append('k')
+            lineWidths.append(1.2)
+            legendText.append(refRunName)
+            xArrays.append(x)
+            fieldArrays.append(yRef)
+            errArrays.append(None)
+
+        if len(legendText) == 1:
+            # no need for a legend
             legendText = [None]
-            plot_1D(config, [x], [y], [None],
-                    lineColors, lineWidths, legendText,
-                    title, xLabel, yLabel, figureName,
-                    xLim=xLimGlobal)
+
+        plot_1D(config, xArrays, fieldArrays, errArrays,
+                lineColors, lineWidths, legendText,
+                title, xLabel, yLabel, figureName,
+                xLim=xLimGlobal)
 
         self._write_xml(filePrefix)
 

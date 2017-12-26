@@ -72,6 +72,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
+    refConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the reference run (if any)
 
     Authors
     -------
@@ -81,7 +83,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, yAxisLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
-                 groupLink, galleryName, subtaskName=None):  # {{{
+                 groupLink, galleryName, subtaskName=None, refConfig=None):
+        # {{{
         """
         Construct the analysis task.
 
@@ -133,8 +136,11 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         galleryName : str
             the name of the gallery in which this plot belongs
 
-        subtaskName :  str
+        subtaskName :  str, optional
             The name of the subtask (``plotTimeSeries<RegionName>`` by default)
+
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            The configuration options for the reference run (if any)
 
         Authors
         -------
@@ -160,6 +166,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.mpasFieldName = mpasFieldName
         self.yAxisLabel = yAxisLabel
         self.sectionName = sectionName
+
+        self.refConfig = refConfig
 
         # xml/html related variables
         self.thumbnailSuffix = thumbnailSuffix
@@ -187,6 +195,17 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         super(PlotDepthIntegratedTimeSeriesSubtask, self).setup_and_check()
 
         config = self.config
+
+        if self.refConfig is not None:
+            # we need to know what file to read from the reference run so
+            # an absolute path won't work
+            assert(not os.path.isabs(self.inFileName))
+
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            self.refFileName = '{}/{}'.format(baseDirectory,
+                                              self.inFileName)
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -368,6 +387,40 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                         'not found. Skipping.'.format(
                                                 variableName))
                     timeSeries.extend(None)
+
+                lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+                lineWidths.append(widths[rangeIndex])
+                maxPoints.append(points[rangeIndex])
+                legendText.append(None)
+
+        if self.refConfig is not None:
+
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            title = '{} \n {} (blue)'.format(title, refRunName)
+
+            self.logger.info('  Load ocean data from reference run...')
+            refStartDate = self.refConfig.get('timeSeries', 'startDate')
+            refEndDate = self.refConfig.get('timeSeries', 'endDate')
+            dsRef = open_mpas_dataset(fileName=self.refFileName,
+                                      calendar=calendar,
+                                      variableList=[self.mpasFieldName],
+                                      timeVariableNames=None,
+                                      startDate=refStartDate,
+                                      endDate=refEndDate)
+            dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
+
+            # add depths as a coordinate to the data set
+            dsRef.coords['depth'] = (('nVertLevels',), depths)
+
+            color = 'b'
+
+            for rangeIndex in range(len(topDepths)):
+                top = topDepths[rangeIndex]
+                bottom = bottomDepths[rangeIndex]
+                field = dsRef[self.mpasFieldName].where(dsRef.depth > top)
+                field = field.where(dsRef.depth <= bottom)
+                timeSeries.append(field.sum('nVertLevels'))
 
                 lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
                 lineWidths.append(widths[rangeIndex])
