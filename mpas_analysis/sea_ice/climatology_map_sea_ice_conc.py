@@ -7,7 +7,7 @@ import xarray as xr
 from ..shared import AnalysisTask
 
 from ..shared.climatology import RemapMpasClimatologySubtask, \
-    RemapObservedClimatologySubtask
+    RemapObservedClimatologySubtask, RemapMpasReferenceClimatologySubtask
 
 from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
 
@@ -25,8 +25,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, mpasClimatologyTask, hemisphere):
-        # {{{
+    def __init__(self, config, mpasClimatologyTask, hemisphere,
+                 mpasRefClimatologyTask=None):  # {{{
         """
         Construct the analysis task.
 
@@ -41,18 +41,23 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
+        mpasRefClimatologyTask : ``MpasClimatologyTask``, optional
+            The task that produced the climatology from a reference run to be
+            remapped and plotted, including anomalies with respect to the main
+            run
+
         Authors
         -------
         Xylar Asay-Davis
         """
         taskName = 'climatologyMapSeaIceConc{}'.format(hemisphere)
 
-        self.fieldName = 'seaIceConc'
+        fieldName = 'seaIceConc'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSeaIceConc, self).__init__(
                 config=config, taskName=taskName,
                 componentName='seaIce',
-                tags=['climatology', 'horizontalMap', self.fieldName])
+                tags=['climatology', 'horizontalMap', fieldName])
 
         mpasFieldName = 'timeMonthly_avg_iceAreaCell'
         iselValues = None
@@ -63,8 +68,6 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
             hemisphereLong = 'Northern'
         else:
             hemisphereLong = 'Southern'
-
-        obsFieldName = 'seaIceConc'
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -85,13 +88,30 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         remapClimatologySubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName='{}{}'.format(self.fieldName, hemisphere),
+            climatologyName='{}{}'.format(fieldName, hemisphere),
             variableList=[mpasFieldName],
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=iselValues)
 
-        observationPrefixes = config.getExpression(sectionName,
+        if mpasRefClimatologyTask is None:
+            self._add_obs_tasks(seasons, comparisonGridNames, hemisphere,
+                                hemisphereLong, remapClimatologySubtask,
+                                mpasFieldName)
+        else:
+            self._add_ref_tasks(seasons, comparisonGridNames, hemisphere,
+                                hemisphereLong, remapClimatologySubtask,
+                                mpasRefClimatologyTask, mpasFieldName,
+                                fieldName, iselValues)
+        # }}}
+
+    def _add_obs_tasks(self, seasons, comparisonGridNames, hemisphere,
+                       hemisphereLong, remapClimatologySubtask,
+                       mpasFieldName):  # {{{
+        config = self.config
+        obsFieldName = 'seaIceConc'
+
+        observationPrefixes = config.getExpression(self.taskName,
                                                    'observationPrefixes')
         for prefix in observationPrefixes:
             for season in seasons:
@@ -107,26 +127,29 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                 remapObservationsSubtask = RemapObservedConcClimatology(
                         parentTask=self, seasons=[season],
                         fileName=obsFileName,
-                        outFilePrefix='{}{}{}_{}'.format(obsFieldName, prefix,
-                                                         hemisphere, season),
+                        outFilePrefix='{}{}{}_{}'.format(
+                                obsFieldName,  prefix, hemisphere, season),
                         comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations_{}{}'.format(prefix,
-                                                                    season))
+                        subtaskName='remapObservations_{}{}'.format(
+                                prefix,  season))
                 self.add_subtask(remapObservationsSubtask)
                 for comparisonGridName in comparisonGridNames:
 
                     imageDescription = \
                         '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
                         'Concentration'.format(season, hemisphereLong)
-                    imageCaption = '{}. <br> Observations: SSM/I {}'.format(
-                        imageDescription, prefix)
+                    imageCaption = \
+                        '{}. <br> Observations: SSM/I {}'.format(
+                            imageDescription, prefix)
                     galleryGroup = \
                         '{}-Hemisphere Sea-Ice Concentration'.format(
                                 hemisphereLong)
-                    # make a new subtask for this season and comparison grid
+                    # make a new subtask for this season and comparison
+                    # grid
                     subtask = PlotClimatologyMapSubtask(
                             self, hemisphere, season, comparisonGridName,
-                            remapClimatologySubtask, remapObservationsSubtask,
+                            remapClimatologySubtask,
+                            remapObsClimatologySubtask=remapObservationsSubtask,
                             subtaskSuffix=prefix)
 
                     subtask.set_plot_info(
@@ -134,8 +157,9 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                                                               hemisphere),
                             fieldNameInTitle='Sea ice concentration',
                             mpasFieldName=mpasFieldName,
-                            obsFieldName=obsFieldName,
-                            observationTitleLabel=observationTitleLabel,
+                            refFieldName=obsFieldName,
+                            refTitleLabel=observationTitleLabel,
+                            diffTitleLabel='Model - Observations',
                             unitsLabel=r'fraction',
                             imageDescription=imageDescription,
                             imageCaption=imageCaption,
@@ -146,6 +170,62 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                                     prefix))
 
                     self.add_subtask(subtask)
+        # }}}
+
+    def _add_ref_tasks(self, seasons, comparisonGridNames, hemisphere,
+                       hemisphereLong, remapClimatologySubtask,
+                       mpasRefClimatologyTask, mpasFieldName, fieldName,
+                       iselValues):  # {{{
+
+        refRunName = mpasRefClimatologyTask.config.get('runs',
+                                                       'mainRunName')
+        galleryName = None
+        refTitleLabel = 'Ref: {}'.format(refRunName)
+
+        remapRefClimatologySubtask = RemapMpasReferenceClimatologySubtask(
+            mpasClimatologyTask=mpasRefClimatologyTask,
+            parentTask=self,
+            climatologyName='{}{}'.format(fieldName, hemisphere),
+            variableList=[mpasFieldName],
+            comparisonGridNames=comparisonGridNames,
+            seasons=seasons,
+            iselValues=iselValues)
+
+        self.add_subtask(remapRefClimatologySubtask)
+
+        for season in seasons:
+            for comparisonGridName in comparisonGridNames:
+
+                imageDescription = \
+                    '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
+                    'Concentration'.format(season, hemisphereLong)
+                imageCaption = imageDescription
+                galleryGroup = \
+                    '{}-Hemisphere Sea-Ice Concentration'.format(
+                            hemisphereLong)
+                # make a new subtask for this season and comparison
+                # grid
+                subtask = PlotClimatologyMapSubtask(
+                    self, hemisphere, season, comparisonGridName,
+                    remapClimatologySubtask,
+                    remapMpasRefClimatologySubtask=remapRefClimatologySubtask)
+
+                subtask.set_plot_info(
+                        outFileLabel='iceconc{}'.format(hemisphere),
+                        fieldNameInTitle='Sea ice concentration',
+                        mpasFieldName=mpasFieldName,
+                        refFieldName=mpasFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel='Main - Reference',
+                        unitsLabel=r'fraction',
+                        imageDescription=imageDescription,
+                        imageCaption=imageCaption,
+                        galleryGroup=galleryGroup,
+                        groupSubtitle=None,
+                        groupLink='{}_conc'.format(hemisphere.lower()),
+                        galleryName=galleryName)
+
+                self.add_subtask(subtask)
         # }}}
     # }}}
 
