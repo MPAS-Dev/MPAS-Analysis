@@ -48,7 +48,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     Xylar Asay-Davis
     '''
 
-    def __init__(self, config, componentName):  # {{{
+    def __init__(self, config, componentName, taskName=None):  # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -61,6 +61,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         componentName : {'ocean', 'seaIce'}
             The name of the component (same as the folder where the task
             resides)
+
+        taskName : str, optional
+            the name of the task, defaults to mpasClimatology<ComponentName>
 
         Authors
         -------
@@ -80,8 +83,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                              'Check with Charlie Zender and Xylar Asay-Davis\n'
                              'about getting it added'.format(componentName))
 
-        suffix = componentName[0].upper() + componentName[1:]
-        taskName = 'mpasClimatology{}'.format(suffix)
+        if taskName is None:
+            suffix = componentName[0].upper() + componentName[1:]
+            taskName = 'mpasClimatology{}'.format(suffix)
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologyTask, self).__init__(

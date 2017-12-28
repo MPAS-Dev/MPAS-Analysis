@@ -7,3 +7,6 @@ from .remap_mpas_climatology_subtask import RemapMpasClimatologySubtask
 from .remap_observed_climatology_subtask import RemapObservedClimatologySubtask
 from .comparison_descriptors import get_comparison_descriptor, \
     get_antarctic_stereographic_projection
+
+from .mpas_reference_climatology_tasks import MpasReferenceClimatologyTask, \
+    RemapMpasReferenceClimatologySubtask

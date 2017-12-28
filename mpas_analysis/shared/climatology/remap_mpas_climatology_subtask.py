@@ -61,7 +61,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, comparisonGridNames=['latlon'],
-                 iselValues=None):
+                 iselValues=None, subtaskName='remapMpasClimatology'):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -97,6 +97,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             A dictionary of dimensions and indices (or ``None``) used to
             extract a slice of the MPAS field(s).
 
+        subtaskName : str, optional
+            The name of the subtask
+
         Authors
         -------
         Xylar Asay-Davis
@@ -105,9 +108,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(RemapMpasClimatologySubtask, self).__init__(
-            config=parentTask.config,
+            config=mpasClimatologyTask.config,
             taskName=parentTask.taskName,
-            subtaskName='remapMpasClimatology',
+            subtaskName=subtaskName,
             componentName=parentTask.componentName,
             tags=tags)
 
