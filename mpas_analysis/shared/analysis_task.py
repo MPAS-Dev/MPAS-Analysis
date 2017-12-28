@@ -293,15 +293,6 @@ class AnalysisTask(Process):  # {{{
         Xylar Asay-Davis
         '''
         # redirect output to a log file
-        logsDirectory = build_config_full_path(self.config, 'output',
-                                               'logsSubdirectory')
-
-        configFileName = '{}/configs/config.{}'.format(logsDirectory,
-                                                       self.fullTaskName)
-        configFile = open(configFileName, 'w')
-        self.config.write(configFile)
-        configFile.close()
-
         if writeLogFile:
             self.logger = logging.getLogger(self.fullTaskName)
             handler = logging.FileHandler(self._logFileName)
