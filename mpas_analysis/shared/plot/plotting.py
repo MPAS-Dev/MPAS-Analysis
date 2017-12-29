@@ -1144,42 +1144,6 @@ def setup_colormap(config, configSectionName, suffix=''):
     return (colormap, colorbarLevels)
 
 
-def plot_size_y_axis(plt, xaxisValues, **data):
-    '''
-    Resize the y-axis limit based on the curves being plotted
-
-    Parameters
-    ----------
-    plt : plot handle
-
-    xaxisValues : numpy.array
-       Values plotted along the x-axis
-
-    data : dictionary entries must be numpy.array
-       data for curves on plot
-
-    Authors
-    -------
-    Luke Van Roekel
-    '''
-
-    ax = plt.gca()
-    xmin = ax.get_xlim()[0]
-    xmax = ax.get_xlim()[1]
-
-    # find period/frequency bounds for chosen xmin/xmax
-    minIndex = np.abs(xaxisValues - xmin).argmin()
-    maxIndex = np.abs(xaxisValues - xmax).argmin()
-
-    # find maximum value of three curves plotted
-    maxCurveVal = -1E20
-    for key in data:
-        maxTemp = data[key][minIndex:maxIndex].max()
-        maxCurveVal = max(maxTemp, maxCurveVal)
-
-    return maxCurveVal
-
-
 def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
     '''
     Formats tick labels and positions along the x-axis for time series
