@@ -12,7 +12,6 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 import os
-import warnings
 
 from ..timekeeping.utility import days_to_datetime
 
@@ -87,7 +86,7 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
             message = 'Deleting cache file {}, which appears to have ' \
                       'been corrupted.'.format(cacheFileName)
             if logger is None:
-                warnings.warn(message)
+                print('Warning: {}'.format(message))
             else:
                 logger.warning(message)
             os.remove(cacheFileName)

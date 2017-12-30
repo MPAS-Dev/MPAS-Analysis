@@ -6,14 +6,11 @@ import xarray as xr
 import numpy as np
 import netCDF4
 import os
-import warnings
 
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
 from ..shared.io.utility import build_config_full_path
-
-from ..shared.timekeeping.utility import get_simulation_start_time
 
 from ..shared import AnalysisTask
 from ..shared.html import write_image_xml
@@ -119,8 +116,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             if os.path.exists(observationsFile):
                 self.observationsFile = observationsFile
             else:
-                warnings.warn('No MHT observations file found: skip plotting '
-                              'obs')
+                print('Warning: No MHT observations file found: skip plotting '
+                      'obs')
 
         mainRunName = self.config.get('runs', 'mainRunName')
 

@@ -3,7 +3,6 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import os
-import warnings
 import subprocess
 from distutils.spawn import find_executable
 import xarray as xr
@@ -225,14 +224,14 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         endYear = years[lastIndex]
 
         if startYear != requestedStartYear or endYear != requestedEndYear:
-            message = "time series start and/or end year different from " \
-                      "requested\n" \
-                      "requestd: {:04d}-{:04d}\n" \
-                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                         requestedEndYear,
-                                                         startYear,
-                                                         endYear)
-            warnings.warn(message)
+            print("Warning: {} start and/or end year different from "
+                  "requested\n" \
+                  "requestd: {:04d}-{:04d}\n" \
+                  "actual:   {:04d}-{:04d}\n".format(section,
+                                                     requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear))
             config.set(section, 'startYear', str(startYear))
             config.set(section, 'endYear', str(endYear))
 

@@ -142,8 +142,7 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        with pytest.warns(UserWarning):
-            mpasClimatologyTask._update_climatology_bounds_from_file_names()
+        mpasClimatologyTask._update_climatology_bounds_from_file_names()
 
         startYear = 2
         endYear = 2
