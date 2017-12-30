@@ -42,7 +42,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
     '''
 
     def __init__(self, config, componentName, taskName=None,
-                 subtaskName=None):  # {{{
+                 subtaskName=None, section='timeSeries'):  # {{{
         '''
         Construct the analysis task for extracting time series.
 
@@ -62,19 +62,22 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         subtaskName : str, optional
             The name of the subtask (if any)
 
+        section : str, optional
+            The section of the config file from which to read the start and
+            end times for the time series, also added as a tag
 
         Authors
         -------
         Xylar Asay-Davis
         '''
         self.variableList = []
-        self.seasons = []
+        self.section = section
+        tags = [section]
 
-        tags = ['timeSeries']
-
-        suffix = componentName[0].upper() + componentName[1:]
         if taskName is None:
-            taskName = 'mpasTimeSeries{}'.format(suffix)
+            suffix = section[0].upper() + section[1:] + \
+                componentName[0].upper() + componentName[1:]
+            taskName = 'mpas{}'.format(suffix)
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasTimeSeriesTask, self).__init__(
@@ -138,8 +141,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        startDate = config.get('timeSeries', 'startDate')
-        endDate = config.get('timeSeries', 'endDate')
+        startDate = config.get(self.section, 'startDate')
+        endDate = config.get(self.section, 'endDate')
         streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
                 streamName, startDate=startDate, endDate=endDate,
@@ -200,7 +203,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         """
 
         config = self.config
-        section = 'timeSeries'
+        section = self.section
 
         requestedStartYear = config.getint(section, 'startYear')
         requestedEndYear = config.getint(section, 'endYear')
@@ -280,7 +283,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
             with xr.open_dataset(self.outputFile) as ds:
                 dates = [bytes.decode(name) for name in
-                           ds.xtime_startMonthly.values]
+                         ds.xtime_startMonthly.values]
                 lastDate = dates[-1]
 
             lastYear = int(lastDate[0:4])

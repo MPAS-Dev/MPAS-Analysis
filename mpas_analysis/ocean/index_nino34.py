@@ -87,8 +87,8 @@ class IndexNino34(AnalysisTask):  # {{{
         #     self.calendar
         super(IndexNino34, self).setup_and_check()
 
-        self.startDate = self.config.get('timeSeries', 'startDate')
-        self.endDate = self.config.get('timeSeries', 'endDate')
+        self.startDate = self.config.get('index', 'startDate')
+        self.endDate = self.config.get('index', 'endDate')
 
         self.variableList = \
             ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
@@ -694,6 +694,7 @@ class IndexNino34(AnalysisTask):  # {{{
         for y in ys:
             maxY = max(y[mask].max(), maxY)
             # check the function interpolated to the max/min as well
+            # Note: flipping the axis so x is in increasing order
             maxY = max(np.interp(xmin, x[::-1], y[::-1]), maxY)
             maxY = max(np.interp(xmax, x[::-1], y[::-1]), maxY)
 
