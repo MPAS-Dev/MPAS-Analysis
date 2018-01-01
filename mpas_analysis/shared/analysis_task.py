@@ -10,7 +10,6 @@ Xylar Asay-Davis
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import warnings
 from multiprocessing import Process, Value
 import time
 import traceback
@@ -451,13 +450,12 @@ class AnalysisTask(Process):  # {{{
         except ValueError:
             enabled = default
             if default:
-                message = 'WARNING: namelist option {} not found.\n' \
-                          'This likely indicates that the simulation you ' \
-                          'are analyzing was run with an\n' \
-                          'older version of MPAS-O that did not support ' \
-                          'this flag.  Assuming enabled.'.format(
-                              analysisOptionName)
-                warnings.warn(message)
+                print('Warning: namelist option {} not found.\n'
+                      'This likely indicates that the simulation you '
+                      'are analyzing was run with an\n'
+                      'older version of MPAS-O that did not support '
+                      'this flag.  Assuming enabled.'.format(
+                              analysisOptionName))
 
         if not enabled and raiseException:
             raise RuntimeError('*** MPAS-Analysis relies on {} = .true.\n'

@@ -4,7 +4,6 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray
 import os
-import warnings
 import subprocess
 from distutils.spawn import find_executable
 
@@ -288,14 +287,13 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         endYear = years[lastIndex]
 
         if startYear != requestedStartYear or endYear != requestedEndYear:
-            message = "climatology start and/or end year different from " \
-                      "requested\n" \
-                      "requestd: {:04d}-{:04d}\n" \
-                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                         requestedEndYear,
-                                                         startYear,
-                                                         endYear)
-            warnings.warn(message)
+            print("Warning: climatology start and/or end year different from "
+                  "requested\n"
+                  "requestd: {:04d}-{:04d}\n"
+                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear))
             config.set('climatology', 'startYear', str(startYear))
             config.set('climatology', 'endYear', str(endYear))
 

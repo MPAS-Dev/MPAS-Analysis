@@ -70,6 +70,9 @@ def build_analysis_list(config):  # {{{
                                               componentName='ocean')
     oceanTimeSeriesTask = MpasTimeSeriesTask(config=config,
                                              componentName='ocean')
+    oceanIndexTask = MpasTimeSeriesTask(config=config,
+                                        componentName='ocean',
+                                        section='index')
     analyses.append(oceanClimatolgyTask)
     analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask))
     analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask))
@@ -81,7 +84,7 @@ def build_analysis_list(config):  # {{{
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask))
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
-    analyses.append(ocean.IndexNino34(config, oceanTimeSeriesTask))
+    analyses.append(ocean.IndexNino34(config, oceanIndexTask))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
