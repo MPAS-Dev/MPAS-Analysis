@@ -295,83 +295,91 @@ baseDirectory = /dir/to/seaice/reference
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/seaice/reference
 
-[timeSeriesOHC]
+[timeSeriesOHCAnomaly]
 ## options related to plotting time series of ocean heat content (OHC)
+## anomalies from year 1
 
-# plot S, T, and OHC fields themselves, in addition to their anomalies?
-plotOriginalFields = False
-# compare to observations?
-compareWithObservations = False
-# list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
-# Number of points over which to compute moving average for time series (e.g.,
-#for monthly output, movingAveragePoints=12 corresponds to a 12-month moving
-# average window)
-movingAveragePointsTimeSeries = 12
-# Number of points over which to compute moving average for Hovmoller plots
-movingAveragePointsHovmoller = 12
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
 
-# colormap for OHC
-colormapNameOHC = RdYlBu_r
+# approximate depths (m) separating plots of the upper, middle and lower ocean
+depths = [700, 2000]
+
+# preprocessed file prefix, with format OHC.<preprocessedRunName>.year*.nc
+preprocessedFilePrefix = OHC
+
+# prefix on preprocessed field name, with format ohc_<suffix> for suffixes
+# 'tot', '700m', '2000m', 'btm'
+preprocessedFieldPrefix = ohc
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+[hovmollerOHCAnomaly]
+## options related to time vs. depth Hovmoller plots of ocean heat content
+## (OHC) anomalies from year 1
+
+# Note: regions and moving average points are the same as for the time series
+# plot
+
+# colormap
+colormapName = RdBu_r
 # colormap indices for contour color
-colormapIndicesOHC = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsOHC = [0, 5, 10, 15, 20, 25, 30, 35, 40]
+colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
 # contour line levels
-contourLevelsOHC = np.arange(0, 41, 4)
+contourLevels = np.arange(-2.5, 2.6, 0.5)
 
-# colormap for OHC anomaly
-colormapNameOHCAnomaly = RdBu_r
-# colormap indices for contour color
-colormapIndicesOHCAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-# colorbar levels/values for contour boundaries
-colorbarLevelsOHCAnomaly = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
-# contour line levels
-contourLevelsOHCAnomaly = np.arange(-2.5, 2.6, 0.5)
+[hovmollerTemperatureAnomaly]
+## options related to plotting time series of temperature vs. depth
 
-# colormap for temperature
-colormapNameTemperature = RdYlBu_r
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# colormap
+colormapName = RdBu_r
 # color indices into colormapName for filled contours
-colormapIndicesTemperature = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsTemperature = [0, 0.6, 1.2, 2, 4, 6, 8, 10, 20]
+colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
 # contour line levels
-contourLevelsTemperature = np.arange(1, 21, 2)
+contourLevels = np.arange(-1.0, 1.26, 0.25)
 
-# colormap for temperature anomaly
-colormapNameTemperatureAnomaly = RdBu_r
-# color indices into colormapName for filled contours
-colormapIndicesTemperatureAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-# colormap levels/values for contour boundaries
-colorbarLevelsTemperatureAnomaly = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
-# contour line levels
-contourLevelsTemperatureAnomaly = np.arange(-1.0, 1.26, 0.25)
+[hovmollerSalinityAnomaly]
+## options related to plotting time series of salinity vs. depth
 
-# colormap for salinity
-colormapNameSalinity = RdYlBu_r
-# color indices into colormapName for filled contours
-colormapIndicesSalinity = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-# colormap levels/values for contour boundaries
-colorbarLevelsSalinity = [34.5, 34.6, 34.65, 34.7, 34.72, 34.74, 34.76, 34.78, 34.8]
-# contour line levels
-contourLevelsSalinity = np.arange(34.51, 34.82, 0.02)
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
 
-# colormap for salinity anomaly
-colormapNameSalinityAnomaly = RdBu_r
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# colormap
+colormapName = RdBu_r
 # color indices into colormapName for filled contours
-colormapIndicesSalinityAnomaly = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsSalinityAnomaly = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
 # contour line levels
-contourLevelsSalinityAnomaly = np.arange(-0.1, 0.11, 0.02)
+contourLevels = np.arange(-0.1, 0.11, 0.02)
 
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
 
 # compare to observations?
 compareWithObservations = True
-# list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
 # Number of points over which to compute moving average (e.g., for monthly
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
@@ -380,10 +388,9 @@ movingAveragePoints = 12
 [indexNino34]
 ## options related to plotting time series of the El Nino 3.4 index
 
-# Specified region for the Nino Index, 5 = Nino34, 3 = Nino3, 4 = Nino4
-# The indexNino34 routine only accepts one value at a time,
-# regionIndicesToPlot should be an integer
-regionIndicesToPlot = 5
+# Specified region for the Nino Index,'nino3', 'nino4', or 'nino3.4'
+# The indexNino34 routine only accepts one value at a time
+region = nino3.4
 
 # Data source to read for comparison.  There are three options
 # 1 - ERS SSTv4 -- Updated version of previous -- 1854 - 2016
@@ -486,8 +493,6 @@ movingAveragePointsClimatological = 1
 
 # compare to observations?
 compareWithObservations = True
-# list of region indices to plot from the region list in [regions] below
-regionIndicesToPlot = [6]
 # Number of points over which to compute moving average (e.g., for monthly
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
