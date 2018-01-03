@@ -145,7 +145,9 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # regionIndex should correspond to NINO34 in surface weighted Average
         # AM
-        regionIndex = config.getint('indexNino34', 'regionIndicesToPlot')
+        regions = config.getExpression('regions', 'regions')
+        regionToPlot = config.get('indexNino34', 'region')
+        regionIndex = regions.index(regionToPlot)
 
         # Load data:
         ds = open_mpas_dataset(fileName=self.inputFile,

@@ -96,14 +96,10 @@ class TimeSeriesSST(AnalysisTask):
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         mainRunName = config.get('runs', 'mainRunName')
-        regions = config.getExpression('regions', 'regions')
-        regionIndicesToPlot = config.getExpression('timeSeriesSST',
-                                                   'regionIndicesToPlot')
+        regions = config.getExpression('timeSeriesSST', 'regions')
 
         self.xmlFileNames = []
         self.filePrefixes = {}
-
-        regions = [regions[index] for index in regionIndicesToPlot]
 
         for region in regions:
             filePrefix = 'sst_{}_{}'.format(region, mainRunName)
@@ -141,16 +137,15 @@ class TimeSeriesSST(AnalysisTask):
 
         regions = config.getExpression('regions', 'regions')
         plotTitles = config.getExpression('regions', 'plotTitles')
-        regionIndicesToPlot = config.getExpression('timeSeriesSST',
-                                                   'regionIndicesToPlot')
+        regionsToPlot = config.getExpression('timeSeriesSST', 'regions')
+
+        regionIndicesToPlot = [regions.index(region) for region in
+                               regionsToPlot]
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'timeseriesSubdirectory')
 
         make_directories(outputDirectory)
-
-        regionNames = config.getExpression('regions', 'regions')
-        regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
         dsSST = open_mpas_dataset(fileName=self.inputFile,
                                   calendar=calendar,
