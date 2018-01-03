@@ -21,7 +21,7 @@ from mpl_toolkits.basemap import Basemap
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
-from mpl_toolkits.axes_grid1 import make_axes_locatable, ImageGrid
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
@@ -115,8 +115,12 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
             continue
-        mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
-        mean = xr.DataArray.from_series(mean)
+        if N == 1 or N is None:
+            mean = dsvalue
+        else:
+            mean = pd.Series.rolling(dsvalue.to_pandas(), N,
+                                     center=True).mean()
+            mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
 
@@ -126,7 +130,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                 stride = int(round(nTime/float(maxPoints[dsIndex])))
                 mean = mean.isel(Time=slice(0, None, stride))
 
-        plt.plot(mean['Time'], mean,
+        plt.plot(mean['Time'].values, mean.values,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex],
                  label=legendText[dsIndex])
