@@ -57,6 +57,10 @@ htmlSubdirectory = html
 #   'all_<tag>' -- all analysis with a particular tag will be run
 #   'all_<component>' -- all analyses from a given component (either 'ocean'
 #                        or 'seaIce') will be run
+#   'only_<component>', 'only_<tag>' -- all analysis from this component or
+#                                       with this tag will be run, and all
+#                                       analysis for other components or
+#                                       without the tag will be skipped
 #   'no_<task_name>' -- skip the given task
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with

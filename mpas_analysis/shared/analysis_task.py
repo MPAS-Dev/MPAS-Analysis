@@ -381,10 +381,14 @@ class AnalysisTask(Process):  # {{{
         if (not isinstance(self.tags, list) and
                 self.tags is not None):
             raise ValueError('Analysis tasks\'s member self.tags '
-                             'must be NOne or a list of strings.')
+                             'must be None or a list of strings.')
 
         config = self.config
         generateList = config.getExpression('output', 'generate')
+        if len(generateList) > 0 and generateList[0][0:5] == 'only_':
+            # add 'all' if the first item in the list has the 'only' prefix.
+            # Otherwise, we would not run any tasks
+            generateList = ['all'] + generateList
         generate = False
         for element in generateList:
             if '_' in element:
@@ -402,6 +406,9 @@ class AnalysisTask(Process):  # {{{
                     generate = True
             elif prefix == 'no':
                 if suffix in noSuffixes:
+                    generate = False
+            if prefix == 'only':
+                if suffix not in allSuffixes:
                     generate = False
             elif element == self.taskName:
                 generate = True
