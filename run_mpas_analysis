@@ -440,8 +440,9 @@ if __name__ == "__main__":
     if args.list:
         analyses = build_analysis_list(config)
         for analysisTask in analyses:
-            print('{}\n    tags: {}'.format(analysisTask.taskName,
-                                            ', '.join(analysisTask.tags)))
+            print('task: {}'.format(analysisTask.taskName))
+            print('    component: {}'.format(analysisTask.componentName)),
+            print('    tags: {}'.format(', '.join(analysisTask.tags)))
         sys.exit(0)
 
     if args.purge:
