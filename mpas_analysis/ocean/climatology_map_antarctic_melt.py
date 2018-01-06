@@ -225,7 +225,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
 
     Authors
     -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    Xylar Asay-Davis
     """
 
     def get_observation_descriptor(self, fileName):  # {{{

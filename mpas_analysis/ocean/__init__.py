@@ -2,6 +2,8 @@ from .climatology_map_sst import ClimatologyMapSST
 from .climatology_map_mld import ClimatologyMapMLD
 from .climatology_map_sss import ClimatologyMapSSS
 from .climatology_map_antarctic_melt import ClimatologyMapAntarcticMelt
+from .climatology_map_sose import ClimatologyMapSoseTemperature, \
+    ClimatologyMapSoseSalinity
 
 from .time_series_ohc import TimeSeriesOHC
 from .time_series_sst import TimeSeriesSST

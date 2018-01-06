@@ -65,6 +65,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     observationTitleLabel : str
         the title of the observations subplot
 
+    diffTitleLabel : str, optional
+        the title of the difference subplot
+
     unitsLabel : str
         the units of the plotted field, to be displayed on color bars
 
@@ -85,13 +88,18 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     galleryName : str
         the name of the gallery in which this plot belongs
 
+    depth : {None, float, 'top', 'bot'}
+        Depth at which to perform the comparison, 'top' for the sea surface
+        'bot' for the sea floor
+
     Authors
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
 
     def __init__(self, parentTask, season, comparisonGridName,
-                 remapMpasClimatologySubtask, remapObsClimatologySubtask):
+                 remapMpasClimatologySubtask, remapObsClimatologySubtask,
+                 depth=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -117,6 +125,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the observational climatology that this
             subtask will plot
 
+        depth : {float, 'top', 'bot'}, optional
+            Depth the data is being plotted, 'top' for the sea surface
+            'bot' for the sea floor
+
         Authors
         -------
         Xylar Asay-Davis
@@ -124,10 +136,18 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         '''
 
         self.season = season
+        self.depth = depth
         self.comparisonGridName = comparisonGridName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
         subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
+
+        if depth is None:
+            self.depthSuffix = ''
+        else:
+            self.depthSuffix = 'depth_{}'.format(depth)
+            subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
+
         config = parentTask.config
         taskName = parentTask.taskName
         tags = parentTask.tags
@@ -146,7 +166,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       obsFieldName, observationTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
-                      galleryName):  # {{{
+                      galleryName, diffTitleLabel='Model - Observations'):
+        # {{{
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -187,6 +208,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         galleryName : str
             the name of the gallery in which this plot belongs
 
+        diffTitleLabel : str, optional
+            the title of the difference subplot
+
         Authors
         -------
         Xylar Asay-Davis
@@ -196,6 +220,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.mpasFieldName = mpasFieldName
         self.obsFieldName = obsFieldName
         self.observationTitleLabel = observationTitleLabel
+        self.diffTitleLabel = diffTitleLabel
         self.unitsLabel = unitsLabel
 
         # xml/html related variables
@@ -204,6 +229,22 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.groupSubtitle = groupSubtitle
         self.groupLink = groupLink
         self.galleryName = galleryName
+
+        season = self.season
+        depth = self.depth
+        if depth is None:
+            self.fieldNameInTitle = fieldNameInTitle
+            self.thumbnailDescription = season
+        elif depth == 'top':
+            self.fieldNameInTitle = 'Sea Surface {}'.format(fieldNameInTitle)
+            self.thumbnailDescription = '{} surface'.format(season)
+        elif depth == 'bot':
+            self.fieldNameInTitle = 'Sea Floor {}'.format(fieldNameInTitle)
+            self.thumbnailDescription = '{} floor'.format(season)
+        else:
+            self.fieldNameInTitle = '{} at z={} m'.format(fieldNameInTitle,
+                                                          depth)
+            self.thumbnailDescription = '{} z={} m'.format(season, depth)
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -230,16 +271,18 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         mainRunName = config.get('runs', 'mainRunName')
 
         self.xmlFileNames = []
-        self.filePrefixes = {}
 
-        if self.comparisonGridName == 'latlon':
-            self.filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
-                    self.outFileLabel, mainRunName,
-                    self.season, self.startYear, self.endYear)
-        else:
-            self.filePrefix = '{}_{}_{}_{}_years{:04d}-{:04d}'.format(
-                    self.outFileLabel, self.comparisonGridName,
-                    mainRunName, self.season, self.startYear, self.endYear)
+        prefixPieces = [self.outFileLabel]
+        if self.comparisonGridName != 'latlon':
+            prefixPieces.append(self.comparisonGridName)
+        prefixPieces.append(mainRunName)
+        if self.depth is not None:
+            prefixPieces.append(self.depthSuffix)
+        years = 'years{:04d}-{:04d}'.format(self.startYear, self.endYear)
+        prefixPieces.extend([self.season, years])
+
+        self.filePrefix = '_'.join(prefixPieces)
+
         self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                     self.filePrefix))
         # }}}
@@ -254,6 +297,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         """
 
         season = self.season
+        depth = self.depth
         comparisonGridName = self.comparisonGridName
         self.logger.info("\nPlotting 2-d maps of {} climatologies for {} on "
                          "the {} grid...".format(self.fieldNameInTitle,
@@ -266,12 +310,32 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
 
+        if depth is not None:
+            if str(depth) not in remappedModelClimatology.depthSlice.values:
+                raise KeyError('The climatology you are attempting to perform '
+                               'depth slices of was originally created\n'
+                               'without depth {}. You will need to delete and '
+                               'regenerate the climatology'.format(depth))
+
+            remappedModelClimatology = remappedModelClimatology.sel(
+                    depthSlice=str(depth), drop=True)
+
         # now the observations
         remappedFileName = self.remapObsClimatologySubtask.get_file_name(
             stage='remapped', season=season,
             comparisonGridName=comparisonGridName)
 
         remappedObsClimatology = xr.open_dataset(remappedFileName)
+
+        if depth is not None:
+            if str(depth) not in remappedObsClimatology.depthSlice.values:
+                raise KeyError('The climatology you are attempting to perform '
+                               'depth slices of was originally created\n'
+                               'without depth {}. You will need to delete and '
+                               'regenerate the climatology'.format(depth))
+
+            remappedObsClimatology = remappedObsClimatology.sel(
+                    depthSlice=str(depth), drop=True)
 
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedObsClimatology)
@@ -327,7 +391,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                title=title,
                                modelTitle='{}'.format(mainRunName),
                                obsTitle=self.observationTitleLabel,
-                               diffTitle='Model-Observations',
+                               diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel)
 
         caption = '{} {}'.format(season, self.imageCaption)
@@ -340,7 +404,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             groupSubtitle=self.groupSubtitle,
             groupLink=self.groupLink,
             gallery=self.galleryName,
-            thumbnailDescription=season,
+            thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
 
@@ -402,7 +466,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             title=title,
             modelTitle='{}'.format(mainRunName),
             obsTitle=self.observationTitleLabel,
-            diffTitle='Model - Observations',
+            diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel)
 
         upperGridName = comparisonGridName[0].upper() + comparisonGridName[1:]
@@ -417,7 +481,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             groupSubtitle=self.groupSubtitle,
             groupLink=self.groupLink,
             gallery=self.galleryName,
-            thumbnailDescription=season,
+            thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
 

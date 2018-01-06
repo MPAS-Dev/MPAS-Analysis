@@ -143,22 +143,31 @@ polarPlot = False
 # Directory containing mask files for ocean basins and ice shelves
 regionMaskDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks
 
+
 [climatologyMapSoseTemperature]
+## options related to plotting climatology maps of Antarctic
+## potential temperature at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# list of depths in meters (positive up) at which to analyze, 'bot' for the
-# bottom of the ocean
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
 depths = ['top', -200, -400, -600, -800, 'bot']
 
 [climatologyMapSoseSalinity]
+## options related to plotting climatology maps of Antarctic
+## salinity at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# list of depths in meters (positive up) at which to analyze, 'bot' for the
-# bottom of the ocean
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
 depths = ['top', -200, -400, -600, -800, 'bot']
 
 [timeSeriesAntarcticMelt]

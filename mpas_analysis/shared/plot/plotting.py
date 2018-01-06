@@ -716,10 +716,19 @@ def plot_polar_projection_comparison(
         (cmapDiff, normDiff) = _setup_colormap_and_norm(
             config, colorMapSectionName, suffix='Difference')
 
-        colorbarTicksResult = config.getExpression(colorMapSectionName,
-                                                   'colorbarTicksResult')
-        colorbarTicksDifference = config.getExpression(
-            colorMapSectionName, 'colorbarTicksDifference')
+        if config.has_option(colorMapSectionName, 'colorbarTicksResult'):
+            colorbarTicksResult = config.getExpression(colorMapSectionName,
+                                                       'colorbarTicksResult',
+                                                       usenumpyfunc=True)
+        else:
+            colorbarTicksResult = None
+        if config.has_option(colorMapSectionName, 'colorbarTicksDifference'):
+            colorbarTicksDifference = config.getExpression(
+                colorMapSectionName, 'colorbarTicksDifference',
+                usenumpyfunc=True)
+        else:
+            colorbarTicksDifference = None
+
     elif colorMapType == 'indexed':
 
         (cmapModelObs, colorbarTicksResult) = setup_colormap(
