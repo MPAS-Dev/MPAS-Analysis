@@ -4,14 +4,16 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import xarray
 
-# SFP: the following are only needed for the stop-gap local plotting routine used here
+# SFP: the following are only needed for the stop-gap local plotting routine
+# used here
 import matplotlib.pyplot as plt
 
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.constants import constants
 
-from ..shared.plot.plotting import timeseries_analysis_plot
+# BELOW IS IMPORTED BUT NOT CURRENTLY USED
+# from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.plot.plotting import plot_xtick_format
 
@@ -189,41 +191,55 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                startDate=self.startDate,
                                endDate=self.endDate)
 
-        # Load observations from multiple files and put in dictionary based on shelf keyname
-        observationsDirectory = build_config_full_path(config, 'oceanObservations', 'meltSubdirectory')
-        obsFileNameDict = { 'Rignot et al. (2013)': 'Rignot_2013_melt_rates.csv', 'Rignot et al. (2013) SS': 'Rignot_2013_melt_rates_SS.csv' }
+        # Load observations from multiple files and put in dictionary based
+        # on shelf keyname
+        observationsDirectory = build_config_full_path(config,
+                                                       'oceanObservations',
+                                                       'meltSubdirectory')
+        obsFileNameDict = {'Rignot et al. (2013)':
+                           'Rignot_2013_melt_rates.csv',
+                           'Rignot et al. (2013) SS':
+                           'Rignot_2013_melt_rates_SS.csv'}
         obsFileNameList = list(obsFileNameDict.values())
         obsFileNameDesc = list(obsFileNameDict.keys())
 
-        obsDictDict = {} # dict for storing dict of obs data
-        fileCount = 0    # counter for uniquely identifying obs data set
-        while len(obsFileNameList)>0:
-            obsFileName = '{}/{}'.format( observationsDirectory, obsFileNameList.pop(0) )
+        obsDictDict = {}  # dict for storing dict of obs data
+        fileCount = 0     # counter for uniquely identifying obs data set
+        while len(obsFileNameList) > 0:
+            obsFileName = '{}/{}'.format(observationsDirectory,
+                                         obsFileNameList.pop(0))
             fileCount = fileCount + 1
             obsDictTemp = {}
-            obsFile = csv.reader( open(obsFileName, 'rU') )
+            obsFile = csv.reader(open(obsFileName, 'rU'))
             next(obsFile, None)  # skip the header line
-            for line in obsFile:  # some possibly useful values are left commented out for now
+            for line in obsFile:  # some later useful values commented out
                 shelfName = line[0]
-                #surveyArea = line[1]
-                meltFlux = float( line[2] )
-                meltFluxUncertainty = float( line[3] )
-                meltRate = float( line[4] )
-                meltRateUncertainty = float( line[5] )
-                #actualArea = float( line[6] )  # actual area here is in sq km
+                # surveyArea = line[1]
+                meltFlux = float(line[2])
+                meltFluxUncertainty = float(line[3])
+                meltRate = float(line[4])
+                meltRateUncertainty = float(line[5])
+                # actualArea = float( line[6] )  # actual area here is in sq km
 
-                # build dict of obs. keyed to filename description (which will be used for plotting)
-                obsDictTemp[shelfName] = {'meltFlux': meltFlux, 'meltFluxUncertainty': meltFluxUncertainty,
-                                          'meltRate': meltRate, 'meltRateUncertainty': meltRateUncertainty}
-                obsDictDict[ '{}'.format( obsFileNameDesc[fileCount-1] ) ] = obsDictTemp
+                # build dict of obs. keyed to filename description
+                # (which will be used for plotting)
+                obsDictTemp[shelfName] = {'meltFlux': meltFlux,
+                                          'meltFluxUncertainty':
+                                              meltFluxUncertainty,
+                                          'meltRate': meltRate,
+                                          'meltRateUncertainty':
+                                              meltRateUncertainty}
+                obsDictDict['{}'.format(
+                        obsFileNameDesc[fileCount-1])] = obsDictTemp
 
-        # Note that if areas from obs file are used they need to be converted from sq km to sq m
+        # If areas from obs file used need to be converted from sq km to sq m
 
         # work on data from simulations
         freshwaterFlux = ds.timeMonthly_avg_landIceFreshwaterFlux
 
-        movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
-                                            'movingAverageMonths')
+        # BELOW ASSIGNED BUT NOT USED
+        # movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
+        #                                    'movingAverageMonths')
 
         iceShelvesToPlot = self.iceShelvesToPlot
 
@@ -254,21 +270,30 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         make_directories(outputDirectory)
 
-
-        obsCount = len( obsDictDict )
+        obsCount = len(obsDictDict)
         self.logger.info('  Make plots...')
         for iRegion in range(nRegions):
 
             regionName = iceShelvesToPlot[iRegion]
 
-            # get obs melt flux and obs melt flux unc. for shelf (similar for rates)
-            obsMeltFlux = []; obsMeltFluxUnc = []; obsMeltRate = []; obsMeltRateUnc = []
-            for iObs in range( obsCount ):
-                dictName = '{}'.format( obsFileNameDesc[iObs] )
-                obsMeltFlux.append( obsDictDict[dictName][regionName]['meltFlux'] )
-                obsMeltFluxUnc.append( obsDictDict[dictName][regionName]['meltFluxUncertainty'] )
-                obsMeltRate.append( obsDictDict[dictName][regionName]['meltRate'] )
-                obsMeltRateUnc.append( obsDictDict[dictName][regionName]['meltRateUncertainty'] )
+            # get obs melt flux and unc. for shelf (similar for rates)
+            obsMeltFlux = []
+            obsMeltFluxUnc = []
+            obsMeltRate = []
+            obsMeltRateUnc = []
+            for iObs in range(obsCount):
+                dictName = '{}'.format(obsFileNameDesc[iObs])
+                obsMeltFlux.append(
+                        obsDictDict[dictName][regionName]
+                        ['meltFlux'])
+                obsMeltFluxUnc.append(
+                        obsDictDict[dictName][regionName]
+                        ['meltFluxUncertainty'])
+                obsMeltRate.append(
+                        obsDictDict[dictName][regionName]['meltRate'])
+                obsMeltRateUnc.append(
+                        obsDictDict[dictName][regionName]
+                        ['meltRateUncertainty'])
 
             title = regionName.replace('_', ' ')
 
@@ -279,15 +304,16 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
             timeSeries = totalMeltFlux.isel(nRegions=iRegion)
 
-
             filePrefix = 'melt_flux_{}'.format(regionName)
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-#            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
+#           timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
 #                                     title, xLabel, yLabel, figureName,
 #                                     lineStyles=['b-'], lineWidths=[1.2],
 #                                     calendar=calendar)
-            self.plot(config, timeSeries, obsFileNameDesc,  obsCount, obsMeltFlux, obsMeltFluxUnc, title, xLabel, yLabel, figureName )
+            self.plot(config, timeSeries, obsFileNameDesc, obsCount,
+                      obsMeltFlux, obsMeltFluxUnc, title,
+                      xLabel, yLabel, figureName)
 
             caption = 'Running Mean of Total Melt Flux  under Ice ' \
                       'Shelves in the {} Region'.format(title)
@@ -303,21 +329,21 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                 imageDescription=caption,
                 imageCaption=caption)
 
-
             xLabel = 'Time (yr)'
             yLabel = 'Melt Rate (m/yr)'
 
             timeSeries = meltRates.isel(nRegions=iRegion)
 
-
             filePrefix = 'melt_rate_{}'.format(regionName)
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-#            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
+#           timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
 #                                     title, xLabel, yLabel, figureName,
 #                                     lineStyles=['b-'], lineWidths=[1.2],
 #                                     calendar=calendar)
-            self.plot(config, timeSeries, obsFileNameDesc, obsCount, obsMeltRate, obsMeltRateUnc, title, xLabel, yLabel, figureName )
+            self.plot(config, timeSeries, obsFileNameDesc, obsCount,
+                      obsMeltRate, obsMeltRateUnc, title,
+                      xLabel, yLabel, figureName)
 
             caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                       'Shelves in the {} Region'.format(title)
@@ -333,13 +359,12 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                 imageDescription=caption,
                 imageCaption=caption)
 
-
     def plot(self, config, modelValues, obsFileNameDesc, obsCount, obsMean,
              obsUncertainty, title, xlabel, ylabel, fileout):
 
         """
-        Plots the list of time series data sets and stores the result in an image
-        file.
+        Plots the list of time series data sets and stores the result in
+        an image file.
         Parameters
         ----------
         config : instance of ConfigParser
@@ -353,7 +378,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             a single observed mean value to plot as a constant line
 
         obsUncertainty : float
-            The observed uncertainty, to plot as a shaded rectangle around the mean
+            The observed uncertainty, to plot as a shaded rectangle
+            around the mean
 
         title : str
             the title of the plot
@@ -374,8 +400,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         dpi = 300
         modelLineStyle = 'b-'
         modelLineWidth = 2
-        obsColor = 'gray'
-        obsLineWidth = 1
+        # BELOW ARE ASSIGNED BUT NOT USED
+        # obsColor = 'gray'
+        # obsLineWidth = 1
 
         maxXTicks = 20
         calendar = self.calendar
@@ -392,12 +419,16 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         plt.plot(modelValues.Time.values, modelValues.values, modelLineStyle,
                  linewidth=modelLineWidth, label='model')
 
-        ax = plt.gca()
+        # MUCH OF (COMMENTED OUT)BELOW IS ASSIGNED BUT NOT USED
+#        ax = plt.gca()
 
-        # this makes a "patch" with a single rectangular polygon, where the pairs are time and melt
-        # rate for the 4 corners, and "True" means it is a closed polygon:
-#        patches = [Polygon([[minDays, obsMean-obsUncertainty], [maxDays, obsMean-obsUncertainty],
-#                        [maxDays, obsMean+obsUncertainty], [minDays, obsMean+obsUncertainty]])]
+        # this makes a "patch" with a single rectangular polygon, where the
+        # pairs are time and melt rate for the 4 corners, and "True" means it
+        # is a closed polygon:
+#        patches = [Polygon([[minDays, obsMean-obsUncertainty],
+#                            [maxDays, obsMean-obsUncertainty],
+#                            [maxDays, obsMean+obsUncertainty],
+#                            [minDays, obsMean+obsUncertainty]])]
 
         # make the polygon gray and mostly transparent
 #        p = PatchCollection(patches, color=obsColor, alpha=0.15)
@@ -405,15 +436,18 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 #        ax.add_collection(p)
 
         # also plot a line
-#        plt.plot([minDays, maxDays], [obsMean, obsMean], color=obsColor, linewidth=obsLineWidth)
+#        plt.plot([minDays, maxDays], [obsMean, obsMean],
+#                 color=obsColor, linewidth=obsLineWidth)
 
         # plot error bars rather than the "patch" used above
-        symbol = ['o','^','s','D','*']
-        for iObs in range( obsCount ):
-           plt.errorbar( ((maxDays - minDays)/5)*(iObs+1)+minDays, obsMean[iObs], yerr=obsUncertainty[iObs], fmt=symbol[iObs], ecolor='k',
-                       capthick=2, label='{}'.format( obsFileNameDesc[iObs] ) )
+        symbol = ['o', '^', 's', 'D', '*']
+        for iObs in range(obsCount):
+            plt.errorbar(((maxDays - minDays)/5)*(iObs+1)+minDays,
+                         obsMean[iObs], yerr=obsUncertainty[iObs],
+                         fmt=symbol[iObs], ecolor='k',
+                         capthick=2, label='{}'.format(obsFileNameDesc[iObs]))
         # add legend
-        plt.legend( loc='lower right', numpoints=1 )
+        plt.legend(loc='lower right', numpoints=1)
 
         # this will need to be imported from shared.plot.plotting
         plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
