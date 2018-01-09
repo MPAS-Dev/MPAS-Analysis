@@ -194,16 +194,12 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                            'Rignot_2013_melt_rates.csv',
                            'Rignot et al. (2013) SS':
                            'Rignot_2013_melt_rates_SS.csv'}
-        obsFileNameList = list(obsFileNameDict.values())
-        obsFileNameDesc = list(obsFileNameDict.keys())
 
-        obsDictDict = {}  # dict for storing dict of obs data
-        fileCount = 0     # counter for uniquely identifying obs data set
-        while len(obsFileNameList) > 0:
+        obsDict = {}  # dict for storing dict of obs data
+        for obsName in obsFileNameDict:
             obsFileName = '{}/{}'.format(observationsDirectory,
-                                         obsFileNameList.pop(0))
-            fileCount = fileCount + 1
-            obsDictTemp = {}
+                                         obsFileNameDict[obsName])
+            obsDict[obsName] = {}
             obsFile = csv.reader(open(obsFileName, 'rU'))
             next(obsFile, None)  # skip the header line
             for line in obsFile:  # some later useful values commented out
@@ -217,14 +213,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
                 # build dict of obs. keyed to filename description
                 # (which will be used for plotting)
-                obsDictTemp[shelfName] = {'meltFlux': meltFlux,
-                                          'meltFluxUncertainty':
-                                              meltFluxUncertainty,
-                                          'meltRate': meltRate,
-                                          'meltRateUncertainty':
-                                              meltRateUncertainty}
-                obsDictDict['{}'.format(
-                        obsFileNameDesc[fileCount-1])] = obsDictTemp
+                obsDict[obsName][shelfName] = {
+                        'meltFlux': meltFlux,
+                        'meltFluxUncertainty': meltFluxUncertainty,
+                        'meltRate': meltRate,
+                        'meltRateUncertainty': meltRateUncertainty}
 
         # If areas from obs file used need to be converted from sq km to sq m
 
@@ -264,7 +257,6 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         make_directories(outputDirectory)
 
-        obsCount = len(obsDictDict)
         self.logger.info('  Make plots...')
         for iRegion in range(nRegions):
 
@@ -275,19 +267,15 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             obsMeltFluxUnc = []
             obsMeltRate = []
             obsMeltRateUnc = []
-            for iObs in range(obsCount):
-                dictName = '{}'.format(obsFileNameDesc[iObs])
+            for obsName in obsDict:
                 obsMeltFlux.append(
-                        obsDictDict[dictName][regionName]
-                        ['meltFlux'])
+                    obsDict[obsName][regionName]['meltFlux'])
                 obsMeltFluxUnc.append(
-                        obsDictDict[dictName][regionName]
-                        ['meltFluxUncertainty'])
+                    obsDict[obsName][regionName]['meltFluxUncertainty'])
                 obsMeltRate.append(
-                        obsDictDict[dictName][regionName]['meltRate'])
+                    obsDict[obsName][regionName]['meltRate'])
                 obsMeltRateUnc.append(
-                        obsDictDict[dictName][regionName]
-                        ['meltRateUncertainty'])
+                    obsDict[obsName][regionName]['meltRateUncertainty'])
 
             title = regionName.replace('_', ' ')
 
@@ -307,7 +295,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                      legendText=[mainRunName],
                                      calendar=calendar, obsMean=obsMeltFlux,
                                      obsUncertainty=obsMeltFluxUnc,
-                                     obsLegend=obsFileNameDesc)
+                                     obsLegend=list(obsDict.keys()))
 
             caption = 'Running Mean of Total Melt Flux  under Ice ' \
                       'Shelves in the {} Region'.format(title)
@@ -337,7 +325,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                      legendText=[mainRunName],
                                      calendar=calendar, obsMean=obsMeltRate,
                                      obsUncertainty=obsMeltRateUnc,
-                                     obsLegend=obsFileNameDesc)
+                                     obsLegend=list(obsDict.keys()))
 
             caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                       'Shelves in the {} Region'.format(title)
