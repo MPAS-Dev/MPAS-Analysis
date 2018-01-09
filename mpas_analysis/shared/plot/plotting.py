@@ -142,11 +142,12 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         obsTimes = np.linspace(start, end, obsCount+2)[1:-1]
         obsSymbols = ['o', '^', 's', 'D', '*']
         for iObs in range(obsCount):
-            plt.errorbar(obsTimes[iObs], obsMean[iObs],
-                         yerr=obsUncertainty[iObs],
-                         fmt=obsSymbols[np.mod(iObs, len(obsSymbols))],
-                         ecolor='k',
-                         capthick=2, label=obsLegend[iObs])
+            if obsMean[iObs] is not None:
+                plt.errorbar(obsTimes[iObs], obsMean[iObs],
+                             yerr=obsUncertainty[iObs],
+                             fmt=obsSymbols[np.mod(iObs, len(obsSymbols))],
+                             ecolor='k',
+                             capthick=2, label=obsLegend[iObs])
 
     plt.legend(loc=legendLocation)
 
@@ -164,7 +165,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     if yaxLimits[0]*yaxLimits[1] < 0:
         indgood = np.where(np.logical_not(np.isnan(mean)))
         x = mean['Time'][indgood]
-        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2)
+        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2, zorder=1)
 
     plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 

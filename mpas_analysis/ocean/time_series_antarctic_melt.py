@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import os
 import xarray
-
+import numpy
 
 from ..shared.analysis_task import AnalysisTask
 
@@ -268,14 +268,23 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             obsMeltRate = []
             obsMeltRateUnc = []
             for obsName in obsDict:
-                obsMeltFlux.append(
-                    obsDict[obsName][regionName]['meltFlux'])
-                obsMeltFluxUnc.append(
-                    obsDict[obsName][regionName]['meltFluxUncertainty'])
-                obsMeltRate.append(
-                    obsDict[obsName][regionName]['meltRate'])
-                obsMeltRateUnc.append(
-                    obsDict[obsName][regionName]['meltRateUncertainty'])
+                if regionName in obsDict[obsName]:
+                    obsMeltFlux.append(
+                        obsDict[obsName][regionName]['meltFlux'])
+                    obsMeltFluxUnc.append(
+                        obsDict[obsName][regionName]['meltFluxUncertainty'])
+                    obsMeltRate.append(
+                        obsDict[obsName][regionName]['meltRate'])
+                    obsMeltRateUnc.append(
+                        obsDict[obsName][regionName]['meltRateUncertainty'])
+                else:
+                    # append NaN so this particular obs won't plot
+                    self.logger.warning('{} observations not available for '
+                                        '{}'.format(obsName, regionName))
+                    obsMeltFlux.append(None)
+                    obsMeltFluxUnc.append(None)
+                    obsMeltRate.append(None)
+                    obsMeltRateUnc.append(None)
 
             title = regionName.replace('_', ' ')
 
