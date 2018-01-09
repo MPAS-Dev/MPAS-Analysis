@@ -228,8 +228,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         if startYear != requestedStartYear or endYear != requestedEndYear:
             print("Warning: {} start and/or end year different from "
-                  "requested\n" \
-                  "requestd: {:04d}-{:04d}\n" \
+                  "requested\n"
+                  "requestd: {:04d}-{:04d}\n"
                   "actual:   {:04d}-{:04d}\n".format(section,
                                                      requestedStartYear,
                                                      requestedEndYear,
@@ -275,33 +275,48 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                           'Note: this presumes use of the conda-forge '
                           'channel.')
 
+        inputFiles = self.inputFiles
         if os.path.exists(self.outputFile):
-            # add only input files wiht times that aren't already in the
-            # output file
-            dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-            inYears = numpy.array([int(date[0:4]) for date in dates])
-            inMonths = numpy.array([int(date[5:7]) for date in dates])
-            totalMonths = 12*inYears + inMonths
-
+            # make sure all the necessary variables are also present
             with xr.open_dataset(self.outputFile) as ds:
-                dates = [bytes.decode(name) for name in
-                         ds.xtime_startMonthly.values]
-                lastDate = dates[-1]
+                updateSubset = True
+                for variableName in self.variableList:
+                    if variableName not in ds.variables:
+                        updateSubset = False
+                        break
 
-            lastYear = int(lastDate[0:4])
-            lastMonth = int(lastDate[5:7])
-            lastTotalMonths = 12*lastYear + lastMonth
+                if updateSubset:
+                    # add only input files wiht times that aren't already in
+                    # the output file
+                    dates = sorted([fileName[-13:-6] for fileName in
+                                    self.inputFiles])
+                    inYears = numpy.array([int(date[0:4]) for date in dates])
+                    inMonths = numpy.array([int(date[5:7]) for date in dates])
+                    totalMonths = 12*inYears + inMonths
 
-            inputFiles = []
-            for index, inputFile in enumerate(self.inputFiles):
-                if totalMonths[index] > lastTotalMonths:
-                    inputFiles.append(inputFile)
+                    dates = [bytes.decode(name) for name in
+                             ds.xtime_startMonthly.values]
+                    lastDate = dates[-1]
 
-            if len(inputFiles) == 0:
-                # nothing to do
-                return
-        else:
-            inputFiles = self.inputFiles
+                    lastYear = int(lastDate[0:4])
+                    lastMonth = int(lastDate[5:7])
+                    lastTotalMonths = 12*lastYear + lastMonth
+
+                    inputFiles = []
+                    for index, inputFile in enumerate(self.inputFiles):
+                        if totalMonths[index] > lastTotalMonths:
+                            inputFiles.append(inputFile)
+
+                    if len(inputFiles) == 0:
+                        # nothing to do
+                        return
+                else:
+                    # there is an output file but it has the wrong variables
+                    # so we need ot delete it.
+                    self.logger.warning('Warning: deleting file {} because '
+                                        'some variables were missing'.format(
+                                                self.outputFile))
+                    os.remove(self.outputFile)
 
         variableList = self.variableList + ['xtime_startMonthly',
                                             'xtime_endMonthly']
