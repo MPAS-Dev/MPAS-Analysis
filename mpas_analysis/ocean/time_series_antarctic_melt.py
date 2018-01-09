@@ -4,18 +4,12 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import xarray
 
-# SFP: the following are only needed for the stop-gap local plotting routine
-# used here
-import matplotlib.pyplot as plt
 
 from ..shared.analysis_task import AnalysisTask
 
 from ..shared.constants import constants
 
-# BELOW IS IMPORTED BUT NOT CURRENTLY USED
-# from ..shared.plot.plotting import timeseries_analysis_plot
-
-from ..shared.plot.plotting import plot_xtick_format
+from ..shared.plot.plotting import timeseries_analysis_plot
 
 from ..shared.io import open_mpas_dataset
 
@@ -237,9 +231,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         # work on data from simulations
         freshwaterFlux = ds.timeMonthly_avg_landIceFreshwaterFlux
 
-        # BELOW ASSIGNED BUT NOT USED
-        # movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
-        #                                    'movingAverageMonths')
+        mainRunName = config.get('runs', 'mainRunName')
+        movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
+                                            'movingAverageMonths')
 
         iceShelvesToPlot = self.iceShelvesToPlot
 
@@ -307,13 +301,13 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             filePrefix = 'melt_flux_{}'.format(regionName)
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-#           timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
-#                                     title, xLabel, yLabel, figureName,
-#                                     lineStyles=['b-'], lineWidths=[1.2],
-#                                     calendar=calendar)
-            self.plot(config, timeSeries, obsFileNameDesc, obsCount,
-                      obsMeltFlux, obsMeltFluxUnc, title,
-                      xLabel, yLabel, figureName)
+            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
+                                     title, xLabel, yLabel, figureName,
+                                     lineStyles=['b-'], lineWidths=[1.2],
+                                     legendText=[mainRunName],
+                                     calendar=calendar, obsMean=obsMeltFlux,
+                                     obsUncertainty=obsMeltFluxUnc,
+                                     obsLegend=obsFileNameDesc)
 
             caption = 'Running Mean of Total Melt Flux  under Ice ' \
                       'Shelves in the {} Region'.format(title)
@@ -337,13 +331,13 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             filePrefix = 'melt_rate_{}'.format(regionName)
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-#           timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
-#                                     title, xLabel, yLabel, figureName,
-#                                     lineStyles=['b-'], lineWidths=[1.2],
-#                                     calendar=calendar)
-            self.plot(config, timeSeries, obsFileNameDesc, obsCount,
-                      obsMeltRate, obsMeltRateUnc, title,
-                      xLabel, yLabel, figureName)
+            timeseries_analysis_plot(config, [timeSeries], movingAverageMonths,
+                                     title, xLabel, yLabel, figureName,
+                                     lineStyles=['b-'], lineWidths=[1.2],
+                                     legendText=[mainRunName],
+                                     calendar=calendar, obsMean=obsMeltRate,
+                                     obsUncertainty=obsMeltRateUnc,
+                                     obsLegend=obsFileNameDesc)
 
             caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                       'Shelves in the {} Region'.format(title)
@@ -358,112 +352,6 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                 thumbnailDescription=title,
                 imageDescription=caption,
                 imageCaption=caption)
-
-    def plot(self, config, modelValues, obsFileNameDesc, obsCount, obsMean,
-             obsUncertainty, title, xlabel, ylabel, fileout):
-
-        """
-        Plots the list of time series data sets and stores the result in
-        an image file.
-        Parameters
-        ----------
-        config : instance of ConfigParser
-            the configuration, containing a [plot] section with options that
-            control plotting
-
-        modelValues : xarray DataSet
-            the data set to be plotted
-
-        obsMean : float
-            a single observed mean value to plot as a constant line
-
-        obsUncertainty : float
-            The observed uncertainty, to plot as a shaded rectangle
-            around the mean
-
-        title : str
-            the title of the plot
-
-        xlabel, ylabel : str
-            axis labels
-
-        fileout : str
-            the file name to be written
-
-        Authors
-        -------
-        Xylar Asay-Davis, Stephen Price
-        """
-
-        # play with these as you need
-        figsize = (15, 6)
-        dpi = 300
-        modelLineStyle = 'b-'
-        modelLineWidth = 2
-        # BELOW ARE ASSIGNED BUT NOT USED
-        # obsColor = 'gray'
-        # obsLineWidth = 1
-
-        maxXTicks = 20
-        calendar = self.calendar
-
-        axis_font = {'size': config.get('plot', 'axisFontSize')}
-        title_font = {'size': config.get('plot', 'titleFontSize'),
-                      'color': config.get('plot', 'titleFontColor'),
-                      'weight': config.get('plot', 'titleFontWeight')}
-
-        plt.figure(figsize=figsize, dpi=dpi)
-
-        minDays = modelValues.Time.min()
-        maxDays = modelValues.Time.max()
-        plt.plot(modelValues.Time.values, modelValues.values, modelLineStyle,
-                 linewidth=modelLineWidth, label='model')
-
-        # MUCH OF (COMMENTED OUT)BELOW IS ASSIGNED BUT NOT USED
-#        ax = plt.gca()
-
-        # this makes a "patch" with a single rectangular polygon, where the
-        # pairs are time and melt rate for the 4 corners, and "True" means it
-        # is a closed polygon:
-#        patches = [Polygon([[minDays, obsMean-obsUncertainty],
-#                            [maxDays, obsMean-obsUncertainty],
-#                            [maxDays, obsMean+obsUncertainty],
-#                            [minDays, obsMean+obsUncertainty]])]
-
-        # make the polygon gray and mostly transparent
-#        p = PatchCollection(patches, color=obsColor, alpha=0.15)
-        # add it to the plot on the current axis
-#        ax.add_collection(p)
-
-        # also plot a line
-#        plt.plot([minDays, maxDays], [obsMean, obsMean],
-#                 color=obsColor, linewidth=obsLineWidth)
-
-        # plot error bars rather than the "patch" used above
-        symbol = ['o', '^', 's', 'D', '*']
-        for iObs in range(obsCount):
-            plt.errorbar(((maxDays - minDays)/5)*(iObs+1)+minDays,
-                         obsMean[iObs], yerr=obsUncertainty[iObs],
-                         fmt=symbol[iObs], ecolor='k',
-                         capthick=2, label='{}'.format(obsFileNameDesc[iObs]))
-        # add legend
-        plt.legend(loc='lower right', numpoints=1)
-
-        # this will need to be imported from shared.plot.plotting
-        plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
-
-        if title is not None:
-            plt.title(title, **title_font)
-        if xlabel is not None:
-            plt.xlabel(xlabel, **axis_font)
-        if ylabel is not None:
-            plt.ylabel(ylabel, **axis_font)
-        if fileout is not None:
-            plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-        if not config.getboolean('plot', 'displayToScreen'):
-            plt.close()
-
         # }}}
 
 # }}}

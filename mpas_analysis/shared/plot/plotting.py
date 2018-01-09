@@ -33,7 +33,9 @@ from six.moves import configparser
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, legendText,
                              calendar, maxPoints=None, titleFontSize=None,
-                             figsize=(15, 6), dpi=None, maxXTicks=20):
+                             figsize=(15, 6), dpi=None, maxXTicks=20,
+                             obsMean=None, obsUncertainty=None,
+                             obsLegend=None, legendLocation='lower left'):
 
     """
     Plots the list of time series data sets and stores the result in an image
@@ -87,9 +89,20 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         This may need to be adjusted depending on the figure size and aspect
         ratio.
 
+    obsMean, obsUncertainty : list of float, optional
+        Mean values and uncertainties for observations to be plotted as error
+        bars. The two lists must have the same number of elements.
+
+    obsLegend : list of str, optional
+        The label in the legend for each element in ``obsMean`` (and
+        ``obsUncertainty``)
+
+    legendLocation : str, optional
+        The location of the legend (see ``pyplot.legend()`` for details)
+
     Authors
     -------
-    Xylar Asay-Davis, Milena Veneziani
+    Xylar Asay-Davis, Milena Veneziani, Stephen Price
     """
 
     if dpi is None:
@@ -117,7 +130,25 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex],
                  label=legendText[dsIndex])
-    plt.legend(loc='lower left')
+
+    if obsMean is not None:
+        obsCount = len(obsMean)
+        assert(len(obsUncertainty) == obsCount)
+
+        # space the observations along the time line, leaving gaps at either
+        # end
+        start = np.amin(minDays)
+        end = np.amax(maxDays)
+        obsTimes = np.linspace(start, end, obsCount+2)[1:-1]
+        obsSymbols = ['o', '^', 's', 'D', '*']
+        for iObs in range(obsCount):
+            plt.errorbar(obsTimes[iObs], obsMean[iObs],
+                         yerr=obsUncertainty[iObs],
+                         fmt=obsSymbols[np.mod(iObs, len(obsSymbols))],
+                         ecolor='k',
+                         capthick=2, label=obsLegend[iObs])
+
+    plt.legend(loc=legendLocation)
 
     ax = plt.gca()
 
