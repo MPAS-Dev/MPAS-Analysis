@@ -164,6 +164,14 @@ depths = ['top', -200, -400, -600, -800, 'bot']
 # plot on polar plot
 polarPlot = False
 
+[timeSeriesAntarcticMelt]
+## options related to plotting time series of melt below Antarctic ice shelves
+
+# list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
+# See "regionNames" in the ice shelf masks file in regionMaskDirectory for
+# details.
+iceShelvesToPlot = ['Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
+
 [regions]
 ## options related to ocean regions used in several analysis modules
 
