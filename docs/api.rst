@@ -59,6 +59,7 @@ Ocean tasks
    TimeSeriesTemperatureAnomaly
    TimeSeriesSalinityAnomaly
    TimeSeriesSST
+   TimeSeriesAntarcticMelt
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 
@@ -179,6 +180,10 @@ Climatology
    RemapObservedClimatologySubtask.build_observational_dataset
    RemapObservedClimatologySubtask.get_file_name
 
+   MpasReferenceClimatologyTask
+   RemapMpasReferenceClimatologySubtask
+
+
 Time Series
 -----------
 .. currentmodule:: mpas_analysis.shared.time_series
@@ -187,7 +192,11 @@ Time Series
    :toctree: generated/
 
     cache_time_series
+    compute_moving_avg_anomaly_from_start
+    compute_moving_avg
 
+    MpasTimeSeriesTask
+    MpasReferenceTimeSeriesTask
 
 Interpolation
 -------------
