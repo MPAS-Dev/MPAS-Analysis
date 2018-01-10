@@ -22,7 +22,7 @@ export OMP_NUM_THREADS=1
 
 module unload python python/base
 module use /global/project/projectdirs/acme/software/modulefiles/all
-module load python/anaconda-2.7-acme
+module load e3sm-unified/1.1.2
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

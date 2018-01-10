@@ -16,7 +16,7 @@ export OMP_NUM_THREADS=1
 
 module unload python
 module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all/
-module load python/anaconda-2.7-climate
+module load e3sm-unified/1.1.2
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
