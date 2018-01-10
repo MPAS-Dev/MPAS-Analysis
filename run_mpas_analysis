@@ -120,7 +120,8 @@ def build_analysis_list(config, refConfig):  # {{{
                                                       oceanClimatolgyTask,
                                                       refOceanClimatolgyTask))
 
-    analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask))
+    analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
+                                                  refOceanTimeSeriesTask))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
