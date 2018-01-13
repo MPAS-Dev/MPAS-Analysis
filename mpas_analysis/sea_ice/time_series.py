@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import os
 
 from ..shared import AnalysisTask
 
@@ -17,7 +18,7 @@ from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
 from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
 from ..shared.generalized_reader import open_multifile_dataset
-from ..shared.io import open_mpas_dataset
+from ..shared.io import open_mpas_dataset, write_netcdf
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 from ..shared.html import write_image_xml
@@ -236,21 +237,13 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         self.logger.info('  Load sea-ice data...')
         # Load mesh
-        self.dsMesh = xr.open_dataset(self.restartFileName)
-        self.dsMesh = subset_variables(self.dsMesh,
-                                       variableList=['lonCell', 'latCell',
-                                                     'areaCell'])
 
-        # Load data
-        ds = open_mpas_dataset(
-            fileName=self.inputFile,
-            calendar=calendar,
-            variableList=self.variableList,
-            startDate=self.startDate,
-            endDate=self.endDate)
+        dsTimeSeries = self._compute_area_vol()
 
-        yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
-        yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+        yearStart = days_to_datetime(dsTimeSeries['NH'].Time.min(),
+                                     calendar=calendar).year
+        yearEnd = days_to_datetime(dsTimeSeries['NH'].Time.max(),
+                                   calendar=calendar).year
         timeStart = date_to_days(year=yearStart, month=1, day=1,
                                  calendar=calendar)
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
@@ -276,25 +269,18 @@ class TimeSeriesSeaIce(AnalysisTask):
                 preprocessedReferenceRunName = 'None'
 
         if self.refConfig is not None:
+
+            dsTimeSeriesRef = {}
             baseDirectory = build_config_full_path(
                 self.refConfig, 'output', 'timeSeriesSubdirectory')
 
-            refFileName = '{}/{}.nc'.format(
-                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
-
-            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
-            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
-            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
-            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
-
-            dsRef = open_mpas_dataset(
-                fileName=refFileName,
-                calendar=calendar,
-                variableList=self.variableList,
-                startDate=refStartDate,
-                endDate=refEndDate)
-
             refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            for hemisphere in ['NH', 'SH']:
+                inFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
+                                                            hemisphere)
+
+                dsTimeSeriesRef[hemisphere] = xr.open_dataset(inFileName)
 
         norm = {'iceArea': 1e-6,  # m^2 to km^2
                 'iceVolume': 1e-12,  # m^3 to 10^3 km^3
@@ -305,7 +291,6 @@ class TimeSeriesSeaIce(AnalysisTask):
         galleryGroup = 'Time Series'
         groupLink = 'timeseries'
 
-        dsTimeSeries = {}
         obs = {}
         preprocessed = {}
         figureNameStd = {}
@@ -317,11 +302,6 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         for hemisphere in ['NH', 'SH']:
 
-            dsTimeSeries[hemisphere] = self._compute_area_vol(ds, hemisphere)
-
-            if self.refConfig is not None:
-                dsTimeSeriesRef = self._compute_area_vol(dsRef, hemisphere)
-
             self.logger.info('  Make {} plots...'.format(hemisphere))
 
             for variableName in ['iceArea', 'iceVolume']:
@@ -332,8 +312,8 @@ class TimeSeriesSeaIce(AnalysisTask):
                                  dsTimeSeries[hemisphere][variableName])
 
                 if self.refConfig is not None:
-                    plotVarsRef[key] = \
-                        norm[variableName] * dsTimeSeriesRef[variableName]
+                    plotVarsRef[key] = norm[variableName] * \
+                        dsTimeSeriesRef[hemisphere][variableName]
 
                 prefix = '{}/{}{}_{}'.format(self.plotsDirectory,
                                              variableName,
@@ -559,36 +539,72 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         return dsShift  # }}}
 
-    def _compute_area_vol(self, ds, hemisphere):  # {{{
+    def _compute_area_vol(self):  # {{{
         '''
         Compute part of the time series of sea ice volume and area, given time
         indices to process.
         '''
 
-        if hemisphere == 'NH':
-            mask = self.dsMesh.latCell > 0
+        outFileNames = {}
+        allExist = True
+        for hemisphere in ['NH', 'SH']:
+            baseDirectory = build_config_full_path(
+                self.config, 'output', 'timeSeriesSubdirectory')
+
+            make_directories(baseDirectory)
+
+            outFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
+                                                         hemisphere)
+            outFileNames[hemisphere] = outFileName
+            if not os.path.exists(outFileName):
+                allExist = False
+
+        dsTimeSeries = {}
+        if allExist:
+            for hemisphere in ['NH', 'SH']:
+                dsTimeSeries[hemisphere] = xr.open_dataset(
+                        outFileNames[hemisphere])
         else:
-            mask = self.dsMesh.latCell < 0
-        ds = ds.where(mask)
+            dsMesh = xr.open_dataset(self.restartFileName)
+            dsMesh = subset_variables(dsMesh,
+                                      variableList=['latCell', 'areaCell'])
+            # Load data
+            ds = open_mpas_dataset(
+                fileName=self.inputFile,
+                calendar=self.calendar,
+                variableList=self.variableList,
+                startDate=self.startDate,
+                endDate=self.endDate)
 
-        dsAreaSum = (ds*self.dsMesh.areaCell).sum('nCells')
-        dsAreaSum = dsAreaSum.rename(
-                {'timeMonthly_avg_iceAreaCell': 'iceArea',
-                 'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
-        dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
-                                     self.dsMesh.areaCell.sum('nCells'))
+            for hemisphere in ['NH', 'SH']:
 
-        dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
-        dsAreaSum['iceArea'].attrs['description'] = \
-            'Total {} sea ice area'.format(hemisphere)
-        dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
-        dsAreaSum['iceVolume'].attrs['description'] = \
-            'Total {} sea ice volume'.format(hemisphere)
-        dsAreaSum['iceThickness'].attrs['units'] = 'm'
-        dsAreaSum['iceThickness'].attrs['description'] = \
-            'Mean {} sea ice volume'.format(hemisphere)
+                if hemisphere == 'NH':
+                    mask = dsMesh.latCell > 0
+                else:
+                    mask = dsMesh.latCell < 0
 
-        return dsAreaSum  # }}}
+                dsAreaSum = (ds.where(mask)*dsMesh.areaCell).sum('nCells')
+                dsAreaSum = dsAreaSum.rename(
+                        {'timeMonthly_avg_iceAreaCell': 'iceArea',
+                         'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
+                dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
+                                             dsMesh.areaCell.sum('nCells'))
+
+                dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
+                dsAreaSum['iceArea'].attrs['description'] = \
+                    'Total {} sea ice area'.format(hemisphere)
+                dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
+                dsAreaSum['iceVolume'].attrs['description'] = \
+                    'Total {} sea ice volume'.format(hemisphere)
+                dsAreaSum['iceThickness'].attrs['units'] = 'm'
+                dsAreaSum['iceThickness'].attrs['description'] = \
+                    'Mean {} sea ice volume'.format(hemisphere)
+
+                dsTimeSeries[hemisphere] = dsAreaSum
+
+                write_netcdf(dsAreaSum, outFileNames[hemisphere])
+
+        return dsTimeSeries  # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
