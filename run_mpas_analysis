@@ -63,10 +63,8 @@ def build_analysis_list(config, refConfig):  # {{{
     # analysis can only be imported after the right MPL renderer is selected
     from mpas_analysis import ocean
     from mpas_analysis import sea_ice
-    from mpas_analysis.shared.climatology import MpasClimatologyTask, \
-        MpasReferenceClimatologyTask
-    from mpas_analysis.shared.time_series import MpasTimeSeriesTask, \
-        MpasReferenceTimeSeriesTask
+    from mpas_analysis.shared.climatology import MpasClimatologyTask
+    from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
     analyses = []
 
@@ -79,49 +77,24 @@ def build_analysis_list(config, refConfig):  # {{{
                                         componentName='ocean',
                                         section='index')
 
-    if refConfig is not None:
-        refOceanClimatolgyTask = MpasReferenceClimatologyTask(
-                config=refConfig, componentName='ocean')
-        refOceanTimeSeriesTask = MpasReferenceTimeSeriesTask(
-                config=refConfig, componentName='ocean')
-        refOceanIndexTask = MpasReferenceTimeSeriesTask(
-                config=refConfig, componentName='ocean',
-                section='index')
-        analyses.append(refOceanClimatolgyTask)
-        analyses.append(refOceanTimeSeriesTask)
-        analyses.append(refOceanIndexTask)
-
-        refSeaIceClimatolgyTask = MpasReferenceClimatologyTask(
-                config=refConfig, componentName='seaIce')
-        refSeaIceTimeSeriesTask = MpasReferenceTimeSeriesTask(
-                config=refConfig, componentName='seaIce')
-        analyses.append(refSeaIceClimatolgyTask)
-        analyses.append(refSeaIceTimeSeriesTask)
-    else:
-        refOceanClimatolgyTask = None
-        refOceanTimeSeriesTask = None
-        refOceanIndexTask = None
-        refSeaIceClimatolgyTask = None
-        refSeaIceTimeSeriesTask = None
-
     analyses.append(oceanClimatolgyTask)
 
     analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask,
-                                            refOceanClimatolgyTask))
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask,
-                                            refOceanClimatolgyTask))
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask,
-                                            refOceanClimatolgyTask))
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapSoseTemperature(
-            config, oceanClimatolgyTask, refOceanClimatolgyTask))
+            config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(
-            config, oceanClimatolgyTask, refOceanClimatolgyTask))
+            config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
                                                       oceanClimatolgyTask,
-                                                      refOceanClimatolgyTask))
+                                                      refConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
-                                                  refOceanTimeSeriesTask))
+                                                  refConfig))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
@@ -129,14 +102,13 @@ def build_analysis_list(config, refConfig):  # {{{
                                                     oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesOHCAnomaly(config,
                                                oceanTimeSeriesTask,
-                                               refOceanTimeSeriesTask))
+                                               refConfig))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
-                                        refOceanTimeSeriesTask))
+                                        refConfig))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
-                                                  refOceanClimatolgyTask))
+                                                  refConfig))
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
-    analyses.append(ocean.IndexNino34(config, oceanIndexTask,
-                                      refOceanIndexTask))
+    analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
@@ -147,20 +119,20 @@ def build_analysis_list(config, refConfig):  # {{{
     analyses.append(seaIceClimatolgyTask)
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
             config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='NH', mpasRefClimatologyTask=refSeaIceClimatolgyTask))
+            hemisphere='NH', refConfig=refConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
             config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='NH', mpasRefClimatologyTask=refSeaIceClimatolgyTask))
+            hemisphere='NH', refConfig=refConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
             config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', mpasRefClimatologyTask=refSeaIceClimatolgyTask))
+            hemisphere='SH', refConfig=refConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
             config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', mpasRefClimatologyTask=refSeaIceClimatolgyTask))
+            hemisphere='SH', refConfig=refConfig))
     analyses.append(seaIceTimeSeriesTask)
 
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
-                                             refSeaIceTimeSeriesTask))
+                                             refConfig))
 
     return analyses  # }}}
 

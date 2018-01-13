@@ -7,7 +7,7 @@ import xarray as xr
 from ..shared import AnalysisTask
 
 from ..shared.climatology import RemapMpasClimatologySubtask, \
-    RemapObservedClimatologySubtask, RemapMpasReferenceClimatologySubtask
+    RemapObservedClimatologySubtask
 
 from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
 
@@ -26,14 +26,14 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 mpasRefClimatologyTask=None):  # {{{
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
@@ -41,10 +41,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        mpasRefClimatologyTask : ``MpasClimatologyTask``, optional
-            The task that produced the climatology from a reference run to be
-            remapped and plotted, including anomalies with respect to the main
-            run
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -94,34 +92,22 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if mpasRefClimatologyTask is None:
+        if refConfig is None:
             refTitleLabel = 'Observations (ICESat)'
             galleryName = 'Observations: ICESat'
             diffTitleLabel = 'Model - Observations'
             refFieldName = 'seaIceThick'
-            remapRefClimatologySubtask = None
         else:
-            refRunName = mpasRefClimatologyTask.config.get('runs',
-                                                           'mainRunName')
+            refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
             refTitleLabel = 'Ref: {}'.format(refRunName)
             refFieldName = mpasFieldName
             diffTitleLabel = 'Main - Reference'
 
-            remapRefClimatologySubtask = RemapMpasReferenceClimatologySubtask(
-                mpasClimatologyTask=mpasRefClimatologyTask,
-                parentTask=self,
-                climatologyName='{}{}'.format(fieldName, hemisphere),
-                variableList=[mpasFieldName],
-                comparisonGridNames=comparisonGridNames,
-                seasons=seasons,
-                iselValues=iselValues)
-
-            self.add_subtask(remapRefClimatologySubtask)
             remapObservationsSubtask = None
 
         for season in seasons:
-            if mpasRefClimatologyTask is None:
+            if refConfig is None:
                 obsFileName = build_config_full_path(
                         config, 'seaIceObservations',
                         'thickness{}_{}'.format(hemisphere, season))
@@ -149,7 +135,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                 subtask = PlotClimatologyMapSubtask(
                         self, hemisphere, season, comparisonGridName,
                         remapClimatologySubtask, remapObservationsSubtask,
-                        remapRefClimatologySubtask)
+                        refConfig)
 
                 subtask.set_plot_info(
                         outFileLabel='icethick{}'.format(hemisphere),

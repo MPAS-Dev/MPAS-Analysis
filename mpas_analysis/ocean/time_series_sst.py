@@ -27,31 +27,29 @@ class TimeSeriesSST(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``
-        A task for extracting the same time series from the reference run
-        or ``None`` if no reference run is specified
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
 
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config, mpasTimeSeriesTask, mpasRefTimeSeriesTask=None):
+    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``, optional
-            A task for extracting the same time series from the reference run
-            (if any)
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -65,11 +63,9 @@ class TimeSeriesSST(AnalysisTask):
             tags=['timeSeries', 'sst'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.mpasRefTimeSeriesTask = mpasRefTimeSeriesTask
+        self.refConfig = refConfig
 
         self.run_after(mpasTimeSeriesTask)
-        if mpasRefTimeSeriesTask is not None:
-            self.run_after(mpasRefTimeSeriesTask)
 
         # }}}
 
@@ -100,10 +96,6 @@ class TimeSeriesSST(AnalysisTask):
         self.variableList = \
             ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
-
-        if self.mpasRefTimeSeriesTask is not None:
-            self.mpasRefTimeSeriesTask.add_variables(
-                    variableList=self.variableList)
 
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
                 check_path_exists(config.get('oceanPreprocessedReference',
@@ -176,13 +168,24 @@ class TimeSeriesSST(AnalysisTask):
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
                                calendar=calendar)
 
-        if self.mpasRefTimeSeriesTask is not None:
+        if self.refConfig is not None:
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            refFileName = '{}/{}.nc'.format(
+                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+
+            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
+            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
+            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
+            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+
             dsRefSST = open_mpas_dataset(
-                    fileName=self.mpasRefTimeSeriesTask.outputFile,
+                    fileName=refFileName,
                     calendar=calendar,
                     variableList=self.variableList,
-                    startDate=self.startDate,
-                    endDate=self.endDate)
+                    startDate=refStartDate,
+                    endDate=refEndDate)
         else:
             dsRefSST = None
 
@@ -233,8 +236,7 @@ class TimeSeriesSST(AnalysisTask):
                 fields.append(refSST)
                 lineStyles.append('b-')
                 lineWidths.append(1.5)
-                refRunName = self.mpasRefTimeSeriesTask.config.get(
-                        'runs', 'mainRunName')
+                refRunName = self.refConfig.get('runs', 'mainRunName')
                 legendText.append(refRunName)
 
             if preprocessedReferenceRunName != 'None':

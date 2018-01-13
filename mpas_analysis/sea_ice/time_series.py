@@ -33,9 +33,9 @@ class TimeSeriesSeaIce(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``
-        A task for extracting the same time series from the reference run
-        (if any)
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
+
 
     Authors
     -------
@@ -43,21 +43,20 @@ class TimeSeriesSeaIce(AnalysisTask):
     """
 
     def __init__(self, config, mpasTimeSeriesTask,
-                 mpasRefTimeSeriesTask=None):  # {{{
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``, optional
-            A task for extracting the same time series from the reference run
-            (if any)
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -71,11 +70,9 @@ class TimeSeriesSeaIce(AnalysisTask):
             tags=['timeSeries'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.mpasRefTimeSeriesTask = mpasRefTimeSeriesTask
+        self.refConfig = refConfig
 
         self.run_after(mpasTimeSeriesTask)
-        if mpasRefTimeSeriesTask is not None:
-            self.run_after(mpasRefTimeSeriesTask)
 
         # }}}
 
@@ -107,10 +104,6 @@ class TimeSeriesSeaIce(AnalysisTask):
         self.variableList = ['timeMonthly_avg_iceAreaCell',
                              'timeMonthly_avg_iceVolumeCell']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
-
-        if self.mpasRefTimeSeriesTask is not None:
-            self.mpasRefTimeSeriesTask.add_variables(
-                    variableList=self.variableList)
 
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
@@ -282,16 +275,26 @@ class TimeSeriesSeaIce(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
-        if self.mpasRefTimeSeriesTask is not None:
+        if self.refConfig is not None:
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            refFileName = '{}/{}.nc'.format(
+                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+
+            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
+            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
+            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
+            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+
             dsRef = open_mpas_dataset(
-                fileName=self.mpasRefTimeSeriesTask.outputFile,
+                fileName=refFileName,
                 calendar=calendar,
                 variableList=self.variableList,
-                startDate=self.startDate,
-                endDate=self.endDate)
+                startDate=refStartDate,
+                endDate=refEndDate)
 
-            refRunName = self.mpasRefTimeSeriesTask.config.get(
-                    'runs', 'mainRunName')
+            refRunName = self.refConfig.get('runs', 'mainRunName')
 
         norm = {'iceArea': 1e-6,  # m^2 to km^2
                 'iceVolume': 1e-12,  # m^3 to 10^3 km^3
@@ -316,7 +319,7 @@ class TimeSeriesSeaIce(AnalysisTask):
 
             dsTimeSeries[hemisphere] = self._compute_area_vol(ds, hemisphere)
 
-            if self.mpasRefTimeSeriesTask is not None:
+            if self.refConfig is not None:
                 dsTimeSeriesRef = self._compute_area_vol(dsRef, hemisphere)
 
             self.logger.info('  Make {} plots...'.format(hemisphere))
@@ -328,7 +331,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                 plotVars[key] = (norm[variableName] *
                                  dsTimeSeries[hemisphere][variableName])
 
-                if self.mpasRefTimeSeriesTask is not None:
+                if self.refConfig is not None:
                     plotVarsRef[key] = \
                         norm[variableName] * dsTimeSeriesRef[variableName]
 
@@ -423,7 +426,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                     lineStyles.append('r-')
                     lineWidths.append(1.2)
 
-                if self.mpasRefTimeSeriesTask is not None:
+                if self.refConfig is not None:
                     dsvalues.append(plotVarsRef[key])
                     legendText.append(refRunName)
                     lineStyles.append('g-')

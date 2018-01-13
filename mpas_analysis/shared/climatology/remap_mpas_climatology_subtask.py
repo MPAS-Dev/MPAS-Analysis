@@ -13,7 +13,8 @@ from ..constants import constants
 from ..io.utility import build_config_full_path, make_directories
 from ..io import write_netcdf
 
-from .climatology import get_remapper
+from .climatology import get_remapper, get_masked_mpas_climatology_file_name, \
+    get_remapped_mpas_climatology_file_name
 from .comparison_descriptors import get_comparison_descriptor
 
 from ..grid import MpasMeshDescriptor
@@ -169,8 +170,6 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         # we're sure this subtask is supposed to run
         self.mpasClimatologyTask.add_variables(self.variableList, self.seasons)
 
-        self._setup_file_names()
-
         # make the mapping directory, because doing so within each process
         # seems to be giving ESMF_RegridWeightGen some trouble
         mappingSubdirectory = build_config_full_path(self.config, 'output',
@@ -207,11 +206,11 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
             for season in self.seasons:
 
-                maskedClimatologyFileName = self.get_file_name(
-                        season, 'masked', comparisonGridName)
+                maskedClimatologyFileName = self.get_masked_file_name(
+                        season)
 
-                remappedFileName = self.get_file_name(
-                        season, 'remapped', comparisonGridName)
+                remappedFileName = self.get_remapped_file_name(
+                        season, comparisonGridName)
 
                 if not os.path.exists(remappedFileName):
                     self._remap(inFileName=maskedClimatologyFileName,
@@ -220,7 +219,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
                                 comparisonGridName=comparisonGridName)
         # }}}
 
-    def get_file_name(self, season, stage, comparisonGridName=None):  # {{{
+    def get_masked_file_name(self, season):  # {{{
         """
         Given config options, the name of a field and a string identifying the
         months in a seasonal climatology, returns the full path for MPAS
@@ -231,10 +230,35 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         season : str
             One of the seasons in ``constants.monthDictionary``
 
-        stage : {'masked', 'remapped'}
-            The stage of the masking and remapping process
+        Returns
+        -------
+        fileName : str
+            The path to the climatology file for the specified season.
 
-        comparisonGridName : {'latlon', 'antarctic'}, optional
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        fileName = get_masked_mpas_climatology_file_name(self.config,
+                                                         season,
+                                                         self.componentName,
+                                                         self.climatologyName)
+
+        return fileName  # }}}
+
+    def get_remapped_file_name(self, season, comparisonGridName):  # {{{
+        """
+        Given config options, the name of a field and a string identifying the
+        months in a seasonal climatology, returns the full path for MPAS
+        climatology files before and after remapping.
+
+        Parameters
+        ----------
+        season : str
+            One of the seasons in ``constants.monthDictionary``
+
+        comparisonGridName : {'latlon', 'antarctic'}
             The name of the comparison grid to use for remapping.
 
         Returns
@@ -247,11 +271,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         Xylar Asay-Davis
         """
 
-        if stage == 'remapped':
-            key = (season, stage, comparisonGridName)
-        else:
-            key = (season, stage)
-        fileName = self._outputFiles[key]
+        fileName = get_remapped_mpas_climatology_file_name(
+                self.config, season, self.componentName, self.climatologyName,
+                comparisonGridName)
 
         return fileName  # }}}
 
@@ -426,7 +448,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         climatologyFileName = self.mpasClimatologyTask.get_file_name(season)
 
-        maskedClimatologyFileName = self.get_file_name(season, 'masked')
+        maskedClimatologyFileName = self.get_masked_file_name(season)
 
         if not os.path.exists(maskedClimatologyFileName):
             # slice and mask the data set

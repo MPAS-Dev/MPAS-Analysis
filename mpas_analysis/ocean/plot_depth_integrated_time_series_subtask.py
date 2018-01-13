@@ -400,8 +400,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             title = '{} \n {} (blue)'.format(title, refRunName)
 
             self.logger.info('  Load ocean data from reference run...')
-            refStartDate = self.refConfig.get('timeSeries', 'startDate')
-            refEndDate = self.refConfig.get('timeSeries', 'endDate')
+            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
+            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
+            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
+            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
             dsRef = open_mpas_dataset(fileName=self.refFileName,
                                       calendar=calendar,
                                       variableList=[self.mpasFieldName],

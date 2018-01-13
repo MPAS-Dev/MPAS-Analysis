@@ -14,6 +14,8 @@ from ..shared.io.utility import build_config_full_path
 from ..shared import AnalysisTask
 from ..shared.html import write_image_xml
 
+from ..shared.climatology import get_unmasked_mpas_climatology_file_name
+
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
     '''
@@ -25,32 +27,28 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
-    mpasRefClimatologyTask : ``MpasReferenceClimatologyTask``
-        The task that produced the climatology from a reference run to be
-        remapped and plotted, including anomalies with respect to the main run
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
 
     Authors
     -------
     Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
 
-    def __init__(self, config, mpasClimatologyTask,
-                 mpasRefClimatologyTask=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
         '''
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        mpasRefClimatologyTask : ``MpasClimatologyTask``, optional
-            The task that produced the climatology from a reference run to be
-            remapped and plotted, including anomalies with respect to the main
-            run
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -67,9 +65,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
 
-        self.mpasRefClimatologyTask = mpasRefClimatologyTask
-        if mpasRefClimatologyTask is not None:
-            self.run_after(mpasRefClimatologyTask)
+        self.refConfig = refConfig
 
         # }}}
 
@@ -125,10 +121,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
-
-        if self.mpasRefClimatologyTask is not None:
-            self.mpasRefClimatologyTask.add_variables(
-                    variableList=variableList, seasons=['ANN'])
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -265,14 +257,14 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             fieldArrays.extend([ncepGlobal, ecmwfGlobal])
             errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
 
-        if self.mpasRefClimatologyTask is not None:
-            dsRef = xr.open_dataset(self.mpasRefClimatologyTask.get_file_name(
-                season='ANN'))
+        if self.refConfig is not None:
+            dsRef = xr.open_dataset(get_unmasked_mpas_climatology_file_name(
+                self.refConfig, season='ANN',
+                componentName=self.componentName))
             dsRef = dsRef.isel(Time=0)
 
             yRef = dsRef.timeMonthly_avg_meridionalHeatTransportLat
-            refRunName = self.mpasRefClimatologyTask.config.get(
-                    'runs', 'mainRunName')
+            refRunName = self.refConfig.get('runs', 'mainRunName')
 
             lineColors.append('k')
             lineWidths.append(1.2)

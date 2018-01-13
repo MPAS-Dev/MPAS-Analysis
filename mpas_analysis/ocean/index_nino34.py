@@ -36,31 +36,29 @@ class IndexNino34(AnalysisTask):  # {{{
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``
-        A task for extracting the same time series from the reference run
-        or ``None`` if no reference run is specified
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
 
     Authors
     -------
     Luke Van Roekel, Xylar Asay-Davis
     '''
 
-    def __init__(self, config, mpasTimeSeriesTask, mpasRefTimeSeriesTask=None):
+    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
         '''
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``, optional
-            A task for extracting the same time series from the reference run
-            (if any)
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -75,11 +73,9 @@ class IndexNino34(AnalysisTask):  # {{{
             tags=['timeSeries', 'index', 'nino'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.mpasRefTimeSeriesTask = mpasRefTimeSeriesTask
+        self.refConfig = refConfig
 
         self.run_after(mpasTimeSeriesTask)
-        if mpasRefTimeSeriesTask is not None:
-            self.run_after(mpasRefTimeSeriesTask)
 
         # }}}
 
@@ -102,10 +98,6 @@ class IndexNino34(AnalysisTask):  # {{{
         self.variableList = \
             ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
-
-        if self.mpasRefTimeSeriesTask is not None:
-            self.mpasRefTimeSeriesTask.add_variables(
-                    variableList=self.variableList)
 
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
@@ -200,7 +192,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # Compute the observational spectra over the last 30 years for
         # comparison. Only saving the spectra
         subsetEndYear = 2016
-        if self.mpasRefTimeSeriesTask is None:
+        if self.refConfig is None:
             subsetStartYear = 1976
         else:
             # make the subset the same length as the input data set
@@ -212,7 +204,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Subset = nino34Obs.sel(Time=slice(time_start, time_end))
         spectraSubset = self._compute_nino34_spectra(nino34Subset)
 
-        if self.mpasRefTimeSeriesTask is None:
+        if self.refConfig is None:
             nino34s = [nino34Obs[2:-3], nino34Subset, nino34Main[2:-3]]
             titles = ['{} (Full Record)'.format(obsTitle),
                       '{} ({} - {})'.format(obsTitle, subsetStartYear,
@@ -220,8 +212,14 @@ class IndexNino34(AnalysisTask):  # {{{
                       mainRunName]
             spectra = [spectraObs, spectraSubset, spectraMain]
         else:
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            refFileName = '{}/{}.nc'.format(
+                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+
             dsRef = open_mpas_dataset(
-                    fileName=self.mpasRefTimeSeriesTask.outputFile,
+                    fileName=refFileName,
                     calendar=calendar,
                     variableList=self.variableList)
 
@@ -229,8 +227,7 @@ class IndexNino34(AnalysisTask):  # {{{
             nino34Ref = self._compute_nino34_index(regionSSTRef, calendar)
 
             nino34s = [nino34Subset, nino34Main[2:-3], nino34Ref[2:-3]]
-            refRunName = self.mpasRefTimeSeriesTask.config.get(
-                    'runs', 'mainRunName')
+            refRunName = self.refConfig.get('runs', 'mainRunName')
 
             spectraRef = self._compute_nino34_spectra(nino34Ref)
 

@@ -8,8 +8,7 @@ from ..shared import AnalysisTask
 from ..shared.io.utility import build_config_full_path
 
 from ..shared.climatology import RemapMpasClimatologySubtask, \
-    RemapObservedClimatologySubtask, RemapMpasReferenceClimatologySubtask, \
-    get_antarctic_stereographic_projection
+    RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
 
 from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
 
@@ -30,22 +29,20 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
     Xylar Asay-Davis
     """
     def __init__(self, config, mpasClimatologyTask,
-                 mpasRefClimatologyTask=None):  # {{{
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        mpasRefClimatologyTask : ``MpasReferenceClimatologyTask``, optional
-            The task that produced the climatology from a reference run to be
-            remapped and plotted, including anomalies with respect to the main
-            run
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -89,7 +86,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if mpasRefClimatologyTask is None:
+        if refConfig is None:
 
             refTitleLabel = \
                 'Observations (Rignot et al, 2013)'
@@ -109,21 +106,11 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                     outFilePrefix=refFieldName,
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
-            remapRefClimatologySubtask = None
             diffTitleLabel = 'Model - Observations'
 
         else:
-            remapRefClimatologySubtask = RemapMpasReferenceClimatologySubtask(
-                mpasClimatologyTask=mpasRefClimatologyTask,
-                parentTask=self,
-                climatologyName=fieldName,
-                variableList=[mpasFieldName],
-                comparisonGridNames=comparisonGridNames,
-                seasons=seasons,
-                iselValues=iselValues)
             remapObservationsSubtask = None
-            refRunName = mpasRefClimatologyTask.config.get(
-                    'runs', 'mainRunName')
+            refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
             refTitleLabel = 'Ref: {}'.format(refRunName)
 
@@ -138,7 +125,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    remapRefClimatologySubtask)
+                                                    refConfig)
 
                 subtask.set_plot_info(
                         outFileLabel=outFileLabel,

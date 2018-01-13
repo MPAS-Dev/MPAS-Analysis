@@ -39,22 +39,21 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
     Xylar Asay-Davis, Stephen Price
     """
 
-    def __init__(self, config, mpasTimeSeriesTask, mpasRefTimeSeriesTask=None):
+    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        mpasRefTimeSeriesTask : ``MpasReferenceTimeSeriesTask``, optional
-            A task for extracting the same time series from the reference run
-            or ``None`` if no reference run is specified
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -70,11 +69,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
 
         self.run_after(mpasTimeSeriesTask)
-        if mpasRefTimeSeriesTask is None:
-            self.refConfig = None
-        else:
-            self.refConfig = mpasRefTimeSeriesTask.config
-            self.run_after(mpasRefTimeSeriesTask)
+        self.refConfig = refConfig
 
         # }}}
 

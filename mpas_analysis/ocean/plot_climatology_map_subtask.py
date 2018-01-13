@@ -22,6 +22,8 @@ from ..shared.html import write_image_xml
 
 from ..shared.grid import interp_extrap_corner
 
+from ..shared.climatology import get_remapped_mpas_climatology_file_name
+
 
 def nans_to_numpy_mask(field):
     field = np.ma.masked_array(
@@ -103,7 +105,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 remapMpasRefClimatologySubtask=None, depth=None):
+                 refConfig=None, depth=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -129,9 +131,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the observational climatology that this
             subtask will plot
 
-        remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``, optional
-            The subtask for remapping the MPAS climatology for the reference
-            run that this subtask will plot
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         depth : {float, 'top', 'bot'}, optional
             Depth the data is being plotted, 'top' for the sea surface
@@ -148,7 +149,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.comparisonGridName = comparisonGridName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
-        self.remapMpasRefClimatologySubtask = remapMpasRefClimatologySubtask
+        self.refConfig = refConfig
         subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
 
         if depth is None:
@@ -171,8 +172,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.run_after(remapMpasClimatologySubtask)
         if remapObsClimatologySubtask is not None:
             self.run_after(remapObsClimatologySubtask)
-        if remapMpasRefClimatologySubtask is not None:
-            self.run_after(remapMpasRefClimatologySubtask)
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
@@ -318,9 +317,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                                  season, comparisonGridName))
 
         # first read the model climatology
-        remappedFileName = self.remapMpasClimatologySubtask.get_file_name(
-            season=season, stage='remapped',
-            comparisonGridName=comparisonGridName)
+        remappedFileName = \
+            self.remapMpasClimatologySubtask.get_remapped_file_name(
+                    season=season, comparisonGridName=comparisonGridName)
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
 
@@ -341,15 +340,17 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 comparisonGridName=comparisonGridName)
 
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-        elif self.remapMpasRefClimatologySubtask is not None:
+        elif self.refConfig is not None:
+            climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
-                self.remapMpasRefClimatologySubtask.get_file_name(
-                        season=season, stage='remapped',
-                        comparisonGridName=comparisonGridName)
+                get_remapped_mpas_climatology_file_name(
+                    self.refConfig, season=season,
+                    componentName=self.componentName,
+                    climatologyName=climatologyName,
+                    comparisonGridName=comparisonGridName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-            refConfig = self.remapMpasRefClimatologySubtask.config
-            refStartYear = refConfig.getint('climatology', 'startYear')
-            refEndYear = refConfig.getint('climatology', 'endYear')
+            refStartYear = self.refConfig.getint('climatology', 'startYear')
+            refEndYear = self.refConfig.getint('climatology', 'endYear')
             if refStartYear != self.startYear or refEndYear != self.endYear:
                 self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
                         self.refTitleLabel, refStartYear, refEndYear)

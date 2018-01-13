@@ -14,6 +14,8 @@ from ..shared.plot.plotting import plot_polar_comparison, \
 
 from ..shared.html import write_image_xml
 
+from ..shared.climatology import get_remapped_mpas_climatology_file_name
+
 
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     """
@@ -40,9 +42,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         The subtask for remapping the observational climatology that this
         subtask will plot
 
-    remapMpasRefClimatologySubtask : ``RemapMpasClimatologySubtask``
-        The subtask for remapping the MPAS climatology for the reference
-        run that this subtask will plot
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
 
     outFileLabel : str
         The prefix on each plot and associated XML file
@@ -89,7 +90,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, hemisphere, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 remapMpasRefClimatologySubtask=None, subtaskSuffix=None):
+                 refConfig=None, subtaskSuffix=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -118,9 +119,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the observational climatology that this
             subtask will plot
 
-        remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``, optional
-            The subtask for remapping the MPAS climatology for the reference
-            run that this subtask will plot
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         subtaskSuffix : str, optional
             A suffix on the subtask to ensure that it is unique (e.g. the
@@ -137,7 +137,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.comparisonGridName = comparisonGridName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
-        self.remapMpasRefClimatologySubtask = remapMpasRefClimatologySubtask
+        self.refConfig = refConfig
 
         subtaskName = 'plot{}'.format(season)
         if subtaskSuffix is not None:
@@ -150,15 +150,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # call the constructor from the base class (AnalysisTask)
         super(PlotClimatologyMapSubtask, self).__init__(
                 config=config, taskName=taskName, subtaskName=subtaskName,
-                componentName='ocean', tags=tags)
+                componentName='seaIce', tags=tags)
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
         self.run_after(remapMpasClimatologySubtask)
         if remapObsClimatologySubtask is not None:
             self.run_after(remapObsClimatologySubtask)
-        if remapMpasRefClimatologySubtask is not None:
-            self.run_after(remapMpasRefClimatologySubtask)
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
@@ -309,9 +307,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         minimumLatitude = config.getfloat(sectionName,
                                           'minimumLatitude')
 
-        remappedFileName = self.remapMpasClimatologySubtask.get_file_name(
-            season=season, stage='remapped',
-            comparisonGridName=comparisonGridName)
+        remappedFileName = \
+            self.remapMpasClimatologySubtask.get_remapped_file_name(
+                    season=season, comparisonGridName=comparisonGridName)
         remappedClimatology = xr.open_dataset(remappedFileName)
 
         modelOutput = remappedClimatology[self.mpasFieldName].values
@@ -334,15 +332,17 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 refOutput = ma.masked_values(refOutput, self.maskValue)
 
             difference = modelOutput - refOutput
-        elif self.remapMpasRefClimatologySubtask is not None:
+        elif self.refConfig is not None:
+            climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
-                self.remapMpasRefClimatologySubtask.get_file_name(
-                        season=season, stage='remapped',
-                        comparisonGridName=comparisonGridName)
+                get_remapped_mpas_climatology_file_name(
+                    self.refConfig, season=season,
+                    componentName=self.componentName,
+                    climatologyName=climatologyName,
+                    comparisonGridName=comparisonGridName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-            refConfig = self.remapMpasRefClimatologySubtask.config
-            refStartYear = refConfig.getint('climatology', 'startYear')
-            refEndYear = refConfig.getint('climatology', 'endYear')
+            refStartYear = self.refConfig.getint('climatology', 'startYear')
+            refEndYear = self.refConfig.getint('climatology', 'endYear')
             if refStartYear != self.startYear or refEndYear != self.endYear:
                 self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
                         self.refTitleLabel, refStartYear, refEndYear)

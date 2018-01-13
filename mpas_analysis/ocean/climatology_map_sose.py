@@ -18,7 +18,6 @@ from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
 from ..shared.io.utility import build_config_full_path
 
 from ..shared.climatology import RemapObservedClimatologySubtask, \
-    RemapMpasReferenceClimatologySubtask, \
     get_antarctic_stereographic_projection
 
 from ..shared.grid import ProjectionGridDescriptor
@@ -37,22 +36,20 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
     """
 
     def __init__(self, config, mpasClimatologyTask,
-                 mpasRefClimatologyTask=None):  # {{{
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        mpasRefClimatologyTask : ``MpasClimatologyTask``, optional
-            The task that produced the climatology from a reference run to be
-            remapped and plotted, including anomalies with respect to the main
-            run
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -102,7 +99,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        if mpasRefClimatologyTask is None:
+        if refConfig is None:
 
             refTitleLabel = 'State Estimate (SOSE)'
 
@@ -127,20 +124,10 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                     comparisonGridNames=comparisonGridNames)
 
             self.add_subtask(remapObservationsSubtask)
-            remapRefClimatologySubtask = None
 
         else:
-            remapRefClimatologySubtask = RemapMpasReferenceClimatologySubtask(
-                mpasClimatologyTask=mpasRefClimatologyTask,
-                parentTask=self,
-                climatologyName=fieldName,
-                variableList=[mpasFieldName],
-                seasons=seasons,
-                comparisonGridNames=comparisonGridNames,
-                iselValues=iselValues)
             remapObservationsSubtask = None
-            refRunName = mpasRefClimatologyTask.config.get(
-                    'runs', 'mainRunName')
+            refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = 'Ref: {}'.format(refRunName)
             refTitleLabel = galleryName
 
@@ -157,7 +144,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        remapMpasRefClimatologySubtask=remapRefClimatologySubtask,
+                        refConfig=refConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
@@ -191,22 +178,20 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
     """
 
     def __init__(self, config, mpasClimatologyTask,
-                 mpasRefClimatologyTask=None):  # {{{
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        mpasRefClimatologyTask : ``MpasClimatologyTask``, optional
-            The task that produced the climatology from a reference run to be
-            remapped and plotted, including anomalies with respect to the main
-            run
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -256,7 +241,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        if mpasRefClimatologyTask is None:
+        if refConfig is None:
 
             refTitleLabel = 'State Estimate (SOSE)'
 
@@ -281,20 +266,10 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                     comparisonGridNames=comparisonGridNames)
 
             self.add_subtask(remapObservationsSubtask)
-            remapRefClimatologySubtask = None
 
         else:
-            remapRefClimatologySubtask = RemapMpasReferenceClimatologySubtask(
-                mpasClimatologyTask=mpasRefClimatologyTask,
-                parentTask=self,
-                climatologyName=fieldName,
-                variableList=[mpasFieldName],
-                seasons=seasons,
-                comparisonGridNames=comparisonGridNames,
-                iselValues=iselValues)
             remapObservationsSubtask = None
-            refRunName = mpasRefClimatologyTask.config.get(
-                    'runs', 'mainRunName')
+            refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
             refTitleLabel = 'Ref: {}'.format(refRunName)
 
@@ -311,7 +286,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        remapMpasRefClimatologySubtask=remapRefClimatologySubtask,
+                        refConfig=refConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
