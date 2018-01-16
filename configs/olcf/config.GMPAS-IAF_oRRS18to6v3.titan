@@ -12,6 +12,13 @@ mainRunName = GMPAS-IAF_oRRS18to6v3
 # MPAS-Analysis)
 preprocessedReferenceRunName = None
 
+# config file for a reference run to which this run will be compared.  The
+# analysis should have already been run to completion once with this config
+# file, so that the relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid.  Leave this option commented out if no
+# reference run is desired.
+# referenceRunConfigFile = /path/to/config/file
+
 [input]
 ## options related to reading in the results to be analyzed
 
