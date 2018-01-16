@@ -112,7 +112,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                     'Thickness.'.format(season, hemisphereLong)
                 imageCaption = imageDescription
                 galleryGroup = \
-                    '{}-Hemisphere Sea-Ice Concentration'.format(
+                    '{}-Hemisphere Sea-Ice Thickness'.format(
                             hemisphereLong)
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
