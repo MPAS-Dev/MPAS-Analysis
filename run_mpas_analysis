@@ -529,6 +529,6 @@ if __name__ == "__main__":
         run_analysis(config, analyses)
 
     if not args.setup_only:
-        generate_html(config, analyses)
+        generate_html(config, analyses, refConfig)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
