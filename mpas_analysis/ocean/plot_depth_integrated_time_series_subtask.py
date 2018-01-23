@@ -253,28 +253,13 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.logger.info('  Load ocean data...')
         ds = open_mpas_dataset(fileName=self.inFileName,
                                calendar=calendar,
-                               variableList=[self.mpasFieldName],
+                               variableList=[self.mpasFieldName, 'depth'],
                                timeVariableNames=None,
                                startDate=startDate,
                                endDate=endDate)
         ds = ds.isel(nOceanRegionsTmp=regionIndex)
 
-        # Note: restart file, not a mesh file because we need refBottomDepth,
-        # not in a mesh file
-        try:
-            restartFile = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for OHC calculation')
-
-        # Define/read in general variables
-        self.logger.info('  Read in depth...')
-        with xr.open_dataset(restartFile) as dsRestart:
-            # reference depth [m]
-            depths = dsRestart.refBottomDepth.values
-
-        # add depths as a coordinate to the data set
-        ds.coords['depth'] = (('nVertLevels',), depths)
+        depths = ds.depth.values
 
         divisionDepths = config.getExpression(self.sectionName, 'depths')
 
@@ -406,14 +391,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
             dsRef = open_mpas_dataset(fileName=self.refFileName,
                                       calendar=calendar,
-                                      variableList=[self.mpasFieldName],
+                                      variableList=[self.mpasFieldName,
+                                                    'depth'],
                                       timeVariableNames=None,
                                       startDate=refStartDate,
                                       endDate=refEndDate)
             dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
-
-            # add depths as a coordinate to the data set
-            dsRef.coords['depth'] = (('nVertLevels',), depths)
 
             color = 'b'
 

@@ -3,6 +3,8 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import xarray as xr
+
 from ..shared import AnalysisTask
 
 from .compute_anomaly_subtask import ComputeAnomalySubtask
@@ -139,6 +141,21 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             ds['avgLayerTemperature']
         ds.ohc.attrs['units'] = '$10^{22}$ J'
         ds.ohc.attrs['description'] = 'Ocean heat content in each region'
+
+        # Note: restart file, not a mesh file because we need refBottomDepth,
+        # not in a mesh file
+        try:
+            restartFile = self.runStreams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-O restart file found: need at least one '
+                          'restart file for OHC calculation')
+
+        # Define/read in general variables
+        with xr.open_dataset(restartFile) as dsRestart:
+            # reference depth [m]
+            # add depths as a coordinate to the data set
+            ds.coords['depth'] = (('nVertLevels',),
+                                  dsRestart.refBottomDepth.values)
 
         return ds  # }}}
 
