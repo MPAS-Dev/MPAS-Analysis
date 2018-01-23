@@ -4,7 +4,6 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy as np
-import netCDF4
 import os
 
 from ..shared.plot.plotting import plot_vertical_section,\
@@ -91,16 +90,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             analysisOptionName='config_am_meridionalheattransport_enable',
             raiseException=True)
 
-        # Later, we will read in depth and MHT latitude points
-        # from mpaso.hist.am.meridionalHeatTransport.*.nc
-        mhtFiles = self.historyStreams.readpath(
-                'meridionalHeatTransportOutput')
-        if len(mhtFiles) == 0:
-            raise IOError('No MPAS-O MHT history file found: need at least '
-                          'one ')
-
-        self.mhtFile = mhtFiles[0]
-
         self.sectionName = 'meridionalHeatTransport'
 
         # Read in obs file information
@@ -163,26 +152,46 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                             'movingAveragePoints')
 
         # Read in depth and MHT latitude points
-        # Latitude is from binBoundaryMerHeatTrans written in
-        #  mpaso.hist.am.meridionalHeatTransport.*.nc
-        # Depth is from refZMid, also in
-        # mpaso.hist.am.meridionalHeatTransport.*.nc
+        # Latitude is from binBoundaryMerHeatTrans
+        try:
+            restartFileName = self.runStreams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-O restart file found: need at least one '
+                          'for MHT calcuation')
 
-        self.logger.info('  Read in depth and latitude...')
-        ncFile = netCDF4.Dataset(self.mhtFile, mode='r')
-        # reference depth [m]
-        refZMid = ncFile.variables['refZMid'][:]
-        refBottomDepth = ncFile.variables['refBottomDepth'][:]
-        binBoundaryMerHeatTrans = \
-            ncFile.variables['binBoundaryMerHeatTrans'][:]
-        binBoundaryMerHeatTrans = np.rad2deg(binBoundaryMerHeatTrans)
-        ncFile.close()
+        with xr.open_dataset(restartFileName) as dsRestart:
+            refBottomDepth = dsRestart.refBottomDepth.values
 
         nVertLevels = len(refBottomDepth)
         refLayerThickness = np.zeros(nVertLevels)
         refLayerThickness[0] = refBottomDepth[0]
         refLayerThickness[1:nVertLevels] = (refBottomDepth[1:nVertLevels] -
                                             refBottomDepth[0:nVertLevels-1])
+
+        refZMid = -refBottomDepth + 0.5*refLayerThickness
+
+        binBoundaryMerHeatTrans = None
+        # first try timeSeriesStatsMonthly for bin boundaries, then try
+        # meridionalHeatTranspor steram as a backup option
+        for streamName in ['timeSeriesStatsMonthlyOutput',
+                           'meridionalHeatTransportOutput']:
+            try:
+                inputFile = self.historyStreams.readpath(streamName)[0]
+            except ValueError:
+                raise IOError('At least one file from stream {} is needed to '
+                              'compute MHT'.format(streamName))
+
+            with xr.open_dataset(inputFile) as ds:
+                if 'binBoundaryMerHeatTrans' in ds.data_vars:
+                    binBoundaryMerHeatTrans = ds.binBoundaryMerHeatTrans.values
+                    break
+
+        if binBoundaryMerHeatTrans is None:
+            raise ValueError('Could not find binBoundaryMerHeatTrans in either'
+                             'timeSeriesStatsMonthlyOutput or '
+                             'meridionalHeatTransportOutput streams')
+
+        binBoundaryMerHeatTrans = np.rad2deg(binBoundaryMerHeatTrans)
 
         ######################################################################
         # Mark P Note: Currently only supports global MHT.
