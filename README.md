@@ -32,7 +32,7 @@ available:
  * bottleneck
  * basemap
  * lxml
- * nco >= 4.6.8
+ * nco >= 4.7.0
  * pyproj
  * pillow
 
