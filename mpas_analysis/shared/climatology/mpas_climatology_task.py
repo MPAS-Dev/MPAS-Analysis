@@ -397,6 +397,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         parallelMode = self.config.get('execute', 'ncclimoParallelMode')
 
         args = ['ncclimo',
+                '-4',
                 '--clm_md=mth',
                 '-a', 'sdd',
                 '-m', self.ncclimoModel,

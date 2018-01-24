@@ -321,7 +321,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         variableList = self.variableList + ['xtime_startMonthly',
                                             'xtime_endMonthly']
 
-        args = ['ncrcat', '--record_append', '--no_tmp_fl',
+        args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl',
                 '-v', ','.join(variableList)]
 
         printCommand = '{} {} ... {} {}'.format(' '.join(args), inputFiles[0],
