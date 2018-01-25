@@ -485,7 +485,11 @@ if __name__ == "__main__":
         sys.exit(0)
 
     if config.has_option('runs', 'referenceRunConfigFile'):
-        refConfigFiles = [config.get('runs', 'referenceRunConfigFile')]
+        refConfigFile = config.get('runs', 'referenceRunConfigFile')
+        if not os.path.exists(refConfigFile):
+            raise OSError('A reference config file {} was specified but the '
+                          'file does not exist'.format(refConfigFile))
+        refConfigFiles = [refConfigFile]
         if defaultConfig is not None:
             refConfigFiles = [defaultConfig] + refConfigFiles
         refConfig = MpasAnalysisConfigParser()
@@ -498,6 +502,9 @@ if __name__ == "__main__":
 
         refConfig.set('output', 'logsSubdirectory', logsDirectory)
 
+        print('Comparing to reference run {} rather than observations. \n'
+              'Make sure that MPAS-Analysis has been run previously with the '
+              'ref config file.'.format(refConfig.get('runs', 'mainRunName')))
     else:
         refConfig = None
 
