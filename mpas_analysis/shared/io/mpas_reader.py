@@ -34,7 +34,9 @@ def open_mpas_dataset(fileName, calendar,
 
     timeVariableNames : str or list of 2 str, optional
         The name of the time variable (typically ``'xtime'``
-        or ``['xtime_startMonthly', 'xtime_endMonthly']``)
+        or ``['xtime_startMonthly', 'xtime_endMonthly']``), or ``None`` if
+        time does not need to be parsed (and is already in the ``Time``
+        variable)
 
     variableList : list of strings, optional
         If present, a list of variables to be included in the data set
@@ -63,7 +65,8 @@ def open_mpas_dataset(fileName, calendar,
     ds = xarray.open_dataset(fileName, decode_cf=True, decode_times=False,
                              lock=False)
 
-    ds = _parse_dataset_time(ds, timeVariableNames, calendar)
+    if timeVariableNames is not None:
+        ds = _parse_dataset_time(ds, timeVariableNames, calendar)
 
     if startDate is not None and endDate is not None:
         if isinstance(startDate, six.string_types):

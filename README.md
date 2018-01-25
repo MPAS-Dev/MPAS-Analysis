@@ -27,7 +27,7 @@ available:
  * scipy
  * matplotlib
  * netCDF4
- * xarray >= 0.9.1
+ * xarray >= 0.10.0
  * dask
  * bottleneck
  * basemap

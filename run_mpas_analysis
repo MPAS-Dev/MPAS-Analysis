@@ -86,7 +86,13 @@ def build_analysis_list(config):  # {{{
 
     analyses.append(oceanTimeSeriesTask)
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask))
-    analyses.append(ocean.TimeSeriesOHC(config, oceanTimeSeriesTask))
+    analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
+                                                       oceanTimeSeriesTask))
+    analyses.append(ocean.TimeSeriesSalinityAnomaly(config,
+                                                    oceanTimeSeriesTask))
+    analyses.append(ocean.TimeSeriesOHCAnomaly(config,
+                                               oceanTimeSeriesTask))
+
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask))
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))

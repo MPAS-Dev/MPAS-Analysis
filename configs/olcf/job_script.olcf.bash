@@ -16,8 +16,8 @@
 cd $PBS_O_WORKDIR
 
 module unload python
-module use /ccs/proj/cli115/pwolfram/modulefiles/all
-module load python/anaconda-2.7-climate
+module use /ccs/proj/cli127/software/modulefiles/all
+module load e3sm-unified/1.1.2
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

@@ -55,8 +55,17 @@ Ocean tasks
    IndexNino34
    MeridionalHeatTransport
    StreamfunctionMOC
-   TimeSeriesOHC
+   TimeSeriesOHCAnomaly
+   TimeSeriesTemperatureAnomaly
+   TimeSeriesSalinityAnomaly
    TimeSeriesSST
+
+.. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   ComputeAnomalySubtask
 
 .. currentmodule:: mpas_analysis.ocean.plot_climatology_map_subtask
 
@@ -65,6 +74,20 @@ Ocean tasks
 
    PlotClimatologyMapSubtask
    PlotClimatologyMapSubtask.set_plot_info
+
+.. currentmodule:: mpas_analysis.ocean.plot_depth_integrated_time_series_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotDepthIntegratedTimeSeriesSubtask
+
+.. currentmodule:: mpas_analysis.ocean.plot_hovmoller_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotHovmollerSubtask
 
 
 Sea ice tasks
@@ -235,7 +258,6 @@ Plotting
    plotting.plot_1D
    plotting.plot_vertical_section
    plotting.setup_colormap
-   plotting.plot_size_y_axis
    plotting.plot_xtick_format
 
 

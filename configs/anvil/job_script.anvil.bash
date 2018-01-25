@@ -13,7 +13,7 @@ cd $PBS_O_WORKDIR
 
 # needed to prevent interference with acme-unified
 unset LD_LIBRARY_PATH
-soft add +acme-unified-1.1.1-nox
+soft add +e3sm-unified-1.1.2-nox
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
