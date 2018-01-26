@@ -51,8 +51,6 @@ class TestClimatology(TestCase):
         config.set('output', 'baseDirectory', self.test_dir)
         config.set('output', 'mappingSubdirectory', '.')
         config.set('output', 'mpasClimatologySubdirectory', 'clim/mpas')
-        config.set('output', 'mpasRemappedClimSubdirectory',
-                   'clim/mpas/remap')
 
         config.add_section('climatology')
         config.set('climatology', 'startYear', '2')

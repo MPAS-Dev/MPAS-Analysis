@@ -292,10 +292,10 @@ def plot_polar_comparison(
         Lons,
         Lats,
         modelArray,
-        obsArray,
+        refArray,
         diffArray,
-        cmapModelObs,
-        clevsModelObs,
+        cmapModelRef,
+        clevsModelRef,
         cmapDiff,
         clevsDiff,
         fileout,
@@ -304,7 +304,7 @@ def plot_polar_comparison(
         latmin=50.0,
         lon0=0,
         modelTitle='Model',
-        obsTitle='Observations',
+        refTitle='Observations',
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
@@ -324,17 +324,17 @@ def plot_polar_comparison(
     Lons, Lats : float arrays
         longitude and latitude arrays
 
-    modelArray, obsArray : float arrays
-        model and observational data sets
+    modelArray, refArray : float arrays
+        model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and obsArray
+        difference between modelArray and refArray
 
-    cmapModelObs : str
-        colormap of model and observations panel
+    cmapModelRef : str
+        colormap of model and observations or reference run panel
 
-    clevsModelObs : int array
-        colorbar values for model and observations panel
+    clevsModelRef : int array
+        colorbar values for model and observations or reference run panel
 
     cmapDiff : str
         colormap of difference (bias) panel
@@ -354,8 +354,8 @@ def plot_polar_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    obsTitle : str, optional
-        title of the observations panel
+    refTitle : str, optional
+        title of the observations or reference run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -408,7 +408,11 @@ def plot_polar_comparison(
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
 
-    if vertical:
+    if refArray is None:
+        if figsize is None:
+            figsize = (8, 8.5)
+        subplots = [111]
+    elif vertical:
         if figsize is None:
             figsize = (8, 22)
         subplots = [311, 312, 313]
@@ -428,20 +432,21 @@ def plot_polar_comparison(
         fig.suptitle(title, y=0.95, **title_font)
     axis_font = {'size': config.get('plot', 'axisFontSize')}
 
-    normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
+    normModelRef = cols.BoundaryNorm(clevsModelRef, cmapModelRef.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
     ax = plt.subplot(subplots[0])
-    do_subplot(ax=ax, field=modelArray, title=modelTitle, cmap=cmapModelObs,
-               norm=normModelObs, levels=clevsModelObs)
+    do_subplot(ax=ax, field=modelArray, title=modelTitle, cmap=cmapModelRef,
+               norm=normModelRef, levels=clevsModelRef)
 
-    ax = plt.subplot(subplots[1])
-    do_subplot(ax=ax, field=obsArray, title=obsTitle, cmap=cmapModelObs,
-               norm=normModelObs, levels=clevsModelObs)
+    if refArray is not None:
+        ax = plt.subplot(subplots[1])
+        do_subplot(ax=ax, field=refArray, title=refTitle, cmap=cmapModelRef,
+                   norm=normModelRef, levels=clevsModelRef)
 
-    ax = plt.subplot(subplots[2])
-    do_subplot(ax=ax, field=diffArray, title=diffTitle, cmap=cmapDiff,
-               norm=normDiff, levels=clevsDiff)
+        ax = plt.subplot(subplots[2])
+        do_subplot(ax=ax, field=diffArray, title=diffTitle, cmap=cmapDiff,
+                   norm=normDiff, levels=clevsDiff)
 
     plt.tight_layout(pad=4.)
     if vertical:
@@ -459,16 +464,16 @@ def plot_global_comparison(
     Lons,
     Lats,
     modelArray,
-    obsArray,
+    refArray,
     diffArray,
-    cmapModelObs,
-    clevsModelObs,
+    cmapModelRef,
+    clevsModelRef,
     cmapDiff,
     clevsDiff,
     fileout,
     title=None,
     modelTitle='Model',
-    obsTitle='Observations',
+    refTitle='Observations',
     diffTitle='Model-Observations',
     cbarlabel='units',
     titleFontSize=None,
@@ -487,17 +492,17 @@ def plot_global_comparison(
     Lons, Lats : float arrays
         longitude and latitude arrays
 
-    modelArray, obsArray : float arrays
-        model and observational data sets
+    modelArray, refArray : float arrays
+        model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and obsArray
+        difference between modelArray and refArray
 
-    cmapModelObs : str
-        colormap of model and observations panel
+    cmapModelRef : str
+        colormap of model and observations or reference run panel
 
-    clevsModelObs : int array
-        colorbar values for model and observations panel
+    clevsModelRef : int array
+        colorbar values for model and observations or reference run panel
 
     cmapDiff : str
         colormap of difference (bias) panel
@@ -514,8 +519,8 @@ def plot_global_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    obsTitle : str, optional
-        title of the observations panel
+    refTitle : str, optional
+        title of the observations or reference run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -555,10 +560,11 @@ def plot_global_comparison(
                 urcrnrlon=181, resolution='l')
     x, y = m(Lons, Lats)  # compute map proj coordinates
 
-    normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
+    normModelRef = cols.BoundaryNorm(clevsModelRef, cmapModelRef.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3, 1, 1)
+    if refArray is not None:
+        plt.subplot(3, 1, 1)
     plt.title(modelTitle, y=1.06, **axis_font)
     m.drawcoastlines()
     m.fillcontinents(color='grey', lake_color='white')
@@ -566,39 +572,40 @@ def plot_global_comparison(
                     labels=[True, False, False, False])
     m.drawmeridians(np.arange(-180., 180., 60.),
                     labels=[False, False, False, True])
-    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
-                    levels=clevsModelObs, extend='both')
+    cs = m.contourf(x, y, modelArray, cmap=cmapModelRef, norm=normModelRef,
+                    levels=clevsModelRef, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
+                      ticks=clevsModelRef, boundaries=clevsModelRef)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3, 1, 2)
-    plt.title(obsTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 80., 20.),
-                    labels=[True, False, False, False])
-    m.drawmeridians(np.arange(-180., 180., 40.),
-                    labels=[False, False, False, True])
-    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
-                    levels=clevsModelObs, extend='both')
-    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    if refArray is not None:
+        plt.subplot(3, 1, 2)
+        plt.title(refTitle, y=1.06, **axis_font)
+        m.drawcoastlines()
+        m.fillcontinents(color='grey', lake_color='white')
+        m.drawparallels(np.arange(-80., 80., 20.),
+                        labels=[True, False, False, False])
+        m.drawmeridians(np.arange(-180., 180., 40.),
+                        labels=[False, False, False, True])
+        cs = m.contourf(x, y, refArray, cmap=cmapModelRef, norm=normModelRef,
+                        levels=clevsModelRef, extend='both')
+        cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                          ticks=clevsModelRef, boundaries=clevsModelRef)
+        cbar.set_label(cbarlabel)
 
-    plt.subplot(3, 1, 3)
-    plt.title(diffTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 80., 20.),
-                    labels=[True, False, False, False])
-    m.drawmeridians(np.arange(-180., 180., 40.),
-                    labels=[False, False, False, True])
-    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
-                    levels=clevsDiff, extend='both')
-    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
-                      ticks=clevsDiff, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+        plt.subplot(3, 1, 3)
+        plt.title(diffTitle, y=1.06, **axis_font)
+        m.drawcoastlines()
+        m.fillcontinents(color='grey', lake_color='white')
+        m.drawparallels(np.arange(-80., 80., 20.),
+                        labels=[True, False, False, False])
+        m.drawmeridians(np.arange(-180., 180., 40.),
+                        labels=[False, False, False, True])
+        cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
+                        levels=clevsDiff, extend='both')
+        cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                          ticks=clevsDiff, boundaries=clevsModelRef)
+        cbar.set_label(cbarlabel)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -613,14 +620,14 @@ def plot_polar_projection_comparison(
         y,
         landMask,
         modelArray,
-        obsArray,
+        refArray,
         diffArray,
         fileout,
         colorMapSectionName,
         colorMapType='norm',
         title=None,
         modelTitle='Model',
-        obsTitle='Observations',
+        refTitle='Observations',
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
@@ -641,13 +648,13 @@ def plot_polar_projection_comparison(
         1D x and y arrays defining the projection grid
 
     landMask : numpy ndarrays
-        model and observational data sets
+        model and observational or reference run data sets
 
-    modelArray, obsArray : numpy ndarrays
-        model and observational data sets
+    modelArray, refArray : numpy ndarrays
+        model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and obsArray
+        difference between modelArray and refArray
 
     fileout : str
         the file name to be written
@@ -680,8 +687,8 @@ def plot_polar_projection_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    obsTitle : str, optional
-        title of the observations panel
+    refTitle : str, optional
+        title of the observations or reference run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -737,7 +744,11 @@ def plot_polar_projection_comparison(
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
 
-    if vertical:
+    if refArray is None:
+        if figsize is None:
+            figsize = (8, 7.5)
+        subplots = [111]
+    elif vertical:
         if figsize is None:
             figsize = (8, 22)
         subplots = [311, 312, 313]
@@ -747,7 +758,7 @@ def plot_polar_projection_comparison(
         subplots = [131, 132, 133]
 
     if colorMapType == 'norm':
-        (cmapModelObs, normModelObs) = _setup_colormap_and_norm(
+        (cmapModelRef, normModelRef) = _setup_colormap_and_norm(
             config, colorMapSectionName, suffix='Result')
         (cmapDiff, normDiff) = _setup_colormap_and_norm(
             config, colorMapSectionName, suffix='Difference')
@@ -767,12 +778,12 @@ def plot_polar_projection_comparison(
 
     elif colorMapType == 'indexed':
 
-        (cmapModelObs, colorbarTicksResult) = setup_colormap(
+        (cmapModelRef, colorbarTicksResult) = setup_colormap(
             config, colorMapSectionName, suffix='Result')
         (cmapDiff, colorbarTicksDifference) = setup_colormap(
             config, colorMapSectionName, suffix='Difference')
 
-        normModelObs = cols.BoundaryNorm(colorbarTicksResult, cmapModelObs.N)
+        normModelRef = cols.BoundaryNorm(colorbarTicksResult, cmapModelRef.N)
         normDiff = cols.BoundaryNorm(colorbarTicksDifference, cmapDiff.N)
     else:
         raise ValueError('colorMapType must be one of {norm, indexed}')
@@ -797,16 +808,17 @@ def plot_polar_projection_comparison(
     yCenter = 0.5*(y[1:] + y[0:-1])
 
     ax = plt.subplot(subplots[0])
-    plot_panel(ax, modelTitle, modelArray, cmapModelObs, normModelObs,
+    plot_panel(ax, modelTitle, modelArray, cmapModelRef, normModelRef,
                colorbarTicksResult)
 
-    ax = plt.subplot(subplots[1])
-    plot_panel(ax, obsTitle, obsArray, cmapModelObs, normModelObs,
-               colorbarTicksResult)
+    if refArray is not None:
+        ax = plt.subplot(subplots[1])
+        plot_panel(ax, refTitle, refArray, cmapModelRef, normModelRef,
+                   colorbarTicksResult)
 
-    ax = plt.subplot(subplots[2])
-    plot_panel(ax, diffTitle, diffArray, cmapDiff, normDiff,
-               colorbarTicksDifference)
+        ax = plt.subplot(subplots[2])
+        plot_panel(ax, diffTitle, diffArray, cmapDiff, normDiff,
+                   colorbarTicksDifference)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)

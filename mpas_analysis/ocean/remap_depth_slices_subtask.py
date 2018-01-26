@@ -88,7 +88,6 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
             mpasClimatologyTask, parentTask, climatologyName, variableList,
             seasons, comparisonGridNames, iselValues)
 
-
     def run_task(self):  # {{{
         """
         Compute climatologies of T or S  from ACME/MPAS output

@@ -4,16 +4,20 @@
 
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = GMPAS-IAF_oRRS18to6v3
-# referenceRunName is the name of a reference run to compare against (or None
-# to turn off comparison with a reference, e.g. if no reference case is
-# available)
-referenceRunName = None
+
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
 # performed with MPAS components (so they cannot be easily ingested by
 # MPAS-Analysis)
 preprocessedReferenceRunName = None
+
+# config file for a reference run to which this run will be compared.  The
+# analysis should have already been run to completion once with this config
+# file, so that the relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid.  Leave this option commented out if no
+# reference run is desired.
+# referenceRunConfigFile = /path/to/config/file
 
 [input]
 ## options related to reading in the results to be analyzed

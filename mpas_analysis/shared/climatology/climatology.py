@@ -23,6 +23,7 @@ from ..io import write_netcdf
 
 from ..interpolation import Remapper
 from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
+from .comparison_descriptors import get_comparison_descriptor
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
@@ -103,72 +104,6 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     remapper.build_mapping_file(method=method, logger=logger)
 
     return remapper  # }}}
-
-
-def get_observation_climatology_file_names(config, fieldName, monthNames,
-                                           componentName, remapper):  # {{{
-    """
-    Given config options, the name of a field and a string identifying the
-    months in a seasonal climatology, returns the full path for observation
-    climatology files before and after remapping.
-
-    Parameters
-    ----------
-    config :  instance of MpasAnalysisConfigParser
-        Contains configuration options
-
-    fieldName : str
-        Name of the field being mapped, used as a prefix for the climatology
-        file name.
-
-    monthNames : str
-        A string identifying the months in a seasonal climatology (e.g. 'JFM')
-
-    remapper : ``Remapper`` object
-        A remapper that used to remap files or data sets from the
-        observation grid to a comparison grid
-
-    Returns
-    -------
-    climatologyFileName : str
-        The absolute path to a file where the climatology should be stored
-        before remapping.
-
-    remappedFileName : str
-        The absolute path to a file where the climatology should be stored
-        after remapping.
-
-    Authors
-    -------
-    Xylar Asay-Davis
-    """
-
-    obsSection = '{}Observations'.format(componentName)
-
-    climatologyDirectory = build_config_full_path(
-        config=config, section='output',
-        relativePathOption='climatologySubdirectory',
-        relativePathSection=obsSection)
-
-    remappedDirectory = build_config_full_path(
-        config=config, section='output',
-        relativePathOption='remappedClimSubdirectory',
-        relativePathSection=obsSection)
-
-    obsGridName = remapper.sourceDescriptor.meshName
-    comparisonGridName = remapper.destinationDescriptor.meshName
-
-    climatologyFileName = '{}/{}_{}_{}.nc'.format(
-        climatologyDirectory, fieldName, obsGridName, monthNames)
-    remappedFileName = '{}/{}_{}_to_{}_{}.nc'.format(
-        remappedDirectory, fieldName, obsGridName, comparisonGridName,
-        monthNames)
-
-    make_directories(climatologyDirectory)
-
-    make_directories(remappedDirectory)
-
-    return (climatologyFileName, remappedFileName)  # }}}
 
 
 def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
@@ -417,6 +352,218 @@ def remap_and_write_climatology(config, climatologyDataSet,
                                                  renormalizationThreshold)
             write_netcdf(remappedClimatology, remappedFileName)
     return remappedClimatology  # }}}
+
+
+def get_unmasked_mpas_climatology_directory(config):  # {{{
+    """
+    Get the directory for an unmasked MPAS climatology produced by ncclimo,
+    making the directory if it doesn't already exist
+
+    Parameters
+    ----------
+    config :  ``MpasAnalysisConfigParser``
+        configuration options
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    climatologyBaseDirectory = build_config_full_path(
+        config, 'output', 'mpasClimatologySubdirectory')
+
+    mpasMeshName = config.get('input', 'mpasMeshName')
+
+    directory = '{}/unmasked_{}'.format(climatologyBaseDirectory,
+                                        mpasMeshName)
+
+    make_directories(directory)
+    return directory  # }}}
+
+
+def get_unmasked_mpas_climatology_file_name(config, season, componentName):
+    # {{{
+    """
+    Get the file name for an unmasked MPAS climatology produced by ncclimo
+
+    Parameters
+    ----------
+    config :  ``MpasAnalysisConfigParser``
+        configuration options
+
+    season : str
+        One of the seasons in ``constants.monthDictionary``
+
+    componentName : {'ocean', 'seaIce'}
+        The MPAS component for which the climatology is being computed
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    startYear = config.getint('climatology', 'startYear')
+    endYear = config.getint('climatology', 'endYear')
+
+    if componentName == 'ocean':
+        ncclimoModel = 'mpaso'
+    elif componentName == 'seaIce':
+        ncclimoModel = 'mpascice'
+    else:
+        raise ValueError('component {} is not supported by ncclimo.\n'
+                         'Check with Charlie Zender and Xylar Asay-Davis\n'
+                         'about getting it added'.format(componentName))
+
+    directory = get_unmasked_mpas_climatology_directory(config)
+
+    make_directories(directory)
+    monthValues = sorted(constants.monthDictionary[season])
+    startMonth = monthValues[0]
+    endMonth = monthValues[-1]
+
+    suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
+            startYear, startMonth, endYear, endMonth)
+
+    if season in constants.abrevMonthNames:
+        season = '{:02d}'.format(monthValues[0])
+    fileName = '{}/{}_{}_{}.nc'.format(directory, ncclimoModel,
+                                       season, suffix)
+    return fileName  # }}}
+
+
+def get_masked_mpas_climatology_file_name(config, season, componentName,
+                                          climatologyName):  # {{{
+    """
+    Get the file name for a masked MPAS climatology
+
+    Parameters
+    ----------
+    config :  ``MpasAnalysisConfigParser``
+        Configuration options
+
+    season : str
+        One of the seasons in ``constants.monthDictionary``
+
+    componentName : {'ocean', 'seaIce'}
+        The MPAS component for which the climatology is being computed
+
+    climatologyName : str
+        The name of the climatology (typically the name of a field to mask
+        and later remap)
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    startYear = config.getint('climatology', 'startYear')
+    endYear = config.getint('climatology', 'endYear')
+    mpasMeshName = config.get('input', 'mpasMeshName')
+
+    if componentName == 'ocean':
+        ncclimoModel = 'mpaso'
+    elif componentName == 'seaIce':
+        ncclimoModel = 'mpascice'
+    else:
+        raise ValueError('component {} is not supported by ncclimo.\n'
+                         'Check with Charlie Zender and Xylar Asay-Davis\n'
+                         'about getting it added'.format(componentName))
+
+    climatologyBaseDirectory = build_config_full_path(
+        config, 'output', 'mpasClimatologySubdirectory')
+
+    stageDirectory = '{}/masked'.format(climatologyBaseDirectory)
+
+    directory = '{}/{}_{}'.format(
+            stageDirectory, climatologyName,
+            mpasMeshName)
+
+    make_directories(directory)
+
+    monthValues = sorted(constants.monthDictionary[season])
+    startMonth = monthValues[0]
+    endMonth = monthValues[-1]
+
+    suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
+            startYear, startMonth, endYear, endMonth)
+
+    if season in constants.abrevMonthNames:
+        season = '{:02d}'.format(monthValues[0])
+    fileName = '{}/{}_{}_{}.nc'.format(
+            directory, ncclimoModel, season, suffix)
+
+    return fileName  # }}}
+
+
+def get_remapped_mpas_climatology_file_name(config, season, componentName,
+                                            climatologyName,
+                                            comparisonGridName):  # {{{
+    """
+    Get the file name for a masked MPAS climatology
+
+    Parameters
+    ----------
+    config :  ``MpasAnalysisConfigParser``
+        Configuration options
+
+    season : str
+        One of the seasons in ``constants.monthDictionary``
+
+    componentName : {'ocean', 'seaIce'}
+        The MPAS component for which the climatology is being computed
+
+    climatologyName : str
+        The name of the climatology (typically the name of a field to mask
+        and later remap)
+
+    comparisonGridName : {'latlon', 'antarctic'}
+        The name of the comparison grid to use for remapping
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    startYear = config.getint('climatology', 'startYear')
+    endYear = config.getint('climatology', 'endYear')
+    mpasMeshName = config.get('input', 'mpasMeshName')
+
+    if componentName == 'ocean':
+        ncclimoModel = 'mpaso'
+    elif componentName == 'seaIce':
+        ncclimoModel = 'mpascice'
+    else:
+        raise ValueError('component {} is not supported by ncclimo.\n'
+                         'Check with Charlie Zender and Xylar Asay-Davis\n'
+                         'about getting it added'.format(componentName))
+
+    climatologyBaseDirectory = build_config_full_path(
+        config, 'output', 'mpasClimatologySubdirectory')
+
+    comparisonDescriptor = get_comparison_descriptor(config,
+                                                     comparisonGridName)
+    comparisonFullMeshName = comparisonDescriptor.meshName
+
+    stageDirectory = '{}/remapped'.format(climatologyBaseDirectory)
+
+    directory = '{}/{}_{}_to_{}'.format(stageDirectory, climatologyName,
+                                        mpasMeshName, comparisonFullMeshName)
+
+    make_directories(directory)
+
+    monthValues = sorted(constants.monthDictionary[season])
+    startMonth = monthValues[0]
+    endMonth = monthValues[-1]
+
+    suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
+            startYear, startMonth, endYear, endMonth)
+
+    if season in constants.abrevMonthNames:
+        season = '{:02d}'.format(monthValues[0])
+    fileName = '{}/{}_{}_{}.nc'.format(
+            directory, ncclimoModel, season, suffix)
+
+    return fileName  # }}}
 
 
 def _compute_masked_mean(ds, maskVaries):  # {{{

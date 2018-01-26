@@ -14,10 +14,13 @@ from ..shared.plot.plotting import plot_polar_comparison, \
 
 from ..shared.html import write_image_xml
 
+from ..shared.climatology import get_remapped_mpas_climatology_file_name
+
 
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     """
-    An analysis task for plotting 2D model fields against observations.
+    An analysis task for plotting 2D model fields against observations or a
+    reference run.
 
     Attributes
     ----------
@@ -39,6 +42,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         The subtask for remapping the observational climatology that this
         subtask will plot
 
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
+
     outFileLabel : str
         The prefix on each plot and associated XML file
 
@@ -48,11 +54,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     mpasFieldName : str
         The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-    obsFieldName : str
-        The name of the variable to use from the observations file
+    refFieldName : str
+        The name of the variable to use from the observations or reference file
 
-    observationTitleLabel : str
-        the title of the observations subplot
+    refTitleLabel : str
+        the title of the observations or reference run subplot
+
+    diffTitleLabel : str
+        the title of the difference (e.g. bias) subplot
 
     unitsLabel : str
         the units of the plotted field, to be displayed on color bars
@@ -80,8 +89,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     """
 
     def __init__(self, parentTask, hemisphere, season, comparisonGridName,
-                 remapMpasClimatologySubtask, remapObsClimatologySubtask,
-                 subtaskSuffix=None):  # {{{
+                 remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
+                 refConfig=None, subtaskSuffix=None):
+        # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -105,9 +115,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the MPAS climatology that this subtask
             will plot
 
-        remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``
+        remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``, optional
             The subtask for remapping the observational climatology that this
             subtask will plot
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         subtaskSuffix : str, optional
             A suffix on the subtask to ensure that it is unique (e.g. the
@@ -124,6 +137,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.comparisonGridName = comparisonGridName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
+        self.refConfig = refConfig
 
         subtaskName = 'plot{}'.format(season)
         if subtaskSuffix is not None:
@@ -136,16 +150,17 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # call the constructor from the base class (AnalysisTask)
         super(PlotClimatologyMapSubtask, self).__init__(
                 config=config, taskName=taskName, subtaskName=subtaskName,
-                componentName='ocean', tags=tags)
+                componentName='seaIce', tags=tags)
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
         self.run_after(remapMpasClimatologySubtask)
-        self.run_after(remapObsClimatologySubtask)
+        if remapObsClimatologySubtask is not None:
+            self.run_after(remapObsClimatologySubtask)
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
-                      obsFieldName, observationTitleLabel, unitsLabel,
+                      refFieldName, refTitleLabel, diffTitleLabel, unitsLabel,
                       imageDescription, imageCaption, galleryGroup,
                       groupSubtitle, groupLink, galleryName, maskValue=None):
         # {{{
@@ -163,11 +178,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         mpasFieldName : str
             The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-        obsFieldName : str
-            The name of the variable to use from the observations file
+        refFieldName : str
+            The name of the variable to use from the observations or reference
+            run file
 
-        observationTitleLabel : str
-            the title of the observations subplot
+        refTitleLabel : str
+            the title of the observations or reference run subplot
+
+        diffTitleLabel : str
+            the title of the difference (e.g. bias) subplot
 
         unitsLabel : str
             the units of the plotted field, to be displayed on color bars
@@ -201,8 +220,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
-        self.obsFieldName = obsFieldName
-        self.observationTitleLabel = observationTitleLabel
+        self.refFieldName = refFieldName
+        self.refTitleLabel = refTitleLabel
+        self.diffTitleLabel = diffTitleLabel
         self.unitsLabel = unitsLabel
 
         # xml/html related variables
@@ -261,9 +281,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         comparisonGridName = self.comparisonGridName
 
         self.logger.info("\nPlotting 2-d maps of {} climatologies for "
-                         "{} from {} observations...".format(
+                         "{} against {}...".format(
                                  self.fieldNameInTitle,
-                                 season, self.observationTitleLabel))
+                                 season, self.refTitleLabel))
 
         mainRunName = config.get('runs', 'mainRunName')
         startYear = self.startYear
@@ -287,9 +307,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         minimumLatitude = config.getfloat(sectionName,
                                           'minimumLatitude')
 
-        remappedFileName = self.remapMpasClimatologySubtask.get_file_name(
-            season=season, stage='remapped',
-            comparisonGridName=comparisonGridName)
+        remappedFileName = \
+            self.remapMpasClimatologySubtask.get_remapped_file_name(
+                    season=season, comparisonGridName=comparisonGridName)
         remappedClimatology = xr.open_dataset(remappedFileName)
 
         modelOutput = remappedClimatology[self.mpasFieldName].values
@@ -300,21 +320,47 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         lonTarg, latTarg = np.meshgrid(lon, lat)
 
-        remappedFileName = self.remapObsClimatologySubtask.get_file_name(
-            stage='remapped', season=season,
-            comparisonGridName=comparisonGridName)
+        if self.remapObsClimatologySubtask is not None:
+            remappedFileName = self.remapObsClimatologySubtask.get_file_name(
+                stage='remapped', season=season,
+                comparisonGridName=comparisonGridName)
 
-        remappedObsClimatology = xr.open_dataset(remappedFileName)
+            remappedRefClimatology = xr.open_dataset(remappedFileName)
 
-        observations = remappedObsClimatology[self.obsFieldName].values
-        if self.maskValue is not None:
-            observations = ma.masked_values(observations, self.maskValue)
+            refOutput = remappedRefClimatology[self.refFieldName].values
+            if self.maskValue is not None:
+                refOutput = ma.masked_values(refOutput, self.maskValue)
 
-        difference = modelOutput - observations
+            difference = modelOutput - refOutput
+        elif self.refConfig is not None:
+            climatologyName = self.remapMpasClimatologySubtask.climatologyName
+            remappedFileName = \
+                get_remapped_mpas_climatology_file_name(
+                    self.refConfig, season=season,
+                    componentName=self.componentName,
+                    climatologyName=climatologyName,
+                    comparisonGridName=comparisonGridName)
+            remappedRefClimatology = xr.open_dataset(remappedFileName)
+            refStartYear = self.refConfig.getint('climatology', 'startYear')
+            refEndYear = self.refConfig.getint('climatology', 'endYear')
+            if refStartYear != self.startYear or refEndYear != self.endYear:
+                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
+                        self.refTitleLabel, refStartYear, refEndYear)
+        else:
+            remappedRefClimatology = None
+
+        if remappedRefClimatology is None:
+            refOutput = None
+            difference = None
+        else:
+            refOutput = remappedRefClimatology[self.refFieldName].values
+            if self.maskValue is not None:
+                refOutput = ma.masked_values(refOutput, self.maskValue)
+
+            difference = modelOutput - refOutput
 
         startYear = self.startYear
         endYear = self.endYear
-        observationTitleLabel = self.observationTitleLabel
         filePrefix = self.filePrefix
         title = '{} ({}, years {:04d}-{:04d})'.format(
             self.fieldNameInTitle, season, startYear, endYear)
@@ -324,7 +370,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             lonTarg,
             latTarg,
             modelOutput,
-            observations,
+            refOutput,
             difference,
             colormapResult,
             colorbarLevelsResult,
@@ -336,8 +382,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             latmin=minimumLatitude,
             lon0=referenceLongitude,
             modelTitle=mainRunName,
-            obsTitle=observationTitleLabel,
-            diffTitle='Model-Observations',
+            refTitle=self.refTitleLabel,
+            diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel,
             vertical=vertical)
 

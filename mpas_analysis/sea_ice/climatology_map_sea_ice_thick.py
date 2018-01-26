@@ -25,15 +25,15 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, mpasClimatologyTask, hemisphere):
-        # {{{
+    def __init__(self, config, mpasClimatologyTask, hemisphere,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
@@ -41,18 +41,21 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
+
         Authors
         -------
         Xylar Asay-Davis
         """
         taskName = 'climatologyMapSeaIceThick{}'.format(hemisphere)
 
-        self.fieldName = 'seaIceThick'
+        fieldName = 'seaIceThick'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSeaIceThick, self).__init__(
                 config=config, taskName=taskName,
                 componentName='seaIce',
-                tags=['climatology', 'horizontalMap', self.fieldName])
+                tags=['climatology', 'horizontalMap', fieldName])
 
         mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
         iselValues = None
@@ -63,8 +66,6 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
             hemisphereLong = 'Northern'
         else:
             hemisphereLong = 'Southern'
-
-        obsFieldName = 'seaIceThick'
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -85,26 +86,42 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         remapClimatologySubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName='{}{}'.format(self.fieldName, hemisphere),
+            climatologyName='{}{}'.format(fieldName, hemisphere),
             variableList=[mpasFieldName],
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=iselValues)
 
+        if refConfig is None:
+            refTitleLabel = 'Observations (ICESat)'
+            galleryName = 'Observations: ICESat'
+            diffTitleLabel = 'Model - Observations'
+            refFieldName = 'seaIceThick'
+        else:
+            refRunName = refConfig.get('runs', 'mainRunName')
+            galleryName = None
+            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refFieldName = mpasFieldName
+            diffTitleLabel = 'Main - Reference'
+
+            remapObservationsSubtask = None
+
         for season in seasons:
+            if refConfig is None:
+                obsFileName = build_config_full_path(
+                        config, 'seaIceObservations',
+                        'thickness{}_{}'.format(hemisphere, season))
 
-            obsFileName = build_config_full_path(
-                    config, 'seaIceObservations',
-                    'thickness{}_{}'.format(hemisphere, season))
+                remapObservationsSubtask = RemapObservedThickClimatology(
+                        parentTask=self, seasons=[season],
+                        fileName=obsFileName,
+                        outFilePrefix='{}{}_{}'.format(refFieldName,
+                                                       hemisphere,
+                                                       season),
+                        comparisonGridNames=comparisonGridNames,
+                        subtaskName='remapObservations{}'.format(season))
+                self.add_subtask(remapObservationsSubtask)
 
-            remapObservationsSubtask = RemapObservedThickClimatology(
-                    parentTask=self, seasons=[season],
-                    fileName=obsFileName,
-                    outFilePrefix='{}{}_{}'.format(obsFieldName, hemisphere,
-                                                   season),
-                    comparisonGridNames=comparisonGridNames,
-                    subtaskName='remapObservations{}'.format(season))
-            self.add_subtask(remapObservationsSubtask)
             for comparisonGridName in comparisonGridNames:
 
                 imageDescription = \
@@ -117,25 +134,29 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                         self, hemisphere, season, comparisonGridName,
-                        remapClimatologySubtask, remapObservationsSubtask)
+                        remapClimatologySubtask, remapObservationsSubtask,
+                        refConfig)
 
                 subtask.set_plot_info(
                         outFileLabel='icethick{}'.format(hemisphere),
                         fieldNameInTitle='Sea ice thickness',
                         mpasFieldName=mpasFieldName,
-                        obsFieldName=obsFieldName,
-                        observationTitleLabel='Observations (ICESat)',
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'm',
                         imageDescription=imageDescription,
                         imageCaption=imageCaption,
                         galleryGroup=galleryGroup,
                         groupSubtitle=None,
                         groupLink='{}_thick'.format(hemisphere.lower()),
-                        galleryName='Observations: ICESat',
+                        galleryName=galleryName,
                         maskValue=0)
 
                 self.add_subtask(subtask)
+
         # }}}
+
     # }}}
 
 

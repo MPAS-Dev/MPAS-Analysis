@@ -27,17 +27,21 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -54,17 +58,6 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
 
         mpasFieldName = 'timeMonthly_avg_dThreshMLD'
         iselValues = None
-
-        observationTitleLabel = \
-            'Observations (HolteTalley density threshold MLD)'
-
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations',
-            '{}Subdirectory'.format(fieldName))
-
-        obsFileName = \
-            "{}/holtetalley_mld_climatology.nc".format(observationsDirectory)
-        obsFieldName = 'mld'
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -91,31 +84,60 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        remapObservationsSubtask = RemapObservedMLDClimatology(
-                parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=obsFieldName,
-                comparisonGridNames=comparisonGridNames)
-        self.add_subtask(remapObservationsSubtask)
+        if refConfig is None:
+
+            observationsDirectory = build_config_full_path(
+                config, 'oceanObservations',
+                '{}Subdirectory'.format(fieldName))
+
+            obsFileName = "{}/holtetalley_mld_climatology.nc".format(
+                    observationsDirectory)
+
+            refFieldName = 'mld'
+            outFileLabel = 'mldHolteTalleyARGO'
+
+            remapObservationsSubtask = RemapObservedMLDClimatology(
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix=refFieldName,
+                    comparisonGridNames=comparisonGridNames)
+            self.add_subtask(remapObservationsSubtask)
+            galleryName = 'Observations: Holte-Talley ARGO'
+            refTitleLabel = \
+                'Observations (HolteTalley density threshold MLD)'
+            diffTitleLabel = 'Model - Observations'
+
+        else:
+            remapObservationsSubtask = None
+            refRunName = refConfig.get('runs', 'mainRunName')
+            galleryName = None
+            refTitleLabel = 'Ref: {}'.format(refRunName)
+
+            refFieldName = mpasFieldName
+            outFileLabel = 'mld'
+            diffTitleLabel = 'Main - Reference'
+
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(self, season,
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
-                                                    remapObservationsSubtask)
+                                                    remapObservationsSubtask,
+                                                    refConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='mldHolteTalleyARGO',
+                        outFileLabel=outFileLabel,
                         fieldNameInTitle='MLD',
                         mpasFieldName=mpasFieldName,
-                        obsFieldName=obsFieldName,
-                        observationTitleLabel=observationTitleLabel,
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'm',
                         imageCaption='Mean Mixed-Layer Depth',
                         galleryGroup='Mixed-Layer Depth',
                         groupSubtitle=None,
                         groupLink='mld',
-                        galleryName='Observations: Holte-Talley ARGO')
+                        galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

@@ -35,17 +35,21 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
     Xylar Asay-Davis
     """
 
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -63,16 +67,6 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
         mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         iselValues = None
 
-        observationTitleLabel = 'State Estimate (SOSE)'
-
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'soseSubdirectory')
-
-        obsFileName = \
-            '{}/SOSE_2005-2010_monthly_pot_temp_6000.0x' \
-            '6000.0km_10.0km_Antarctic_stereo.nc'.format(observationsDirectory)
-        obsFieldName = 'theta'
-
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
 
@@ -105,14 +99,42 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        remapObservationsSubtask = RemapSoseClimatology(
-                parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=obsFieldName,
-                fieldName=obsFieldName,
-                botFieldName='botTheta',
-                depths=depths,
-                comparisonGridNames=comparisonGridNames)
-        self.add_subtask(remapObservationsSubtask)
+        if refConfig is None:
+
+            refTitleLabel = 'State Estimate (SOSE)'
+
+            observationsDirectory = build_config_full_path(
+                config, 'oceanObservations', 'soseSubdirectory')
+
+            obsFileName = \
+                '{}/SOSE_2005-2010_monthly_pot_temp_6000.0x' \
+                '6000.0km_10.0km_Antarctic_stereo.nc'.format(
+                        observationsDirectory)
+            refFieldName = 'theta'
+            outFileLabel = 'tempSOSE'
+            galleryName = 'State Estimate: SOSE'
+            diffTitleLabel = 'Model - State Estimate'
+
+            remapObservationsSubtask = RemapSoseClimatology(
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix=refFieldName,
+                    fieldName=refFieldName,
+                    botFieldName='botTheta',
+                    depths=depths,
+                    comparisonGridNames=comparisonGridNames)
+
+            self.add_subtask(remapObservationsSubtask)
+
+        else:
+            remapObservationsSubtask = None
+            refRunName = refConfig.get('runs', 'mainRunName')
+            galleryName = 'Ref: {}'.format(refRunName)
+            refTitleLabel = galleryName
+
+            refFieldName = mpasFieldName
+            outFileLabel = 'temp'
+            diffTitleLabel = 'Main - Reference'
+
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 for depth in depths:
@@ -122,21 +144,22 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
+                        refConfig=refConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
-                        outFileLabel='tempSOSE',
+                        outFileLabel=outFileLabel,
                         fieldNameInTitle='Temperature',
                         mpasFieldName=mpasFieldName,
-                        obsFieldName=obsFieldName,
-                        observationTitleLabel=observationTitleLabel,
-                        diffTitleLabel='Model - State Estimate',
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
                         imageCaption='Temperature',
                         galleryGroup='Temperature',
                         groupSubtitle=None,
                         groupLink='temp',
-                        galleryName='State Estimate: SOSE')
+                        galleryName=galleryName)
 
                     self.add_subtask(subtask)
         # }}}
@@ -154,17 +177,21 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
     Xylar Asay-Davis
     """
 
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -181,16 +208,6 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
         iselValues = None
-
-        observationTitleLabel = 'State Estimate (SOSE)'
-
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'soseSubdirectory')
-
-        obsFileName = \
-            '{}/SOSE_2005-2010_monthly_salinity_6000.0x' \
-            '6000.0km_10.0km_Antarctic_stereo.nc'.format(observationsDirectory)
-        obsFieldName = 'salinity'
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -224,14 +241,42 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        remapObservationsSubtask = RemapSoseClimatology(
-                parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=obsFieldName,
-                fieldName=obsFieldName,
-                botFieldName='botSalinity',
-                depths=depths,
-                comparisonGridNames=comparisonGridNames)
-        self.add_subtask(remapObservationsSubtask)
+        if refConfig is None:
+
+            refTitleLabel = 'State Estimate (SOSE)'
+
+            observationsDirectory = build_config_full_path(
+                config, 'oceanObservations', 'soseSubdirectory')
+
+            obsFileName = \
+                '{}/SOSE_2005-2010_monthly_salinity_6000.0x' \
+                '6000.0km_10.0km_Antarctic_stereo.nc'.format(
+                        observationsDirectory)
+            refFieldName = 'salinity'
+            outFileLabel = 'salinSOSE'
+            galleryName = 'State Estimate: SOSE'
+            diffTitleLabel = 'Model - State Estimate'
+
+            remapObservationsSubtask = RemapSoseClimatology(
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix=refFieldName,
+                    fieldName=refFieldName,
+                    botFieldName='botSalinity',
+                    depths=depths,
+                    comparisonGridNames=comparisonGridNames)
+
+            self.add_subtask(remapObservationsSubtask)
+
+        else:
+            remapObservationsSubtask = None
+            refRunName = refConfig.get('runs', 'mainRunName')
+            galleryName = None
+            refTitleLabel = 'Ref: {}'.format(refRunName)
+
+            refFieldName = mpasFieldName
+            outFileLabel = 'salin'
+            diffTitleLabel = 'Main - Reference'
+
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 for depth in depths:
@@ -241,21 +286,22 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
+                        refConfig=refConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
-                        outFileLabel='salinSOSE',
+                        outFileLabel=outFileLabel,
                         fieldNameInTitle='Salinity',
                         mpasFieldName=mpasFieldName,
-                        obsFieldName=obsFieldName,
-                        observationTitleLabel=observationTitleLabel,
-                        diffTitleLabel='Model - State Estimate',
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
                         imageCaption='Salinity',
                         galleryGroup='Salinity',
                         groupSubtitle=None,
                         groupLink='salin',
-                        galleryName='State Estimate: SOSE')
+                        galleryName=galleryName)
 
                     self.add_subtask(subtask)
         # }}}
@@ -325,7 +371,8 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         self.botFieldName = botFieldName
         self.depths = depths
 
-        # call the constructor from the base class (AnalysisTask)
+        # call the constructor from the base class
+        # (RemapObservedClimatologySubtask)
         super(RemapSoseClimatology, self).__init__(
                 parentTask, seasons, fileName, outFilePrefix,
                 comparisonGridNames, subtaskName)

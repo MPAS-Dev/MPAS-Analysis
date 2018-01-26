@@ -25,45 +25,37 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
         Xylar Asay-Davis
         """
-        self.fieldName = 'sss'
+        fieldName = 'sss'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSSS, self).__init__(
                 config=config, taskName='climatologyMapSSS',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', self.fieldName])
+                tags=['climatology', 'horizontalMap', fieldName])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
         iselValues = {'nVertLevels': 0}
 
         sectionName = self.taskName
-
-        observationTitleLabel = \
-            'Observations (Aquarius, 2011-2014)'
-
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations',
-            '{}Subdirectory'.format(self.fieldName))
-
-        obsFileName = \
-            "{}/Aquarius_V3_SSS_Monthly.nc".format(
-                observationsDirectory)
-        obsFieldName = 'sss'
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -84,37 +76,67 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
         remapClimatologySubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName=self.fieldName,
+            climatologyName=fieldName,
             variableList=[mpasFieldName],
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=iselValues)
 
-        remapObservationsSubtask = RemapObservedSSSClimatology(
-                parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=obsFieldName,
-                comparisonGridNames=comparisonGridNames)
-        self.add_subtask(remapObservationsSubtask)
+        if refConfig is None:
+
+            refTitleLabel = \
+                'Observations (Aquarius, 2011-2014)'
+
+            observationsDirectory = build_config_full_path(
+                config, 'oceanObservations',
+                '{}Subdirectory'.format(fieldName))
+
+            obsFileName = \
+                "{}/Aquarius_V3_SSS_Monthly.nc".format(
+                    observationsDirectory)
+            refFieldName = 'sss'
+            outFileLabel = 'sssAquarius'
+            galleryName = 'Observations: Aquarius'
+
+            remapObservationsSubtask = RemapObservedSSSClimatology(
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix=refFieldName,
+                    comparisonGridNames=comparisonGridNames)
+            self.add_subtask(remapObservationsSubtask)
+            diffTitleLabel = 'Model - Observations'
+
+        else:
+            remapObservationsSubtask = None
+            refRunName = refConfig.get('runs', 'mainRunName')
+            galleryName = None
+            refTitleLabel = 'Ref: {}'.format(refRunName)
+
+            refFieldName = mpasFieldName
+            outFileLabel = 'sss'
+            diffTitleLabel = 'Main - Reference'
+
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(self, season,
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
-                                                    remapObservationsSubtask)
+                                                    remapObservationsSubtask,
+                                                    refConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='sssAquarius',
+                        outFileLabel=outFileLabel,
                         fieldNameInTitle='SSS',
                         mpasFieldName=mpasFieldName,
-                        obsFieldName=obsFieldName,
-                        observationTitleLabel=observationTitleLabel,
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
                         imageCaption='Mean Sea Surface Salinity',
                         galleryGroup='Sea Surface Salinity',
                         groupSubtitle=None,
                         groupLink='sss',
-                        galleryName='Observations: Aquarius')
+                        galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

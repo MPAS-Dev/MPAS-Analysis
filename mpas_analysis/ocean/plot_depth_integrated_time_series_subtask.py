@@ -72,6 +72,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
+    refConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the reference run (if any)
 
     Authors
     -------
@@ -81,7 +83,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, yAxisLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
-                 groupLink, galleryName, subtaskName=None):  # {{{
+                 groupLink, galleryName, subtaskName=None, refConfig=None):
+        # {{{
         """
         Construct the analysis task.
 
@@ -133,8 +136,11 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         galleryName : str
             the name of the gallery in which this plot belongs
 
-        subtaskName :  str
+        subtaskName :  str, optional
             The name of the subtask (``plotTimeSeries<RegionName>`` by default)
+
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            The configuration options for the reference run (if any)
 
         Authors
         -------
@@ -160,6 +166,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.mpasFieldName = mpasFieldName
         self.yAxisLabel = yAxisLabel
         self.sectionName = sectionName
+
+        self.refConfig = refConfig
 
         # xml/html related variables
         self.thumbnailSuffix = thumbnailSuffix
@@ -187,6 +195,17 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         super(PlotDepthIntegratedTimeSeriesSubtask, self).setup_and_check()
 
         config = self.config
+
+        if self.refConfig is not None:
+            # we need to know what file to read from the reference run so
+            # an absolute path won't work
+            assert(not os.path.isabs(self.inFileName))
+
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            self.refFileName = '{}/{}'.format(baseDirectory,
+                                              self.inFileName)
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -234,28 +253,13 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.logger.info('  Load ocean data...')
         ds = open_mpas_dataset(fileName=self.inFileName,
                                calendar=calendar,
-                               variableList=[self.mpasFieldName],
+                               variableList=[self.mpasFieldName, 'depth'],
                                timeVariableNames=None,
                                startDate=startDate,
                                endDate=endDate)
         ds = ds.isel(nOceanRegionsTmp=regionIndex)
 
-        # Note: restart file, not a mesh file because we need refBottomDepth,
-        # not in a mesh file
-        try:
-            restartFile = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for OHC calculation')
-
-        # Define/read in general variables
-        self.logger.info('  Read in depth...')
-        with xr.open_dataset(restartFile) as dsRestart:
-            # reference depth [m]
-            depths = dsRestart.refBottomDepth.values
-
-        # add depths as a coordinate to the data set
-        ds.coords['depth'] = (('nVertLevels',), depths)
+        depths = ds.depth.values
 
         divisionDepths = config.getExpression(self.sectionName, 'depths')
 
@@ -368,6 +372,40 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                         'not found. Skipping.'.format(
                                                 variableName))
                     timeSeries.extend(None)
+
+                lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+                lineWidths.append(widths[rangeIndex])
+                maxPoints.append(points[rangeIndex])
+                legendText.append(None)
+
+        if self.refConfig is not None:
+
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            title = '{} \n {} (blue)'.format(title, refRunName)
+
+            self.logger.info('  Load ocean data from reference run...')
+            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
+            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
+            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
+            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+            dsRef = open_mpas_dataset(fileName=self.refFileName,
+                                      calendar=calendar,
+                                      variableList=[self.mpasFieldName,
+                                                    'depth'],
+                                      timeVariableNames=None,
+                                      startDate=refStartDate,
+                                      endDate=refEndDate)
+            dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
+
+            color = 'b'
+
+            for rangeIndex in range(len(topDepths)):
+                top = topDepths[rangeIndex]
+                bottom = bottomDepths[rangeIndex]
+                field = dsRef[self.mpasFieldName].where(dsRef.depth > top)
+                field = field.where(dsRef.depth <= bottom)
+                timeSeries.append(field.sum('nVertLevels'))
 
                 lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
                 lineWidths.append(widths[rangeIndex])

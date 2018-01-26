@@ -25,28 +25,32 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
     -------
     Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
         Xylar Asay-Davis
         """
-        self.fieldName = 'sst'
+        fieldName = 'sst'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSST, self).__init__(
                 config=config, taskName='climatologyMapSST',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', self.fieldName])
+                tags=['climatology', 'horizontalMap', fieldName])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         iselValues = {'nVertLevels': 0}
@@ -57,25 +61,6 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                                       'sstClimatologyStartYear')
         climEndYear = config.getint('oceanObservations',
                                     'sstClimatologyEndYear')
-
-        if climStartYear < 1925:
-            period = 'pre-industrial'
-        else:
-            period = 'present-day'
-
-        observationTitleLabel = \
-            'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(period,
-                                                                climStartYear,
-                                                                climEndYear)
-
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations',
-            '{}Subdirectory'.format(self.fieldName))
-
-        obsFileName = \
-            "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
-                observationsDirectory)
-        obsFieldName = 'sst'
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -91,42 +76,77 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        # the variable self.mpasFieldName will be added to mpasClimatologyTask
+        # the variable mpasFieldName will be added to mpasClimatologyTask
         # along with the seasons.
         remapClimatologySubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName=self.fieldName,
+            climatologyName=fieldName,
             variableList=[mpasFieldName],
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=iselValues)
 
-        remapObservationsSubtask = RemapObservedSSTClimatology(
-                parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=obsFieldName,
-                comparisonGridNames=comparisonGridNames)
-        self.add_subtask(remapObservationsSubtask)
+        if refConfig is None:
+            if climStartYear < 1925:
+                period = 'pre-industrial'
+            else:
+                period = 'present-day'
+
+            refTitleLabel = \
+                'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(
+                        period, climStartYear, climEndYear)
+
+            observationsDirectory = build_config_full_path(
+                config, 'oceanObservations',
+                '{}Subdirectory'.format(fieldName))
+
+            obsFileName = \
+                "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
+                    observationsDirectory)
+            refFieldName = 'sst'
+            outFileLabel = 'sstHADOI'
+            galleryName = 'Observations: Hadley-NOAA-OI'
+
+            remapObservationsSubtask = RemapObservedSSTClimatology(
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix=refFieldName,
+                    comparisonGridNames=comparisonGridNames)
+            self.add_subtask(remapObservationsSubtask)
+            diffTitleLabel = 'Model - Observations'
+
+        else:
+            remapObservationsSubtask = None
+            refRunName = refConfig.get('runs', 'mainRunName')
+            galleryName = None
+            refTitleLabel = 'Ref: {}'.format(refRunName)
+
+            refFieldName = mpasFieldName
+            outFileLabel = 'sst'
+            diffTitleLabel = 'Main - Reference'
+
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(self, season,
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
-                                                    remapObservationsSubtask)
+                                                    remapObservationsSubtask,
+                                                    refConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='sstHADOI',
+                        outFileLabel=outFileLabel,
                         fieldNameInTitle='SST',
                         mpasFieldName=mpasFieldName,
-                        obsFieldName=obsFieldName,
-                        observationTitleLabel=observationTitleLabel,
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^o$C',
                         imageCaption='Mean Sea Surface Temperature',
                         galleryGroup='Sea Surface Temperature',
                         groupSubtitle=None,
                         groupLink='sst',
-                        galleryName='Observations: Hadley-NOAA-OI')
+                        galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

@@ -36,22 +36,29 @@ class IndexNino34(AnalysisTask):  # {{{
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
+
     Authors
     -------
     Luke Van Roekel, Xylar Asay-Davis
     '''
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+        # {{{
         '''
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -66,6 +73,7 @@ class IndexNino34(AnalysisTask):  # {{{
             tags=['timeSeries', 'index', 'nino'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
+        self.refConfig = refConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -86,9 +94,6 @@ class IndexNino34(AnalysisTask):  # {{{
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar
         super(IndexNino34, self).setup_and_check()
-
-        self.startDate = self.config.get('index', 'startDate')
-        self.endDate = self.config.get('index', 'endDate')
 
         self.variableList = \
             ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
@@ -125,6 +130,12 @@ class IndexNino34(AnalysisTask):  # {{{
         config = self.config
         calendar = self.calendar
 
+        startDate = self.config.get('index', 'startDate')
+        endDate = self.config.get('index', 'endDate')
+
+        startYear = self.config.getint('index', 'startYear')
+        endYear = self.config.getint('index', 'endYear')
+
         dataSource = config.get('indexNino34', 'observationData')
 
         observationsDirectory = build_config_full_path(
@@ -153,8 +164,8 @@ class IndexNino34(AnalysisTask):  # {{{
         ds = open_mpas_dataset(fileName=self.inputFile,
                                calendar=calendar,
                                variableList=self.variableList,
-                               startDate=self.startDate,
-                               endDate=self.endDate)
+                               startDate=startDate,
+                               endDate=endDate)
 
         # Observations have been processed to the nino34Index prior to reading
         dsObs = xr.open_dataset(dataPath, decode_cf=False, decode_times=False)
@@ -180,8 +191,12 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # Compute the observational spectra over the last 30 years for
         # comparison. Only saving the spectra
-        subsetStartYear = 1976
         subsetEndYear = 2016
+        if self.refConfig is None:
+            subsetStartYear = 1976
+        else:
+            # make the subset the same length as the input data set
+            subsetStartYear = subsetEndYear - (endYear - startYear)
         time_start = datetime_to_days(datetime.datetime(subsetStartYear, 1, 1),
                                       calendar=calendar)
         time_end = datetime_to_days(datetime.datetime(subsetEndYear, 12, 31),
@@ -189,21 +204,50 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Subset = nino34Obs.sel(Time=slice(time_start, time_end))
         spectraSubset = self._compute_nino34_spectra(nino34Subset)
 
+        if self.refConfig is None:
+            nino34s = [nino34Obs[2:-3], nino34Subset, nino34Main[2:-3]]
+            titles = ['{} (Full Record)'.format(obsTitle),
+                      '{} ({} - {})'.format(obsTitle, subsetStartYear,
+                                            subsetEndYear),
+                      mainRunName]
+            spectra = [spectraObs, spectraSubset, spectraMain]
+        else:
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            refFileName = '{}/{}.nc'.format(
+                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+
+            dsRef = open_mpas_dataset(
+                    fileName=refFileName,
+                    calendar=calendar,
+                    variableList=self.variableList)
+
+            regionSSTRef = dsRef[varName].isel(nOceanRegions=regionIndex)
+            nino34Ref = self._compute_nino34_index(regionSSTRef, calendar)
+
+            nino34s = [nino34Subset, nino34Main[2:-3], nino34Ref[2:-3]]
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            spectraRef = self._compute_nino34_spectra(nino34Ref)
+
+            titles = ['{} ({} - {})'.format(obsTitle, subsetStartYear,
+                                            subsetEndYear),
+                      mainRunName,
+                      'Ref: {}'.format(refRunName)]
+            spectra = [spectraSubset, spectraMain, spectraRef]
+
         # Convert frequencies to period in years
-        for spectra in [spectraMain, spectraObs, spectraSubset]:
-            spectra['period'] = \
-                1.0 / (constants.eps + spectra['f']*constants.sec_per_year)
+        for s in spectra:
+            s['period'] = \
+                1.0 / (constants.eps + s['f']*constants.sec_per_year)
 
         self.logger.info(' Plot NINO3.4 index and spectra...')
 
         outFileName = '{}/NINO34_{}.png'.format(self.plotsDirectory,
                                                 mainRunName)
-        titles = ['{} (Full Record)'.format(obsTitle),
-                  '{} ({} - {})'.format(obsTitle, subsetStartYear,
-                                        subsetEndYear),
-                  mainRunName]
         self._nino34_timeseries_plot(
-                nino34s=[nino34Obs[2:-3], nino34Subset, nino34Main[2:-3]],
+                nino34s=nino34s,
                 title='NINO 3.4 Index',
                 panelTitles=titles,
                 outFileName=outFileName)
@@ -214,7 +258,7 @@ class IndexNino34(AnalysisTask):  # {{{
         outFileName = '{}/NINO34_spectra_{}.png'.format(self.plotsDirectory,
                                                         mainRunName)
         self._nino34_spectra_plot(
-                spectra=[spectraObs, spectraSubset, spectraMain],
+                spectra=spectra,
                 title='NINO3.4 power spectrum',
                 panelTitles=titles,
                 outFileName=outFileName)

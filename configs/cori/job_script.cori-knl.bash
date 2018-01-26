@@ -32,10 +32,10 @@ if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
     exit 1
 fi
-if [ ! -f ./run_analysis.py ]; then
-    echo "run_analysis.py not found in current directory!"
+if [ ! -f ./run_mpas_analysis ]; then
+    echo "run_mpas_analysis not found in current directory!"
     exit 1
 fi
 
-srun -N 1 -n 1 ./run_analysis.py $run_config_file
+srun -N 1 -n 1 ./run_mpas_analysis $run_config_file
 

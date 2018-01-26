@@ -11,20 +11,24 @@ from collections import OrderedDict
 from ..io.utility import build_config_full_path
 
 
-def generate_html(config, analyses):  # {{{
+def generate_html(config, analyses, refConfig=None):  # {{{
     """
     Generates webpages for diplaying the plots from each analysis task
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
+    config : ``MpasAnalysisConfigParser``
+        Config options
 
     analysis : ``OrderedDict`` of ``AnalysisTask`` objects
         the analysis tasks that generated the plots to include in the webpages.
         The ``list_xml_files()`` method will be called on each task to get
         the list of files to include on the webpage for the associated
         component.
+
+    refConfig : ``MpasAnalysisConfigParser``, optional
+        Config options for a reference run
+
 
     Authors
     -------
@@ -36,7 +40,7 @@ def generate_html(config, analyses):  # {{{
 
     print("Generating webpage for viewing results...")
 
-    page = MainPage(config)
+    page = MainPage(config, refConfig)
 
     components = OrderedDict()
 
@@ -45,7 +49,8 @@ def generate_html(config, analyses):  # {{{
     for analysisTask in analyses.values():
         for fileName in analysisTask.xmlFileNames:
             try:
-                ComponentPage.add_image(fileName, config, components)
+                ComponentPage.add_image(fileName, config, components,
+                                        refConfig)
             except IOError:
                 missingCount += 1
 
@@ -71,8 +76,11 @@ class MainPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
+    config : ``MpasAnalysisConfigParser``
+        Config options
+
+    refConfig : ``MpasAnalysisConfigParser``
+        Config options for a reference run
 
     pageTemplate, componentTemplate : str
         The contents of templates used to construct the page
@@ -85,14 +93,17 @@ class MainPage(object):
     -------
     Xylar Asay-Davis
     """
-    def __init__(self, config):
+    def __init__(self, config, refConfig=None):
         """
         Create a MainPage object, reading in the templates
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser`` object
-            contains config options
+        config : ``MpasAnalysisConfigParser``
+            Config options
+
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a reference run
 
         Authors
         -------
@@ -100,6 +111,7 @@ class MainPage(object):
         """
 
         self.config = config
+        self.refConfig = refConfig
 
         # get template text
         fileName = \
@@ -155,6 +167,12 @@ class MainPage(object):
         """
         runName = self.config.get('runs', 'mainRunName')
 
+        if self.refConfig is None:
+            refRunText = ''
+        else:
+            refRunText = '<br> Ref: {}'.format(
+                    self.refConfig.get('runs', 'mainRunName'))
+
         componentsText = ''
 
         for componentName, componentDict in self.components.items():
@@ -170,6 +188,7 @@ class MainPage(object):
                 _replace_tempate_text(self.componentTemplate, replacements)
 
         replacements = {'@runName': runName,
+                        '@refRunText': refRunText,
                         '@components': componentsText}
 
         pageText = _replace_tempate_text(self.pageTemplate, replacements)
@@ -214,8 +233,11 @@ class ComponentPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
+    config : ``MpasAnalysisConfigParser``
+        Config options
+
+    refConfig : ``MpasAnalysisConfigParser``
+        Config options for a reference run
 
     name : str
         The name of the component as it should appear in the list of
@@ -236,14 +258,14 @@ class ComponentPage(object):
     -------
     Xylar Asay-Davis
     """
-    def __init__(self, config, name, subdirectory):
+    def __init__(self, config, name, subdirectory, refConfig=None):
         """
         Create a ComponentPage object, reading in the templates
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser`` object
-            contains config options
+        config : ``MpasAnalysisConfigParser``
+            Config options
 
         name : str
             The name of the component as it should appear in the list of
@@ -253,12 +275,16 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a reference run
+
         Authors
         -------
         Xylar Asay-Davis
         """
 
         self.config = config
+        self.refConfig = refConfig
         self.name = name
         self.subdirectory = subdirectory
 
@@ -283,7 +309,7 @@ class ComponentPage(object):
         self.groups = OrderedDict()
 
     @staticmethod
-    def add_image(xmlFileName, config, components):
+    def add_image(xmlFileName, config, components, refConfig=None):
         """
         Add the image to the appropriate component.  Note: this is a static
         method because we do not know which component to add the image to
@@ -302,6 +328,9 @@ class ComponentPage(object):
             the appropriate component is not yet in the dictionary, it will
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
+
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a reference run
 
         Authors
         -------
@@ -327,7 +356,8 @@ class ComponentPage(object):
 
         if componentName not in components:
             components[componentName] = ComponentPage(config, componentName,
-                                                      componentSubdirectory)
+                                                      componentSubdirectory,
+                                                      refConfig)
 
         component = components[componentName]
 
@@ -375,6 +405,12 @@ class ComponentPage(object):
         """
         runName = self.config.get('runs', 'mainRunName')
 
+        if self.refConfig is None:
+            refRunText = ''
+        else:
+            refRunText = '<br> Ref: {}'.format(
+                    self.refConfig.get('runs', 'mainRunName'))
+
         quickLinkText = ''
         galleriesText = ''
         for groupName, groupDict in self.groups.items():
@@ -385,6 +421,7 @@ class ComponentPage(object):
                 self._generate_group_text(groupName, groupDict)
 
         replacements = {'@runName': runName,
+                        '@refRunText': refRunText,
                         '@componentName': self.name,
                         '@quickLinks': quickLinkText,
                         '@galleries': galleriesText}

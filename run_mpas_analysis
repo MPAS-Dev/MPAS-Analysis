@@ -31,7 +31,7 @@ from mpas_analysis.shared.html import generate_html
 from mpas_analysis.shared import AnalysisTask
 
 
-def build_analysis_list(config):  # {{{
+def build_analysis_list(config, refConfig):  # {{{
     """
     Build a list of analysis tasks. New tasks should be added here, following
     the approach used for existing analysis tasks.
@@ -40,6 +40,10 @@ def build_analysis_list(config):  # {{{
     ----------
     config : ``MpasAnalysisConfigParser`` object
         contains config options
+
+    refConfig : ``MpasAnalysisConfigParser`` object
+        contains config options for a reference run, or ``None`` if no config
+        file for a reference run was specified
 
     Returns
     -------
@@ -62,7 +66,6 @@ def build_analysis_list(config):  # {{{
     from mpas_analysis.shared.climatology import MpasClimatologyTask
     from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
-    # analyses will be a list of analysis classes
     analyses = []
 
     # Ocean Analyses
@@ -73,51 +76,63 @@ def build_analysis_list(config):  # {{{
     oceanIndexTask = MpasTimeSeriesTask(config=config,
                                         componentName='ocean',
                                         section='index')
-    analyses.append(oceanClimatolgyTask)
-    analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask))
-    analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask))
-    analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask))
-    analyses.append(ocean.ClimatologyMapSoseTemperature(config,
-                                                        oceanClimatolgyTask))
-    analyses.append(ocean.ClimatologyMapSoseSalinity(config,
-                                                     oceanClimatolgyTask))
-    analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
-                                                      oceanClimatolgyTask))
 
-    analyses.append(oceanTimeSeriesTask)
-    analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask))
+    analyses.append(oceanClimatolgyTask)
+
+    analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask,
+                                            refConfig))
+    analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask,
+                                            refConfig))
+    analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask,
+                                            refConfig))
+    analyses.append(ocean.ClimatologyMapSoseTemperature(
+            config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSoseSalinity(
+            config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
+                                                      oceanClimatolgyTask,
+                                                      refConfig))
+
+    analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
+                                                  refConfig))
+
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesSalinityAnomaly(config,
                                                     oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesOHCAnomaly(config,
-                                               oceanTimeSeriesTask))
-
-    analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask))
-    analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask))
+                                               oceanTimeSeriesTask,
+                                               refConfig))
+    analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
+                                        refConfig))
+    analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
+                                                  refConfig))
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
-    analyses.append(ocean.IndexNino34(config, oceanIndexTask))
+    analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
                                                componentName='seaIce')
     seaIceTimeSeriesTask = MpasTimeSeriesTask(config=config,
                                               componentName='seaIce')
+
     analyses.append(seaIceClimatolgyTask)
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
-                                                     seaIceClimatolgyTask,
-                                                     hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
-                                                      seaIceClimatolgyTask,
-                                                      hemisphere='NH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceConc(config,
-                                                     seaIceClimatolgyTask,
-                                                     hemisphere='SH'))
-    analyses.append(sea_ice.ClimatologyMapSeaIceThick(config,
-                                                      seaIceClimatolgyTask,
-                                                      hemisphere='SH'))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(
+            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+            hemisphere='NH', refConfig=refConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(
+            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+            hemisphere='NH', refConfig=refConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceConc(
+            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+            hemisphere='SH', refConfig=refConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceThick(
+            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+            hemisphere='SH', refConfig=refConfig))
     analyses.append(seaIceTimeSeriesTask)
-    analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask))
+
+    analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
+                                             refConfig))
 
     return analyses  # }}}
 
@@ -206,7 +221,6 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
         add_task_and_subtasks(prereq, analysesToGenerate,
                               callCheckGenerate=False)
         if prereq._setupStatus != 'success':
-            print(prereq._setupStatus)
             # a prereq failed setup_and_check
             print("ERROR: prerequisite task {} of analysis task {}"
                   " failed during check,\n"
@@ -290,6 +304,18 @@ def run_analysis(config, analyses):  # {{{
     -------
     Xylar Asay-Davis
     """
+
+    # write the config file the log directory
+    logsDirectory = build_config_full_path(config, 'output',
+                                           'logsSubdirectory')
+
+    mainRunName = config.get('runs', 'mainRunName')
+
+    configFileName = '{}/config.{}'.format(logsDirectory, mainRunName)
+
+    configFile = open(configFileName, 'w')
+    config.write(configFile)
+    configFile.close()
 
     taskCount = config.getWithDefault('execute', 'parallelTaskCount',
                                       default=1)
@@ -444,18 +470,43 @@ if __name__ == "__main__":
         print('WARNING: Did not find config.default.  Assuming other config '
               'file(s) contain a\n'
               'full set of configuration options.')
+        defaultConfig = None
         configFiles = args.configFiles
 
     config = MpasAnalysisConfigParser()
     config.read(configFiles)
 
     if args.list:
-        analyses = build_analysis_list(config)
+        analyses = build_analysis_list(config, refConfig=None)
         for analysisTask in analyses:
             print('task: {}'.format(analysisTask.taskName))
             print('    component: {}'.format(analysisTask.componentName)),
             print('    tags: {}'.format(', '.join(analysisTask.tags)))
         sys.exit(0)
+
+    if config.has_option('runs', 'referenceRunConfigFile'):
+        refConfigFile = config.get('runs', 'referenceRunConfigFile')
+        if not os.path.exists(refConfigFile):
+            raise OSError('A reference config file {} was specified but the '
+                          'file does not exist'.format(refConfigFile))
+        refConfigFiles = [refConfigFile]
+        if defaultConfig is not None:
+            refConfigFiles = [defaultConfig] + refConfigFiles
+        refConfig = MpasAnalysisConfigParser()
+        refConfig.read(refConfigFiles)
+
+        # replace the log directory so log files get written to this run's
+        # log directory, not the reference run's
+        logsDirectory = build_config_full_path(config, 'output',
+                                               'logsSubdirectory')
+
+        refConfig.set('output', 'logsSubdirectory', logsDirectory)
+
+        print('Comparing to reference run {} rather than observations. \n'
+              'Make sure that MPAS-Analysis has been run previously with the '
+              'ref config file.'.format(refConfig.get('runs', 'mainRunName')))
+    else:
+        refConfig = None
 
     if args.purge:
         outputDirectory = config.get('output', 'baseDirectory')
@@ -469,18 +520,22 @@ if __name__ == "__main__":
     if args.generate:
         update_generate(config, args.generate)
 
+    if refConfig is not None:
+        # we want to use the "generate" option from the current run, not
+        # the reference config file
+        refConfig.set('output', 'generate', config.get('output', 'generate'))
+
     logsDirectory = build_config_full_path(config, 'output',
                                            'logsSubdirectory')
     make_directories(logsDirectory)
-    make_directories('{}/configs/'.format(logsDirectory))
 
-    analyses = build_analysis_list(config)
+    analyses = build_analysis_list(config, refConfig)
     analyses = determine_analyses_to_generate(analyses)
 
     if not args.setup_only and not args.html_only:
         run_analysis(config, analyses)
 
     if not args.setup_only:
-        generate_html(config, analyses)
+        generate_html(config, analyses, refConfig)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

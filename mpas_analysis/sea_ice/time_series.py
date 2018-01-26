@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import os
 
 from ..shared import AnalysisTask
 
@@ -17,7 +18,7 @@ from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
 from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
 
 from ..shared.generalized_reader import open_multifile_dataset
-from ..shared.io import open_mpas_dataset
+from ..shared.io import open_mpas_dataset, write_netcdf
 from ..shared.mpas_xarray.mpas_xarray import subset_variables
 
 from ..shared.html import write_image_xml
@@ -33,22 +34,30 @@ class TimeSeriesSeaIce(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
+
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask,
+                 refConfig=None):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -62,6 +71,7 @@ class TimeSeriesSeaIce(AnalysisTask):
             tags=['timeSeries'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
+        self.refConfig = refConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -227,21 +237,13 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         self.logger.info('  Load sea-ice data...')
         # Load mesh
-        self.dsMesh = xr.open_dataset(self.restartFileName)
-        self.dsMesh = subset_variables(self.dsMesh,
-                                       variableList=['lonCell', 'latCell',
-                                                     'areaCell'])
 
-        # Load data
-        ds = open_mpas_dataset(
-            fileName=self.inputFile,
-            calendar=calendar,
-            variableList=self.variableList,
-            startDate=self.startDate,
-            endDate=self.endDate)
+        dsTimeSeries = self._compute_area_vol()
 
-        yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
-        yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
+        yearStart = days_to_datetime(dsTimeSeries['NH'].Time.min(),
+                                     calendar=calendar).year
+        yearEnd = days_to_datetime(dsTimeSeries['NH'].Time.max(),
+                                   calendar=calendar).year
         timeStart = date_to_days(year=yearStart, month=1, day=1,
                                  calendar=calendar)
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
@@ -266,6 +268,20 @@ class TimeSeriesSeaIce(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
+        if self.refConfig is not None:
+
+            dsTimeSeriesRef = {}
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            for hemisphere in ['NH', 'SH']:
+                inFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
+                                                            hemisphere)
+
+                dsTimeSeriesRef[hemisphere] = xr.open_dataset(inFileName)
+
         norm = {'iceArea': 1e-6,  # m^2 to km^2
                 'iceVolume': 1e-12,  # m^3 to 10^3 km^3
                 'iceThickness': 1.}
@@ -275,17 +291,16 @@ class TimeSeriesSeaIce(AnalysisTask):
         galleryGroup = 'Time Series'
         groupLink = 'timeseries'
 
-        dsTimeSeries = {}
         obs = {}
         preprocessed = {}
         figureNameStd = {}
         figureNamePolar = {}
         title = {}
         plotVars = {}
+        obsLegend = {}
+        plotVarsRef = {}
 
         for hemisphere in ['NH', 'SH']:
-
-            dsTimeSeries[hemisphere] = self._compute_area_vol(ds, hemisphere)
 
             self.logger.info('  Make {} plots...'.format(hemisphere))
 
@@ -296,6 +311,10 @@ class TimeSeriesSeaIce(AnalysisTask):
                 plotVars[key] = (norm[variableName] *
                                  dsTimeSeries[hemisphere][variableName])
 
+                if self.refConfig is not None:
+                    plotVarsRef[key] = norm[variableName] * \
+                        dsTimeSeriesRef[hemisphere][variableName]
+
                 prefix = '{}/{}{}_{}'.format(self.plotsDirectory,
                                              variableName,
                                              hemisphere,
@@ -304,23 +323,19 @@ class TimeSeriesSeaIce(AnalysisTask):
                 figureNameStd[key] = '{}.png'.format(prefix)
                 figureNamePolar[key] = '{}_polar.png'.format(prefix)
 
-                title[key] = '{} ({}) \n {} (black)'.format(
-                    plotTitles[variableName], hemisphere, mainRunName)
+                title[key] = '{} ({})'.format(plotTitles[variableName],
+                                              hemisphere)
 
             if compareWithObservations:
                 key = (hemisphere, 'iceArea')
-                title[key] = '{}\nSSM/I observations, annual cycle ' \
-                             '(blue)'.format(title[key])
+                obsLegend[key] = 'SSM/I observations, annual cycle '
                 if hemisphere == 'NH':
                     key = (hemisphere, 'iceVolume')
-                    title[key] = \
-                        '{}\nPIOMAS, annual cycle (blue)'.format(title[key])
+                    obsLegend[key] = 'PIOMAS, annual cycle (blue)'
 
             if preprocessedReferenceRunName != 'None':
                 for variableName in ['iceArea', 'iceVolume']:
                     key = (hemisphere, variableName)
-                    title[key] = '{}\n {} (red)'.format(
-                        title[key], preprocessedReferenceRunName)
 
             if compareWithObservations:
                 dsObs = open_multifile_dataset(
@@ -376,110 +391,43 @@ class TimeSeriesSeaIce(AnalysisTask):
 
             for variableName in ['iceArea', 'iceVolume']:
                 key = (hemisphere, variableName)
-                if compareWithObservations:
-                    if preprocessedReferenceRunName != 'None':
-                        plotVars[key] = [plotVars[key], obs[key],
-                                         preprocessed[key]]
-                        lineStyles = ['k-', 'b-', 'r-']
-                        lineWidths = [3, 1.2, 1.2]
-                        legendText = [None, None, None]
-                    else:
-                        # just v1 model and obs
-                        plotVars[key] = [plotVars[key], obs[key]]
-                        lineStyles = ['k-', 'b-']
-                        lineWidths = [3, 1.2]
-                        legendText = [None, None]
-                elif preprocessedReferenceRunName != 'None':
-                    # just v1 and v0 models
-                    plotVars[key] = [plotVars[key], preprocessed[key]]
-                    lineStyles = ['k-', 'r-']
-                    lineWidths = [3, 1.2]
-                    legendText = [None, None]
+                dsvalues = [plotVars[key]]
+                legendText = [mainRunName]
+                lineStyles = ['k-']
+                lineWidths = [3]
+                if compareWithObservations and key in obsLegend.keys():
+                    dsvalues.append(obs[key])
+                    legendText.append(obsLegend[key])
+                    lineStyles.append('b-')
+                    lineWidths.append(1.2)
+                if preprocessedReferenceRunName != 'None':
+                    dsvalues.append(preprocessed[key])
+                    legendText.append(preprocessedReferenceRunName)
+                    lineStyles.append('r-')
+                    lineWidths.append(1.2)
 
-                if (compareWithObservations or
-                        preprocessedReferenceRunName != 'None'):
-                    # separate plots for nothern and southern hemispheres
-                    timeseries_analysis_plot(config, plotVars[key],
-                                             movingAveragePoints,
-                                             title[key], xLabel,
-                                             units[variableName],
-                                             figureNameStd[key],
-                                             lineStyles=lineStyles,
-                                             lineWidths=lineWidths,
-                                             legendText=legendText,
-                                             titleFontSize=titleFontSize,
-                                             calendar=calendar)
-                    filePrefix = '{}{}_{}'.format(variableName,
-                                                  hemisphere,
-                                                  mainRunName)
-                    thumbnailDescription = '{} {}'.format(
-                            hemisphere, plotTitles[variableName])
-                    caption = 'Running mean of {}'.format(
-                            thumbnailDescription)
-                    write_image_xml(
-                        config,
-                        filePrefix,
-                        componentName='Sea Ice',
-                        componentSubdirectory='sea_ice',
-                        galleryGroup=galleryGroup,
-                        groupLink=groupLink,
-                        thumbnailDescription=thumbnailDescription,
-                        imageDescription=caption,
-                        imageCaption=caption)
+                if self.refConfig is not None:
+                    dsvalues.append(plotVarsRef[key])
+                    legendText.append(refRunName)
+                    lineStyles.append('g-')
+                    lineWidths.append(1.2)
 
-                    if (polarPlot):
-                        timeseries_analysis_plot_polar(
-                            config,
-                            plotVars[key],
-                            movingAveragePoints,
-                            title[key],
-                            figureNamePolar[key],
-                            lineStyles=lineStyles,
-                            lineWidths=lineWidths,
-                            legendText=legendText,
-                            titleFontSize=titleFontSize,
-                            calendar=calendar)
-
-                        filePrefix = '{}{}_{}_polar'.format(variableName,
-                                                            hemisphere,
-                                                            mainRunName)
-                        write_image_xml(
-                            config,
-                            filePrefix,
-                            componentName='Sea Ice',
-                            componentSubdirectory='sea_ice',
-                            galleryGroup=galleryGroup,
-                            groupLink=groupLink,
-                            thumbnailDescription=thumbnailDescription,
-                            imageDescription=caption,
-                            imageCaption=caption)
-
-        if (not compareWithObservations and
-                preprocessedReferenceRunName == 'None'):
-            for variableName in ['iceArea', 'iceVolume']:
-                # we will combine north and south onto a single graph
-                figureNameStd = '{}/{}.{}.png'.format(self.plotsDirectory,
-                                                      mainRunName,
-                                                      variableName)
-                figureNamePolar = \
-                    '{}/{}.{}_polar.png'.format(self.plotsDirectory,
-                                                mainRunName,
-                                                variableName)
-                title = '{}, NH (black), SH (blue)\n' \
-                    '{}'.format(plotTitles[variableName],  mainRunName)
-                varList = [plotVars[('NH', variableName)],
-                           plotVars[('SH', variableName)]]
-                timeseries_analysis_plot(config, varList,
+                # separate plots for nothern and southern hemispheres
+                timeseries_analysis_plot(config, dsvalues,
                                          movingAveragePoints,
-                                         title, xLabel, units[variableName],
-                                         figureNameStd,
-                                         lineStyles=['k-', 'b-'],
-                                         lineWidths=[2, 2],
-                                         legendText=[None, None],
+                                         title[key], xLabel,
+                                         units[variableName],
+                                         figureNameStd[key],
+                                         lineStyles=lineStyles,
+                                         lineWidths=lineWidths,
+                                         legendText=legendText,
                                          titleFontSize=titleFontSize,
                                          calendar=calendar)
-                filePrefix = '{}.{}'.format(mainRunName, variableName)
-                thumbnailDescription = plotTitles[variableName]
+                filePrefix = '{}{}_{}'.format(variableName,
+                                              hemisphere,
+                                              mainRunName)
+                thumbnailDescription = '{} {}'.format(
+                        hemisphere, plotTitles[variableName])
                 caption = 'Running mean of {}'.format(
                         thumbnailDescription)
                 write_image_xml(
@@ -492,17 +440,23 @@ class TimeSeriesSeaIce(AnalysisTask):
                     thumbnailDescription=thumbnailDescription,
                     imageDescription=caption,
                     imageCaption=caption)
-            if (polarPlot):
-                    timeseries_analysis_plot_polar(config, varList,
-                                                   movingAveragePoints,
-                                                   title, figureNamePolar,
-                                                   lineStyles=['k-', 'b-'],
-                                                   lineWidths=[2, 2],
-                                                   legendText=[None, None],
-                                                   titleFontSize=titleFontSize,
-                                                   calendar=calendar)
-                    filePrefix = '{}.{}_polar'.format(mainRunName,
-                                                      variableName)
+
+                if (polarPlot):
+                    timeseries_analysis_plot_polar(
+                        config,
+                        dsvalues,
+                        movingAveragePoints,
+                        title[key],
+                        figureNamePolar[key],
+                        lineStyles=lineStyles,
+                        lineWidths=lineWidths,
+                        legendText=legendText,
+                        titleFontSize=titleFontSize,
+                        calendar=calendar)
+
+                    filePrefix = '{}{}_{}_polar'.format(variableName,
+                                                        hemisphere,
+                                                        mainRunName)
                     write_image_xml(
                         config,
                         filePrefix,
@@ -513,7 +467,6 @@ class TimeSeriesSeaIce(AnalysisTask):
                         thumbnailDescription=thumbnailDescription,
                         imageDescription=caption,
                         imageCaption=caption)
-
         # }}}
 
     def _replicate_cycle(self, ds, dsToReplicate, calendar):  # {{{
@@ -586,36 +539,72 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         return dsShift  # }}}
 
-    def _compute_area_vol(self, ds, hemisphere):  # {{{
+    def _compute_area_vol(self):  # {{{
         '''
         Compute part of the time series of sea ice volume and area, given time
         indices to process.
         '''
 
-        if hemisphere == 'NH':
-            mask = self.dsMesh.latCell > 0
+        outFileNames = {}
+        allExist = True
+        for hemisphere in ['NH', 'SH']:
+            baseDirectory = build_config_full_path(
+                self.config, 'output', 'timeSeriesSubdirectory')
+
+            make_directories(baseDirectory)
+
+            outFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
+                                                         hemisphere)
+            outFileNames[hemisphere] = outFileName
+            if not os.path.exists(outFileName):
+                allExist = False
+
+        dsTimeSeries = {}
+        if allExist:
+            for hemisphere in ['NH', 'SH']:
+                dsTimeSeries[hemisphere] = xr.open_dataset(
+                        outFileNames[hemisphere])
         else:
-            mask = self.dsMesh.latCell < 0
-        ds = ds.where(mask)
+            dsMesh = xr.open_dataset(self.restartFileName)
+            dsMesh = subset_variables(dsMesh,
+                                      variableList=['latCell', 'areaCell'])
+            # Load data
+            ds = open_mpas_dataset(
+                fileName=self.inputFile,
+                calendar=self.calendar,
+                variableList=self.variableList,
+                startDate=self.startDate,
+                endDate=self.endDate)
 
-        dsAreaSum = (ds*self.dsMesh.areaCell).sum('nCells')
-        dsAreaSum = dsAreaSum.rename(
-                {'timeMonthly_avg_iceAreaCell': 'iceArea',
-                 'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
-        dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
-                                     self.dsMesh.areaCell.sum('nCells'))
+            for hemisphere in ['NH', 'SH']:
 
-        dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
-        dsAreaSum['iceArea'].attrs['description'] = \
-            'Total {} sea ice area'.format(hemisphere)
-        dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
-        dsAreaSum['iceVolume'].attrs['description'] = \
-            'Total {} sea ice volume'.format(hemisphere)
-        dsAreaSum['iceThickness'].attrs['units'] = 'm'
-        dsAreaSum['iceThickness'].attrs['description'] = \
-            'Mean {} sea ice volume'.format(hemisphere)
+                if hemisphere == 'NH':
+                    mask = dsMesh.latCell > 0
+                else:
+                    mask = dsMesh.latCell < 0
 
-        return dsAreaSum  # }}}
+                dsAreaSum = (ds.where(mask)*dsMesh.areaCell).sum('nCells')
+                dsAreaSum = dsAreaSum.rename(
+                        {'timeMonthly_avg_iceAreaCell': 'iceArea',
+                         'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
+                dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
+                                             dsMesh.areaCell.sum('nCells'))
+
+                dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
+                dsAreaSum['iceArea'].attrs['description'] = \
+                    'Total {} sea ice area'.format(hemisphere)
+                dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
+                dsAreaSum['iceVolume'].attrs['description'] = \
+                    'Total {} sea ice volume'.format(hemisphere)
+                dsAreaSum['iceThickness'].attrs['units'] = 'm'
+                dsAreaSum['iceThickness'].attrs['description'] = \
+                    'Mean {} sea ice volume'.format(hemisphere)
+
+                dsTimeSeries[hemisphere] = dsAreaSum
+
+                write_netcdf(dsAreaSum, outFileNames[hemisphere])
+
+        return dsTimeSeries  # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
