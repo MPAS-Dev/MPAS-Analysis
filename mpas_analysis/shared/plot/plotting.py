@@ -21,7 +21,7 @@ from mpl_toolkits.basemap import Basemap
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
-from mpl_toolkits.axes_grid1 import make_axes_locatable, ImageGrid
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from ..timekeeping.utility import days_to_datetime, date_to_days
 
@@ -32,8 +32,10 @@ from six.moves import configparser
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, legendText,
-                             calendar, titleFontSize=None, figsize=(15, 6),
-                             dpi=None, maxXTicks=20):
+                             calendar, maxPoints=None, titleFontSize=None,
+                             figsize=(15, 6), dpi=None, maxXTicks=20,
+                             obsMean=None, obsUncertainty=None,
+                             obsLegend=None, legendLocation='lower left'):
 
     """
     Plots the list of time series data sets and stores the result in an image
@@ -66,6 +68,12 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     calendar : str
         the calendar to use for formatting the time axis
 
+    maxPoints : list of {None, int}
+        the approximate maximum number of time points to use in a time series.
+        This can be helpful for reducing the number of symbols plotted if
+        plotting with markers.  Otherwise the markers become indistinguishable
+        from each other.
+
     titleFontSize : int, optional
         the size of the title font
 
@@ -81,9 +89,20 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         This may need to be adjusted depending on the figure size and aspect
         ratio.
 
+    obsMean, obsUncertainty : list of float, optional
+        Mean values and uncertainties for observations to be plotted as error
+        bars. The two lists must have the same number of elements.
+
+    obsLegend : list of str, optional
+        The label in the legend for each element in ``obsMean`` (and
+        ``obsUncertainty``)
+
+    legendLocation : str, optional
+        The location of the legend (see ``pyplot.legend()`` for details)
+
     Authors
     -------
-    Xylar Asay-Davis, Milena Veneziani
+    Xylar Asay-Davis, Milena Veneziani, Stephen Price
     """
 
     if dpi is None:
@@ -96,15 +115,45 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
             continue
-        mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
-        mean = xr.DataArray.from_series(mean)
+        if N == 1 or N is None:
+            mean = dsvalue
+        else:
+            mean = pd.Series.rolling(dsvalue.to_pandas(), N,
+                                     center=True).mean()
+            mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
-        plt.plot(mean['Time'], mean,
+
+        if maxPoints is not None and maxPoints[dsIndex] is not None:
+            nTime = mean.sizes['Time']
+            if maxPoints[dsIndex] < nTime:
+                stride = int(round(nTime/float(maxPoints[dsIndex])))
+                mean = mean.isel(Time=slice(0, None, stride))
+
+        plt.plot(mean['Time'].values, mean.values,
                  lineStyles[dsIndex],
                  linewidth=lineWidths[dsIndex],
                  label=legendText[dsIndex])
-    plt.legend(loc='lower left')
+
+    if obsMean is not None:
+        obsCount = len(obsMean)
+        assert(len(obsUncertainty) == obsCount)
+
+        # space the observations along the time line, leaving gaps at either
+        # end
+        start = np.amin(minDays)
+        end = np.amax(maxDays)
+        obsTimes = np.linspace(start, end, obsCount+2)[1:-1]
+        obsSymbols = ['o', '^', 's', 'D', '*']
+        for iObs in range(obsCount):
+            if obsMean[iObs] is not None:
+                plt.errorbar(obsTimes[iObs], obsMean[iObs],
+                             yerr=obsUncertainty[iObs],
+                             fmt=obsSymbols[np.mod(iObs, len(obsSymbols))],
+                             ecolor='k',
+                             capthick=2, label=obsLegend[iObs])
+
+    plt.legend(loc=legendLocation)
 
     ax = plt.gca()
 
@@ -120,7 +169,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     if yaxLimits[0]*yaxLimits[1] < 0:
         indgood = np.where(np.logical_not(np.isnan(mean)))
         x = mean['Time'][indgood]
-        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2)
+        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2, zorder=1)
 
     plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
@@ -243,10 +292,10 @@ def plot_polar_comparison(
         Lons,
         Lats,
         modelArray,
-        obsArray,
+        refArray,
         diffArray,
-        cmapModelObs,
-        clevsModelObs,
+        cmapModelRef,
+        clevsModelRef,
         cmapDiff,
         clevsDiff,
         fileout,
@@ -255,7 +304,7 @@ def plot_polar_comparison(
         latmin=50.0,
         lon0=0,
         modelTitle='Model',
-        obsTitle='Observations',
+        refTitle='Observations',
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
@@ -275,17 +324,17 @@ def plot_polar_comparison(
     Lons, Lats : float arrays
         longitude and latitude arrays
 
-    modelArray, obsArray : float arrays
-        model and observational data sets
+    modelArray, refArray : float arrays
+        model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and obsArray
+        difference between modelArray and refArray
 
-    cmapModelObs : str
-        colormap of model and observations panel
+    cmapModelRef : str
+        colormap of model and observations or reference run panel
 
-    clevsModelObs : int array
-        colorbar values for model and observations panel
+    clevsModelRef : int array
+        colorbar values for model and observations or reference run panel
 
     cmapDiff : str
         colormap of difference (bias) panel
@@ -305,8 +354,8 @@ def plot_polar_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    obsTitle : str, optional
-        title of the observations panel
+    refTitle : str, optional
+        title of the observations or reference run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -359,7 +408,11 @@ def plot_polar_comparison(
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
 
-    if vertical:
+    if refArray is None:
+        if figsize is None:
+            figsize = (8, 8.5)
+        subplots = [111]
+    elif vertical:
         if figsize is None:
             figsize = (8, 22)
         subplots = [311, 312, 313]
@@ -379,20 +432,21 @@ def plot_polar_comparison(
         fig.suptitle(title, y=0.95, **title_font)
     axis_font = {'size': config.get('plot', 'axisFontSize')}
 
-    normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
+    normModelRef = cols.BoundaryNorm(clevsModelRef, cmapModelRef.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
     ax = plt.subplot(subplots[0])
-    do_subplot(ax=ax, field=modelArray, title=modelTitle, cmap=cmapModelObs,
-               norm=normModelObs, levels=clevsModelObs)
+    do_subplot(ax=ax, field=modelArray, title=modelTitle, cmap=cmapModelRef,
+               norm=normModelRef, levels=clevsModelRef)
 
-    ax = plt.subplot(subplots[1])
-    do_subplot(ax=ax, field=obsArray, title=obsTitle, cmap=cmapModelObs,
-               norm=normModelObs, levels=clevsModelObs)
+    if refArray is not None:
+        ax = plt.subplot(subplots[1])
+        do_subplot(ax=ax, field=refArray, title=refTitle, cmap=cmapModelRef,
+                   norm=normModelRef, levels=clevsModelRef)
 
-    ax = plt.subplot(subplots[2])
-    do_subplot(ax=ax, field=diffArray, title=diffTitle, cmap=cmapDiff,
-               norm=normDiff, levels=clevsDiff)
+        ax = plt.subplot(subplots[2])
+        do_subplot(ax=ax, field=diffArray, title=diffTitle, cmap=cmapDiff,
+                   norm=normDiff, levels=clevsDiff)
 
     plt.tight_layout(pad=4.)
     if vertical:
@@ -410,20 +464,20 @@ def plot_global_comparison(
     Lons,
     Lats,
     modelArray,
-    obsArray,
+    refArray,
     diffArray,
-    cmapModelObs,
-    clevsModelObs,
+    cmapModelRef,
+    clevsModelRef,
     cmapDiff,
     clevsDiff,
     fileout,
     title=None,
     modelTitle='Model',
-    obsTitle='Observations',
+    refTitle='Observations',
     diffTitle='Model-Observations',
     cbarlabel='units',
     titleFontSize=None,
-    figsize=(8, 12),
+    figsize=(8, 13),
     dpi=None):
 
     """
@@ -438,17 +492,17 @@ def plot_global_comparison(
     Lons, Lats : float arrays
         longitude and latitude arrays
 
-    modelArray, obsArray : float arrays
-        model and observational data sets
+    modelArray, refArray : float arrays
+        model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and obsArray
+        difference between modelArray and refArray
 
-    cmapModelObs : str
-        colormap of model and observations panel
+    cmapModelRef : str
+        colormap of model and observations or reference run panel
 
-    clevsModelObs : int array
-        colorbar values for model and observations panel
+    clevsModelRef : int array
+        colorbar values for model and observations or reference run panel
 
     cmapDiff : str
         colormap of difference (bias) panel
@@ -465,8 +519,8 @@ def plot_global_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    obsTitle : str, optional
-        title of the observations panel
+    refTitle : str, optional
+        title of the observations or reference run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -506,10 +560,11 @@ def plot_global_comparison(
                 urcrnrlon=181, resolution='l')
     x, y = m(Lons, Lats)  # compute map proj coordinates
 
-    normModelObs = cols.BoundaryNorm(clevsModelObs, cmapModelObs.N)
+    normModelRef = cols.BoundaryNorm(clevsModelRef, cmapModelRef.N)
     normDiff = cols.BoundaryNorm(clevsDiff, cmapDiff.N)
 
-    plt.subplot(3, 1, 1)
+    if refArray is not None:
+        plt.subplot(3, 1, 1)
     plt.title(modelTitle, y=1.06, **axis_font)
     m.drawcoastlines()
     m.fillcontinents(color='grey', lake_color='white')
@@ -517,39 +572,40 @@ def plot_global_comparison(
                     labels=[True, False, False, False])
     m.drawmeridians(np.arange(-180., 180., 60.),
                     labels=[False, False, False, True])
-    cs = m.contourf(x, y, modelArray, cmap=cmapModelObs, norm=normModelObs,
-                    levels=clevsModelObs, extend='both')
+    cs = m.contourf(x, y, modelArray, cmap=cmapModelRef, norm=normModelRef,
+                    levels=clevsModelRef, extend='both')
     cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
+                      ticks=clevsModelRef, boundaries=clevsModelRef)
     cbar.set_label(cbarlabel)
 
-    plt.subplot(3, 1, 2)
-    plt.title(obsTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 80., 20.),
-                    labels=[True, False, False, False])
-    m.drawmeridians(np.arange(-180., 180., 40.),
-                    labels=[False, False, False, True])
-    cs = m.contourf(x, y, obsArray, cmap=cmapModelObs, norm=normModelObs,
-                    levels=clevsModelObs, extend='both')
-    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
-                      ticks=clevsModelObs, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+    if refArray is not None:
+        plt.subplot(3, 1, 2)
+        plt.title(refTitle, y=1.06, **axis_font)
+        m.drawcoastlines()
+        m.fillcontinents(color='grey', lake_color='white')
+        m.drawparallels(np.arange(-80., 80., 20.),
+                        labels=[True, False, False, False])
+        m.drawmeridians(np.arange(-180., 180., 40.),
+                        labels=[False, False, False, True])
+        cs = m.contourf(x, y, refArray, cmap=cmapModelRef, norm=normModelRef,
+                        levels=clevsModelRef, extend='both')
+        cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                          ticks=clevsModelRef, boundaries=clevsModelRef)
+        cbar.set_label(cbarlabel)
 
-    plt.subplot(3, 1, 3)
-    plt.title(diffTitle, y=1.06, **axis_font)
-    m.drawcoastlines()
-    m.fillcontinents(color='grey', lake_color='white')
-    m.drawparallels(np.arange(-80., 80., 20.),
-                    labels=[True, False, False, False])
-    m.drawmeridians(np.arange(-180., 180., 40.),
-                    labels=[False, False, False, True])
-    cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
-                    levels=clevsDiff, extend='both')
-    cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
-                      ticks=clevsDiff, boundaries=clevsModelObs)
-    cbar.set_label(cbarlabel)
+        plt.subplot(3, 1, 3)
+        plt.title(diffTitle, y=1.06, **axis_font)
+        m.drawcoastlines()
+        m.fillcontinents(color='grey', lake_color='white')
+        m.drawparallels(np.arange(-80., 80., 20.),
+                        labels=[True, False, False, False])
+        m.drawmeridians(np.arange(-180., 180., 40.),
+                        labels=[False, False, False, True])
+        cs = m.contourf(x, y, diffArray, cmap=cmapDiff, norm=normDiff,
+                        levels=clevsDiff, extend='both')
+        cbar = m.colorbar(cs, location='right', pad="5%", spacing='uniform',
+                          ticks=clevsDiff, boundaries=clevsModelRef)
+        cbar.set_label(cbarlabel)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -558,13 +614,217 @@ def plot_global_comparison(
         plt.close()
 
 
-def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
-    days = np.maximum(days, 0.)
-    date = days_to_datetime(days, calendar)
-    if includeMonth:
-        return '{:04d}-{:02d}'.format(date.year, date.month)
+def plot_polar_projection_comparison(
+        config,
+        x,
+        y,
+        landMask,
+        modelArray,
+        refArray,
+        diffArray,
+        fileout,
+        colorMapSectionName,
+        colorMapType='norm',
+        title=None,
+        modelTitle='Model',
+        refTitle='Observations',
+        diffTitle='Model-Observations',
+        cbarlabel='units',
+        titleFontSize=None,
+        figsize=None,
+        dpi=None,
+        vertical=False):
+
+    """
+    Plots a data set as a longitude/latitude map.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    x, y : numpy ndarrays
+        1D x and y arrays defining the projection grid
+
+    landMask : numpy ndarrays
+        model and observational or reference run data sets
+
+    modelArray, refArray : numpy ndarrays
+        model and observational or reference run data sets
+
+    diffArray : float array
+        difference between modelArray and refArray
+
+    fileout : str
+        the file name to be written
+
+    colorMapSectionName : str
+        section name in ``config`` where color map info can be found.
+
+    colorMapType : {'norm', 'indexed'}, optional
+        The type of color map, either a matplotlib norm or indices into a color
+        map.
+
+        If 'norm', the following options must be defined for suffixes
+        ``Result`` and ``Difference``:
+            ``colormapName<suffix>``, ``normType<suffix>``,
+            ``normArgs<suffix>``, ``colorbarTicks<suffix>``
+
+        If 'indexed', these options are required:
+            ``colormapName<suffix>``, ``colormapIndices<suffix>``,
+            ``colorbarLevels<suffix>``
+
+        The colorbar for each panel will be constructed from these options
+
+
+    title : str, optional
+        the subtitle of the plot
+
+    plotProjection : str, optional
+        Basemap projection for the plot
+
+    modelTitle : str, optional
+        title of the model panel
+
+    refTitle : str, optional
+        title of the observations or reference run panel
+
+    diffTitle : str, optional
+        title of the difference (bias) panel
+
+    cbarlabel : str, optional
+        label on the colorbar
+
+    titleFontSize : int, optional
+        size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches.  If ``None``, the figure size is
+        ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.
+
+    dpi : int, optional
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
+
+    vertical : bool, optional
+        whether the subplots should be stacked vertically rather than
+        horizontally
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    def plot_panel(ax, title, array, cmap, norm, ticks):
+        plt.title(title, y=1.06, **axis_font)
+
+        mesh = plt.pcolormesh(x, y, array, cmap=cmap, norm=norm)
+
+        plt.pcolormesh(x, y, landMask, cmap=landColorMap)
+        plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
+                    linewidths=0.5)
+
+        # create an axes on the right side of ax. The width of cax will be 5%
+        # of ax and the padding between cax and ax will be fixed at 0.05 inch.
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+
+        cbar = plt.colorbar(mesh, cax=cax)
+        cbar.set_label(cbarlabel)
+        if ticks is not None:
+            cbar.set_ticks(ticks)
+            cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+        ax.axis('off')
+        ax.set_aspect('equal')
+        ax.autoscale(tight=True)
+
+    # set up figure
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+
+    if refArray is None:
+        if figsize is None:
+            figsize = (8, 7.5)
+        subplots = [111]
+    elif vertical:
+        if figsize is None:
+            figsize = (8, 22)
+        subplots = [311, 312, 313]
     else:
-        return '{:04d}'.format(date.year)
+        if figsize is None:
+            figsize = (22, 7.5)
+        subplots = [131, 132, 133]
+
+    if colorMapType == 'norm':
+        (cmapModelRef, normModelRef) = _setup_colormap_and_norm(
+            config, colorMapSectionName, suffix='Result')
+        (cmapDiff, normDiff) = _setup_colormap_and_norm(
+            config, colorMapSectionName, suffix='Difference')
+
+        if config.has_option(colorMapSectionName, 'colorbarTicksResult'):
+            colorbarTicksResult = config.getExpression(colorMapSectionName,
+                                                       'colorbarTicksResult',
+                                                       usenumpyfunc=True)
+        else:
+            colorbarTicksResult = None
+        if config.has_option(colorMapSectionName, 'colorbarTicksDifference'):
+            colorbarTicksDifference = config.getExpression(
+                colorMapSectionName, 'colorbarTicksDifference',
+                usenumpyfunc=True)
+        else:
+            colorbarTicksDifference = None
+
+    elif colorMapType == 'indexed':
+
+        (cmapModelRef, colorbarTicksResult) = setup_colormap(
+            config, colorMapSectionName, suffix='Result')
+        (cmapDiff, colorbarTicksDifference) = setup_colormap(
+            config, colorMapSectionName, suffix='Difference')
+
+        normModelRef = cols.BoundaryNorm(colorbarTicksResult, cmapModelRef.N)
+        normDiff = cols.BoundaryNorm(colorbarTicksDifference, cmapDiff.N)
+    else:
+        raise ValueError('colorMapType must be one of {norm, indexed}')
+
+    # set up figure
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+    if (title is not None):
+        if titleFontSize is None:
+            titleFontSize = config.get('plot', 'titleFontSize')
+        title_font = {'size': titleFontSize,
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
+        fig.suptitle(title, y=0.95, **title_font)
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+
+    # set up land colormap
+    colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
+    landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
+
+    # locations of centers for land contour
+    xCenter = 0.5*(x[1:] + x[0:-1])
+    yCenter = 0.5*(y[1:] + y[0:-1])
+
+    ax = plt.subplot(subplots[0])
+    plot_panel(ax, modelTitle, modelArray, cmapModelRef, normModelRef,
+               colorbarTicksResult)
+
+    if refArray is not None:
+        ax = plt.subplot(subplots[1])
+        plot_panel(ax, refTitle, refArray, cmapModelRef, normModelRef,
+                   colorbarTicksResult)
+
+        ax = plt.subplot(subplots[2])
+        plot_panel(ax, diffTitle, diffArray, cmapDiff, normDiff,
+                   colorbarTicksDifference)
+
+    if (fileout is not None):
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
 
 
 def plot_1D(config, xArrays, fieldArrays, errArrays,
@@ -905,6 +1165,8 @@ def setup_colormap(config, configSectionName, suffix=''):
     Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     '''
 
+    _register_custom_colormaps()
+
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
 
@@ -937,42 +1199,6 @@ def setup_colormap(config, configSectionName, suffix=''):
         colormap.set_over(overColor)
 
     return (colormap, colorbarLevels)
-
-
-def plot_size_y_axis(plt, xaxisValues, **data):
-    '''
-    Resize the y-axis limit based on the curves being plotted
-
-    Parameters
-    ----------
-    plt : plot handle
-
-    xaxisValues : numpy.array
-       Values plotted along the x-axis
-
-    data : dictionary entries must be numpy.array
-       data for curves on plot
-
-    Authors
-    -------
-    Luke Van Roekel
-    '''
-
-    ax = plt.gca()
-    xmin = ax.get_xlim()[0]
-    xmax = ax.get_xlim()[1]
-
-    # find period/frequency bounds for chosen xmin/xmax
-    minIndex = np.abs(xaxisValues - xmin).argmin()
-    maxIndex = np.abs(xaxisValues - xmax).argmin()
-
-    # find maximum value of three curves plotted
-    maxCurveVal = -1E20
-    for key in data:
-        maxTemp = data[key][minIndex:maxIndex].max()
-        maxCurveVal = max(maxTemp, maxCurveVal)
-
-    return maxCurveVal
 
 
 def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
@@ -1021,6 +1247,184 @@ def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
 
     plt.autoscale(enable=True, axis='x', tight=True)
 
+
+def _setup_colormap_and_norm(config, configSectionName, suffix=''):
+
+    '''
+    Set up a colormap from the registry
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    configSectionName : str
+        name of config section
+
+    suffix: str, optional
+        suffix of colormap related options
+
+    Returns
+    -------
+    colormap : srt
+        new colormap
+
+    norm : ``SymLogNorm`` object
+        the norm used to normalize the colormap
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    '''
+
+    _register_custom_colormaps()
+
+    colormap = plt.get_cmap(config.get(configSectionName,
+                                       'colormapName{}'.format(suffix)))
+
+    normType = config.get(configSectionName, 'normType{}'.format(suffix))
+
+    kwargs = config.getExpression(configSectionName,
+                                  'normArgs{}'.format(suffix))
+
+    if normType == 'symLog':
+        norm = cols.SymLogNorm(**kwargs)
+    elif normType == 'linear':
+        norm = cols.Normalize(**kwargs)
+    else:
+        raise ValueError('Unsupported norm type {} in section {}'.format(
+            normType, configSectionName))
+
+    return (colormap, norm)
+
+
+def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
+    days = np.maximum(days, 0.)
+    date = days_to_datetime(days, calendar)
+    if includeMonth:
+        return '{:04d}-{:02d}'.format(date.year, date.month)
+    else:
+        return '{:04d}'.format(date.year)
+
+
+def _register_custom_colormaps():
+    name = 'ferret'
+    backgroundColor = (0.9, 0.9, 0.9)
+
+    red = np.array([[0, 0.6],
+                    [0.15, 1],
+                    [0.35, 1],
+                    [0.65, 0],
+                    [0.8, 0],
+                    [1, 0.75]])
+
+    green = np.array([[0, 0],
+                      [0.1, 0],
+                      [0.35, 1],
+                      [1, 0]])
+
+    blue = np.array([[0, 0],
+                     [0.5, 0],
+                     [0.9, 0.9],
+                     [1, 0.9]])
+
+    colorCount = 21
+    colorList = np.ones((colorCount, 4), float)
+    colorList[:, 0] = np.interp(np.linspace(0, 1, colorCount),
+                                red[:, 0], red[:, 1])
+    colorList[:, 1] = np.interp(np.linspace(0, 1, colorCount),
+                                green[:, 0], green[:, 1])
+    colorList[:, 2] = np.interp(np.linspace(0, 1, colorCount),
+                                blue[:, 0], blue[:, 1])
+    colorList = colorList[::-1, :]
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    colorMap.set_bad(backgroundColor)
+    plt.register_cmap(name, colorMap)
+
+    name = 'erdc_iceFire_H'
+
+    colorArray = np.array([
+        [-1, 4.05432e-07, 0, 5.90122e-06],
+        [-0.87451, 0, 0.120401, 0.302675],
+        [-0.74902, 0, 0.216583, 0.524574],
+        [-0.623529, 0.0552475, 0.345025, 0.6595],
+        [-0.498039, 0.128047, 0.492588, 0.720288],
+        [-0.372549, 0.188955, 0.641309, 0.792092],
+        [-0.247059, 0.327673, 0.784935, 0.873434],
+        [-0.121569, 0.60824, 0.892164, 0.935547],
+        [0.00392157, 0.881371, 0.912178, 0.818099],
+        [0.129412, 0.951407, 0.835621, 0.449279],
+        [0.254902, 0.904481, 0.690489, 0],
+        [0.380392, 0.85407, 0.510864, 0],
+        [0.505882, 0.777093, 0.33018, 0.00088199],
+        [0.631373, 0.672862, 0.139087, 0.00269398],
+        [0.756863, 0.508815, 0, 0],
+        [0.882353, 0.299417, 0.000366289, 0.000547829],
+        [1, 0.0157519, 0.00332021, 4.55569e-08]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex+1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    plt.register_cmap(name, colorMap)
+
+    name = 'erdc_iceFire_L'
+
+    colorArray = np.array([
+        [-1, 0.870485, 0.913768, 0.832905],
+        [-0.87451, 0.586919, 0.887865, 0.934003],
+        [-0.74902, 0.31583, 0.776442, 0.867858],
+        [-0.623529, 0.18302, 0.632034, 0.787722],
+        [-0.498039, 0.117909, 0.484134, 0.713825],
+        [-0.372549, 0.0507239, 0.335979, 0.654741],
+        [-0.247059, 0, 0.209874, 0.511832],
+        [-0.121569, 0, 0.114689, 0.28935],
+        [0.00392157, 0.0157519, 0.00332021, 4.55569e-08],
+        [0.129412, 0.312914, 0, 0],
+        [0.254902, 0.520865, 0, 0],
+        [0.380392, 0.680105, 0.15255, 0.0025996],
+        [0.505882, 0.785109, 0.339479, 0.000797922],
+        [0.631373, 0.857354, 0.522494, 0],
+        [0.756863, 0.910974, 0.699774, 0],
+        [0.882353, 0.951921, 0.842817, 0.478545],
+        [1, 0.881371, 0.912178, 0.818099]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex+1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    plt.register_cmap(name, colorMap)
+
+    name = 'BuOr'
+    colors1 = plt.cm.PuOr(np.linspace(0., 1, 256))
+    colors2 = plt.cm.RdBu(np.linspace(0, 1, 256))
+
+    # combine them and build a new colormap, just the orange from the first
+    # and the blue from the second
+    colorList = np.vstack((colors1[0:128, :], colors2[128:256, :]))
+    # reverse the order
+    colorList = colorList[::-1, :]
+    colorMap = cols.LinearSegmentedColormap.from_list(name, colorList)
+
+    plt.register_cmap(name, colorMap)
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

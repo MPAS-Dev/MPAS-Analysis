@@ -10,8 +10,7 @@ from __future__ import absolute_import, division, print_function, \
 import pytest
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.analysis_task import AnalysisTask
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 class TestAnalysisTask(TestCase):

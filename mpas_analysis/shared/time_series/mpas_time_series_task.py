@@ -3,7 +3,6 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import os
-import warnings
 import subprocess
 from distutils.spawn import find_executable
 import xarray as xr
@@ -42,7 +41,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
     '''
 
     def __init__(self, config, componentName, taskName=None,
-                 subtaskName=None):  # {{{
+                 subtaskName=None, section='timeSeries'):  # {{{
         '''
         Construct the analysis task for extracting time series.
 
@@ -62,19 +61,22 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         subtaskName : str, optional
             The name of the subtask (if any)
 
+        section : str, optional
+            The section of the config file from which to read the start and
+            end times for the time series, also added as a tag
 
         Authors
         -------
         Xylar Asay-Davis
         '''
         self.variableList = []
-        self.seasons = []
+        self.section = section
+        tags = [section]
 
-        tags = ['timeSeries']
-
-        suffix = componentName[0].upper() + componentName[1:]
         if taskName is None:
-            taskName = 'mpasTimeSeries{}'.format(suffix)
+            suffix = section[0].upper() + section[1:] + \
+                componentName[0].upper() + componentName[1:]
+            taskName = 'mpas{}'.format(suffix)
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasTimeSeriesTask, self).__init__(
@@ -138,8 +140,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         # get a list of timeSeriesStats output files from the streams file,
         # reading only those that are between the start and end dates
-        startDate = config.get('timeSeries', 'startDate')
-        endDate = config.get('timeSeries', 'endDate')
+        startDate = config.get(self.section, 'startDate')
+        endDate = config.get(self.section, 'endDate')
         streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
                 streamName, startDate=startDate, endDate=endDate,
@@ -150,6 +152,12 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                           '{}.'.format(streamName, startDate, endDate))
 
         self._update_time_series_bounds_from_file_names()
+
+        self.runMessage = '\nComputing MPAS time series from first year ' \
+                          'plus files:\n' \
+                          '    {} through\n    {}'.format(
+                                  os.path.basename(self.inputFiles[0]),
+                                  os.path.basename(self.inputFiles[-1]))
 
         # Make sure first year of data is included for computing anomalies
         simulationStartTime = get_simulation_start_time(self.runStreams)
@@ -180,10 +188,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             # nothing to do
             return
 
-        self.logger.info('\nComputing MPAS time series from files:\n'
-                         '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFiles[0]),
-                                 os.path.basename(self.inputFiles[-1])))
+        self.logger.info(self.runMessage)
 
         self._compute_time_series_with_ncrcat()
 
@@ -200,7 +205,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         """
 
         config = self.config
-        section = 'timeSeries'
+        section = self.section
 
         requestedStartYear = config.getint(section, 'startYear')
         requestedEndYear = config.getint(section, 'endYear')
@@ -222,14 +227,14 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         endYear = years[lastIndex]
 
         if startYear != requestedStartYear or endYear != requestedEndYear:
-            message = "time series start and/or end year different from " \
-                      "requested\n" \
-                      "requestd: {:04d}-{:04d}\n" \
-                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                         requestedEndYear,
-                                                         startYear,
-                                                         endYear)
-            warnings.warn(message)
+            print("Warning: {} start and/or end year different from "
+                  "requested\n"
+                  "requestd: {:04d}-{:04d}\n"
+                  "actual:   {:04d}-{:04d}\n".format(section,
+                                                     requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear))
             config.set(section, 'startYear', str(startYear))
             config.set(section, 'endYear', str(endYear))
 
@@ -270,36 +275,53 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                           'Note: this presumes use of the conda-forge '
                           'channel.')
 
+        inputFiles = self.inputFiles
         if os.path.exists(self.outputFile):
-            # add only input files wiht times that aren't already in the
-            # output file
-            dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-            inYears = numpy.array([int(date[0:4]) for date in dates])
-            inMonths = numpy.array([int(date[5:7]) for date in dates])
-            totalMonths = 12*inYears + inMonths
-
+            # make sure all the necessary variables are also present
             with xr.open_dataset(self.outputFile) as ds:
-                lastDate = str(ds.xtime_startMonthly[-1].values)
+                updateSubset = True
+                for variableName in self.variableList:
+                    if variableName not in ds.variables:
+                        updateSubset = False
+                        break
 
-            lastYear = int(lastDate[0:4])
-            lastMonth = int(lastDate[5:7])
-            lastTotalMonths = 12*lastYear + lastMonth
+                if updateSubset:
+                    # add only input files wiht times that aren't already in
+                    # the output file
+                    dates = sorted([fileName[-13:-6] for fileName in
+                                    self.inputFiles])
+                    inYears = numpy.array([int(date[0:4]) for date in dates])
+                    inMonths = numpy.array([int(date[5:7]) for date in dates])
+                    totalMonths = 12*inYears + inMonths
 
-            inputFiles = []
-            for index, inputFile in enumerate(self.inputFiles):
-                if totalMonths[index] > lastTotalMonths:
-                    inputFiles.append(inputFile)
+                    dates = [bytes.decode(name) for name in
+                             ds.xtime_startMonthly.values]
+                    lastDate = dates[-1]
 
-            if len(inputFiles) == 0:
-                # nothing to do
-                return
-        else:
-            inputFiles = self.inputFiles
+                    lastYear = int(lastDate[0:4])
+                    lastMonth = int(lastDate[5:7])
+                    lastTotalMonths = 12*lastYear + lastMonth
+
+                    inputFiles = []
+                    for index, inputFile in enumerate(self.inputFiles):
+                        if totalMonths[index] > lastTotalMonths:
+                            inputFiles.append(inputFile)
+
+                    if len(inputFiles) == 0:
+                        # nothing to do
+                        return
+                else:
+                    # there is an output file but it has the wrong variables
+                    # so we need ot delete it.
+                    self.logger.warning('Warning: deleting file {} because '
+                                        'some variables were missing'.format(
+                                                self.outputFile))
+                    os.remove(self.outputFile)
 
         variableList = self.variableList + ['xtime_startMonthly',
                                             'xtime_endMonthly']
 
-        args = ['ncrcat', '--record_append', '--no_tmp_fl',
+        args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl',
                 '-v', ','.join(variableList)]
 
         printCommand = '{} {} ... {} {}'.format(' '.join(args), inputFiles[0],

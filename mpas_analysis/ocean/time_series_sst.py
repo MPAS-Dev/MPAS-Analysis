@@ -27,22 +27,29 @@ class TimeSeriesSST(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
+
     Authors
     -------
     Xylar Asay-Davis, Milena Veneziani
     """
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+        # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -56,6 +63,7 @@ class TimeSeriesSST(AnalysisTask):
             tags=['timeSeries', 'sst'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
+        self.refConfig = refConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -96,14 +104,10 @@ class TimeSeriesSST(AnalysisTask):
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         mainRunName = config.get('runs', 'mainRunName')
-        regions = config.getExpression('regions', 'regions')
-        regionIndicesToPlot = config.getExpression('timeSeriesSST',
-                                                   'regionIndicesToPlot')
+        regions = config.getExpression('timeSeriesSST', 'regions')
 
         self.xmlFileNames = []
         self.filePrefixes = {}
-
-        regions = [regions[index] for index in regionIndicesToPlot]
 
         for region in regions:
             filePrefix = 'sst_{}_{}'.format(region, mainRunName)
@@ -141,16 +145,15 @@ class TimeSeriesSST(AnalysisTask):
 
         regions = config.getExpression('regions', 'regions')
         plotTitles = config.getExpression('regions', 'plotTitles')
-        regionIndicesToPlot = config.getExpression('timeSeriesSST',
-                                                   'regionIndicesToPlot')
+        regionsToPlot = config.getExpression('timeSeriesSST', 'regions')
+
+        regionIndicesToPlot = [regions.index(region) for region in
+                               regionsToPlot]
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'timeseriesSubdirectory')
 
         make_directories(outputDirectory)
-
-        regionNames = config.getExpression('regions', 'regions')
-        regionNames = [regionNames[index] for index in regionIndicesToPlot]
 
         dsSST = open_mpas_dataset(fileName=self.inputFile,
                                   calendar=calendar,
@@ -164,6 +167,27 @@ class TimeSeriesSST(AnalysisTask):
                                  calendar=calendar)
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
                                calendar=calendar)
+
+        if self.refConfig is not None:
+            baseDirectory = build_config_full_path(
+                self.refConfig, 'output', 'timeSeriesSubdirectory')
+
+            refFileName = '{}/{}.nc'.format(
+                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+
+            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
+            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
+            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
+            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+
+            dsRefSST = open_mpas_dataset(
+                    fileName=refFileName,
+                    calendar=calendar,
+                    variableList=self.variableList,
+                    startDate=refStartDate,
+                    endDate=refEndDate)
+        else:
+            dsRefSST = None
 
         if preprocessedReferenceRunName != 'None':
             self.logger.info('  Load in SST for a preprocesses reference '
@@ -190,8 +214,7 @@ class TimeSeriesSST(AnalysisTask):
         for regionIndex in regionIndicesToPlot:
             region = regions[regionIndex]
 
-            title = plotTitles[regionIndex]
-            title = 'SST, %s \n %s (black)' % (title, mainRunName)
+            title = '{} SST'.format(plotTitles[regionIndex])
             xLabel = 'Time [years]'
             yLabel = '[$^\circ$C]'
 
@@ -202,23 +225,32 @@ class TimeSeriesSST(AnalysisTask):
 
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
+            lineStyles = ['k-']
+            lineWidths = [3]
+
+            fields = [SST]
+            legendText = [mainRunName]
+
+            if dsRefSST is not None:
+                refSST = dsRefSST[varName].isel(nOceanRegions=regionIndex)
+                fields.append(refSST)
+                lineStyles.append('b-')
+                lineWidths.append(1.5)
+                refRunName = self.refConfig.get('runs', 'mainRunName')
+                legendText.append(refRunName)
+
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST
+                fields.append(SST_v0)
+                lineStyles.append('r-')
+                lineWidths.append(1.5)
+                legendText.append(preprocessedReferenceRunName)
 
-                title = '{}\n {} (red)'.format(title,
-                                               preprocessedReferenceRunName)
-                timeseries_analysis_plot(config, [SST, SST_v0],
-                                         movingAveragePoints,
-                                         title, xLabel, yLabel, figureName,
-                                         lineStyles=['k-', 'r-'],
-                                         lineWidths=[3, 1.5],
-                                         legendText=[None, None],
-                                         calendar=calendar)
-            else:
-                timeseries_analysis_plot(config, [SST], movingAveragePoints,
-                                         title, xLabel, yLabel, figureName,
-                                         lineStyles=['k-'], lineWidths=[3],
-                                         legendText=[None], calendar=calendar)
+            timeseries_analysis_plot(config, fields, movingAveragePoints,
+                                     title, xLabel, yLabel, figureName,
+                                     lineStyles=lineStyles,
+                                     lineWidths=lineWidths,
+                                     legendText=legendText, calendar=calendar)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                     region)

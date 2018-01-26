@@ -1,17 +1,3 @@
-'''
-Functions for writing data sets
-
-Functions
----------
-write_netcdf - write an xarray data set to a NetCDF file using finite fill
-    values
-
-Authors
--------
-Xylar Asay-Davis
-
-'''
-
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 

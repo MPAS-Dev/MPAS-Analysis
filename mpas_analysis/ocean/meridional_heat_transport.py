@@ -4,19 +4,18 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy as np
-import netCDF4
 import os
-import warnings
 
 from ..shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
-from ..shared.io.utility import build_config_full_path
-
-from ..shared.timekeeping.utility import get_simulation_start_time
+from ..shared.io.utility import build_config_full_path, make_directories
+from ..shared.io import write_netcdf, subset_variables
 
 from ..shared import AnalysisTask
 from ..shared.html import write_image_xml
+
+from ..shared.climatology import get_unmasked_mpas_climatology_file_name
 
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
@@ -29,22 +28,28 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
+    refConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a reference run (if any)
+
     Authors
     -------
     Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
 
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
         '''
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
-            Contains configuration options
+        config :  ``MpasAnalysisConfigParser``
+            Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
 
         Authors
         -------
@@ -61,15 +66,13 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
 
+        self.refConfig = refConfig
+
         # }}}
 
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Raises
-        ------
-        ValueError: if myArg has an invalid value
 
         Authors
         -------
@@ -94,16 +97,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             analysisOptionName='config_am_meridionalheattransport_enable',
             raiseException=True)
 
-        # Later, we will read in depth and MHT latitude points
-        # from mpaso.hist.am.meridionalHeatTransport.*.nc
-        mhtFiles = self.historyStreams.readpath(
-                'meridionalHeatTransportOutput')
-        if len(mhtFiles) == 0:
-            raise IOError('No MPAS-O MHT history file found: need at least '
-                          'one ')
-
-        self.mhtFile = mhtFiles[0]
-
         self.sectionName = 'meridionalHeatTransport'
 
         # Read in obs file information
@@ -119,8 +112,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             if os.path.exists(observationsFile):
                 self.observationsFile = observationsFile
             else:
-                warnings.warn('No MHT observations file found: skip plotting '
-                              'obs')
+                print('Warning: No MHT observations file found: skip plotting '
+                      'obs')
 
         mainRunName = self.config.get('runs', 'mainRunName')
 
@@ -162,57 +155,106 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         config = self.config
 
+        mainRunName = config.get('runs', 'mainRunName')
+
+        depthLimGlobal = config.getExpression(self.sectionName,
+                                              'depthLimGlobal')
+        xLimGlobal = config.getExpression(self.sectionName, 'xLimGlobal')
         movingAveragePoints = config.getint('meridionalHeatTransport',
                                             'movingAveragePoints')
 
-        # Read in depth and MHT latitude points
-        # Latitude is from binBoundaryMerHeatTrans written in
-        #  mpaso.hist.am.meridionalHeatTransport.*.nc
-        # Depth is from refZMid, also in
-        # mpaso.hist.am.meridionalHeatTransport.*.nc
+        outputDirectory = build_config_full_path(config, 'output',
+                                                 'mpasClimatologySubdirectory')
 
-        self.logger.info('  Read in depth and latitude...')
-        ncFile = netCDF4.Dataset(self.mhtFile, mode='r')
-        # reference depth [m]
-        refZMid = ncFile.variables['refZMid'][:]
-        refBottomDepth = ncFile.variables['refBottomDepth'][:]
-        binBoundaryMerHeatTrans = \
-            ncFile.variables['binBoundaryMerHeatTrans'][:]
-        binBoundaryMerHeatTrans = np.rad2deg(binBoundaryMerHeatTrans)
-        ncFile.close()
+        make_directories(outputDirectory)
 
-        nVertLevels = len(refBottomDepth)
-        refLayerThickness = np.zeros(nVertLevels)
-        refLayerThickness[0] = refBottomDepth[0]
-        refLayerThickness[1:nVertLevels] = (refBottomDepth[1:nVertLevels] -
-                                            refBottomDepth[0:nVertLevels-1])
+        outFileName = \
+            '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(
+                outputDirectory, self.startYear, self.endYear)
 
-        ######################################################################
-        # Mark P Note: Currently only supports global MHT.
-        # Need to add variables merHeatTransLatRegion and
-        # merHeatTransLatZRegion
-        # These are not computed by default in ACME right now.
-        # Then we will need to add another section for regions with a loop
-        # over number of regions.
-        ######################################################################
 
-        self.logger.info('\n   Plotting global meridional heat transport')
+        if os.path.exists(outFileName):
+            self.logger.info('  Reading results from previous analysis run...')
+            annualClimatology = xr.open_dataset(outFileName)
+            refZMid = annualClimatology.refZMid.values
+            binBoundaryMerHeatTrans = \
+                annualClimatology.binBoundaryMerHeatTrans.values
+        else:
 
-        self.logger.info('   Load data...')
+            # Read in depth and MHT latitude points
+            # Latitude is from binBoundaryMerHeatTrans
+            try:
+                restartFileName = self.runStreams.readpath('restart')[0]
+            except ValueError:
+                raise IOError('No MPAS-O restart file found: need at least '
+                              'one for MHT calcuation')
 
-        climatologyFileName = self.mpasClimatologyTask.get_file_name(
-                season='ANN')
+            with xr.open_dataset(restartFileName) as dsRestart:
+                refBottomDepth = dsRestart.refBottomDepth.values
 
-        annualClimatology = xr.open_dataset(climatologyFileName)
-        annualClimatology = annualClimatology.isel(Time=0)
+            nVertLevels = len(refBottomDepth)
+            refLayerThickness = np.zeros(nVertLevels)
+            refLayerThickness[0] = refBottomDepth[0]
+            refLayerThickness[1:nVertLevels] = \
+                refBottomDepth[1:nVertLevels] - refBottomDepth[0:nVertLevels-1]
+
+            refZMid = -refBottomDepth + 0.5*refLayerThickness
+
+            binBoundaryMerHeatTrans = None
+            # first try timeSeriesStatsMonthly for bin boundaries, then try
+            # meridionalHeatTranspor steram as a backup option
+            for streamName in ['timeSeriesStatsMonthlyOutput',
+                               'meridionalHeatTransportOutput']:
+                try:
+                    inputFile = self.historyStreams.readpath(streamName)[0]
+                except ValueError:
+                    raise IOError('At least one file from stream {} is needed '
+                                  'to compute MHT'.format(streamName))
+
+                with xr.open_dataset(inputFile) as ds:
+                    if 'binBoundaryMerHeatTrans' in ds.data_vars:
+                        binBoundaryMerHeatTrans = \
+                            ds.binBoundaryMerHeatTrans.values
+                        break
+
+            if binBoundaryMerHeatTrans is None:
+                raise ValueError('Could not find binBoundaryMerHeatTrans in '
+                                 'either timeSeriesStatsMonthlyOutput or '
+                                 'meridionalHeatTransportOutput streams')
+
+            binBoundaryMerHeatTrans = np.rad2deg(binBoundaryMerHeatTrans)
+
+            ###################################################################
+            # Mark P Note: Currently only supports global MHT.
+            # Need to add variables merHeatTransLatRegion and
+            # merHeatTransLatZRegion
+            # These are not computed by default in ACME right now.
+            # Then we will need to add another section for regions with a loop
+            # over number of regions.
+            ###################################################################
+
+            self.logger.info('\n   Plotting global meridional heat transport')
+
+            self.logger.info('   Load data...')
+
+            climatologyFileName = self.mpasClimatologyTask.get_file_name(
+                    season='ANN')
+
+            variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
+                            'timeMonthly_avg_meridionalHeatTransportLatZ']
+
+            annualClimatology = xr.open_dataset(climatologyFileName)
+            annualClimatology = subset_variables(annualClimatology,
+                                                 variableList)
+            annualClimatology = annualClimatology.isel(Time=0)
+
+            annualClimatology.coords['refZMid'] = (('nVertLevels',), refZMid)
+            annualClimatology.coords['binBoundaryMerHeatTrans'] = \
+                (('nMerHeatTransBinsP1',), binBoundaryMerHeatTrans)
+
+            write_netcdf(annualClimatology, outFileName)
 
         # **** Plot MHT ****
-        # Define plotting variables
-        mainRunName = config.get('runs', 'mainRunName')
-        xLimGlobal = config.getExpression(self.sectionName, 'xLimGlobal')
-        depthLimGlobal = config.getExpression(self.sectionName,
-                                              'depthLimGlobal')
-
         self.logger.info('   Plot global MHT...')
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
@@ -223,6 +265,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                  self.startYear, self.endYear, mainRunName)
         filePrefix = self.filePrefixes['mht']
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        lineColors = ['r']
+        lineWidths = [1.6]
+        legendText = [mainRunName]
+        xArrays = [x]
+        fieldArrays = [y]
+        errArrays = [None]
         if self.observationsFile is not None:
             # Load in observations
             dsObs = xr.open_dataset(self.observationsFile)
@@ -232,23 +280,43 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             ecmwfGlobal = dsObs.GLOBALECMWF_ADJUSTED
             ecmwfErrGlobal = dsObs.GLOBALECMWF_ERR
 
-            lineColors = ['r', 'b', 'g']
-            lineWidths = [1.6, 1.2, 1.2]
-            legendText = ['model', 'NCEP', 'ECMWF']
-            plot_1D(config, [x, xObs, xObs],
-                    [y, ncepGlobal, ecmwfGlobal],
-                    [None, ncepErrGlobal, ecmwfErrGlobal],
-                    lineColors, lineWidths, legendText,
-                    title, xLabel, yLabel, figureName,
-                    xLim=xLimGlobal)
-        else:
-            lineColors = ['r']
-            lineWidths = [1.6]
+            lineColors.extend(['b', 'g'])
+            lineWidths.extend([1.2, 1.2])
+            legendText.extend(['NCEP', 'ECMWF'])
+            xArrays.extend([xObs, xObs])
+            fieldArrays.extend([ncepGlobal, ecmwfGlobal])
+            errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
+
+        if self.refConfig is not None:
+
+            refStartYear = self.refConfig.getint('climatology', 'startYear')
+            refEndYear = self.refConfig.getint('climatology', 'endYear')
+            refDirectory = build_config_full_path(
+                    self.refConfig, 'output', 'mpasClimatologySubdirectory')
+
+            refFileName = \
+                '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(
+                    refDirectory, refStartYear, refEndYear)
+
+            dsRef = xr.open_dataset(refFileName)
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            lineColors.append('k')
+            lineWidths.append(1.2)
+            legendText.append(refRunName)
+            xArrays.append(dsRef.binBoundaryMerHeatTrans)
+            fieldArrays.append(
+                    dsRef.timeMonthly_avg_meridionalHeatTransportLat)
+            errArrays.append(None)
+
+        if len(legendText) == 1:
+            # no need for a legend
             legendText = [None]
-            plot_1D(config, [x], [y], [None],
-                    lineColors, lineWidths, legendText,
-                    title, xLabel, yLabel, figureName,
-                    xLim=xLimGlobal)
+
+        plot_1D(config, xArrays, fieldArrays, errArrays,
+                lineColors, lineWidths, legendText,
+                title, xLabel, yLabel, figureName,
+                xLim=xLimGlobal)
 
         self._write_xml(filePrefix)
 

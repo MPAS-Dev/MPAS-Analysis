@@ -13,7 +13,7 @@ cd $PBS_O_WORKDIR
 
 # needed to prevent interference with acme-unified
 unset LD_LIBRARY_PATH
-soft add +acme-unified-1.1.1-nox
+soft add +e3sm-unified-1.1.2-nox
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
@@ -54,7 +54,7 @@ ncclimoParallelMode = $ncclimo_mode
 EOF
 
 # first, perform setup only without mpirun to create the mapping files
-$mpas_analysis_dir/run_mpas_analysis --purge --setup_only $run_config_file \
+$mpas_analysis_dir/run_mpas_analysis --setup_only $run_config_file \
     $job_config_file
 # next, do the full run now tht we have mapping files, but this time launching
 # with mpirun

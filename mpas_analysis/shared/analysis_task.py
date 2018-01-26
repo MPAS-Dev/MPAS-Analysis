@@ -10,7 +10,6 @@ Xylar Asay-Davis
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import warnings
 from multiprocessing import Process, Value
 import time
 import traceback
@@ -294,15 +293,6 @@ class AnalysisTask(Process):  # {{{
         Xylar Asay-Davis
         '''
         # redirect output to a log file
-        logsDirectory = build_config_full_path(self.config, 'output',
-                                               'logsSubdirectory')
-
-        configFileName = '{}/configs/config.{}'.format(logsDirectory,
-                                                       self.fullTaskName)
-        configFile = open(configFileName, 'w')
-        self.config.write(configFile)
-        configFile.close()
-
         if writeLogFile:
             self.logger = logging.getLogger(self.fullTaskName)
             handler = logging.FileHandler(self._logFileName)
@@ -382,10 +372,14 @@ class AnalysisTask(Process):  # {{{
         if (not isinstance(self.tags, list) and
                 self.tags is not None):
             raise ValueError('Analysis tasks\'s member self.tags '
-                             'must be NOne or a list of strings.')
+                             'must be None or a list of strings.')
 
         config = self.config
         generateList = config.getExpression('output', 'generate')
+        if len(generateList) > 0 and generateList[0][0:5] == 'only_':
+            # add 'all' if the first item in the list has the 'only' prefix.
+            # Otherwise, we would not run any tasks
+            generateList = ['all'] + generateList
         generate = False
         for element in generateList:
             if '_' in element:
@@ -403,6 +397,9 @@ class AnalysisTask(Process):  # {{{
                     generate = True
             elif prefix == 'no':
                 if suffix in noSuffixes:
+                    generate = False
+            if prefix == 'only':
+                if suffix not in allSuffixes:
                     generate = False
             elif element == self.taskName:
                 generate = True
@@ -451,13 +448,12 @@ class AnalysisTask(Process):  # {{{
         except ValueError:
             enabled = default
             if default:
-                message = 'WARNING: namelist option {} not found.\n' \
-                          'This likely indicates that the simulation you ' \
-                          'are analyzing was run with an\n' \
-                          'older version of MPAS-O that did not support ' \
-                          'this flag.  Assuming enabled.'.format(
-                              analysisOptionName)
-                warnings.warn(message)
+                print('Warning: namelist option {} not found.\n'
+                      'This likely indicates that the simulation you '
+                      'are analyzing was run with an\n'
+                      'older version of MPAS-O that did not support '
+                      'this flag.  Assuming enabled.'.format(
+                              analysisOptionName))
 
         if not enabled and raiseException:
             raise RuntimeError('*** MPAS-Analysis relies on {} = .true.\n'

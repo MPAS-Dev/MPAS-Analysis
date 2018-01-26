@@ -189,7 +189,7 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
 
         inFile.close()
         outFile.close()  # }}}
-# }}}
+    # }}}
 
 
 class LatLonGridDescriptor(MeshDescriptor):  # {{{
@@ -259,8 +259,8 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
                                ds[lonVarName].dims[0])
 
         # interp/extrap corners
-        descriptor.lonCorner = _interp_extrap_corner(descriptor.lon)
-        descriptor.latCorner = _interp_extrap_corner(descriptor.lat)
+        descriptor.lonCorner = interp_extrap_corner(descriptor.lon)
+        descriptor.latCorner = interp_extrap_corner(descriptor.lat)
 
         if 'history' in ds.attrs:
             descriptor.history = '\n'.join([ds.attrs['history'],
@@ -368,6 +368,7 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         if self.meshName is None:
             self.meshName = '{}x{}{}'.format(abs(dLat), abs(dLon), units)
         # }}}
+    # }}}
 
 
 class ProjectionGridDescriptor(MeshDescriptor):  # {{{
@@ -446,8 +447,8 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
                                ds[yVarName].dims[0])
 
         # interp/extrap corners
-        descriptor.xCorner = _interp_extrap_corner(descriptor.x)
-        descriptor.yCorner = _interp_extrap_corner(descriptor.y)
+        descriptor.xCorner = interp_extrap_corner(descriptor.x)
+        descriptor.yCorner = interp_extrap_corner(descriptor.y)
 
         # Update history attribute of netCDF file
         if 'history' in ds.attrs:
@@ -487,8 +488,8 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         descriptor._set_coords('x', 'y', 'x', 'y')
 
         # interp/extrap corners
-        descriptor.xCorner = _interp_extrap_corner(descriptor.x)
-        descriptor.yCorner = _interp_extrap_corner(descriptor.y)
+        descriptor.xCorner = interp_extrap_corner(descriptor.x)
+        descriptor.yCorner = interp_extrap_corner(descriptor.y)
         descriptor.history = sys.argv[:]
         return descriptor  # }}}
 
@@ -587,6 +588,19 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         self.dimSize = [len(self.x), len(self.y)]
         # }}}
 
+    # }}}
+
+
+def interp_extrap_corner(inField):  # {{{
+    '''Interpolate/extrapolate a 1D field from grid centers to grid corners'''
+
+    outField = numpy.zeros(len(inField)+1)
+    outField[1:-1] = 0.5*(inField[0:-1] + inField[1:])
+    # extrapolate the ends
+    outField[0] = 1.5*inField[0] - 0.5*inField[1]
+    outField[-1] = 1.5*inField[-1] - 0.5*inField[-2]
+    return outField  # }}}
+
 
 def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units,
                   meshName):  # {{{
@@ -643,17 +657,6 @@ def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units,
 
     outFile.meshName = meshName
     # }}}
-
-
-def _interp_extrap_corner(inField):  # {{{
-    '''Interpolate/extrapolate a 1D field from grid centers to grid corners'''
-
-    outField = numpy.zeros(len(inField)+1)
-    outField[1:-1] = 0.5*(inField[0:-1] + inField[1:])
-    # extrapolate the ends
-    outField[0] = 1.5*inField[0] - 0.5*inField[1]
-    outField[-1] = 1.5*inField[-1] - 0.5*inField[-2]
-    return outField  # }}}
 
 
 def _unwrap_corners(inField):

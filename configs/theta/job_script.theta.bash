@@ -8,7 +8,7 @@ export OMP_NUM_THREADS=1
 
 module unload python
 module use /projects/OceanClimate/modulefiles/all
-module load python/anaconda-2.7-acme
+module load e3sm-unified/1.1.2
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
@@ -61,7 +61,7 @@ module unload python
 module use /projects/OceanClimate/modulefiles/all
 module load python/anaconda-2.7-acme
 
-$mpas_analysis_dir/run_mpas_analysis --purge \
+$mpas_analysis_dir/run_mpas_analysis \
     $run_config_file $job_config_file
 EOF
 

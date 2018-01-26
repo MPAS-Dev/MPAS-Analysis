@@ -27,12 +27,12 @@ available:
  * scipy
  * matplotlib
  * netCDF4
- * xarray >= 0.9.1
+ * xarray >= 0.10.0
  * dask
  * bottleneck
  * basemap
  * lxml
- * nco >= 4.6.8
+ * nco >= 4.7.0
  * pyproj
  * pillow
 
@@ -169,8 +169,7 @@ another machine to fit your needs.
 
 To generate the `sphinx` documentation, run:
 ```bash
-conda install sphinx sphinx_rtd_theme numpydoc
-pip install recommonmark
+conda install sphinx sphinx_rtd_theme numpydoc recommonmark
 cd docs
 make html
 ```

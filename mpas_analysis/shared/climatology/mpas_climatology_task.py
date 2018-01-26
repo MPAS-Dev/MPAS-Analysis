@@ -4,15 +4,13 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray
 import os
-import warnings
 import subprocess
 from distutils.spawn import find_executable
 
 from ..analysis_task import AnalysisTask
 
-from ..constants import constants
-
-from ..io.utility import build_config_full_path, make_directories
+from .climatology import get_unmasked_mpas_climatology_directory, \
+    get_unmasked_mpas_climatology_file_name
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -49,7 +47,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     Xylar Asay-Davis
     '''
 
-    def __init__(self, config, componentName):  # {{{
+    def __init__(self, config, componentName, taskName=None):  # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -62,6 +60,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         componentName : {'ocean', 'seaIce'}
             The name of the component (same as the folder where the task
             resides)
+
+        taskName : str, optional
+            the name of the task, defaults to mpasClimatology<ComponentName>
 
         Authors
         -------
@@ -81,8 +82,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                              'Check with Charlie Zender and Xylar Asay-Davis\n'
                              'about getting it added'.format(componentName))
 
-        suffix = componentName[0].upper() + componentName[1:]
-        taskName = 'mpasClimatology{}'.format(suffix)
+        if taskName is None:
+            suffix = componentName[0].upper() + componentName[1:]
+            taskName = 'mpasClimatology{}'.format(suffix)
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologyTask, self).__init__(
@@ -122,8 +124,6 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             for season in seasons:
                 if season not in self.seasons:
                     self.seasons.append(season)
-
-        self._setup_file_names()
 
         # }}}
 
@@ -197,8 +197,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         allExist = True
         for season in seasonsToCheck:
 
-            climatologyFileName, climatologyDirectory = \
-                self.get_file_name(season, returnDir=True)
+            climatologyFileName = self.get_file_name(season)
+            climatologyDirectory = get_unmasked_mpas_climatology_directory(
+                    self.config)
 
             if not os.path.exists(climatologyFileName):
                 allExist = False
@@ -206,8 +207,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         if allExist:
             # make sure all the necessary variables are also present
-            ds = xarray.open_dataset(self.get_file_name(seasonsToCheck[0],
-                                                        returnDir=False))
+            ds = xarray.open_dataset(self.get_file_name(seasonsToCheck[0]))
 
             for variableName in self.variableList:
                 if variableName not in ds.variables:
@@ -221,22 +221,15 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # }}}
 
-    def get_file_name(self, season, returnDir=False):  # {{{
+    def get_file_name(self, season):  # {{{
         """
-        Given config options, the name of a field and a string identifying the
-        months in a seasonal climatology, returns the full path for MPAS
-        climatology files before and after remapping.
+
+        Returns the full path for MPAS climatology file produced by ncclimo.
 
         Parameters
         ----------
         season : str
             One of the seasons in ``constants.monthDictionary``
-
-        mpasMeshName : str
-            The name of the MPAS mesh
-
-        returnDir : bool, optional
-            Return the directory as well
 
         Returns
         -------
@@ -248,13 +241,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         Xylar Asay-Davis
         """
 
-        fileName = self._outputFiles[season]
+        return get_unmasked_mpas_climatology_file_name(self.config, season,
+                                                       self.componentName)
 
-        if returnDir:
-            directory = self._outputDirs[season]
-            return fileName, directory
-        else:
-            return fileName  # }}}
+        # }}}
 
     def _update_climatology_bounds_from_file_names(self):  # {{{
         """
@@ -288,14 +278,13 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         endYear = years[lastIndex]
 
         if startYear != requestedStartYear or endYear != requestedEndYear:
-            message = "climatology start and/or end year different from " \
-                      "requested\n" \
-                      "requestd: {:04d}-{:04d}\n" \
-                      "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                         requestedEndYear,
-                                                         startYear,
-                                                         endYear)
-            warnings.warn(message)
+            print("Warning: climatology start and/or end year different from "
+                  "requested\n"
+                  "requestd: {:04d}-{:04d}\n"
+                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
+                                                     requestedEndYear,
+                                                     startYear,
+                                                     endYear))
             config.set('climatology', 'startYear', str(startYear))
             config.set('climatology', 'endYear', str(endYear))
 
@@ -312,46 +301,6 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         self.endDate = endDate
         self.startYear = startYear
         self.endYear = endYear
-
-        # }}}
-
-    def _setup_file_names(self):  # {{{
-        """
-        Create a dictionary of file names and directories for this climatology
-
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
-
-        config = self.config
-        climatologyBaseDirectory = build_config_full_path(
-            config, 'output', 'mpasClimatologySubdirectory')
-
-        mpasMeshName = config.get('input', 'mpasMeshName')
-
-        self._outputDirs = {}
-        self._outputFiles = {}
-
-        directory = '{}/unmasked_{}'.format(climatologyBaseDirectory,
-                                            mpasMeshName)
-
-        make_directories(directory)
-        for season in self.seasons:
-            monthValues = sorted(constants.monthDictionary[season])
-            startMonth = monthValues[0]
-            endMonth = monthValues[-1]
-
-            suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
-                    self.startYear, startMonth, self.endYear, endMonth)
-
-            if season in constants.abrevMonthNames:
-                season = '{:02d}'.format(monthValues[0])
-            fileName = '{}/{}_{}_{}.nc'.format(directory, self.ncclimoModel,
-                                               season, suffix)
-
-            self._outputDirs[season] = directory
-            self._outputFiles[season] = fileName
 
         # }}}
 
@@ -399,6 +348,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         parallelMode = self.config.get('execute', 'ncclimoParallelMode')
 
         args = ['ncclimo',
+                '-4',
                 '--clm_md=mth',
                 '-a', 'sdd',
                 '-m', self.ncclimoModel,

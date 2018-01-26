@@ -142,8 +142,7 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        with pytest.warns(UserWarning):
-            mpasClimatologyTask._update_climatology_bounds_from_file_names()
+        mpasClimatologyTask._update_climatology_bounds_from_file_names()
 
         startYear = 2
         endYear = 2
@@ -170,23 +169,23 @@ class TestMpasClimatologyTask(TestCase):
         remapSubtask.run(writeLogFile=False)
 
         for season in remapSubtask.seasons:
-            for stage in ['masked', 'remapped']:
-                fileName = remapSubtask.get_file_name(
-                        season=season, stage=stage,
-                        comparisonGridName='latlon')
-                assert(os.path.exists(fileName))
+            fileName = remapSubtask.get_masked_file_name(season=season)
+            assert(os.path.exists(fileName))
+
+            fileName = remapSubtask.get_remapped_file_name(
+                    season=season, comparisonGridName='latlon')
+            assert(os.path.exists(fileName))
 
     def test_subtask_get_file_name(self):
         mpasClimatologyTask = self.setup_task()
         variableList, seasons = self.add_variables(mpasClimatologyTask)
         remapSubtask = self.setup_subtask(mpasClimatologyTask)
 
-        fileName = remapSubtask.get_file_name(season='JFM', stage='masked',
-                                              comparisonGridName='latlon')
+        fileName = remapSubtask.get_masked_file_name(season='JFM')
         assert(fileName == '{}/clim/mpas/masked/ssh_oQU240/'
                'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))
 
-        fileName = remapSubtask.get_file_name(season='JFM', stage='remapped',
-                                              comparisonGridName='latlon')
+        fileName = remapSubtask.get_remapped_file_name(
+                season='JFM', comparisonGridName='latlon')
         assert(fileName == '{}/clim/mpas/remapped/ssh_oQU240_to_0.5x0.5degree/'
                'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))

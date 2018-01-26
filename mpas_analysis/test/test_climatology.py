@@ -18,11 +18,9 @@ import xarray
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import \
     get_comparison_descriptor, get_remapper, \
-    get_observation_climatology_file_names, \
     add_years_months_days_in_month, compute_climatology, \
     compute_monthly_climatology
 from mpas_analysis.shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
@@ -53,8 +51,6 @@ class TestClimatology(TestCase):
         config.set('output', 'baseDirectory', self.test_dir)
         config.set('output', 'mappingSubdirectory', '.')
         config.set('output', 'mpasClimatologySubdirectory', 'clim/mpas')
-        config.set('output', 'mpasRemappedClimSubdirectory',
-                   'clim/mpas/remap')
 
         config.add_section('climatology')
         config.set('climatology', 'startYear', '2')
@@ -194,26 +190,6 @@ class TestClimatology(TestCase):
                 # copy the mapping file so it exists in the 'maps' dir
                 shutil.copyfile(defaultMappingFileName,
                                 explicitMappingFileName)
-
-    def test_get_observation_climatology_file_names(self):
-        config = self.setup_config()
-        fieldName = 'sst'
-        monthNames = 'JFM'
-        componentName = 'ocean'
-
-        remapper = self.setup_obs_remapper(config, fieldName)
-
-        (climatologyFileName, remappedFileName) = \
-            get_observation_climatology_file_names(
-                config, fieldName, monthNames, componentName, remapper)
-        expectedClimatologyFileName = '{}/clim/obs/sst_1.0x1.0degree_' \
-                                      'JFM.nc'.format(self.test_dir)
-        self.assertEqual(climatologyFileName, expectedClimatologyFileName)
-
-        expectedRemappedFileName = '{}/clim/obs/remap/sst_1.0x1.0degree_' \
-                                   'to_0.5x0.5degree_' \
-                                   'JFM.nc'.format(self.test_dir)
-        self.assertEqual(remappedFileName, expectedRemappedFileName)
 
     def test_compute_climatology(self):
         config = self.setup_config()

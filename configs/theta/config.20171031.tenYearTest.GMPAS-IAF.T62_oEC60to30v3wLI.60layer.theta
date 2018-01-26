@@ -11,6 +11,13 @@ mainRunName = 20171031.tenYearTest.GMPAS-IAF.T62_oEC60to30v3wLI.60layer.theta
 # MPAS-Analysis)
 preprocessedReferenceRunName = None
 
+# config file for a reference run to which this run will be compared.  The
+# analysis should have already been run to completion once with this config
+# file, so that the relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid.  Leave this option commented out if no
+# reference run is desired.
+# referenceRunConfigFile = /path/to/config/file
+
 [execute]
 ## options related to executing parallel tasks
 
@@ -45,35 +52,30 @@ mappingDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/mappi
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
-# a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
-#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcThick'
-# the following shortcuts exist:
+# a list of analyses to generate.  Valid names can be seen by running:
+#   ./run_mpas_analysis --list
+# This command also lists tags for each analysis.
+# Shortcuts exist to generate (or not generate) several types of analysis.
+# These include:
 #   'all' -- all analyses will be run
-#   'all_timeSeries' -- all time-series analyses will be run
-#   'all_climatology' -- all analyses involving climatologies
-#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
-#   'all_ocean' -- all ocean analyses will be run
-#   'all_seaIce' -- all sea-ice analyses will be run
-#   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
-#                             other analyses).
-#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
-#                                            given category of analysis
+#   'all_<tag>' -- all analysis with a particular tag will be run
+#   'all_<component>' -- all analyses from a given component (either 'ocean'
+#                        or 'seaIce') will be run
+#   'only_<component>', 'only_<tag>' -- all analysis from this component or
+#                                       with this tag will be run, and all
+#                                       analysis for other components or
+#                                       without the tag will be skipped
+#   'no_<task_name>' -- skip the given task
+#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
+#                                   tasks from the given compoonent or with
+#                                   the given tag.  Do
+#                                      ./run_mpas_analysis --list
+#                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all']
-
-# alternative examples that would perform all analysis except
-#   'timeSeriesOHC'
-#generate = ['all', 'no_timeSeriesOHC']
-# Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would run all tasks that aren't ocean analyses,
-# except that it would also run ocean time series tasks:
-#generate = ['all', 'no_ocean', 'all_timeSeries']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
@@ -144,36 +146,37 @@ baseDirectory =  /projects/OceanClimate/mpas-analysis_data/ACMEv0_lowres/B1850C5
 # plot on polar plot
 polarPlot = False
 
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
-## circulation (MOC)
-maxChunkSize = 1000
-
-# Mask file for ocean basin regional computation
-regionMaskFiles = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks/oEC60to30v3wLI_Atlantic_region_masks_and_southern_transect.nc
-
 [regions]
 # Directory containing mask files for ocean basins and ice shelves
-regionMaskDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks/
+regionMaskDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks
+
 
 [climatologyMapSoseTemperature]
+## options related to plotting climatology maps of Antarctic
+## potential temperature at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# list of depths in meters (positive up) at which to analyze, 'bot' for the
-# bottom of the ocean
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
 depths = ['top', -200, -400, -600, -800, 'bot']
 
 [climatologyMapSoseSalinity]
+## options related to plotting climatology maps of Antarctic
+## salinity at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
-# list of depths in meters (positive up) at which to analyze, 'bot' for the
-# bottom of the ocean
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
 depths = ['top', -200, -400, -600, -800, 'bot']
 
 [timeSeriesAntarcticMelt]
 # a list of ice shelves to plot
-iceShelvesToPlot = ['Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Larsen_D', 'Ronne', 'Filchner', 'Brunt_Stancomb', 'Fimbul', 'Riiser-Larsen', 'Baudouin', 'Amery', 'West', 'Shackleton', 'Totten', 'Mertz', 'Ross_East', 'Ross_West', 'Getz', 'Dotson', 'Crosson', 'Thwaites', 'Pine_Island', 'Abbot', 'Stange', 'George_VI', 'Wilkins']
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
