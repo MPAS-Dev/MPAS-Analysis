@@ -61,8 +61,8 @@ copyright = u'2016-2017, Los Alamos National Security, LLC (LANS) (Ocean: ' \
             u'LA-CC-13-047; Land Ice: LA-CC-13-117) and the University ' \
             u'Corporation for Atmospheric Research (UCAR)'
 author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, ' \
-         u'Luke Van Roekel, Greg Streletz, Mark Petersen, Adrian Turner, ' \
-         u'Matthew Hoffman'
+         u'Luke Van Roekel, Greg Streletz, Mark Petersen, Stephen Price, ' \
+         u'Joseph Kennedy, Adrian Turner, Matthew Hoffman, Jeremy Fyke'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
