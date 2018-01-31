@@ -164,14 +164,13 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                   'color': config.get('plot', 'titleFontColor'),
                   'weight': config.get('plot', 'titleFontWeight')}
 
+    plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+
     # Add a y=0 line if y ranges between positive and negative values
     yaxLimits = ax.get_ylim()
     if yaxLimits[0]*yaxLimits[1] < 0:
-        indgood = np.where(np.logical_not(np.isnan(mean)))
-        x = mean['Time'][indgood]
+        x = ax.get_xlim()
         plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2, zorder=1)
-
-    plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
 
     if title is not None:
         plt.title(title, **title_font)
