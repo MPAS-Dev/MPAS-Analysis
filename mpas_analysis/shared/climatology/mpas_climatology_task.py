@@ -13,6 +13,8 @@ from mpas_analysis.shared.climatology.climatology import \
     get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name
 
+from ..io.utility import get_files_year_month
+
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
     '''
@@ -262,9 +264,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         requestedStartYear = config.getint('climatology', 'startYear')
         requestedEndYear = config.getint('climatology', 'endYear')
 
-        dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-        years = [int(date[0:4]) for date in dates]
-        months = [int(date[5:7]) for date in dates]
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         # search for the start of the first full year
         firstIndex = 0

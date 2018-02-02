@@ -11,6 +11,7 @@ import glob
 import os
 import random
 import string
+from datetime import datetime
 
 
 def paths(*args):  # {{{
@@ -95,7 +96,7 @@ def make_directories(path):  # {{{
 
 def build_config_full_path(config, section, relativePathOption,
                            relativePathSection=None,
-                           defaultPath=None): # {{{
+                           defaultPath=None):  # {{{
     """
     Returns a full path from a base directory and a relative path
 
@@ -134,7 +135,7 @@ def build_config_full_path(config, section, relativePathOption,
 
     if defaultPath is not None and not os.path.exists(fullPath):
         fullPath = defaultPath
-    return fullPath # }}}
+    return fullPath  # }}}
 
 
 def check_path_exists(path):  # {{{
@@ -158,5 +159,40 @@ def check_path_exists(path):  # {{{
     if not (os.path.isdir(path) or os.path.isfile(path)):
         raise OSError('Path {} not found'.format(path))  # }}}
 
+
+def get_files_year_month(fileNames, streamsFile, streamName):  # {{{
+    """
+    Extract the year and month from file names associated with a stream
+
+    Parameters
+    ----------
+    fileNames : list of str
+        The names of files with a year and month in their names.
+
+    streamsFile : ``StreamsFile``
+        The parsed streams file, used to get a template for the
+
+    streamName : str
+        The name of the stream with a file-name template for ``fileNames``
+
+    Returns
+    -------
+    years, months : list of int
+        The years and months for each file in ``fileNames``
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    template = streamsFile.read_datetime_template(streamName)
+    template = os.path.basename(template)
+    dts = [datetime.strptime(os.path.basename(fileName), template) for
+           fileName in fileNames]
+
+    years = [dt.year for dt in dts]
+    months = [dt.month for dt in dts]
+
+    return years, months  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

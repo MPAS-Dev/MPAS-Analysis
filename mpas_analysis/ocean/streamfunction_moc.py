@@ -13,7 +13,7 @@ from mpas_analysis.shared.plot.plotting import plot_vertical_section, \
     timeseries_analysis_plot, setup_colormap
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, get_files_year_month
 
 from mpas_analysis.shared.io import open_mpas_dataset
 
@@ -485,13 +485,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                 streamName, startDate=self.startDateTseries,
                 endDate=self.endDateTseries, calendar=self.calendar))
 
-        template = self.historyStreams.read_datetime_template(streamName)
-        template = os.path.basename(template)
-        dts = [datetime.strptime(os.path.basename(fileName), template) for
-               fileName in inputFilesTseries]
-
-        years = [dt.year for dt in dts]
-        months = [dt.month for dt in dts]
+        years, months = get_files_year_month(inputFilesTseries,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFilesTseries))
         times = np.zeros(len(inputFilesTseries))
