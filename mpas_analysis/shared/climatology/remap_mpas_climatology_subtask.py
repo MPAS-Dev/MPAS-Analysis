@@ -58,8 +58,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         over which the climatology should be computed or ['none'] if only
         monthly climatologies are needed.
 
-    comparisonGridNames : list of {'latlon', 'antarctic'}
-        The name(s) of the comparison grid to use for remapping.
+    comparisonDescriptors : dict of ``MeshDescriptor``
+        Descriptors of the comparison grids to use for remapping, with
+        grid names as the keys.
 
     restartFileName : str
         If ``comparisonGridName`` is not ``None``, the name of a restart
@@ -75,7 +76,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
-                 variableList, seasons, comparisonGridNames=['latlon'],
+                 variableList, seasons, comparisonGridNames=None,
                  iselValues=None, subtaskName='remapMpasClimatology',
                  useNcremap=None):
         # {{{
@@ -101,13 +102,15 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             A list of variable names in ``timeSeriesStatsMonthly`` to be
             included in the climatologies
 
-        seasons : list of str, optional
+        seasons : list of str
             A list of seasons (keys in ``shared.constants.monthDictionary``)
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
 
         comparisonGridNames : list of {'latlon', 'antarctic'}, optional
-            The name(s) of the comparison grid to use for remapping.
+            The name(s) of the comparison grid to use for remapping.  If none
+            is supplied, `add_comparison_descriptor()` must be called to add
+            one or more comparison grids.
 
         iselValues : dict, optional
             A dictionary of dimensions and indices (or ``None``) used to
@@ -140,7 +143,14 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         self.variableList = variableList
         self.seasons = seasons
-        self.comparisonGridNames = comparisonGridNames
+        self.comparisonDescriptors = {}
+        if comparisonGridNames is not None:
+            for comparisonGridName in comparisonGridNames:
+                comparisonDescriptor = get_comparison_descriptor(
+                    self.config, comparisonGridName)
+                self.comparisonDescriptors[comparisonGridName] = \
+                    comparisonDescriptor
+
         self.iselValues = iselValues
         self.climatologyName = climatologyName
         self.mpasClimatologyTask = mpasClimatologyTask
@@ -229,7 +239,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         for season in self.seasons:
             self._mask_climatologies(season, dsMask)
 
-        for comparisonGridName in self.comparisonGridNames:
+        for comparisonGridName in self.comparisonDescriptors:
 
             for season in self.seasons:
 
@@ -246,6 +256,25 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
                                 comparisonGridName=comparisonGridName,
                                 season=season)
         # }}}
+
+    def add_comparison_grid_descriptor(self, comparisonGridName,
+                                       comparisonDescriptor):  # {{{
+        '''
+        Add a custom grid descriptor (something other than 'latlon' or
+        'antarctic').
+
+        Parameters
+        ----------
+        comparisonGridName : str
+            The name of the comparison grid
+
+        comparisonDescriptor : ``MeshDescriptor``
+            A descriptor of the comparison grid to use for
+            remapping
+
+        '''
+        self.comparisonDescriptors[comparisonGridName] = \
+            comparisonDescriptor  # }}}
 
     def get_masked_file_name(self, season):  # {{{
         """
@@ -371,10 +400,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         # make reamppers
         mappingFilePrefix = 'map'
         self.remappers = {}
-        for comparisonGridName in self.comparisonGridNames:
+        for comparisonGridName in self.comparisonDescriptors:
 
-            comparisonDescriptor = get_comparison_descriptor(
-                    config, comparisonGridName)
+            comparisonDescriptor = \
+                self.comparisonDescriptors[comparisonGridName]
             self.comparisonGridName = comparisonDescriptor.meshName
             mpasDescriptor = MpasMeshDescriptor(
                 self.restartFileName, meshName=config.get('input',
@@ -405,9 +434,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         mpasMeshName = config.get('input', 'mpasMeshName')
 
         comparisonFullMeshNames = {}
-        for comparisonGridName in self.comparisonGridNames:
-            comparisonDescriptor = get_comparison_descriptor(
-                    config, comparisonGridName)
+        for comparisonGridName in self.comparisonDescriptors:
+            comparisonDescriptor = \
+                self.comparisonDescriptors[comparisonGridName]
             comparisonFullMeshNames[comparisonGridName] = \
                 comparisonDescriptor.meshName
 
@@ -416,7 +445,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             stage = 'masked'
             keys.append((season, stage))
             stage = 'remapped'
-            for comparisonGridName in self.comparisonGridNames:
+            for comparisonGridName in self.comparisonDescriptors:
                 keys.append((season, stage, comparisonGridName))
 
         self._outputDirs = {}
