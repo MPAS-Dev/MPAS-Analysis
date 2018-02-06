@@ -617,7 +617,7 @@ class PointCollectionDescriptor(MeshDescriptor):  # {{{
 
         collectionName : str
             A unique name for the collection of transects, used in the names
-            of files containing data mapped to these transects.
+            of files containing data mapped to these points.
 
         units : {'degrees', 'radians'}, optional
             The units of ``lats`` and ``lons``
