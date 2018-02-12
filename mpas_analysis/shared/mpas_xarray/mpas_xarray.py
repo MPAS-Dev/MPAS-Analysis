@@ -7,8 +7,9 @@ import six
 import xarray
 from functools import partial
 
-from ..timekeeping.utility import string_to_days_since_date, \
-    string_to_datetime, days_to_datetime, datetime_to_days
+from mpas_analysis.shared.timekeeping.utility import \
+    string_to_days_since_date,  string_to_datetime, days_to_datetime, \
+    datetime_to_days
 
 """
 Utility functions for importing MPAS files into xarray.

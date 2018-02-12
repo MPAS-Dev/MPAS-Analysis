@@ -4,11 +4,11 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy as np
 
-from ..shared.climatology import RemapMpasClimatologySubtask
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
-from ..shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
-from .utility import compute_zmid
+from mpas_analysis.ocean.utility import compute_zmid
 
 
 class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{

@@ -11,7 +11,7 @@ import datetime
 from lxml import etree
 from PIL import Image
 
-from ..io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
 
 def write_image_xml(config, filePrefix, componentName, componentSubdirectory,

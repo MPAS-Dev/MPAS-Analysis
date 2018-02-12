@@ -7,14 +7,15 @@ import numpy as np
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import plot_polar_comparison, \
+from mpas_analysis.shared.plot.plotting import plot_polar_comparison, \
     setup_colormap
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.climatology import get_remapped_mpas_climatology_file_name
+from mpas_analysis.shared.climatology import \
+    get_remapped_mpas_climatology_file_name
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{

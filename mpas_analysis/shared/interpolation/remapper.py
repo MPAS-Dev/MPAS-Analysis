@@ -25,8 +25,8 @@ from scipy.sparse import csr_matrix
 import xarray as xr
 import sys
 
-from ..grid import MpasMeshDescriptor, LatLonGridDescriptor, \
-    ProjectionGridDescriptor
+from mpas_analysis.shared.grid import MpasMeshDescriptor, \
+    LatLonGridDescriptor, ProjectionGridDescriptor
 
 
 class Remapper(object):

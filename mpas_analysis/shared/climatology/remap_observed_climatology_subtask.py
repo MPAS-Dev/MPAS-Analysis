@@ -5,17 +5,19 @@ import os
 import os.path
 import xarray as xr
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..io.utility import build_config_full_path, make_directories
-from ..io import write_netcdf
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf
 
-from .climatology import get_remapper, remap_and_write_climatology, \
-    compute_climatology
+from mpas_analysis.shared.climatology.climatology import get_remapper, \
+    remap_and_write_climatology, compute_climatology
 
-from .comparison_descriptors import get_comparison_descriptor
+from mpas_analysis.shared.climatology.comparison_descriptors import \
+    get_comparison_descriptor
 
 
 class RemapObservedClimatologySubtask(AnalysisTask):  # {{{

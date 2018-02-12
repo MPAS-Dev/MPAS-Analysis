@@ -13,7 +13,7 @@ import xarray as xr
 import numpy
 import os
 
-from ..timekeeping.utility import days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,

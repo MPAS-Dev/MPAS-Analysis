@@ -8,10 +8,11 @@ from distutils.spawn import find_executable
 import xarray as xr
 import numpy
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..io.utility import build_config_full_path, make_directories
-from ..timekeeping.utility import get_simulation_start_time
+from mpas_analysis.shared.io.utility import \
+    build_config_full_path, make_directories
+from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
 class MpasTimeSeriesTask(AnalysisTask):  # {{{

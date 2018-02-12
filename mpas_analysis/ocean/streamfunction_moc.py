@@ -8,19 +8,20 @@ import numpy as np
 import netCDF4
 import os
 
-from ..shared.constants.constants import m3ps_to_Sv
-from ..shared.plot.plotting import plot_vertical_section,\
+from mpas_analysis.shared.constants.constants import m3ps_to_Sv
+from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
     timeseries_analysis_plot, setup_colormap
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset
 
-from ..shared.timekeeping.utility import days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{

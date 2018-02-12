@@ -14,7 +14,8 @@ import netCDF4
 import numpy
 import six
 
-from .MpasRelativeDelta import MpasRelativeDelta
+from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
+    MpasRelativeDelta
 
 
 def get_simulation_start_time(streams):

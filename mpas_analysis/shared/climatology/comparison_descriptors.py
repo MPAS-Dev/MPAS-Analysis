@@ -12,9 +12,10 @@ from __future__ import absolute_import, division, print_function, \
 import numpy
 import pyproj
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
+from mpas_analysis.shared.grid import LatLonGridDescriptor, \
+    ProjectionGridDescriptor
 
 
 def get_comparison_descriptor(config, comparisonGridName):  # {{{

@@ -21,8 +21,9 @@ import xarray
 from functools import partial
 import resource
 
-from ..mpas_xarray import mpas_xarray
-from ..timekeeping.utility import string_to_days_since_date, days_to_datetime
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.timekeeping.utility import \
+    string_to_days_since_date, days_to_datetime
 
 
 def open_multifile_dataset(fileNames, calendar, config,

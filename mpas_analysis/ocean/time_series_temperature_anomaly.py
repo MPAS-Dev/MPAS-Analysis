@@ -3,10 +3,10 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from .compute_anomaly_subtask import ComputeAnomalySubtask
-from .plot_hovmoller_subtask import PlotHovmollerSubtask
+from mpas_analysis.ocean.compute_anomaly_subtask import ComputeAnomalySubtask
+from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 
 
 class TimeSeriesTemperatureAnomaly(AnalysisTask):

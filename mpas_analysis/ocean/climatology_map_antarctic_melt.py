@@ -3,20 +3,21 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.climatology import RemapMpasClimatologySubtask, \
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
 
-from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
+from mpas_analysis.ocean.plot_climatology_map_subtask import \
+    PlotClimatologyMapSubtask
 
-from ..shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
-from ..shared.constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..shared.grid import ProjectionGridDescriptor
+from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
 
 class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
