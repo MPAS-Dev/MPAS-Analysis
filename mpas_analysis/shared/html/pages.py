@@ -8,7 +8,7 @@ from shutil import copyfile
 from lxml import etree
 from collections import OrderedDict
 
-from ..io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
 
 def generate_html(config, analyses, refConfig=None):  # {{{

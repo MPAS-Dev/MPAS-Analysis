@@ -16,9 +16,9 @@ from lxml import etree
 import re
 import os.path
 
-from ..containers import ReadOnlyDict
-from .utility import paths
-from ..timekeeping.utility import string_to_datetime
+from mpas_analysis.shared.containers import ReadOnlyDict
+from mpas_analysis.shared.io.utility import paths
+from mpas_analysis.shared.timekeeping.utility import string_to_datetime
 
 
 def convert_namelist_to_dict(fname, readonly=True):

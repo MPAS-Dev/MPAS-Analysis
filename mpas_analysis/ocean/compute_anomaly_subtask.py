@@ -5,15 +5,16 @@ from __future__ import absolute_import, division, print_function, \
 
 import os
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf
 
-from ..shared.timekeeping.utility import get_simulation_start_time
+from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.time_series import compute_moving_avg_anomaly_from_start
+from mpas_analysis.shared.time_series import \
+    compute_moving_avg_anomaly_from_start
 
 
 class ComputeAnomalySubtask(AnalysisTask):

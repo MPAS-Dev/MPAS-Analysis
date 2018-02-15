@@ -9,20 +9,22 @@ Xylar Asay-Davis
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from .remap_depth_slices_subtask import RemapDepthSlicesSubtask
+from mpas_analysis.ocean.remap_depth_slices_subtask import \
+    RemapDepthSlicesSubtask
 
-from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
+from mpas_analysis.ocean.plot_climatology_map_subtask import \
+    PlotClimatologyMapSubtask
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.climatology import RemapObservedClimatologySubtask, \
+from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
 
-from ..shared.grid import ProjectionGridDescriptor
+from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
-from ..shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{

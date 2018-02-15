@@ -6,20 +6,23 @@ import xarray as xr
 import numpy
 import os
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..io.utility import build_config_full_path, make_directories
-from ..io import write_netcdf
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf
 
-from .climatology import get_remapper, get_masked_mpas_climatology_file_name, \
+from mpas_analysis.shared.climatology.climatology import get_remapper, \
+    get_masked_mpas_climatology_file_name, \
     get_remapped_mpas_climatology_file_name
-from .comparison_descriptors import get_comparison_descriptor
+from mpas_analysis.shared.climatology.comparison_descriptors import \
+    get_comparison_descriptor
 
-from ..grid import MpasMeshDescriptor
+from mpas_analysis.shared.grid import MpasMeshDescriptor
 
-from ..mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class RemapMpasClimatologySubtask(AnalysisTask):  # {{{

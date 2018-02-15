@@ -23,9 +23,10 @@ import numpy as np
 from functools import partial
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-from ..timekeeping.utility import days_to_datetime, date_to_days
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime, \
+    date_to_days
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
 from six.moves import configparser
 

@@ -13,16 +13,17 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy as np
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import plot_global_comparison, \
+from mpas_analysis.shared.plot.plotting import plot_global_comparison, \
     setup_colormap, plot_polar_projection_comparison
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.grid import interp_extrap_corner
+from mpas_analysis.shared.grid import interp_extrap_corner
 
-from ..shared.climatology import get_remapped_mpas_climatology_file_name
+from mpas_analysis.shared.climatology import \
+    get_remapped_mpas_climatology_file_name
 
 
 def nans_to_numpy_mask(field):

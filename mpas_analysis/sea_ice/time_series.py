@@ -5,23 +5,24 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import os
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import timeseries_analysis_plot, \
+from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
-from ..shared.io.utility import build_config_full_path, check_path_exists, \
-    make_directories
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    check_path_exists, make_directories
 
-from ..shared.timekeeping.utility import date_to_days, days_to_datetime, \
-    datetime_to_days, get_simulation_start_time
-from ..shared.timekeeping.MpasRelativeDelta import MpasRelativeDelta
+from mpas_analysis.shared.timekeeping.utility import date_to_days, \
+    days_to_datetime, datetime_to_days, get_simulation_start_time
+from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
+    MpasRelativeDelta
 
-from ..shared.generalized_reader import open_multifile_dataset
-from ..shared.io import open_mpas_dataset, write_netcdf
-from ..shared.mpas_xarray.mpas_xarray import subset_variables
+from mpas_analysis.shared.generalized_reader import open_multifile_dataset
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 
 class TimeSeriesSeaIce(AnalysisTask):

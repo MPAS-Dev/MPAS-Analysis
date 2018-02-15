@@ -13,17 +13,19 @@ import xarray as xr
 import os
 import numpy
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..timekeeping.utility import days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
-from ..io.utility import build_config_full_path, make_directories, \
-    fingerprint_generator
-from ..io import write_netcdf
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, fingerprint_generator
+from mpas_analysis.shared.io import write_netcdf
 
-from ..interpolation import Remapper
-from ..grid import LatLonGridDescriptor, ProjectionGridDescriptor
-from .comparison_descriptors import get_comparison_descriptor
+from mpas_analysis.shared.interpolation import Remapper
+from mpas_analysis.shared.grid import LatLonGridDescriptor, \
+    ProjectionGridDescriptor
+from mpas_analysis.shared.climatology.comparison_descriptors import \
+    get_comparison_descriptor
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
@@ -327,7 +329,8 @@ def remap_and_write_climatology(config, climatologyDataSet,
     useNcremap = config.getboolean('climatology', 'useNcremap')
 
     if (isinstance(remapper.sourceDescriptor, ProjectionGridDescriptor) or
-        isinstance(remapper.destinationDescriptor, ProjectionGridDescriptor)):
+            isinstance(remapper.destinationDescriptor,
+                       ProjectionGridDescriptor)):
         # ncremap doesn't support projection grids
         useNcremap = False
 

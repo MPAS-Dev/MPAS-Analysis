@@ -13,7 +13,8 @@ from __future__ import absolute_import, division, print_function, \
 import six
 import xarray
 
-from ..timekeeping.utility import string_to_days_since_date, days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import \
+    string_to_days_since_date, days_to_datetime
 
 
 def open_mpas_dataset(fileName, calendar,

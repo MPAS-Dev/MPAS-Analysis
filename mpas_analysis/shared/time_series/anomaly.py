@@ -3,8 +3,8 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-from ..io import open_mpas_dataset
-from .moving_average import compute_moving_avg
+from mpas_analysis.shared.io import open_mpas_dataset
+from mpas_analysis.shared.time_series.moving_average import compute_moving_avg
 
 
 def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,

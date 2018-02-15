@@ -6,16 +6,18 @@ import xarray as xr
 import numpy as np
 import os
 
-from ..shared.plot.plotting import plot_vertical_section,\
+from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
     setup_colormap, plot_1D
 
-from ..shared.io.utility import build_config_full_path, make_directories
-from ..shared.io import write_netcdf, subset_variables
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf, subset_variables
 
-from ..shared import AnalysisTask
-from ..shared.html import write_image_xml
+from mpas_analysis.shared import AnalysisTask
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.climatology import get_unmasked_mpas_climatology_file_name
+from mpas_analysis.shared.climatology import \
+    get_unmasked_mpas_climatology_file_name
 
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{

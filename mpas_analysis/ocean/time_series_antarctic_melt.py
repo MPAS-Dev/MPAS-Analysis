@@ -5,17 +5,18 @@ import os
 import xarray
 import numpy
 
-from ..shared.analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..shared.constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 import csv
 

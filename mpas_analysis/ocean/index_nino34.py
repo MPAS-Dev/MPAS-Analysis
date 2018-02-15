@@ -10,19 +10,19 @@ import numpy as np
 from scipy import signal, stats
 import matplotlib.pyplot as plt
 
-from ..shared.climatology import climatology
-from ..shared.constants import constants
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.climatology import climatology
+from mpas_analysis.shared.constants import constants
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.timekeeping.utility import datetime_to_days, \
+from mpas_analysis.shared.timekeeping.utility import datetime_to_days, \
     string_to_days_since_date
 
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset
 
-from ..shared.plot.plotting import plot_xtick_format
+from mpas_analysis.shared.plot.plotting import plot_xtick_format
 
-from ..shared import AnalysisTask
-from ..shared.html import write_image_xml
+from mpas_analysis.shared import AnalysisTask
+from mpas_analysis.shared.html import write_image_xml
 
 
 class IndexNino34(AnalysisTask):  # {{{

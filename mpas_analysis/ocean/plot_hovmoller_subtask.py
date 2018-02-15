@@ -6,15 +6,16 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import os
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import plot_vertical_section, setup_colormap
+from mpas_analysis.shared.plot.plotting import plot_vertical_section, \
+    setup_colormap
 
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 
 class PlotHovmollerSubtask(AnalysisTask):

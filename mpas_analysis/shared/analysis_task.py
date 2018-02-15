@@ -16,8 +16,9 @@ import traceback
 import logging
 import sys
 
-from .io import NameList, StreamsFile
-from .io.utility import build_config_full_path, make_directories
+from mpas_analysis.shared.io import NameList, StreamsFile
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
 
 class AnalysisTask(Process):  # {{{

@@ -42,11 +42,12 @@ import matplotlib.pyplot as plt
 
 # import mpas_analysis module here (those with relative paths starting with
 # dots)
-from ..shared.analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.climatology import update_climatology_bounds_from_file_names
+from mpas_analysis.shared.climatology import \
+    update_climatology_bounds_from_file_names
 
 
 # Everywhere in this template, change MyTask to the name of your task, starting

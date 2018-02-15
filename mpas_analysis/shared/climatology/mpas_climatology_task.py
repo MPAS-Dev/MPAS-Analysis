@@ -7,9 +7,10 @@ import os
 import subprocess
 from distutils.spawn import find_executable
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from .climatology import get_unmasked_mpas_climatology_directory, \
+from mpas_analysis.shared.climatology.climatology import \
+    get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name
 
 
