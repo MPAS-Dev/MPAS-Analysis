@@ -10,8 +10,8 @@ import numpy
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from mpas_analysis.shared.io.utility import \
-    build_config_full_path, make_directories
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, get_files_year_month
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
@@ -211,9 +211,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         requestedStartYear = config.getint(section, 'startYear')
         requestedEndYear = config.getint(section, 'endYear')
 
-        dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-        years = [int(date[0:4]) for date in dates]
-        months = [int(date[5:7]) for date in dates]
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         # search for the start of the first full year
         firstIndex = 0
@@ -289,10 +290,14 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                 if updateSubset:
                     # add only input files wiht times that aren't already in
                     # the output file
-                    dates = sorted([fileName[-13:-6] for fileName in
-                                    self.inputFiles])
-                    inYears = numpy.array([int(date[0:4]) for date in dates])
-                    inMonths = numpy.array([int(date[5:7]) for date in dates])
+
+                    fileNames = sorted(self.inputFiles)
+                    inYears, inMonths = get_files_year_month(
+                            fileNames, self.historyStreams,
+                            'timeSeriesStatsMonthlyOutput')
+
+                    inYears = numpy.array(inYears)
+                    inMonths = numpy.array(inMonths)
                     totalMonths = 12*inYears + inMonths
 
                     dates = [bytes.decode(name) for name in
@@ -304,7 +309,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     lastTotalMonths = 12*lastYear + lastMonth
 
                     inputFiles = []
-                    for index, inputFile in enumerate(self.inputFiles):
+                    for index, inputFile in enumerate(fileNames):
                         if totalMonths[index] > lastTotalMonths:
                             inputFiles.append(inputFile)
 

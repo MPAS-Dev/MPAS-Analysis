@@ -23,7 +23,25 @@ Documentation
    api
    design_docs
 
+MPAS Components and E3SM
+========================
+
+.. toctree::
+   :maxdepth: 2
+
+   mpaso
+   mpascice
+   e3sm
+
+
 Indices and tables
 ==================
 
 * :ref:`genindex`
+
+Authors
+=======
+.. toctree::
+   :maxdepth: 1
+
+   authors

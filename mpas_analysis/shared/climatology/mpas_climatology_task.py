@@ -13,6 +13,9 @@ from mpas_analysis.shared.climatology.climatology import \
     get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name
 
+from ..io.utility import build_config_full_path, make_directories, \
+    get_files_year_month
+
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
     '''
@@ -168,7 +171,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, startDate, endDate))
 
-        self._update_climatology_bounds_from_file_names()
+        self.symlinkDirectory = \
+            self._update_climatology_bounds_and_create_symlinks()
 
         # }}}
 
@@ -217,7 +221,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         if not allExist:
             self._compute_climatologies_with_ncclimo(
-                    inDirectory=self.historyDirectory,
+                    inDirectory=self.symlinkDirectory,
                     outDirectory=climatologyDirectory)
 
         # }}}
@@ -247,10 +251,18 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # }}}
 
-    def _update_climatology_bounds_from_file_names(self):  # {{{
+    def _update_climatology_bounds_and_create_symlinks(self):  # {{{
         """
         Update the start and end years and dates for climatologies based on the
-        years actually available in the list of files.
+        years actually available in the list of files.  Create symlinks to
+        monthly mean files so they have the expected file naming convention
+        for ncclimo.
+
+        Returns
+        -------
+        symlinkDirectory : str
+            The path to the symlinks created for each timeSeriesStatsMonthly
+            input file
 
         Authors
         -------
@@ -262,9 +274,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         requestedStartYear = config.getint('climatology', 'startYear')
         requestedEndYear = config.getint('climatology', 'endYear')
 
-        dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-        years = [int(date[0:4]) for date in dates]
-        months = [int(date[5:7]) for date in dates]
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         # search for the start of the first full year
         firstIndex = 0
@@ -302,6 +315,25 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         self.endDate = endDate
         self.startYear = startYear
         self.endYear = endYear
+
+        # now, create the symlinks
+        climatologyBaseDirectory = build_config_full_path(
+            config, 'output', 'mpasClimatologySubdirectory')
+
+        symlinkDirectory = '{}/source_symlinks'.format(
+                climatologyBaseDirectory)
+
+        make_directories(symlinkDirectory)
+
+        for inFileName, year, month in zip(fileNames, years, months):
+            outFileName = '{}/{}.hist.am.timeSeriesStatsMonthly.{:04d}-' \
+                '{:02d}-01.nc'.format(symlinkDirectory, self.ncclimoModel,
+                                      year, month)
+
+            if not os.path.exists(outFileName):
+                os.symlink(inFileName, outFileName)
+
+        return symlinkDirectory
 
         # }}}
 

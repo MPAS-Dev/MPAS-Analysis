@@ -9,11 +9,11 @@ import netCDF4
 import os
 
 from mpas_analysis.shared.constants.constants import m3ps_to_Sv
-from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
+from mpas_analysis.shared.plot.plotting import plot_vertical_section, \
     timeseries_analysis_plot, setup_colormap
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, get_files_year_month
 
 from mpas_analysis.shared.io import open_mpas_dataset
 
@@ -485,9 +485,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                 streamName, startDate=self.startDateTseries,
                 endDate=self.endDateTseries, calendar=self.calendar))
 
-        dates = sorted([fileName[-13:-6] for fileName in inputFilesTseries])
-        years = np.array([int(date[0:4]) for date in dates])
-        months = np.array([int(date[5:7]) for date in dates])
+        years, months = get_files_year_month(inputFilesTseries,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFilesTseries))
         times = np.zeros(len(inputFilesTseries))

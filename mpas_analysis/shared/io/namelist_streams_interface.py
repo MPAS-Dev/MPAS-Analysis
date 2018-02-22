@@ -329,6 +329,40 @@ class StreamsFile:
                 return stream.get(attribname)
         return None
 
+    def read_datetime_template(self, streamname):
+        """
+        Get the value of the given attribute in the given stream
+
+        Parameters
+        ----------
+        streamname : str
+            The name of the stream
+
+        Returns
+        -------
+        value : str
+            The template for file names from this stream in a format accepted
+            by ``datetime.strptime``.  This is useful for parsing the date
+            from a given file name.
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+        template = self.read(streamname, 'filename_template')
+        replacements = {'$Y': '%Y',
+                        '$M': '%m',
+                        '$D': '%d',
+                        '$S': '00000',  # datetime doesn't handle seconds alone
+                        '$h': '%H',
+                        '$m': '%M',
+                        '$s': '%S'}
+
+        for old in replacements:
+            template = template.replace(old, replacements[old])
+
+        return template
+
     def readpath(self, streamName, startDate=None, endDate=None,
                  calendar=None):
         """
