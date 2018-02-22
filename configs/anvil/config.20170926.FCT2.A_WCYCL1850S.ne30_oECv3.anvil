@@ -142,4 +142,4 @@ polarPlot = False
 ## options related to ocean regions used in several analysis modules
 
 # Directory for region mask files
-regionMaskDirectory = /global/project/projectdirs/acme/mapping/grids/
+regionMaskDirectory = /lcrc/group/acme/mpas_analysis/region_masks 
