@@ -64,4 +64,7 @@ rho_fw = 1000.
 # kilograms per gigatonne
 kg_per_GT = 1e12
 
+# cm per m
+cm_per_m = 100.
+
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

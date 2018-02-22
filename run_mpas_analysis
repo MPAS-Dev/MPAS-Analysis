@@ -85,6 +85,8 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask,
                                             refConfig))
+    analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapSoseTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(
@@ -107,6 +109,7 @@ def build_analysis_list(config, refConfig):  # {{{
                                         refConfig))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
                                                   refConfig))
+
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
 
