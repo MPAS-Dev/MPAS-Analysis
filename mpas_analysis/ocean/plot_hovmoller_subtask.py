@@ -8,8 +8,7 @@ import os
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import plot_vertical_section, \
-    setup_colormap
+from mpas_analysis.shared.plot.plotting import plot_vertical_section
 
 from mpas_analysis.shared.io import open_mpas_dataset
 
@@ -260,18 +259,11 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
-        (colormapName, colorbarLevels) = setup_colormap(config,
-                                                        self.sectionName)
-
-        contourLevels = config.getExpression(self.sectionName,
-                                             'contourLevels',
-                                             usenumpyfunc=True)
-
-        plot_vertical_section(config, Time, depth, field,
-                              colormapName, colorbarLevels, contourLevels,
-                              self.unitsLabel, title, xLabel, yLabel,
-                              figureName, linewidths=1, xArrayIsTime=True,
-                              calendar=self.calendar)
+        plot_vertical_section(config, Time, depth, field, self.sectionName,
+                              suffix='', colorbarLabel=self.unitsLabel,
+                              title=title, xlabel=xLabel, ylabel=yLabel,
+                              fileout=figureName, linewidths=1,
+                              xArrayIsTime=True, calendar=self.calendar)
 
         write_image_xml(
             config=config,

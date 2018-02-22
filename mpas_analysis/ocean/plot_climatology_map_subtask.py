@@ -16,7 +16,7 @@ import numpy as np
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import plot_global_comparison, \
-    setup_colormap, plot_polar_projection_comparison
+    plot_polar_projection_comparison
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -386,11 +386,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        (colormapResult, colorbarLevelsResult) = setup_colormap(
-            config, configSectionName, suffix='Result')
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-            config, configSectionName, suffix='Difference')
-
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
 
@@ -419,10 +414,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                modelOutput,
                                refOutput,
                                bias,
-                               colormapResult,
-                               colorbarLevelsResult,
-                               colormapDifference,
-                               colorbarLevelsDifference,
+                               configSectionName,
                                fileout=outFileName,
                                title=title,
                                modelTitle='{}'.format(mainRunName),
@@ -483,15 +475,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-        if config.has_option(configSectionName, 'colormapIndicesResult'):
-            colorMapType = 'indexed'
-        elif config.has_option(configSectionName, 'normTypeResult'):
-            colorMapType = 'norm'
-        else:
-            raise ValueError('config section {} contains neither the info'
-                             'for an indexed color map nor for computing a '
-                             'norm'.format(configSectionName))
-
         plot_polar_projection_comparison(
             config,
             x,
@@ -502,7 +485,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             bias,
             fileout=outFileName,
             colorMapSectionName=configSectionName,
-            colorMapType=colorMapType,
             title=title,
             modelTitle='{}'.format(mainRunName),
             refTitle=self.refTitleLabel,

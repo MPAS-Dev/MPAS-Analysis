@@ -9,8 +9,8 @@ import netCDF4
 import os
 
 from mpas_analysis.shared.constants.constants import m3ps_to_Sv
-from mpas_analysis.shared.plot.plotting import plot_vertical_section, \
-    timeseries_analysis_plot, setup_colormap
+from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
+    timeseries_analysis_plot
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
@@ -197,20 +197,14 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                      mainRunName)
             filePrefix = self.filePrefixes[region]
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-            contourLevels = \
-                config.getExpression(self.sectionName,
-                                     'contourLevels{}'.format(region),
-                                     usenumpyfunc=True)
-            (colormapName, colorbarLevels) = setup_colormap(config,
-                                                            self.sectionName,
-                                                            suffix=region)
 
             x = self.lat[region]
             y = self.depth
             z = self.moc[region]
-            plot_vertical_section(config, x, y, z, colormapName,
-                                  colorbarLevels, contourLevels, colorbarLabel,
-                                  title, xLabel, yLabel, figureName,
+            plot_vertical_section(config, x, y, z, self.sectionName,
+                                  suffix=region, colorbarLabel=colorbarLabel,
+                                  title=title, xlabel=xLabel, ylabel=yLabel,
+                                  fileout=figureName,
                                   N=movingAveragePointsClimatological)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
