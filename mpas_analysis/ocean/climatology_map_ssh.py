@@ -15,6 +15,8 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 
+from mpas_analysis.shared.constants import constants
+
 
 class ClimatologyMapSSH(AnalysisTask):  # {{{
     """
@@ -73,7 +75,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
 
         # the variable mpasFieldName will be added to mpasClimatologyTask
         # along with the seasons.
-        remapClimatologySubtask = RemapMpasClimatologySubtask(
+        remapClimatologySubtask = RemapSSHClimatology(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
             climatologyName=fieldName,
@@ -130,7 +132,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'm',
+                        unitsLabel=r'cm',
                         imageCaption='Mean Sea Surface Height',
                         galleryGroup='Sea Surface Height',
                         groupSubtitle=None,
@@ -139,6 +141,44 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
 
                 self.add_subtask(subtask)
         # }}}
+    # }}}
+
+
+class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
+    """
+    Change units from m to cm
+
+    Authors
+    -------
+    Xylar Asay-Davis
+    """
+
+    def customize_masked_climatology(self, climatology):  # {{{
+        """
+        Mask the melt rates using ``landIceMask`` and rescale it to m/yr
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset`` object
+            the climatology data set
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset`` object
+            the modified climatology data set
+
+        Authors
+        -------
+        Xylar Asay-Davis
+        """
+
+        fieldName = self.variableList[0]
+
+        # scale the field to cm from m
+        climatology[fieldName] = constants.cm_per_m * climatology[fieldName]
+
+        return climatology  # }}}
+
     # }}}
 
 
@@ -201,6 +241,9 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.rename({'time': 'Time'}, inplace=True)
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
+
+        # scale the field to cm from m
+        dsObs['zos'] = constants.cm_per_m * dsObs['zos']
 
         return dsObs  # }}}
 

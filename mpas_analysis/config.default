@@ -592,14 +592,14 @@ colormapNameResult = Spectral_r
 # color indices into colormapName for filled contours
 colormapIndicesResult = [0, 20, 40, 80, 100, 120, 160, 180, 200, 240, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [-2.4, -2, -1.6, -1.2, -0.8, -0.4, 0, 0.4, 0.8, 1.2]
+colorbarLevelsResult = [-240., -200., -160., -120., -80., -40., 0., 40., 80., 120.]
 
 # colormap for differences
 colormapNameDifference = RdBu_r
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185, 209, 232, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0., 0.1, 0.2,  0.4,  0.6,  0.8,  1.]
+colorbarLevelsDifference = [-100., -80., -60., -40., -20., -10., 0., 10., 20.,  40.,  60.,  80.,  100.]
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
