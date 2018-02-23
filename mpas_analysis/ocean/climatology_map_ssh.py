@@ -54,7 +54,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                 componentName='ocean',
                 tags=['climatology', 'horizontalMap', fieldName])
 
-        mpasFieldName = 'timeMonthly_avg_ssh'
+        mpasFieldName = 'timeMonthly_avg_pressureAdjustedSSH'
+
         iselValues = None
 
         sectionName = self.taskName
@@ -86,7 +87,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Observations (AVISO sea-level anomaly)'
+            refTitleLabel = 'Observations (AVISO Dynamic ' \
+                'Topography, 1993-2010)'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations',
@@ -127,7 +129,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
 
                 subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle='SSH',
+                        fieldNameInTitle='Zero-mean SSH',
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
@@ -176,6 +178,9 @@ class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
 
         # scale the field to cm from m
         climatology[fieldName] = constants.cm_per_m * climatology[fieldName]
+        # remove the mean
+        climatology[fieldName] = climatology[fieldName] - \
+            climatology[fieldName].mean()
 
         return climatology  # }}}
 
@@ -244,6 +249,9 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
 
         # scale the field to cm from m
         dsObs['zos'] = constants.cm_per_m * dsObs['zos']
+
+        # remove the mean
+        dsObs['zos'] = dsObs['zos'] -dsObs['zos'].mean()
 
         return dsObs  # }}}
 
