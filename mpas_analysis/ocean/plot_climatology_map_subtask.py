@@ -57,6 +57,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         The subtask for remapping the MPAS climatology for the reference
         run that this subtask will plot
 
+    removeMean : bool, optional
+        If True, a common mask for the model and reference data sets is
+        computed (where both are valid) and the mean over that mask is
+        subtracted from both the model and reference results.  This is
+        useful for data sets where the desire is to compare the spatial
+        pattern but the mean offset is not meaningful (e.g. SSH)
+
     outFileLabel : str
         The prefix on each plot and associated XML file
 
@@ -106,7 +113,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 refConfig=None, depth=None):
+                 refConfig=None, depth=None, removeMean=False):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -139,6 +146,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             Depth the data is being plotted, 'top' for the sea surface
             'bot' for the sea floor
 
+        removeMean : bool, optional
+            If True, a common mask for the model and reference data sets is
+            computed (where both are valid) and the mean over that mask is
+            subtracted from both the model and reference results.  This is
+            useful for data sets where the desire is to compare the spatial
+            pattern but the mean offset is not meaningful (e.g. SSH)
+
         Authors
         -------
         Xylar Asay-Davis
@@ -151,6 +165,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
         self.refConfig = refConfig
+        self.removeMean = removeMean
         subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
 
         if depth is None:
@@ -368,6 +383,24 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
             remappedRefClimatology = remappedRefClimatology.sel(
                     depthSlice=str(depth), drop=True)
+
+        if self.removeMean:
+            if remappedRefClimatology is None:
+                remappedModelClimatology[self.mpasFieldName] = \
+                    remappedModelClimatology[self.mpasFieldName] - \
+                    remappedModelClimatology[self.mpasFieldName].mean()
+            else:
+                masked = remappedModelClimatology[self.mpasFieldName].where(
+                        remappedRefClimatology[self.refFieldName].notnull())
+                remappedModelClimatology[self.mpasFieldName] = \
+                    remappedModelClimatology[self.mpasFieldName] - \
+                    masked.mean()
+
+                masked = remappedRefClimatology[self.refFieldName].where(
+                        remappedModelClimatology[self.mpasFieldName].notnull())
+                remappedRefClimatology[self.refFieldName] = \
+                    remappedRefClimatology[self.refFieldName] - \
+                    masked.mean()
 
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedRefClimatology)

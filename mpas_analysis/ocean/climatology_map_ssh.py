@@ -125,7 +125,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    refConfig)
+                                                    refConfig, removeMean=True)
 
                 subtask.set_plot_info(
                         outFileLabel=outFileLabel,
@@ -178,9 +178,6 @@ class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
 
         # scale the field to cm from m
         climatology[fieldName] = constants.cm_per_m * climatology[fieldName]
-        # remove the mean
-        climatology[fieldName] = climatology[fieldName] - \
-            climatology[fieldName].mean()
 
         return climatology  # }}}
 
@@ -249,9 +246,6 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
 
         # scale the field to cm from m
         dsObs['zos'] = constants.cm_per_m * dsObs['zos']
-
-        # remove the mean
-        dsObs['zos'] = dsObs['zos'] -dsObs['zos'].mean()
 
         return dsObs  # }}}
 
