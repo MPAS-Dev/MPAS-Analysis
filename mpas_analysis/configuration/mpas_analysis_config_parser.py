@@ -22,8 +22,8 @@ from six.moves.configparser import ConfigParser
 if six.PY3:
     xrange = range
 
-npallow = dict(linspace=np.linspace, xrange=xrange, range=range,
-               arange=np.arange, pi=np.pi, Pi=np.pi, __builtins__=None)
+npallow = dict(linspace=np.linspace, xrange=xrange, range=range, array=np.array,
+               arange=np.arange, pi=np.pi, Pi=np.pi, int=int, __builtins__=None)
 
 
 class MpasAnalysisConfigParser(ConfigParser):

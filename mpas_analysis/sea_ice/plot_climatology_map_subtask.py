@@ -9,8 +9,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import plot_polar_comparison, \
-    setup_colormap
+from mpas_analysis.shared.plot.plotting import plot_polar_comparison
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -298,11 +297,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         else:
             plotProjection = 'spstere'
 
-        (colormapResult, colorbarLevelsResult) = setup_colormap(
-            config, sectionName, suffix='Result')
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-            config, sectionName, suffix='Difference')
-
         referenceLongitude = config.getfloat(sectionName,
                                              'referenceLongitude')
         minimumLatitude = config.getfloat(sectionName,
@@ -373,10 +367,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             modelOutput,
             refOutput,
             difference,
-            colormapResult,
-            colorbarLevelsResult,
-            colormapDifference,
-            colorbarLevelsDifference,
+            sectionName,
             title=title,
             fileout=fileout,
             plotProjection=plotProjection,

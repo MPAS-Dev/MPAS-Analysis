@@ -54,7 +54,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                 componentName='ocean',
                 tags=['climatology', 'horizontalMap', fieldName])
 
-        mpasFieldName = 'timeMonthly_avg_ssh'
+        mpasFieldName = 'timeMonthly_avg_pressureAdjustedSSH'
+
         iselValues = None
 
         sectionName = self.taskName
@@ -86,7 +87,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Observations (AVISO sea-level anomaly)'
+            refTitleLabel = 'Observations (AVISO Dynamic ' \
+                'Topography, 1993-2010)'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations',
@@ -123,11 +125,11 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    refConfig)
+                                                    refConfig, removeMean=True)
 
                 subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle='SSH',
+                        fieldNameInTitle='Zero-mean SSH',
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,

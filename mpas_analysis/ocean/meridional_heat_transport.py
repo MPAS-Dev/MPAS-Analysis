@@ -6,8 +6,7 @@ import xarray as xr
 import numpy as np
 import os
 
-from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
-    setup_colormap, plot_1D
+from mpas_analysis.shared.plot.plotting import plot_vertical_section, plot_1D
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
@@ -15,9 +14,6 @@ from mpas_analysis.shared.io import write_netcdf, subset_variables
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
-
-from mpas_analysis.shared.climatology import \
-    get_unmasked_mpas_climatology_file_name
 
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
@@ -173,7 +169,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         outFileName = \
             '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(
                 outputDirectory, self.startYear, self.endYear)
-
 
         if os.path.exists(outFileName):
             self.logger.info('  Reading results from previous analysis run...')
@@ -342,18 +337,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             filePrefix = self.filePrefixes['mhtZ']
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             colorbarLabel = '[PW/m]'
-            contourLevels = config.getExpression(self.sectionName,
-                                                 'contourLevelsGlobal',
-                                                 usenumpyfunc=True)
-            (colormapName, colorbarLevels) = setup_colormap(config,
-                                                            self.sectionName,
-                                                            suffix='Global')
-            plot_vertical_section(config, x, y, z,
-                                  colormapName, colorbarLevels,
-                                  contourLevels, colorbarLabel,
-                                  title, xLabel, yLabel, figureName,
-                                  xLim=xLimGlobal, yLim=depthLimGlobal,
-                                  invertYAxis=False, N=movingAveragePoints)
+            plot_vertical_section(config, x, y, z, self.sectionName,
+                                  suffix='', colorbarLabel=colorbarLabel,
+                                  title=title, xlabel=xLabel, ylabel=yLabel,
+                                  fileout=figureName, xLim=xLimGlobal,
+                                  yLim=depthLimGlobal, invertYAxis=False,
+                                  N=movingAveragePoints)
 
             self._write_xml(filePrefix)
 

@@ -51,6 +51,7 @@ Ocean tasks
    ClimatologyMapSST
    ClimatologyMapSSS
    ClimatologyMapMLD
+   ClimatologyMapSSH
    ClimatologyMapAntarcticMelt
    IndexNino34
    MeridionalHeatTransport
