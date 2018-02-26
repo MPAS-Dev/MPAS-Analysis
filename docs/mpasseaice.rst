@@ -1,8 +1,7 @@
-MPAS Sea Ice
+MPAS-Seaice
 ============
 
-The Model for Prediction Across Scales Sea Ice (MPAS Sea Ice, sometimes called
-MPAS-CICE because of the physics it has inherited from the CICE sea-ice model)
+The Model for Prediction Across Scales Sea Ice (MPAS-Seaice)
 is designed for the simulations of sea ice on unstructured grids supported by
 the MPAS framework.  The model has not yet been publicly released and does not
 have public documentation.
