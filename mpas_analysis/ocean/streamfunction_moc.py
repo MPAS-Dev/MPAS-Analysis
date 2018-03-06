@@ -112,8 +112,17 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
+        self.includeBolus = config.getboolean(self.sectionName, 'includeBolus')
+        if self.includeBolus:
+            # only add the bolus velocity if GM is enabled
+            self.includeBolus = self.namelist.getbool('config_use_standardgm')
+
         self.variableList = ['timeMonthly_avg_normalVelocity',
                              'timeMonthly_avg_vertVelocityTop']
+        if self.includeBolus:
+            self.variableList.extend(
+                    ['timeMonthly_avg_normalGMBolusVelocity',
+                     'timeMonthly_avg_vertGMBolusVelocityTop'])
 
         self.mpasClimatologyTask.add_variables(variableList=self.variableList,
                                                seasons=['ANN'])
@@ -345,11 +354,21 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             climatologyFileName = self.mpasClimatologyTask.get_file_name(
                 season='ANN')
             annualClimatology = xr.open_dataset(climatologyFileName)
-            # rename some variables for convenience
-            annualClimatology = annualClimatology.rename(
+            annualClimatology = annualClimatology.isel(Time=0)
+
+            if self.includeBolus:
+                annualClimatology['avgNormalVelocity'] = \
+                    annualClimatology['timeMonthly_avg_normalVelocity'] + \
+                    annualClimatology['timeMonthly_avg_normalGMBolusVelocity']
+
+                annualClimatology['avgVertVelocityTop'] = \
+                    annualClimatology['timeMonthly_avg_vertVelocityTop'] + \
+                    annualClimatology['timeMonthly_avg_vertGMBolusVelocityTop']
+            else:
+                # rename some variables for convenience
+                annualClimatology = annualClimatology.rename(
                     {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
                      'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
-            annualClimatology = annualClimatology.isel(Time=0)
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)
@@ -528,8 +547,22 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             self.logger.info('     date: {:04d}-{:02d}'.format(date.year,
                                                                date.month))
 
-            horizontalVel = dsLocal.timeMonthly_avg_normalVelocity.values
-            verticalVel = dsLocal.timeMonthly_avg_vertVelocityTop.values
+            if self.includeBolus:
+                dsLocal['avgNormalVelocity'] = \
+                    dsLocal['timeMonthly_avg_normalVelocity'] + \
+                    dsLocal['timeMonthly_avg_normalGMBolusVelocity']
+
+                dsLocal['avgVertVelocityTop'] = \
+                    dsLocal['timeMonthly_avg_vertVelocityTop'] + \
+                    dsLocal['timeMonthly_avg_vertGMBolusVelocityTop']
+            else:
+                # rename some variables for convenience
+                dsLocal = dsLocal.rename(
+                    {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+                     'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
+            horizontalVel = dsLocal.avgNormalVelocity.values
+            verticalVel = dsLocal.avgVertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
             transportZ = self._compute_transport(maxEdgesInTransect,
                                                  transectEdgeGlobalIDs,

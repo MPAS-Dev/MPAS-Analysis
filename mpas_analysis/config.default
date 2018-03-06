@@ -443,6 +443,11 @@ movingAveragePoints = 1
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 
+# Include the bolus velocity from the Gent-McWilliams parameterization?  This
+# only needs to be disabled if the simulation was run with GM turned on but
+# the MOC shouldn't include the bolus term
+includeBolus = True
+
 # Region names for basin MOC calculation.
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
