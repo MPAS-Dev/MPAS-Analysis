@@ -161,12 +161,17 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                                   os.path.basename(self.inputFiles[-1]))
 
         # Make sure first year of data is included for computing anomalies
-        simulationStartTime = get_simulation_start_time(self.runStreams)
-        firstYear = int(simulationStartTime[0:4])
-        endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
+        if config.has_option('timeSeries', 'anomalyRefYear'):
+            anomalyYear = config.getint('timeSeries', 'anomalyRefYear')
+            anomalyStartDate = '{:04d}-01-01_00:00:00'.format(anomalyYear)
+        else:
+            anomalyStartDate = get_simulation_start_time(self.runStreams)
+            anomalyYear = int(anomalyStartDate[0:4])
+
+        anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
         firstYearInputFiles = self.historyStreams.readpath(
-                streamName, startDate=simulationStartTime,
-                endDate=endDateFirstYear,
+                streamName, startDate=anomalyStartDate,
+                endDate=anomalyEndDate,
                 calendar=self.calendar)
         for fileName in firstYearInputFiles:
             if fileName not in self.inputFiles:

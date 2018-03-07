@@ -184,6 +184,11 @@ renormalizationThreshold = 0.01
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs
 
+# the year from which to compute anomalies if not the start year of the
+# simulation.  This might be useful if a long spin-up cycle is performed and
+# only the anomaly over a later span of years is of interest.
+# anomalyRefYear = 249
+
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
