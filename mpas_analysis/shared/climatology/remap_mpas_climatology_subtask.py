@@ -58,6 +58,11 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         If ``comparisonGridName`` is not ``None``, the name of a restart
         file from which the MPAS mesh can be read.
 
+    useNcremap : bool, optional
+        Whether to use ncremap to do the remapping (the other option being
+        an internal python code that handles more grid types and extra
+        dimensions)
+
     Authors
     -------
     Xylar Asay-Davis
@@ -65,7 +70,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, comparisonGridNames=['latlon'],
-                 iselValues=None, subtaskName='remapMpasClimatology'):
+                 iselValues=None, subtaskName='remapMpasClimatology',
+                 useNcremap=None):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -104,6 +110,14 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         subtaskName : str, optional
             The name of the subtask
 
+        useNcremap : bool, optional
+            Whether to use ncremap to do the remapping (the other option being
+            an internal python code that handles more grid types and extra
+            dimensions).  This defaults to the config option ``useNcremap``
+            if it is not explicitly given.  If a comparison grid other than
+            ``latlon`` is given, ncremap is not supported so this flag is set
+            to ``False``.
+
         Authors
         -------
         Xylar Asay-Davis
@@ -132,6 +146,12 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         # this is a stopgap until MPAS implements the _FillValue attribute
         # correctly
         self._fillValue = -9.99999979021476795361e+33
+
+        if useNcremap is None:
+            self.useNcremap = self.config.getboolean('climatology',
+                                                     'useNcremap')
+        else:
+            self.useNcremap = useNcremap
 
         # }}}
 
@@ -511,16 +531,11 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             # no remapping is needed
             return
 
-        useNcremap = self.config.getboolean('climatology', 'useNcremap')
-
-        if comparisonGridName != 'latlon':
-            # ncremap doesn't support grids other than lat/lon
-            useNcremap = False
-
         renormalizationThreshold = self.config.getfloat(
             'climatology', 'renormalizationThreshold')
 
-        if useNcremap:
+        # ncremap doesn't support grids other than lat/lon
+        if self.useNcremap and comparisonGridName == 'latlon':
             remapper.remap_file(inFileName=inFileName,
                                 outFileName=outFileName,
                                 overwrite=True,

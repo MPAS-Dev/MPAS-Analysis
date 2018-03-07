@@ -86,7 +86,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # (RemapMpasClimatologySubtask)
         super(RemapDepthSlicesSubtask, self).__init__(
             mpasClimatologyTask, parentTask, climatologyName, variableList,
-            seasons, comparisonGridNames, iselValues)
+            seasons, comparisonGridNames, iselValues, useNcremap=False)
 
     def run_task(self):  # {{{
         """
