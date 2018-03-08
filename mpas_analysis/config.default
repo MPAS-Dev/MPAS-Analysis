@@ -717,7 +717,7 @@ comparisonGrids = ['latlon']
 seasons =  ['ANN','JAS','JFM']
 
 # list of depths in meters (positive up) at which to analyze, 'top' for the
-# sea surface
+# sea surface.  Argo data is only available above -2000 m
 depths = ['top', -25, -50, -100, -150, -200, -400, -800, -1500]
 
 
@@ -787,7 +787,7 @@ comparisonGrids = ['latlon']
 seasons =  ['ANN','JFM','JAS']
 
 # list of depths in meters (positive up) at which to analyze, 'top' for the
-# sea surface
+# sea surface.  Argo data is only available above -2000 m
 depths = ['top', -25, -50, -100, -150, -200, -400, -600, -800, -1500]
 
 # colormap for model/observations
