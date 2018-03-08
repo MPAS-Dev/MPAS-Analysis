@@ -57,7 +57,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         -------
         Luke Van Roekel, Xylar Asay-Davis
         """
-        fieldName = 'temperature'
+        fieldName = 'temperatureARGO'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoTemperature, self).__init__(
                 config=config, taskName='climatologyMapArgoTemperature',
@@ -155,8 +155,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Temperature',
-                        galleryGroup='Temperature',
+                        imageCaption='ARGO_Temperature',
+                        galleryGroup='ARGO_Temperature',
                         groupSubtitle=None,
                         groupLink='temp',
                         galleryName=galleryName)
@@ -197,7 +197,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         -------
         Xylar Asay-Davis, Luke Van Roekel
         """
-        fieldName = 'salinity'
+        fieldName = 'salinityARGO'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoSalinity, self).__init__(
                 config=config, taskName='climatologyMapArgoSalinity',
@@ -295,8 +295,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
-                        imageCaption='Salinity',
-                        galleryGroup='Salinity',
+                        imageCaption='ARGO_Salinity',
+                        galleryGroup='ARGO_Salinity',
                         groupSubtitle=None,
                         groupLink='salin',
                         galleryName=galleryName)
