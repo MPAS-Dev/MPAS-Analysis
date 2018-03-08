@@ -158,7 +158,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                                      'observations',
                         galleryGroup='Argo Temperature',
                         groupSubtitle=None,
-                        groupLink='temp',
+                        groupLink='tempArgo',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
@@ -299,7 +299,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                                      'observations',
                         galleryGroup='Argo Salinity',
                         groupSubtitle=None,
-                        groupLink='salin',
+                        groupLink='salinArgo',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)

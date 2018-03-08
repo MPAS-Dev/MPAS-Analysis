@@ -160,7 +160,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         imageCaption='Temperature compared with SOSE',
                         galleryGroup='Temperature',
                         groupSubtitle=None,
-                        groupLink='temp',
+                        groupLink='tempSose',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
@@ -302,7 +302,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                         imageCaption='Salinity compared with SOSE',
                         galleryGroup='Salinity',
                         groupSubtitle=None,
-                        groupLink='salin',
+                        groupLink='salinSose',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
