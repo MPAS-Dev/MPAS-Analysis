@@ -19,10 +19,9 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 
-from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
-    RemapMpasClimatologySubtask
+from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
-from mpas_analysis.shared.grid import LatLonGridDescriptor 
+from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
@@ -155,7 +154,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Model temperature compared with ARGO observations',
+                        imageCaption='Model temperature compared with ARGO '
+                                     'observations',
                         galleryGroup='Argo Temperature',
                         groupSubtitle=None,
                         groupLink='temp',
@@ -295,7 +295,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
-                        imageCaption='Model Salinity compared with Argo observations',
+                        imageCaption='Model Salinity compared with Argo '
+                                     'observations',
                         galleryGroup='Argo Salinity',
                         groupSubtitle=None,
                         groupLink='salin',
@@ -345,7 +346,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         fieldName : str
             The name of the 3D field to remap
 
-        depths : list of {None, float, 'top', 'bot'}
+        depths : list of {None, float, 'top'}
             A list of depths at which the climatology will be sliced in the
             vertical.
 
@@ -393,7 +394,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         # Load Argo observational Data
         dsObs = self.build_observational_dataset(fileName)
 
-        # create a descriptor of the observation grid using Lat/Lon 
+        # create a descriptor of the observation grid using Lat/Lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
                                                   latVarName='latCoord',
@@ -425,8 +426,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         dsObs = xr.open_dataset(fileName)
 
         # Rename coordinates to be consistent with other datasets
-        dsObs.rename({'month':'calmonth', 'LATITUDE': 'latCoord',
-                      'LONGITUDE':'lonCoord', 'DEPTH': 'depth'}, inplace=True)
+        dsObs.rename({'month': 'calmonth', 'LATITUDE': 'latCoord',
+                      'LONGITUDE': 'lonCoord', 'DEPTH': 'depth'}, inplace=True)
         dsObs.coords['LATITUDE'] = dsObs['latCoord']
         dsObs.coords['LONGITUDE'] = dsObs['lonCoord']
         dsObs.coords['DEPTH'] = dsObs['depth']
@@ -442,8 +443,6 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
             if depth == 'top':
                 slices.append(field.sel(method='nearest', depth=0.).drop(
                         'depth'))
-            elif depth == 'bot':
-                slices.append(botField)
             else:
                 slices.append(field.sel(method='nearest', depth=depth).drop(
                         'depth'))

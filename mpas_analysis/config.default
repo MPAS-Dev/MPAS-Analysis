@@ -717,7 +717,7 @@ comparisonGrids = ['latlon']
 seasons =  ['ANN','JAS','JFM']
 
 # list of depths in meters (positive up) at which to analyze, 'top' for the
-# sea surface, 'bot' for the sea floor
+# sea surface
 depths = ['top', -25, -50, -100, -150, -200, -400, -800, -1500]
 
 
@@ -789,7 +789,7 @@ seasons =  ['ANN','JFM','JAS']
 # list of depths in meters (positive up) at which to analyze, 'top' for the
 # sea surface
 depths = ['top', -25, -50, -100, -150, -200, -400, -600, -800, -1500]
-#depths = ['top',-50]
+
 # colormap for model/observations
 colormapNameResult = BuOr
 # the type of norm used in the colormap
