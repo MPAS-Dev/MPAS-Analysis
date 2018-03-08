@@ -111,7 +111,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
-            refFieldName = 'theta'
+            refFieldName = 'thetaArgo'
             outFileLabel = 'tempArgo'
             galleryName = 'Roemmich-Gilson Climatology: ARGO'
             diffTitleLabel = 'Model - Argo'
@@ -155,8 +155,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='ARGO_Temperature',
-                        galleryGroup='ARGO_Temperature',
+                        imageCaption='Model temperature compared with ARGO observations',
+                        galleryGroup='Argo Temperature',
                         groupSubtitle=None,
                         groupLink='temp',
                         galleryName=galleryName)
@@ -251,7 +251,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
-            refFieldName = 'salinity'
+            refFieldName = 'salinityArgo'
             outFileLabel = 'salinArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
@@ -295,8 +295,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
-                        imageCaption='ARGO_Salinity',
-                        galleryGroup='ARGO_Salinity',
+                        imageCaption='Model Salinity compared with Argo observations',
+                        galleryGroup='Argo Salinity',
                         groupSubtitle=None,
                         groupLink='salin',
                         galleryName=galleryName)

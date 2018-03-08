@@ -57,7 +57,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
         -------
         Xylar Asay-Davis
         """
-        fieldName = 'temperature'
+        fieldName = 'temperatureSOSE'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSoseTemperature, self).__init__(
                 config=config, taskName='climatologyMapSoseTemperature',
@@ -112,7 +112,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                 '{}/SOSE_2005-2010_monthly_pot_temp_6000.0x' \
                 '6000.0km_10.0km_Antarctic_stereo.nc'.format(
                         observationsDirectory)
-            refFieldName = 'theta'
+            refFieldName = 'thetaSOSE'
             outFileLabel = 'tempSOSE'
             galleryName = 'State Estimate: SOSE'
             diffTitleLabel = 'Model - State Estimate'
@@ -157,7 +157,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Temperature',
+                        imageCaption='Temperature compared with SOSE',
                         galleryGroup='Temperature',
                         groupSubtitle=None,
                         groupLink='temp',
@@ -199,7 +199,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
         -------
         Xylar Asay-Davis
         """
-        fieldName = 'salinity'
+        fieldName = 'salinitySOSE'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSoseSalinity, self).__init__(
                 config=config, taskName='climatologyMapSoseSalinity',
@@ -254,7 +254,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                 '{}/SOSE_2005-2010_monthly_salinity_6000.0x' \
                 '6000.0km_10.0km_Antarctic_stereo.nc'.format(
                         observationsDirectory)
-            refFieldName = 'salinity'
+            refFieldName = 'salinitySOSE'
             outFileLabel = 'salinSOSE'
             galleryName = 'State Estimate: SOSE'
             diffTitleLabel = 'Model - State Estimate'
@@ -299,7 +299,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
-                        imageCaption='Salinity',
+                        imageCaption='Salinity compared with SOSE',
                         galleryGroup='Salinity',
                         groupSubtitle=None,
                         groupLink='salin',
