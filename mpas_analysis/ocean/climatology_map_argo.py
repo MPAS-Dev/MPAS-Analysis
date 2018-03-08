@@ -1,13 +1,13 @@
 '''
-Analysis tasks for comparing Antarctic climatology maps against observations
-and reanalysis data.
+Analysis tasks for comparing Global climatology maps against ARGO data.
 
 Authors
 -------
-Xylar Asay-Davis
+Luke Van Roekel
 '''
 
 import xarray as xr
+import numpy as np
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -19,22 +19,21 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 
-from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
-    get_antarctic_stereographic_projection
+from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
-from mpas_analysis.shared.grid import ProjectionGridDescriptor
+from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
-class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
+class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     """
     An analysis task for comparison of antarctic temperature against SOSE
     fields
 
     Authors
     -------
-    Xylar Asay-Davis
+    Luke Van Roekel, Xylar Asay-Davis
     """
 
     def __init__(self, config, mpasClimatologyTask,
@@ -55,14 +54,14 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
 
         Authors
         -------
-        Xylar Asay-Davis
+        Luke Van Roekel, Xylar Asay-Davis
         """
-        fieldName = 'temperatureSOSE'
+        fieldName = 'temperatureARGO'
         # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSoseTemperature, self).__init__(
-                config=config, taskName='climatologyMapSoseTemperature',
+        super(ClimatologyMapArgoTemperature, self).__init__(
+                config=config, taskName='climatologyMapArgoTemperature',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', fieldName])
+                tags=['climatology', 'horizontalMap', 'argo', fieldName])
 
         sectionName = self.taskName
 
@@ -103,25 +102,23 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'State Estimate (SOSE)'
+            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Temperature'
 
             observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'soseSubdirectory')
+                config, 'oceanObservations', 'argoSubdirectory')
 
             obsFileName = \
-                '{}/SOSE_2005-2010_monthly_pot_temp_6000.0x' \
-                '6000.0km_10.0km_Antarctic_stereo.nc'.format(
+                '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
             refFieldName = 'theta'
-            outFileLabel = 'tempSOSE'
-            galleryName = 'State Estimate: SOSE'
-            diffTitleLabel = 'Model - State Estimate'
+            outFileLabel = 'tempArgo'
+            galleryName = 'Roemmich-Gilson Climatology: ARGO'
+            diffTitleLabel = 'Model - Argo'
 
-            remapObservationsSubtask = RemapSoseClimatology(
+            remapObservationsSubtask = RemapArgoClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}SOSE'.format(refFieldName),
+                    outFilePrefix='{}Argo'.format(refFieldName),
                     fieldName=refFieldName,
-                    botFieldName='botTheta',
                     depths=depths,
                     comparisonGridNames=comparisonGridNames)
 
@@ -157,10 +154,11 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Temperature compared with SOSE',
-                        galleryGroup='Temperature',
+                        imageCaption='Model temperature compared with ARGO '
+                                     'observations',
+                        galleryGroup='Argo Temperature',
                         groupSubtitle=None,
-                        groupLink='tempSose',
+                        groupLink='tempArgo',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
@@ -169,14 +167,14 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
     # }}}
 
 
-class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
+class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of antarctic salinity against SOSE
+    An analysis task for comparison of Global Temperature against Argo
     fields
 
     Authors
     -------
-    Xylar Asay-Davis
+    Xylar Asay-Davis, Luke Van Roekel
     """
 
     def __init__(self, config, mpasClimatologyTask,
@@ -197,14 +195,14 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
 
         Authors
         -------
-        Xylar Asay-Davis
+        Xylar Asay-Davis, Luke Van Roekel
         """
-        fieldName = 'salinitySOSE'
+        fieldName = 'salinityARGO'
         # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSoseSalinity, self).__init__(
-                config=config, taskName='climatologyMapSoseSalinity',
+        super(ClimatologyMapArgoSalinity, self).__init__(
+                config=config, taskName='climatologyMapArgoSalinity',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', fieldName])
+                tags=['climatology', 'horizontalMap', 'argo', fieldName])
 
         sectionName = self.taskName
 
@@ -245,25 +243,23 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'State Estimate (SOSE)'
+            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Salinity'
 
             observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'soseSubdirectory')
+                config, 'oceanObservations', 'argoSubdirectory')
 
             obsFileName = \
-                '{}/SOSE_2005-2010_monthly_salinity_6000.0x' \
-                '6000.0km_10.0km_Antarctic_stereo.nc'.format(
+                '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
             refFieldName = 'salinity'
-            outFileLabel = 'salinSOSE'
-            galleryName = 'State Estimate: SOSE'
-            diffTitleLabel = 'Model - State Estimate'
+            outFileLabel = 'salinArgo'
+            galleryName = 'Roemmich-Gilson Climatology: Argo'
+            diffTitleLabel = 'Model - Argo'
 
-            remapObservationsSubtask = RemapSoseClimatology(
+            remapObservationsSubtask = RemapArgoClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}SOSE'.format(refFieldName),
+                    outFilePrefix='{}Argo'.format(refFieldName),
                     fieldName=refFieldName,
-                    botFieldName='botSalinity',
                     depths=depths,
                     comparisonGridNames=comparisonGridNames)
 
@@ -299,10 +295,11 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
-                        imageCaption='Salinity compared with SOSE',
-                        galleryGroup='Salinity',
+                        imageCaption='Model Salinity compared with Argo '
+                                     'observations',
+                        galleryGroup='Argo Salinity',
                         groupSubtitle=None,
-                        groupLink='salinSose',
+                        groupLink='salinArgo',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
@@ -311,18 +308,18 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
     # }}}
 
 
-class RemapSoseClimatology(RemapObservedClimatologySubtask):
+class RemapArgoClimatology(RemapObservedClimatologySubtask):
     # {{{
     """
     A subtask for reading and remapping SOSE fields to the comparison grid
 
     Authors
     -------
-    Xylar Asay-Davis
+    Xylar Asay-Davis, Luke Van Roekel
     """
 
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
-                 fieldName, botFieldName, depths,
+                 fieldName, depths,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
         # {{{
@@ -349,11 +346,7 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         fieldName : str
             The name of the 3D field to remap
 
-        botFieldName : str
-            The name of the same field as ``fieldName`` but sampled at the
-            sea floor
-
-        depths : list of {None, float, 'top', 'bot'}
+        depths : list of {None, float, 'top'}
             A list of depths at which the climatology will be sliced in the
             vertical.
 
@@ -365,17 +358,16 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
 
         Authors
         -------
-        Xylar Asay-Davis
+        Xylar Asay-Davis, Luke Van Roekel
 
         '''
 
         self.fieldName = fieldName
-        self.botFieldName = botFieldName
         self.depths = depths
 
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
-        super(RemapSoseClimatology, self).__init__(
+        super(RemapArgoClimatology, self).__init__(
                 parentTask, seasons, fileName, outFilePrefix,
                 comparisonGridNames, subtaskName)
         # }}}
@@ -396,14 +388,18 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
 
         Authors
         -------
-        Xylar Asay-Davis
+        Xylar Asay-Davis, Luke Van Roekel
         '''
 
-        # create a descriptor of the observation grid using the x/y polar
-        # stereographic coordinates
-        projection = get_antarctic_stereographic_projection()
-        obsDescriptor = ProjectionGridDescriptor.read(
-            projection, fileName=fileName, xVarName='x', yVarName='y')
+        # Load Argo observational Data
+        dsObs = self.build_observational_dataset(fileName)
+
+        # create a descriptor of the observation grid using Lat/Lon
+        # coordinates
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
+                                                  latVarName='latCoord',
+                                                  lonVarName='lonCoord')
+        dsObs.close()
         return obsDescriptor  # }}}
 
     def build_observational_dataset(self, fileName):  # {{{
@@ -423,24 +419,30 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
 
         Authors
         -------
-        Xylar Asay-Davis
+        Xylar Asay-Davis, Luke Van Roekel
         '''
 
-        # Load MLD observational data
+        # Load Argo observational data
         dsObs = xr.open_dataset(fileName)
 
-        dsObs = mpas_xarray.subset_variables(dsObs, [self.fieldName,
-                                                     self.botFieldName,
-                                                     'month', 'year'])
+        # Rename coordinates to be consistent with other datasets
+        dsObs.rename({'month': 'calmonth', 'LATITUDE': 'latCoord',
+                      'LONGITUDE': 'lonCoord', 'DEPTH': 'depth'}, inplace=True)
+        dsObs.coords['LATITUDE'] = dsObs['latCoord']
+        dsObs.coords['LONGITUDE'] = dsObs['lonCoord']
+        dsObs.coords['DEPTH'] = dsObs['depth']
+        dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
+
+        # no meaningful year since this is already a climatology
+        dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
+        dsObs = mpas_xarray.subset_variables(dsObs, [self.fieldName, 'month'])
+
         slices = []
         field = dsObs[self.fieldName]
-        botField = dsObs[self.botFieldName]
         for depth in self.depths:
             if depth == 'top':
                 slices.append(field.sel(method='nearest', depth=0.).drop(
                         'depth'))
-            elif depth == 'bot':
-                slices.append(botField)
             else:
                 slices.append(field.sel(method='nearest', depth=depth).drop(
                         'depth'))

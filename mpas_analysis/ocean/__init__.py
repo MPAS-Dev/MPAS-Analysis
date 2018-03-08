@@ -6,6 +6,8 @@ from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
 from mpas_analysis.ocean.climatology_map_sose import \
     ClimatologyMapSoseTemperature, ClimatologyMapSoseSalinity
+from mpas_analysis.ocean.climatology_map_argo import \
+    ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 
 from mpas_analysis.ocean.time_series_temperature_anomaly import \
     TimeSeriesTemperatureAnomaly
