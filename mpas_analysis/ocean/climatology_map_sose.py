@@ -112,14 +112,14 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                 '{}/SOSE_2005-2010_monthly_pot_temp_6000.0x' \
                 '6000.0km_10.0km_Antarctic_stereo.nc'.format(
                         observationsDirectory)
-            refFieldName = 'thetaSOSE'
+            refFieldName = 'theta'
             outFileLabel = 'tempSOSE'
             galleryName = 'State Estimate: SOSE'
             diffTitleLabel = 'Model - State Estimate'
 
             remapObservationsSubtask = RemapSoseClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix='{}SOSE'.format(refFieldName),
                     fieldName=refFieldName,
                     botFieldName='botTheta',
                     depths=depths,
@@ -254,14 +254,14 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                 '{}/SOSE_2005-2010_monthly_salinity_6000.0x' \
                 '6000.0km_10.0km_Antarctic_stereo.nc'.format(
                         observationsDirectory)
-            refFieldName = 'salinitySOSE'
+            refFieldName = 'salinity'
             outFileLabel = 'salinSOSE'
             galleryName = 'State Estimate: SOSE'
             diffTitleLabel = 'Model - State Estimate'
 
             remapObservationsSubtask = RemapSoseClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix='{}SOSE'.format(refFieldName),
                     fieldName=refFieldName,
                     botFieldName='botSalinity',
                     depths=depths,

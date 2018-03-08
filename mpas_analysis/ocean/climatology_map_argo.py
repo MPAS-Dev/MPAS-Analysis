@@ -110,14 +110,14 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
-            refFieldName = 'thetaArgo'
+            refFieldName = 'theta'
             outFileLabel = 'tempArgo'
             galleryName = 'Roemmich-Gilson Climatology: ARGO'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix='{}Argo'.format(refFieldName),
                     fieldName=refFieldName,
                     depths=depths,
                     comparisonGridNames=comparisonGridNames)
@@ -251,14 +251,14 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
-            refFieldName = 'salinityArgo'
+            refFieldName = 'salinity'
             outFileLabel = 'salinArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix='{}Argo'.format(refFieldName),
                     fieldName=refFieldName,
                     depths=depths,
                     comparisonGridNames=comparisonGridNames)
