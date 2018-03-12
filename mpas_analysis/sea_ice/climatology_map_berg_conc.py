@@ -17,14 +17,14 @@ from mpas_analysis.shared.io.utility import build_config_full_path
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 
-class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
+class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of sea ice thickness against
+    An analysis task for comparison of iceberg concentration against
     observations
 
     Authors
     -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani, Darin Comeau
     """
     def __init__(self, config, mpasClimatologyTask, hemisphere,
                  refConfig=None):  # {{{
@@ -49,16 +49,16 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         -------
         Xylar Asay-Davis
         """
-        taskName = 'climatologyMapSeaIceThick{}'.format(hemisphere)
+        taskName = 'climatologyMapIcebergConc{}'.format(hemisphere)
 
-        fieldName = 'seaIceThick'
+        fieldName = 'IcebergConc'
         # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSeaIceThick, self).__init__(
+        super(ClimatologyMapIcebergConc, self).__init__(
                 config=config, taskName=taskName,
                 componentName='seaIce',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['icebergs', 'climatology', 'horizontalMap', fieldName])
 
-        mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
+        mpasFieldName = 'timeMonthly_avg_bergAreaCell'
         iselValues = None
 
         sectionName = taskName
@@ -94,10 +94,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
             iselValues=iselValues)
 
         if refConfig is None:
-            refTitleLabel = 'Observations (ICESat)'
-            galleryName = 'Observations: ICESat'
+            refTitleLabel = 'Observations (Altiberg)'
+            galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
-            refFieldName = 'seaIceThick'
+            refFieldName = 'IcebergConc'
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
@@ -110,10 +110,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         for season in seasons:
             if refConfig is None:
                 obsFileName = build_config_full_path(
-                        config, 'seaIceObservations',
-                        'thickness{}_{}'.format(hemisphere, season))
+                        config, 'icebergObservations',
+                        'concentration{}_{}'.format(hemisphere, season))
 
-                remapObservationsSubtask = RemapObservedThickClimatology(
+                remapObservationsSubtask = RemapObservedConcClimatology(
                         parentTask=self, seasons=[season],
                         fileName=obsFileName,
                         outFilePrefix='{}{}_{}'.format(refFieldName,
@@ -126,11 +126,11 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
             for comparisonGridName in comparisonGridNames:
 
                 imageDescription = \
-                    '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
-                    'Thickness.'.format(season, hemisphereLong)
+                    '{} Climatology Map of {}-Hemisphere Iceberg ' \
+                    'Concentration.'.format(season, hemisphereLong)
                 imageCaption = imageDescription
                 galleryGroup = \
-                    '{}-Hemisphere Sea-Ice Thickness'.format(
+                    '{}-Hemisphere Iceberg Concentration'.format(
                             hemisphereLong)
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
@@ -139,8 +139,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                         refConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='icethick{}'.format(hemisphere),
-                        fieldNameInTitle='Sea ice thickness',
+                        outFileLabel='bergconc{}'.format(hemisphere),
+                        fieldNameInTitle='Iceberg concentration',
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
@@ -150,7 +150,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                         imageCaption=imageCaption,
                         galleryGroup=galleryGroup,
                         groupSubtitle=None,
-                        groupLink='{}_thick'.format(hemisphere.lower()),
+                        groupLink='{}_conc'.format(hemisphere.lower()),
                         galleryName=galleryName,
                         maskValue=0)
 
@@ -161,9 +161,9 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
     # }}}
 
 
-class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
     """
-    A subtask for reading and remapping sea ice thickness observations
+    A subtask for reading and remapping iceberg concentration observations
 
     Authors
     -------
@@ -192,8 +192,8 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='t_lat',
-                                                  lonVarName='t_lon')
+                                                  latVarName='latitude',
+                                                  lonVarName='longitude')
         return obsDescriptor  # }}}
 
     def build_observational_dataset(self, fileName):  # {{{
@@ -217,7 +217,7 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
 
         dsObs = xr.open_dataset(fileName)
-        dsObs.rename({'HI': 'seaIceThick'}, inplace=True)
+        dsObs.rename({'probability': 'IcebergConc'}, inplace=True)
         return dsObs
         # }}}
     # }}}

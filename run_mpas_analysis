@@ -170,6 +170,14 @@ def build_analysis_list(config, refConfig):  # {{{
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
                                              refConfig))
 
+    # Iceberg Analyses
+    IcebergClimatolgyTask = MpasClimatologyTask(config=config,
+                                                componentName='seaIce')
+    analyses.append(IcebergClimatolgyTask)
+    analyses.append(sea_ice.ClimatologyMapIcebergConc(
+            config=config, mpasClimatologyTask=IcebergClimatolgyTask,
+            hemisphere='SH', refConfig=refConfig))
+
     return analyses  # }}}
 
 
