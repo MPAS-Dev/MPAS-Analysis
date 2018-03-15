@@ -57,7 +57,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MPAS-Analysis'
-copyright = u'2016-2017, Los Alamos National Security, LLC (LANS) (Ocean: ' \
+copyright = u'2016-2018, Los Alamos National Security, LLC (LANS) (Ocean: ' \
             u'LA-CC-13-047; Land Ice: LA-CC-13-117) and the University ' \
             u'Corporation for Atmospheric Research (UCAR)'
 author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, ' \
