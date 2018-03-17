@@ -97,7 +97,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             refTitleLabel = 'Observations (Altiberg)'
             galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
-            refFieldName = 'IcebergConc'
+            refFieldName = 'icebergConc'
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
@@ -111,9 +111,9 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             if refConfig is None:
                 obsFileName = build_config_full_path(
                         config, 'icebergObservations',
-                        'concentration{}_{}'.format(hemisphere, season))
+                        'concentration{}'.format(hemisphere))
 
-                remapObservationsSubtask = RemapObservedConcClimatology(
+                remapObservationsSubtask = RemapAltibergConcClimatology(
                         parentTask=self, seasons=[season],
                         fileName=obsFileName,
                         outFilePrefix='{}{}_{}'.format(refFieldName,
@@ -161,9 +161,10 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
     # }}}
 
 
-class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
     """
-    A subtask for reading and remapping iceberg concentration observations
+    A subtask for reading and remapping iceberg concentration from Altiberg
+    observations
 
     Authors
     -------
@@ -217,9 +218,12 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
 
         dsObs = xr.open_dataset(fileName)
-        dsObs.rename({'probability': 'IcebergConc'}, inplace=True)
-        return dsObs
-        # }}}
+        dsObs.rename({'probability': 'icebergConc', 'time': 'Time'},
+                     inplace=True)
+        dsObs.coords['month'] = dsObs['Time.month']
+        dsObs.coords['year'] = dsObs['Time.year']
+
+        return dsObs  # }}}
     # }}}
 
 
