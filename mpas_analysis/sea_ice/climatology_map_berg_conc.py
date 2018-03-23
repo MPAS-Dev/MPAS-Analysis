@@ -219,6 +219,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
                      inplace=True)
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
+        dsObs = dsObs.transpose('Time', 'latitude', 'longitude')
 
         return dsObs  # }}}
     # }}}
