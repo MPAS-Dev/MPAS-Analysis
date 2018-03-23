@@ -116,9 +116,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                 remapObservationsSubtask = RemapAltibergConcClimatology(
                         parentTask=self, seasons=[season],
                         fileName=obsFileName,
-                        outFilePrefix='{}{}_{}'.format(refFieldName,
-                                                       hemisphere,
-                                                       season),
+                        outFilePrefix='{}{}'.format(refFieldName,
+                                                    hemisphere),
                         comparisonGridNames=comparisonGridNames,
                         subtaskName='remapObservations{}'.format(season))
                 self.add_subtask(remapObservationsSubtask)
