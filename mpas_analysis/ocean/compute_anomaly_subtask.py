@@ -152,12 +152,20 @@ class ComputeAnomalySubtask(AnalysisTask):
         startDate = config.get('timeSeries', 'startDate')
         endDate = config.get('timeSeries', 'endDate')
 
-        simulationStartTime = get_simulation_start_time(self.runStreams)
+        if config.has_option('timeSeries', 'anomalyRefYear'):
+            anomalyYear = config.getint('timeSeries', 'anomalyRefYear')
+            anomalyRefDate = '{:04d}-01-01_00:00:00'.format(anomalyYear)
+            anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
+        else:
+            anomalyRefDate = get_simulation_start_time(self.runStreams)
+            anomalyYear = int(anomalyRefDate[0:4])
+            anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
 
         ds = compute_moving_avg_anomaly_from_start(
                 timeSeriesFileName=self.inputFile,
                 variableList=self.variableList,
-                simulationStartTime=simulationStartTime,
+                anomalyStartTime=anomalyRefDate,
+                anomalyEndTime=anomalyEndDate,
                 startDate=startDate,
                 endDate=endDate,
                 calendar=self.calendar,

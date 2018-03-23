@@ -15,8 +15,8 @@ from mpas_analysis.shared.time_series.moving_average import compute_moving_avg
 
 
 def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
-                                          simulationStartTime, startDate,
-                                          endDate, calendar,
+                                          anomalyStartTime, anomalyEndTime,
+                                          startDate, endDate, calendar,
                                           movingAveragePoints=12,
                                           alter_dataset=None):  # {{{
 
@@ -74,7 +74,8 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
         fileName=timeSeriesFileName,
         calendar=calendar,
         variableList=variableList,
-        startDate=simulationStartTime)
+        startDate=anomalyStartTime,
+        endDate=anomalyEndTime)
 
     if alter_dataset is not None:
         dsStart = alter_dataset(dsStart)
