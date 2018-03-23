@@ -24,7 +24,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
 
     Authors
     -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani, Darin Comeau
+    Darin Comeau, Xylar Asay-Davis
     """
     def __init__(self, config, mpasClimatologyTask, hemisphere,
                  refConfig=None):  # {{{
@@ -47,7 +47,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
 
         Authors
         -------
-        Xylar Asay-Davis
+        Darin Comeau, Xylar Asay-Davis
         """
         taskName = 'climatologyMapIcebergConc{}'.format(hemisphere)
 
@@ -168,7 +168,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
 
     Authors
     -------
-    Xylar Asay-Davis
+    Darin Comeau, Xylar Asay-Davis
     """
 
     def get_observation_descriptor(self, fileName):  # {{{
@@ -187,7 +187,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
 
         Authors
         -------
-        Xylar Asay-Davis
+        Darin Comeau, Xylar Asay-Davis
         '''
 
         # create a descriptor of the observation grid using the lat/lon
@@ -214,7 +214,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
 
         Authors
         -------
-        Xylar Asay-Davis
+        Darin Comeau, Xylar Asay-Davis
         '''
 
         dsObs = xr.open_dataset(fileName)
