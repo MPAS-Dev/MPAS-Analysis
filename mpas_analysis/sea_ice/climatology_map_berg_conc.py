@@ -98,6 +98,18 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
             refFieldName = 'icebergConc'
+            obsFileName = build_config_full_path(
+                    config, 'icebergObservations',
+                    'concentration{}'.format(hemisphere))
+
+            remapObservationsSubtask = RemapAltibergConcClimatology(
+                    parentTask=self, seasons=seasons,
+                    fileName=obsFileName,
+                    outFilePrefix='{}{}'.format(refFieldName,
+                                                hemisphere),
+                    comparisonGridNames=comparisonGridNames)
+            self.add_subtask(remapObservationsSubtask)
+
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
@@ -108,20 +120,6 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             remapObservationsSubtask = None
 
         for season in seasons:
-            if refConfig is None:
-                obsFileName = build_config_full_path(
-                        config, 'icebergObservations',
-                        'concentration{}'.format(hemisphere))
-
-                remapObservationsSubtask = RemapAltibergConcClimatology(
-                        parentTask=self, seasons=[season],
-                        fileName=obsFileName,
-                        outFilePrefix='{}{}'.format(refFieldName,
-                                                    hemisphere),
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations{}'.format(season))
-                self.add_subtask(remapObservationsSubtask)
-
             for comparisonGridName in comparisonGridNames:
 
                 imageDescription = \
