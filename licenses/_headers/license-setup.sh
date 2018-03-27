@@ -17,14 +17,21 @@ SOURCE_DIR="../.."
 
 CURRENT="Copyright (c)"
 
-ALWAYS_IGNORE=(-not -path "*.git*" -not -path "*docs/*" -not -path "build/*" \
-               -not -path "dist/*" -not -path "*.egg-info/*" \
-               -not -path "licenses/*" )
+ALWAYS_IGNORE=(-not -path "*.git*" \
+               -not -path "${SOURCE_DIR}/docs/*"  \
+               -not -path "${SOURCE_DIR}/licenses/*" \
+               -not -path "${SOURCE_DIR}/build/*" \
+               -not -path "${SOURCE_DIR}/dist/*" \
+               -not -path "${SOURCE_DIR}/.idea/*" \
+               -not -path "*.egg-info/*" \
+               -not -path "${SOURCE_DIR}/conda/recipe/meta.yaml" \
+               -not -path "${SOURCE_DIR}/setup.cfg")
 
-FILE_IGNORE=(-not -iname "*.md" -not -iname "*.json" -not -iname "*.txt" \
+FILE_IGNORE=(-not -iname "*.ocean" -not -iname "*_in" \
+             -not -iname "*.md" -not -iname "*.json" -not -iname "*.txt" \
              -not -iname "*.png" -not -iname "*.jpg" -not -iname "*.svg" \
              -not -iname "config.*" -not -iname "*.nc"\
              -not -iname "*.pyc" \
-             -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml"    )
+             -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml")
 
 PYTHON_IGNORE=(-not -iname "__init__.py")

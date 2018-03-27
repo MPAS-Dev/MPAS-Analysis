@@ -12,10 +12,9 @@ source license-setup.sh
 echo "--------------------------------------------------------------------------------"
 echo "    THESE FILES ARE MISSING A CURRENT LICENSE HEADER:"
 echo "--------------------------------------------------------------------------------"
-find $SOURCE_DIR -type f "${ALWAYS_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f "${ALWAYS_IGNORE[@]}" \
     "${FILE_IGNORE[@]}" \
     "${PYTHON_IGNORE[@]}" \
-    "${CSS_IGNORE[@]}" \
-    | xargs grep -L "$CURRENT" \
+    | xargs -r grep -L "$CURRENT" \
     | sort
 
