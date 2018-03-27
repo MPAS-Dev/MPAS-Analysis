@@ -16,17 +16,13 @@
 # Get the source dir and ignore variables
 source license-setup.sh
 
-GET=( -iname "*.py" -or -iname "*.sh" -or -iname "*.bash" -or -iname "*.csh" \
-     -or -iname "*.pbs" -or -iname "*.html" -or -iname "*.css" -or -iname "*.js" )
-
 echo "--------------------------------------------------------------------------------"
-echo "    PREPENDING A LICENSE HEADER ONTO THESE FILES:"
+echo "    ATTEMPTING TO PREPEND A LICENSE HEADER ONTO THESE FILES:"
 echo "--------------------------------------------------------------------------------"
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f "${ALWAYS_IGNORE[@]}" \
     "${FILE_IGNORE[@]}" \
     "${PYTHON_IGNORE[@]}" \
-    "${CSS_IGNORE[@]}" \
-    | xargs grep -L "$CURRENT" \
+    | xargs -r grep -L "$CURRENT" \
     | sort
 
 echo "--------------------------------------------------------------------------------"
@@ -40,7 +36,7 @@ echo "--------------------------------------------------------------------------
 ############################################################
 GET=( -iname "*.py" )
 
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
     | xargs -r grep -l --max-count=1 "#!" \
     | xargs -r grep -l --max-count=1 "# -\*-" \
     | xargs -r grep -L "$CURRENT" \
@@ -62,7 +58,7 @@ done
 #######################################################################
 GET=( -iname "*.py" )
 
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
     | xargs -r grep -l --max-count=1 "# -\*-" \
     | xargs -r grep -L "$CURRENT" \
     | while read SRC
@@ -83,7 +79,7 @@ done
 ############################################################
 GET=( -iname "*.py" )
 
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
     | xargs -r grep -L "#!" \
     | xargs -r grep -L "$CURRENT" \
     | while read SRC
@@ -103,7 +99,7 @@ done
 #######################################################################
 GET=( -iname "*.py" -or -iname "*.sh" -or -iname "*.bash" -or -iname "*.csh" -or -iname "*.pbs")
 
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${PYTHON_IGNORE[@]}" \
     | xargs -r grep -l --max-count=1 "#!" \
     | xargs -r grep -L "$CURRENT" \
     | while read SRC
@@ -124,7 +120,7 @@ done
 ####################################################
 GET=( -iname "*.html")
 
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" \
     | xargs -r grep -L "$CURRENT" \
     | while read SRC
 do
@@ -142,7 +138,7 @@ done
 ####################################################
 GET=( -iname "*.css" -or -iname "*.js" )
 
-find $SOURCE_DIR -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" "${CSS_IGNORE[@]}" \
+find ${SOURCE_DIR} -type f \( "${GET[@]}" \) "${ALWAYS_IGNORE[@]}" \
     | xargs -r grep -L "$CURRENT" \
     | while read SRC
 do
@@ -156,5 +152,27 @@ done
 
 echo "--------------------------------------------------------------------------------"
 echo "    DONE PREPENDING!"
-echo "--------------------------------------------------------------------------------"
 
+
+MISSED=`find ${SOURCE_DIR} -type f "${ALWAYS_IGNORE[@]}" \
+    "${FILE_IGNORE[@]}" \
+    "${PYTHON_IGNORE[@]}" \
+    | xargs -r grep -L "$CURRENT"`
+
+if [ "$MISSED" ]
+then
+    echo ""
+    echo "    WARNING: There is no method to prepend a license header onto the following"
+    echo "             files. Please either manually add the license head to these files,"
+    echo "             add a method to prepend a license header onto these type of files,"
+    echo "             or set them to be ignored in 'license-setup.sh'. "
+    echo "--------------------------------------------------------------------------------"
+    find ${SOURCE_DIR} -type f "${ALWAYS_IGNORE[@]}" \
+        "${FILE_IGNORE[@]}" \
+        "${PYTHON_IGNORE[@]}" \
+        | xargs -r grep -L "$CURRENT" \
+        | sort
+    echo "--------------------------------------------------------------------------------"
+else
+    echo "--------------------------------------------------------------------------------"
+fi
