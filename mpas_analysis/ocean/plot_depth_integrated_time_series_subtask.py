@@ -11,15 +11,15 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import xarray as xr
 import os
+import xarray
 
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
 from mpas_analysis.shared.generalized_reader import open_multifile_dataset
-from mpas_analysis.shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
     days_to_datetime
@@ -216,6 +216,18 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             self.refFileName = '{}/{}'.format(baseDirectory,
                                               self.inFileName)
 
+        preprocessedReferenceRunName = config.get(
+                'runs', 'preprocessedReferenceRunName')
+        if preprocessedReferenceRunName != 'None':
+
+            assert(not os.path.isabs(self.inFileName))
+
+            baseDirectory = build_config_full_path(
+                config, 'output', 'timeSeriesSubdirectory')
+
+            self.preprocessedFileName = '{}/preprocessed_{}'.format(
+                    baseDirectory, self.inFileName)
+
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
                 config, 'output', 'timeSeriesSubdirectory')
@@ -354,6 +366,13 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                     'not be plotted.')
                 preprocessedReferenceRunName = 'None'
 
+            # rolling mean seems to have trouble with dask data sets so we
+            # write out the data set and read it back as a single-file data set
+            # (without dask)
+            dsPreprocessed = dsPreprocessed.drop('xtime')
+            write_netcdf(dsPreprocessed, self.preprocessedFileName)
+            dsPreprocessed = xarray.open_dataset(self.preprocessedFileName)
+
         if preprocessedReferenceRunName != 'None':
             color = 'r'
             title = '{} \n {} (red)'.format(title,
@@ -369,13 +388,13 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                   divisionDepths] + ['btm']
 
             # these preprocessed data are OHC *anomalies*
+            dsPreprocessed = compute_moving_avg(dsPreprocessed,
+                                                movingAveragePoints)
             for rangeIndex in range(len(suffixes)):
                 variableName = '{}_{}'.format(preprocessedFieldPrefix,
                                               suffixes[rangeIndex])
                 if variableName in list(dsPreprocessed.data_vars.keys()):
-                    field = dsPreprocessed[variableName]
-                    field = compute_moving_avg(field, movingAveragePoints)
-                    timeSeries.append(field)
+                    timeSeries.append(dsPreprocessed[variableName])
                 else:
                     self.logger.warning('Warning: Preprocessed variable {} '
                                         'not found. Skipping.'.format(
