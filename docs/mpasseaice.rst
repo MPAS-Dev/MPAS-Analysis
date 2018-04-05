@@ -14,7 +14,8 @@ In order to support all sea=ice analysis tasks from MPAS-Analysis, certain
 simulation, need to be enabled.
 
 The following is a list of suggested values for namelist options, typically
-found in ``namelist.cice`` or ``mpas-cice_in``::
+found in ``namelist.seaice`` or ``mpas-seaice_in`` (or ``mpas-cice_in`` in
+older E3SM runs)::
 
      config_AM_timeSeriesStatsMonthly_enable = .true.
 
@@ -24,13 +25,13 @@ typically longer before most analysis is useful::
      config_run_duration = '0002-00-00_00:00:00'
 
 Several streams must be defined in the streams file, typically
-``streams.cice``, (even if they will not be written out --
-``output_interval=="none"``)::
+``streams.seaice`` or ``streams.cice`` in older E3SM runs, (even if they will
+not be written out -- ``output_interval=="none"``)::
 
   <stream name="timeSeriesStatsMonthlyRestart"
           type="input;output"
           io_type="pnetcdf"
-          filename_template="mpascice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc"
+          filename_template="mpasseaice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc"
           filename_interval="output_interval"
           clobber_mode="truncate"
           packages="timeSeriesStatsMonthlyAMPKG"
@@ -41,7 +42,7 @@ Several streams must be defined in the streams file, typically
   <stream name="timeSeriesStatsMonthlyOutput"
           type="output"
           io_type="pnetcdf"
-          filename_template="mpascice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc"
+          filename_template="mpasseaice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc"
           filename_interval="00-01-00_00:00:00"
           output_interval="00-01-00_00:00:00"
           clobber_mode="truncate"
