@@ -40,3 +40,5 @@ from mpas_analysis.ocean.meridional_heat_transport import \
     MeridionalHeatTransport
 from mpas_analysis.ocean.time_series_antarctic_melt import \
     TimeSeriesAntarcticMelt
+
+from mpas_analysis.ocean.woce_transects import WoceTransects

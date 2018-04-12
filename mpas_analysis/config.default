@@ -264,6 +264,7 @@ soseSubdirectory = SOSE
 sshSubdirectory = SSH
 argoSubdirectory = ARGO
 schmidtkoSubdirectory = Schmidtko
+woceSubdirectory = WOCE
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -1166,6 +1167,81 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[woceTransects]
+## options related to plotting model vs. World Ocean Circulation Experiment
+## (WOCE) transects.
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# The approximate horizontal resolution (in km) of each transect.  Latitude/
+# longitude between observation points will be subsampled at this interval.
+# Use 'obs' to indicate no subsampling.
+horizontalResolution = obs
+
+# The name of the vertical comparison grid.  Valid values are 'mpas' for the
+# MPAS vertical grid, 'obs' to use the locations of observations or
+# any other name if the vertical grid is defined by 'verticalComparisonGrid'
+verticalComparisonGridName = obs
+# verticalComparisonGridName = uniform_0_to_4000m_at_10m
+
+# The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
+# 'obs'.  This should be numpy array of (typically negative) elevations (in m).
+# verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+
+# The order of vertical interpolation (only 'linear' is currently supported)
+interpolationMethod = linear
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+
+[woceTemperatureTransects]
+## options related to plotting WOCE transects of potential temperature
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[woceSalinityTransects]
+## options related to plotting WOCE transects of salinity
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
 
 [climatologyMapSeaIceConcNH]

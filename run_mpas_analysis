@@ -147,6 +147,9 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
 
+    analyses.append(ocean.WoceTransects(config, oceanClimatolgyTask,
+                                        refConfig))
+
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
                                                componentName='seaIce')
