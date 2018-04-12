@@ -118,20 +118,17 @@ class WoceTransects(AnalysisTask):  # {{{
 
             refTitleLabel = 'Observations (WOCE)'
 
-            galleryName = 'Observations: AVISO'
-
             diffTitleLabel = 'Model - Observations'
 
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
-            galleryName = None
             refTitleLabel = 'Ref: {}'.format(refRunName)
 
             diffTitleLabel = 'Main - Reference'
 
-        for transectName in obsFileNames:
-            for season in seasons:
-                for fieldName in fields:
+        for fieldName in fields:
+            for transectName in obsFileNames:
+                for season in seasons:
                     outFileLabel = fieldName
                     if plotObs:
                         refFieldName = fields[fieldName]['obs']
@@ -141,9 +138,7 @@ class WoceTransects(AnalysisTask):  # {{{
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
                     fieldNameInTytle = '{} from {}'.format(
                             fieldNameUpper,
-                            transectName.replace('_',' '))
-                    galleryGroup = 'WOCE {}'.format(fieldNameUpper)
-                    groupLink = 'woce_{}'.format(fieldName)
+                            transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
@@ -161,10 +156,10 @@ class WoceTransects(AnalysisTask):  # {{{
                             unitsLabel=fields[fieldName]['units'],
                             imageCaption='{} {}'.format(fieldNameInTytle,
                                                         season),
-                            galleryGroup=galleryGroup,
+                            galleryGroup='WOCE Transects',
                             groupSubtitle=None,
-                            groupLink=groupLink,
-                            galleryName=galleryName,
+                            groupLink='woce',
+                            galleryName=fieldNameUpper,
                             configSectionName='woce{}Transects'.format(
                                     fieldNameUpper))
 
