@@ -63,10 +63,9 @@ class TestMpasClimatologyTask(TestCase):
         variableList = ['timeMonthly_avg_ssh']
         seasons = [mpasClimatologyTask.seasons[0]]
 
-        remapSubtask = RemapMpasClimatologySubtask(mpasClimatologyTask,
-                                                   parentTask,
-                                                   climatologyName,
-                                                   variableList, seasons)
+        remapSubtask = RemapMpasClimatologySubtask(
+                mpasClimatologyTask, parentTask, climatologyName,
+                variableList, seasons, comparisonGridNames=['latlon'])
 
         remapSubtask.setup_and_check()
         return remapSubtask
