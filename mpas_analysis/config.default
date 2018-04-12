@@ -1185,15 +1185,12 @@ horizontalResolution = obs
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
-verticalComparisonGridName = obs
-# verticalComparisonGridName = uniform_0_to_4000m_at_10m
+# verticalComparisonGridName = obs
+verticalComparisonGridName = uniform_0_to_4000m_at_10m
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
 # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
-# verticalComparisonGrid = numpy.linspace(0, -4000, 401)
-
-# The order of vertical interpolation (only 'linear' is currently supported)
-interpolationMethod = linear
+verticalComparisonGrid = numpy.linspace(0, -4000, 401)
 
 # The minimum weight of a destination cell after remapping. Any cell with
 # weights lower than this threshold will therefore be masked out.
