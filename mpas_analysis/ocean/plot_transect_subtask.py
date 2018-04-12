@@ -11,7 +11,7 @@ observations or reference data.
 
 Authors
 -------
-Xylar Asay-Davis
+Xylar Asay-Davis, Greg Streletz
 """
 
 from __future__ import absolute_import, division, print_function, \
@@ -283,7 +283,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         Authors
         -------
-        Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+        Xylar Asay-Davis, Greg Streletz
         """
 
         season = self.season
