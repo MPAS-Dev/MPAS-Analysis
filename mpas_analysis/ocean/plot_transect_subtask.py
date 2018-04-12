@@ -26,8 +26,10 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.climatology import \
+from mpas_analysis.shared.climatology import compute_climatology, \
     get_remapped_mpas_climatology_file_name
+
+from mpas_analysis.shared.constants import constants
 
 from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
@@ -306,6 +308,15 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                     transectName,
                     verticalComparisonGridName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
+
+            # if Time is an axis, take the appropriate avarage to get the
+            # climatology
+            if 'Time' in remappedRefClimatology.dims:
+                monthValues = constants.monthDictionary[season]
+                remappedRefClimatology = compute_climatology(
+                        remappedRefClimatology, monthValues, maskVaries=True)
+                print(remappedRefClimatology)
+
         elif self.refConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
@@ -355,8 +366,13 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             refOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
-                remappedRefClimatology[self.refFieldName].values)
+            refOutput = remappedRefClimatology[self.refFieldName]
+            dims = refOutput.dims
+            print(dims)
+            refOutput = nans_to_numpy_mask(refOutput.values)
+            if dims[0] != 'nPoints':
+                assert(dims[1] == 'nPoints')
+                refOutput = refOutput.transpose()
 
             bias = modelOutput - refOutput
 

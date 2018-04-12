@@ -48,6 +48,8 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
     outDims = xOut.dims
     inDims = xIn.dims
 
+    # print(xIn, inInterpDim, xOut, outInterpDim)
+
     inAxis = inDims.index(inInterpDim)
     outAxis = outDims.index(outInterpDim)
 

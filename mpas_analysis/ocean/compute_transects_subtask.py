@@ -251,7 +251,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         # }}}
 
-    def customize_masked_climatology(self, climatology):  # {{{
+    def customize_masked_climatology(self, climatology, season):  # {{{
         """
         Add zMid to the climatologys
 
@@ -259,6 +259,9 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         ----------
         climatology : ``xarray.Dataset`` object
             the climatology data set
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------
@@ -269,12 +272,12 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         Xylar Asay-Davis
         """
-
         climatology['zMid'] = self.zMid
 
         return climatology  # }}}
 
-    def customize_remapped_climatology(self, climatology):  # {{{
+    def customize_remapped_climatology(self, climatology, comparisonGridNames,
+                                       season):  # {{{
         """
         Add the transect index to the data set
 
@@ -282,6 +285,12 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         ----------
         climatology : ``xarray.Dataset```
             The MPAS climatology data set that has been remapped
+
+        comparisonGridNames : {'latlon', 'antarctic'}
+            The name of the comparison grid to use for remapping.
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------
@@ -455,16 +464,18 @@ class TransectsObservations(object):  # {{{
                 dsObs.load()
             else:
                 dsObs = self.build_observational_dataset(
-                        self.obsFileNames[name])
+                        self.obsFileNames[name], name)
                 dsObs.load()
-                if self.horizontalResolution != 'obs':
+                if self.horizontalResolution == 'obs':
+                    dsObs = self._add_distance(dsObs)
+                else:
                     dsObs = self._subdivide_observations(dsObs)
                 write_netcdf(dsObs, outFileName)
             self.obsDatasets[name] = dsObs
 
         return self.obsDatasets  # }}}
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName, transectName):  # {{{
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -473,6 +484,9 @@ class TransectsObservations(object):  # {{{
         ----------
         fileName : str
             observation file name
+
+        transectName : str
+            transect name
 
         Returns
         -------
@@ -541,6 +555,24 @@ class TransectsObservations(object):  # {{{
                 verticalComparisonGridName)
 
         return fileName  # }}}
+
+    def _add_distance(self, dsObs):  # {{{
+        '''
+        Subdivide each segment of the transect so the horizontal resolution
+        approximately matches the requested resolution
+        '''
+
+        lat = dsObs.lat.values
+        lon = dsObs.lon.values
+
+        # compute the great circle distance between these points
+        dxIn = self._haversine(lon[0:-1], lat[0:-1], lon[1:], lat[1:])
+
+        xIn = numpy.zeros(lat.shape)
+        xIn[1:] = numpy.cumsum(dxIn)
+
+        dsObs['x'] = (('nPoints',), xIn)
+        return dsObs  # }}}
 
     def _subdivide_observations(self, dsObs):  # {{{
         '''
