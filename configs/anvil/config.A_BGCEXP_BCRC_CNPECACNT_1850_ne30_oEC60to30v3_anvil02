@@ -68,7 +68,7 @@ htmlSubdirectory = html
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_landIceCavities']
+generate = ['all', 'no_landIceCavities', 'no_mld']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
