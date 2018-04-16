@@ -56,11 +56,10 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
     -------
     ds : ``xarray.Dataset``
         The anomaly of the rolling time mean from the start of the simulation
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     ds = open_mpas_dataset(fileName=timeSeriesFileName,
                            calendar=calendar,

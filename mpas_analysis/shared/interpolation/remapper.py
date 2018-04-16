@@ -14,11 +14,10 @@ build_remap_weights - constructs a mapping file containing the indices and
     weights needed to perform horizontal interpolation
 
 remap - perform horizontal interpolation on a data sets, given a mapping file
-
-Authors
--------
-Xylar Asay-Davis
 '''
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -41,11 +40,10 @@ class Remapper(object):
     A class for remapping fields using a given mapping file.  The weights and
     indices from the mapping file can be loaded once and reused multiple times
     to map several fields between the same source and destination grids.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, sourceDescriptor, destinationDescriptor,
                  mappingFileName=None):  # {{{
@@ -70,11 +68,10 @@ class Remapper(object):
             This is useful if the source and destination grids are determined
             to be the same (though the Remapper does not attempt to determine
             if this is the case).
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if not isinstance(sourceDescriptor,
                           (MpasMeshDescriptor,  LatLonGridDescriptor,
@@ -122,11 +119,10 @@ class Remapper(object):
 
         ValueError
             If sourceDescriptor or destinationDescriptor is of an unknown type
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingFileName is None or \
                 os.path.exists(self.mappingFileName):
@@ -242,11 +238,10 @@ class Remapper(object):
         ValueError
             If ``mappingFileName`` is ``None`` (meaning no remapping is
             needed).
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingFileName is None:
             raise ValueError('No mapping file was given because remapping is '
@@ -371,11 +366,10 @@ class Remapper(object):
             (``self.src_grid_dims``).
         TypeError
             If ds is not an ``xarray.Dataset`` or ``xarray.DataArray`` object
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingFileName is None:
             # No remapping is needed
@@ -420,11 +414,10 @@ class Remapper(object):
         '''
         Load weights and indices from a mapping file, if this has not already
         been done
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingLoaded:
             return
@@ -491,11 +484,10 @@ class Remapper(object):
     def _remap_data_array(self, dataArray, renormalizationThreshold):  # {{{
         '''
         Remap a single xarray data array
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         sourceDims = self.sourceDescriptor.dims
         destDims = self.destinationDescriptor.dims
@@ -562,11 +554,10 @@ class Remapper(object):
                            renormalizationThreshold):  # {{{
         '''
         Remap a single numpy array
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # permute the dimensions of inField so the axes to remap are first,
         # then flatten the remapping and the extra dimensions separately for

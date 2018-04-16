@@ -30,11 +30,11 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
     """
     An analysis task for comparison of mixed layer depth (mld) against
     observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
         """
@@ -50,11 +50,11 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         fieldName = 'mld'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapMLD, self).__init__(
@@ -155,11 +155,10 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
 class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping MLD observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -174,11 +173,10 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # Load MLD observational data
         dsObs = self.build_observational_dataset(fileName)
@@ -205,11 +203,10 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # Load MLD observational data
         dsObs = xr.open_dataset(fileName)

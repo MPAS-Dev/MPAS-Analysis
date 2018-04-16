@@ -28,11 +28,11 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
     """
     An analysis task for comparison of sea ice thickness against
     observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
     def __init__(self, config, mpasClimatologyTask, hemisphere,
                  refConfig=None):  # {{{
         """
@@ -51,11 +51,11 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         taskName = 'climatologyMapSeaIceThick{}'.format(hemisphere)
 
         fieldName = 'seaIceThick'
@@ -171,11 +171,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
 class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping sea ice thickness observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -190,11 +189,10 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -217,11 +215,10 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
         dsObs.rename({'HI': 'seaIceThick'}, inplace=True)

@@ -42,11 +42,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The start and end years of the time series
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None,
                  subtaskName=None, section='timeSeries'):  # {{{
@@ -72,11 +71,11 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         section : str, optional
             The section of the config file from which to read the start and
             end times for the time series, also added as a tag
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.variableList = []
         self.section = section
         tags = [section]
@@ -105,11 +104,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         variableList : list of str
             A list of variable names in ``timeSeriesStatsMonthly`` to be
             included in the time series
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         for variable in variableList:
             if variable not in self.variableList:
@@ -120,11 +118,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -191,11 +188,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         '''
         Compute the requested time series
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if len(self.variableList) == 0:
             # nothing to do
@@ -211,11 +207,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         """
         Update the start and end years and dates for time series based on the
         years actually available in the list of files.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
         section = self.section

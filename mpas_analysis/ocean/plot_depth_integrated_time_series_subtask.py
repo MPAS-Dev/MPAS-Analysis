@@ -83,11 +83,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
     refConfig : ``MpasAnalysisConfigParser``
         The configuration options for the reference run (if any)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, yAxisLabel, sectionName,
@@ -150,11 +149,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         refConfig : ``MpasAnalysisConfigParser``, optional
             The configuration options for the reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if subtaskName is None:
             suffix = regionName[0].upper() + regionName[1:]
@@ -191,11 +189,11 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Greg Streletz
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -248,11 +246,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def run_task(self):  # {{{
         """
         Compute vertical agregates of the data and plot the time series
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nPlotting depth-integrated time series of "
                          "{}...".format(self.fieldNameInTitle))

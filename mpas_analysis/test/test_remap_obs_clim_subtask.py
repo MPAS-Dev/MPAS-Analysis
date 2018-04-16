@@ -32,11 +32,10 @@ from mpas_analysis.shared.grid import LatLonGridDescriptor
 class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping MLD observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -51,11 +50,10 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -78,11 +76,10 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # Load MLD observational data
         dsObs = xarray.open_dataset(fileName)

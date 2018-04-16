@@ -75,11 +75,10 @@ class PlotHovmollerSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
@@ -138,11 +137,10 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         subtaskName :  str
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if subtaskName is None:
             suffix = regionName[0].upper() + regionName[1:]
@@ -177,11 +175,11 @@ class PlotHovmollerSubtask(AnalysisTask):
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Greg Streletz
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -211,11 +209,10 @@ class PlotHovmollerSubtask(AnalysisTask):
     def run_task(self):  # {{{
         """
         Make the Hovmoller plot from the time series.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nPlotting {} trends vs. depth...".format(
                 self.fieldNameInTitle))

@@ -52,11 +52,10 @@ class ComputeAnomalySubtask(AnalysisTask):
         variable computed from others).  This operation is performed before
         computing moving averages and anomalies, so that these operations are
         also performed on any new variables added to the data set.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, parentTask, mpasTimeSeriesTask, outFileName,
                  variableList, movingAveragePoints,
@@ -92,11 +91,11 @@ class ComputeAnomalySubtask(AnalysisTask):
             variable computed from others).  This operation is performed before
             computing moving averages and anomalies, so that these operations
             are also performed on any new variables added to the data set.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(ComputeAnomalySubtask, self).__init__(
             config=parentTask.config,
@@ -120,11 +119,11 @@ class ComputeAnomalySubtask(AnalysisTask):
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -141,11 +140,10 @@ class ComputeAnomalySubtask(AnalysisTask):
     def run_task(self):  # {{{
         """
         Performs analysis of ocean heat content (OHC) from time-series output.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nComputing anomalies...")
 

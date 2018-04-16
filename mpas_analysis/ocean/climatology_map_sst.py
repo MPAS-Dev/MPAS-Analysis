@@ -28,11 +28,11 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
     """
     An analysis task for comparison of sea surface temperature (sst) against
     observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
         """
@@ -48,11 +48,11 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         fieldName = 'sst'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSST, self).__init__(
@@ -164,11 +164,10 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
 class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping SST observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -183,11 +182,10 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -210,11 +208,10 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         climStartYear = self.config.getint('oceanObservations',
                                            'sstClimatologyStartYear')

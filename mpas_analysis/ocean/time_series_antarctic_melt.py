@@ -41,11 +41,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
     refConfig : ``MpasAnalysisConfigParser``
         The configuration options for the reference run (if any)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Stephen Price
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -62,11 +61,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesAntarcticMelt, self).__init__(
             config=config,
@@ -89,11 +88,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         ------
         IOError
             If files are not present
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
@@ -181,11 +180,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         """
         Performs analysis of the time-series output of Antarctic sub-ice-shelf
         melt rates.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Stephen Price
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Stephen Price
 
         self.logger.info("\nPlotting Antarctic melt rate time series...")
 
@@ -370,11 +368,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         """
         Reads melt flux time series and computes regional total melt flux and
         mean melt rate.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Stephen Price
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Stephen Price
 
         mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
@@ -464,11 +461,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         """
         Reads melt flux time series and computes regional total melt flux and
         mean melt rate.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 

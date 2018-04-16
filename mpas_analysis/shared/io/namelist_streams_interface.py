@@ -9,11 +9,10 @@
 """
 Module of classes/routines to manipulate fortran namelist and streams
 files.
-
-Authors
--------
-Phillip Wolfram, Xylar Asay-Davis
 """
+# Authors
+# -------
+# Phillip Wolfram, Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -39,11 +38,11 @@ def convert_namelist_to_dict(fname, readonly=True):
 
     readonly : bool, optional
         Should the resulting dictionary read-only?
-
-    Authors
-    -------
-    Phillip J Wolfram
     """
+    # Authors
+    # -------
+    # Phillip J Wolfram
+
     # form dictionary
     nml = dict()
 
@@ -64,11 +63,10 @@ class NameList:
     """
     Class for fortran manipulation of namelist files, provides
     read and write functionality
-
-    Authors
-    -------
-    Phillip Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip Wolfram, Xylar Asay-Davis
 
     # constructor
     def __init__(self, fname, path=None):
@@ -83,11 +81,11 @@ class NameList:
         path : str, optional
             If ``fname`` contains a relative path, ``fname`` is
             relative to ``path``, rather than the current working directory
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         if not os.path.isabs(fname) and path is not None:
             # only the file name was given, not the absolute path, and
             # a path was provided, so we will assume the namelist
@@ -113,11 +111,11 @@ class NameList:
         -------
         value : str
             The value associated with ``key``
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         return self.nml[key]
 
     # provide accessor for dictionary notation (returns string)
@@ -134,11 +132,11 @@ class NameList:
         -------
         value : str
             The value associated with ``key``
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         return self.nml[key]
 
     # provide accessors for get, getint, getfloat, getbool with appropriate
@@ -156,11 +154,11 @@ class NameList:
         -------
         value : str
             The value associated with ``key``
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         return self.nml[key]
 
     def getint(self, key):
@@ -176,11 +174,11 @@ class NameList:
         -------
         value : int
             The value associated with ``key``
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         return int(self.nml[key])
 
     def getfloat(self, key):
@@ -196,11 +194,11 @@ class NameList:
         -------
         value : float
             The value associated with ``key``
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         return float(self.nml[key])
 
     def getbool(self, key):
@@ -216,11 +214,11 @@ class NameList:
         -------
         value : bool
             The value associated with ``key``
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         if 'True' in self.nml[key] or 'true' in self.nml[key]:
             return True
         else:
@@ -246,11 +244,10 @@ class NameList:
         ------
         ValueError
             If no match is found.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         for optionName in possibleOptions:
             if optionName in self.nml.keys():
@@ -266,11 +263,10 @@ class StreamsFile:
     """
     Class to read in streams configuration file, provdies
     read and write functionality
-
-    Authors
-    -------
-    Phillip Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip Wolfram, Xylar Asay-Davis
 
     def __init__(self, fname, streamsdir=None):
         """
@@ -284,11 +280,11 @@ class StreamsFile:
         streamsdir : str, optional
             The base path to both the output streams data and the sreams file
             (the latter only if ``fname`` is a relative path).
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         if not os.path.isabs(fname) and streamsdir is not None:
             # only the file name was given, not the absolute path, and
             # a streamsdir was provided, so we will assume the streams
@@ -325,11 +321,11 @@ class StreamsFile:
         value : str
             The value associated with the attribute, or ``None`` if the
             attribute was not found
-
-        Authors
-        -------
-        Phillip Wolfram, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Phillip Wolfram, Xylar Asay-Davis
+
         for stream in self.root:
             # assumes streamname is unique in XML
             if stream.get('name') == streamname:
@@ -351,11 +347,11 @@ class StreamsFile:
             The template for file names from this stream in a format accepted
             by ``datetime.strptime``.  This is useful for parsing the date
             from a given file name.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         template = self.read(streamname, 'filename_template')
         replacements = {'$Y': '%Y',
                         '$M': '%m',
@@ -404,11 +400,11 @@ class StreamsFile:
         ------
         ValueError
             If no files from the stream are found.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         template = self.read(streamName, 'filename_template')
         if template is None:
             raise ValueError('Stream {} not found in streams file {}.'.format(
@@ -492,11 +488,11 @@ class StreamsFile:
         streamFound : bool
             ``True`` if the stream was found in the stream file, ``False``
             otherwise
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         for stream in self.root:
             # assumes streamname is unique in XML
             if stream.get('name') == streamName:
@@ -523,11 +519,11 @@ class StreamsFile:
         ------
         ValueError
             If no match is found.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         for streamName in possibleStreams:
             if self.has_stream(streamName):
                 return streamName

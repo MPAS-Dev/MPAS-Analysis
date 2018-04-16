@@ -21,11 +21,10 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
     """
     Performs analysis of time series of salinity anomalies from the first
     simulation year as a function of depth.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, mpasTimeSeriesTask):  # {{{
         """
@@ -38,11 +37,11 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesSalinityAnomaly, self).__init__(
             config=config,

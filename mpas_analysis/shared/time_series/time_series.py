@@ -7,11 +7,10 @@
 #
 """
 Utility functions related to time-series data sets
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -70,11 +69,10 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     timesProcessed = numpy.zeros(len(timesInDataSet), bool)
     # figure out which files to load and which years go in each file

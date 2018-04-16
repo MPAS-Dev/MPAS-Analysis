@@ -81,11 +81,11 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
     kwargs : dict
         additional keyword arguments will be used to add additional xml tags
         with the associated values
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     imageFileName = '{}.png'.format(filePrefix)
     plotsDirectory = build_config_full_path(config, 'output',
                                             'plotsSubdirectory')
@@ -148,11 +148,11 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
 def _provenance_command(root, history):  # {{{
     """
     Utility funciton for provenance of xml file associated with a plot.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     call = ' '.join(sys.argv)
     if history is None:
         history = call

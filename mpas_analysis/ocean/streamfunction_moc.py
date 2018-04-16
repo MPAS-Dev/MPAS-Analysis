@@ -47,11 +47,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
-
-    Authors
-    -------
-    Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask):  # {{{
         '''
@@ -64,12 +63,12 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+# 
         # first, call the constructor from the base class (AnalysisTask)
         super(StreamfunctionMOC, self).__init__(
             config=config,
@@ -89,11 +88,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         ------
         ValueError
             if timeSeriesStatsMonthly is not enabled in the MPAS run
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -165,11 +163,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         post-processing if not. Plots streamfunction climatolgoical sections
         as well as time series of max Atlantic MOC at 26.5N (latitude of
         RAPID MOC Array).
-
-        Authors
-        -------
-        Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
 
         self.logger.info("\nPlotting streamfunction of Meridional Overturning "
                          "Circulation (MOC)...")

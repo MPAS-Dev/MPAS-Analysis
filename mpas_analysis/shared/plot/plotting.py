@@ -11,11 +11,10 @@ Plotting utilities, including routines for plotting:
     * remapped horizontal fields (and comparing with reference data sets)
     * vertical sections on native grid
     * NINO34 time series and spectra
-
-Authors
--------
-Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 """
+# Authors
+# -------
+# Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -108,11 +107,10 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     legendLocation : str, optional
         The location of the legend (see ``pyplot.legend()`` for details)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Stephen Price
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Stephen Price
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
@@ -233,11 +231,11 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     dpi : int, optional
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
-
-    Authors
-    -------
-    Adrian K. Turner, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Adrian K. Turner, Xylar Asay-Davis
+
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
@@ -372,11 +370,10 @@ def plot_polar_comparison(
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
         horizontally
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def do_subplot(ax, field, title, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
@@ -535,11 +532,10 @@ def plot_global_comparison(
 
     lineColor : str, optional
         the color contour lines (if specified)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def plot_panel(title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
@@ -684,11 +680,10 @@ def plot_polar_projection_comparison(
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
         horizontally
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
@@ -837,11 +832,10 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
 
     invertYAxis : logical, optional
         if True, invert Y axis
-
-    Authors
-    -------
-    Mark Petersen, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Mark Petersen, Milena Veneziani
 
     # set up figure
     if dpi is None:
@@ -1000,11 +994,10 @@ def plot_vertical_section(
     calendar : str, optional
         the calendar to use for formatting the time axis
         NOTE:  calendar is only used if xArrayIsTime is True
-
-    Authors
-    -------
-    Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
     """
+    # Authors
+    # -------
+    # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
 
     # verify that the dimensions of fieldArray are consistent with those of
     # xArray and depthArray
@@ -1128,11 +1121,10 @@ def setup_colormap(config, configSectionName, suffix=''):
         'lineWidth' is the width of contour lines or ``None`` if not specified
 
         'lineColor' is the color of contour lines or ``None`` if not specified
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     _register_custom_colormaps()
 
@@ -1188,11 +1180,11 @@ def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
     minDays : start time for labels
 
     maxDays : end time for labels
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     ax = plt.gca()
 
     start = days_to_datetime(np.amin(minDays), calendar=calendar)
@@ -1248,11 +1240,10 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     ticks : array of float
         the tick marks on the colormap
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     _register_custom_colormaps()
 
@@ -1311,11 +1302,10 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     ticks : array of float
         the tick marks on the colormap
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))

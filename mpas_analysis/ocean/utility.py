@@ -7,11 +7,10 @@
 #
 """
 A utility for computing common ocean fields (e.g. zMid) from datasets
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -41,11 +40,10 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):  # {{{
     zMid : ``xarray.DataArray``
         the vertical coordinate defining the middle of each layer, masked below
         the bathymetry
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     nVertLevels = \
         layerThickness.shape[layerThickness.dims.index('nVertLevels')]
