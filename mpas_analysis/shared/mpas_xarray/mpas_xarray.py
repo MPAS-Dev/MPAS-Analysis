@@ -244,6 +244,12 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
     and Xylar Asay-Davis
     """
 
+    # following a suggestion by @rabernat
+    # https://github.com/pydata/xarray/issues/2064#issuecomment-381717472
+    concat_dim = 'Time'
+    coord_vars = [v for v in ds.data_vars if concat_dim not in ds[v].dims]
+    ds = ds.set_coords(coord_vars)
+
     ds = _parse_dataset_time(ds=ds,
                              inTimeVariableName=timeVariableName,
                              calendar=calendar,
