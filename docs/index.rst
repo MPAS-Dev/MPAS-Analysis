@@ -14,6 +14,11 @@ Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Accelerated Climate Model for Energy (ACME), which
 used those components.
 
+Observations
+============
+.. toctree::
+
+  observations
 
 Documentation
 =============
