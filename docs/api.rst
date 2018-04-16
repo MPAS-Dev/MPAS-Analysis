@@ -53,6 +53,10 @@ Ocean tasks
    ClimatologyMapMLD
    ClimatologyMapSSH
    ClimatologyMapAntarcticMelt
+   ClimatologyMapSoseTemperature
+   ClimatologyMapSoseSalinity
+   ClimatologyMapArgoTemperature
+   ClimatologyMapArgoSalinity
    IndexNino34
    MeridionalHeatTransport
    StreamfunctionMOC

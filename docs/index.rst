@@ -30,7 +30,7 @@ MPAS Components and E3SM
    :maxdepth: 2
 
    mpaso
-   mpascice
+   mpasseaice
    e3sm
 
 
