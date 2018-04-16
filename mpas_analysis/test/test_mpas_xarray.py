@@ -15,6 +15,8 @@ Xylar Asay-Davis, Phillip J. Wolfram
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import numpy
+
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
@@ -38,7 +40,8 @@ class TestMpasXarray(TestCase):
                                                 calendar=calendar,
                                                 timeVariableName=timestr)
         ds = mpas_xarray.subset_variables(ds, variableList)
-        self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
+        dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+        assert(numpy.all([var in dsVarList for var in variableList]))
         self.assertEqual(days_to_datetime(days=ds.Time.values,
                                           referenceDate='0001-01-01',
                                           calendar=calendar),
@@ -76,7 +79,8 @@ class TestMpasXarray(TestCase):
             variableList=variableList,
             iselValues=iselvals)
 
-        self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
+        dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+        assert(numpy.all([var in dsVarList for var in variableList]))
         self.assertEqual(ds[variableList[0]].shape, (1, 7, 3))
         self.assertEqual(ds['refBottomDepth'].shape, (3,))
         self.assertApproxEqual(ds['refBottomDepth'][-1],
@@ -102,7 +106,9 @@ class TestMpasXarray(TestCase):
             simulationStartTime=simulationStartTime,
             timeVariableName=timestr,
             variableList=variableList)
-        self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
+
+        dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+        assert(numpy.all([var in dsVarList for var in variableList]))
 
         self.assertEqual(days_to_datetime(days=ds.Time.values[0],
                                           referenceDate='0001-01-01',
@@ -157,7 +163,9 @@ class TestMpasXarray(TestCase):
                 variableList=variableList,
                 selValues=selvals)
 
-            self.assertEqual(list(ds.data_vars.keys()), variableList)
+            dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+            assert(numpy.all([var in dsVarList for var in variableList]))
+
             self.assertEqual(ds[variableList[0]].shape, (1, 7))
             self.assertEqual(ds['refBottomDepth'],
                              dsRef['refBottomDepth'][vertIndex])
@@ -176,7 +184,8 @@ class TestMpasXarray(TestCase):
             timeVariableName=timestr,
             variableList=variableList)
 
-        self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
+        dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+        assert(numpy.all([var in dsVarList for var in variableList]))
         # There would be 3 time indices if repeat indices had not been removed.
         # Make sure there are 2.
         self.assertEqual(len(ds.Time.values), 2)
