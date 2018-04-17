@@ -13,9 +13,9 @@ import argparse
 import re
 
 def markdown_links(data, footer):
-    urlscmd = re.findall(r"\[.*?\]\(.*?\)", data)
-    urls = re.findall(r"\[.*?\]\((.*?)\)", data)
-    linknames = re.findall(r"\[(.*?)\]\(.*?\)", data)
+    urlscmd = re.findall(r"\[.*?\]\n*\(.*?\)", data)
+    urls = re.findall(r"\[.*?\]\n*\((.*?)\)", data)
+    linknames = re.findall(r"\[(.*?)\]\n*\(.*?\)", data)
 
     for alinkname, aurl, aurlscmd in zip(linknames, urls, urlscmd):
         data = data.replace(aurlscmd, '`' + alinkname +'`_')
