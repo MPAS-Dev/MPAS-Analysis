@@ -21,6 +21,6 @@ dependencies:
   - sphinx
   - sphinx_rtd_theme
   - numpydoc
-  - tabulate >= 0.8.2 
+  - tabulate >= 0.8.2
   - pip:
     - recommonmark
