@@ -32,6 +32,13 @@ mpasMeshName = oRRS18to6v3
 # placed in the output mappingSubdirectory
 mappingDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping
 
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpas-o_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpas-cice_in
+seaIceStreamsFileName = streams.cice
+
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
