@@ -10,6 +10,24 @@ Phillip J. Wolfram
 import xml.etree.ElementTree as ET
 import tabulate
 import argparse
+import re
+
+def markdown_links(data, footer):
+    urlscmd = re.findall(r"\[.*?\]\(.*?\)", data)
+    urls = re.findall(r"\[.*?\]\((.*?)\)", data)
+    linknames = re.findall(r"\[(.*?)\]\(.*?\)", data)
+
+    for alinkname, aurl, aurlscmd in zip(linknames, urls, urlscmd):
+        data = data.replace(aurlscmd, '`' + alinkname +'`_')
+        footer += ".. _`" + alinkname + "`: " + aurl + "\n"
+
+    return data, footer
+
+def cleanup(linedata, footer):
+    cleanups = [markdown_links]
+    for acleanup in cleanups:
+        cleandata, footer = acleanup(linedata, footer)
+    return cleandata, footer
 
 def build_rst_table_from_xml(xmlfile, rstfile):
 
@@ -23,13 +41,17 @@ def build_rst_table_from_xml(xmlfile, rstfile):
     headers = xml.getroot().attrib['headers'].replace(' ','').split(',')
     headernames = [aname.strip() for aname in xml.getroot().attrib['headernames'].split(',')]
     data = []
+    footer = '\n'
     for entry in xml.findall('aobs'):
         line = []
         for aheader in headers:
-            line.append(entry.findall(aheader)[0].text.strip().replace('\n', ' '))
+            linedata = entry.findall(aheader)[0].text.strip().replace('\n', ' ')
+            linedata, footer = cleanup(linedata, footer)
+            line.append(linedata)
         data.append(line)
 
     rst.write(tabulate.tabulate(data, headernames, tablefmt='rst'))
+    rst.write(footer)
 
     rst.close()
 

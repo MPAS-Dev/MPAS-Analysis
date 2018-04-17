@@ -18,8 +18,7 @@
       Time series of area-weighted (AW) global mean (1-year running average).
     </detaileddesc>
     <obsDataSet>
-      Merged Hadley Center-NOAA/OI data set from Hurrell et al. 2008
-      (https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
+      [Merged Hadley Center-NOAA/OI data set from Hurrell et al. 2008](https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
       <releasePolicy>
         Update 4/11/18: emailed UCAR to ask about their release policy.
       </releasePolicy>
@@ -48,8 +47,7 @@
     computed over 5-10 year periods at regular intervals throughout the run.
     </detaileddesc>
     <obsDataSet>
-      NASA Aquarius satellite data ~4 years until Jun 2015
-      (ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L3/mapped/V4/7day_running/SCI/)
+      [NASA Aquarius satellite data ~4 years until Jun 2015](ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L3/mapped/V4/7day_running/SCI/)
       <releasePolicy>
       This statement is from the NASA daac (Distributed
       Active Archive Center) website: "NASA data are not copyrighted; however,
@@ -59,8 +57,8 @@
       </releasePolicy>
     </obsDataSet>
     <otherDataSets>
-      PHC (http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html)
-      or WOA13 climatology (https://www.nodc.noaa.gov/OC5/woa13/)
+      [PHC](http://psc.apl.washington.edu/nonwp_projects/PHC/Climatology.html)
+        or [WOA13 climatology](https://www.nodc.noaa.gov/OC5/woa13/).
     </otherDataSets>
     <references>
       1. Large and Danabasoglu (2006, Fig.1), 2. Griffies et al. (2009, Fig. 8)
