@@ -49,7 +49,7 @@ def build_rst_table_from_xml(xmlfile, rstfile, component):
     headernames = [aname.strip() for aname in xml.getroot().attrib['headernames'].split(',')]
     data = []
     footer = '\n'
-    for entry in xml.findall('aobs'):
+    for entry in xml.findall('observation'):
         if component != 'all' and entry.findall('component')[0].text.strip() != component:
             continue
         line = []

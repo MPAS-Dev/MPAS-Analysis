@@ -3,7 +3,7 @@
   headers="shortdesc, obsDataSet, references"
   headernames="Dataset, Observational Dataset, References">
   <!-- OCEAN -->
-  <aobs>
+  <observation>
     <name>
       sst Hadley-NOAA
     </name>
@@ -32,8 +32,8 @@
     <inMPASAnalysis value="true" />
     <testedStandAlone value="true" />
     <testedCoupled value="true" />
-  </aobs>
-  <aobs>
+  </observation>
+  <observation>
     <name>
       SSS NASA Aquarius
     </name>
@@ -69,9 +69,9 @@
     <inMPASAnalysis value="true"/>
     <testedStandAlone value="true"/>
     <testedCoupled value="true"/>
-  </aobs>
+  </observation>
   <!-- SEA ICE -->
-  <aobs>
+  <observation>
     <name>
       Ice area/extent annual climatology, and annual and seasonal trends
     </name>
@@ -109,9 +109,9 @@
     <inMPASAnalysis value="NA"/>
     <testedStandAlone value="NA"/>
     <testedCoupled value="NA"/>
-  </aobs>
+  </observation>
   <!-- LAND ICE -->
-  <aobs>
+  <observation>
     <name>
       Present-day ice sheet area and volume (scalar)
     </name>
@@ -148,6 +148,6 @@
     <inMPASAnalysis value="on landice/develop"/>
     <testedStandAlone value="True"/>
     <testedCoupled value="False"/>
-  </aobs>
+  </observation>
 
 </observations>
