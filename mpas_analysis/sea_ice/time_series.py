@@ -45,11 +45,10 @@ class TimeSeriesSeaIce(AnalysisTask):
     refConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a reference run (if any)
 
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask,
                  refConfig=None):  # {{{
@@ -66,11 +65,11 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesSeaIce, self).__init__(
             config=config,
@@ -93,11 +92,11 @@ class TimeSeriesSeaIce(AnalysisTask):
         ------
         OSError
             If files are not present
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -188,11 +187,10 @@ class TimeSeriesSeaIce(AnalysisTask):
     def run_task(self):  # {{{
         """
         Performs analysis of time series of sea-ice properties.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani
 
         self.logger.info("\nPlotting sea-ice area and volume time series...")
 
@@ -498,11 +496,11 @@ class TimeSeriesSeaIce(AnalysisTask):
         --------
         dsShift : a cyclicly repeated version of `dsToReplicte` covering the
             range of time of `ds`.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani
+
         dsStartTime = days_to_datetime(ds.Time.min(), calendar=calendar)
         dsEndTime = days_to_datetime(ds.Time.max(), calendar=calendar)
         repStartTime = days_to_datetime(dsToReplicate.Time.min(),

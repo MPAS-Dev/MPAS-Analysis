@@ -7,11 +7,10 @@
 #
 """
 Time keeping utility functions
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -45,11 +44,10 @@ def get_simulation_start_time(streams):
     ------
     IOError
         If no restart file can be found.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     try:
         restartFile = streams.readpath('restart')[0]
@@ -100,11 +98,10 @@ def string_to_datetime(dateString):  # {{{
     ------
     ValueError
         If an invalid ``dateString`` is supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     (year, month, day, hour, minute, second) = \
         _parse_date_string(dateString, isInterval=False)
@@ -149,11 +146,10 @@ def string_to_relative_delta(dateString, calendar='gregorian'):  # {{{
     ------
     ValueError
         If an invalid ``dateString`` is supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     (years, months, days, hours, minutes, seconds) = \
         _parse_date_string(dateString, isInterval=True)
@@ -211,11 +207,10 @@ def string_to_days_since_date(dateString, calendar='gregorian',
     ------
     ValueError
         If an invalid ``dateString`` or ``calendar`` is supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     isSingleString = isinstance(dateString, six.string_types)
 
@@ -262,11 +257,10 @@ def days_to_datetime(days, calendar='gregorian', referenceDate='0001-01-01'):
     ------
     ValueError
         If an invalid ``days``, ``referenceDate`` or ``calendar`` is supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     datetimes = netCDF4.num2date(days,
                                  'days since {}'.format(referenceDate),
@@ -317,11 +311,10 @@ def datetime_to_days(dates, calendar='gregorian', referenceDate='0001-01-01'):
     ValueError
         If an invalid ``datetimes``, ``referenceDate`` or ``calendar`` is
         supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     isSingleDate = False
     if isinstance(dates, datetime.datetime):
@@ -367,11 +360,10 @@ def date_to_days(year=1, month=1, day=1, hour=0, minute=0, second=0,
     ------
     ValueError
         If an invalid ``referenceDate`` or ``calendar`` is supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     calendar = _mpas_to_netcdf_calendar(calendar)
 
@@ -419,11 +411,11 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
     ------
     ValueError
         If an invalid ``dateString`` is supplied.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     if isInterval:
         offset = 0
     else:

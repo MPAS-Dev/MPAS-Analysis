@@ -10,11 +10,10 @@ A configuratin parser class for MPAS analysis.  MpasAnalysisConfigParser adds
 the capabilities to get an option including a default value
 (``getWithDefault(section, option, default, ...)``) and to get options
 that are lists, tuples, dicts, etc (``getExpression(section, option)``).
-
-Authors
--------
-Xylar Asay-Davis, Phillip J. Wolfram
 """
+# Authors
+# -------
+# Xylar Asay-Davis, Phillip J. Wolfram
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -53,11 +52,11 @@ class MpasAnalysisConfigParser(ConfigParser):
             to determine the type of the option if it *is* found. If
             ``default`` is a list, tuple, or dict, ``getExpression(...)`` is
             used if the option is present in the config file.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         if self.has_section(section):
             if self.has_option(section, option):
                 if isinstance(default, bool):
@@ -101,11 +100,11 @@ class MpasAnalysisConfigParser(ConfigParser):
             If ``True``, the expression is evaluated including functionality
             from the numpy package (which can be referenced either as ``numpy``
             or ``np``).
-
-        Authors
-        -------
-        Xylar Asay-Davis, Phillip J. Wolfram
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Phillip J. Wolfram
+
         expressionString = self.get(section, option)
         if usenumpyfunc:
             assert '__' not in expressionString, \

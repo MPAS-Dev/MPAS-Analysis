@@ -14,11 +14,10 @@ start and end dates.
 open_multifile_dataset : opens a data set, maps variable names, preprocess
     the data set removes repeated time indices, and slices the time coordinate
     to lie between desired start and end dates.
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -124,11 +123,10 @@ def open_multifile_dataset(fileNames, calendar, config,
         If the time variable is not found in the data set or if the time
         variable is a number of days since the start of the simulation but
         simulationStartTime is None.
-
-    Authors
-    -------
-    Xylar Asay-Davis, Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Phillip J. Wolfram
 
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
@@ -278,11 +276,10 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
     ds : xarray.DataSet object
         A copy of the data set with the time coordinate set and which
         has been sliced.
-
-    Authors
-    -------
-    Xylar Asay-Davis, Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Phillip J. Wolfram
 
     submap = variableMap
 
@@ -350,11 +347,11 @@ def _map_variable_name(variableName, ds, variableMap):  # {{{
     ValueError
         If none of the possible variable names in `variableMap[variableName]`
         can be found in `ds`.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     possibleVariables = variableMap[variableName]
     for variable in possibleVariables:
         if isinstance(variable, (list, tuple)):
@@ -398,11 +395,10 @@ def _rename_variables(ds, variableMap):  # {{{
     Returns
     -------
     outDataSEt : A new `xarray.DataSet` object with the variable renamed.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     renameDict = {}
     for datasetVariable in ds.data_vars:

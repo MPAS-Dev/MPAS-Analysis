@@ -7,11 +7,10 @@
 #
 '''
 Analysis tasks for comparing Global climatology maps against ARGO data.
-
-Authors
--------
-Luke Van Roekel
 '''
+# Authors
+# -------
+# Luke Van Roekel
 
 import xarray as xr
 import numpy as np
@@ -37,11 +36,10 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     """
     An analysis task for comparison of antarctic temperature against SOSE
     fields
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
@@ -58,11 +56,11 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
+
         fieldName = 'temperatureARGO'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoTemperature, self).__init__(
@@ -178,11 +176,10 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
     """
     An analysis task for comparison of Global Temperature against Argo
     fields
-
-    Authors
-    -------
-    Xylar Asay-Davis, Luke Van Roekel
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Luke Van Roekel
 
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
@@ -199,11 +196,11 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis, Luke Van Roekel
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Luke Van Roekel
+
         fieldName = 'salinityARGO'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoSalinity, self).__init__(
@@ -319,11 +316,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
     # {{{
     """
     A subtask for reading and remapping SOSE fields to the comparison grid
-
-    Authors
-    -------
-    Xylar Asay-Davis, Luke Van Roekel
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Luke Van Roekel
 
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
                  fieldName, depths,
@@ -362,12 +358,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
 
         subtaskName : str, optional
             The name of the subtask
-
-        Authors
-        -------
-        Xylar Asay-Davis, Luke Van Roekel
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Luke Van Roekel
 
         self.fieldName = fieldName
         self.depths = depths
@@ -392,11 +386,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis, Luke Van Roekel
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Luke Van Roekel
 
         # Load Argo observational Data
         dsObs = self.build_observational_dataset(fileName)
@@ -423,11 +416,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis, Luke Van Roekel
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Luke Van Roekel
 
         # Load Argo observational data
         dsObs = xr.open_dataset(fileName)

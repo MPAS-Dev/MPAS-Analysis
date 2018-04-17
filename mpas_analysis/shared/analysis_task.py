@@ -7,12 +7,10 @@
 #
 '''
 Defines the base class for analysis tasks.
-
-Authors
--------
-Xylar Asay-Davis
-
 '''
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -87,12 +85,10 @@ class AnalysisTask(Process):  # {{{
 
     logger : ``logging.Logger``
         A logger for output during the run phase of an analysis task
-
-    Authors
-    -------
-    Xylar Asay-Davis
-
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     # flags for run status
     UNSET = 0
@@ -132,11 +128,11 @@ class AnalysisTask(Process):  # {{{
 
         subtaskName : str, optional
             If this is a subtask of ``taskName``, the name of the subtask
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         if subtaskName is None:
             self.fullTaskName = taskName
             self.printTaskName = taskName
@@ -181,11 +177,10 @@ class AnalysisTask(Process):  # {{{
         analysis-specific setup.  For example, this function could check if
         necessary observations and other data files are found, then, determine
         the list of files to be read when the analysis is run.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # read parameters from config file
         # the run directory contains the restart files
@@ -235,11 +230,11 @@ class AnalysisTask(Process):  # {{{
         '''
         Run the analysis.  Each task should override this function to do the
         work of computing and/or plotting analysis
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         return  # }}}
 
     def run_after(self, task):  # {{{
@@ -254,11 +249,10 @@ class AnalysisTask(Process):  # {{{
         ----------
         task : ``AnalysisTask``
             The task that should finish before this one begins
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.runAfterTasks.append(task)
         # }}}
@@ -274,11 +268,10 @@ class AnalysisTask(Process):  # {{{
         ----------
         subtask : ``AnalysisTask``
             The subtask to run as part of this task
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if subtask not in self.subtasks:
             self.subtasks.append(subtask)
@@ -295,11 +288,11 @@ class AnalysisTask(Process):  # {{{
             Otherwise, the internal logger ``self.logger`` points to stdout
             and no log file is created.  The intention is for logging to take
             place in parallel mode but not in serial mode.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # redirect output to a log file
         if writeLogFile:
             self.logger = logging.getLogger(self.fullTaskName)
@@ -366,11 +359,10 @@ class AnalysisTask(Process):  # {{{
         ------
         ValueError : If one of ``self.taskName``, ``self.componentName``
             or ``self.tags`` has not been set.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         for memberName in ['taskName', 'componentName', 'tags']:
             if not hasattr(self, memberName):
@@ -444,11 +436,10 @@ class AnalysisTask(Process):  # {{{
             If the given analysis option is not found and ``default`` is not
             ``True`` or if the analysis option is found and is ``False``.  The
             exception is only raised if ``raiseException = True``.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         try:
             optionName = analysisOptionName
@@ -481,11 +472,10 @@ class AnalysisTask(Process):  # {{{
             The name of a section in the config file containing ``startYear``
             and ``endYear`` options. ``section`` is typically one of
             ``climatology``, ``timeSeries`` or ``index``
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if not self.config.has_option(section, 'startDate'):
             startDate = '{:04d}-01-01_00:00:00'.format(
@@ -505,11 +495,10 @@ class AnalysisFormatter(logging.Formatter):  # {{{
 
     Modified from:
     https://stackoverflow.com/a/8349076/7728169
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     # printing error messages without a prefix because they are sometimes
     # errors and sometimes only warnings sent to stderr

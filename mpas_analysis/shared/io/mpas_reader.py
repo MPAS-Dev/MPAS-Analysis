@@ -8,11 +8,10 @@
 """
 Utility functions for reading a single MPAS file into xarray and for removing
 all but a given list of variables from a data set.
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -64,11 +63,10 @@ def open_mpas_dataset(fileName, calendar,
 
     ValueError
         If the time variable is not found in the data set
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     ds = xarray.open_dataset(fileName, decode_cf=True, decode_times=False,
                              lock=False)
@@ -121,11 +119,10 @@ def subset_variables(ds, variableList):  # {{{
     ------
     ValueError
         If the resulting data set is empty.
-
-    Authors
-    -------
-    Phillip J. Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram, Xylar Asay-Davis
 
     allvars = ds.data_vars.keys()
 
@@ -204,11 +201,10 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
     TypeError
         If the time variable has an unsupported type (not a date string
         or a floating-pont number of days since the start of the simulatio).
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     if isinstance(inTimeVariableName, (tuple, list)):
         # we want to average the two

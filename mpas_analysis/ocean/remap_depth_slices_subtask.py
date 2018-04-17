@@ -34,11 +34,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
     verticalIndices : xarray.DataArray
         The vertical indices of slice to be plotted
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, depths, comparisonGridNames=['latlon'],
@@ -81,11 +80,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         iselValues : dict, optional
             A dictionary of dimensions and indices (or ``None``) used to
             extract a slice of the MPAS field(s).
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.depths = depths
 
@@ -104,11 +102,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         ``verticalIndex`` is also computed for later indexing of
         the model level. It then simply calls the run function from
         ClimatologyMapOcean.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, load the land-ice mask from the restart file
         ds = xr.open_dataset(self.restartFileName)
@@ -190,11 +187,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         climatology : ``xarray.Dataset`` object
             the modified climatology data set
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.depths is None:
             return climatology

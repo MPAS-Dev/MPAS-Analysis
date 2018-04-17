@@ -30,11 +30,10 @@ def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
     -------
     ds : ``xarray.Dataset``
         The anomaly of the rolling time mean from the start of the simulation
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     ds = ds.rolling(Time=movingAveragePoints,
                     center=True).mean().dropna('Time')

@@ -28,11 +28,11 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
     """
     An analysis task for comparison of sea ice concentration against
     observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
     def __init__(self, config, mpasClimatologyTask, hemisphere,
                  refConfig=None):  # {{{
         """
@@ -51,11 +51,11 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         taskName = 'climatologyMapSeaIceConc{}'.format(hemisphere)
 
         fieldName = 'seaIceConc'
@@ -226,11 +226,10 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
 class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping sea ice concentration observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -245,11 +244,10 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -272,11 +270,10 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
         dsObs.rename({'AICE': 'seaIceConc'}, inplace=True)

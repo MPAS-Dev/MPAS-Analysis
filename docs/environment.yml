@@ -21,5 +21,4 @@ dependencies:
   - sphinx
   - sphinx_rtd_theme
   - numpydoc
-  - pip:
-    - recommonmark
+  - recommonmark

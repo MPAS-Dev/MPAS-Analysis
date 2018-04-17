@@ -35,11 +35,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
     refConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a reference run (if any)
-
-    Authors
-    -------
-    Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
         '''
@@ -55,12 +54,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(MeridionalHeatTransport, self).__init__(
             config=config,
@@ -78,11 +76,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Mark Petersen, Milena Veneziani, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -151,11 +148,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         Plots MHT as:
            1D function of latitude
            2D function of latitude and depth
-
-        Authors
-        -------
-        Mark Petersen, Milena Veneziani, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
+
         self.logger.info("\nPlotting meridional heat transport (MHT)...")
 
         config = self.config

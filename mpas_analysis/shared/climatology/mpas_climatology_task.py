@@ -52,11 +52,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The start and end years of the climatology
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None):  # {{{
         '''
@@ -74,11 +73,11 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         taskName : str, optional
             the name of the task, defaults to mpasClimatology<ComponentName>
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.variableList = []
         self.seasons = []
 
@@ -121,11 +120,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             A list of seasons (keys in ``shared.constants.monthDictionary``)
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         for variable in variableList:
             if variable not in self.variableList:
@@ -148,11 +146,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -186,11 +183,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         '''
         Compute the requested climatologies
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if len(self.variableList) == 0:
             # nothing to do
@@ -247,11 +243,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         return get_unmasked_mpas_climatology_file_name(self.config, season,
                                                        self.componentName)
@@ -270,11 +265,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         symlinkDirectory : str
             The path to the symlinks created for each timeSeriesStatsMonthly
             input file
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
 

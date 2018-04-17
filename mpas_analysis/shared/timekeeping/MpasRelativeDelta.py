@@ -24,11 +24,10 @@ class MpasRelativeDelta(relativedelta):
     of ``datetime.datetime`` objects or other ``MpasRelativeDelta`` (but
     currently not ``datetime.date``, ``datetime.timedelta`` or other related
     objects) is supported.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, dt1=None, dt2=None, years=0, months=0, days=0,
                  hours=0, minutes=0, seconds=0, calendar='gregorian'):

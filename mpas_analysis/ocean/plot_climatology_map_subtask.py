@@ -8,11 +8,10 @@
 """
 An analysis subtasks for plotting comparison of 2D model fields against
 observations.
-
-Authors
--------
-Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 """
+# Authors
+# -------
+# Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -112,11 +111,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     depth : {None, float, 'top', 'bot'}
         Depth at which to perform the comparison, 'top' for the sea surface
         'bot' for the sea floor
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
@@ -159,12 +157,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             subtracted from both the model and reference results.  This is
             useful for data sets where the desire is to compare the spatial
             pattern but the mean offset is not meaningful (e.g. SSH)
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.season = season
         self.depth = depth
@@ -245,11 +241,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         diffTitleLabel : str, optional
             the title of the difference subplot
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
@@ -285,11 +281,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -326,11 +322,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
         or a reference run
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
         season = self.season
         depth = self.depth

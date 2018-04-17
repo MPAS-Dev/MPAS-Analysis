@@ -7,11 +7,10 @@
 #
 """
 Functions for creating climatologies from monthly time series data
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -41,11 +40,11 @@ def get_comparison_descriptor(config, comparisonGridName):  # {{{
     ------
     ValueError
         If comparisonGridName does not describe a known comparions grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     if comparisonGridName == 'latlon':
         comparisonDescriptor = \
             _get_lat_lon_comparison_descriptor(config)
@@ -66,11 +65,11 @@ def get_antarctic_stereographic_projection():  # {{{
     -------
     projection : ``pyproj.Proj`` object
         The projection
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
                              '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
 
@@ -91,11 +90,11 @@ def _get_lat_lon_comparison_descriptor(config):  # {{{
     -------
     descriptor : ``LatLonGridDescriptor`` object
         A descriptor of the lat/lon grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     climSection = 'climatology'
 
     comparisonLatRes = config.getWithDefault(climSection,
@@ -129,11 +128,11 @@ def _get_antarctic_stereographic_comparison_descriptor(config):  # {{{
     -------
     descriptor : ``ProjectionGridDescriptor`` object
         A descriptor of the Antarctic comparison grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     climSection = 'climatology'
 
     comparisonStereoWidth = config.getfloat(climSection,

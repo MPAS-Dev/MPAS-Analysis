@@ -24,11 +24,10 @@ from mpas_analysis.ocean.plot_depth_integrated_time_series_subtask import \
 class TimeSeriesOHCAnomaly(AnalysisTask):
     """
     Performs analysis of ocean heat content (OHC) from time-series output.
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -45,11 +44,11 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesOHCAnomaly, self).__init__(
             config=config,

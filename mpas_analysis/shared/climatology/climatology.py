@@ -7,11 +7,10 @@
 #
 """
 Functions for creating climatologies from monthly time series data
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -70,11 +69,10 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     remapper : ``Remapper`` object
         A remapper that can be used to remap files or data sets from the source
         grid or mesh to the comparison grid.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     mappingFileName = None
 
@@ -146,11 +144,10 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def compute_one_month_climatology(ds):
         monthValues = list(ds.month.values)
@@ -200,11 +197,10 @@ def compute_climatology(ds, monthValues, calendar=None,
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     ds = add_years_months_days_in_month(ds, calendar)
 
@@ -243,11 +239,10 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
     ds : object of same type as ``ds``
         The data set with ``year``, ``month`` and ``daysInMonth`` data arrays
         added (if not already present)
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     if ('year' in ds.coords and 'month' in ds.coords and
             'daysInMonth' in ds.coords):
@@ -328,11 +323,11 @@ def remap_and_write_climatology(config, climatologyDataSet,
     -------
     remappedClimatology : ``xarray.DataSet`` or ``xarray.DataArray`` object
         A data set containing the remapped climatology
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     useNcremap = config.getboolean('climatology', 'useNcremap')
 
     if (isinstance(remapper.sourceDescriptor, ProjectionGridDescriptor) or
@@ -373,11 +368,10 @@ def get_unmasked_mpas_climatology_directory(config):  # {{{
     ----------
     config :  ``MpasAnalysisConfigParser``
         configuration options
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     climatologyBaseDirectory = build_config_full_path(
         config, 'output', 'mpasClimatologySubdirectory')
@@ -406,11 +400,10 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName):
 
     componentName : {'ocean', 'seaIce'}
         The MPAS component for which the climatology is being computed
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
@@ -460,11 +453,10 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
     climatologyName : str
         The name of the climatology (typically the name of a field to mask
         and later remap)
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
@@ -528,11 +520,10 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     comparisonGridName : {'latlon', 'antarctic'}
         The name of the comparison grid to use for remapping
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     startYear = config.getint('climatology', 'startYear')
     endYear = config.getint('climatology', 'endYear')
@@ -581,11 +572,11 @@ def _compute_masked_mean(ds, maskVaries):  # {{{
     Compute the time average of data set, masked out where the variables in ds
     are NaN and, if ``maskVaries == True``, weighting by the number of days
     used to compute each monthly mean time in ds.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     def ds_to_weights(ds):
         # make an identical data set to ds but replacing all data arrays with
         # nonnull applied to that data array
@@ -622,11 +613,10 @@ def _compute_masked_mean(ds, maskVaries):  # {{{
 def _matches_comparison(obsDescriptor, comparisonDescriptor):  # {{{
     '''
     Determine if the two meshes are the same
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     if isinstance(obsDescriptor, ProjectionGridDescriptor) and \
             isinstance(comparisonDescriptor, ProjectionGridDescriptor):
@@ -663,11 +653,10 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     '''
     Determine which cache files already exist, which are incomplete and which
     years are present in each cache file (whether existing or to be created).
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     cacheInfo = []
 
@@ -726,11 +715,10 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
                                     calendar):  # {{{
     '''
     Cache individual climatologies for later aggregation.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     for cacheIndex, info in enumerate(cacheInfo):
         outputFileClimo, done, yearString = info
@@ -763,11 +751,10 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
                                   cacheInfo):  # {{{
     '''
     Cache aggregated climatology from individual climatologies.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     yearString, fileSuffix = _get_year_string(startYearClimo, endYearClimo)
     outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)

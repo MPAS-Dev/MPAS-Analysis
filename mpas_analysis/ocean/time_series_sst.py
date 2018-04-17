@@ -37,11 +37,10 @@ class TimeSeriesSST(AnalysisTask):
 
     refConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a reference run (if any)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -58,11 +57,11 @@ class TimeSeriesSST(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesSST, self).__init__(
             config=config,
@@ -85,11 +84,11 @@ class TimeSeriesSST(AnalysisTask):
         ------
         OSError
             If files are not present
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
@@ -129,11 +128,10 @@ class TimeSeriesSST(AnalysisTask):
         """
         Performs analysis of the time-series output of sea-surface temperature
         (SST).
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani
 
         self.logger.info("\nPlotting SST time series...")
 

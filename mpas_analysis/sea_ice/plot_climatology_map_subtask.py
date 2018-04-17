@@ -89,11 +89,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     galleryName : str
         the name of the gallery in which this plot belongs
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, parentTask, hemisphere, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
@@ -132,12 +131,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         subtaskSuffix : str, optional
             A suffix on the subtask to ensure that it is unique (e.g. the
             observations being plotted)
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.hemisphere = hemisphere
         self.season = season
@@ -219,11 +216,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         maskValue : float, optional
             a value to mask out in plots
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
@@ -246,11 +243,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup
         super(PlotClimatologyMapSubtask, self).setup_and_check()
@@ -277,11 +274,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         """
         Performs analysis of sea-ice properties by comparing with
         previous model results and/or observations.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani
 
         config = self.config
         season = self.season

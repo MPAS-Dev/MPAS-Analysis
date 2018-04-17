@@ -46,11 +46,10 @@ class IndexNino34(AnalysisTask):  # {{{
 
     refConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a reference run (if any)
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -67,12 +66,11 @@ class IndexNino34(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(IndexNino34, self).__init__(
             config=config,
@@ -90,11 +88,10 @@ class IndexNino34(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -123,11 +120,10 @@ class IndexNino34(AnalysisTask):  # {{{
         '''
         Computes NINO34 index and plots the time series and power spectrum with
         95 and 99% confidence bounds
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
 
         self.logger.info("\nPlotting Nino3.4 time series and power "
                          "spectrum....")
@@ -300,11 +296,10 @@ class IndexNino34(AnalysisTask):  # {{{
         Returns
         -------
         xarray.DataArray object containing the nino34index
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
 
         if not isinstance(regionSST, xr.core.dataarray.DataArray):
             raise ValueError('regionSST should be an xarray DataArray')
@@ -360,11 +355,10 @@ class IndexNino34(AnalysisTask):  # {{{
 
         mkov*scale*xHigh : numpy.array
             99% confidence threshold from chi-squared test
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
 
         # Move nino34Index to numpy to allow functionality with scipy routines
         ninoIndex = nino34Index.values
@@ -427,11 +421,10 @@ class IndexNino34(AnalysisTask):  # {{{
         -------
         Single value giving the lag one auto-correlation
             If t != 1, this is no longer a lag one auto-correlation
-
-        Authors
-        -------
-        Luke Van Roekel
         """
+        # Authors
+        # -------
+        # Luke Van Roekel
 
         return np.corrcoef(np.array([x[0:len(x)-t], x[t:len(x)]]))  # }}}
 
@@ -449,11 +442,10 @@ class IndexNino34(AnalysisTask):  # {{{
            for the nino index this is a 5-point boxcar window
            for the nino power spectra this is a modified Daniell window (see
            https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
 
         nt = len(inputData)
         sp = (len(wgts) - 1) // 2
@@ -508,11 +500,11 @@ class IndexNino34(AnalysisTask):  # {{{
 
         periodMin, periodMax : float, optional
             the maximum and minimum periods (in years) to be plotted
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
+
         config = self.config
 
         if dpi is None:
@@ -610,11 +602,11 @@ class IndexNino34(AnalysisTask):  # {{{
 
         lineWidth : int, optional
             control line width
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
+
         config = self.config
         calendar = self.calendar
 
@@ -680,11 +672,11 @@ class IndexNino34(AnalysisTask):  # {{{
 
         lineWidth : list of str
             control line width
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
+
         plt.title(panelTitle, y=1.06, **title_font)
         y1 = ninoIndex
         nt = np.size(ninoIndex)
@@ -736,11 +728,11 @@ class IndexNino34(AnalysisTask):  # {{{
 
         xmax : float, optional
             The maximum x values
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis
+
         mask = np.logical_and(x >= xmin, x <= xmax)
 
         # find maximum value of three curves plotted

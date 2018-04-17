@@ -35,11 +35,11 @@ def paths(*args):  # {{{
     -------
     paths : list of str
         A list of file paths
-
-    Authors
-    -------
-    Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram
+
     paths = []
     for aargs in args:
         paths += sorted(glob.glob(aargs))
@@ -67,11 +67,11 @@ def fingerprint_generator(size=12,
     Reference
     ---------
     http://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python
-
-    Authors
-    -------
-    Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram
+
     return ''.join(random.choice(chars) for _ in range(size))  # }}}
 
 
@@ -88,11 +88,10 @@ def make_directories(path):  # {{{
     -------
     path : str
         the path unchanged
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     try:
         os.makedirs(path)
@@ -125,11 +124,11 @@ def build_config_full_path(config, section, relativePathOption,
 
     defaultPath : str, optional
         the name of a path to return if the resulting path doesn't exist.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     if relativePathSection is None:
         relativePathSection = section
 
@@ -158,11 +157,11 @@ def check_path_exists(path):  # {{{
     ------
     OSError
         If the path does not exist
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     if not (os.path.isdir(path) or os.path.isfile(path)):
         raise OSError('Path {} not found'.format(path))  # }}}
 
@@ -186,11 +185,10 @@ def get_files_year_month(fileNames, streamsFile, streamName):  # {{{
     -------
     years, months : list of int
         The years and months for each file in ``fileNames``
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     template = streamsFile.read_datetime_template(streamName)
     template = os.path.basename(template)
