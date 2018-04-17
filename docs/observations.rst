@@ -1,9 +1,18 @@
 Observations
-==========
+============
 
 A variety of observational datasets are used within MPAS-Analysis:
 
-Tier1a metrics
---------------
+Land Ice metrics
+----------------
+.. include::  landicobservationstable.rst
 
-.. include::  tier1a.rst
+Ocean metrics
+-------------
+
+.. include::  oceanobservationstable.rst
+
+Sea Ice metrics
+---------------
+.. include::  seaicobservationstable.rst
+

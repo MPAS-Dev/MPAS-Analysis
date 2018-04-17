@@ -23,13 +23,20 @@ def markdown_links(data, footer):
 
     return data, footer
 
-def cleanup(linedata, footer):
-    cleanups = [markdown_links]
-    for acleanup in cleanups:
-        cleandata, footer = acleanup(linedata, footer)
-    return cleandata, footer
+def spurious_newline_whitespace(data, _):
+    whitespace = re.findall('\n\s*', data)
+    if len(whitespace) > 0:
+        astr = min(whitespace)
+        data = data.replace(astr, "\n")
+    return data, _
 
-def build_rst_table_from_xml(xmlfile, rstfile):
+def cleanup(linedata, footer):
+    cleanups = [spurious_newline_whitespace, markdown_links]
+    for acleanup in cleanups:
+        linedata, footer = acleanup(linedata, footer)
+    return linedata, footer
+
+def build_rst_table_from_xml(xmlfile, rstfile, component):
 
     # open xml file for reading
     xml = ET.parse(xmlfile)
@@ -43,9 +50,11 @@ def build_rst_table_from_xml(xmlfile, rstfile):
     data = []
     footer = '\n'
     for entry in xml.findall('aobs'):
+        if component != 'all' and entry.findall('component')[0].text.strip() != component:
+            continue
         line = []
         for aheader in headers:
-            linedata = entry.findall(aheader)[0].text.strip().replace('\n', ' ')
+            linedata = entry.findall(aheader)[0].text.strip()
             linedata, footer = cleanup(linedata, footer)
             line.append(linedata)
         data.append(line)
@@ -64,7 +73,10 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--rst_table", dest="rst_table",
                         help="Path to file containing rst description of table for output",
                         metavar="FILE", required=True)
+    parser.add_argument("-c", "--component", dest="component",
+                        help="Component for parsing of table, 'landice', 'ocean', "
+                             "'seaice', or 'all'", metavar="STRING", default="all")
 
     args = parser.parse_args()
 
-    build_rst_table_from_xml(args.xml_table, args.rst_table)
+    build_rst_table_from_xml(args.xml_table, args.rst_table, args.component)
