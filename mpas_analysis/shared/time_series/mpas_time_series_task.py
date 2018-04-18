@@ -34,6 +34,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         A list of variable names in ``timeSeriesStatsMonthly`` to be
         included in the time series
 
+    allVariables : list of str
+        A list of all available variable names in ``timeSeriesStatsMonthly``
+        used to raise an exception when an unavailable variable is requested
+
     inputFiles : list of str
         A list of input files from which to extract the time series.
 
@@ -80,6 +84,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         self.section = section
         tags = [section]
 
+        self.allVariables = None
+
         if taskName is None:
             suffix = section[0].upper() + section[1:] + \
                 componentName[0].upper() + componentName[1:]
@@ -104,12 +110,32 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         variableList : list of str
             A list of variable names in ``timeSeriesStatsMonthly`` to be
             included in the time series
+
+        Raises
+        ------
+        ValueError
+            if this funciton is called before this task has been set up (so
+            the list of available variables has not yet been set) or if one
+            or more of the requested variables is not available in the
+            ``timeSeriesStatsMonthly`` output.
         '''
         # Authors
         # -------
         # Xylar Asay-Davis
 
+        if self.allVariables is None:
+            raise ValueError('add_variables() can only be called after '
+                             'setup_and_check() in MpasTimeSeriesTask.\n'
+                             'Presumably tasks were added in the wrong order '
+                             'or add_variables() is being called in the wrong '
+                             'place.')
+
         for variable in variableList:
+            if variable not in self.allVariables:
+                raise ValueError(
+                        '{} is not available in timeSeriesStatsMonthly '
+                        'output:\n{}'.format(variable, self.allVariables))
+
             if variable not in self.variableList:
                 self.variableList.append(variable)
 
@@ -182,6 +208,9 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                 self.inputFiles.append(fileName)
 
         self.inputFiles = sorted(self.inputFiles)
+
+        with xr.open_dataset(self.inputFiles[0]) as ds:
+            self.allVariables = list(ds.data_vars.keys())
 
         # }}}
 

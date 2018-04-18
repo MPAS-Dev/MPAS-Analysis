@@ -36,6 +36,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         A list of variable names in ``timeSeriesStatsMonthly`` to be
         included in the climatologies
 
+    allVariables : list of str
+        A list of all available variable names in ``timeSeriesStatsMonthly``
+        used to raise an exception when an unavailable variable is requested
+
     seasons : list of str
         A list of seasons (keys in ``shared.constants.monthDictionary``)
         over which the climatology should be computed or ['none'] if only
@@ -96,6 +100,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             suffix = componentName[0].upper() + componentName[1:]
             taskName = 'mpasClimatology{}'.format(suffix)
 
+        self.allVariables = None
+
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologyTask, self).__init__(
             config=config,
@@ -120,12 +126,32 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             A list of seasons (keys in ``shared.constants.monthDictionary``)
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
+
+        Raises
+        ------
+        ValueError
+            if this funciton is called before this task has been set up (so
+            the list of available variables has not yet been set) or if one
+            or more of the requested variables is not available in the
+            ``timeSeriesStatsMonthly`` output.
         '''
         # Authors
         # -------
         # Xylar Asay-Davis
 
+        if self.allVariables is None:
+            raise ValueError('add_variables() can only be called after '
+                             'setup_and_check() in MpasClimatologyTask.\n'
+                             'Presumably tasks were added in the wrong order '
+                             'or add_variables() is being called in the wrong '
+                             'place.')
+
         for variable in variableList:
+            if variable not in self.allVariables:
+                raise ValueError(
+                        '{} is not available in timeSeriesStatsMonthly '
+                        'output:\n{}'.format(variable, self.allVariables))
+
             if variable not in self.variableList:
                 self.variableList.append(variable)
 
@@ -177,6 +203,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         self.symlinkDirectory = \
             self._update_climatology_bounds_and_create_symlinks()
+
+        with xarray.open_dataset(self.inputFiles[0]) as ds:
+            self.allVariables = list(ds.data_vars.keys())
 
         # }}}
 
