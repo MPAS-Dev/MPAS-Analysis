@@ -1137,7 +1137,7 @@ def setup_colormap(config, configSectionName, suffix=''):
             config, configSectionName, suffix=suffix)
         levels = None
     else:
-        raise ValueError('config section {} contains neither the info'
+        raise ValueError('config section {} contains neither the info '
                          'for an indexed color map nor for computing a '
                          'norm'.format(configSectionName))
 
