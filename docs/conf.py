@@ -16,6 +16,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 import mpas_analysis
+from docs.parse_table import build_rst_table_from_xml
 
 
 # -- General configuration ------------------------------------------------
@@ -181,3 +182,10 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
     'xarray': ('http://xarray.pydata.org/en/stable/', None)}
+
+
+# Build some custom rst files
+xmlFileName = '../mpas_analysis/obs/observationstable.xml'
+for component in ['ocean', 'seaice', 'landice']:
+    build_rst_table_from_xml(xmlFileName, '{}_obs_table.rst'.format(component),
+                             component)
