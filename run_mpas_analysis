@@ -92,6 +92,11 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
                                             refConfig))
+    for bgcvar in config.getExpression('climatologyMapBGC', 'variables'):
+        analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
+                                                bgcvar,
+                                                'timeMonthly_avg_ecosysTracers_' + bgcvar,
+                                                refConfig))
     analyses.append(ocean.ClimatologyMapSoseTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(
