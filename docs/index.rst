@@ -32,8 +32,8 @@ MPAS Components and E3SM
    mpasseaice
    e3sm
 
-Observations
-============
+Observational Data Sets
+=======================
 .. toctree::
 
   observations

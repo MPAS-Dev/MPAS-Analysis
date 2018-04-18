@@ -1,18 +1,13 @@
-Observations
-============
-
 A variety of observational datasets are used within MPAS-Analysis:
 
-Land Ice metrics
-----------------
-.. include::  landicobservationstable.rst
+Ocean Observations
+------------------
+.. include::  ocean_obs_table.rst
 
-Ocean metrics
--------------
+Sea Ice Observations
+--------------------
+.. include::  seaice_obs_table.rst
 
-.. include::  oceanobservationstable.rst
-
-Sea Ice metrics
----------------
-.. include::  seaicobservationstable.rst
-
+Land Ice Observations
+---------------------
+.. include::  landice_obs_table.rst
