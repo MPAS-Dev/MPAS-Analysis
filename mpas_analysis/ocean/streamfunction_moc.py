@@ -68,7 +68,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-# 
         # first, call the constructor from the base class (AnalysisTask)
         super(StreamfunctionMOC, self).__init__(
             config=config,
@@ -242,11 +241,25 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
+        if config.has_option(self.taskName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.taskName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option(self.taskName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.taskName,
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
         timeseries_analysis_plot(config, [dsMOCTimeSeries.mocAtlantic26],
                                  movingAveragePoints, title,
                                  xLabel, yLabel, figureName,
                                  lineStyles=['k-'], lineWidths=[2],
-                                 legendText=[None], calendar=self.calendar)
+                                 legendText=[None], calendar=self.calendar,
+                                 firstYearXTicks=firstYearXTicks,
+                                 yearStrideXTicks=yearStrideXTicks)
 
         caption = u'Time Series of maximum Meridional Overturning ' \
                   u'Circulation at 26.5°N'

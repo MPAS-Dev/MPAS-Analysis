@@ -635,7 +635,7 @@ class IndexNino34(AnalysisTask):  # {{{
             minDays = time.min()
             maxDays = time.max()
 
-            plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+            plot_xtick_format(calendar, minDays, maxDays, maxXTicks)
 
         plt.tight_layout(rect=[0, 0.03, 1, 0.90])
 

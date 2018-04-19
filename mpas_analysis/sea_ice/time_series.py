@@ -418,6 +418,18 @@ class TimeSeriesSeaIce(AnalysisTask):
                     lineStyles.append('g-')
                     lineWidths.append(1.2)
 
+                if config.has_option(self.taskName, 'firstYearXTicks'):
+                    firstYearXTicks = config.getint(self.taskName,
+                                                    'firstYearXTicks')
+                else:
+                    firstYearXTicks = None
+
+                if config.has_option(self.taskName, 'yearStrideXTicks'):
+                    yearStrideXTicks = config.getint(self.taskName,
+                                                     'yearStrideXTicks')
+                else:
+                    yearStrideXTicks = None
+
                 # separate plots for nothern and southern hemispheres
                 timeseries_analysis_plot(config, dsvalues,
                                          movingAveragePoints,
@@ -428,7 +440,10 @@ class TimeSeriesSeaIce(AnalysisTask):
                                          lineWidths=lineWidths,
                                          legendText=legendText,
                                          titleFontSize=titleFontSize,
-                                         calendar=calendar)
+                                         calendar=calendar,
+                                         firstYearXTicks=firstYearXTicks,
+                                         yearStrideXTicks=yearStrideXTicks)
+
                 filePrefix = '{}{}_{}'.format(variableName,
                                               hemisphere,
                                               mainRunName)

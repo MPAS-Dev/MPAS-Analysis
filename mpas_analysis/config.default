@@ -328,6 +328,12 @@ preprocessedFieldPrefix = ohc
 # window)
 movingAveragePoints = 12
 
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
+
 [hovmollerOHCAnomaly]
 ## options related to time vs. depth Hovmoller plots of ocean heat content
 ## (OHC) anomalies from year 1
@@ -343,6 +349,12 @@ colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
 # contour line levels
 contourLevels = np.arange(-2.5, 2.6, 0.5)
+
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
 
 [hovmollerTemperatureAnomaly]
 ## options related to plotting time series of temperature vs. depth
@@ -364,6 +376,12 @@ colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
 # contour line levels
 contourLevels = np.arange(-1.0, 1.26, 0.25)
 
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
+
 [hovmollerSalinityAnomaly]
 ## options related to plotting time series of salinity vs. depth
 
@@ -384,6 +402,12 @@ colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
 # contour line levels
 contourLevels = np.arange(-0.1, 0.11, 0.02)
 
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
+
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
 
@@ -395,6 +419,12 @@ regions = ['global']
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
 movingAveragePoints = 12
+
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
 
 [indexNino34]
 ## options related to plotting time series of the El Nino 3.4 index
@@ -504,6 +534,12 @@ movingAveragePoints = 12
 # latitude) for climatological MOC plots
 movingAveragePointsClimatological = 1
 
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
+
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
 
@@ -517,6 +553,12 @@ movingAveragePoints = 1
 titleFontSize = 18
 # plot on polar plot
 polarPlot = False
+
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
 
 [climatologyMapSST]
 ## options related to plotting horizontally remapped climatologies of
@@ -672,6 +714,12 @@ iceShelvesToPlot = ['Antarctica']
 
 # Number of months over which to compute moving average
 movingAverageMonths = 1
+
+# An optional first year for the tick marks on the x axis
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis
+# yearStrideXTicks = 1
 
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
