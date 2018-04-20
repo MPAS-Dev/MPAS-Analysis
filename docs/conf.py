@@ -185,7 +185,7 @@ intersphinx_mapping = {
 
 
 # Build some custom rst files
-xmlFileName = '../mpas_analysis/obs/observationstable.xml'
-for component in ['ocean', 'seaice', 'landice']:
+xmlFileName = '../mpas_analysis/obs/observational_datasets.xml'
+for component in ['ocean', 'seaice']:
     build_rst_table_from_xml(xmlFileName, '{}_obs_table.rst'.format(component),
                              component)
