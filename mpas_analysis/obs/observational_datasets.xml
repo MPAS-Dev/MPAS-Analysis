@@ -31,7 +31,9 @@
       (https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
     </source>
     <releasePolicy>
-      Unknown
+      [Acknowledgment:] Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
+      2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community 
+      Atmosphere Model. Journal of Climate, 21, 5145-5153.
     </releasePolicy>
     <references>
       [Hurrell et al. (2008)](https://doi.org/10.1175/2008JCLI2292.1)
@@ -76,7 +78,8 @@
     </description>
     <source>
       [NASA Aquarius FTP server]
-      (ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L3/mapped/V4/7day_running/SCI/)
+      (https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4)
+   
     </source>
     <releasePolicy>
       NASA data are not copyrighted; however, when you publish our data or
@@ -91,7 +94,7 @@
     <bibtex>
     </bibtex>
     <dataUrls>
-      (missing)
+      (ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L4/IPRC/v4/7day/)
     </dataUrls>
     <preprocessing>
       (missing)
@@ -124,7 +127,6 @@
       co-located on the same 1 degree grids.
     </description>
     <source>
-      - [AVISO+ website](https://www.aviso.altimetry.fr/en/data/products/sea-surface-height-products/global/madt-h-uv.html)
       - [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
     </source>
     <releasePolicy>
@@ -136,7 +138,7 @@
       (http://www.aviso.altimetry.fr/duacs/)"
     </releasePolicy>
     <references>
-      (missing)
+      [ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf]
     </references>
     <bibtex>
     </bibtex>
