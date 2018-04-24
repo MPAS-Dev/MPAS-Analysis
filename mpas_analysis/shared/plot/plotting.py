@@ -1214,8 +1214,8 @@ def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
         the maximum number of tick marks to display, used to sub-sample ticks
         if there are too many
 
-    stride : int, optionoal
-        the number of months or years to skip over between ticks
+    yearStride : int, optional
+        the number of years to skip over between ticks
     '''
     # Authors
     # -------
@@ -1229,6 +1229,8 @@ def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
     if yearStride is not None or end.year - start.year > maxXTicks/2:
         if yearStride is None:
             yearStride = 1
+        else:
+            maxXTicks = None
         major = [date_to_days(year=year, calendar=calendar)
                  for year in np.arange(start.year, end.year+1, yearStride)]
         formatterFun = partial(_date_tick, calendar=calendar,
