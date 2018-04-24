@@ -328,10 +328,12 @@ preprocessedFieldPrefix = ohc
 # window)
 movingAveragePoints = 12
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
 # yearStrideXTicks = 1
 
 [hovmollerOHCAnomaly]
@@ -350,10 +352,13 @@ colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
 # contour line levels
 contourLevels = np.arange(-2.5, 2.6, 0.5)
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
 # yearStrideXTicks = 1
 
 [hovmollerTemperatureAnomaly]
@@ -376,10 +381,14 @@ colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
 # contour line levels
 contourLevels = np.arange(-1.0, 1.26, 0.25)
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
 # yearStrideXTicks = 1
 
 [hovmollerSalinityAnomaly]
@@ -402,10 +411,14 @@ colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
 # contour line levels
 contourLevels = np.arange(-0.1, 0.11, 0.02)
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
 # yearStrideXTicks = 1
 
 [timeSeriesSST]
@@ -420,10 +433,14 @@ regions = ['global']
 # window)
 movingAveragePoints = 12
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
 # yearStrideXTicks = 1
 
 [indexNino34]
@@ -534,10 +551,14 @@ movingAveragePoints = 12
 # latitude) for climatological MOC plots
 movingAveragePointsClimatological = 1
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
 # yearStrideXTicks = 1
 
 [timeSeriesSeaIceAreaVol]
@@ -554,10 +575,14 @@ titleFontSize = 18
 # plot on polar plot
 polarPlot = False
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
 # yearStrideXTicks = 1
 
 [climatologyMapSST]
@@ -715,10 +740,14 @@ iceShelvesToPlot = ['Antarctica']
 # Number of months over which to compute moving average
 movingAverageMonths = 1
 
-# An optional first year for the tick marks on the x axis
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
 # firstYearXTicks = 1
 
-# An optional number of years between tick marks on the x axis
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
 # yearStrideXTicks = 1
 
 [climatologyMapSoseTemperature]
