@@ -41,7 +41,8 @@ from six.moves import configparser
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, legendText,
                              calendar, maxPoints=None, titleFontSize=None,
-                             figsize=(15, 6), dpi=None, maxXTicks=20,
+                             figsize=(15, 6), dpi=None, firstYearXTicks=None,
+                             yearStrideXTicks=None, maxXTicks=20,
                              obsMean=None, obsUncertainty=None,
                              obsLegend=None, legendLocation='lower left'):
 
@@ -91,6 +92,14 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     dpi : int, optional
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
+
+    firstYearXTicks : int, optional
+        The year of the first tick on the x axis.  By default, the first time
+        entry is the first tick.
+
+    yearStrideXTicks : int, optional
+        The number of years between x ticks. By default, the stride is chosen
+        automatically to have ``maxXTicks`` tick marks or fewer.
 
     maxXTicks : int, optional
         the maximum number of tick marks that will be allowed along the x axis.
@@ -171,7 +180,11 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                   'color': config.get('plot', 'titleFontColor'),
                   'weight': config.get('plot', 'titleFontWeight')}
 
-    plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+    if firstYearXTicks is not None:
+        minDays = date_to_days(year=firstYearXTicks, calendar=calendar)
+
+    plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
+                      yearStride=yearStrideXTicks)
 
     # Add a y=0 line if y ranges between positive and negative values
     yaxLimits = ax.get_ylim()
@@ -915,6 +928,8 @@ def plot_vertical_section(
         invertYAxis=True,
         xArrayIsTime=False,
         N=None,
+        firstYearXTicks=None,
+        yearStrideXTicks=None,
         maxXTicks=20,
         calendar='gregorian'):  # {{{
 
@@ -985,6 +1000,14 @@ def plot_vertical_section(
         average calculation is based on number of points, not actual x axis
         values, so for best results, the values in the xArray should be equally
         spaced.
+
+    firstYearXTicks : int, optional
+        The year of the first tick on the x axis.  By default, the first time
+        entry is the first tick.
+
+    yearStrideXTicks : int, optional
+        The number of years between x ticks. By default, the stride is chosen
+        automatically to have ``maxXTicks`` tick marks or fewer.
 
     maxXTicks : int, optional
         the maximum number of tick marks that will be allowed along the x axis.
@@ -1069,9 +1092,14 @@ def plot_vertical_section(
         plt.ylim(yLim)
 
     if xArrayIsTime:
-        minDays = [xArray[0]]
+        if firstYearXTicks is None:
+            minDays = [xArray[0]]
+        else:
+            minDays = date_to_days(year=firstYearXTicks, calendar=calendar)
         maxDays = [xArray[-1]]
-        plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks)
+
+        plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
+                          yearStride=yearStrideXTicks)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -1166,20 +1194,28 @@ def setup_colormap(config, configSectionName, suffix=''):
             'lineColor': lineColor}
 
 
-def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
+def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
     '''
     Formats tick labels and positions along the x-axis for time series
     / index plots
 
     Parameters
     ----------
-    plt : plt handle on which to change ticks
+    calendar : str
+        the calendar to use for formatting the time axis
 
-    calendar : specified calendar for the plot
+    minDays : float
+        start time for labels
 
-    minDays : start time for labels
+    maxDays : float
+        end time for labels
 
-    maxDays : end time for labels
+    maxXTicks : int
+        the maximum number of tick marks to display, used to sub-sample ticks
+        if there are too many
+
+    yearStride : int, optional
+        the number of years to skip over between ticks
     '''
     # Authors
     # -------
@@ -1190,9 +1226,13 @@ def plot_xtick_format(plt, calendar, minDays, maxDays, maxXTicks):
     start = days_to_datetime(np.amin(minDays), calendar=calendar)
     end = days_to_datetime(np.amax(maxDays), calendar=calendar)
 
-    if (end.year - start.year > maxXTicks/2):
+    if yearStride is not None or end.year - start.year > maxXTicks/2:
+        if yearStride is None:
+            yearStride = 1
+        else:
+            maxXTicks = None
         major = [date_to_days(year=year, calendar=calendar)
-                 for year in np.arange(start.year, end.year+1)]
+                 for year in np.arange(start.year, end.year+1, yearStride)]
         formatterFun = partial(_date_tick, calendar=calendar,
                                includeMonth=False)
     else:

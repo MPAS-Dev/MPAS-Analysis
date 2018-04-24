@@ -437,11 +437,25 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
 
+        if config.has_option(self.taskName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.taskName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option(self.taskName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.taskName,
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
         timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
                                  title=title, xlabel=xLabel, ylabel=yLabel,
                                  fileout=figureName, lineStyles=lineStyles,
                                  lineWidths=lineWidths, maxPoints=maxPoints,
-                                 legendText=legendText, calendar=calendar)
+                                 legendText=legendText, calendar=calendar,
+                                 firstYearXTicks=firstYearXTicks,
+                                 yearStrideXTicks=yearStrideXTicks)
 
         write_image_xml(
             config=config,

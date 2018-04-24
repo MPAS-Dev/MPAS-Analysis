@@ -252,11 +252,25 @@ class TimeSeriesSST(AnalysisTask):
                 lineWidths.append(1.5)
                 legendText.append(preprocessedReferenceRunName)
 
+            if config.has_option(self.taskName, 'firstYearXTicks'):
+                firstYearXTicks = config.getint(self.taskName,
+                                                'firstYearXTicks')
+            else:
+                firstYearXTicks = None
+
+            if config.has_option(self.taskName, 'yearStrideXTicks'):
+                yearStrideXTicks = config.getint(self.taskName,
+                                                 'yearStrideXTicks')
+            else:
+                yearStrideXTicks = None
+
             timeseries_analysis_plot(config, fields, movingAveragePoints,
                                      title, xLabel, yLabel, figureName,
                                      lineStyles=lineStyles,
                                      lineWidths=lineWidths,
-                                     legendText=legendText, calendar=calendar)
+                                     legendText=legendText, calendar=calendar,
+                                     firstYearXTicks=firstYearXTicks,
+                                     yearStrideXTicks=yearStrideXTicks)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                     region)

@@ -340,6 +340,18 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                 lineWidths.append(1.2)
                 legendText.append(refRunName)
 
+            if config.has_option(self.taskName, 'firstYearXTicks'):
+                firstYearXTicks = config.getint(self.taskName,
+                                                'firstYearXTicks')
+            else:
+                firstYearXTicks = None
+
+            if config.has_option(self.taskName, 'yearStrideXTicks'):
+                yearStrideXTicks = config.getint(self.taskName,
+                                                 'yearStrideXTicks')
+            else:
+                yearStrideXTicks = None
+
             timeseries_analysis_plot(config, fields, movingAverageMonths,
                                      title, xLabel, yLabel, figureName,
                                      lineStyles=lineStyles,
@@ -347,7 +359,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                      legendText=legendText,
                                      calendar=calendar, obsMean=obsMeltRate,
                                      obsUncertainty=obsMeltRateUnc,
-                                     obsLegend=list(obsDict.keys()))
+                                     obsLegend=list(obsDict.keys()),
+                                     firstYearXTicks=firstYearXTicks,
+                                     yearStrideXTicks=yearStrideXTicks)
 
             caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                       'Shelves in the {} Region'.format(title)

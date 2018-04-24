@@ -264,11 +264,25 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
+        if config.has_option(self.sectionName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.sectionName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option(self.sectionName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.sectionName,
+                                            'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
         plot_vertical_section(config, Time, depth, field, self.sectionName,
                               suffix='', colorbarLabel=self.unitsLabel,
                               title=title, xlabel=xLabel, ylabel=yLabel,
                               fileout=figureName, linewidths=1,
-                              xArrayIsTime=True, calendar=self.calendar)
+                              xArrayIsTime=True, calendar=self.calendar,
+                              firstYearXTicks=firstYearXTicks,
+                              yearStrideXTicks=yearStrideXTicks)
 
         write_image_xml(
             config=config,
