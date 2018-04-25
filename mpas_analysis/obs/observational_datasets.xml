@@ -32,7 +32,7 @@
     </source>
     <releasePolicy>
       [Acknowledgment:] Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
-      2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community 
+      2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
       Atmosphere Model. Journal of Climate, 21, 5145-5153.
     </releasePolicy>
     <references>
@@ -79,7 +79,7 @@
     <source>
       [NASA Aquarius FTP server]
       (https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4)
-   
+
     </source>
     <releasePolicy>
       NASA data are not copyrighted; however, when you publish our data or
@@ -577,7 +577,9 @@
       (missing, requires registration with NSIDC)
     </dataUrls>
     <preprocessing>
-      (missing)
+      preprocess_observations/NASATeam_Antarctic_compute_climo.m
+      preprocess_observations/NASATeam_Arctic_compute_climo.m
+      (missing remapping from stereographic to lat/lon)
     </preprocessing>
     <tasks>
       - climatologyMapSeaIceConcNH
@@ -633,7 +635,9 @@
       (missing, requires registration with NSIDC)
     </dataUrls>
     <preprocessing>
-      (missing)
+      preprocess_observations/Bootstrap_Antarctic_compute_climo.m
+      preprocess_observations/Bootstrap_Arctic_compute_climo.m
+      (missing remapping from stereographic to lat/lon)
     </preprocessing>
     <tasks>
       - climatologyMapSeaIceConcNH
@@ -770,7 +774,7 @@
       - https://neptune.gsfc.nasa.gov/uploads/files/SH_IceExt_Monthly_1978-2012.txt
     </dataUrls>
     <preprocessing>
-      (missing)
+      preprocess_observations/IceaArea_txt2netcdf.m
     </preprocessing>
     <tasks>
       - timeSeriesSeaIceAreaVol
@@ -817,6 +821,9 @@
       (missing, requires registration with NSIDC)
     </dataUrls>
     <preprocessing>
+      ICESat_Arctic_compute_climo.m
+      (missing Antarctic climo)
+      (missing remapping from stereographic to lat/lon)
     </preprocessing>
     <tasks>
       - timeSeriesSeaIceAreaVol
@@ -878,7 +885,7 @@
       - http://psc.apl.uw.edu/wordpress/wp-content/uploads/schweiger/ice_volume/PIOMAS.2sst.monthly.Current.v2.1.txt
     </dataUrls>
     <preprocessing>
-      (missing)
+      preprocess_observations/PIOMAS_txt2netcdf.m
     </preprocessing>
     <tasks>
       - timeSeriesSeaIceAreaVol
