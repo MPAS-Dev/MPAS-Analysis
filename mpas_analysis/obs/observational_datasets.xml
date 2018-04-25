@@ -1,0 +1,957 @@
+<?xml version="1.0"?>
+<observations
+  headers="name, tasks, source, references"
+  headernames="Observational Dataset, MPAS-Analysis Task(s), Source, References">
+
+  <!-- OCEAN -->
+
+  <observation>
+    <name>
+      SST merged Hadley Center-NOAA/OI data set
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      The merged Hadley-OI sea surface temperature (SST) and sea ice
+      concentration (SIC) data sets were specifically developed as surface
+      forcing data sets for AMIP style uncoupled simulations of the Community
+      Atmosphere Model (CAM). The Hadley Centre's SST/SIC version 1.1
+      (HADISST1), which is derived gridded, bias-adjusted in situ observations,
+      were merged with the NOAA-Optimal Interpolation (version 2; OI.v2)
+      analyses. The HADISST1 spanned 1870 onward but the OI.v2, which started
+      in November 1981, better resolved features such as the Gulf Stream and
+      Kuroshio Current which are important components of the climate system.
+      Since the two data sets used different development methods, anomalies
+      from a base period were used to create a more homogeneous record. Also,
+      additional adjustments were made to the SIC data set.
+    </description>
+    <source>
+      [NCAR Hadley-NOAA/OI SST website]
+      (https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
+    </source>
+    <releasePolicy>
+      Acknowledgment: Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
+      2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
+      Atmosphere Model. Journal of Climate, 21, 5145-5153.
+    </releasePolicy>
+    <references>
+      [Hurrell et al. (2008)](https://doi.org/10.1175/2008JCLI2292.1)
+    </references>
+    <bibtex>
+      @article{Hurrell2008,
+      author = {James W.  Hurrell  and  James J.  Hack  and  Dennis  Shea  and  Julie M.  Caron  and  James  Rosinski},
+      title = {A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community Atmosphere Model},
+      journal = {Journal of Climate},
+      volume = {21},
+      number = {19},
+      pages = {5145-5153},
+      year = {2008},
+      doi = {10.1175/2008JCLI2292.1},
+      URL = {https://doi.org/10.1175/2008JCLI2292.1}
+      }
+    </bibtex>
+    <dataUrls>
+      - ftp://ftp.cgd.ucar.edu/archive/SSTICE/MODEL.SST.HAD187001-198110.OI198111-201712.nc
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      - climatologyMapSST
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      SSS from NASA Aquarius satellite
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Level 3 Aquarius sea surface salinity (SSS) data products have a temporal
+      resolutions of daily, 8 day, monthly, 3 months, and annual.  Monthly and
+      seasonal climatology
+      products from Aqaurius are also available. The Aquarius instrument
+      provides global coverage every 7 days. L3 products are gridded at 1
+      degree spatial resolution.
+    </description>
+    <source>
+      [NASA Aquarius Website]
+      (https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4)
+
+    </source>
+    <releasePolicy>
+      NASA data are not copyrighted; however, when you publish our data or
+      results derived therefrom, we request that you include an acknowledgment
+      within the text of the publication and reference list.
+      [Data Citation and Acknowledgements]
+      (https://podaac.jpl.nasa.gov/CitingPODAAC)
+    </releasePolicy>
+    <references>
+      [Lagerloef et al. (2015)](ftp://podaac.jpl.nasa.gov/SalinityDensity/aquarius/docs/v4/AQ-014-PS-0016_AquariusSalinityDataValidationAnalysis_DatasetVersion4.0and3.0.pdf)
+    </references>
+    <bibtex>
+    </bibtex>
+    <dataUrls>
+      ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L4/IPRC/v4/7day/
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - climatologyMapSSS
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      AVISO Absolute Dynamic Topography
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
+      This dataset contains absolute dynamic topography (similar to sea level
+      but with respect to the geoid) binned and averaged monthly on 1 degree
+      grids. The coverage is from October 1992 to December 2010. These data
+      were provided by AVISO (French space agency data provider) to support the
+      CMIP5 (Coupled Model Intercomparison Project Phase 5) under the World
+      Climate Research Program (WCRP) and was first made available via the JPL
+      Earth System Grid. The dynamic topography are derived from sea surface
+      height measured by several satellites including Envisat, TOPEX/Poseidon,
+      Jason-1 and OSTM/Jason-2, and referenced to the geoid. Along with this
+      dataset, two additional ancillary data files are included in the same
+      directory which contain the number of observations and standard error
+      co-located on the same 1 degree grids.
+    </description>
+    <source>
+      - [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
+    </source>
+    <releasePolicy>
+      When using Ssalto/Duacs data (NRT or DT along-track Absolute Dynamic
+      Topography (ADT), maps of SLA geostrophic currents (MSLA UV) or maps of
+      ADT heights and currents (MADT H and UV), climatologies and averages of
+      MSLA-H), please cite: "The altimeter products were produced by
+      Ssalto/Duacs and distributed by Aviso, with support from Cnes
+      (http://www.aviso.altimetry.fr/duacs/)"
+    </releasePolicy>
+    <references>
+      [AVISO: Sea Surface Height above Geoid]
+      (ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf)
+    </references>
+    <bibtex>
+    </bibtex>
+    <dataUrls>
+      - ftp://podaac-ftp.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/zos_AVISO_L4_199210-201012.nc
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      - climatologyMapSSH
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Argo Mixed Layer Depth (MLD) climatology
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      A mixed layer climatology and database (described in Holte et al. 2017)
+      using Argo profiles and a hybrid method (Holte and Talley 2009) for
+      finding the mixed layer depth (MLD). The climatology incorporates over
+      1,385,000 Argo profiles (through February 2017). The new hybrid algorithm
+      models the general shape of each profile, searches for physical features
+      in the profile, and calculates threshold and gradient MLDs to assemble a
+      suite of possible MLD values. It then analyzes the patterns in the suite
+      to select a final MLD estimate. Results are also presented for MLDs
+      calculated using de Boyer Montegut et al.'s (2004) threshold values.
+    </description>
+    <source>
+      [UCSD Mixed Layer Website](http://mixedlayer.ucsd.edu/)
+    </source>
+    <releasePolicy>
+      [Acknowledgment:](http://mixedlayer.ucsd.edu/) If you use this data,
+      please cite it as: Holte, J., L. D. Talley, J. Gilson, and D. Roemmich
+      (2017), An Argo mixed layer climatology and database, Geophys. Res.
+      Lett., 44, 5618–5626, doi:10.1002/2017GL073426.
+    </releasePolicy>
+    <references>
+      - [Holte et al. (2017)](http://onlinelibrary.wiley.com/doi/10.1002/2017GL073426/full)
+      - [Holte and Talley (2009)](http://journals.ametsoc.org/doi/abs/10.1175/2009JTECHO543.1)
+      - [de Boyer Montegut et al. (2004)](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004JC002378)
+    </references>
+    <bibtex>
+      @article{Holte2017,
+      author = {James Holte and Lynne D. Talley and John Gilson and Dean Roemmich},
+      title = {An Argo mixed layer climatology and database},
+      journal = {Geophysical Research Letters},
+      year = {2017},
+      volume = {44},
+      number = {11},
+      pages = {5618-5626},
+      keywords = {Argo, mixed layer, climatology, global},
+      doi = {10.1002/2017GL073426},
+      url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2017GL073426}
+      }
+
+      @article{Holte2009,
+      author = { James  Holte  and  Lynne  Talley },
+      title = {A New Algorithm for Finding Mixed Layer Depths with Applications to Argo Data and Subantarctic Mode Water Formation},
+      journal = {Journal of Atmospheric and Oceanic Technology},
+      volume = {26},
+      number = {9},
+      pages = {1920-1939},
+      year = {2009},
+      doi = {10.1175/2009JTECHO543.1},
+      URL = {https://doi.org/10.1175/2009JTECHO543.1}
+      }
+
+      @article{deBoyerMontegut2004,
+      author = {Cl\'{e}ment {de Boyer Mont\'{e}gut} and Gurvan Madec and Albert S. Fischer and Alban Lazar and Daniele Iudicone},
+      title = {Mixed layer depth over the global ocean: An examination of profile data and a profile‐based climatology},
+      journal = {Journal of Geophysical Research: Oceans},
+      volume = {109},
+      number = {C12},
+      pages = {},
+      year = {2004},
+      keywords = {mixed layer, mixed layer depth criterion, density compensation},
+      doi = {10.1029/2004JC002378},
+      url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004JC002378}
+      }
+    </bibtex>
+    <dataUrls>
+      - http://mixedlayer.ucsd.edu/data/Argo_mixedlayers_monthlyclim_03192017.nc
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      - climatologyMapMLD
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Meridional Heat Transport (MHT)
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+     (missing)
+    </description>
+    <source>
+      (missing)
+    </source>
+    <releasePolicy>
+      (missing)
+    </releasePolicy>
+    <references>
+      [Trenberth and Caron (2000)](https://doi.org/10.1175/1520-0442%282000%29013&lt;4358%3ATSORSL&gt;2.0.CO%3B2)
+    </references>
+    <bibtex>
+      @article{Trenberth2000,
+      author = { Kevin E.  Trenberth  and  Julie M.  Caron },
+      title = {The Southern Oscillation Revisited: Sea Level Pressures, Surface Temperatures, and Precipitation},
+      journal = {Journal of Climate},
+      volume = {13},
+      number = {24},
+      pages = {4358-4365},
+      year = {2000},
+      doi = {10.1175/1520-0442(2000)013&lt;4358:TSORSL&gt;2.0.CO;2},
+      URL = {https://doi.org/10.1175/1520-0442(2000)013&lt;4358:TSORSL&gt;2.0.CO;2}
+      }
+    </bibtex>
+    <dataUrls>
+      (missing)
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - meridionalHeatTransport
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Roemmich-Gilson Argo Climatology
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      This new version of the Roemmich-Gilson Argo Climatology extends the
+      analysis of Argo-only derived temperature and salinity fields through
+      2016. Several marginal seas and the Artic Oean have been added. The
+      analysis method is similar to what was descibed in the Progress In
+      Oceanography Roemmich and Gilson paper (2009). The only modification has
+      been to scale the zonal equatorial correlation of the optimal estimation
+      step, by 8 times, versus 4 times as in the 2009 paper. The additional
+      Argo data utilized in the analysis results in a longer monthly record as
+      well as better estimates of the mean and variability fields. Monthly
+      updates are available in between major yearly re-analyses.
+    </description>
+    <source>
+      [Scripps Roemmich-Gilson Argo Website](http://sio-argo.ucsd.edu/RG_Climatology.html)
+    </source>
+    <releasePolicy>
+      [Acknowledgment:](http://sio-argo.ucsd.edu/RG_Climatology.html) Roemmich,
+      D. and J. Gilson, 2009: The 2004-2008 mean and annual cycle of
+      temperature, salinity, and steric height in the global ocean from the
+      Argo Program. Progress in Oceanography, 82, 81-100.
+    </releasePolicy>
+    <references>
+      [Roemmich and Gilson (2009)](http://www.sciencedirect.com/science/article/pii/S0079661109000160)
+    </references>
+    <bibtex>
+      @article{Roemmich2009,
+      title = "The 2004–2008 mean and annual cycle of temperature, salinity, and steric height in the global ocean from the Argo Program",
+      journal = "Progress in Oceanography",
+      volume = "82",
+      number = "2",
+      pages = "81 - 100",
+      year = "2009",
+      issn = "0079-6611",
+      doi = "10.1016/j.pocean.2009.03.004",
+      url = "http://www.sciencedirect.com/science/article/pii/S0079661109000160",
+      author = "Dean Roemmich and John Gilson"
+      }
+    </bibtex>
+    <dataUrls>
+      - ftp://kakapo.ucsd.edu/pub/gilson/argo_climatology/RG_ArgoClim_Temperature_2017.nc.gz
+      - ftp://kakapo.ucsd.edu/pub/gilson/argo_climatology/RG_ArgoClim_Salinity_2017.nc.gz
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/Process_RG_Argo_climatology.ipynb
+    </preprocessing>
+    <tasks>
+      - climatologyMapArgoTemperature
+      - climatologyMapArgoSalinity
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      SOSE potential temperature and salinity
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Monthly potential temperature and salinity output from the Southern Ocean
+      State Estimate (SOSE) covering years 2005-2010
+    </description>
+    <source>
+      [SOSE Website at UCSD]
+      (http://sose.ucsd.edu/sose_stateestimation_data_05to10.html)
+    </source>
+    <releasePolicy>
+      [Conditions of use]
+      (http://sose.ucsd.edu/sose_stateestimation_disclaimer.html): The data on
+      these webpages are made freely available for scientific, bona fide,
+      not-for-profit research only. If your use of the data is different (e.g.
+      commercial), you must contact the data providers and receive written
+      permission for your use of the data prior to any such use. The user must
+      acknowledge SOSE data in all products or publications that use them, e.g.
+      by including the following written note: "Computational resources for the
+      SOSE were provided by NSF XSEDE resource grant OCE130007." An appropriate
+      citation should also be made.
+    </releasePolicy>
+    <references>
+      [Mazloff et al. (2010)](http://doi.org/10.1175/2009JPO4236.1)
+    </references>
+    <bibtex>
+      @article{Mazloff2010,
+      author = {Matthew R.  Mazloff  and  Patrick  Heimbach  and  Carl  Wunsch},
+      title = {An Eddy-Permitting Southern Ocean State Estimate},
+      journal = {Journal of Physical Oceanography},
+      volume = {40},
+      number = {5},
+      pages = {880-899},
+      year = {2010},
+      doi = {10.1175/2009JPO4236.1},
+      URL = {https://doi.org/10.1175/2009JPO4236.1}
+      }
+    </bibtex>
+    <dataUrls>
+      - http://sose.ucsd.edu/DATA/SO6_V2/THETA_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/THETA_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.meta
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/remap_SOSE_T_S.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapSoseTemperature
+      - climatologyMapSoseSalinity
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Antarctic melt rates and fluxes
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Melt rates and melt fluxes from Rignot et al. (2013)
+    </description>
+    <source>
+      [Ice-Shelf Melting Around Antarctica](http://science.sciencemag.org/content/341/6143/266)
+    </source>
+    <releasePolicy>
+      Data available upon request from co-author J. Mouginot.
+    </releasePolicy>
+    <references>
+      [Rignot et al. (2013)](http://science.sciencemag.org/content/341/6143/266)
+    </references>
+    <bibtex>
+      @article{Rignot2013,
+	  title = {Ice-{Shelf} {Melting} {Around} {Antarctica}},
+	  volume = {341},
+	  url = {http://www.ncbi.nlm.nih.gov/pubmed/23765278},
+	  doi = {10.1126/science.1235798},
+	  number = {6143},
+	  journal = {Science},
+	  author = {Rignot, E. and Jacobs, S. and Mouginot, J. and Scheuchl, B.},
+	  month = jul,
+	  year = {2013},
+	  pages = {266--270}
+	  }
+    </bibtex>
+    <dataUrls>
+      - http://science.sciencemag.org/highwire/filestream/594977/field_highwire_adjunct_files/0/1235798tableS1.xlsx
+      - (data available upon request from J. Mouginot)
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/remap_rignot.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapAntarcticMelt
+      - timeSeriesAntarcticMelt
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      HadISST Nino 3.4 Index
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      (missing)
+    </description>
+    <source>
+      (missing)
+    </source>
+    <releasePolicy>
+      (missing)
+    </releasePolicy>
+    <references>
+      (missing)
+    </references>
+    <bibtex>
+      (missing)
+    </bibtex>
+    <dataUrls>
+      (missing)
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - indexNino34
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      ERS SSTv4 Nino 3.4 Index
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      (missing)
+    </description>
+    <source>
+      (missing)
+    </source>
+    <releasePolicy>
+      (missing)
+    </releasePolicy>
+    <references>
+      (missing)
+    </references>
+    <bibtex>
+      (missing)
+    </bibtex>
+    <dataUrls>
+      (missing)
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - indexNino34
+    </tasks>
+  </observation>
+
+<!--
+  <observation>
+    <name>
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+    </description>
+    <source>
+      []()
+    </source>
+    <releasePolicy>
+    </releasePolicy>
+    <references>
+      -
+    </references>
+    <bibtex>
+    </bibtex>
+    <dataUrls>
+      -
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      -
+    </tasks>
+  </observation>
+-->
+
+  <!-- SEA ICE -->
+
+  <observation>
+    <name>
+      Ice concentration: SSM/I, NASATeam algorithm
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      This data set is generated from brightness temperature data and is
+      designed to provide a consistent time series of sea ice concentrations
+      spanning the coverage of several passive microwave instruments. The data
+      are provided in the polar stereographic projection at a grid cell size of
+      25 x 25 km.
+    </description>
+    <source>
+      [NSIDC NASATeam Website](http://nsidc.org/data/NSIDC-0051)
+    </source>
+    <releasePolicy>
+      NASA data are not copyrighted; however, when you publish our data or
+      results derived therefrom, we request that you include an acknowledgment
+      within the text of the publication and reference list.
+      [Data Citation and Acknowledgements]
+      (https://podaac.jpl.nasa.gov/CitingPODAAC)
+    </releasePolicy>
+    <references>
+      [Cavalieri et al. (1996)](https://doi.org/10.5067/8GQ8LZQVL0VL)
+    </references>
+    <bibtex>
+      @misc{Cavalieri1996,
+      author = {D. J. Cavalieri,  and C. L. Parkinson and P. Gloersen and H. J. Zwally},
+      title = {Sea Ice Concentrations from Nimbus-7 SMMR and DMSP SSM/I-SSMIS Passive Microwave Data, Version 1},
+      year = {1996},
+      doi = {10.5067/8GQ8LZQVL0VL},
+      notes = {updated yearly},
+      url = {https://doi.org/10.5067/8GQ8LZQVL0VL}
+      }
+    </bibtex>
+    <dataUrls>
+      (missing, requires registration with NSIDC)
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/NASATeam_Antarctic_compute_climo.m
+      preprocess_observations/NASATeam_Arctic_compute_climo.m
+      (missing remapping from stereographic to lat/lon)
+    </preprocessing>
+    <tasks>
+      - climatologyMapSeaIceConcNH
+      - climatologyMapSeaIceConcSH
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Ice concentration: SSM/I, Bootstrap algorithm
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      This sea ice concentration data set was derived using measurements from
+      the Scanning Multichannel Microwave Radiometer (SMMR) on the Nimbus-7
+      satellite and from the Special Sensor Microwave/Imager (SSM/I) sensors on
+      the Defense Meteorological Satellite Program's (DMSP) -F8, -F11, and -F13
+      satellites. Measurements from the Special Sensor Microwave Imager/Sounder
+      (SSMIS) aboard DMSP-F17 are also included. The data set has been
+      generated using the Advanced Microwave Scanning Radiometer - Earth
+      Observing System (AMSR-E) Bootstrap Algorithm with daily varying
+      tie-points. Daily (every other day prior to July 1987) and monthly data
+      are available for both the north and south polar regions. Data are
+      gridded on the SSM/I polar stereographic grid (25 x 25 km) and provided
+      in two-byte integer format. Data are available via FTP.
+    </description>
+    <source>
+      [NSIDC Bootstrap Website](http://nsidc.org/data/NSIDC-0079)
+    </source>
+    <releasePolicy>
+      NASA data are not copyrighted; however, when you publish our data or
+      results derived therefrom, we request that you include an acknowledgment
+      within the text of the publication and reference list.
+      [Data Citation and Acknowledgements]
+      (https://podaac.jpl.nasa.gov/CitingPODAAC)
+    </releasePolicy>
+    <references>
+      [Comiso (2017)](https://doi.org/10.5067/7Q8HCCWS4I0R)
+    </references>
+    <bibtex>
+      @misc{Comiso1996,
+      author = {J. C. Comiso},
+      title = {Bootstrap Sea Ice Concentrations from Nimbus-7 SMMR and DMSP SSM/I-SSMIS, Version 3},
+      year = {2017},
+      doi = {10.5067/7Q8HCCWS4I0R},
+      notes = {updated yearly},
+      url = {https://doi.org/10.5067/7Q8HCCWS4I0R}
+      }
+    </bibtex>
+    <dataUrls>
+      (missing, requires registration with NSIDC)
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/Bootstrap_Antarctic_compute_climo.m
+      preprocess_observations/Bootstrap_Arctic_compute_climo.m
+      (missing remapping from stereographic to lat/lon)
+    </preprocessing>
+    <tasks>
+      - climatologyMapSeaIceConcNH
+      - climatologyMapSeaIceConcSH
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Ice area and extent time series: SSM/I derived
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      The sea ice data presented here were derived from satellite
+      passive-microwave radiometers, specifically, the Scanning Multichannel
+      Microwave Radiometer (SMMR) on NASA's Nimbus 7 satellite, for November
+      1978-August 1987, a sequence of Special Sensor Microwave Imagers (SSMIs)
+      on the F8, F11, and F13 satellites of the Defense Meteorological
+      Satellite Program (DMSP), for August 1987-December 2007, and the Special
+      Sensor Microwave Imager Sounder (SSMIS) on the DMSP F17 satellite for
+      January 2008-December 2012. The baseline data used were daily maps of
+      sea ice concentration. The maps are polar stereographic projections with
+      individual grid elements of approximately 25 km x 25 km; and the ice
+      concentration data are also archived at the National Snow and Ice Data
+      Center (NSIDC) at http://nsidc.org. The concentrations are calculated for
+      each ocean grid element and are used to derive 'sea ice extent', which is
+      calculated as the sum of all ocean elements having a sea ice
+      concentration of at least 15%, and 'sea ice area', which is calculated as
+      the sum over all ocean grid elements of the product of ice concentration
+      and grid element area. The data sets provided here include the
+      hemispheric totals and additionally the values for nine regions in the
+      Arctic and five regions in the Antarctic. These regions are identified in
+      Figures 1 and 2 respectively. Figures 3 and 4 provide plots of the trends
+      in the Arctic and Antarctic sea ice extents, along with monthly
+      deviations and 12-month running means. The monthly deviations are
+      calculated by taking the individual month's ice extent/area and
+      subtracting from it the average over the course of the data set of the
+      extents/areas for that month.
+    </description>
+    <source>
+      [NASA Ice area and extent website](https://neptune.gsfc.nasa.gov/csb/index.php?section=59)
+    </source>
+    <releasePolicy>
+      NASA data are not copyrighted; however, when you publish our data or
+      results derived therefrom, we request that you include an acknowledgment
+      within the text of the publication and reference list.
+      [Data Citation and Acknowledgements]
+      (https://podaac.jpl.nasa.gov/CitingPODAAC)
+    </releasePolicy>
+    <references>
+      - [Cavalieri et al. (1999)](https://doi.org/10.1029/1999JC900081)
+      - [Cavalieri et al. (2012)](https://doi.org/10.1109/LGRS.2011.2166754)
+      - [Cavalieri and Parkinson (2012)](https://doi.org/10.5194/tc-6-881-2012)
+      - [Parkinson et al. (1999)](https://doi.org/0.1029/1999JC900082)
+      - [Parkinson and Cavalieri (2012)](https://doi.org/10.5194/tc-6-871-2012)
+      - [Zwally et al. (2002)](https://doi.org/10.1029/2000JC000733)
+    </references>
+    <bibtex>
+      @article{Cavalieri1999,
+      author = {D. J. Cavalieri and C. L. Parkinson and P. Gloersen and J. C. Comiso and H. J. Zwally},
+      title = {Deriving long‐term time series of sea ice cover from satellite passive‐microwave multisensor data sets},
+      journal = {Journal of Geophysical Research: Oceans},
+      volume = {104},
+      number = {C7},
+      year = {1999},
+      pages = {15803-15814},
+      doi = {10.1029/1999JC900081},
+      url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/1999JC900081}
+      }
+      @article{Cavalieri2012a,
+      author={D. J. Cavalieri and C. L. Parkinson and N. DiGirolamo and A. Ivanoff},
+      journal={IEEE Geoscience and Remote Sensing Letters},
+      title={Intersensor Calibration Between F13 SSMI and F17 SSMIS for Global Sea Ice Data Records},
+      year={2012},
+      volume={9},
+      number={2},
+      pages={233-236},
+      doi={10.1109/LGRS.2011.2166754},
+      ISSN={1545-598X},
+      month={March}
+      }
+      @Article{Cavalieri2012b,
+      AUTHOR = {Cavalieri, D. J. and Parkinson, C. L.},
+      TITLE = {Arctic sea ice variability and trends, 1979--2010},
+      JOURNAL = {The Cryosphere},
+      VOLUME = {6},
+      YEAR = {2012},
+      NUMBER = {4},
+      PAGES = {881--889},
+      URL = {https://www.the-cryosphere.net/6/881/2012/},
+      DOI = {10.5194/tc-6-881-2012}
+      }
+      @article{Parkinson1999,
+      author = {Claire L. Parkinson and Donald J. Cavalieri and Per Gloersen and H. Jay Zwally and Josefino C. Comiso},
+      title = {Arctic sea ice extents, areas, and trends, 1978–1996},
+      journal = {Journal of Geophysical Research: Oceans},
+      volume = {104},
+      number = {C9},
+      year = {1999},
+      pages = {20837-20856},
+      doi = {10.1029/1999JC900082},
+      url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/1999JC900082}
+      }
+      @Article{Parkinson2012,
+      AUTHOR = {Parkinson, C. L. and Cavalieri, D. J.},
+      TITLE = {Antarctic sea ice variability and trends, 1979--2010},
+      JOURNAL = {The Cryosphere},
+      VOLUME = {6},
+      YEAR = {2012},
+      NUMBER = {4},
+      PAGES = {871--880},
+      URL = {https://www.the-cryosphere.net/6/871/2012/},
+      DOI = {10.5194/tc-6-871-2012}
+      }
+      @article{Zwally2002,
+      author = {H. Jay Zwally and Josefino C. Comiso and Claire L. Parkinson and Donald J. Cavalieri and Per Gloersen},
+      title = {Variability of Antarctic sea ice 1979–1998},
+      journal = {Journal of Geophysical Research: Oceans},
+      volume = {107},
+      number = {C5},
+      pages = {9-1-9-19},
+      keywords = {sea ice, Antarctic, climate, passive microwave, Southern Ocean},
+      doi = {10.1029/2000JC000733},
+      url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2000JC000733},
+      year = {2002}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://neptune.gsfc.nasa.gov/uploads/files/NH_IceArea_Monthly_1978-2012.txt
+      - https://neptune.gsfc.nasa.gov/uploads/files/NH_IceExt_Monthly_1978-2012.txt
+      - https://neptune.gsfc.nasa.gov/uploads/files/SH_IceArea_Monthly_1978-2012.txt
+      - https://neptune.gsfc.nasa.gov/uploads/files/SH_IceExt_Monthly_1978-2012.txt
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/IceaArea_txt2netcdf.m
+    </preprocessing>
+    <tasks>
+      - timeSeriesSeaIceAreaVol
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      IceSat Ice Thickness
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      This data set provides measurements of sea ice freeboard and sea ice
+      thickness for the Arctic region. The data were derived from measurements
+      made by from the Ice, Cloud, and land Elevation Satellite (ICESat)
+      Geoscience Laser Altimeter System (GLAS) instrument, the Special Sensor
+      Microwave/Imager (SSM/I), and climatologies of snow and drift of ice.
+    </description>
+    <source>
+      [NASA: Arctic Sea Ice Freeboard and Thickness](http://nsidc.org/data/NSIDC-0393)
+    </source>
+    <releasePolicy>
+      NASA data are not copyrighted; however, when you publish our data or
+      results derived therefrom, we request that you include an acknowledgment
+      within the text of the publication and reference list.
+      [Data Citation and Acknowledgements]
+      (https://podaac.jpl.nasa.gov/CitingPODAAC)
+    </releasePolicy>
+    <references>
+      [Yi and Zwally (2009)](https://doi.org/10.5067/SXJVJ3A2XIZT)
+    </references>
+    <bibtex>
+      @misc{Yi2009,
+      author = {D. Yi and H. J. Zwally},
+      title = {Arctic Sea Ice Freeboard and Thickness, Version 1},
+      year = {2009},
+      doi = {10.5067/7Q8HCCWS4I0R},
+      url = {https://doi.org/10.5067/SXJVJ3A2XIZT}
+      }
+    </bibtex>
+    <dataUrls>
+      (missing, requires registration with NSIDC)
+    </dataUrls>
+    <preprocessing>
+      ICESat_Arctic_compute_climo.m
+      (missing Antarctic climo)
+      (missing remapping from stereographic to lat/lon)
+    </preprocessing>
+    <tasks>
+      - timeSeriesSeaIceAreaVol
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      PIOMAS Arctic Sea Ice Volume Reanalysis
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      Sea Ice Volume is calculated using the Pan-Arctic Ice Ocean Modeling and
+      Assimilation System (PIOMAS, Zhang and Rothrock, 2003) developed at
+      APL/PSC.  Anomalies for each day are calculated relative to the average
+      over the 1979 -2016 period for that day of the year to remove the annual
+      cycle. The model mean annual cycle of sea ice volume over this period
+      ranges from 28,000 km3 in April to 11,500 km3 in September.
+    </description>
+    <source>
+      [PIOMAS website](http://psc.apl.uw.edu/research/projects/arctic-sea-ice-volume-anomaly/)
+    </source>
+    <releasePolicy>
+      Data is public, but they optionally ask for basic information about the
+      person downloading the data (name, e-mail, and affiliation).
+    </releasePolicy>
+    <references>
+      - [Schweiger et al. (2011)](https://doi.org/10.1029/2011JC007084)
+      - [Zhang and Rothrock (2003)](https://doi.org/10.1175/1520-0493%282003%29131&lt;0845:MGSIWA&gt;2.0.CO;2)
+    </references>
+    <bibtex>
+      @article{Schweiger2011,
+      author = {Axel Schweiger and Ron Lindsay and Jinlun Zhang and Mike Steele and Harry Stern and Ron Kwok},
+      title = {Uncertainty in modeled Arctic sea ice volume},
+      journal = {Journal of Geophysical Research: Oceans},
+      volume = {116},
+      number = {C8},
+      pages = {},
+      keywords = {Arctic, climate change, ice volume, modelling, sea ice},
+      doi = {10.1029/2011JC007084},
+      url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2011JC007084},
+      year = {2011}
+      }
+      @article{Zhang2003,
+      author = { Jinlun  Zhang  and  D. A.  Rothrock },
+      title = {Modeling Global Sea Ice with a Thickness and Enthalpy Distribution Model in Generalized Curvilinear Coordinates},
+      journal = {Monthly Weather Review},
+      volume = {131},
+      number = {5},
+      pages = {845-861},
+      year = {2003},
+      doi = {10.1175/1520-0493(2003)131&lt;0845:MGSIWA&gt;2.0.CO;2},
+      URL = {https://doi.org/10.1175/1520-0493(2003)131&lt;0845:MGSIWA&gt;2.0.CO;2}
+      }
+    </bibtex>
+    <dataUrls>
+      - http://psc.apl.uw.edu/wordpress/wp-content/uploads/schweiger/ice_volume/PIOMAS.2sst.monthly.Current.v2.1.txt
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/PIOMAS_txt2netcdf.m
+    </preprocessing>
+    <tasks>
+      - timeSeriesSeaIceAreaVol
+    </tasks>
+  </observation>
+
+<!--
+  <observation>
+    <name>
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+    </description>
+    <source>
+      []()
+    </source>
+    <releasePolicy>
+    </releasePolicy>
+    <references>
+      -
+    </references>
+    <bibtex>
+    </bibtex>
+    <dataUrls>
+      -
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      -
+    </tasks>
+  </observation>
+-->
+
+  <!-- LAND ICE -->
+
+<!--
+  <observation>
+    <name>
+    </name>
+    <component>
+      landice
+    </component>
+    <description>
+    </description>
+    <source>
+      []()
+    </source>
+    <releasePolicy>
+    </releasePolicy>
+    <references>
+      -
+    </references>
+    <bibtex>
+    </bibtex>
+    <dataUrls>
+      -
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      -
+    </tasks>
+  </observation>
+-->
+</observations>

@@ -6,7 +6,7 @@
 # distributed with this code, or at http://mpas-dev.github.com/license.html
 #
 '''
-Analysis tasks for comparing Global climatology maps against ARGO data.
+Analysis tasks for comparing Global climatology maps against Argo data.
 '''
 # Authors
 # -------
@@ -61,7 +61,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
 
-        fieldName = 'temperatureARGO'
+        fieldName = 'temperatureArgo'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoTemperature, self).__init__(
                 config=config, taskName='climatologyMapArgoTemperature',
@@ -117,7 +117,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         observationsDirectory)
             refFieldName = 'theta'
             outFileLabel = 'tempArgo'
-            galleryName = 'Roemmich-Gilson Climatology: ARGO'
+            galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
@@ -159,7 +159,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Model temperature compared with ARGO '
+                        imageCaption='Model temperature compared with Argo '
                                      'observations',
                         galleryGroup='Argo Temperature',
                         groupSubtitle=None,
@@ -201,7 +201,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis, Luke Van Roekel
 
-        fieldName = 'salinityARGO'
+        fieldName = 'salinityArgo'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoSalinity, self).__init__(
                 config=config, taskName='climatologyMapArgoSalinity',
