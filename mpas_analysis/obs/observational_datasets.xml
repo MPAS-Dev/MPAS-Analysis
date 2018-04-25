@@ -31,7 +31,7 @@
       (https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
     </source>
     <releasePolicy>
-      [Acknowledgment:] Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
+      Acknowledgment: Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
       2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
       Atmosphere Model. Journal of Climate, 21, 5145-5153.
     </releasePolicy>
@@ -77,7 +77,7 @@
       degree spatial resolution.
     </description>
     <source>
-      [NASA Aquarius FTP server]
+      [NASA Aquarius Website]
       (https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4)
 
     </source>
@@ -94,7 +94,7 @@
     <bibtex>
     </bibtex>
     <dataUrls>
-      (ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L4/IPRC/v4/7day/)
+      ftp://podaac-ftp.jpl.nasa.gov/allData/aquarius/L4/IPRC/v4/7day/
     </dataUrls>
     <preprocessing>
       (missing)
@@ -138,7 +138,8 @@
       (http://www.aviso.altimetry.fr/duacs/)"
     </releasePolicy>
     <references>
-      [ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf]
+      [AVISO: Sea Surface Height above Geoid]
+      (ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf)
     </references>
     <bibtex>
     </bibtex>
