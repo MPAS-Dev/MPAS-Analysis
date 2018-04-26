@@ -6,14 +6,15 @@ Main Authors
 
 Contributors
 ============
-* Luke Van Roekel
-* Greg Streletz
+* Charles Doutriaux
+* Jeremy Fyke
+* Matthew Hoffman
+* Joseph Kennedy
 * Mark Petersen
 * Stephen Price
-* Joseph Kennedy
+* Greg Streletz
 * Adrian Turner
-* Matthew Hoffman
-* Jeremy Fyke
+* Luke Van Roekel
 
 For a list of all the contributions:
 https://github.com/MPAS-Dev/MPAS-Analysis/graphs/contributors
