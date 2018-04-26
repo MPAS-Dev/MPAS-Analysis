@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 '''
 This is an example analysis task to be used as a template for new tasks.
 It should be copied into one of the component folders (`ocean`, `sea_ice`,
@@ -27,11 +34,10 @@ Instructions for creating a new analysis task:
    to be generated and is set up properly.
 
 Don't forget to remove this docstring. (It's not needed.)
-
-Authors
--------
-Xylar Asay-Davis
 '''
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -42,11 +48,12 @@ import matplotlib.pyplot as plt
 
 # import mpas_analysis module here (those with relative paths starting with
 # dots)
-from ..shared.analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.climatology import update_climatology_bounds_from_file_names
+from mpas_analysis.shared.climatology import \
+    update_climatology_bounds_from_file_names
 
 
 # Everywhere in this template, change MyTask to the name of your task, starting
@@ -59,11 +66,10 @@ class MyTask(AnalysisTask):  # {{{
     '''
     <Briefly describe the analysis task here.  Just a 1-2 sentence description
     of what the task does should be sufficient.>
-
-    Authors
-    -------
-    <List of authors>
     '''
+    # Authors
+    # -------
+    # <List of authors>
 
     # This function is the "constructor", which is called when you want to
     # create a new object from your class.  Typically, it will just store a few
@@ -106,12 +112,11 @@ class MyTask(AnalysisTask):  # {{{
         myArg : str, optional
             <Describe the arg, or just remove remove it>
 
-
-        Authors
-        -------
-        <List of authors>
-
         '''
+        # Authors
+        # -------
+        # <List of authors>
+
         # first, call the constructor from the base class (AnalysisTask).
         # Modify MyTask, "myTask", "component" and ['tag1', 'tag2'] below:
         # taskName is the same as the class name but with a lowercase letter
@@ -193,11 +198,10 @@ class MyTask(AnalysisTask):  # {{{
         Raises
         ------
         ValueError: <if myArg has an invalid value; modify as needed>
-
-        Authors
-        -------
-        <List of authors>
         '''
+        # Authors
+        # -------
+        # <List of authors>
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -309,11 +313,10 @@ class MyTask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         '''
         The main method of the task that performs the analysis task.
-
-        Authors
-        -------
-        <List of authors>
         '''
+        # Authors
+        # -------
+        # <List of authors>
 
         # Add the main contents of the analysis task below
 

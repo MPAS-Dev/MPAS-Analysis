@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-from ..io import open_mpas_dataset
-from .moving_average import compute_moving_avg
+from mpas_analysis.shared.io import open_mpas_dataset
+from mpas_analysis.shared.time_series.moving_average import compute_moving_avg
 
 
 def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
-                                          simulationStartTime, startDate,
-                                          endDate, calendar,
+                                          anomalyStartTime, anomalyEndTime,
+                                          startDate, endDate, calendar,
                                           movingAveragePoints=12,
                                           alter_dataset=None):  # {{{
 
@@ -48,11 +56,10 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
     -------
     ds : ``xarray.Dataset``
         The anomaly of the rolling time mean from the start of the simulation
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     ds = open_mpas_dataset(fileName=timeSeriesFileName,
                            calendar=calendar,
@@ -67,7 +74,8 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
         fileName=timeSeriesFileName,
         calendar=calendar,
         variableList=variableList,
-        startDate=simulationStartTime)
+        startDate=anomalyStartTime,
+        endDate=anomalyEndTime)
 
     if alter_dataset is not None:
         dsStart = alter_dataset(dsStart)

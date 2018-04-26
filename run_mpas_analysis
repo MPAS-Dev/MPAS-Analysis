@@ -1,13 +1,19 @@
 #!/usr/bin/env python
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 """
 Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
 specifying analysis options.
-
-Authors
--------
-Xylar Asay-Davis, Phillip J. Wolfram
 """
+# Authors
+# -------
+# Xylar Asay-Davis, Phillip J. Wolfram
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -49,11 +55,10 @@ def build_analysis_list(config, refConfig):  # {{{
     -------
     analyses : list of ``AnalysisTask`` objects
         A list of all analysis tasks
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     # choose the right rendering backend, depending on whether we're displaying
     # to the screen
@@ -85,10 +90,17 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask,
                                             refConfig))
+    analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapSoseTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(
             config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapArgoTemperature(
+            config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapArgoSalinity(
+            config, oceanClimatolgyTask, refConfig))
+
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
                                                       oceanClimatolgyTask,
                                                       refConfig))
@@ -107,6 +119,7 @@ def build_analysis_list(config, refConfig):  # {{{
                                         refConfig))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
                                                   refConfig))
+
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
 
@@ -153,11 +166,10 @@ def determine_analyses_to_generate(analyses):  # {{{
     -------
     analysesToGenerate : list of ``AnalysisTask`` objects
         A list of analysis tasks to run
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     analysesToGenerate = OrderedDict()
     # check which analysis we actually want to generate and only keep those
@@ -190,11 +202,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
         see if it has been requested.  We skip this for subtasks and
         prerequisites, since they are needed by another task regardless of
         whether the user specifically requested them.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     key = (analysisTask.taskName, analysisTask.subtaskName)
     if key in analysesToGenerate.keys():
@@ -272,11 +283,10 @@ def update_generate(config, generate):  # {{{
         a comma-separated string of generate flags: either names of analysis
         tasks or commands of the form ``all_<tag>`` or ``no_<tag>`` indicating
         that analysis with a given tag should be included or excluded).
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     # overwrite the 'generate' in config with a string that parses to
     # a list of string
@@ -299,11 +309,10 @@ def run_analysis(config, analyses):  # {{{
     analyses : OrderedDict of ``AnalysisTask`` objects
         A dictionary of analysis tasks to run with (task, subtask) names as
         keys
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     # write the config file the log directory
     logsDirectory = build_config_full_path(config, 'output',
@@ -423,11 +432,11 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
     -------
     analysisTask : ``AnalysisTasks``
         A task that finished
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     # necessary to have a timeout so we can kill the whole thing
     # with a keyboard interrupt
     while True:
@@ -459,6 +468,10 @@ if __name__ == "__main__":
     parser.add_argument('configFiles', metavar='CONFIG',
                         type=str, nargs='*', help='config file')
     args = parser.parse_args()
+
+    for configFile in args.configFiles:
+        if not os.path.exists(configFile):
+            raise OSError('Config file {} not found.'.format(configFile))
 
     # add config.default to cover default not included in the config files
     # provided on the command line

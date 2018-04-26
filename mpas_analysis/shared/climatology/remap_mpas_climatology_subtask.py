@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -6,20 +13,23 @@ import xarray as xr
 import numpy
 import os
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..io.utility import build_config_full_path, make_directories
-from ..io import write_netcdf
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf
 
-from .climatology import get_remapper, get_masked_mpas_climatology_file_name, \
+from mpas_analysis.shared.climatology.climatology import get_remapper, \
+    get_masked_mpas_climatology_file_name, \
     get_remapped_mpas_climatology_file_name
-from .comparison_descriptors import get_comparison_descriptor
+from mpas_analysis.shared.climatology.comparison_descriptors import \
+    get_comparison_descriptor
 
-from ..grid import MpasMeshDescriptor
+from mpas_analysis.shared.grid import MpasMeshDescriptor
 
-from ..mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
@@ -55,14 +65,19 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         If ``comparisonGridName`` is not ``None``, the name of a restart
         file from which the MPAS mesh can be read.
 
-    Authors
-    -------
-    Xylar Asay-Davis
+    useNcremap : bool, optional
+        Whether to use ncremap to do the remapping (the other option being
+        an internal python code that handles more grid types and extra
+        dimensions)
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, comparisonGridNames=['latlon'],
-                 iselValues=None, subtaskName='remapMpasClimatology'):
+                 iselValues=None, subtaskName='remapMpasClimatology',
+                 useNcremap=None):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -101,10 +116,18 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         subtaskName : str, optional
             The name of the subtask
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        useNcremap : bool, optional
+            Whether to use ncremap to do the remapping (the other option being
+            an internal python code that handles more grid types and extra
+            dimensions).  This defaults to the config option ``useNcremap``
+            if it is not explicitly given.  If a comparison grid other than
+            ``latlon`` is given, ncremap is not supported so this flag is set
+            to ``False``.
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         tags = ['climatology']
 
         # call the constructor from the base class (AnalysisTask)
@@ -130,6 +153,12 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         # correctly
         self._fillValue = -9.99999979021476795361e+33
 
+        if useNcremap is None:
+            self.useNcremap = self.config.getboolean('climatology',
+                                                     'useNcremap')
+        else:
+            self.useNcremap = useNcremap
+
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -142,11 +171,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -181,11 +209,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         '''
         Compute the requested climatologies
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.logger.info('\nRemapping climatology {}'.format(
             self.climatologyName))
@@ -234,11 +261,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         fileName = get_masked_mpas_climatology_file_name(self.config,
                                                          season,
@@ -265,11 +291,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         fileName = get_remapped_mpas_climatology_file_name(
                 self.config, season, self.componentName, self.climatologyName,
@@ -281,11 +306,11 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         """
         Set up the remappers for remapping from the MPAS to the comparison
         grids.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         config = self.config
 
         # make reamppers
@@ -326,11 +351,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         climatology : ``xarray.Dataset```
             The same data set with any custom fields added or modifications
             made
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         return climatology  # }}}
 
@@ -348,22 +372,20 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         climatology : ``xarray.Dataset```
             The same data set with any custom fields added or modifications
             made
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         return climatology  # }}}
 
     def _setup_file_names(self):  # {{{
         """
         Create a dictionary of file names and directories for this climatology
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
         climatologyBaseDirectory = build_config_full_path(
@@ -499,25 +521,20 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         comparisonGridNames : {'latlon', 'antarctic'}
             The name of the comparison grid to use for remapping.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         if remapper.mappingFileName is None:
             # no remapping is needed
             return
 
-        useNcremap = self.config.getboolean('climatology', 'useNcremap')
-
-        if comparisonGridName != 'latlon':
-            # ncremap doesn't support grids other than lat/lon
-            useNcremap = False
-
         renormalizationThreshold = self.config.getfloat(
             'climatology', 'renormalizationThreshold')
 
-        if useNcremap:
+        # ncremap doesn't support grids other than lat/lon
+        if self.useNcremap and comparisonGridName == 'latlon':
             remapper.remap_file(inFileName=inFileName,
                                 outFileName=outFileName,
                                 overwrite=True,

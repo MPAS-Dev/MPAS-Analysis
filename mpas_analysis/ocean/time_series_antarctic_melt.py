@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -5,17 +12,18 @@ import os
 import xarray
 import numpy
 
-from ..shared.analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..shared.constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 import csv
 
@@ -33,11 +41,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
     refConfig : ``MpasAnalysisConfigParser``
         The configuration options for the reference run (if any)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Stephen Price
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -54,11 +61,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesAntarcticMelt, self).__init__(
             config=config,
@@ -81,11 +88,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         ------
         IOError
             If files are not present
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
@@ -173,11 +180,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         """
         Performs analysis of the time-series output of Antarctic sub-ice-shelf
         melt rates.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Stephen Price
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Stephen Price
 
         self.logger.info("\nPlotting Antarctic melt rate time series...")
 
@@ -334,6 +340,18 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                 lineWidths.append(1.2)
                 legendText.append(refRunName)
 
+            if config.has_option(self.taskName, 'firstYearXTicks'):
+                firstYearXTicks = config.getint(self.taskName,
+                                                'firstYearXTicks')
+            else:
+                firstYearXTicks = None
+
+            if config.has_option(self.taskName, 'yearStrideXTicks'):
+                yearStrideXTicks = config.getint(self.taskName,
+                                                 'yearStrideXTicks')
+            else:
+                yearStrideXTicks = None
+
             timeseries_analysis_plot(config, fields, movingAverageMonths,
                                      title, xLabel, yLabel, figureName,
                                      lineStyles=lineStyles,
@@ -341,7 +359,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                                      legendText=legendText,
                                      calendar=calendar, obsMean=obsMeltRate,
                                      obsUncertainty=obsMeltRateUnc,
-                                     obsLegend=list(obsDict.keys()))
+                                     obsLegend=list(obsDict.keys()),
+                                     firstYearXTicks=firstYearXTicks,
+                                     yearStrideXTicks=yearStrideXTicks)
 
             caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                       'Shelves in the {} Region'.format(title)
@@ -362,11 +382,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         """
         Reads melt flux time series and computes regional total melt flux and
         mean melt rate.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Stephen Price
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Stephen Price
 
         mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
@@ -456,11 +475,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         """
         Reads melt flux time series and computes regional total melt flux and
         mean melt rate.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 

@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -7,14 +14,14 @@ import numpy as np
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import plot_polar_comparison, \
-    setup_colormap
+from mpas_analysis.shared.plot.plotting import plot_polar_comparison
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.climatology import get_remapped_mpas_climatology_file_name
+from mpas_analysis.shared.climatology import \
+    get_remapped_mpas_climatology_file_name
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
@@ -82,11 +89,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     galleryName : str
         the name of the gallery in which this plot belongs
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, parentTask, hemisphere, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
@@ -125,12 +131,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         subtaskSuffix : str, optional
             A suffix on the subtask to ensure that it is unique (e.g. the
             observations being plotted)
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.hemisphere = hemisphere
         self.season = season
@@ -212,11 +216,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         maskValue : float, optional
             a value to mask out in plots
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
@@ -239,11 +243,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup
         super(PlotClimatologyMapSubtask, self).setup_and_check()
@@ -270,11 +274,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         """
         Performs analysis of sea-ice properties by comparing with
         previous model results and/or observations.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani
 
         config = self.config
         season = self.season
@@ -296,11 +299,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             plotProjection = 'npstere'
         else:
             plotProjection = 'spstere'
-
-        (colormapResult, colorbarLevelsResult) = setup_colormap(
-            config, sectionName, suffix='Result')
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-            config, sectionName, suffix='Difference')
 
         referenceLongitude = config.getfloat(sectionName,
                                              'referenceLongitude')
@@ -372,10 +370,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             modelOutput,
             refOutput,
             difference,
-            colormapResult,
-            colorbarLevelsResult,
-            colormapDifference,
-            colorbarLevelsDifference,
+            sectionName,
             title=title,
             fileout=fileout,
             plotProjection=plotProjection,

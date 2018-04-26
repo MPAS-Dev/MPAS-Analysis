@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from .compute_anomaly_subtask import ComputeAnomalySubtask
-from .plot_hovmoller_subtask import PlotHovmollerSubtask
-from .plot_depth_integrated_time_series_subtask import \
+from mpas_analysis.ocean.compute_anomaly_subtask import ComputeAnomalySubtask
+from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
+from mpas_analysis.ocean.plot_depth_integrated_time_series_subtask import \
     PlotDepthIntegratedTimeSeriesSubtask
 
 
 class TimeSeriesOHCAnomaly(AnalysisTask):
     """
     Performs analysis of ocean heat content (OHC) from time-series output.
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -37,11 +44,11 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesOHCAnomaly, self).__init__(
             config=config,

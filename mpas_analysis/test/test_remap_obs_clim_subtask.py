@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Unit test infrastructure for MpasClimatologyTask.
 
@@ -25,11 +32,10 @@ from mpas_analysis.shared.grid import LatLonGridDescriptor
 class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping MLD observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -44,11 +50,10 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -71,11 +76,10 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # Load MLD observational data
         dsObs = xarray.open_dataset(fileName)

@@ -1,10 +1,16 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Utility functions related to time-series data sets
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -13,7 +19,7 @@ import xarray as xr
 import numpy
 import os
 
-from ..timekeeping.utility import days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
@@ -63,11 +69,10 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     timesProcessed = numpy.zeros(len(timesInDataSet), bool)
     # figure out which files to load and which years go in each file

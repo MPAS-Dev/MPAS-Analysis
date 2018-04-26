@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -7,8 +14,9 @@ import six
 import xarray
 from functools import partial
 
-from ..timekeeping.utility import string_to_days_since_date, \
-    string_to_datetime, days_to_datetime, datetime_to_days
+from mpas_analysis.shared.timekeeping.utility import \
+    string_to_days_since_date,  string_to_datetime, days_to_datetime, \
+    datetime_to_days
 
 """
 Utility functions for importing MPAS files into xarray.
@@ -17,11 +25,10 @@ open_multifile_dataset : open an xarray data set from MPAS data files
 subset_variables : Keep only a subset of variables in a dataset
 preprocess : preprocess a single file of an xarray dataset
 remove_repeated_time_index : remove redundant indices in the 'Time' coordinate
-
-Authors
--------
-Phillip J. Wolfram, Xylar Asay-Davis
 """
+# Authors
+# -------
+# Phillip J. Wolfram, Xylar Asay-Davis
 
 
 def open_multifile_dataset(fileNames, calendar,
@@ -91,11 +98,10 @@ def open_multifile_dataset(fileNames, calendar,
         If the time variable is not found in the data set or if the time
         variable is a number of days since the start of the simulation but
         simulationStartTime is None.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     preprocess_partial = partial(preprocess,
                                  calendar=calendar,
@@ -137,11 +143,10 @@ def subset_variables(ds, variableList):  # {{{
     ------
     ValueError
         If the resulting data set is empty.
-
-    Authors
-    -------
-    Phillip J. Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram, Xylar Asay-Davis
 
     allvars = ds.data_vars.keys()
 
@@ -229,12 +234,17 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
     ds : ``xarray.DataSet`` object
         A copy of the data set with the time coordinate set and which
         has been sliced.
-
-    Authors
-    -------
-    Phillip J. Wolfram, Milena Veneziani, Luke van Roekel
-    and Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram, Milena Veneziani, Luke van Roekel
+    # and Xylar Asay-Davis
+
+    # following a suggestion by @rabernat
+    # https://github.com/pydata/xarray/issues/2064#issuecomment-381717472
+    concat_dim = 'Time'
+    coord_vars = [v for v in ds.data_vars if concat_dim not in ds[v].dims]
+    ds = ds.set_coords(coord_vars)
 
     ds = _parse_dataset_time(ds=ds,
                              inTimeVariableName=timeVariableName,
@@ -272,11 +282,11 @@ def remove_repeated_time_index(ds):  # {{{
     -------
     ds : ``xarray.DataSet`` object
         A copy of the original data set with any repeated time indices removed.
-
-    Authors
-    -------
-    Phillip J. Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram, Xylar Asay-Davis
+
     # get repeated indices
     times = ds.Time.values
     indices = list(range(len(times)))
@@ -309,11 +319,11 @@ def _assert_valid_selections(ds, selvals, iselvals):  # {{{
     and iselvals are unique.  Additionally, keys for selvals and iselvals
     are tested to make sure they are dataset dimensions that can be used
     for selection.
-
-    Authors
-    -------
-    Phillip J. Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram, Xylar Asay-Davis
+
     def test_vals_in_ds(vals, dims):
         if vals is not None:
             for val in vals.keys():
@@ -337,11 +347,10 @@ def _assert_valid_selections(ds, selvals, iselvals):  # {{{
 def _ensure_list(alist):  # {{{
     """
     Ensure that variables used as a list are actually lists.
-
-    Authors
-    -------
-    Phillip J. Wolfram, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram, Xylar Asay-Davis
 
     if isinstance(alist, six.string_types):
         # print 'Warning, converting %s to a list'%(alist)
@@ -418,11 +427,10 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
     ValueError
         If  the time variable is a number of days since the start of the
         simulation but simulationStartTime is None.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     if isinstance(inTimeVariableName, (tuple, list)):
         # we want to average the two
@@ -534,11 +542,10 @@ def process_chunking(ds, chunking):  # {{{
 
     ValueError
         If chunking value used is not an acceptable value.
-
-    Authors
-    -------
-    Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Phillip J. Wolfram
 
     if isinstance(chunking, int):
         chunks = {}

@@ -1,30 +1,38 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.climatology import RemapMpasClimatologySubtask, \
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
+from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
+    PlotClimatologyMapSubtask
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.grid import LatLonGridDescriptor
+from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 
 class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
     """
     An analysis task for comparison of sea ice thickness against
     observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
     def __init__(self, config, mpasClimatologyTask, hemisphere,
                  refConfig=None):  # {{{
         """
@@ -43,11 +51,11 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         taskName = 'climatologyMapSeaIceThick{}'.format(hemisphere)
 
         fieldName = 'seaIceThick'
@@ -163,11 +171,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
 class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping sea ice thickness observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -182,11 +189,10 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -209,11 +215,10 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
         dsObs.rename({'HI': 'seaIceThick'}, inplace=True)

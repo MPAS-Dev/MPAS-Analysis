@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -6,16 +13,14 @@ import xarray as xr
 import numpy as np
 import os
 
-from ..shared.plot.plotting import plot_vertical_section,\
-    setup_colormap, plot_1D
+from mpas_analysis.shared.plot.plotting import plot_vertical_section, plot_1D
 
-from ..shared.io.utility import build_config_full_path, make_directories
-from ..shared.io import write_netcdf, subset_variables
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf, subset_variables
 
-from ..shared import AnalysisTask
-from ..shared.html import write_image_xml
-
-from ..shared.climatology import get_unmasked_mpas_climatology_file_name
+from mpas_analysis.shared import AnalysisTask
+from mpas_analysis.shared.html import write_image_xml
 
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
@@ -30,11 +35,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
     refConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a reference run (if any)
-
-    Authors
-    -------
-    Mark Petersen, Milena Veneziani, Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
         '''
@@ -50,12 +54,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(MeridionalHeatTransport, self).__init__(
             config=config,
@@ -73,11 +76,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Mark Petersen, Milena Veneziani, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -146,11 +148,11 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         Plots MHT as:
            1D function of latitude
            2D function of latitude and depth
-
-        Authors
-        -------
-        Mark Petersen, Milena Veneziani, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
+
         self.logger.info("\nPlotting meridional heat transport (MHT)...")
 
         config = self.config
@@ -171,7 +173,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         outFileName = \
             '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(
                 outputDirectory, self.startYear, self.endYear)
-
 
         if os.path.exists(outFileName):
             self.logger.info('  Reading results from previous analysis run...')
@@ -340,18 +341,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             filePrefix = self.filePrefixes['mhtZ']
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             colorbarLabel = '[PW/m]'
-            contourLevels = config.getExpression(self.sectionName,
-                                                 'contourLevelsGlobal',
-                                                 usenumpyfunc=True)
-            (colormapName, colorbarLevels) = setup_colormap(config,
-                                                            self.sectionName,
-                                                            suffix='Global')
-            plot_vertical_section(config, x, y, z,
-                                  colormapName, colorbarLevels,
-                                  contourLevels, colorbarLabel,
-                                  title, xLabel, yLabel, figureName,
-                                  xLim=xLimGlobal, yLim=depthLimGlobal,
-                                  invertYAxis=False, N=movingAveragePoints)
+            plot_vertical_section(config, x, y, z, self.sectionName,
+                                  suffix='', colorbarLabel=colorbarLabel,
+                                  title=title, xlabel=xLabel, ylabel=yLabel,
+                                  fileout=figureName, xLim=xLimGlobal,
+                                  yLim=depthLimGlobal, invertYAxis=False,
+                                  N=movingAveragePoints)
 
             self._write_xml(filePrefix)
 

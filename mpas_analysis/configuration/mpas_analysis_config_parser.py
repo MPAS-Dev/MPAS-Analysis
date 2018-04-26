@@ -1,13 +1,19 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 A configuratin parser class for MPAS analysis.  MpasAnalysisConfigParser adds
 the capabilities to get an option including a default value
 (``getWithDefault(section, option, default, ...)``) and to get options
 that are lists, tuples, dicts, etc (``getExpression(section, option)``).
-
-Authors
--------
-Xylar Asay-Davis, Phillip J. Wolfram
 """
+# Authors
+# -------
+# Xylar Asay-Davis, Phillip J. Wolfram
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -22,8 +28,8 @@ from six.moves.configparser import ConfigParser
 if six.PY3:
     xrange = range
 
-npallow = dict(linspace=np.linspace, xrange=xrange, range=range,
-               arange=np.arange, pi=np.pi, Pi=np.pi, __builtins__=None)
+npallow = dict(linspace=np.linspace, xrange=xrange, range=range, array=np.array,
+               arange=np.arange, pi=np.pi, Pi=np.pi, int=int, __builtins__=None)
 
 
 class MpasAnalysisConfigParser(ConfigParser):
@@ -46,11 +52,11 @@ class MpasAnalysisConfigParser(ConfigParser):
             to determine the type of the option if it *is* found. If
             ``default`` is a list, tuple, or dict, ``getExpression(...)`` is
             used if the option is present in the config file.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         if self.has_section(section):
             if self.has_option(section, option):
                 if isinstance(default, bool):
@@ -94,11 +100,11 @@ class MpasAnalysisConfigParser(ConfigParser):
             If ``True``, the expression is evaluated including functionality
             from the numpy package (which can be referenced either as ``numpy``
             or ``np``).
-
-        Authors
-        -------
-        Xylar Asay-Davis, Phillip J. Wolfram
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Phillip J. Wolfram
+
         expressionString = self.get(section, option)
         if usenumpyfunc:
             assert '__' not in expressionString, \

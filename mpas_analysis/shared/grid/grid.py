@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 '''
 Classes for describing meshes and grids , including creating SCRIP files,
 used to create mapping files
@@ -10,12 +17,10 @@ LatLonGridDescriptor - describes a lat-lon grid
 
 ProjectionGridDescriptor - describes a logically rectangular grid on a pyproj
     projection
-
-Authors
--------
-Xylar Asay-Davis
-
 '''
+# Authors
+# -------
+# Xylar Asay-Davis
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -30,23 +35,20 @@ import xarray
 class MeshDescriptor(object):  # {{{
     '''
     A class for describing a mesh
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self):  # {{{
         '''
         Constructor creates a common ``meshName`` member variable, ``None`` by
         default.  Each Subclass should define or use input arguments to set
         ``meshName`` to a short description of the mesh or grid.
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.meshName = None  # }}}
 
@@ -59,11 +61,10 @@ class MeshDescriptor(object):  # {{{
         ----------
         scripFileName : str
             The path to which the SCRIP file should be written
-
-        Authors
-        ------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # ------
+        # Xylar Asay-Davis
 
         return  # }}}
 
@@ -73,11 +74,10 @@ class MeshDescriptor(object):  # {{{
 class MpasMeshDescriptor(MeshDescriptor):  # {{{
     '''
     A class for describing an MPAS mesh
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, fileName, meshName=None):  # {{{
         '''
@@ -93,11 +93,10 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
             ``'oRRS18to6'``).  If not provided, the data set in ``fileName``
             must have a global attribute ``meshName`` that will be used
             instead.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         ds = xarray.open_dataset(fileName)
 
@@ -130,11 +129,11 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
         ----------
         scripFileName : str
             The path to which the SCRIP file should be written
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.scripFileName = scripFileName
 
         inFile = netCDF4.Dataset(self.fileName, 'r')
@@ -195,11 +194,11 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
 class LatLonGridDescriptor(MeshDescriptor):  # {{{
     '''
     A class for describing a lat-lon grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     def __init__(self):  # {{{
         '''
         Constructor stores the file name
@@ -208,11 +207,11 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         ----------
         fileName : str
             The path of the file containing the MPAS mesh
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.regional = False
         self.meshName = None  # }}}
 
@@ -234,11 +233,11 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
 
         latVarName, lonVarName : str, optional
             The name of the latitude and longitude variables in the grid file
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         if ds is None:
             ds = xarray.open_dataset(fileName)
 
@@ -282,11 +281,11 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
 
         units : {'degrees', 'radians'}, optional
             The units of `latCorner` and `lonCorner`
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         descriptor = cls()
 
         descriptor.latCorner = latCorner
@@ -306,11 +305,11 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         ----------
         scripFileName : str
             The path to which the SCRIP file should be written
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.scripFileName = scripFileName
 
         outFile = netCDF4.Dataset(scripFileName, 'w')
@@ -375,11 +374,10 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
     '''
     A class for describing a general logically rectangular grid that can be
     defined by a `pyproj` projection.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, projection):  # {{{
         '''
@@ -390,11 +388,11 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         projection : ``pyproj.Proj`` object
             The projection used to map from grid x-y space to latitude and
             longitude
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.projection = projection
         self.latLonProjection = pyproj.Proj(proj='latlong', datum='WGS84')
         self.regional = True
@@ -423,11 +421,11 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
 
         xVarName, yVarName : str, optional
             The name of the x and y (in meters) variables in the grid file
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         descriptor = cls(projection)
 
         ds = xarray.open_dataset(fileName)
@@ -473,11 +471,11 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
 
         meshName : str
             The name of the grid (e.g. ``'10km_Antarctic_stereo'``)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         descriptor = cls(projection)
 
         descriptor.meshName = meshName
@@ -501,11 +499,11 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         ----------
         scripFileName : str
             The path to which the SCRIP file should be written
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.scripFileName = scripFileName
 
         outFile = netCDF4.Dataset(scripFileName, 'w')
@@ -553,11 +551,10 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         -------
         Lat, Lon : numpy.array with same shape as X and Y
             the latitude and longitude in degrees of the points
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         Lon, Lat = pyproj.transform(self.projection, self.latLonProjection,
                                     X, Y, radians=False)
@@ -627,11 +624,11 @@ def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units,
 
     meshName : str
         The name of the mesh
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     # Write to output file
     # Dimensions
     outFile.createDimension("grid_size", grid_size)

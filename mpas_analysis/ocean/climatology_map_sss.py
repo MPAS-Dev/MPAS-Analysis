@@ -1,30 +1,38 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
 import datetime
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.climatology import RemapMpasClimatologySubtask, \
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
+from mpas_analysis.ocean.plot_climatology_map_subtask import \
+    PlotClimatologyMapSubtask
 
-from ..shared.grid import LatLonGridDescriptor
+from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 
 class ClimatologyMapSSS(AnalysisTask):  # {{{
     """
     An analysis task for comparison of sea surface salinity (sss) against
     observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
+
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
         """
@@ -40,11 +48,11 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         fieldName = 'sss'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSSS, self).__init__(
@@ -146,11 +154,10 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
 class RemapObservedSSSClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping SSS observations
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -165,11 +172,10 @@ class RemapObservedSSSClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -192,11 +198,10 @@ class RemapObservedSSSClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         timeStart = datetime.datetime(2011, 8, 1)
         timeEnd = datetime.datetime(2014, 12, 31)

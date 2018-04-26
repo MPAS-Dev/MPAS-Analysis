@@ -1,11 +1,17 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 An analysis subtasks for plotting comparison of 2D model fields against
 observations.
-
-Authors
--------
-Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 """
+# Authors
+# -------
+# Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -13,16 +19,17 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy as np
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import plot_global_comparison, \
-    setup_colormap, plot_polar_projection_comparison
+from mpas_analysis.shared.plot.plotting import plot_global_comparison, \
+    plot_polar_projection_comparison
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.grid import interp_extrap_corner
+from mpas_analysis.shared.grid import interp_extrap_corner
 
-from ..shared.climatology import get_remapped_mpas_climatology_file_name
+from mpas_analysis.shared.climatology import \
+    get_remapped_mpas_climatology_file_name
 
 
 def nans_to_numpy_mask(field):
@@ -55,6 +62,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``
         The subtask for remapping the MPAS climatology for the reference
         run that this subtask will plot
+
+    removeMean : bool, optional
+        If True, a common mask for the model and reference data sets is
+        computed (where both are valid) and the mean over that mask is
+        subtracted from both the model and reference results.  This is
+        useful for data sets where the desire is to compare the spatial
+        pattern but the mean offset is not meaningful (e.g. SSH)
 
     outFileLabel : str
         The prefix on each plot and associated XML file
@@ -97,15 +111,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     depth : {None, float, 'top', 'bot'}
         Depth at which to perform the comparison, 'top' for the sea surface
         'bot' for the sea floor
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 refConfig=None, depth=None):
+                 refConfig=None, depth=None, removeMean=False):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -138,11 +151,16 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             Depth the data is being plotted, 'top' for the sea surface
             'bot' for the sea floor
 
-        Authors
-        -------
-        Xylar Asay-Davis
-
+        removeMean : bool, optional
+            If True, a common mask for the model and reference data sets is
+            computed (where both are valid) and the mean over that mask is
+            subtracted from both the model and reference results.  This is
+            useful for data sets where the desire is to compare the spatial
+            pattern but the mean offset is not meaningful (e.g. SSH)
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.season = season
         self.depth = depth
@@ -150,6 +168,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
         self.refConfig = refConfig
+        self.removeMean = removeMean
         subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
 
         if depth is None:
@@ -222,11 +241,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         diffTitleLabel : str, optional
             the title of the difference subplot
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
@@ -262,11 +281,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -303,11 +322,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
         or a reference run
-
-        Authors
-        -------
-        Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
         season = self.season
         depth = self.depth
@@ -368,6 +386,24 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             remappedRefClimatology = remappedRefClimatology.sel(
                     depthSlice=str(depth), drop=True)
 
+        if self.removeMean:
+            if remappedRefClimatology is None:
+                remappedModelClimatology[self.mpasFieldName] = \
+                    remappedModelClimatology[self.mpasFieldName] - \
+                    remappedModelClimatology[self.mpasFieldName].mean()
+            else:
+                masked = remappedModelClimatology[self.mpasFieldName].where(
+                        remappedRefClimatology[self.refFieldName].notnull())
+                remappedModelClimatology[self.mpasFieldName] = \
+                    remappedModelClimatology[self.mpasFieldName] - \
+                    masked.mean()
+
+                masked = remappedRefClimatology[self.refFieldName].where(
+                        remappedModelClimatology[self.mpasFieldName].notnull())
+                remappedRefClimatology[self.refFieldName] = \
+                    remappedRefClimatology[self.refFieldName] - \
+                    masked.mean()
+
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
         elif self.comparisonGridName == 'antarctic':
@@ -384,11 +420,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         configSectionName = self.taskName
 
         mainRunName = config.get('runs', 'mainRunName')
-
-        (colormapResult, colorbarLevelsResult) = setup_colormap(
-            config, configSectionName, suffix='Result')
-        (colormapDifference, colorbarLevelsDifference) = setup_colormap(
-            config, configSectionName, suffix='Difference')
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
@@ -418,10 +449,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                modelOutput,
                                refOutput,
                                bias,
-                               colormapResult,
-                               colorbarLevelsResult,
-                               colormapDifference,
-                               colorbarLevelsDifference,
+                               configSectionName,
                                fileout=outFileName,
                                title=title,
                                modelTitle='{}'.format(mainRunName),
@@ -482,15 +510,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-        if config.has_option(configSectionName, 'colormapIndicesResult'):
-            colorMapType = 'indexed'
-        elif config.has_option(configSectionName, 'normTypeResult'):
-            colorMapType = 'norm'
-        else:
-            raise ValueError('config section {} contains neither the info'
-                             'for an indexed color map nor for computing a '
-                             'norm'.format(configSectionName))
-
         plot_polar_projection_comparison(
             config,
             x,
@@ -501,7 +520,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             bias,
             fileout=outFileName,
             colorMapSectionName=configSectionName,
-            colorMapType=colorMapType,
             title=title,
             modelTitle='{}'.format(mainRunName),
             refTitle=self.refTitleLabel,

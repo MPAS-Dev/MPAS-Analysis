@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -8,7 +15,7 @@ from shutil import copyfile
 from lxml import etree
 from collections import OrderedDict
 
-from ..io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
 
 def generate_html(config, analyses, refConfig=None):  # {{{
@@ -29,11 +36,11 @@ def generate_html(config, analyses, refConfig=None):  # {{{
     refConfig : ``MpasAnalysisConfigParser``, optional
         Config options for a reference run
 
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     generateHTML = config.getboolean('html', 'generate')
     if not generateHTML:
         return
@@ -88,11 +95,11 @@ class MainPage(object):
     components : OrederdDict of dict
         Each component has a name, subdirectory and image name used to find
         the appropriate thumbnail.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     def __init__(self, config, refConfig=None):
         """
         Create a MainPage object, reading in the templates
@@ -104,11 +111,10 @@ class MainPage(object):
 
         refConfig : ``MpasAnalysisConfigParser``, optional
             Config options for a reference run
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.config = config
         self.refConfig = refConfig
@@ -148,11 +154,11 @@ class MainPage(object):
             The name of an image file (without path) that will be used as the
             thumbnail for the gallery.  Typically, this is the first image
             from the first gallery.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.components[name] = {'subdirectory': subdirectory,
                                  'imageFileName': imageFileName}
 
@@ -160,11 +166,11 @@ class MainPage(object):
         """
         Generate the webpage from templates and components, and write it out to
         the HTML directory.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         runName = self.config.get('runs', 'mainRunName')
 
         if self.refConfig is None:
@@ -253,11 +259,11 @@ class ComponentPage(object):
     groups : tree of OrederdDict
         A tree of information describing the the gallery groups in the page,
         the galleries in each group and the images in each gallery.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     def __init__(self, config, name, subdirectory, refConfig=None):
         """
         Create a ComponentPage object, reading in the templates
@@ -277,11 +283,10 @@ class ComponentPage(object):
 
         refConfig : ``MpasAnalysisConfigParser``, optional
             Config options for a reference run
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.config = config
         self.refConfig = refConfig
@@ -331,11 +336,11 @@ class ComponentPage(object):
 
         refConfig : ``MpasAnalysisConfigParser``, optional
             Config options for a reference run
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         xmlRoot = etree.parse(xmlFileName).getroot()
 
         componentName = ComponentPage._get_required_xml_text(xmlRoot,
@@ -398,11 +403,11 @@ class ComponentPage(object):
         """
         Generate the webpage from templates and groups, and write it out to
         the HTML directory.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         runName = self.config.get('runs', 'mainRunName')
 
         if self.refConfig is None:
@@ -444,11 +449,11 @@ class ComponentPage(object):
         -------
         firstImageFilename : str
             The name (with out path) of the first image in the first gallery
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # get the first image name
         firstGroup = next(iter(self.groups.values()))
         firstGallery = next(iter(firstGroup['galleries'].values()))

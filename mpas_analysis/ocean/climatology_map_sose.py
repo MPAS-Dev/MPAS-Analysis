@@ -1,39 +1,46 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 '''
 Analysis tasks for comparing Antarctic climatology maps against observations
 and reanalysis data.
-
-Authors
--------
-Xylar Asay-Davis
 '''
+# Authors
+# -------
+# Xylar Asay-Davis
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from .remap_depth_slices_subtask import RemapDepthSlicesSubtask
+from mpas_analysis.ocean.remap_depth_slices_subtask import \
+    RemapDepthSlicesSubtask
 
-from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
+from mpas_analysis.ocean.plot_climatology_map_subtask import \
+    PlotClimatologyMapSubtask
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.climatology import RemapObservedClimatologySubtask, \
+from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
 
-from ..shared.grid import ProjectionGridDescriptor
+from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
-from ..shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
     """
     An analysis task for comparison of antarctic temperature against SOSE
     fields
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
@@ -50,12 +57,12 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
-        fieldName = 'temperature'
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        fieldName = 'temperatureSOSE'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSoseTemperature, self).__init__(
                 config=config, taskName='climatologyMapSoseTemperature',
@@ -117,7 +124,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
 
             remapObservationsSubtask = RemapSoseClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix='{}SOSE'.format(refFieldName),
                     fieldName=refFieldName,
                     botFieldName='botTheta',
                     depths=depths,
@@ -155,10 +162,10 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Temperature',
+                        imageCaption='Temperature compared with SOSE',
                         galleryGroup='Temperature',
                         groupSubtitle=None,
-                        groupLink='temp',
+                        groupLink='tempSose',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
@@ -171,11 +178,10 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
     """
     An analysis task for comparison of antarctic salinity against SOSE
     fields
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
@@ -192,12 +198,12 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
-        fieldName = 'salinity'
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        fieldName = 'salinitySOSE'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSoseSalinity, self).__init__(
                 config=config, taskName='climatologyMapSoseSalinity',
@@ -259,7 +265,7 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
 
             remapObservationsSubtask = RemapSoseClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix='{}SOSE'.format(refFieldName),
                     fieldName=refFieldName,
                     botFieldName='botSalinity',
                     depths=depths,
@@ -297,10 +303,10 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
-                        imageCaption='Salinity',
+                        imageCaption='Salinity compared with SOSE',
                         galleryGroup='Salinity',
                         groupSubtitle=None,
-                        groupLink='salin',
+                        groupLink='salinSose',
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
@@ -313,11 +319,10 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
     # {{{
     """
     A subtask for reading and remapping SOSE fields to the comparison grid
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
                  fieldName, botFieldName, depths,
@@ -360,12 +365,10 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
 
         subtaskName : str, optional
             The name of the subtask
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.fieldName = fieldName
         self.botFieldName = botFieldName
@@ -391,11 +394,10 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the x/y polar
         # stereographic coordinates
@@ -418,11 +420,10 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # Load MLD observational data
         dsObs = xr.open_dataset(fileName)

@@ -1,19 +1,27 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.generalized_reader import open_multifile_dataset
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.generalized_reader import open_multifile_dataset
+from mpas_analysis.shared.io import open_mpas_dataset
 
-from ..shared.timekeeping.utility import date_to_days, days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import date_to_days, \
+    days_to_datetime
 
-from ..shared.io.utility import build_config_full_path, make_directories, \
-    check_path_exists
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, check_path_exists
+from mpas_analysis.shared.html import write_image_xml
 
 
 class TimeSeriesSST(AnalysisTask):
@@ -29,11 +37,10 @@ class TimeSeriesSST(AnalysisTask):
 
     refConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a reference run (if any)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
         # {{{
@@ -50,11 +57,11 @@ class TimeSeriesSST(AnalysisTask):
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(TimeSeriesSST, self).__init__(
             config=config,
@@ -77,11 +84,11 @@ class TimeSeriesSST(AnalysisTask):
         ------
         OSError
             If files are not present
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
@@ -121,11 +128,10 @@ class TimeSeriesSST(AnalysisTask):
         """
         Performs analysis of the time-series output of sea-surface temperature
         (SST).
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani
 
         self.logger.info("\nPlotting SST time series...")
 
@@ -246,11 +252,25 @@ class TimeSeriesSST(AnalysisTask):
                 lineWidths.append(1.5)
                 legendText.append(preprocessedReferenceRunName)
 
+            if config.has_option(self.taskName, 'firstYearXTicks'):
+                firstYearXTicks = config.getint(self.taskName,
+                                                'firstYearXTicks')
+            else:
+                firstYearXTicks = None
+
+            if config.has_option(self.taskName, 'yearStrideXTicks'):
+                yearStrideXTicks = config.getint(self.taskName,
+                                                 'yearStrideXTicks')
+            else:
+                yearStrideXTicks = None
+
             timeseries_analysis_plot(config, fields, movingAveragePoints,
                                      title, xLabel, yLabel, figureName,
                                      lineStyles=lineStyles,
                                      lineWidths=lineWidths,
-                                     legendText=legendText, calendar=calendar)
+                                     legendText=legendText, calendar=calendar,
+                                     firstYearXTicks=firstYearXTicks,
+                                     yearStrideXTicks=yearStrideXTicks)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                     region)

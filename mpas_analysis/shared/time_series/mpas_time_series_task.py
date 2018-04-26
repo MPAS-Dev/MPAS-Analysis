@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -8,10 +15,11 @@ from distutils.spawn import find_executable
 import xarray as xr
 import numpy
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..io.utility import build_config_full_path, make_directories
-from ..timekeeping.utility import get_simulation_start_time
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, get_files_year_month
+from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
 class MpasTimeSeriesTask(AnalysisTask):  # {{{
@@ -26,6 +34,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         A list of variable names in ``timeSeriesStatsMonthly`` to be
         included in the time series
 
+    allVariables : list of str
+        A list of all available variable names in ``timeSeriesStatsMonthly``
+        used to raise an exception when an unavailable variable is requested
+
     inputFiles : list of str
         A list of input files from which to extract the time series.
 
@@ -34,11 +46,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The start and end years of the time series
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None,
                  subtaskName=None, section='timeSeries'):  # {{{
@@ -64,14 +75,16 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         section : str, optional
             The section of the config file from which to read the start and
             end times for the time series, also added as a tag
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.variableList = []
         self.section = section
         tags = [section]
+
+        self.allVariables = None
 
         if taskName is None:
             suffix = section[0].upper() + section[1:] + \
@@ -98,12 +111,31 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             A list of variable names in ``timeSeriesStatsMonthly`` to be
             included in the time series
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        Raises
+        ------
+        ValueError
+            if this funciton is called before this task has been set up (so
+            the list of available variables has not yet been set) or if one
+            or more of the requested variables is not available in the
+            ``timeSeriesStatsMonthly`` output.
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        if self.allVariables is None:
+            raise ValueError('add_variables() can only be called after '
+                             'setup_and_check() in MpasTimeSeriesTask.\n'
+                             'Presumably tasks were added in the wrong order '
+                             'or add_variables() is being called in the wrong '
+                             'place.')
 
         for variable in variableList:
+            if variable not in self.allVariables:
+                raise ValueError(
+                        '{} is not available in timeSeriesStatsMonthly '
+                        'output:\n{}'.format(variable, self.allVariables))
+
             if variable not in self.variableList:
                 self.variableList.append(variable)
 
@@ -112,11 +144,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         '''
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -160,12 +191,17 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                                   os.path.basename(self.inputFiles[-1]))
 
         # Make sure first year of data is included for computing anomalies
-        simulationStartTime = get_simulation_start_time(self.runStreams)
-        firstYear = int(simulationStartTime[0:4])
-        endDateFirstYear = '{:04d}-12-31_23:59:59'.format(firstYear)
+        if config.has_option('timeSeries', 'anomalyRefYear'):
+            anomalyYear = config.getint('timeSeries', 'anomalyRefYear')
+            anomalyStartDate = '{:04d}-01-01_00:00:00'.format(anomalyYear)
+        else:
+            anomalyStartDate = get_simulation_start_time(self.runStreams)
+            anomalyYear = int(anomalyStartDate[0:4])
+
+        anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
         firstYearInputFiles = self.historyStreams.readpath(
-                streamName, startDate=simulationStartTime,
-                endDate=endDateFirstYear,
+                streamName, startDate=anomalyStartDate,
+                endDate=anomalyEndDate,
                 calendar=self.calendar)
         for fileName in firstYearInputFiles:
             if fileName not in self.inputFiles:
@@ -173,16 +209,18 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         self.inputFiles = sorted(self.inputFiles)
 
+        with xr.open_dataset(self.inputFiles[0]) as ds:
+            self.allVariables = list(ds.data_vars.keys())
+
         # }}}
 
     def run_task(self):  # {{{
         '''
         Compute the requested time series
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if len(self.variableList) == 0:
             # nothing to do
@@ -198,11 +236,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         """
         Update the start and end years and dates for time series based on the
         years actually available in the list of files.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
         section = self.section
@@ -210,9 +247,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         requestedStartYear = config.getint(section, 'startYear')
         requestedEndYear = config.getint(section, 'endYear')
 
-        dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-        years = [int(date[0:4]) for date in dates]
-        months = [int(date[5:7]) for date in dates]
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         # search for the start of the first full year
         firstIndex = 0
@@ -288,10 +326,14 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                 if updateSubset:
                     # add only input files wiht times that aren't already in
                     # the output file
-                    dates = sorted([fileName[-13:-6] for fileName in
-                                    self.inputFiles])
-                    inYears = numpy.array([int(date[0:4]) for date in dates])
-                    inMonths = numpy.array([int(date[5:7]) for date in dates])
+
+                    fileNames = sorted(self.inputFiles)
+                    inYears, inMonths = get_files_year_month(
+                            fileNames, self.historyStreams,
+                            'timeSeriesStatsMonthlyOutput')
+
+                    inYears = numpy.array(inYears)
+                    inMonths = numpy.array(inMonths)
                     totalMonths = 12*inYears + inMonths
 
                     dates = [bytes.decode(name) for name in
@@ -303,7 +345,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     lastTotalMonths = 12*lastYear + lastMonth
 
                     inputFiles = []
-                    for index, inputFile in enumerate(self.inputFiles):
+                    for index, inputFile in enumerate(fileNames):
                         if totalMonths[index] > lastTotalMonths:
                             inputFiles.append(inputFile)
 

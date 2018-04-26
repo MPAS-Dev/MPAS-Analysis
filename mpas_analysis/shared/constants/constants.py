@@ -1,14 +1,16 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Constants that are common to all analysis tasks
-
-Authors
--------
-Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
-
-Last modified
--------------
-03/15/2017
 """
+# Authors
+# -------
+# Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -63,5 +65,8 @@ rho_fw = 1000.
 
 # kilograms per gigatonne
 kg_per_GT = 1e12
+
+# cm per m
+cm_per_m = 100.
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

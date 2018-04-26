@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import os
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf
 
-from ..shared.timekeeping.utility import get_simulation_start_time
+from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.time_series import compute_moving_avg_anomaly_from_start
+from mpas_analysis.shared.time_series import \
+    compute_moving_avg_anomaly_from_start
 
 
 class ComputeAnomalySubtask(AnalysisTask):
@@ -43,11 +52,10 @@ class ComputeAnomalySubtask(AnalysisTask):
         variable computed from others).  This operation is performed before
         computing moving averages and anomalies, so that these operations are
         also performed on any new variables added to the data set.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, parentTask, mpasTimeSeriesTask, outFileName,
                  variableList, movingAveragePoints,
@@ -83,11 +91,11 @@ class ComputeAnomalySubtask(AnalysisTask):
             variable computed from others).  This operation is performed before
             computing moving averages and anomalies, so that these operations
             are also performed on any new variables added to the data set.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(ComputeAnomalySubtask, self).__init__(
             config=parentTask.config,
@@ -111,11 +119,11 @@ class ComputeAnomalySubtask(AnalysisTask):
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -132,11 +140,10 @@ class ComputeAnomalySubtask(AnalysisTask):
     def run_task(self):  # {{{
         """
         Performs analysis of ocean heat content (OHC) from time-series output.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nComputing anomalies...")
 
@@ -144,12 +151,20 @@ class ComputeAnomalySubtask(AnalysisTask):
         startDate = config.get('timeSeries', 'startDate')
         endDate = config.get('timeSeries', 'endDate')
 
-        simulationStartTime = get_simulation_start_time(self.runStreams)
+        if config.has_option('timeSeries', 'anomalyRefYear'):
+            anomalyYear = config.getint('timeSeries', 'anomalyRefYear')
+            anomalyRefDate = '{:04d}-01-01_00:00:00'.format(anomalyYear)
+            anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
+        else:
+            anomalyRefDate = get_simulation_start_time(self.runStreams)
+            anomalyYear = int(anomalyRefDate[0:4])
+            anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
 
         ds = compute_moving_avg_anomaly_from_start(
                 timeSeriesFileName=self.inputFile,
                 variableList=self.variableList,
-                simulationStartTime=simulationStartTime,
+                anomalyStartTime=anomalyRefDate,
+                anomalyEndTime=anomalyEndDate,
                 startDate=startDate,
                 endDate=endDate,
                 calendar=self.calendar,

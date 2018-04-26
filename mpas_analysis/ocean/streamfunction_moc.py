@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -8,19 +16,20 @@ import numpy as np
 import netCDF4
 import os
 
-from ..shared.constants.constants import m3ps_to_Sv
-from ..shared.plot.plotting import plot_vertical_section,\
-    timeseries_analysis_plot, setup_colormap
+from mpas_analysis.shared.constants.constants import m3ps_to_Sv
+from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
+    timeseries_analysis_plot
 
-from ..shared.io.utility import build_config_full_path, make_directories
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, get_files_year_month
 
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset
 
-from ..shared.timekeeping.utility import days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{
@@ -38,11 +47,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
-
-    Authors
-    -------
-    Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask):  # {{{
         '''
@@ -55,12 +63,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call the constructor from the base class (AnalysisTask)
         super(StreamfunctionMOC, self).__init__(
             config=config,
@@ -80,11 +87,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         ------
         ValueError
             if timeSeriesStatsMonthly is not enabled in the MPAS run
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -111,8 +117,17 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
+        self.includeBolus = config.getboolean(self.sectionName, 'includeBolus')
+        if self.includeBolus:
+            # only add the bolus velocity if GM is enabled
+            self.includeBolus = self.namelist.getbool('config_use_standardgm')
+
         self.variableList = ['timeMonthly_avg_normalVelocity',
                              'timeMonthly_avg_vertVelocityTop']
+        if self.includeBolus:
+            self.variableList.extend(
+                    ['timeMonthly_avg_normalGMBolusVelocity',
+                     'timeMonthly_avg_vertGMBolusVelocityTop'])
 
         self.mpasClimatologyTask.add_variables(variableList=self.variableList,
                                                seasons=['ANN'])
@@ -147,11 +162,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         post-processing if not. Plots streamfunction climatolgoical sections
         as well as time series of max Atlantic MOC at 26.5N (latitude of
         RAPID MOC Array).
-
-        Authors
-        -------
-        Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
 
         self.logger.info("\nPlotting streamfunction of Meridional Overturning "
                          "Circulation (MOC)...")
@@ -196,20 +210,14 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                      mainRunName)
             filePrefix = self.filePrefixes[region]
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-            contourLevels = \
-                config.getExpression(self.sectionName,
-                                     'contourLevels{}'.format(region),
-                                     usenumpyfunc=True)
-            (colormapName, colorbarLevels) = setup_colormap(config,
-                                                            self.sectionName,
-                                                            suffix=region)
 
             x = self.lat[region]
             y = self.depth
             z = self.moc[region]
-            plot_vertical_section(config, x, y, z, colormapName,
-                                  colorbarLevels, contourLevels, colorbarLabel,
-                                  title, xLabel, yLabel, figureName,
+            plot_vertical_section(config, x, y, z, self.sectionName,
+                                  suffix=region, colorbarLabel=colorbarLabel,
+                                  title=title, xlabel=xLabel, ylabel=yLabel,
+                                  fileout=figureName,
                                   N=movingAveragePointsClimatological)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
@@ -233,11 +241,25 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
+        if config.has_option(self.taskName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.taskName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option(self.taskName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.taskName,
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
         timeseries_analysis_plot(config, [dsMOCTimeSeries.mocAtlantic26],
                                  movingAveragePoints, title,
                                  xLabel, yLabel, figureName,
                                  lineStyles=['k-'], lineWidths=[2],
-                                 legendText=[None], calendar=self.calendar)
+                                 legendText=[None], calendar=self.calendar,
+                                 firstYearXTicks=firstYearXTicks,
+                                 yearStrideXTicks=yearStrideXTicks)
 
         caption = u'Time Series of maximum Meridional Overturning ' \
                   u'Circulation at 26.5°N'
@@ -350,11 +372,21 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             climatologyFileName = self.mpasClimatologyTask.get_file_name(
                 season='ANN')
             annualClimatology = xr.open_dataset(climatologyFileName)
-            # rename some variables for convenience
-            annualClimatology = annualClimatology.rename(
+            annualClimatology = annualClimatology.isel(Time=0)
+
+            if self.includeBolus:
+                annualClimatology['avgNormalVelocity'] = \
+                    annualClimatology['timeMonthly_avg_normalVelocity'] + \
+                    annualClimatology['timeMonthly_avg_normalGMBolusVelocity']
+
+                annualClimatology['avgVertVelocityTop'] = \
+                    annualClimatology['timeMonthly_avg_vertVelocityTop'] + \
+                    annualClimatology['timeMonthly_avg_vertGMBolusVelocityTop']
+            else:
+                # rename some variables for convenience
+                annualClimatology = annualClimatology.rename(
                     {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
                      'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
-            annualClimatology = annualClimatology.isel(Time=0)
 
             # Convert to numpy arrays
             # (can result in a memory error for large array size)
@@ -484,9 +516,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                 streamName, startDate=self.startDateTseries,
                 endDate=self.endDateTseries, calendar=self.calendar))
 
-        dates = sorted([fileName[-13:-6] for fileName in inputFilesTseries])
-        years = np.array([int(date[0:4]) for date in dates])
-        months = np.array([int(date[5:7]) for date in dates])
+        years, months = get_files_year_month(inputFilesTseries,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFilesTseries))
         times = np.zeros(len(inputFilesTseries))
@@ -533,8 +565,22 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             self.logger.info('     date: {:04d}-{:02d}'.format(date.year,
                                                                date.month))
 
-            horizontalVel = dsLocal.timeMonthly_avg_normalVelocity.values
-            verticalVel = dsLocal.timeMonthly_avg_vertVelocityTop.values
+            if self.includeBolus:
+                dsLocal['avgNormalVelocity'] = \
+                    dsLocal['timeMonthly_avg_normalVelocity'] + \
+                    dsLocal['timeMonthly_avg_normalGMBolusVelocity']
+
+                dsLocal['avgVertVelocityTop'] = \
+                    dsLocal['timeMonthly_avg_vertVelocityTop'] + \
+                    dsLocal['timeMonthly_avg_vertGMBolusVelocityTop']
+            else:
+                # rename some variables for convenience
+                dsLocal = dsLocal.rename(
+                    {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+                     'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
+            horizontalVel = dsLocal.avgNormalVelocity.values
+            verticalVel = dsLocal.avgVertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
             transportZ = self._compute_transport(maxEdgesInTransect,
                                                  transectEdgeGlobalIDs,

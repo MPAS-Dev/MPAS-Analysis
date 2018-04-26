@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -5,17 +12,19 @@ import os
 import os.path
 import xarray as xr
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from ..constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..io.utility import build_config_full_path, make_directories
-from ..io import write_netcdf
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf
 
-from .climatology import get_remapper, remap_and_write_climatology, \
-    compute_climatology
+from mpas_analysis.shared.climatology.climatology import get_remapper, \
+    remap_and_write_climatology, compute_climatology
 
-from .comparison_descriptors import get_comparison_descriptor
+from mpas_analysis.shared.climatology.comparison_descriptors import \
+    get_comparison_descriptor
 
 
 class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
@@ -37,10 +46,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
 
     comparisonGridNames : list of {'latlon', 'antarctic'}
         The name(s) of the comparison grid to use for remapping.
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
                  comparisonGridNames=['latlon'],
@@ -71,12 +80,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
 
         subtaskName : str, optional
             The name of the subtask
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.seasons = seasons
         self.fileName = fileName
@@ -97,11 +104,11 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -125,11 +132,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         """
         Performs remapping of obsrevations to the comparsion grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
 
@@ -198,11 +204,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         return None  # }}}
 
@@ -221,11 +226,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         return None  # }}}
 
@@ -253,11 +257,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
         obsSection = '{}Observations'.format(self.componentName)
@@ -314,11 +317,11 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         ----------
         fileName : str
             The name of the observation file used to determine the source grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         config = self.config
 
         sectionName = '{}Observations'.format(self.componentName)

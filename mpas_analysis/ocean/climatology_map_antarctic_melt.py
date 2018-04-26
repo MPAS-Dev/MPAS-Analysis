@@ -1,33 +1,41 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.climatology import RemapMpasClimatologySubtask, \
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
 
-from .plot_climatology_map_subtask import PlotClimatologyMapSubtask
+from mpas_analysis.ocean.plot_climatology_map_subtask import \
+    PlotClimatologyMapSubtask
 
-from ..shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
-from ..shared.constants import constants
+from mpas_analysis.shared.constants import constants
 
-from ..shared.grid import ProjectionGridDescriptor
+from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
 
 class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
     """
     An analysis task for comparison of Antarctic melt rates against
     observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     def __init__(self, config, mpasClimatologyTask,
                  refConfig=None):  # {{{
         """
@@ -43,11 +51,11 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         fieldName = 'meltRate'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapAntarcticMelt, self).__init__(
@@ -147,11 +155,10 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class
         # (AnalysisTask), which will perform some common setup
@@ -177,11 +184,10 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
     landIceMask : xarray.DataArray
         A mask indicating where there is land ice on the ocean grid (thus,
         where melt rates are valid)
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def run_task(self):  # {{{
         """
@@ -190,11 +196,10 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
         This function has been overridden to load ``landIceMask`` from a
         restart file for later use in masking the melt rate.  It then simply
         calls the run function from
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, load the land-ice mask from the restart file
         dsLandIceMask = xr.open_dataset(self.restartFileName)
@@ -222,11 +227,10 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
         -------
         climatology : ``xarray.Dataset`` object
             the modified climatology data set
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         fieldName = self.variableList[0]
 
@@ -244,11 +248,10 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
     # {{{
     """
     A subtask for reading and remapping Antarctic melt-rate observations
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -263,11 +266,10 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the x/y polar
         # stereographic coordinates
@@ -290,11 +292,10 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # Load MLD observational data
         dsObs = xr.open_dataset(fileName)

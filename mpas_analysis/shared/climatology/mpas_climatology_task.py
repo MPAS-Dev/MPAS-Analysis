@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -7,10 +14,14 @@ import os
 import subprocess
 from distutils.spawn import find_executable
 
-from ..analysis_task import AnalysisTask
+from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from .climatology import get_unmasked_mpas_climatology_directory, \
+from mpas_analysis.shared.climatology.climatology import \
+    get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name
+
+from ..io.utility import build_config_full_path, make_directories, \
+    get_files_year_month
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -24,6 +35,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     variableList : list of str
         A list of variable names in ``timeSeriesStatsMonthly`` to be
         included in the climatologies
+
+    allVariables : list of str
+        A list of all available variable names in ``timeSeriesStatsMonthly``
+        used to raise an exception when an unavailable variable is requested
 
     seasons : list of str
         A list of seasons (keys in ``shared.constants.monthDictionary``)
@@ -41,11 +56,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The start and end years of the climatology
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None):  # {{{
         '''
@@ -63,11 +77,11 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         taskName : str, optional
             the name of the task, defaults to mpasClimatology<ComponentName>
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.variableList = []
         self.seasons = []
 
@@ -85,6 +99,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         if taskName is None:
             suffix = componentName[0].upper() + componentName[1:]
             taskName = 'mpasClimatology{}'.format(suffix)
+
+        self.allVariables = None
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologyTask, self).__init__(
@@ -111,12 +127,31 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        Raises
+        ------
+        ValueError
+            if this funciton is called before this task has been set up (so
+            the list of available variables has not yet been set) or if one
+            or more of the requested variables is not available in the
+            ``timeSeriesStatsMonthly`` output.
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        if self.allVariables is None:
+            raise ValueError('add_variables() can only be called after '
+                             'setup_and_check() in MpasClimatologyTask.\n'
+                             'Presumably tasks were added in the wrong order '
+                             'or add_variables() is being called in the wrong '
+                             'place.')
 
         for variable in variableList:
+            if variable not in self.allVariables:
+                raise ValueError(
+                        '{} is not available in timeSeriesStatsMonthly '
+                        'output:\n{}'.format(variable, self.allVariables))
+
             if variable not in self.variableList:
                 self.variableList.append(variable)
 
@@ -137,11 +172,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -167,18 +201,21 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, startDate, endDate))
 
-        self._update_climatology_bounds_from_file_names()
+        self.symlinkDirectory = \
+            self._update_climatology_bounds_and_create_symlinks()
+
+        with xarray.open_dataset(self.inputFiles[0]) as ds:
+            self.allVariables = list(ds.data_vars.keys())
 
         # }}}
 
     def run_task(self):  # {{{
         '''
         Compute the requested climatologies
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if len(self.variableList) == 0:
             # nothing to do
@@ -216,7 +253,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         if not allExist:
             self._compute_climatologies_with_ncclimo(
-                    inDirectory=self.historyDirectory,
+                    inDirectory=self.symlinkDirectory,
                     outDirectory=climatologyDirectory)
 
         # }}}
@@ -235,35 +272,42 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         return get_unmasked_mpas_climatology_file_name(self.config, season,
                                                        self.componentName)
 
         # }}}
 
-    def _update_climatology_bounds_from_file_names(self):  # {{{
+    def _update_climatology_bounds_and_create_symlinks(self):  # {{{
         """
         Update the start and end years and dates for climatologies based on the
-        years actually available in the list of files.
+        years actually available in the list of files.  Create symlinks to
+        monthly mean files so they have the expected file naming convention
+        for ncclimo.
 
-        Authors
+        Returns
         -------
-        Xylar Asay-Davis
+        symlinkDirectory : str
+            The path to the symlinks created for each timeSeriesStatsMonthly
+            input file
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
 
         requestedStartYear = config.getint('climatology', 'startYear')
         requestedEndYear = config.getint('climatology', 'endYear')
 
-        dates = sorted([fileName[-13:-6] for fileName in self.inputFiles])
-        years = [int(date[0:4]) for date in dates]
-        months = [int(date[5:7]) for date in dates]
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
 
         # search for the start of the first full year
         firstIndex = 0
@@ -301,6 +345,25 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         self.endDate = endDate
         self.startYear = startYear
         self.endYear = endYear
+
+        # now, create the symlinks
+        climatologyBaseDirectory = build_config_full_path(
+            config, 'output', 'mpasClimatologySubdirectory')
+
+        symlinkDirectory = '{}/source_symlinks'.format(
+                climatologyBaseDirectory)
+
+        make_directories(symlinkDirectory)
+
+        for inFileName, year, month in zip(fileNames, years, months):
+            outFileName = '{}/{}.hist.am.timeSeriesStatsMonthly.{:04d}-' \
+                '{:02d}-01.nc'.format(symlinkDirectory, self.ncclimoModel,
+                                      year, month)
+
+            if not os.path.exists(outFileName):
+                os.symlink(inFileName, outFileName)
+
+        return symlinkDirectory
 
         # }}}
 

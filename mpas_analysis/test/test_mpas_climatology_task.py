@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Unit test infrastructure for MpasClimatologyTask.
 
@@ -112,7 +119,7 @@ class TestMpasClimatologyTask(TestCase):
             fileName = mpasClimatologyTask.get_file_name(season=season)
             assert(os.path.exists(fileName))
 
-    def test_update_climatology_bounds_from_file_names(self):
+    def test_update_climatology_bounds_and_create_symlinks(self):
         mpasClimatologyTask = self.setup_task()
         config = mpasClimatologyTask.config
 
@@ -123,7 +130,7 @@ class TestMpasClimatologyTask(TestCase):
         startDate = '{:04d}-01-01_00:00:00'.format(startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(endYear)
 
-        mpasClimatologyTask._update_climatology_bounds_from_file_names()
+        mpasClimatologyTask._update_climatology_bounds_and_create_symlinks()
 
         assert(mpasClimatologyTask.startYear == startYear)
         assert(mpasClimatologyTask.endYear == endYear)
@@ -142,7 +149,7 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        mpasClimatologyTask._update_climatology_bounds_from_file_names()
+        mpasClimatologyTask._update_climatology_bounds_and_create_symlinks()
 
         startYear = 2
         endYear = 2

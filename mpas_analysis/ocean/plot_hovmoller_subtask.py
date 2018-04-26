@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -6,15 +14,15 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import os
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import plot_vertical_section, setup_colormap
+from mpas_analysis.shared.plot.plotting import plot_vertical_section
 
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
 
 class PlotHovmollerSubtask(AnalysisTask):
@@ -67,11 +75,10 @@ class PlotHovmollerSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
@@ -130,11 +137,10 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         subtaskName :  str
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if subtaskName is None:
             suffix = regionName[0].upper() + regionName[1:]
@@ -169,11 +175,11 @@ class PlotHovmollerSubtask(AnalysisTask):
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Greg Streletz
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -203,11 +209,10 @@ class PlotHovmollerSubtask(AnalysisTask):
     def run_task(self):  # {{{
         """
         Make the Hovmoller plot from the time series.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nPlotting {} trends vs. depth...".format(
                 self.fieldNameInTitle))
@@ -259,18 +264,25 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
-        (colormapName, colorbarLevels) = setup_colormap(config,
-                                                        self.sectionName)
+        if config.has_option(self.sectionName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.sectionName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
 
-        contourLevels = config.getExpression(self.sectionName,
-                                             'contourLevels',
-                                             usenumpyfunc=True)
+        if config.has_option(self.sectionName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.sectionName,
+                                            'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
 
-        plot_vertical_section(config, Time, depth, field,
-                              colormapName, colorbarLevels, contourLevels,
-                              self.unitsLabel, title, xLabel, yLabel,
-                              figureName, linewidths=1, xArrayIsTime=True,
-                              calendar=self.calendar)
+        plot_vertical_section(config, Time, depth, field, self.sectionName,
+                              suffix='', colorbarLabel=self.unitsLabel,
+                              title=title, xlabel=xLabel, ylabel=yLabel,
+                              fileout=figureName, linewidths=1,
+                              xArrayIsTime=True, calendar=self.calendar,
+                              firstYearXTicks=firstYearXTicks,
+                              yearStrideXTicks=yearStrideXTicks)
 
         write_image_xml(
             config=config,

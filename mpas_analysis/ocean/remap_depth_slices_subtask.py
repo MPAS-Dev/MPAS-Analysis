@@ -1,14 +1,21 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
 import numpy as np
 
-from ..shared.climatology import RemapMpasClimatologySubtask
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
-from ..shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
-from .utility import compute_zmid
+from mpas_analysis.ocean.utility import compute_zmid
 
 
 class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
@@ -27,11 +34,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
     verticalIndices : xarray.DataArray
         The vertical indices of slice to be plotted
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, depths, comparisonGridNames=['latlon'],
@@ -74,11 +80,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         iselValues : dict, optional
             A dictionary of dimensions and indices (or ``None``) used to
             extract a slice of the MPAS field(s).
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.depths = depths
 
@@ -86,7 +91,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # (RemapMpasClimatologySubtask)
         super(RemapDepthSlicesSubtask, self).__init__(
             mpasClimatologyTask, parentTask, climatologyName, variableList,
-            seasons, comparisonGridNames, iselValues)
+            seasons, comparisonGridNames, iselValues, useNcremap=False)
 
     def run_task(self):  # {{{
         """
@@ -97,11 +102,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         ``verticalIndex`` is also computed for later indexing of
         the model level. It then simply calls the run function from
         ClimatologyMapOcean.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, load the land-ice mask from the restart file
         ds = xr.open_dataset(self.restartFileName)
@@ -183,11 +187,10 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         climatology : ``xarray.Dataset`` object
             the modified climatology data set
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.depths is None:
             return climatology

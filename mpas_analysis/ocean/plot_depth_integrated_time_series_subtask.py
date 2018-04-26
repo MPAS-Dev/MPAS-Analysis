@@ -1,25 +1,34 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import xarray as xr
 import os
+import xarray
 
-from ..shared import AnalysisTask
+from mpas_analysis.shared import AnalysisTask
 
-from ..shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from ..shared.generalized_reader import open_multifile_dataset
-from ..shared.io import open_mpas_dataset
+from mpas_analysis.shared.generalized_reader import open_multifile_dataset
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
-from ..shared.timekeeping.utility import date_to_days, days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import date_to_days, \
+    days_to_datetime
 
-from ..shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
-from ..shared.html import write_image_xml
+from mpas_analysis.shared.html import write_image_xml
 
-from ..shared.time_series import compute_moving_avg
+from mpas_analysis.shared.time_series import compute_moving_avg
 
 
 class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
@@ -74,11 +83,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
     refConfig : ``MpasAnalysisConfigParser``
         The configuration options for the reference run (if any)
-
-    Authors
-    -------
-    Xylar Asay-Davis, Milena Veneziani, Greg Streletz
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, yAxisLabel, sectionName,
@@ -141,11 +149,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         refConfig : ``MpasAnalysisConfigParser``, optional
             The configuration options for the reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if subtaskName is None:
             suffix = regionName[0].upper() + regionName[1:]
@@ -182,11 +189,11 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Greg Streletz
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -206,6 +213,18 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
             self.refFileName = '{}/{}'.format(baseDirectory,
                                               self.inFileName)
+
+        preprocessedReferenceRunName = config.get(
+                'runs', 'preprocessedReferenceRunName')
+        if preprocessedReferenceRunName != 'None':
+
+            assert(not os.path.isabs(self.inFileName))
+
+            baseDirectory = build_config_full_path(
+                config, 'output', 'timeSeriesSubdirectory')
+
+            self.preprocessedFileName = '{}/preprocessed_{}'.format(
+                    baseDirectory, self.inFileName)
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -227,11 +246,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def run_task(self):  # {{{
         """
         Compute vertical agregates of the data and plot the time series
-
-        Authors
-        -------
-        Xylar Asay-Davis, Milena Veneziani, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nPlotting depth-integrated time series of "
                          "{}...".format(self.fieldNameInTitle))
@@ -345,6 +363,13 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                     'not be plotted.')
                 preprocessedReferenceRunName = 'None'
 
+            # rolling mean seems to have trouble with dask data sets so we
+            # write out the data set and read it back as a single-file data set
+            # (without dask)
+            dsPreprocessed = dsPreprocessed.drop('xtime')
+            write_netcdf(dsPreprocessed, self.preprocessedFileName)
+            dsPreprocessed = xarray.open_dataset(self.preprocessedFileName)
+
         if preprocessedReferenceRunName != 'None':
             color = 'r'
             title = '{} \n {} (red)'.format(title,
@@ -360,13 +385,13 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                   divisionDepths] + ['btm']
 
             # these preprocessed data are OHC *anomalies*
+            dsPreprocessed = compute_moving_avg(dsPreprocessed,
+                                                movingAveragePoints)
             for rangeIndex in range(len(suffixes)):
                 variableName = '{}_{}'.format(preprocessedFieldPrefix,
                                               suffixes[rangeIndex])
                 if variableName in list(dsPreprocessed.data_vars.keys()):
-                    field = dsPreprocessed[variableName]
-                    field = compute_moving_avg(field, movingAveragePoints)
-                    timeSeries.append(field)
+                    timeSeries.append(dsPreprocessed[variableName])
                 else:
                     self.logger.warning('Warning: Preprocessed variable {} '
                                         'not found. Skipping.'.format(
@@ -412,11 +437,25 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
 
+        if config.has_option(self.taskName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.taskName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option(self.taskName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.taskName,
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
         timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
                                  title=title, xlabel=xLabel, ylabel=yLabel,
                                  fileout=figureName, lineStyles=lineStyles,
                                  lineWidths=lineWidths, maxPoints=maxPoints,
-                                 legendText=legendText, calendar=calendar)
+                                 legendText=legendText, calendar=calendar,
+                                 firstYearXTicks=firstYearXTicks,
+                                 yearStrideXTicks=yearStrideXTicks)
 
         write_image_xml(
             config=config,

@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -11,7 +18,7 @@ import datetime
 from lxml import etree
 from PIL import Image
 
-from ..io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
 
 def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
@@ -74,11 +81,11 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
     kwargs : dict
         additional keyword arguments will be used to add additional xml tags
         with the associated values
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     imageFileName = '{}.png'.format(filePrefix)
     plotsDirectory = build_config_full_path(config, 'output',
                                             'plotsSubdirectory')
@@ -141,11 +148,11 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
 def _provenance_command(root, history):  # {{{
     """
     Utility funciton for provenance of xml file associated with a plot.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     call = ' '.join(sys.argv)
     if history is None:
         history = call
