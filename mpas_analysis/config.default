@@ -150,6 +150,11 @@ generate = ['all']
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
+# the year from which to compute anomalies if not the start year of the
+# simulation.  This might be useful if a long spin-up cycle is performed and
+# only the anomaly over a later span of years is of interest.
+# anomalyRefYear = 249
+
 # the first year over which to average climatalogies
 startYear = 11
 # the last year over which to average climatalogies
@@ -688,6 +693,33 @@ colormapNameDifference = RdBu_r
 colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185, 209, 232, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-100., -80., -60., -40., -20., -10., 0., 10., 20.,  40.,  60.,  80.,  100.]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+[climatologyMapOHCAnomaly]
+## options related to plotting horizontally remapped climatologies of
+## ocean heat content (OHC) against reference model results (if available)
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# color indices into colormapName for filled contours
+colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = numpy.linspace(-12., 12., 37)
+# colormap levels/values for ticks (defaults to same as levels)
+colorbarTicksResult = numpy.linspace(-12., 12., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = numpy.array(numpy.linspace(0, 255, 10), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = numpy.linspace(-2., 2., 11)
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
