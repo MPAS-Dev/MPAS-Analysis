@@ -161,14 +161,18 @@ class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def customize_masked_climatology(self, climatology):  # {{{
+    def customize_masked_climatology(self, climatology, season):  # {{{
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
         Parameters
         ----------
-        climatology : ``xarray.Dataset`` object
-            the climatology data set
+        climatology : ``xarray.Dataset```
+            The MPAS climatology data set that has had a mask added but has
+            not yet been remapped
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------

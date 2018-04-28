@@ -214,7 +214,7 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
 
         # }}}
 
-    def customize_masked_climatology(self, climatology):  # {{{
+    def customize_masked_climatology(self, climatology, season):  # {{{
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
@@ -222,6 +222,9 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
         ----------
         climatology : ``xarray.Dataset`` object
             the climatology data set
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------

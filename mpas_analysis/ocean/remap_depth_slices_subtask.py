@@ -172,7 +172,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # which will perform the main function of the task
         super(RemapDepthSlicesSubtask, self).run_task()
 
-    def customize_masked_climatology(self, climatology):  # {{{
+    def customize_masked_climatology(self, climatology, season):  # {{{
         """
         Uses ``verticalIndex`` to slice the 3D climatology field at each
         requested depth.  The resulting field has the depth appended to
@@ -182,6 +182,9 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         ----------
         climatology : ``xarray.Dataset`` object
             the climatology data set
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------
