@@ -723,11 +723,16 @@ colorbarLevelsDifference = numpy.linspace(-2., 2., 11)
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-seasons =  ['JFM', 'JAS', 'ANN']
+seasons =  ['ANN']
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
+# Minimum and maximum depths (positive up, in meters) to include in the
+# vertical sum.  The default values are intended to cover the full depth of the
+# ocean.
+minDepth = 0.0
+maxDepth = -7000.0
 
 [climatologyMapAntarcticMelt]
 ## options related to plotting horizontally regridded maps of Antarctic

@@ -45,8 +45,7 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    nVertLevels = \
-        layerThickness.shape[layerThickness.dims.index('nVertLevels')]
+    nVertLevels = layerThickness.sizes['nVertLevels']
 
     vertIndex = \
         xarray.DataArray.from_dict({'dims': ('nVertLevels',),

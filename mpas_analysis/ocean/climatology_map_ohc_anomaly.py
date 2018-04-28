@@ -18,6 +18,8 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
+from mpas_analysis.ocean.utility import compute_zmid
+
 
 class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
     """
@@ -80,6 +82,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         variableList = ['timeMonthly_avg_activeTracers_temperature',
                         'timeMonthly_avg_layerThickness']
 
+        minDepth = config.getfloat('climatologyMapOHCAnomaly', 'minDepth')
+        maxDepth = config.getfloat('climatologyMapOHCAnomaly', 'maxDepth')
+
         # the variable 'timeMonthly_avg_landIceFreshwaterFlux' will be added to
         # mpasClimatologyTask along with the seasons.
         remapClimatologySubtask = RemapMpasOHCClimatology(
@@ -117,7 +122,10 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
 
                 subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle='OHC Anomaly',
+                        fieldNameInTitle='OHC anomaly summed '
+                                         '{:g}-{:g}m'.format(
+                                                 numpy.abs(minDepth),
+                                                 numpy.abs(maxDepth)),
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
@@ -258,7 +266,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         climatology['deltaOHC'] = ohc - refOHC
         climatology.deltaOHC.attrs['units'] = 'GJ m$^{-2}$'
         climatology.deltaOHC.attrs['description'] = \
-            'Anomaly from year {} in Ocean heat contentG in each region'.format(
+            'Anomaly from year {} in ocean heat content'.format(
                     self.refYearClimatolgyTask.startYear)
 
         climatology = climatology.drop(self.variableList)
@@ -282,16 +290,24 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         nVertLevels = dsRestart.sizes['nVertLevels']
 
+        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell,
+                            dsRestart.layerThickness)
+
+        minDepth = self.config.getfloat('climatologyMapOHCAnomaly', 'minDepth')
+        maxDepth = self.config.getfloat('climatologyMapOHCAnomaly', 'maxDepth')
+
         vertIndex = xarray.DataArray.from_dict(
                 {'dims': ('nVertLevels',), 'data': numpy.arange(nVertLevels)})
 
-        mask = vertIndex < dsRestart.maxLevelCell
+        temperature = climatology['timeMonthly_avg_activeTracers_temperature']
+        layerThickness = climatology['timeMonthly_avg_layerThickness']
 
-        temperature = \
-            climatology['timeMonthly_avg_activeTracers_temperature'].where(
-                    mask)
-        layerThickness = \
-            climatology['timeMonthly_avg_layerThickness'].where(mask)
+        masks = [vertIndex < dsRestart.maxLevelCell,
+                 zMid <= minDepth,
+                 zMid >= maxDepth]
+        for mask in masks:
+            temperature = temperature.where(mask)
+            layerThickness = layerThickness.where(mask)
 
         ohc = unitsScalefactor*rho*cp * layerThickness * temperature
         ohc = ohc.sum(dim='nVertLevels')
