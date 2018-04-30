@@ -890,6 +890,49 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
+[climatologyMapBGC]
+## options related to plotting climatology mpas of BGC
+
+# variables to plot
+variables = ['PO4', 'NO3']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# the first year over which to average climatalogies
+startYear = 11
+# the last year over which to average climatalogies
+endYear = 20
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+#colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+# comparison grid(s)
+comparisonGrids = ['latlon']
+
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
 ## sea ice concentration against reference model results and observations
