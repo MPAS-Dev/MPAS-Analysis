@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20171102.beta3rc02_1850.ne30_oECv3_ICG.edison
+mainRunName = 20180129.DECKv1b_piControl.ne30_oEC.edison
 
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
@@ -19,11 +19,29 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
 
+[execute]
+## options related to executing parallel tasks
+
+# the number of parallel tasks (1 means tasks run in serial, the default)
+parallelTaskCount = 4
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = bck
+
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /global/cscratch1/sd/golaz/ACME_simulations/20171102.beta3rc02_1850.ne30_oECv3_ICG.edison/run
+baseDirectory = /global/cscratch1/sd/golaz/ACME_simulations/20180129.DECKv1b_piControl.ne30_oEC.edison
+
+# subdirectory containing restart files
+runSubdirectory = run
+# subdirectory for ocean history files
+oceanHistorySubdirectory = archive/ocn/hist
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = archive/ice/hist
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3
@@ -35,10 +53,10 @@ mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
-oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
-seaIceStreamsFileName = streams.cice
+oceanNamelistFileName = run/mpas-o_in
+oceanStreamsFileName = run/streams.ocean
+seaIceNamelistFileName = run/mpas-cice_in
+seaIceStreamsFileName = run/streams.cice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,

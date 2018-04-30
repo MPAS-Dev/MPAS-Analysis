@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20170915.beta2.A_WCYCL1850S.ne30_oECv3_ICG.edison
+mainRunName = 20180129.DECKv1b_piControl.ne30_oEC.edison
 
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
@@ -19,18 +19,37 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
 
+[execute]
+## options related to executing parallel tasks
+
+# the number of parallel tasks (1 means tasks run in serial, the default)
+parallelTaskCount = 4
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = bck
+
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /global/cscratch1/sd/golaz/ACME_simulations/20170915.beta2.A_WCYCL1850S.ne30_oECv3_ICG.edison
+baseDirectory = /global/cscratch1/sd/mpeterse/acme_scratch/20180209.GMPAS-IAF.T62_oRRS30to10v3wLI.cori-knl.afterSalinityFix
 
 # subdirectory containing restart files
 runSubdirectory = run
 # subdirectory for ocean history files
-oceanHistorySubdirectory = archive/ocn/hist
+oceanHistorySubdirectory = run
 # subdirectory for sea ice history files
-seaIceHistorySubdirectory = archive/ice/hist
+seaIceHistorySubdirectory = run
+
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+mpasMeshName = oRRS30to10v3wLI
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -38,14 +57,6 @@ oceanNamelistFileName = run/mpas-o_in
 oceanStreamsFileName = run/streams.ocean
 seaIceNamelistFileName = run/mpas-cice_in
 seaIceStreamsFileName = run/streams.cice
-
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oEC60to30v3
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -84,16 +95,16 @@ htmlSubdirectory = html
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_landIceCavities']
+generate = ['all']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 140
+startYear = 5
 # the last year over which to average climatalogies
-endYear = 150
+endYear = 10
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -103,7 +114,7 @@ endYear = 150
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 153
+endYear = 10
 
 [index]
 ## options related to producing nino index.
@@ -113,7 +124,7 @@ endYear = 153
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 153
+endYear = 10
 
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
@@ -153,6 +164,14 @@ baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.
 
 # plot on polar plot
 polarPlot = False
+
+[timeSeriesAntarcticMelt]
+## options related to plotting time series of melt below Antarctic ice shelves
+
+# list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
+# See "regionNames" in the ice shelf masks file in regionMaskDirectory for
+# details.
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 [regions]
 ## options related to ocean regions used in several analysis modules
