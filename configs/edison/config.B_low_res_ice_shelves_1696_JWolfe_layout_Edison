@@ -188,7 +188,7 @@ polarPlot = False
 # list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
 # See "regionNames" in the ice shelf masks file in regionMaskDirectory for
 # details.
-iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
+#iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 [regions]
 ## options related to ocean regions used in several analysis modules
