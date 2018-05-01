@@ -118,8 +118,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 refConfig=None, depth=None, removeMean=False):
-        # {{{
+                 refConfig=None, depth=None, removeMean=False,
+                 subtaskName=None):  # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -157,6 +157,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             subtracted from both the model and reference results.  This is
             useful for data sets where the desire is to compare the spatial
             pattern but the mean offset is not meaningful (e.g. SSH)
+
+        subtaskName : str, optinal
+            The name of the subtask.  If not specified, it is
+            ``plot<season>_<comparisonGridName>`` with a suffix indicating the
+            depth being sliced (if any)
         '''
         # Authors
         # -------
@@ -169,13 +174,16 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
         self.refConfig = refConfig
         self.removeMean = removeMean
-        subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
 
         if depth is None:
             self.depthSuffix = ''
         else:
             self.depthSuffix = 'depth_{}'.format(depth)
-            subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
+
+        if subtaskName is None:
+            subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
+            if depth is not None:
+                subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
 
         config = parentTask.config
         taskName = parentTask.taskName

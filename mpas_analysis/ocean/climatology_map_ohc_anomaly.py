@@ -82,62 +82,67 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         variableList = ['timeMonthly_avg_activeTracers_temperature',
                         'timeMonthly_avg_layerThickness']
 
-        minDepth = config.getfloat('climatologyMapOHCAnomaly', 'minDepth')
-        maxDepth = config.getfloat('climatologyMapOHCAnomaly', 'maxDepth')
+        depthRanges = config.getExpression('climatologyMapOHCAnomaly',
+                                           'depthRanges',
+                                           usenumpyfunc=True)
 
-        # the variable 'timeMonthly_avg_landIceFreshwaterFlux' will be added to
-        # mpasClimatologyTask along with the seasons.
-        remapClimatologySubtask = RemapMpasOHCClimatology(
-            mpasClimatologyTask=mpasClimatologyTask,
-            refYearClimatolgyTask=refYearClimatolgyTask,
-            parentTask=self,
-            climatologyName=fieldName,
-            variableList=variableList,
-            comparisonGridNames=comparisonGridNames,
-            seasons=seasons)
+        for minDepth, maxDepth in depthRanges:
+            depthRangeString = '{:g}-{:g}m'.format(numpy.abs(minDepth),
+                                                   numpy.abs(maxDepth))
+            remapClimatologySubtask = RemapMpasOHCClimatology(
+                mpasClimatologyTask=mpasClimatologyTask,
+                refYearClimatolgyTask=refYearClimatolgyTask,
+                parentTask=self,
+                climatologyName='{}_{}'.format(fieldName, depthRangeString),
+                variableList=variableList,
+                comparisonGridNames=comparisonGridNames,
+                seasons=seasons,
+                minDepth=minDepth,
+                maxDepth=maxDepth)
 
-        self.add_subtask(remapClimatologySubtask)
+            self.add_subtask(remapClimatologySubtask)
 
-        outFileLabel = 'deltaOHC'
-        remapObservationsSubtask = None
-        if refConfig is None:
-            refTitleLabel = None
-            refFieldName = None
-            diffTitleLabel = 'Model - Observations'
+            outFileLabel = 'deltaOHC_{}'.format(depthRangeString)
+            remapObservationsSubtask = None
+            if refConfig is None:
+                refTitleLabel = None
+                refFieldName = None
+                diffTitleLabel = 'Model - Observations'
 
-        else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
-            refFieldName = mpasFieldName
-            diffTitleLabel = 'Main - Reference'
+            else:
+                refRunName = refConfig.get('runs', 'mainRunName')
+                refTitleLabel = 'Ref: {}'.format(refRunName)
+                refFieldName = mpasFieldName
+                diffTitleLabel = 'Main - Reference'
 
-        for comparisonGridName in comparisonGridNames:
-            for season in seasons:
-                # make a new subtask for this season and comparison grid
-                subtask = PlotClimatologyMapSubtask(self, season,
-                                                    comparisonGridName,
-                                                    remapClimatologySubtask,
-                                                    remapObservationsSubtask,
-                                                    refConfig)
+            for comparisonGridName in comparisonGridNames:
+                for season in seasons:
+                    # make a new subtask for this season and comparison grid
+                    subtaskName = 'plot{}_{}_{}'.format(
+                            season, comparisonGridName, depthRangeString)
 
-                subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='OHC anomaly summed '
-                                         '{:g}-{:g}m'.format(
-                                                 numpy.abs(minDepth),
-                                                 numpy.abs(maxDepth)),
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'GJ m$^{-2}$',
-                        imageCaption='Anomaly in Ocean Heat Content',
-                        galleryGroup='OHC Anomaly',
-                        groupSubtitle=None,
-                        groupLink='ohc_anom',
-                        galleryName=None)
+                    subtask = PlotClimatologyMapSubtask(
+                            self, season, comparisonGridName,
+                            remapClimatologySubtask, remapObservationsSubtask,
+                            refConfig, subtaskName=subtaskName)
 
-                self.add_subtask(subtask)
+                    subtask.set_plot_info(
+                            outFileLabel=outFileLabel,
+                            fieldNameInTitle=r'$\Delta$OHC over {}'.format(
+                                    depthRangeString),
+                            mpasFieldName=mpasFieldName,
+                            refFieldName=refFieldName,
+                            refTitleLabel=refTitleLabel,
+                            diffTitleLabel=diffTitleLabel,
+                            unitsLabel=r'GJ m$^{-2}$',
+                            imageCaption='Anomaly in Ocean Heat Content over '
+                                         '{}'.format(depthRangeString),
+                            galleryGroup='OHC Anomaly',
+                            groupSubtitle=None,
+                            groupLink='ohc_anom',
+                            galleryName=None)
+
+                    self.add_subtask(subtask)
         # }}}
     # }}}
 
@@ -149,16 +154,16 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
     Attributes
     ----------
-    landIceMask : xarray.DataArray
-        A mask indicating where there is land ice on the ocean grid (thus,
-        where melt rates are valid)
+    minDepth, maxDepth : float
+        The minimum and maximum depths for integration
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, mpasClimatologyTask, refYearClimatolgyTask, parentTask,
-                 climatologyName, variableList, seasons, comparisonGridNames):
+                 climatologyName, variableList, seasons, comparisonGridNames,
+                 minDepth, maxDepth):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -194,19 +199,27 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         comparisonGridNames : list of {'latlon', 'antarctic'}
             The name(s) of the comparison grid to use for remapping.
 
+        minDepth, maxDepth : float
+            The minimum and maximum depths for integration
+
         '''
         # Authors
         # -------
         # Xylar Asay-Davis
 
+        subtaskName = 'remapMpasClimatology_{:g}-{:g}m'.format(
+                numpy.abs(minDepth), numpy.abs(maxDepth))
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
         super(RemapMpasOHCClimatology, self).__init__(
                  mpasClimatologyTask, parentTask, climatologyName,
-                 variableList, seasons, comparisonGridNames)
+                 variableList, seasons, comparisonGridNames,
+                 subtaskName=subtaskName)
 
         self.refYearClimatolgyTask = refYearClimatolgyTask
         self.run_after(refYearClimatolgyTask)
+        self.minDepth = minDepth
+        self.maxDepth = maxDepth
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -293,9 +306,6 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell,
                             dsRestart.layerThickness)
 
-        minDepth = self.config.getfloat('climatologyMapOHCAnomaly', 'minDepth')
-        maxDepth = self.config.getfloat('climatologyMapOHCAnomaly', 'maxDepth')
-
         vertIndex = xarray.DataArray.from_dict(
                 {'dims': ('nVertLevels',), 'data': numpy.arange(nVertLevels)})
 
@@ -303,8 +313,8 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         layerThickness = climatology['timeMonthly_avg_layerThickness']
 
         masks = [vertIndex < dsRestart.maxLevelCell,
-                 zMid <= minDepth,
-                 zMid >= maxDepth]
+                 zMid <= self.minDepth,
+                 zMid >= self.maxDepth]
         for mask in masks:
             temperature = temperature.where(mask)
             layerThickness = layerThickness.where(mask)

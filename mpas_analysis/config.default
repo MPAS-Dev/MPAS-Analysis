@@ -728,11 +728,12 @@ seasons =  ['ANN']
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
-# Minimum and maximum depths (positive up, in meters) to include in the
-# vertical sum.  The default values are intended to cover the full depth of the
-# ocean.
-minDepth = 0.0
-maxDepth = -7000.0
+# A list of pairs of minimum and maximum depths (positive up, in meters) to
+# include in the vertical sums.  The default values are the equivalents of the
+# default ranges of the timeSeriesOHCAnomaly task, with a value of -10,000 m
+# intended to be well below the bottom of the ocean for all existing MPAS-O
+# meshes.
+depthRanges = [(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -10000.0)]
 
 [climatologyMapAntarcticMelt]
 ## options related to plotting horizontally regridded maps of Antarctic
