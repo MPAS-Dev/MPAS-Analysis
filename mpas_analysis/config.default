@@ -773,7 +773,7 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
 # list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
 # See "regionNames" in the ice shelf masks file in regionMaskDirectory for
 # details.
-iceShelvesToPlot = ['Antarctica']
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 # Number of months over which to compute moving average
 movingAverageMonths = 1
