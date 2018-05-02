@@ -188,21 +188,25 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        # get a list of timeSeriesStats output files from the streams file,
+        self.startYear, self.endYear = self.get_start_and_end()
+
+        self.startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
+        self.endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
+
+        # get a list of timeSeriesSta output files from the streams file,
         # reading only those that are between the start and end dates
-        startDate = self.config.get('climatology', 'startDate')
-        endDate = self.config.get('climatology', 'endDate')
         streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
-                streamName, startDate=startDate, endDate=endDate,
+                streamName, startDate=self.startDate, endDate=self.endDate,
                 calendar=self.calendar)
 
         if len(self.inputFiles) == 0:
             raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, startDate, endDate))
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
 
-        self.symlinkDirectory = \
-            self._update_climatology_bounds_and_create_symlinks()
+        self._update_climatology_bounds()
+        self.symlinkDirectory = self._create_symlinks()
 
         with xarray.open_dataset(self.inputFiles[0]) as ds:
             self.allVariables = list(ds.data_vars.keys())
@@ -258,6 +262,30 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # }}}
 
+    def get_start_and_end(self):  # {{{
+        """
+        Get the start and end years and dates for the climatology.  This
+        function is provided to allow a custom method for setting the start
+        and end years of the climatology.  By default, they are read from the
+        climatology section of the config file
+
+        Returns
+        -------
+        startYear, endYear : int
+           The start and end years of the climatology
+
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        startYear = self.config.getint('climatology', 'startYear')
+        endYear = self.config.getint('climatology', 'endYear')
+
+        return startYear, endYear
+
+        # }}}
+
     def get_file_name(self, season):  # {{{
         """
 
@@ -282,18 +310,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # }}}
 
-    def _update_climatology_bounds_and_create_symlinks(self):  # {{{
+    def _update_climatology_bounds(self):  # {{{
         """
         Update the start and end years and dates for climatologies based on the
-        years actually available in the list of files.  Create symlinks to
-        monthly mean files so they have the expected file naming convention
-        for ncclimo.
-
-        Returns
-        -------
-        symlinkDirectory : str
-            The path to the symlinks created for each timeSeriesStatsMonthly
-            input file
+        years actually available in the list of files.
         """
         # Authors
         # -------
@@ -301,8 +321,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         config = self.config
 
-        requestedStartYear = config.getint('climatology', 'startYear')
-        requestedEndYear = config.getint('climatology', 'endYear')
+        requestedStartYear = self.startYear
+        requestedEndYear = self.endYear
 
         fileNames = sorted(self.inputFiles)
         years, months = get_files_year_month(fileNames,
@@ -321,6 +341,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             lastIndex -= 1
         endYear = years[lastIndex]
 
+        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
+        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+
         if startYear != requestedStartYear or endYear != requestedEndYear:
             print("Warning: climatology start and/or end year different from "
                   "requested\n"
@@ -329,24 +352,40 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                                                      requestedEndYear,
                                                      startYear,
                                                      endYear))
+
             config.set('climatology', 'startYear', str(startYear))
-            config.set('climatology', 'endYear', str(endYear))
-
-            startDate = '{:04d}-01-01_00:00:00'.format(startYear)
             config.set('climatology', 'startDate', startDate)
-            endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+            config.set('climatology', 'endYear', str(endYear))
             config.set('climatology', 'endDate', endDate)
-
-        else:
-            startDate = config.get('climatology', 'startDate')
-            endDate = config.get('climatology', 'endDate')
 
         self.startDate = startDate
         self.endDate = endDate
         self.startYear = startYear
         self.endYear = endYear
+        # }}}
 
-        # now, create the symlinks
+    def _create_symlinks(self):  # {{{
+        """
+        Create symlinks to monthly mean files so they have the expected file
+        naming convention for ncclimo.
+
+        Returns
+        -------
+        symlinkDirectory : str
+            The path to the symlinks created for each timeSeriesStatsMonthly
+            input file
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
+
         climatologyBaseDirectory = build_config_full_path(
             config, 'output', 'mpasClimatologySubdirectory')
 

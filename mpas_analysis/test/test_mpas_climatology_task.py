@@ -130,7 +130,8 @@ class TestMpasClimatologyTask(TestCase):
         startDate = '{:04d}-01-01_00:00:00'.format(startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(endYear)
 
-        mpasClimatologyTask._update_climatology_bounds_and_create_symlinks()
+        mpasClimatologyTask._update_climatology_bounds()
+        mpasClimatologyTask._create_symlinks()
 
         assert(mpasClimatologyTask.startYear == startYear)
         assert(mpasClimatologyTask.endYear == endYear)
@@ -149,7 +150,8 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        mpasClimatologyTask._update_climatology_bounds_and_create_symlinks()
+        mpasClimatologyTask._update_climatology_bounds()
+        mpasClimatologyTask._create_symlinks()
 
         startYear = 2
         endYear = 2

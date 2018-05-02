@@ -68,7 +68,8 @@ def build_analysis_list(config, refConfig):  # {{{
     # analysis can only be imported after the right MPL renderer is selected
     from mpas_analysis import ocean
     from mpas_analysis import sea_ice
-    from mpas_analysis.shared.climatology import MpasClimatologyTask
+    from mpas_analysis.shared.climatology import MpasClimatologyTask, \
+        RefYearMpasClimatologyTask
     from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
     analyses = []
@@ -82,7 +83,11 @@ def build_analysis_list(config, refConfig):  # {{{
                                         componentName='ocean',
                                         section='index')
 
+    oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
+            config=config,  componentName='ocean')
+
     analyses.append(oceanClimatolgyTask)
+    analyses.append(oceanRefYearClimatolgyTask)
 
     analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask,
                                             refConfig))
@@ -92,6 +97,9 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
                                             refConfig))
+    analyses.append(ocean.ClimatologyMapOHCAnomaly(
+            config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
+            refConfig))
     analyses.append(ocean.ClimatologyMapSoseTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(

@@ -150,6 +150,11 @@ generate = ['all']
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
+# the year from which to compute anomalies if not the start year of the
+# simulation.  This might be useful if a long spin-up cycle is performed and
+# only the anomaly over a later span of years is of interest.
+# anomalyRefYear = 249
+
 # the first year over which to average climatalogies
 startYear = 11
 # the last year over which to average climatalogies
@@ -696,6 +701,39 @@ seasons =  ['JFM', 'JAS', 'ANN']
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
 
+[climatologyMapOHCAnomaly]
+## options related to plotting horizontally remapped climatologies of
+## ocean heat content (OHC) against reference model results (if available)
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# color indices into colormapName for filled contours
+colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = numpy.linspace(-12., 12., 37)
+# colormap levels/values for ticks (defaults to same as levels)
+colorbarTicksResult = numpy.linspace(-12., 12., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# color indices into colormapName for filled contours
+colormapIndicesDifference = numpy.array(numpy.linspace(0, 255, 10), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = numpy.linspace(-2., 2., 11)
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# A list of pairs of minimum and maximum depths (positive up, in meters) to
+# include in the vertical sums.  The default values are the equivalents of the
+# default ranges of the timeSeriesOHCAnomaly task, with a value of -10,000 m
+# intended to be well below the bottom of the ocean for all existing MPAS-O
+# meshes.
+depthRanges = [(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -10000.0)]
 
 [climatologyMapAntarcticMelt]
 ## options related to plotting horizontally regridded maps of Antarctic

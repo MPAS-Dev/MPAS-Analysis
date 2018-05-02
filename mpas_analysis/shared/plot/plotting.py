@@ -486,7 +486,7 @@ def plot_global_comparison(
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
-        figsize=(8, 13),
+        figsize=None,
         dpi=None,
         lineWidth=1,
         lineColor='black'):
@@ -578,6 +578,12 @@ def plot_global_comparison(
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
+    if figsize is None:
+        # set the defaults, depending on if we have 1 or 3 panels
+        if refArray is None:
+            figsize = (8, 5)
+        else:
+            figsize = (8, 13)
     fig = plt.figure(figsize=figsize, dpi=dpi)
     if (title is not None):
         if titleFontSize is None:
