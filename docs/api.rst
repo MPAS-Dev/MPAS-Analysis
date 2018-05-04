@@ -52,9 +52,11 @@ Ocean tasks
    ClimatologyMapSSS
    ClimatologyMapMLD
    ClimatologyMapSSH
+   ClimatologyMapOHCAnomaly
    ClimatologyMapAntarcticMelt
    ClimatologyMapSoseTemperature
    ClimatologyMapSoseSalinity
+   ClimatologyMapSoseMLD
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
    IndexNino34
