@@ -116,7 +116,6 @@ logsSubdirectory = logs
 mpasClimatologySubdirectory = clim/mpas
 mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
-timeCacheSubdirectory = timecache
 # provide an absolute path to put HTML in an alternative location (e.g. a web
 # portal)
 htmlSubdirectory = html
