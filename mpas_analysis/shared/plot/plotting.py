@@ -1133,8 +1133,6 @@ def setup_colormap(config, configSectionName, suffix=''):
     suffix: str, optional
         suffix of colormap related options
 
-    colorMapType
-
     Returns
     -------
     colormapDict : dict
@@ -1281,7 +1279,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     colormap : srt
         new colormap
 
-    norm : ``SymLogNorm`` object
+    norm : ``mapplotlib.colors.Normalize``
         the norm used to normalize the colormap
 
     ticks : array of float
@@ -1303,6 +1301,8 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     if normType == 'symLog':
         norm = cols.SymLogNorm(**kwargs)
+    elif normType == 'log':
+        norm = cols.LogNorm(**kwargs)
     elif normType == 'linear':
         norm = cols.Normalize(**kwargs)
     else:
@@ -1343,7 +1343,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     colormap : srt
         new colormap
 
-    norm : ``SymLogNorm`` object
+    norm : ``mapplotlib.colors.Normalize``
         the norm used to normalize the colormap
 
     ticks : array of float
