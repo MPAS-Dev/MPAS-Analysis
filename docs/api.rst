@@ -57,6 +57,9 @@ Ocean tasks
    ClimatologyMapSoseTemperature
    ClimatologyMapSoseSalinity
    ClimatologyMapSoseMLD
+   ClimatologyMapSoseZonalVel
+   ClimatologyMapSoseMeridVel
+   ClimatologyMapSoseVelMag
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
    IndexNino34
