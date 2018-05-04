@@ -33,7 +33,7 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
-                 fieldName, botFieldName, depths,
+                 fieldName, botFieldName=None, depths=None,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
         # {{{
@@ -60,11 +60,11 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         fieldName : str
             The name of the 3D field to remap
 
-        botFieldName : str
+        botFieldName : str, optional
             The name of the same field as ``fieldName`` but sampled at the
             sea floor
 
-        depths : list of {None, float, 'top', 'bot'}
+        depths : list of {None, float, 'top', 'bot'}, optional
             A list of depths at which the climatology will be sliced in the
             vertical.
 
@@ -81,6 +81,9 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         self.fieldName = fieldName
         self.botFieldName = botFieldName
         self.depths = depths
+
+        if depths is not None and 'bot' in depths:
+            assert(botFieldName is not None)
 
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
@@ -136,27 +139,31 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         # Load MLD observational data
         dsObs = xr.open_dataset(fileName)
 
-        dsObs = mpas_xarray.subset_variables(dsObs, [self.fieldName,
-                                                     self.botFieldName,
-                                                     'month', 'year'])
-        slices = []
-        field = dsObs[self.fieldName]
-        botField = dsObs[self.botFieldName]
-        for depth in self.depths:
-            if depth == 'top':
-                slices.append(field.sel(method='nearest', depth=0.).drop(
-                        'depth'))
-            elif depth == 'bot':
-                slices.append(botField)
-            else:
-                slices.append(field.sel(method='nearest', depth=depth).drop(
-                        'depth'))
+        varList = [self.fieldName, 'month', 'year']
 
-        depthNames = [str(depth) for depth in self.depths]
-        field = xr.concat(slices, dim='depthSlice')
+        if self.botFieldName is not None:
+            varList.append(self.botFieldName)
+        dsObs = mpas_xarray.subset_variables(dsObs, varList)
 
-        dsObs = xr.Dataset(data_vars={self.fieldName: field},
-                           coords={'depthSlice': depthNames})
+        if self.depths is not None:
+            field = dsObs[self.fieldName]
+            slices = []
+            for depth in self.depths:
+                if depth == 'top':
+                    slices.append(field.sel(method='nearest', depth=0.).drop(
+                            'depth'))
+                elif depth == 'bot':
+                    slices.append(dsObs[self.botFieldName])
+                else:
+                    level = field.sel(method='nearest', depth=depth).drop(
+                            'depth')
+                    slices.append(level)
+
+            depthNames = [str(depth) for depth in self.depths]
+            field = xr.concat(slices, dim='depthSlice')
+
+            dsObs = xr.Dataset(data_vars={self.fieldName: field},
+                               coords={'depthSlice': depthNames})
 
         return dsObs  # }}}
 
