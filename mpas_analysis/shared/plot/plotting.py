@@ -711,8 +711,8 @@ def plot_polar_projection_comparison(
         if levels is None:
             plotHandle = plt.pcolormesh(x, y, array, cmap=colormap, norm=norm)
         else:
-            plotHandle = plt.contourf(x, y, array, cmap=colormap, norm=norm,
-                                      levels=levels, extend='both')
+            plotHandle = plt.contourf(xCenter, yCenter, array, cmap=colormap,
+                                      norm=norm, levels=levels, extend='both')
 
         plt.pcolormesh(x, y, landMask, cmap=landColorMap)
         plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
@@ -773,7 +773,7 @@ def plot_polar_projection_comparison(
     colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
     landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
 
-    # locations of centers for land contour
+    # locations of centers for contour plots
     xCenter = 0.5*(x[1:] + x[0:-1])
     yCenter = 0.5*(y[1:] + y[0:-1])
 
