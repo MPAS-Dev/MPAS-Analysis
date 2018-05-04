@@ -12,6 +12,12 @@ from mpas_analysis.ocean.climatology_map_sose_salinity import \
     ClimatologyMapSoseSalinity
 from mpas_analysis.ocean.climatology_map_sose_mld import \
     ClimatologyMapSoseMLD
+from mpas_analysis.ocean.climatology_map_sose_zonal_vel import \
+    ClimatologyMapSoseZonalVel
+from mpas_analysis.ocean.climatology_map_sose_merid_vel import \
+    ClimatologyMapSoseMeridVel
+from mpas_analysis.ocean.climatology_map_sose_vel_mag import \
+    ClimatologyMapSoseVelMag
 
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
