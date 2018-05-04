@@ -35,13 +35,14 @@ available:
  * nco >= 4.7.0
  * pyproj
  * pillow
+ * cmocean
 
 You can easily install them via the conda command:
 
 ```
 conda config --add channels conda-forge
 conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
-    lxml nco pyproj pillow
+    lxml nco pyproj pillow cmocean
 ```
 
 ## List Analysis

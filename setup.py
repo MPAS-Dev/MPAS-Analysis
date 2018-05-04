@@ -49,5 +49,5 @@ setup(name='mpas_analysis',
                     'mpas_analysis.test': ['test*/*', 'test*/*/*']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'bottleneck', 'basemap', 'lxml', 'nco',
-                        ' pyproj', 'pillow'],
+                        ' pyproj', 'pillow', 'cmocean'],
       scripts=['run_mpas_analysis'])

@@ -36,6 +36,7 @@ requirements:
         - lxml
         - nco >=4.7.0
         - pillow
+        - cmocean
 
 about:
     home:  http://gitub.com/MPAS-Dev/MPAS-Analysis
