@@ -711,8 +711,8 @@ def plot_polar_projection_comparison(
         if levels is None:
             plotHandle = plt.pcolormesh(x, y, array, cmap=colormap, norm=norm)
         else:
-            plotHandle = plt.contourf(x, y, array, cmap=colormap, norm=norm,
-                                      levels=levels, extend='both')
+            plotHandle = plt.contourf(xCenter, yCenter, array, cmap=colormap,
+                                      norm=norm, levels=levels, extend='both')
 
         plt.pcolormesh(x, y, landMask, cmap=landColorMap)
         plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
@@ -773,7 +773,7 @@ def plot_polar_projection_comparison(
     colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
     landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
 
-    # locations of centers for land contour
+    # locations of centers for contour plots
     xCenter = 0.5*(x[1:] + x[0:-1])
     yCenter = 0.5*(y[1:] + y[0:-1])
 
@@ -1133,8 +1133,6 @@ def setup_colormap(config, configSectionName, suffix=''):
     suffix: str, optional
         suffix of colormap related options
 
-    colorMapType
-
     Returns
     -------
     colormapDict : dict
@@ -1281,7 +1279,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     colormap : srt
         new colormap
 
-    norm : ``SymLogNorm`` object
+    norm : ``mapplotlib.colors.Normalize``
         the norm used to normalize the colormap
 
     ticks : array of float
@@ -1303,6 +1301,8 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     if normType == 'symLog':
         norm = cols.SymLogNorm(**kwargs)
+    elif normType == 'log':
+        norm = cols.LogNorm(**kwargs)
     elif normType == 'linear':
         norm = cols.Normalize(**kwargs)
     else:
@@ -1343,7 +1343,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     colormap : srt
         new colormap
 
-    norm : ``SymLogNorm`` object
+    norm : ``mapplotlib.colors.Normalize``
         the norm used to normalize the colormap
 
     ticks : array of float

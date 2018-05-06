@@ -6,8 +6,13 @@ from mpas_analysis.ocean.climatology_map_ohc_anomaly import \
     ClimatologyMapOHCAnomaly
 from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
-from mpas_analysis.ocean.climatology_map_sose import \
-    ClimatologyMapSoseTemperature, ClimatologyMapSoseSalinity
+from mpas_analysis.ocean.climatology_map_sose_temperature import \
+    ClimatologyMapSoseTemperature
+from mpas_analysis.ocean.climatology_map_sose_salinity import \
+    ClimatologyMapSoseSalinity
+from mpas_analysis.ocean.climatology_map_sose_mld import \
+    ClimatologyMapSoseMLD
+
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 
