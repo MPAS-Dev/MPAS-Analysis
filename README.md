@@ -102,19 +102,21 @@ for more details.
         `hist.am.meridionalHeatTransport` file)
       * `mpaso.rst.0002-01-01_00000.nc` (or any other mpas-o restart file)
       * `streams.ocean`
-      * `mpas-o_in`
+      * `mpaso_in`
   * mpas-seaice files:
       * `mpasseaice.hist.am.timeSeriesStatsMonthly.*.nc`
       * `mpasseaice.rst.0002-01-01_00000.nc` (or any other mpas-seaice restart
         file)
       * `streams.seaice`
-      * `mpas-seaice_in`
+      * `mpassi_in`
 
 Note: for older runs, mpas-seaice files will be named:
   * `mpascice.hist.am.timeSeriesStatsMonthly.*.nc`
   * `mpascice.rst.0002-01-01_00000.nc`
   * `streams.cice`
   * `mpas-cice_in`
+  Also, for older runs mpaso-in will be named:
+  * `mpas-o_in`
 
 
 ## Purge Old Analysis

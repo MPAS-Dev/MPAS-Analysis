@@ -24,7 +24,7 @@ In order to support all ocean analysis tasks from MPAS-Analysis, certain
 simulation, need to be enabled.
 
 The following is a list of suggested values for namelist options, typically
-found in ``namelist.ocean`` or ``mpas-o_in``::
+found in ``namelist.ocean`` or ``mpaso_in`` (or ``mpas-o_in`` in older E3SM runs)::
 
    config_AM_surfaceAreaWeightedAverages_enable = .true.
    config_AM_surfaceAreaWeightedAverages_compute_interval = '0000-00-00_01:00:00'
