@@ -79,12 +79,12 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
 
     outSizes = [ds.sizes[d] for d in allOutDims]
 
-    allInDims = allOutDims.copy()
+    allInDims = list(allOutDims)
     index = allInDims.index(outInterpDim)
     allInDims.pop(index)
     allInDims.insert(index, inInterpDim)
 
-    shape = outSizes.copy()
+    shape = list(outSizes)
     for index, dim in enumerate(allOutDims):
         if dim not in outDims:
             shape[index] = 1

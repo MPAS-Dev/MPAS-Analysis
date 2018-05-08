@@ -258,7 +258,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         lon = float(transectName.rsplit('_', 1)[-1])
 
-        dsObs = dsObs.sel(method='nearest', lon=lon)
+        dsObs = dsObs.sel(method=str('nearest'), lon=lon)
         lon = dsObs.lon.values
 
         lat = dsObs.lat.values
