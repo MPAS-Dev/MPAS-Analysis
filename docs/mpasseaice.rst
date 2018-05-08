@@ -14,7 +14,7 @@ In order to support all sea=ice analysis tasks from MPAS-Analysis, certain
 simulation, need to be enabled.
 
 The following is a list of suggested values for namelist options, typically
-found in ``namelist.seaice`` or ``mpas-seaice_in`` (or ``mpas-cice_in`` in
+found in ``namelist.seaice`` or ``mpassi_in`` (or ``mpas-cice_in`` in
 older E3SM runs)::
 
      config_AM_timeSeriesStatsMonthly_enable = .true.

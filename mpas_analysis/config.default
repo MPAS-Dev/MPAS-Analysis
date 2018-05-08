@@ -72,9 +72,9 @@ seaIceHistorySubdirectory = .
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
+oceanNamelistFileName = mpaso_in
 oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-seaice_in
+seaIceNamelistFileName = mpassi_in
 seaIceStreamsFileName = streams.seaice
 
 # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
