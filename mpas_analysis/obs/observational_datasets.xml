@@ -59,6 +59,9 @@
     <tasks>
       - climatologyMapSST
     </tasks>
+    <subdirectory>
+      Ocean/SST
+    </subdirectory>
   </observation>
 
   <observation>
@@ -102,6 +105,9 @@
     <tasks>
       - climatologyMapSSS
     </tasks>
+    <subdirectory>
+      Ocean/SSS
+    </subdirectory>
   </observation>
 
   <observation>
@@ -151,6 +157,9 @@
     <tasks>
       - climatologyMapSSH
     </tasks>
+    <subdirectory>
+      Ocean/SSH
+    </subdirectory>
   </observation>
 
   <observation>
@@ -232,6 +241,9 @@
     <tasks>
       - climatologyMapMLD
     </tasks>
+    <subdirectory>
+      Ocean/MLD
+    </subdirectory>
   </observation>
 
   <observation>
@@ -275,6 +287,9 @@
     <tasks>
       - meridionalHeatTransport
     </tasks>
+    <subdirectory>
+      Ocean/MHT
+    </subdirectory>
   </observation>
 
   <observation>
@@ -333,6 +348,9 @@
       - climatologyMapArgoTemperature
       - climatologyMapArgoSalinity
     </tasks>
+    <subdirectory>
+      Ocean/ARGO
+    </subdirectory>
   </observation>
 
   <observation>
@@ -391,6 +409,9 @@
       - climatologyMapSoseTemperature
       - climatologyMapSoseSalinity
     </tasks>
+    <subdirectory>
+      Ocean/SOSE
+    </subdirectory>
   </observation>
 
   <observation>
@@ -437,6 +458,9 @@
       - climatologyMapAntarcticMelt
       - timeSeriesAntarcticMelt
     </tasks>
+    <subdirectory>
+      Ocean/Melt
+    </subdirectory>
   </observation>
 
   <observation>
@@ -470,6 +494,9 @@
     <tasks>
       - indexNino34
     </tasks>
+    <subdirectory>
+      Ocean/Nino/HadISST
+    </subdirectory>
   </observation>
 
   <observation>
@@ -503,6 +530,9 @@
     <tasks>
       - indexNino34
     </tasks>
+    <subdirectory>
+      Ocean/Nino/ERS_SSTv4
+    </subdirectory>
   </observation>
 
 <!--
@@ -586,6 +616,9 @@
       - climatologyMapSeaIceConcNH
       - climatologyMapSeaIceConcSH
     </tasks>
+    <subdirectory>
+      SeaIce/SSMI/NASATeam_NSIDC0051
+    </subdirectory>
   </observation>
 
   <observation>
@@ -644,6 +677,9 @@
       - climatologyMapSeaIceConcNH
       - climatologyMapSeaIceConcSH
     </tasks>
+    <subdirectory>
+      SeaIce/SSMI/Bootstrap_NSIDC0079
+    </subdirectory>
   </observation>
 
   <observation>
@@ -780,6 +816,9 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/IceArea_timeseries
+    </subdirectory>
   </observation>
 
   <observation>
@@ -829,6 +868,9 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/ICESat
+    </subdirectory>
   </observation>
 
   <observation>
@@ -891,6 +933,9 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/PIOMAS
+    </subdirectory>
   </observation>
 
 <!--
