@@ -10,6 +10,8 @@ from mpas_analysis.ocean.climatology_map_sose_temperature import \
     ClimatologyMapSoseTemperature
 from mpas_analysis.ocean.climatology_map_sose_salinity import \
     ClimatologyMapSoseSalinity
+from mpas_analysis.ocean.climatology_map_sose_potential_density import \
+    ClimatologyMapSosePotentialDensity
 from mpas_analysis.ocean.climatology_map_sose_mld import \
     ClimatologyMapSoseMLD
 from mpas_analysis.ocean.climatology_map_sose_zonal_vel import \

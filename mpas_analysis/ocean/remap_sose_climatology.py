@@ -150,13 +150,13 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
             slices = []
             for depth in self.depths:
                 if depth == 'top':
-                    slices.append(field.sel(method='nearest', depth=0.).drop(
-                            'depth'))
+                    slices.append(field.sel(method='nearest', z=0.).drop(
+                            'z'))
                 elif depth == 'bot':
                     slices.append(dsObs[self.botFieldName])
                 else:
-                    level = field.sel(method='nearest', depth=depth).drop(
-                            'depth')
+                    level = field.sel(method='nearest', z=depth).drop(
+                            'z')
                     slices.append(level)
 
             depthNames = [str(depth) for depth in self.depths]
