@@ -23,7 +23,7 @@ from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
 
-from mpas_analysis.shared.io import open_mpas_dataset
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
@@ -527,25 +527,31 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         continueOutput = os.path.exists(outputFileTseries)
         if continueOutput:
             self.logger.info('   Read in previously computed MOC time series')
-            dsMOCIn = xr.open_dataset(outputFileTseries, decode_times=False)
+            with open_mpas_dataset(fileName=outputFileTseries,
+                                   calendar=self.calendar,
+                                   timeVariableNames=None,
+                                   variableList=['mocAtlantic26'],
+                                   startDate=self.startDateTseries,
+                                   endDate=self.endDateTseries) as dsMOCIn:
 
-            # first, copy all computed data
-            for inIndex in range(dsMOCIn.dims['Time']):
-                mask = np.logical_and(
-                        dsMOCIn.year[inIndex].values == years,
-                        dsMOCIn.month[inIndex].values == months)
+                dsMOCIn.load()
 
-                outIndex = np.where(mask)[0][0]
+                # first, copy all computed data
+                for inIndex in range(dsMOCIn.dims['Time']):
 
-                mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
-                times[outIndex] = dsMOCIn.Time[inIndex]
-                computed[outIndex] = True
+                    mask = np.logical_and(
+                            dsMOCIn.year[inIndex].values == years,
+                            dsMOCIn.month[inIndex].values == months)
 
-            if np.all(computed):
-                # no need to waste time writing out the data set again
-                return dsMOCIn
+                    outIndex = np.where(mask)[0][0]
 
-            dsMOCIn.close()
+                    mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                    times[outIndex] = dsMOCIn.Time[inIndex]
+                    computed[outIndex] = True
+
+                if np.all(computed):
+                    # no need to waste time writing out the data set again
+                    return dsMOCIn
 
         for timeIndex, fileName in enumerate(inputFilesTseries):
             if computed[timeIndex]:
@@ -614,7 +620,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                     'attrs': {'units': 'Sv (10^6 m^3/s)',
                                               'description': description}}}}
         dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
-        dsMOCTimeSeries.to_netcdf(outputFileTseries)
+        write_netcdf(dsMOCTimeSeries, outputFileTseries)
 
         return dsMOCTimeSeries
 

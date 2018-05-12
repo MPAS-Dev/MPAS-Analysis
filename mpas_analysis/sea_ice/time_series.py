@@ -567,7 +567,6 @@ class TimeSeriesSeaIce(AnalysisTask):
         '''
 
         outFileNames = {}
-        allExist = True
         for hemisphere in ['NH', 'SH']:
             baseDirectory = build_config_full_path(
                 self.config, 'output', 'timeSeriesSubdirectory')
@@ -577,53 +576,46 @@ class TimeSeriesSeaIce(AnalysisTask):
             outFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
                                                          hemisphere)
             outFileNames[hemisphere] = outFileName
-            if not os.path.exists(outFileName):
-                allExist = False
 
         dsTimeSeries = {}
-        if allExist:
-            for hemisphere in ['NH', 'SH']:
-                dsTimeSeries[hemisphere] = xr.open_dataset(
-                        outFileNames[hemisphere])
-        else:
-            dsMesh = xr.open_dataset(self.restartFileName)
-            dsMesh = subset_variables(dsMesh,
-                                      variableList=['latCell', 'areaCell'])
-            # Load data
-            ds = open_mpas_dataset(
-                fileName=self.inputFile,
-                calendar=self.calendar,
-                variableList=self.variableList,
-                startDate=self.startDate,
-                endDate=self.endDate)
+        dsMesh = xr.open_dataset(self.restartFileName)
+        dsMesh = subset_variables(dsMesh,
+                                  variableList=['latCell', 'areaCell'])
+        # Load data
+        ds = open_mpas_dataset(
+            fileName=self.inputFile,
+            calendar=self.calendar,
+            variableList=self.variableList,
+            startDate=self.startDate,
+            endDate=self.endDate)
 
-            for hemisphere in ['NH', 'SH']:
+        for hemisphere in ['NH', 'SH']:
 
-                if hemisphere == 'NH':
-                    mask = dsMesh.latCell > 0
-                else:
-                    mask = dsMesh.latCell < 0
+            if hemisphere == 'NH':
+                mask = dsMesh.latCell > 0
+            else:
+                mask = dsMesh.latCell < 0
 
-                dsAreaSum = (ds.where(mask)*dsMesh.areaCell).sum('nCells')
-                dsAreaSum = dsAreaSum.rename(
-                        {'timeMonthly_avg_iceAreaCell': 'iceArea',
-                         'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
-                dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
-                                             dsMesh.areaCell.sum('nCells'))
+            dsAreaSum = (ds.where(mask)*dsMesh.areaCell).sum('nCells')
+            dsAreaSum = dsAreaSum.rename(
+                    {'timeMonthly_avg_iceAreaCell': 'iceArea',
+                     'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
+            dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
+                                         dsMesh.areaCell.sum('nCells'))
 
-                dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
-                dsAreaSum['iceArea'].attrs['description'] = \
-                    'Total {} sea ice area'.format(hemisphere)
-                dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
-                dsAreaSum['iceVolume'].attrs['description'] = \
-                    'Total {} sea ice volume'.format(hemisphere)
-                dsAreaSum['iceThickness'].attrs['units'] = 'm'
-                dsAreaSum['iceThickness'].attrs['description'] = \
-                    'Mean {} sea ice volume'.format(hemisphere)
+            dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
+            dsAreaSum['iceArea'].attrs['description'] = \
+                'Total {} sea ice area'.format(hemisphere)
+            dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
+            dsAreaSum['iceVolume'].attrs['description'] = \
+                'Total {} sea ice volume'.format(hemisphere)
+            dsAreaSum['iceThickness'].attrs['units'] = 'm'
+            dsAreaSum['iceThickness'].attrs['description'] = \
+                'Mean {} sea ice volume'.format(hemisphere)
 
-                dsTimeSeries[hemisphere] = dsAreaSum
+            dsTimeSeries[hemisphere] = dsAreaSum
 
-                write_netcdf(dsAreaSum, outFileNames[hemisphere])
+            write_netcdf(dsAreaSum, outFileNames[hemisphere])
 
         return dsTimeSeries  # }}}
 
