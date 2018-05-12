@@ -1269,6 +1269,98 @@ normArgsDifference = {'vmin': -1.0, 'vmax': 1.0}
 contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
 
 
+[geojsonTransects]
+## options related to plotting model transects at points determined by a
+## geojson file.
+
+# a list of geojson files containing lat/lon points in LineStrings to be
+# plotted.  If relative paths are given, they are relative to the current
+# working directory.
+geojsonFiles = []
+
+# a dictionary of fields and units to be plotted
+fields =
+    {'temperature':
+        {'mpas': 'timeMonthly_avg_activeTracers_temperature',
+         'units': r'$^\circ$C'},
+     'salinity':
+        {'mpas': 'timeMonthly_avg_activeTracers_salinity',
+         'units': r'PSU'},
+     'potentialDensity':
+        {'mpas': 'timeMonthly_avg_potentialDensity',
+         'units': r'kg m$^{-3}$'},
+     'zonalVelocity':
+        {'mpas': 'timeMonthly_avg_velocityZonal',
+         'units': r'm s$^{-1}$'},
+     'meridionalVelocity':
+        {'mpas': 'timeMonthly_avg_velocityMeridional',
+         'units': r'm s$^{-1}$'}}
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# The approximate horizontal resolution (in km) of each transect.  Latitude/
+# longitude between observation points will be subsampled at this interval.
+# Use 'obs' to indicate no subsampling.
+horizontalResolution = 10
+
+# The name of the vertical comparison grid.  Valid values are 'mpas' for the
+# MPAS vertical grid or any other name if the vertical grid is defined by
+# 'verticalComparisonGrid'
+#verticalComparisonGridName = mpas
+verticalComparisonGridName = uniform_0_to_4000m_at_10m
+
+# The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas'.
+# This should be numpy array of (typically negative) elevations (in m).
+verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+[geojsonTemperatureTransects]
+## options related to plotting geojson transects of potential temperature
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+[geojsonSalinityTransects]
+## options related to plotting geojson transects of salinity
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
 [soseTransects]
 ## options related to plotting model vs. Southern Ocean State Estimate (SOSE)
 ## transects.
