@@ -13,6 +13,9 @@ from mpas_analysis.ocean.climatology_map_sose_salinity import \
 from mpas_analysis.ocean.climatology_map_sose_mld import \
     ClimatologyMapSoseMLD
 
+from mpas_analysis.ocean.climatology_map_schmidtko import \
+    ClimatologyMapSchmidtko
+
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 
