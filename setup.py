@@ -46,8 +46,9 @@ setup(name='mpas_analysis',
       packages=find_packages(),
       package_data={'mpas_analysis': ['config.default'],
                     'mpas_analysis.shared.html': ['templates/*'],
-                    'mpas_analysis.test': ['test*/*', 'test*/*/*']},
+                    'mpas_analysis.test': ['test*/*', 'test*/*/*'],
+                    'mpas_analysis.obs': ['analysis_input_files', 'observational_datasets.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'bottleneck', 'basemap', 'lxml', 'nco',
                         ' pyproj', 'pillow', 'cmocean'],
-      scripts=['run_mpas_analysis'])
+      scripts=['run_mpas_analysis', 'download_analysis_data.py'])
