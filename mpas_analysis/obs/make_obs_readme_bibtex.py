@@ -51,7 +51,12 @@ def build_readmes(xmlFile, outDir):
               'tasks': 'MPAS-Analysis Tasks'}
 
     for entry in xml.findall('observation'):
-        subdirectory = entry.findall('subdirectory')[0].text.strip()
+        name = entry.findall('name')[0].text.strip()
+        subdirectory = entry.findall('subdirectory')
+        if len(subdirectory) == 0:
+            print('Warning: {} has no subdirectory tag'.format(name))
+            continue
+        subdirectory = subdirectory[0].text.strip()
         path = '{}/{}'.format(outDir, subdirectory)
         try:
             os.makedirs(path)
@@ -60,7 +65,6 @@ def build_readmes(xmlFile, outDir):
 
         readme = open('{}/README.md'.format(path), 'w')
 
-        name = entry.findall('name')[0].text.strip()
         readme.write('{}\n'.format(name))
         readme.write('='*len(name))
         readme.write('\n\n')
@@ -80,7 +84,12 @@ def build_bibtex(xmlFile, outDir):
     xml = ET.parse(xmlFile)
 
     for entry in xml.findall('observation'):
-        subdirectory = entry.findall('subdirectory')[0].text.strip()
+        name = entry.findall('name')[0].text.strip()
+        subdirectory = entry.findall('subdirectory')
+        if len(subdirectory) == 0:
+            print('Warning: {} has no subdirectory tag'.format(name))
+            continue
+        subdirectory = subdirectory[0].text.strip()
         path = '{}/{}'.format(outDir, subdirectory)
         try:
             os.makedirs(path)
