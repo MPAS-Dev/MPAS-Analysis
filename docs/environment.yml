@@ -18,6 +18,7 @@ dependencies:
   - nco
   - pyproj
   - pillow
+  - cmocean
   - sphinx
   - sphinx_rtd_theme
   - numpydoc

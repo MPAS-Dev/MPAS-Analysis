@@ -37,6 +37,8 @@ from mpas_analysis.shared.constants import constants
 
 from six.moves import configparser
 
+import cmocean
+
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fileout, lineStyles, lineWidths, legendText,
@@ -1546,5 +1548,13 @@ def _register_custom_colormaps():
         name, colorList, N=255)
 
     plt.register_cmap(name, colorMap)
+
+    # add the cmocean color maps
+    mapNames = list(cmocean.cm.cmapnames)
+    # don't bother with gray (already exists, I think)
+    mapNames.pop(mapNames.index('gray'))
+    for mapName in mapNames:
+        plt.register_cmap(mapName, getattr(cmocean.cm, mapName))
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

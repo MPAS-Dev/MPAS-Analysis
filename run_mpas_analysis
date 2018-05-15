@@ -100,12 +100,20 @@ def build_analysis_list(config, refConfig):  # {{{
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
             config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
             refConfig))
+
     analyses.append(ocean.ClimatologyMapSoseTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseMLD(
             config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSoseZonalVel(
+            config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSoseMeridVel(
+            config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSoseVelMag(
+            config, oceanClimatolgyTask, refConfig))
+
     analyses.append(ocean.ClimatologyMapArgoTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapArgoSalinity(
