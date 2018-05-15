@@ -59,6 +59,9 @@
     <tasks>
       - climatologyMapSST
     </tasks>
+    <subdirectory>
+      Ocean/SST
+    </subdirectory>
   </observation>
 
   <observation>
@@ -102,6 +105,9 @@
     <tasks>
       - climatologyMapSSS
     </tasks>
+    <subdirectory>
+      Ocean/SSS
+    </subdirectory>
   </observation>
 
   <observation>
@@ -151,6 +157,9 @@
     <tasks>
       - climatologyMapSSH
     </tasks>
+    <subdirectory>
+      Ocean/SSH
+    </subdirectory>
   </observation>
 
   <observation>
@@ -178,7 +187,7 @@
       [Acknowledgment:](http://mixedlayer.ucsd.edu/) If you use this data,
       please cite it as: Holte, J., L. D. Talley, J. Gilson, and D. Roemmich
       (2017), An Argo mixed layer climatology and database, Geophys. Res.
-      Lett., 44, 5618–5626, doi:10.1002/2017GL073426.
+      Lett., 44, 5618-5626, doi:10.1002/2017GL073426.
     </releasePolicy>
     <references>
       - [Holte et al. (2017)](http://onlinelibrary.wiley.com/doi/10.1002/2017GL073426/full)
@@ -213,7 +222,7 @@
 
       @article{deBoyerMontegut2004,
       author = {Cl\'{e}ment {de Boyer Mont\'{e}gut} and Gurvan Madec and Albert S. Fischer and Alban Lazar and Daniele Iudicone},
-      title = {Mixed layer depth over the global ocean: An examination of profile data and a profile‐based climatology},
+      title = {Mixed layer depth over the global ocean: An examination of profile data and a profile-based climatology},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {109},
       number = {C12},
@@ -232,6 +241,9 @@
     <tasks>
       - climatologyMapMLD
     </tasks>
+    <subdirectory>
+      Ocean/MLD
+    </subdirectory>
   </observation>
 
   <observation>
@@ -275,6 +287,9 @@
     <tasks>
       - meridionalHeatTransport
     </tasks>
+    <subdirectory>
+      Ocean/MHT
+    </subdirectory>
   </observation>
 
   <observation>
@@ -310,7 +325,7 @@
     </references>
     <bibtex>
       @article{Roemmich2009,
-      title = "The 2004–2008 mean and annual cycle of temperature, salinity, and steric height in the global ocean from the Argo Program",
+      title = "The 2004--2008 mean and annual cycle of temperature, salinity, and steric height in the global ocean from the Argo Program",
       journal = "Progress in Oceanography",
       volume = "82",
       number = "2",
@@ -333,6 +348,9 @@
       - climatologyMapArgoTemperature
       - climatologyMapArgoSalinity
     </tasks>
+    <subdirectory>
+      Ocean/ARGO
+    </subdirectory>
   </observation>
 
   <observation>
@@ -391,6 +409,9 @@
       - climatologyMapSoseTemperature
       - climatologyMapSoseSalinity
     </tasks>
+    <subdirectory>
+      Ocean/SOSE
+    </subdirectory>
   </observation>
 
   <observation>
@@ -437,6 +458,9 @@
       - climatologyMapAntarcticMelt
       - timeSeriesAntarcticMelt
     </tasks>
+    <subdirectory>
+      Ocean/Melt
+    </subdirectory>
   </observation>
 
   <observation>
@@ -470,6 +494,9 @@
     <tasks>
       - indexNino34
     </tasks>
+    <subdirectory>
+      Ocean/Nino/HadISST
+    </subdirectory>
   </observation>
 
   <observation>
@@ -503,6 +530,9 @@
     <tasks>
       - indexNino34
     </tasks>
+    <subdirectory>
+      Ocean/Nino/ERS_SSTv4
+    </subdirectory>
   </observation>
 
   <observation>
@@ -633,6 +663,9 @@
       - climatologyMapSeaIceConcNH
       - climatologyMapSeaIceConcSH
     </tasks>
+    <subdirectory>
+      SeaIce/SSMI/NASATeam_NSIDC0051
+    </subdirectory>
   </observation>
 
   <observation>
@@ -691,6 +724,9 @@
       - climatologyMapSeaIceConcNH
       - climatologyMapSeaIceConcSH
     </tasks>
+    <subdirectory>
+      SeaIce/SSMI/Bootstrap_NSIDC0079
+    </subdirectory>
   </observation>
 
   <observation>
@@ -748,7 +784,7 @@
     <bibtex>
       @article{Cavalieri1999,
       author = {D. J. Cavalieri and C. L. Parkinson and P. Gloersen and J. C. Comiso and H. J. Zwally},
-      title = {Deriving long‐term time series of sea ice cover from satellite passive‐microwave multisensor data sets},
+      title = {Deriving long-term time series of sea ice cover from satellite passive-microwave multisensor data sets},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {104},
       number = {C7},
@@ -782,7 +818,7 @@
       }
       @article{Parkinson1999,
       author = {Claire L. Parkinson and Donald J. Cavalieri and Per Gloersen and H. Jay Zwally and Josefino C. Comiso},
-      title = {Arctic sea ice extents, areas, and trends, 1978–1996},
+      title = {Arctic sea ice extents, areas, and trends, 1978--1996},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {104},
       number = {C9},
@@ -804,7 +840,7 @@
       }
       @article{Zwally2002,
       author = {H. Jay Zwally and Josefino C. Comiso and Claire L. Parkinson and Donald J. Cavalieri and Per Gloersen},
-      title = {Variability of Antarctic sea ice 1979–1998},
+      title = {Variability of Antarctic sea ice 1979--1998},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {107},
       number = {C5},
@@ -827,6 +863,9 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/IceArea_timeseries
+    </subdirectory>
   </observation>
 
   <observation>
@@ -876,6 +915,9 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/ICESat
+    </subdirectory>
   </observation>
 
   <observation>
@@ -889,7 +931,7 @@
       Sea Ice Volume is calculated using the Pan-Arctic Ice Ocean Modeling and
       Assimilation System (PIOMAS, Zhang and Rothrock, 2003) developed at
       APL/PSC.  Anomalies for each day are calculated relative to the average
-      over the 1979 -2016 period for that day of the year to remove the annual
+      over the 1979-2016 period for that day of the year to remove the annual
       cycle. The model mean annual cycle of sea ice volume over this period
       ranges from 28,000 km3 in April to 11,500 km3 in September.
     </description>
@@ -938,6 +980,9 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/PIOMAS
+    </subdirectory>
   </observation>
 
 <!--
