@@ -19,6 +19,7 @@ Documentation
 .. toctree::
    :maxdepth: 2
 
+   quick_start
    api
    design_docs
 
