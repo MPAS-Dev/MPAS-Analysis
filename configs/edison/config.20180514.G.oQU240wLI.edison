@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20170807.beta1.G_oQU240.edison
+mainRunName = 20180514.G.oQU240wLI.edison
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
@@ -18,26 +18,44 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
 
+[execute]
+## options related to executing parallel tasks
+
+# the number of parallel tasks (1 means tasks run in serial, the default)
+parallelTaskCount = 8
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = bck
+
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /scratch1/scratchdirs/xylar/acme_scratch/edison/G-QU240-master-intel/run
+baseDirectory = /global/cscratch1/sd/xylar/acme_scratch/edison/20180514.G.oQU240wLI.edison
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oQU240
+mpasMeshName = oQU240wLI
+
+# subdirectory containing restart files
+runSubdirectory = run
+# subdirectory for ocean history files
+oceanHistorySubdirectory = run
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = run
 
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-# mappingDirectory = /dir/for/mapping/files
+mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
-oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
-seaIceStreamsFileName = streams.cice
+oceanNamelistFileName = run/mpaso_in
+oceanStreamsFileName = run/streams.ocean
+seaIceNamelistFileName = run/mpassi_in
+seaIceStreamsFileName = run/streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -76,16 +94,16 @@ htmlSubdirectory = html
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_landIceCavities', 'no_ssh']
+generate = ['all']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 2
+startYear = 4
 # the last year over which to average climatalogies
-endYear = 5
+endYear = 8
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
