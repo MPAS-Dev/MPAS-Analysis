@@ -223,6 +223,7 @@ meltSubdirectory = Melt
 soseSubdirectory = SOSE
 sshSubdirectory = SSH
 argoSubdirectory = ARGO
+schmidtkoSubdirectory = Schmidtko
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -1062,6 +1063,85 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+[climatologyMapSchmidtko]
+## options related to plotting climatology maps of Antarctic fields at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+[climatologyMapSchmidtkoTemperature]
+## options related to plotting climatology maps of potential temperature at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# colormap for model/observations
+colormapNameResult = RdBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+[climatologyMapSchmidtkoSalinity]
+## options related to plotting climatology maps of potential temperature at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(33.8, 35.0, 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+[climatologyMapSchmidtkoPotentialDensity]
+## options related to plotting climatology maps of potential temperature at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# colormap for model/observations
+#colormapNameResult = matter
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026.5, 1028., 9)
+
+# colormap for differences
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of

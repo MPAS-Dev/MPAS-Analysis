@@ -111,6 +111,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     depth : {None, float, 'top', 'bot'}
         Depth at which to perform the comparison, 'top' for the sea surface
         'bot' for the sea floor
+
+    configSectionName : str
+        the name of the section where the color map and range is defined
     """
     # Authors
     # -------
@@ -204,7 +207,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
-                      galleryName, diffTitleLabel='Model - Observations'):
+                      galleryName, diffTitleLabel='Model - Observations',
+                      configSectionName=None):
         # {{{
         """
         Store attributes related to plots, plot file names and HTML output.
@@ -249,6 +253,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         diffTitleLabel : str, optional
             the title of the difference subplot
+
+        configSectionName : str, optional
+            the name of the section where the color map and range is defined,
+            default is the name of the task
         """
         # Authors
         # -------
@@ -268,6 +276,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.groupSubtitle = groupSubtitle
         self.groupLink = groupLink
         self.galleryName = galleryName
+
+        if configSectionName is None:
+            self.configSectionName = self.taskName
+        else:
+            self.configSectionName = configSectionName
 
         season = self.season
         depth = self.depth
@@ -425,7 +438,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         season = self.season
         config = self.config
-        configSectionName = self.taskName
+        configSectionName = self.configSectionName
 
         mainRunName = config.get('runs', 'mainRunName')
 
@@ -488,7 +501,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         season = self.season
         comparisonGridName = self.comparisonGridName
         config = self.config
-        configSectionName = self.taskName
+        configSectionName = self.configSectionName
 
         mainRunName = config.get('runs', 'mainRunName')
 

@@ -385,7 +385,7 @@
       - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.meta
     </dataUrls>
     <preprocessing>
-      preprocess_observations/remap_SOSE_T_S.py
+      preprocess_observations/preprocess_SOSE_data.py
     </preprocessing>
     <tasks>
       - climatologyMapSoseTemperature
@@ -502,6 +502,53 @@
     </preprocessing>
     <tasks>
       - indexNino34
+    </tasks>
+  </observation>
+
+  <observation>
+    <name>
+      Antarctic Seafloor Temperature and Salinity
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Temporal means in conservative temperature and absolute salinity
+      of Antarctic Continental Shelf Bottom Water (ASBW) for depths shallower
+      than 1500 m for the period 1975 to 2012.
+    </description>
+    <source>
+      [ASCII data file](https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/Antarctic_shelf_data.txt)
+    </source>
+    <releasePolicy>
+     (missings)
+    </releasePolicy>
+    <references>
+      - [Schmidtko et al. (2014)](http://www.sciencemag.org/cgi/doi/10.1126/science.1256117)
+    </references>
+    <bibtex>
+      @article {Schmidtko2014,
+        author = {Schmidtko, Sunke and Heywood, Karen J. and Thompson, Andrew F. and Aoki, Shigeru},
+        title = {Multidecadal warming of Antarctic waters},
+        volume = {346},
+        number = {6214},
+        pages = {1227--1231},
+        year = {2014},
+        doi = {10.1126/science.1256117},
+        publisher = {American Association for the Advancement of Science},
+        issn = {0036-8075},
+        url = {http://science.sciencemag.org/content/346/6214/1227},
+        journal = {Science}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/Antarctic_shelf_data.txt
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_Schmidtko_data.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapSchmidtko
     </tasks>
   </observation>
 

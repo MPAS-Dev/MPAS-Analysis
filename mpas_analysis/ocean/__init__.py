@@ -19,6 +19,9 @@ from mpas_analysis.ocean.climatology_map_sose_merid_vel import \
 from mpas_analysis.ocean.climatology_map_sose_vel_mag import \
     ClimatologyMapSoseVelMag
 
+from mpas_analysis.ocean.climatology_map_schmidtko import \
+    ClimatologyMapSchmidtko
+
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 

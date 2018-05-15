@@ -119,6 +119,9 @@ def build_analysis_list(config, refConfig):  # {{{
     analyses.append(ocean.ClimatologyMapArgoSalinity(
             config, oceanClimatolgyTask, refConfig))
 
+    analyses.append(ocean.ClimatologyMapSchmidtko(
+            config, oceanClimatolgyTask, refConfig))
+
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
                                                       oceanClimatolgyTask,
                                                       refConfig))
