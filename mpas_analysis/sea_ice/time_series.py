@@ -10,7 +10,6 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
-import os
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -399,23 +398,23 @@ class TimeSeriesSeaIce(AnalysisTask):
                 key = (hemisphere, variableName)
                 dsvalues = [plotVars[key]]
                 legendText = [mainRunName]
-                lineStyles = ['k-']
+                lineColors = ['k']
                 lineWidths = [3]
                 if compareWithObservations and key in obsLegend.keys():
                     dsvalues.append(obs[key])
                     legendText.append(obsLegend[key])
-                    lineStyles.append('b-')
+                    lineColors.append('b')
                     lineWidths.append(1.2)
                 if preprocessedReferenceRunName != 'None':
                     dsvalues.append(preprocessed[key])
                     legendText.append(preprocessedReferenceRunName)
-                    lineStyles.append('r-')
+                    lineColors.append('purple')
                     lineWidths.append(1.2)
 
                 if self.refConfig is not None:
                     dsvalues.append(plotVarsRef[key])
                     legendText.append(refRunName)
-                    lineStyles.append('g-')
+                    lineColors.append('r')
                     lineWidths.append(1.2)
 
                 if config.has_option(self.taskName, 'firstYearXTicks'):
@@ -436,11 +435,11 @@ class TimeSeriesSeaIce(AnalysisTask):
                                          title[key], xLabel,
                                          units[variableName],
                                          figureNameStd[key],
-                                         lineStyles=lineStyles,
+                                         calendar=calendar,
+                                         lineColors=lineColors,
                                          lineWidths=lineWidths,
                                          legendText=legendText,
                                          titleFontSize=titleFontSize,
-                                         calendar=calendar,
                                          firstYearXTicks=firstYearXTicks,
                                          yearStrideXTicks=yearStrideXTicks)
 
@@ -469,11 +468,10 @@ class TimeSeriesSeaIce(AnalysisTask):
                         movingAveragePoints,
                         title[key],
                         figureNamePolar[key],
-                        lineStyles=lineStyles,
+                        lineColors=lineColors,
                         lineWidths=lineWidths,
                         legendText=legendText,
-                        titleFontSize=titleFontSize,
-                        calendar=calendar)
+                        titleFontSize=titleFontSize)
 
                     filePrefix = '{}{}_{}_polar'.format(variableName,
                                                         hemisphere,
