@@ -5,7 +5,7 @@
 ##     example files in the configs directory.
 ##  2. Copy and modify any config options you want to change from this file into
 ##     into your new config file. Make sure they have the right section name
-##     (e.g. [run] or [output]). If nothing esle, you will need to set
+##     (e.g. [run] or [output]). If nothing else, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
 ##  3. run: ./run_mpas_analysis config.myrun.  This will read the configuraiton
 ##     first from this file and then replace that configuraiton with any
@@ -126,6 +126,8 @@ htmlSubdirectory = html
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
 #   'all' -- all analyses will be run
+#   'all_publicObs' -- all analyses for which observations are availabe on the
+#                      public server (the default)
 #   'all_<tag>' -- all analysis with a particular tag will be run
 #   'all_<component>' -- all analyses from a given component (either 'ocean'
 #                        or 'seaIce') will be run
@@ -143,7 +145,7 @@ htmlSubdirectory = html
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         only_ocean,no_timeSeries,timeSeriesSST
-generate = ['all']
+generate = ['all_publicObs']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

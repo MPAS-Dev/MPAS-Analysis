@@ -59,7 +59,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         super(ClimatologyMapOHCAnomaly, self).__init__(
                 config=config, taskName='climatologyMapOHCAnomaly',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         sectionName = self.taskName
 

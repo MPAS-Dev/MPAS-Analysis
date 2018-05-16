@@ -67,7 +67,7 @@ class TimeSeriesSST(AnalysisTask):
             config=config,
             taskName='timeSeriesSST',
             componentName='ocean',
-            tags=['timeSeries', 'sst'])
+            tags=['timeSeries', 'sst', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
         self.refConfig = refConfig

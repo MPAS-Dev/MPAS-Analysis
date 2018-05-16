@@ -58,7 +58,7 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
         super(ClimatologyMapSSS, self).__init__(
                 config=config, taskName='climatologyMapSSS',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
         iselValues = {'nVertLevels': 0}
