@@ -45,6 +45,23 @@ conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
     bottleneck basemap lxml nco pyproj pillow cmocean
 ```
 
+## Download analysis input data
+
+To download the data that is necessary to MPAS-Analysis, run:
+
+```
+./download_analysis_data.py -o /path/to/output/directory
+```
+
+where `/path/to/output/directory` is the main folder that will contain
+two subdirectories:
+
+* `mpas_analysis`, which includes mapping and region mask files for
+  standard resolution MPAS meshes
+* `observations`, which includes the pre-processed observations listed in the
+  [Observations table](http://mpas-analysis.readthedocs.io/en/latest/observations.html)
+  and used to evaluate the model results 
+
 ## List Analysis
 
 To list the available analysis tasks, run:

@@ -44,7 +44,7 @@ except ImportError:
 
 
 def download_analysis_files(outDir):
-    urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations'
+    urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
     analysisFileList = pkg_resources.resource_string(
             'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
 
@@ -54,7 +54,7 @@ def download_analysis_files(outDir):
 
     queue = Queue()
     # Set up some threads to fetch the data
-    threadCount = 4
+    threadCount = 2
     for index in range(threadCount):
         worker = threading.Thread(target=download_worker,
                                   args=(queue, outDir))
