@@ -146,7 +146,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.plotObs = plotObs
         self.refConfig = refConfig
-        subtaskName = 'plot{}_{}_{}'.format(season, transectName, fieldName)
+        subtaskName = 'plot{}_{}_{}'.format(season,
+                                            transectName.replace(' ', '_'),
+                                            fieldName)
 
         config = parentTask.config
         taskName = parentTask.taskName
@@ -209,7 +211,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         galleryName : str
             the name of the gallery in which this plot belongs
 
-        sectionName : str
+        configSectionName : str
             the name of the section where the color map and range is defined
 
         diffTitleLabel : str, optional
@@ -268,7 +270,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         prefixPieces = []
         if self.outFileLabel is not '':
             prefixPieces.append(self.outFileLabel)
-        prefixPieces.append(self.transectName)
+        prefixPieces.append(self.transectName.replace(' ', '_'))
         prefixPieces.append(mainRunName)
         years = 'years{:04d}-{:04d}'.format(self.startYear, self.endYear)
         prefixPieces.extend([self.season, years])
