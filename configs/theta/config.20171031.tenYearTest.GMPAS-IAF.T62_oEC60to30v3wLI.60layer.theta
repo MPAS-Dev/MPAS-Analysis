@@ -22,14 +22,12 @@ preprocessedReferenceRunName = None
 ## options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
-#parallelTaskCount = 24
-parallelTaskCount = 1
+parallelTaskCount = 4
 
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
-#ncclimoParallelMode = bck
-ncclimoParallelMode = serial
+ncclimoParallelMode = bck
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -43,7 +41,7 @@ mpasMeshName = oEC60to30v3wLI
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-mappingDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/mapping
+mappingDirectory = /projects/ccsm/acme/diagnostics_data/mapping
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -117,7 +115,7 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /projects/OceanClimate/mpas-analysis_data/observations/Ocean/
+baseDirectory = /projects/ccsm/acme/diagnostics_data/observations/Ocean
 sstSubdirectory = SST
 sssSubdirectory = SSS
 mldSubdirectory = MLD
@@ -131,21 +129,21 @@ soseSubdirectory = SOSE
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /projects/OceanClimate/mpas-analysis_data/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /projects/ccsm/acme/diagnostics_data/reference_runs/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /projects/OceanClimate/mpas-analysis_data/observations/SeaIce
+baseDirectory = /projects/ccsm/acme/diagnostics_data/observations/SeaIce
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory =  /projects/OceanClimate/mpas-analysis_data/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
+baseDirectory = /projects/ccsm/acme/diagnostics_data/reference_runs/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
@@ -155,7 +153,7 @@ polarPlot = False
 
 [regions]
 # Directory containing mask files for ocean basins and ice shelves
-regionMaskDirectory = /projects/OceanClimate/mpas-analysis_data/mpas_analysis/region_masks
+regionMaskDirectory = /projects/ccsm/acme/diagnostics_data/region_masks
 
 
 [climatologyMapSoseTemperature]
