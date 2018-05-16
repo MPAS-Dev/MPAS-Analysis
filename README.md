@@ -4,15 +4,10 @@
 
 
 Analysis for simulations produced with Model for Prediction Across Scales
-(MPAS) components and the Accelerated Climate Model for Energy (ACME), which
+(MPAS) components and the Energy Exascale Earth System Model (E3SM), which
 used those components.
 
 ![sea surface temperature](docs/_static/sst_example.png)
-
-Analysis is stored in a directory corresponding to each core component, e.g.,
-`ocean` for MPAS-Ocean. Shared functionality is contained within the `shared`
-directory.
-
 
 ## Documentation
 
@@ -20,8 +15,15 @@ directory.
 
 
 ## Installation
-This analysis repository presumes that the following python packages are
-available:
+
+MPAS-Analysis is available as an anaconda package via the `e3sm` channel:
+
+```
+conda install -c conda-forge -c e3sm mpas_analysis
+```
+
+To use the latest version for developers, you will need to set up a conda
+environment with the following packages:
 
  * numpy
  * scipy
@@ -37,12 +39,10 @@ available:
  * pillow
  * cmocean
 
-You can easily install them via the conda command:
-
+These can be installed via the conda command:
 ```
-conda config --add channels conda-forge
-conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
-    lxml nco pyproj pillow cmocean
+conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
+    bottleneck basemap lxml nco pyproj pillow cmocean
 ```
 
 ## List Analysis
@@ -154,6 +154,10 @@ another machine to fit your needs.
 
 
 ## Instructions for creating a new analysis task
+
+Analysis tasks can be found in a directory corresponding to each component,
+e.g., `mpas_analysis/ocean` for MPAS-Ocean. Shared functionality is contained
+within the `mpas_analysis/shared` directory.
 
 1. create a new task by `copying mpas_analysis/analysis_task_template.py` to
    the appropriate folder (`ocean`, `sea_ice`, etc.) and modifying it as
