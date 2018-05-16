@@ -58,10 +58,10 @@ for more details.
 
 ## Running the analysis
 
-  1. Create and empty config file (say `config.myrun`) or copy one of the
-     example files in the `configs` directory.
-  2. Copy and modify any config options you want to change from
-     `mpas_analysis/config.default` into your new config file.
+  1. Create and empty config file (say `config.myrun`), copy `config.example`,
+     or copy one of the example files in the `configs` directory.
+  2. Either modify config options in your new file or copy and modify config
+     options from `mpas_analysis/config.default`.
 
      **Requirements for custom config files:**
      * At minimum you should set `baseDirectory` under `[output]` to the folder
@@ -71,11 +71,10 @@ for more details.
        updated correctly.
      * Any options you copy into the config file **must** include the
        appropriate section header (e.g. '[run]' or '[output]')
-     * The entire `mpas_analysis/config.default` does not need to be used.
+     * You do not need to copy all options from `mpas_analysis/config.default`.
        This file will automatically be used for any options you do not include
        in your custom config file.
-     * Given the automatic sourcing of `mpas_analysis/config.default` you
-       should **not** alter that file directly.
+     * You should **not** modify `mpas_analysis/config.default` directly.
   3. run: `./run_mpas_analysis config.myrun`.  This will read the configuraiton
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
