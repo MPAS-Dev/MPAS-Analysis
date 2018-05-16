@@ -293,7 +293,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 legends.append('{}m-{}m'.format(top, bottom))
 
         # more possible symbols than we typically use
-        lines = ['-', '-', '--', '+', 'o', '^', 'v']
+        lines = ['-', '-', '--', None, None, None, None]
+        markers = [None, None, None, '+', 'o', '^', 'v']
         widths = [5, 3, 3, 3, 3, 3, 3]
         points = [None, None, None, 300, 300, 300, 300]
 
@@ -309,7 +310,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
         timeSeries = []
+        lineColors = []
         lineStyles = []
+        lineMarkers = []
         lineWidths = []
         maxPoints = []
         legendText = []
@@ -321,7 +324,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             field = field.where(ds.depth <= bottom)
             timeSeries.append(field.sum('nVertLevels'))
 
-            lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+            lineColors.append(color)
+            lineStyles.append(lines[rangeIndex])
+            lineMarkers.append(markers[rangeIndex])
             lineWidths.append(widths[rangeIndex])
             maxPoints.append(points[rangeIndex])
             legendText.append(legends[rangeIndex])
@@ -371,8 +376,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             dsPreprocessed = xarray.open_dataset(self.preprocessedFileName)
 
         if preprocessedReferenceRunName != 'None':
-            color = 'r'
-            title = '{} \n {} (red)'.format(title,
+            color = 'purple'
+            title = '{} \n {} (purple)'.format(title,
                                             preprocessedReferenceRunName)
 
             preprocessedFieldPrefix = config.get(self.sectionName,
@@ -398,7 +403,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                                 variableName))
                     timeSeries.extend(None)
 
-                lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+                lineColors.append(color)
+                lineStyles.append(lines[rangeIndex])
+                lineMarkers.append(markers[rangeIndex])
                 lineWidths.append(widths[rangeIndex])
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
@@ -407,7 +414,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
             refRunName = self.refConfig.get('runs', 'mainRunName')
 
-            title = '{} \n {} (blue)'.format(title, refRunName)
+            title = '{} \n {} (red)'.format(title, refRunName)
 
             self.logger.info('  Load ocean data from reference run...')
             refStartYear = self.refConfig.getint('timeSeries', 'startYear')
@@ -423,7 +430,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                       endDate=refEndDate)
             dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
 
-            color = 'b'
+            color = 'r'
 
             for rangeIndex in range(len(topDepths)):
                 top = topDepths[rangeIndex]
@@ -432,7 +439,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 field = field.where(dsRef.depth <= bottom)
                 timeSeries.append(field.sum('nVertLevels'))
 
-                lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+                lineColors.append(color)
+                lineStyles.append(lines[rangeIndex])
+                lineMarkers.append(markers[rangeIndex])
                 lineWidths.append(widths[rangeIndex])
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
@@ -451,9 +460,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
                                  title=title, xlabel=xLabel, ylabel=yLabel,
-                                 fileout=figureName, lineStyles=lineStyles,
-                                 lineWidths=lineWidths, maxPoints=maxPoints,
-                                 legendText=legendText, calendar=calendar,
+                                 fileout=figureName, calendar=calendar,
+                                 lineColors=lineColors, lineStyles=lineStyles,
+                                 markers=lineMarkers, lineWidths=lineWidths,
+                                 maxPoints=maxPoints, legendText=legendText,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
 

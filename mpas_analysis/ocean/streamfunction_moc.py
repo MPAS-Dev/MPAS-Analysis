@@ -52,7 +52,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask):  # {{{
+    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -63,6 +63,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
         '''
         # Authors
         # -------
@@ -77,6 +80,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
+
+        self.refConfig = refConfig
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -253,11 +258,41 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         else:
             yearStrideXTicks = None
 
-        timeseries_analysis_plot(config, [dsMOCTimeSeries.mocAtlantic26],
+        fields = [dsMOCTimeSeries.mocAtlantic26]
+        lineColors = ['k']
+        lineWidths = [2]
+        legendText = [mainRunName]
+
+        if self.refConfig is not None:
+
+            refDirectory = build_config_full_path(self.refConfig, 'output',
+                                                  'timeseriesSubdirectory')
+
+            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
+            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
+            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
+            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+
+            refFileName = '{}/mocTimeSeries.nc'.format(refDirectory)
+            self.logger.info('   Read in reference run MOC time series')
+            dsRefMOC = open_mpas_dataset(fileName=refFileName,
+                                         calendar=self.calendar,
+                                         timeVariableNames=None,
+                                         variableList=['mocAtlantic26'],
+                                         startDate=refStartDate,
+                                         endDate=refEndDate)
+            fields.append(dsRefMOC.mocAtlantic26)
+            lineColors.append('r')
+            lineWidths.append(2)
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+            legendText.append(refRunName)
+
+        timeseries_analysis_plot(config, fields,
                                  movingAveragePoints, title,
                                  xLabel, yLabel, figureName,
-                                 lineStyles=['k-'], lineWidths=[2],
-                                 legendText=[None], calendar=self.calendar,
+                                 calendar=self.calendar, lineColors=lineColors,
+                                 lineWidths=lineWidths,
+                                 legendText=legendText,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
 

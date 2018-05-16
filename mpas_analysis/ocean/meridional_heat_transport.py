@@ -266,7 +266,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                  self.startYear, self.endYear, mainRunName)
         filePrefix = self.filePrefixes['mht']
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        lineColors = ['r']
+        lineColors = ['k']
         lineWidths = [1.6]
         legendText = [mainRunName]
         xArrays = [x]
@@ -302,7 +302,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             dsRef = xr.open_dataset(refFileName)
             refRunName = self.refConfig.get('runs', 'mainRunName')
 
-            lineColors.append('k')
+            lineColors.append('r')
             lineWidths.append(1.2)
             legendText.append(refRunName)
             xArrays.append(dsRef.binBoundaryMerHeatTrans)
@@ -315,9 +315,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             legendText = [None]
 
         plot_1D(config, xArrays, fieldArrays, errArrays,
-                lineColors, lineWidths, legendText,
-                title, xLabel, yLabel, figureName,
-                xLim=xLimGlobal)
+                lineColors=lineColors, lineWidths=lineWidths,
+                legendText=legendText, title=title, xlabel=xLabel,
+                ylabel=yLabel, fileout=figureName, xLim=xLimGlobal)
 
         self._write_xml(filePrefix)
 

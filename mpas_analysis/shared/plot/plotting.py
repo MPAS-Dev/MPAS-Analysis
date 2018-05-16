@@ -41,11 +41,12 @@ import cmocean
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
-                             fileout, lineStyles, lineWidths, legendText,
-                             calendar, maxPoints=None, titleFontSize=None,
-                             figsize=(15, 6), dpi=None, firstYearXTicks=None,
-                             yearStrideXTicks=None, maxXTicks=20,
-                             obsMean=None, obsUncertainty=None,
+                             fileout, calendar, lineColors=None,
+                             lineStyles=None, markers=None, lineWidths=None,
+                             legendText=None, maxPoints=None,
+                             titleFontSize=None, figsize=(15, 6), dpi=None,
+                             firstYearXTicks=None, yearStrideXTicks=None,
+                             maxXTicks=20, obsMean=None, obsUncertainty=None,
                              obsLegend=None, legendLocation='lower left'):
 
     """
@@ -73,13 +74,17 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     fileout : str
         the file name to be written
 
-    lineStyles, lineWidths, legendText : list of str
-        control line style/width and corresponding legend text
-
     calendar : str
         the calendar to use for formatting the time axis
 
-    maxPoints : list of {None, int}
+    lineColors, lineStyles, markers, legendText : list of str, optional
+        control line color, style, marker, and corresponding legend
+        text.  Default is black, solid line with no marker, and no legend.
+
+    lineWidths : list of float, optional
+        control line width.  Default is 1.0.
+
+    maxPoints : list of {None, int}, optional
         the approximate maximum number of time points to use in a time series.
         This can be helpful for reducing the number of symbols plotted if
         plotting with markers.  Otherwise the markers become indistinguishable
@@ -129,6 +134,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     minDays = []
     maxDays = []
+    plotLegend = False
     for dsIndex in range(len(dsvalues)):
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
@@ -148,10 +154,31 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                 stride = int(round(nTime/float(maxPoints[dsIndex])))
                 mean = mean.isel(Time=slice(0, None, stride))
 
-        plt.plot(mean['Time'].values, mean.values,
-                 lineStyles[dsIndex],
-                 linewidth=lineWidths[dsIndex],
-                 label=legendText[dsIndex])
+        if legendText is None:
+            label = None
+        else:
+            label = legendText[dsIndex]
+            plotLegend = True
+        if lineColors is None:
+            color = 'k'
+        else:
+            color = lineColors[dsIndex]
+        if lineStyles is None:
+            linestyle = '-'
+        else:
+            linestyle = lineStyles[dsIndex]
+        if markers is None:
+            marker = None
+        else:
+            marker = markers[dsIndex]
+        if lineWidths is None:
+            linewidth = 1.
+        else:
+            linewidth = lineWidths[dsIndex]
+
+        plt.plot(mean['Time'].values, mean.values, color=color,
+                 linestyle=linestyle, marker=marker, linewidth=linewidth,
+                 label=label)
 
     if obsMean is not None:
         obsCount = len(obsMean)
@@ -171,7 +198,8 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              ecolor='k',
                              capthick=2, label=obsLegend[iObs])
 
-    plt.legend(loc=legendLocation)
+    if plotLegend and len(dsvalues) > 1:
+        plt.legend(loc=legendLocation)
 
     ax = plt.gca()
 
@@ -208,8 +236,9 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
 
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
-                                   fileout, lineStyles, lineWidths,
-                                   legendText, titleFontSize=None,
+                                   fileout, lineColors=None, lineStyles=None,
+                                   markers=None, lineWidths=None,
+                                   legendText=None, titleFontSize=None,
                                    figsize=(15, 6), dpi=None):
 
     """
@@ -234,8 +263,12 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     fileout : str
         the file name to be written
 
-    lineStyles, lineWidths, legendText : list of str
-        control line style/width and corresponding legend text
+    lineColors, lineStyles, markers, legendText : list of str, optional
+        control line color, style, marker, and corresponding legend
+        text.  Default is black, solid line with no marker, and no legend.
+
+    lineWidths : list of float, optional
+        control line width.  Default is 1.0.
 
     titleFontSize : int, optional
         the size of the title font
@@ -257,6 +290,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
 
     minDays = []
     maxDays = []
+    plotLegend = False
     for dsIndex in range(len(dsvalues)):
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
@@ -265,11 +299,35 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())
-        plt.polar((mean['Time']/365.0)*np.pi*2.0, mean,
-                  lineStyles[dsIndex],
-                  linewidth=lineWidths[dsIndex],
-                  label=legendText[dsIndex])
-    plt.legend(loc='lower left')
+
+        if legendText is None:
+            label = None
+        else:
+            label = legendText[dsIndex]
+            plotLegend = True
+        if lineColors is None:
+            color = 'k'
+        else:
+            color = lineColors[dsIndex]
+        if lineStyles is None:
+            linestyle = '-'
+        else:
+            linestyle = lineStyles[dsIndex]
+        if markers is None:
+            marker = None
+        else:
+            marker = markers[dsIndex]
+        if lineWidths is None:
+            linewidth = 1.
+        else:
+            linewidth = lineWidths[dsIndex]
+
+        plt.polar((mean['Time']/365.0)*np.pi*2.0, mean, color=color,
+                  linestyle=linestyle, marker=marker, linewidth=linewidth,
+                  label=label)
+
+    if plotLegend and len(dsvalues) > 1:
+        plt.legend(loc='lower left')
 
     ax = plt.gca()
 
@@ -797,8 +855,8 @@ def plot_polar_projection_comparison(
 
 
 def plot_1D(config, xArrays, fieldArrays, errArrays,
-            lineColors, lineWidths, legendText,
-            title=None, xlabel=None, ylabel=None,
+            lineColors=None, lineStyles=None, markers=None, lineWidths=None,
+            legendText=None, title=None, xlabel=None, ylabel=None,
             fileout='plot_1D.png',
             figsize=(10, 4), dpi=None,
             xLim=None,
@@ -823,11 +881,12 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     errArrays : list of float arrays
         error array (y errors)
 
-    lineColors, legendText : list of str
-        control line color and legend
+    lineColors, lineStyles, markers, legendText : list of str, optional
+        control line color, style, marker, and corresponding legend
+        text.  Default is black, solid line with no marker, and no legend.
 
-    lineWidths : list of int
-        control line width
+    lineWidths : list of float, optional
+        control line width.  Default is 1.0.
 
     title : str, optional
         title of plot
@@ -863,29 +922,46 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
         dpi = config.getint('plot', 'dpi')
     plt.figure(figsize=figsize, dpi=dpi)
 
+    plotLegend = False
     for dsIndex in range(len(xArrays)):
         xArray = xArrays[dsIndex]
         fieldArray = fieldArrays[dsIndex]
         errArray = errArrays[dsIndex]
         if xArray is None:
             continue
-        if errArray is None:
-            plt.plot(xArray, fieldArray,
-                     color=lineColors[dsIndex],
-                     linewidth=lineWidths[dsIndex],
-                     label=legendText[dsIndex])
+
+        if legendText is None:
+            label = None
         else:
-            plt.plot(xArray, fieldArray,
-                     color=lineColors[dsIndex],
-                     linewidth=lineWidths[dsIndex],
-                     label=legendText[dsIndex])
+            label = legendText[dsIndex]
+            plotLegend = True
+        if lineColors is None:
+            color = 'k'
+        else:
+            color = lineColors[dsIndex]
+        if markers is None:
+            marker = None
+        else:
+            marker = markers[dsIndex]
+        if lineStyles is None:
+            linestyle = '-'
+        else:
+            linestyle = lineStyles[dsIndex]
+        if lineWidths is None:
+            linewidth = 1.
+        else:
+            linewidth = lineWidths[dsIndex]
+
+        plt.plot(xArray, fieldArray, color=color, linestyle=linestyle,
+                 marker=marker, linewidth=linewidth, label=label)
+        if errArray is not None:
             plt.fill_between(xArray, fieldArray, fieldArray+errArray,
-                             facecolor=lineColors[dsIndex], alpha=0.2)
+                             facecolor=color, alpha=0.2)
             plt.fill_between(xArray, fieldArray, fieldArray-errArray,
-                             facecolor=lineColors[dsIndex], alpha=0.2)
+                             facecolor=color, alpha=0.2)
     plt.grid()
     plt.axhline(0.0, linestyle='-', color='k')  # horizontal lines
-    if dsIndex > 0:
+    if plotLegend and len(xArrays) > 1:
         plt.legend()
 
     axis_font = {'size': config.get('plot', 'axisFontSize')}

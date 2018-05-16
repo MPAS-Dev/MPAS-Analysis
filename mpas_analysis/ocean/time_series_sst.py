@@ -231,7 +231,7 @@ class TimeSeriesSST(AnalysisTask):
 
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-            lineStyles = ['k-']
+            lineColors = ['k']
             lineWidths = [3]
 
             fields = [SST]
@@ -240,7 +240,7 @@ class TimeSeriesSST(AnalysisTask):
             if dsRefSST is not None:
                 refSST = dsRefSST[varName].isel(nOceanRegions=regionIndex)
                 fields.append(refSST)
-                lineStyles.append('b-')
+                lineColors.append('r')
                 lineWidths.append(1.5)
                 refRunName = self.refConfig.get('runs', 'mainRunName')
                 legendText.append(refRunName)
@@ -248,7 +248,7 @@ class TimeSeriesSST(AnalysisTask):
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST
                 fields.append(SST_v0)
-                lineStyles.append('r-')
+                lineColors.append('purple')
                 lineWidths.append(1.5)
                 legendText.append(preprocessedReferenceRunName)
 
@@ -266,9 +266,10 @@ class TimeSeriesSST(AnalysisTask):
 
             timeseries_analysis_plot(config, fields, movingAveragePoints,
                                      title, xLabel, yLabel, figureName,
-                                     lineStyles=lineStyles,
+                                     calendar=calendar,
+                                     lineColors=lineColors,
                                      lineWidths=lineWidths,
-                                     legendText=legendText, calendar=calendar,
+                                     legendText=legendText,
                                      firstYearXTicks=firstYearXTicks,
                                      yearStrideXTicks=yearStrideXTicks)
 

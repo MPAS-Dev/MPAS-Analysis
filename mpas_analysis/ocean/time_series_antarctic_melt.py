@@ -290,21 +290,22 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             fields = [timeSeries]
-            lineStyles = ['k-']
+            lineColors = ['k']
             lineWidths = [2.5]
             legendText = [mainRunName]
             if plotRef:
                 fields.append(refTotalMeltFlux.isel(nRegions=iRegion))
-                lineStyles.append('r-')
+                lineColors.append('r')
                 lineWidths.append(1.2)
                 legendText.append(refRunName)
 
             timeseries_analysis_plot(config, fields, movingAverageMonths,
                                      title, xLabel, yLabel, figureName,
-                                     lineStyles=lineStyles,
+                                     calendar=calendar,
+                                     lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,
-                                     calendar=calendar, obsMean=obsMeltFlux,
+                                     obsMean=obsMeltFlux,
                                      obsUncertainty=obsMeltFluxUnc,
                                      obsLegend=list(obsDict.keys()))
 
@@ -331,12 +332,12 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             fields = [timeSeries]
-            lineStyles = ['k-']
+            lineColors = ['k']
             lineWidths = [2.5]
             legendText = [mainRunName]
             if plotRef:
                 fields.append(refMeltRates.isel(nRegions=iRegion))
-                lineStyles.append('r-')
+                lineColors.append('r')
                 lineWidths.append(1.2)
                 legendText.append(refRunName)
 
@@ -354,10 +355,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
             timeseries_analysis_plot(config, fields, movingAverageMonths,
                                      title, xLabel, yLabel, figureName,
-                                     lineStyles=lineStyles,
+                                     calendar=calendar,
+                                     lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,
-                                     calendar=calendar, obsMean=obsMeltRate,
+                                     obsMean=obsMeltRate,
                                      obsUncertainty=obsMeltRateUnc,
                                      obsLegend=list(obsDict.keys()),
                                      firstYearXTicks=firstYearXTicks,

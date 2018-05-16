@@ -141,7 +141,8 @@ def build_analysis_list(config, refConfig):  # {{{
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
                                                   refConfig))
 
-    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
+    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask,
+                                            refConfig))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
 
     # Sea Ice Analyses
