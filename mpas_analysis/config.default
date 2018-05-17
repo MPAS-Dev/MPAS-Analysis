@@ -351,7 +351,7 @@ movingAveragePoints = 12
 # plot
 
 # colormap
-colormapName = RdBu_r
+colormapName = balance
 # colormap indices for contour color
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
@@ -380,7 +380,7 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = RdBu_r
+colormapName = balance
 # color indices into colormapName for filled contours
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -410,7 +410,7 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = RdBu_r
+colormapName = balance
 # color indices into colormapName for filled contours
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -469,9 +469,9 @@ observationData = HADIsst
 observationData = mht_TrenberthCaron.NoAtm.nc
 
 # colormap for model results
-colormapNameGlobal = RdBu_r
-colormapNameAtlantic = RdBu_r
-colormapNameIndoPacific = RdBu_r
+colormapNameGlobal = balance
+colormapNameAtlantic = balance
+colormapNameIndoPacific = balance
 # colormap indices for contour color
 colormapIndicesGlobal = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 colormapIndicesAtlantic = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
@@ -605,7 +605,7 @@ colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -623,14 +623,14 @@ comparisonGrids = ['latlon']
 ## sea surface salinity (SSS) against reference model results and observations
 
 # colormap for model/observations
-colormapNameResult = RdYlBu_r
+colormapNameResult = haline
 # color indices into colormapName for filled contours
 colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsResult = [28, 29, 30, 31, 32, 33, 34, 35, 36, 38]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -655,7 +655,7 @@ colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -673,7 +673,6 @@ comparisonGrids = ['latlon']
 ## sea surface height (SSH) against reference model results and observations
 
 # colormap for model/observations
-#colormapNameResult = Spectral_r
 colormapNameResult = Maximenko
 # color indices into colormapName for filled contours
 colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
@@ -690,7 +689,7 @@ contourThicknessResult = 0.25
 contourColorResult = 0.25
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185, 209, 232, 255]
 # colormap levels/values for contour boundaries
@@ -717,7 +716,7 @@ colorbarLevelsResult = numpy.linspace(-12., 12., 37)
 colorbarTicksResult = numpy.linspace(-12., 12., 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = numpy.array(numpy.linspace(0, 255, 10), int)
 # colormap levels/values for contour boundaries
@@ -760,7 +759,7 @@ colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,
                        10., 20., 50., 100.]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = symLog
 # A dictionary with keywords for the SemiLogNorm
@@ -809,7 +808,7 @@ depths = ['top', -200, -400, -600, -800, 'bot']
 
 
 # colormap for model/observations
-colormapNameResult = RdBu_r
+colormapNameResult = RdYlBu_r
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -818,7 +817,7 @@ normArgsResult = {'vmin': -2., 'vmax': 2.}
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -844,7 +843,7 @@ depths = ['top', -25, -50, -100, -150, -200, -400, -800, -1500]
 
 
 # colormap for model/observations
-colormapNameResult = RdBu_r
+colormapNameResult = RdYlBu_r
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -853,7 +852,7 @@ normArgsResult = {'vmin': -2., 'vmax': 30.}
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -879,7 +878,7 @@ seasons =  ['ANN','JFM','JAS']
 depths = ['top', -200, -400, -600, -800, 'bot']
 
 # colormap for model/observations
-colormapNameResult = BuOr
+colormapNameResult = haline
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -888,7 +887,7 @@ normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
 # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -913,7 +912,7 @@ seasons =  ['ANN','JFM','JAS']
 depths = ['top', -25, -50, -100, -150, -200, -400, -600, -800, -1500]
 
 # colormap for model/observations
-colormapNameResult = BuOr
+colormapNameResult = haline
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -922,7 +921,7 @@ normArgsResult = {'vmin': 30, 'vmax': 39.0}
 # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -953,7 +952,7 @@ normArgsResult = {'vmin': 10., 'vmax': 300.}
 colorbarTicksResult = [10, 20, 40, 60, 80, 100, 200, 300]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = symLog
 # A dictionary with keywords for the SemiLogNorm
@@ -988,7 +987,7 @@ normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1023,7 +1022,7 @@ normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1058,7 +1057,7 @@ normArgsResult = {'vmin': 0, 'vmax': 0.2}
 # colorbarTicksResult = numpy.linspace(0, 0.2, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1083,7 +1082,7 @@ seasons =  ['ANN','JFM','JAS']
 ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
 # colormap for model/observations
-colormapNameResult = RdBu_r
+colormapNameResult = RdYlBu_r
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1092,7 +1091,7 @@ normArgsResult = {'vmin': -2., 'vmax': 2.}
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1105,7 +1104,7 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
 # colormap for model/observations
-colormapNameResult = BuOr
+colormapNameResult = haline
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1114,7 +1113,7 @@ normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
 # colorbarTicksResult = numpy.linspace(33.8, 35.0, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1127,7 +1126,6 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
 # colormap for model/observations
-#colormapNameResult = matter
 colormapNameResult = Spectral_r
 # the type of norm used in the colormap
 normTypeResult = linear
@@ -1137,7 +1135,7 @@ normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 # colorbarTicksResult = numpy.linspace(1026.5, 1028., 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1151,14 +1149,14 @@ normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 ## in the northern hemisphere (NH)
 
 # colormap for model/observations
-colormapNameResult = inferno
+colormapNameResult = ice
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -1187,14 +1185,14 @@ vertical = False
 ## in the southern hemisphere (SH)
 
 # colormap for model/observations
-colormapNameResult = inferno
+colormapNameResult = ice
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -1223,14 +1221,14 @@ vertical = False
 ## in the northern hemisphere (NH)
 
 # colormap for model/observations
-colormapNameResult = inferno
+colormapNameResult = ice
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsResult = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -1259,14 +1257,14 @@ vertical = False
 ## in the southern hemisphere (SH)
 
 # colormap for model/observations
-colormapNameResult = inferno
+colormapNameResult = ice
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsResult = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
