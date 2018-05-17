@@ -283,7 +283,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             lineColors.extend(['b', 'g'])
             lineWidths.extend([1.2, 1.2])
-            legendText.extend(['NCEP', 'ECMWF'])
+            legendText.extend(['Trenberth and Caron - NCEP',
+                               'Trenberth and Caron - ECMWF'])
             xArrays.extend([xObs, xObs])
             fieldArrays.extend([ncepGlobal, ecmwfGlobal])
             errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
