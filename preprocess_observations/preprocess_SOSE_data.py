@@ -27,24 +27,8 @@ import os
 import argparse
 import gzip
 import shutil
-import threading
-try:
-    # python 3
-    from queue import Queue
-except ImportError:
-    # python 2
-    from Queue import Queue
 
-
-try:
-    # python 3
-    from urllib.request import urlretrieve
-    from urllib.error import HTTPError
-except ImportError:
-    # python 2
-    from urllib import urlretrieve
-    from urllib2 import HTTPError
-
+from mpas_analysis.shared.io.download import download_files
 from mpas_analysis.shared.interpolation import Remapper
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 from mpas_analysis.shared.climatology.comparison_descriptors \
@@ -133,45 +117,6 @@ def get_monthly_average_2d(filePrefix, botIndices):
 
     monthlyClimatologies = monthlyClimatologies.transpose(0, 2, 1)
     return monthlyClimatologies
-
-
-def download_sose_files(inPrefixes, outDir):
-    # dowload the desired file
-    urlBase = 'http://sose.ucsd.edu/DATA/SO6_V2'
-
-    fileList = [('http://sose.ucsd.edu/DATA', 'GRID_README.txt'),
-                (urlBase, 'grid.mat')]
-    for prefix in inPrefixes:
-        fileList.append((urlBase, '{}.data.gz'.format(prefix)))
-        fileList.append((urlBase, '{}.meta'.format(prefix)))
-
-    queue = Queue()
-    # Set up some threads to fetch the data
-    threadCount = 2  # maximum simultaneous downloads the sose server allows
-    for index in range(threadCount):
-        worker = threading.Thread(target=download_sose_worker,
-                                  args=(queue, outDir))
-        worker.setDaemon(True)
-        worker.start()
-
-    for fileData in fileList:
-        queue.put(fileData)
-    queue.join()
-
-
-def download_sose_worker(queue, outDir):
-    while True:
-        urlBase, fileName = queue.get()
-        outFileName = '{}/{}'.format(outDir, fileName)
-        if not os.path.exists(outFileName):
-            print('Downloading {}...'.format(fileName))
-            try:
-                urlretrieve('{}/{}'.format(urlBase, fileName), outFileName)
-            except HTTPError:
-                print('  {} failed!'.format(fileName))
-            else:
-                print('  {} done.'.format(fileName))
-        queue.task_done()
 
 
 def unzip_sose_data(inPrefixes, outDir):
@@ -632,10 +577,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-i", "--inDir", dest="inDir", required=True,
-                        help="Directory where SOSE files should be downloaded")
+                        help="Directory where intermediate files used in "
+                             "processing should be downloaded")
     parser.add_argument("-o", "--outDir", dest="outDir", required=True,
-                        help="Directory where MPAS-Analysis observation are"
-                             "stored")
+                        help="Directory where final preprocessed observation "
+                             "are stored")
     args = parser.parse_args()
 
     inGridName = 'SouthernOcean_0.167x0.167degree'
@@ -655,7 +601,18 @@ if __name__ == "__main__":
     except OSError:
         pass
 
-    download_sose_files(inPrefixes, args.inDir)
+    # dowload the desired file
+    download_files(['GRID_README.txt'], urlBase='http://sose.ucsd.edu/DATA',
+                   outDir=args.inDir)
+
+    urlBase = 'http://sose.ucsd.edu/DATA/SO6_V2'
+
+    fileList = ['grid.mat']
+    for prefix in inPrefixes:
+        fileList.append('{}.data.gz'.format(prefix))
+        fileList.append('{}.meta'.format(prefix))
+
+    download_files(fileList, urlBase, args.inDir)
     unzip_sose_data(inPrefixes, args.inDir)
 
     prefix = '{}/SOSE_2005-2010_monthly'.format(args.outDir)

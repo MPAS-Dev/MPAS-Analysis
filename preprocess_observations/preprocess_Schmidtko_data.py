@@ -26,14 +26,7 @@ import argparse
 import pandas
 import gsw
 
-try:
-    # python 3
-    from urllib.request import urlretrieve
-    from urllib.error import HTTPError
-except ImportError:
-    # python 2
-    from urllib import urlretrieve
-    from urllib2 import HTTPError
+from mpas_analysis.shared.io.download import download_files
 
 from mpas_analysis.shared.interpolation import Remapper
 from mpas_analysis.shared.grid import LatLonGridDescriptor
@@ -42,21 +35,6 @@ from mpas_analysis.shared.climatology.comparison_descriptors \
 from mpas_analysis.configuration \
     import MpasAnalysisConfigParser
 from mpas_analysis.shared.io import write_netcdf
-
-
-def download_file(outDir):
-    # dowload the desired file
-    urlBase = 'https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/'
-    fileName = 'Antarctic_shelf_data.txt'
-    outFileName = '{}/{}'.format(outDir, fileName)
-    if not os.path.exists(outFileName):
-        print('Downloading {}...'.format(fileName))
-        try:
-            urlretrieve('{}/{}'.format(urlBase, fileName), outFileName)
-        except HTTPError:
-            print('  {} failed!'.format(fileName))
-        else:
-            print('  {} done.'.format(fileName))
 
 
 def text_to_netcdf(inDir, outDir):
@@ -200,10 +178,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-i", "--inDir", dest="inDir", required=True,
-                        help="Directory where SOSE files should be downloaded")
+                        help="Directory where intermediate files used in "
+                             "processing should be downloaded")
     parser.add_argument("-o", "--outDir", dest="outDir", required=True,
-                        help="Directory where MPAS-Analysis observation are"
-                             "stored")
+                        help="Directory where final preprocessed observation "
+                             "are stored")
     args = parser.parse_args()
 
     try:
@@ -216,6 +195,9 @@ if __name__ == "__main__":
     except OSError:
         pass
 
-    download_file(args.inDir)
+    urlBase = 'https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/'
+    fileName = 'Antarctic_shelf_data.txt'
+
+    download_files([fileName], urlBase, args.inDir)
     text_to_netcdf(args.inDir, args.inDir)
     remap(args.inDir, args.outDir)

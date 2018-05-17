@@ -16,3 +16,5 @@ dependencies:
   - pyproj
   - pillow
   - cmocean
+  - progressbar2
+  - requests
