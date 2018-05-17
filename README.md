@@ -38,6 +38,8 @@ environment with the following packages:
  * pyproj
  * pillow
  * cmocean
+ * progressbar2
+ * requests
 
 These can be installed via the conda command:
 ```
@@ -60,7 +62,7 @@ two subdirectories:
   standard resolution MPAS meshes
 * `observations`, which includes the pre-processed observations listed in the
   [Observations table](http://mpas-analysis.readthedocs.io/en/latest/observations.html)
-  and used to evaluate the model results 
+  and used to evaluate the model results
 
 ## List Analysis
 
