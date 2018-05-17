@@ -16,7 +16,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 import mpas_analysis
-from docs.parse_table import build_rst_table_from_xml
+from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
 from docs.parse_quick_start import build_quick_start
 
 
@@ -191,4 +191,5 @@ for component in ['ocean', 'seaice']:
     build_rst_table_from_xml(xmlFileName, '{}_obs_table.rst'.format(component),
                              component)
 
+build_obs_pages_from_xml(xmlFileName)
 build_quick_start()

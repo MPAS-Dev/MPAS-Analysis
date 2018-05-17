@@ -4,6 +4,7 @@ This script is used to convert an xml-based table into an rst table for
 python documentation and pythonic parsing.
 
 Phillip J. Wolfram
+Xylar Asay-Davis
 04/16/2018
 """
 
@@ -11,6 +12,7 @@ import xml.etree.ElementTree as ET
 import tabulate
 import argparse
 import re
+import os
 
 
 def markdown_links(data, footer):
@@ -26,10 +28,7 @@ def markdown_links(data, footer):
 
 
 def spurious_newline_whitespace(data, _):
-    whitespace = re.findall('\n\s*', data)
-    if len(whitespace) > 0:
-        astr = min(whitespace)
-        data = data.replace(astr, "\n")
+    data = '\n'.join([string.strip() for string in data.split('\n')])
     return data, _
 
 
@@ -61,6 +60,12 @@ def build_rst_table_from_xml(xmlfile, rstfile, component):
         line = []
         for aheader in headers:
             linedata = entry.findall(aheader)[0].text.strip()
+            if aheader == 'name':
+                # add a link to the associated page, if available
+                nameInDocs = entry.findall('nameInDocs')
+                if len(nameInDocs) > 0:
+                    nameInDocs = nameInDocs[0].text.strip()
+                    linedata = ':ref:`{}`'.format(nameInDocs)
             linedata, footer = cleanup(linedata, footer)
             line.append(linedata)
         data.append(line)
@@ -71,6 +76,69 @@ def build_rst_table_from_xml(xmlfile, rstfile, component):
     rst.write('\n')
 
     rst.close()
+
+
+def build_obs_pages_from_xml(xmlfile):
+
+    # open xml file for reading
+    xml = ET.parse(xmlfile)
+
+    titles = {'description': 'Description',
+              'source': 'Source',
+              'releasePolicy': 'Release Policy',
+              'references': 'References',
+              'tasks': 'MPAS-Analysis Tasks'}
+
+    path = 'obs'
+    try:
+        os.makedirs(path)
+    except OSError:
+        pass
+
+    all_obs = open('all_obs.rst', 'w')
+
+    all_obs.write('.. toctree::\n')
+    all_obs.write('   :maxdepth: 1\n\n')
+
+    urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations'
+
+    for entry in xml.findall('observation'):
+
+        nameInDocs = entry.findall('nameInDocs')
+        if len(nameInDocs) == 0:
+            # we're not making a page for this one
+            continue
+
+        footer = ''
+        nameInDocs = nameInDocs[0].text.strip()
+
+        all_obs.write('   {}/{}.rst\n'.format(path, nameInDocs))
+
+        name = entry.findall('name')[0].text.strip()
+
+        rst = open('{}/{}.rst'.format(path, nameInDocs), 'w')
+
+        rst.write('.. _{}:\n\n'.format(nameInDocs))
+        rst.write('{}\n'.format(name))
+        rst.write('='*len(name))
+        rst.write('\n\n')
+
+        for tag in titles:
+            title = titles[tag]
+            rst.write('{}\n'.format(title))
+            rst.write('{}\n'.format('-'*len(title)))
+            text = entry.findall(tag)[0].text.strip()
+            if tag == 'references':
+                # add a link to the bibtex file
+                subdirectory = entry.findall('subdirectory')[0].text.strip()
+                text = '{}\n\n[bibtex file]({}/{}/obs.bib)'.format(
+                        text, urlBase, subdirectory)
+            text, footer = cleanup(text, footer)
+            rst.write('{}\n\n'.format(text))
+        rst.write(footer)
+        rst.write('\n')
+        rst.close()
+    all_obs.close()
 
 
 if __name__ == "__main__":
