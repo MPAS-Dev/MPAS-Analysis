@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <observations
-  headers="name, tasks, source, references"
-  headernames="Observational Dataset, MPAS-Analysis Task(s), Source, References">
+  headers="name, source, references"
+  headernames="Observational Dataset, Source, References">
 
   <!-- OCEAN -->
 
@@ -62,6 +62,9 @@
     <subdirectory>
       Ocean/SST
     </subdirectory>
+    <nameInDocs>
+      hadley_center_sst
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -106,6 +109,9 @@
     <subdirectory>
       Ocean/SSS
     </subdirectory>
+    <nameInDocs>
+      aquarius_sss
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -158,6 +164,9 @@
     <subdirectory>
       Ocean/SSH
     </subdirectory>
+    <nameInDocs>
+      aviso_ssh
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -240,6 +249,9 @@
     <subdirectory>
       Ocean/MLD
     </subdirectory>
+    <nameInDocs>
+      argo_mld
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -291,6 +303,9 @@
     <subdirectory>
       Ocean/MHT
     </subdirectory>
+    <nameInDocs>
+      trenberth_mht
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -352,6 +367,9 @@
     <subdirectory>
       Ocean/ARGO
     </subdirectory>
+    <nameInDocs>
+      roemmich_gilson_argo
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -413,6 +431,9 @@
     <subdirectory>
       Ocean/SOSE
     </subdirectory>
+    <nameInDocs>
+      sose
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -462,6 +483,9 @@
     <subdirectory>
       Ocean/Melt
     </subdirectory>
+    <nameInDocs>
+      rignot_melt
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -523,6 +547,9 @@
     <subdirectory>
       Ocean/Nino/HadISST
     </subdirectory>
+    <nameInDocs>
+      hadisst_nino
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -613,6 +640,9 @@
     <subdirectory>
       Ocean/Nino/ERS_SSTv4
     </subdirectory>
+    <nameInDocs>
+      ers_sst_nino
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -660,6 +690,12 @@
     <tasks>
       - climatologyMapSchmidtko
     </tasks>
+    <subdirectory>
+      Ocean/Schmidtko
+    </subdirectory>
+    <nameInDocs>
+      schmidtko
+    </nameInDocs>
   </observation>
 
 <!--
@@ -689,6 +725,11 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      Ocean/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
 
@@ -746,6 +787,9 @@
     <subdirectory>
       SeaIce/SSMI/NASATeam_NSIDC0051
     </subdirectory>
+    <nameInDocs>
+      nasateam_conc
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -807,6 +851,9 @@
     <subdirectory>
       SeaIce/SSMI/Bootstrap_NSIDC0079
     </subdirectory>
+    <nameInDocs>
+      bootstrap_conc
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -946,6 +993,9 @@
     <subdirectory>
       SeaIce/IceArea_timeseries
     </subdirectory>
+    <nameInDocs>
+      ssmi_ice_area
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -998,6 +1048,9 @@
     <subdirectory>
       SeaIce/ICESat
     </subdirectory>
+    <nameInDocs>
+      icesat_thickness
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -1063,6 +1116,9 @@
     <subdirectory>
       SeaIce/PIOMAS
     </subdirectory>
+    <nameInDocs>
+      piomass_ice_volume
+    </nameInDocs>
   </observation>
 
 <!--
@@ -1092,6 +1148,11 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      SeaIce/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
 
@@ -1124,6 +1185,12 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      LandIce/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
+
 </observations>
