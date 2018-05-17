@@ -74,15 +74,13 @@
     <description>
       Level 3 Aquarius sea surface salinity (SSS) data products have a temporal
       resolutions of daily, 8 day, monthly, 3 months, and annual.  Monthly and
-      seasonal climatology
-      products from Aqaurius are also available. The Aquarius instrument
-      provides global coverage every 7 days. L3 products are gridded at 1
-      degree spatial resolution.
+      seasonal climatology products from Aqaurius are also available. The Aquarius 
+      instrument provides global coverage every 7 days. L3 products are gridded 
+      at 1 degree spatial resolution.
     </description>
     <source>
       [NASA Aquarius Website]
       (https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4)
-
     </source>
     <releasePolicy>
       NASA data are not copyrighted; however, when you publish our data or
@@ -133,7 +131,7 @@
       co-located on the same 1 degree grids.
     </description>
     <source>
-      - [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
+      [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
     </source>
     <releasePolicy>
       When using Ssalto/Duacs data (NRT or DT along-track Absolute Dynamic
@@ -207,7 +205,6 @@
       doi = {10.1002/2017GL073426},
       url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2017GL073426}
       }
-
       @article{Holte2009,
       author = { James  Holte  and  Lynne  Talley },
       title = {A New Algorithm for Finding Mixed Layer Depths with Applications to Argo Data and Subantarctic Mode Water Formation},
@@ -219,7 +216,6 @@
       doi = {10.1175/2009JTECHO543.1},
       URL = {https://doi.org/10.1175/2009JTECHO543.1}
       }
-
       @article{deBoyerMontegut2004,
       author = {Cl\'{e}ment {de Boyer Mont\'{e}gut} and Gurvan Madec and Albert S. Fischer and Alban Lazar and Daniele Iudicone},
       title = {Mixed layer depth over the global ocean: An examination of profile data and a profile-based climatology},
@@ -254,35 +250,40 @@
       ocean
     </component>
     <description>
-     (missing)
+      The Trenbert and Caron oceanic meridional heat transport is computed
+      by computation of energy balance of the atmosphere, adjusted to fit
+      physical constraints, and using two reanalysis products: the National 
+      Centers for Environmental Prediction-National Center for Atmospheric 
+      Research (NCEP-NCAR) reanalysis and the European Centre for Medium-Range 
+      Weather Forecasts (ECMWF) product. The analysis focuses on the period 
+      from February 1985 to April 1989 when there are reliable top-of-the-atmosphere 
+      radiation data from the Earth Radiation Budget Experiment. 
     </description>
     <source>
-      (missing)
+      Data available upon request from Dr. Kevin Trenberth
     </source>
     <releasePolicy>
-      (missing)
+      Acknowledgment: please cite: Trenberth and Caron (2001). Estimates of 
+      Meridional Atmosphere and Ocean Heat Transports, J. of Climate, 14, 3433-3443.
     </releasePolicy>
     <references>
-      [Trenberth and Caron (2000)](https://doi.org/10.1175/1520-0442%282000%29013&lt;4358%3ATSORSL&gt;2.0.CO%3B2)
+      [Trenberth and Caron (2001)](https://doi.org/10.1175/1520-0442%282001%29014&lt;3433%3AEOMAAO&gt;2.0.CO%3B2)
     </references>
     <bibtex>
-      @article{Trenberth2000,
+      @article{Trenberth2001,
       author = { Kevin E.  Trenberth  and  Julie M.  Caron },
-      title = {The Southern Oscillation Revisited: Sea Level Pressures, Surface Temperatures, and Precipitation},
+      title = {Estimates of Meridional Atmosphere and Ocean Heat Transports},
       journal = {Journal of Climate},
-      volume = {13},
-      number = {24},
-      pages = {4358-4365},
-      year = {2000},
-      doi = {10.1175/1520-0442(2000)013&lt;4358:TSORSL&gt;2.0.CO;2},
-      URL = {https://doi.org/10.1175/1520-0442(2000)013&lt;4358:TSORSL&gt;2.0.CO;2}
+      volume = {14},
+      pages = {3433-3443},
+      year = {2001},
+      doi = {10.1175/1520-0442%282001%29014&lt;3433%3AEOMAAO&gt;2.0.CO%3B2},
+      URL = {https://doi.org/10.1175/1520-0442%282001%29014&lt;3433%3AEOMAAO&gt;2.0.CO%3B2}
       }
     </bibtex>
     <dataUrls>
-      (missing)
     </dataUrls>
     <preprocessing>
-      (missing)
     </preprocessing>
     <tasks>
       - meridionalHeatTransport
@@ -471,22 +472,47 @@
       ocean
     </component>
     <description>
-      (missing)
+      Nino 3.4 Index is computed from the Hadley-OI sea surface temperature
+      (SST) and sea ice concentration (SIC) data set. This product was 
+      specifically developed as surface forcing data set for AMIP style 
+      uncoupled simulations of the Community Atmosphere Model (CAM). The 
+      Hadley Centre's SST/SIC version 1.1 (HADISST1), which is derived gridded, 
+      bias-adjusted in situ observations, were merged with the NOAA-Optimal 
+      Interpolation (version 2; OI.v2) analyses. The HADISST1 spanned 1870 
+      onward but the OI.v2, which started in November 1981, better resolved 
+      features such as the Gulf Stream and Kuroshio Current which are important 
+      components of the climate system. Since the two data sets used different 
+      development methods, anomalies from a base period were used to create 
+      a more homogeneous record. Also, additional adjustments were made to 
+      the SIC data set.
     </description>
     <source>
-      (missing)
+      [NCAR Hadley-NOAA/OI SST website]
+      (https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
     </source>
     <releasePolicy>
-      (missing)
+      Acknowledgment: Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
+      2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
+      Atmosphere Model. Journal of Climate, 21, 5145-5153.
     </releasePolicy>
     <references>
-      (missing)
+      [Hurrell et al. (2008)](https://doi.org/10.1175/2008JCLI2292.1)
     </references>
     <bibtex>
-      (missing)
+      @article{Hurrell2008,
+      author = {James W.  Hurrell  and  James J.  Hack  and  Dennis  Shea  and  Julie M.  Caron  and  James  Rosinski},
+      title = {A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community Atmosphere Model},
+      journal = {Journal of Climate},
+      volume = {21},
+      number = {19},
+      pages = {5145-5153},
+      year = {2008},
+      doi = {10.1175/2008JCLI2292.1},
+      URL = {https://doi.org/10.1175/2008JCLI2292.1}
+      }
     </bibtex>
     <dataUrls>
-      (missing)
+      - ftp://ftp.cgd.ucar.edu/archive/SSTICE/MODEL.SST.HAD187001-198110.OI198111-201712.nc
     </dataUrls>
     <preprocessing>
       (missing)
@@ -507,22 +533,76 @@
       ocean
     </component>
     <description>
-      (missing)
+      The Nino 3.4 Index is also computed using the Extended Reconstructed 
+      Sea Surface Temperature (ERSST) dataset, which is a global monthly 
+      sea surface temperature dataset derived from the International Comprehensive 
+      Ocean-Atmosphere Dataset (ICOADS). It is produced on a 2 degree by 2 degree
+      grid with spatial completeness enhanced using statistical methods. This 
+      monthly analysis begins in January 1854 continuing to the present and 
+      includes anomalies computed with respect to a 1971-2000 monthly climatology. 
+      The newest version of ERSST, version 4, is based on optimally tuned parameters
+      using the latest datasets and improved analysis methods. ERSST is suitable
+      for long-term global and basin-wide studies, and smoothed local and 
+      short-term variations are used in the dataset.
     </description>
     <source>
-      (missing)
+      [NOAA ERSST v4 website]
+      (https://www.ncdc.noaa.gov/data-access/marineocean-data/extended-reconstructed-sea-surface-temperature-ersst-v4)
     </source>
     <releasePolicy>
-      (missing)
+      Cite this dataset when used as a source: Boyin Huang, Viva F. Banzon, Eric Freeman,
+      Jay Lawrimore, Wei Liu, Thomas C. Peterson, Thomas M. Smith, Peter W. Thorne,
+      Scott D. Woodruff, and Huai-Min Zhang, 2015: Extended Reconstructed Sea Surface
+      Temperature (ERSST), Version 4. NOAA National Centers for Environmental Information.
+      doi:10.7289/V5KD1VVF [access date: January 2017].
     </releasePolicy>
     <references>
-      (missing)
+      - [Huang et al. (2014)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00006.1)
+      - [Liu et al. (2014)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00007.1)
+      - [Huang et al. (2015)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-15-0430.1) 
     </references>
     <bibtex>
-      (missing)
+      @article{Huang2014,
+      author = {Boyin Huang  and  Viva F. Banzon and Eric Freeman and Jay Lawrimore and Wei Liu
+                and Thomas C. Peterson and Thomas M. Smith and Peter W. Thorne and Scott D. Woodruff
+                and Huai-Min Zhang},
+      title = {Extended Reconstructed Sea Surface Temperature Version 4 (ERSST.v4).
+               Part I: Upgrades and Intercomparisons},
+      journal = {Journal of Climate},
+      volume = {28},
+      pages = {911-930},
+      year = {2014},
+      doi = {10.1175/JCLI-D-14-00006.1},
+      URL = {https://doi.org/10.1175/JCLI-D-14-00006.1}
+      }
+      @article{Liu2014,
+      author = {Wei Liu and Boyin Huang and Peter W. Thorne and Viva F. Banzon and
+                Huai-Min Zhang and Eric Freeman and Jay Lawrimore and Thomas C. Peterson and
+                Thomas M. Smith and Scott D. Woodruff},
+      title = {Extended Reconstructed Sea Surface Temperature Version 4 (ERSST.v4).
+               Part II. Parametric and Structural Uncertainty Estimations},
+      journal = {Journal of Climate},
+      volume = {28},
+      pages = {931-951},
+      year = {2014},
+      doi = {10.1175/JCLI-D-14-00007.1},
+      URL = {https://doi.org/10.1175/JCLI-D-14-00007.1}
+      }
+      @article{Huang2015,
+      author = {Boyin Huang and Peter W. Thorne and Thomas M. Smith and Wei Liu and
+                Jay Lawrimore and Viva F. Banzon and Huai-Min Zhang and Thomas C. Peterson and Matthew Menne},
+      title = {Further Exploring and Quantifying Uncertainties for Extended Reconstructed
+               Sea Surface Temperature (ERSST) Version 4 (v4)},
+      journal = {Journal of Climate},
+      volume = {29},
+      pages = {3119-3142},
+      year = {2015},
+      doi = {10.1175/JCLI-D-15-0430.1},
+      URL = {https://doi.org/10.1175/JCLI-D-15-0430.1}
+      }
     </bibtex>
     <dataUrls>
-      (missing)
+      - https://www1.ncdc.noaa.gov/pub/data/cmb/ersst/v4/netcdf
     </dataUrls>
     <preprocessing>
       (missing)
@@ -554,7 +634,7 @@
      (missings)
     </releasePolicy>
     <references>
-      - [Schmidtko et al. (2014)](http://www.sciencemag.org/cgi/doi/10.1126/science.1256117)
+      [Schmidtko et al. (2014)](http://www.sciencemag.org/cgi/doi/10.1126/science.1256117)
     </references>
     <bibtex>
       @article {Schmidtko2014,
