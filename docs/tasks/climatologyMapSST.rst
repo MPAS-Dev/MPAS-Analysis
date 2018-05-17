@@ -1,0 +1,48 @@
+climatologyMapSST
+=================
+
+An analysis task for comparison of global maps of sea surface temperature (SST)
+against observations.
+
+Configuration Options
+---------------------
+
+The following configuration options are available for this task::
+
+  # colormap for model/observations
+  colormapNameResult = RdYlBu_r
+  # color indices into colormapName for filled contours
+  colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+  # colormap levels/values for contour boundaries
+  colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
+
+  # colormap for differences
+  colormapNameDifference = RdBu_r
+  # color indices into colormapName for filled contours
+  colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+  # colormap levels/values for contour boundaries
+  colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+
+  # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+  # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+  seasons =  ['JFM', 'JAS', 'ANN']
+
+  # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+  comparisonGrids = ['latlon']
+
+For more details, see:
+ * :ref:`color_maps`
+ * :ref:`seasons`
+ * :ref:`comparison_grids`
+
+Observations
+------------
+
+:ref:`hadley_center_sst`
+
+Example Result
+--------------
+
+.. image:: examples/sst.png
+   :width: 500 px
+   :align: center

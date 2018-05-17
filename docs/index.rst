@@ -20,6 +20,8 @@ Documentation
    :maxdepth: 2
 
    quick_start
+   analysis_tasks
+   configuration
    api
    design_docs
 
