@@ -153,11 +153,10 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         '''
         Check if MLD capability was turned on in the run.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:

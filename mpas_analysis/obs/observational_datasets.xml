@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <observations
-  headers="name, tasks, source, references"
-  headernames="Observational Dataset, MPAS-Analysis Task(s), Source, References">
+  headers="name, source, references"
+  headernames="Observational Dataset, Source, References">
 
   <!-- OCEAN -->
 
@@ -62,6 +62,9 @@
     <subdirectory>
       Ocean/SST
     </subdirectory>
+    <nameInDocs>
+      hadley_center_sst
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -74,8 +77,8 @@
     <description>
       Level 3 Aquarius sea surface salinity (SSS) data products have a temporal
       resolutions of daily, 8 day, monthly, 3 months, and annual.  Monthly and
-      seasonal climatology products from Aqaurius are also available. The Aquarius 
-      instrument provides global coverage every 7 days. L3 products are gridded 
+      seasonal climatology products from Aqaurius are also available. The Aquarius
+      instrument provides global coverage every 7 days. L3 products are gridded
       at 1 degree spatial resolution.
     </description>
     <source>
@@ -106,6 +109,9 @@
     <subdirectory>
       Ocean/SSS
     </subdirectory>
+    <nameInDocs>
+      aquarius_sss
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -158,6 +164,9 @@
     <subdirectory>
       Ocean/SSH
     </subdirectory>
+    <nameInDocs>
+      aviso_ssh
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -240,6 +249,9 @@
     <subdirectory>
       Ocean/MLD
     </subdirectory>
+    <nameInDocs>
+      argo_mld
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -252,18 +264,18 @@
     <description>
       The Trenbert and Caron oceanic meridional heat transport is computed
       by computation of energy balance of the atmosphere, adjusted to fit
-      physical constraints, and using two reanalysis products: the National 
-      Centers for Environmental Prediction-National Center for Atmospheric 
-      Research (NCEP-NCAR) reanalysis and the European Centre for Medium-Range 
-      Weather Forecasts (ECMWF) product. The analysis focuses on the period 
-      from February 1985 to April 1989 when there are reliable top-of-the-atmosphere 
-      radiation data from the Earth Radiation Budget Experiment. 
+      physical constraints, and using two reanalysis products: the National
+      Centers for Environmental Prediction-National Center for Atmospheric
+      Research (NCEP-NCAR) reanalysis and the European Centre for Medium-Range
+      Weather Forecasts (ECMWF) product. The analysis focuses on the period
+      from February 1985 to April 1989 when there are reliable top-of-the-atmosphere
+      radiation data from the Earth Radiation Budget Experiment.
     </description>
     <source>
       Data available upon request from Dr. Kevin Trenberth
     </source>
     <releasePolicy>
-      Acknowledgment: please cite: Trenberth and Caron (2001). Estimates of 
+      Acknowledgment: please cite: Trenberth and Caron (2001). Estimates of
       Meridional Atmosphere and Ocean Heat Transports, J. of Climate, 14, 3433-3443.
     </releasePolicy>
     <references>
@@ -291,6 +303,9 @@
     <subdirectory>
       Ocean/MHT
     </subdirectory>
+    <nameInDocs>
+      trenberth_mht
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -352,6 +367,9 @@
     <subdirectory>
       Ocean/ARGO
     </subdirectory>
+    <nameInDocs>
+      roemmich_gilson_argo
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -413,6 +431,9 @@
     <subdirectory>
       Ocean/SOSE
     </subdirectory>
+    <nameInDocs>
+      sose
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -462,6 +483,9 @@
     <subdirectory>
       Ocean/Melt
     </subdirectory>
+    <nameInDocs>
+      rignot_melt
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -473,17 +497,17 @@
     </component>
     <description>
       Nino 3.4 Index is computed from the Hadley-OI sea surface temperature
-      (SST) and sea ice concentration (SIC) data set. This product was 
-      specifically developed as surface forcing data set for AMIP style 
-      uncoupled simulations of the Community Atmosphere Model (CAM). The 
-      Hadley Centre's SST/SIC version 1.1 (HADISST1), which is derived gridded, 
-      bias-adjusted in situ observations, were merged with the NOAA-Optimal 
-      Interpolation (version 2; OI.v2) analyses. The HADISST1 spanned 1870 
-      onward but the OI.v2, which started in November 1981, better resolved 
-      features such as the Gulf Stream and Kuroshio Current which are important 
-      components of the climate system. Since the two data sets used different 
-      development methods, anomalies from a base period were used to create 
-      a more homogeneous record. Also, additional adjustments were made to 
+      (SST) and sea ice concentration (SIC) data set. This product was
+      specifically developed as surface forcing data set for AMIP style
+      uncoupled simulations of the Community Atmosphere Model (CAM). The
+      Hadley Centre's SST/SIC version 1.1 (HADISST1), which is derived gridded,
+      bias-adjusted in situ observations, were merged with the NOAA-Optimal
+      Interpolation (version 2; OI.v2) analyses. The HADISST1 spanned 1870
+      onward but the OI.v2, which started in November 1981, better resolved
+      features such as the Gulf Stream and Kuroshio Current which are important
+      components of the climate system. Since the two data sets used different
+      development methods, anomalies from a base period were used to create
+      a more homogeneous record. Also, additional adjustments were made to
       the SIC data set.
     </description>
     <source>
@@ -523,6 +547,9 @@
     <subdirectory>
       Ocean/Nino/HadISST
     </subdirectory>
+    <nameInDocs>
+      hadisst_nino
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -533,16 +560,16 @@
       ocean
     </component>
     <description>
-      The Nino 3.4 Index is also computed using the Extended Reconstructed 
-      Sea Surface Temperature (ERSST) dataset, which is a global monthly 
-      sea surface temperature dataset derived from the International Comprehensive 
+      The Nino 3.4 Index is also computed using the Extended Reconstructed
+      Sea Surface Temperature (ERSST) dataset, which is a global monthly
+      sea surface temperature dataset derived from the International Comprehensive
       Ocean-Atmosphere Dataset (ICOADS). It is produced on a 2 degree by 2 degree
-      grid with spatial completeness enhanced using statistical methods. This 
-      monthly analysis begins in January 1854 continuing to the present and 
-      includes anomalies computed with respect to a 1971-2000 monthly climatology. 
+      grid with spatial completeness enhanced using statistical methods. This
+      monthly analysis begins in January 1854 continuing to the present and
+      includes anomalies computed with respect to a 1971-2000 monthly climatology.
       The newest version of ERSST, version 4, is based on optimally tuned parameters
       using the latest datasets and improved analysis methods. ERSST is suitable
-      for long-term global and basin-wide studies, and smoothed local and 
+      for long-term global and basin-wide studies, and smoothed local and
       short-term variations are used in the dataset.
     </description>
     <source>
@@ -559,7 +586,7 @@
     <references>
       - [Huang et al. (2014)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00006.1)
       - [Liu et al. (2014)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00007.1)
-      - [Huang et al. (2015)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-15-0430.1) 
+      - [Huang et al. (2015)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-15-0430.1)
     </references>
     <bibtex>
       @article{Huang2014,
@@ -613,6 +640,9 @@
     <subdirectory>
       Ocean/Nino/ERS_SSTv4
     </subdirectory>
+    <nameInDocs>
+      ers_sst_nino
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -660,6 +690,12 @@
     <tasks>
       - climatologyMapSchmidtko
     </tasks>
+    <subdirectory>
+      Ocean/Schmidtko
+    </subdirectory>
+    <nameInDocs>
+      schmidtko
+    </nameInDocs>
   </observation>
 
 <!--
@@ -689,6 +725,11 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      Ocean/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
 
@@ -746,6 +787,9 @@
     <subdirectory>
       SeaIce/SSMI/NASATeam_NSIDC0051
     </subdirectory>
+    <nameInDocs>
+      nasateam_conc
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -807,6 +851,9 @@
     <subdirectory>
       SeaIce/SSMI/Bootstrap_NSIDC0079
     </subdirectory>
+    <nameInDocs>
+      bootstrap_conc
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -857,7 +904,7 @@
       - [Cavalieri et al. (1999)](https://doi.org/10.1029/1999JC900081)
       - [Cavalieri et al. (2012)](https://doi.org/10.1109/LGRS.2011.2166754)
       - [Cavalieri and Parkinson (2012)](https://doi.org/10.5194/tc-6-881-2012)
-      - [Parkinson et al. (1999)](https://doi.org/0.1029/1999JC900082)
+      - [Parkinson et al. (1999)](https://doi.org/10.1029/1999JC900082)
       - [Parkinson and Cavalieri (2012)](https://doi.org/10.5194/tc-6-871-2012)
       - [Zwally et al. (2002)](https://doi.org/10.1029/2000JC000733)
     </references>
@@ -946,6 +993,9 @@
     <subdirectory>
       SeaIce/IceArea_timeseries
     </subdirectory>
+    <nameInDocs>
+      ssmi_ice_area
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -998,6 +1048,9 @@
     <subdirectory>
       SeaIce/ICESat
     </subdirectory>
+    <nameInDocs>
+      icesat_thickness
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -1063,6 +1116,9 @@
     <subdirectory>
       SeaIce/PIOMAS
     </subdirectory>
+    <nameInDocs>
+      piomass_ice_volume
+    </nameInDocs>
   </observation>
 
 <!--
@@ -1092,6 +1148,11 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      SeaIce/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
 
@@ -1124,6 +1185,12 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      LandIce/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
+
 </observations>
