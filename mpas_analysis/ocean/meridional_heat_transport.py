@@ -64,7 +64,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             config=config,
             taskName='meridionalHeatTransport',
             componentName='ocean',
-            tags=['climatology'])
+            tags=['climatology', 'publicObs'])
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)

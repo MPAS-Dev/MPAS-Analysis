@@ -76,7 +76,7 @@ class IndexNino34(AnalysisTask):  # {{{
             config=config,
             taskName='indexNino34',
             componentName='ocean',
-            tags=['timeSeries', 'index', 'nino'])
+            tags=['timeSeries', 'index', 'nino', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
         self.refConfig = refConfig

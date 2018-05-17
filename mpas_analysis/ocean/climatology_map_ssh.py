@@ -59,7 +59,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
         super(ClimatologyMapSSH, self).__init__(
                 config=config, taskName='climatologyMapSSH',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_pressureAdjustedSSH'
 

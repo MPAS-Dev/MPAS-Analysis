@@ -76,7 +76,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             config=config,
             taskName='streamfunctionMOC',
             componentName='ocean',
-            tags=['streamfunction', 'moc', 'climatology', 'timeSeries'])
+            tags=['streamfunction', 'moc', 'climatology', 'timeSeries',
+                  'publicObs'])
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)

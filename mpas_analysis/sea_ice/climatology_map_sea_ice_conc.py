@@ -63,7 +63,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         super(ClimatologyMapSeaIceConc, self).__init__(
                 config=config, taskName=taskName,
                 componentName='seaIce',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_iceAreaCell'
         iselValues = None
