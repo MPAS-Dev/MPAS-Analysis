@@ -5,3 +5,4 @@ Analysis Tasks
    :maxdepth: 1
 
    tasks/climatologyMapSST
+   tasks/climatologyMapSSS
