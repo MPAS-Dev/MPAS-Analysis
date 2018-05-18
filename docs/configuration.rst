@@ -21,6 +21,8 @@ options that are most commonly modified.
    config/climatology
    config/timeSeries
    config/index
+   config/observations
+   config/preprocessed
 
    config/colormaps
    config/seasons
