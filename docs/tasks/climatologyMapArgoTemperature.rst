@@ -6,6 +6,11 @@ climatologyMapArgoTemperature
 An analysis task for comparing potential temperature at various depths against
 Argo observations.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, argo, temperature, publicObs
+
 Configuration Options
 ---------------------
 

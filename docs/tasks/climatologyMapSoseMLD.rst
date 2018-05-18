@@ -6,6 +6,11 @@ climatologyMapSoseMLD
 An analysis task for comparing mixed layer depth (MLD) against results from the
 `Southern Ocean State Estimate (SOSE)`_.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, sose, mld
+
 Configuration Options
 ---------------------
 

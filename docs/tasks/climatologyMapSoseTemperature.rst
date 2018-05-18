@@ -6,6 +6,11 @@ climatologyMapSoseTemperature
 An analysis task for comparing potential temperature at various depths against
 results from the `Southern Ocean State Estimate (SOSE)`_.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, sose, temperature
+
 Configuration Options
 ---------------------
 

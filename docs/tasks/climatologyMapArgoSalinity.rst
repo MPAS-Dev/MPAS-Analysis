@@ -6,6 +6,11 @@ climatologyMapArgoSalinity
 An analysis task for comparing salinity at various depths against
 Argo observations.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, argo, salinity, publicObs
+
 Configuration Options
 ---------------------
 

@@ -6,6 +6,11 @@ climatologyMapMLD
 An analysis task for comparison of global maps of mixed layer depth (MLD)
 against observations.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, mld, publicObs
+
 Configuration Options
 ---------------------
 

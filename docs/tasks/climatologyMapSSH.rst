@@ -8,6 +8,11 @@ with zero mean against observations.  The mean has been subtracted because the
 initial sea level is somewhat arbitrary and will lead to a systematic offset
 when compared with the observations.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, ssh, publicObs
+
 Configuration Options
 ---------------------
 

@@ -6,6 +6,11 @@ climatologyMapSST
 An analysis task for comparison of global maps of sea surface temperature (SST)
 against observations.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, sst, publicObs
+
 Configuration Options
 ---------------------
 

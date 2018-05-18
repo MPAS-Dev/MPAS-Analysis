@@ -6,6 +6,11 @@ climatologyMapOHCAnomaly
 An analysis task for plotting anomalies in ocean heat content (OHC) compared
 with a reference year (typically the start of the simulation).
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, deltaOHC, publicObs
+
 Configuration Options
 ---------------------
 

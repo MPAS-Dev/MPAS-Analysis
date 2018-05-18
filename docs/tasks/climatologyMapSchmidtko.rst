@@ -7,6 +7,11 @@ An analysis task for comparison of Antarctic maps of seafloor potential
 temperature, salinity and potential density against observations from
 `Schmidtko et al. (2014)`_.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, temperature, salinity, potentialDensity
+
 Configuration Options
 ---------------------
 

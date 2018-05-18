@@ -6,6 +6,11 @@ climatologyMapSSS
 An analysis task for comparison of global maps of sea surface salinity (SSS)
 against observations.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, sss, publicObs
+
 Configuration Options
 ---------------------
 

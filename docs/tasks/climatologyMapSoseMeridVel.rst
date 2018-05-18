@@ -6,6 +6,12 @@ climatologyMapSoseMeridVel
 An analysis task for comparing meridional velocity at various depths against
 results from the `Southern Ocean State Estimate (SOSE)`_.
 
+Component and Tags::
+
+  component: ocean
+  tags: climatology, horizontalMap, sose, velocity, meridional
+
+
 Configuration Options
 ---------------------
 
