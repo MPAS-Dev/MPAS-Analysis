@@ -1,4 +1,4 @@
-.. _comparison_grids:
+.. _config_comparison_grids:
 
 Comparison Grids
 ================

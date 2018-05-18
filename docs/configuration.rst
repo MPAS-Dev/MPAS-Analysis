@@ -9,6 +9,6 @@ across a number of analysis tasks.
 .. toctree::
    :maxdepth: 1
 
-   color_maps
-   seasons
-   comparison_grids
+   config/colormaps
+   config/seasons
+   config/comparison_grids

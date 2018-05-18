@@ -37,9 +37,9 @@ The following configuration options are available for this task::
   comparisonGrids = ['latlon']
 
 For more details, see:
- * :ref:`color_maps`
- * :ref:`seasons`
- * :ref:`comparison_grids`
+ * :ref:`config_colormaps`
+ * :ref:`config_seasons`
+ * :ref:`config_comparison_grids`
 
 The following configuration options relate to the observations used by this
 task::

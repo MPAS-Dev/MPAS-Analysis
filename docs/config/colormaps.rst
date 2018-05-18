@@ -1,4 +1,4 @@
-.. _color_maps:
+.. _config_colormaps:
 
 Colormaps
 ==========

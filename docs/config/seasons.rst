@@ -1,4 +1,4 @@
-.. _seasons:
+.. _config_seasons:
 
 Seasons
 =======
