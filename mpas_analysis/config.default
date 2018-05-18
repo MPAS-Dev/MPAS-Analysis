@@ -43,10 +43,6 @@ preprocessedReferenceRunName = None
 # the number of parallel tasks (1 means tasks run in serial, the default)
 parallelTaskCount = 1
 
-# Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_mpas_analysis is executed directly)
-commandPrefix =
-
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
@@ -110,7 +106,6 @@ maxChunkSize = 10000
 baseDirectory = /dir/for/analysis/output
 
 # subdirectories within baseDirectory for analysis output
-scratchSubdirectory = scratch
 plotsSubdirectory = plots
 logsSubdirectory = logs
 mpasClimatologySubdirectory = clim/mpas
@@ -172,11 +167,6 @@ comparisonAntarcticStereoResolution = 10.
 # interpolation order for model and observation results. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 mpasInterpolationMethod = bilinear
-
-# the number of years per cached climatology file.  These cached files are
-# aggregated together to create annual climatologies, for example, when
-# computing the MOC.
-yearsPerCacheFile = 1
 
 # should remapping be performed with ncremap or with the Remapper class
 # directly in MPAS-Analysis
@@ -249,13 +239,6 @@ interpolationMethod = bilinear
 climatologySubdirectory = clim/obs
 remappedClimSubdirectory = clim/obs/remapped
 
-[oceanReference]
-## options related to ocean reference run with which the results will be
-## compared
-
-# directory where ocean reference simulation results are stored
-baseDirectory = /dir/to/ocean/reference
-
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
@@ -298,13 +281,6 @@ interpolationMethod = bilinear
 # remapping.
 climatologySubdirectory = clim/obs
 remappedClimSubdirectory = clim/obs/remapped
-
-[seaIceReference]
-## options related to sea ice reference run with which the results will be
-## compared
-
-# directory where sea ice reference simulation results are stored
-baseDirectory = /dir/to/seaice/reference
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
@@ -431,10 +407,9 @@ contourLevels = np.arange(-0.1, 0.11, 0.02)
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
 
-# compare to observations?
-compareWithObservations = True
 # list of regions to plot from the region list in [regions] below
 regions = ['global']
+
 # Number of points over which to compute moving average (e.g., for monthly
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
@@ -457,9 +432,9 @@ movingAveragePoints = 12
 # The indexNino34 routine only accepts one value at a time
 region = nino3.4
 
-# Data source to read for comparison.  There are three options
-# 1 - ERS SSTv4 -- Updated version of previous -- 1854 - 2016
-# 2 - HADIsst -- Hadley center analysis -- 1870 - 2016
+# Data source to read for comparison.  There are two options
+# 1 - ERS SSTv4 -- Extended Reconstructed Sea Surface Temperature -- 1854 - 2016
+# 2 - HADIsst -- Hadley Center analysis -- 1870 - 2016
 observationData = HADIsst
 
 [meridionalHeatTransport]
@@ -512,18 +487,6 @@ includeBolus = True
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# xarray (with dask) divides data sets into "chunks", allowing computations
-# to be made on data that is larger than the available memory.  MPAS-Analysis
-# supports setting a maximum chunk size for data sets generally, and a
-# separate option specific to loading the 3D velocity field in the MOC
-# specifically.  By default, maxChunkSize is left undefined, so that chunking
-# is handled automatically.  If the MOC calculation encounters memory problems,
-# consider setting maxChunkSize to a number significantly lower than nEdges
-# in your MPAS mesh so that the calculation will be divided into smaller
-# pieces.
-# Note, need to use maxChunkSize for the 18to6
-# maxChunkSize = 1000
-
 # Size of latitude bins over which MOC streamfunction is integrated
 latBinSizeGlobal = 1.
 latBinSizeAtlantic = 0.5
@@ -545,9 +508,6 @@ colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
 contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
 contourLevelsAtlantic = np.arange(-8, 20.1, 2)
 contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
-
-# compare to observations?
-compareWithObservations = True
 
 # Number of points over which to compute moving average for
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
