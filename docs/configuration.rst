@@ -18,6 +18,9 @@ options that are most commonly modified.
    config/execute
    config/input
    config/output
+   config/climatology
+   config/timeSeries
+   config/index
 
    config/colormaps
    config/seasons
