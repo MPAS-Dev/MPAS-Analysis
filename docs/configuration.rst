@@ -23,9 +23,12 @@ options that are most commonly modified.
    config/index
    config/observations
    config/preprocessed
-
    config/colormaps
    config/seasons
    config/comparison_grids
+   config/regions
+   config/plot
+   config/html
+
 
 .. _`GitHub`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs
