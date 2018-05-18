@@ -26,7 +26,7 @@ typically longer before most analysis is useful::
 
 Several streams must be defined in the streams file, typically
 ``streams.seaice`` or ``streams.cice`` in older E3SM runs, (even if they will
-not be written out -- ``output_interval=="none"``)::
+not be written out -- ``output_interval="none"``)::
 
   <stream name="timeSeriesStatsMonthlyRestart"
           type="input;output"

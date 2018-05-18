@@ -42,7 +42,7 @@ typically longer before most analysis is useful::
 
 Several streams must be defined in the streams file, typically
 ``streams.ocean``, (even if they will not be written out --
-``output_intervale=="none"``)::
+``output_interval="none"``)::
 
   <stream name="timeSeriesStatsMonthlyRestart"
           type="input;output"
