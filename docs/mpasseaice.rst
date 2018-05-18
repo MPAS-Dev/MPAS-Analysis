@@ -1,5 +1,5 @@
 MPAS-Seaice
-============
+-----------
 
 The Model for Prediction Across Scales Sea Ice (MPAS-Seaice)
 is designed for the simulations of sea ice on unstructured grids supported by
@@ -7,7 +7,7 @@ the MPAS framework.  The model has not yet been publicly released and does not
 have public documentation.
 
 Setting up Standalone MPAS Sea Ice Runs
----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to support all sea=ice analysis tasks from MPAS-Analysis, certain
 "analysis members", Fortran modules that perform analysis during the

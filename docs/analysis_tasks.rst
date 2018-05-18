@@ -2,6 +2,6 @@ Analysis Tasks
 ==============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    tasks/climatologyMapSST

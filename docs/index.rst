@@ -14,32 +14,24 @@ Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Accelerated Climate Model for Energy (ACME), which
 used those components.
 
-Documentation
-=============
+User's Guide
+============
 .. toctree::
    :maxdepth: 2
 
    quick_start
-   analysis_tasks
    configuration
-   api
-   design_docs
+   analysis_tasks
+   components
+   observations
 
-MPAS Components and E3SM
-========================
-
+Developer's Guide
+=================
 .. toctree::
    :maxdepth: 2
 
-   mpaso
-   mpasseaice
-   e3sm
-
-Observational Data Sets
-=======================
-.. toctree::
-
-  observations
+   api
+   design_docs
 
 Indices and tables
 ==================
