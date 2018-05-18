@@ -66,7 +66,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         super(ClimatologyMapArgoTemperature, self).__init__(
                 config=config, taskName='climatologyMapArgoTemperature',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', fieldName,
+                tags=['climatology', 'horizontalMap', 'argo', 'temperature',
                       'publicObs'])
 
         sectionName = self.taskName
@@ -207,7 +207,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         super(ClimatologyMapArgoSalinity, self).__init__(
                 config=config, taskName='climatologyMapArgoSalinity',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', fieldName])
+                tags=['climatology', 'horizontalMap', 'argo', 'salinity'])
 
         sectionName = self.taskName
 
