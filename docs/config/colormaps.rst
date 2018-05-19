@@ -37,7 +37,7 @@ between two contours will be filled with a solid color specified by a colormap
 index, the number of levels is one greater than the number of indices.  The
 exception is when a separate shading should be used for values that fall
 outside the range of the contours, in which case the number of colormap indices
-is is one more than the number of levels values, and the first and last index
+is one more than the number of levels values, and the first and last index
 are used to specify the "under" and "over" color values.
 
 Continuous Colormaps

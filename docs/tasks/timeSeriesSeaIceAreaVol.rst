@@ -45,7 +45,7 @@ both sets of observations (see below).
 
 The title font size can be customized with ``titleFontSize``, given in points.
 
-To produce ploar plots (with time progressing clockwise around the origin and
+To produce polar plots (with time progressing clockwise around the origin and
 sea ice area or volume the distance from the origin) in addition to the
 typical time series with time on the x axis, set ``polarPlot = True``.
 

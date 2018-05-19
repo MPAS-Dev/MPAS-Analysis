@@ -4,7 +4,7 @@ Comparison Grids
 ================
 
 Currently, MPAS-Analysis supports two comparison grids to which both model
-results and observations are remapped for comprison and plotting.  These are
+results and observations are remapped for comparison and plotting.  These are
 ``latlon``, a global latitude/longitude grid, and ``antarctic``, a
 stereographic grid centered at the south pole.  Many analysis tasks support
 both of these grids, in which case either or both can be specified in a list::

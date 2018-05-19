@@ -80,7 +80,7 @@ meters) that separate the upper, middle and lower regions of the ocean, e.g.::
 indictes that OHC will be integrated from 0 to 700 m, 700 to 2000 m,
 and 2000 m to the ocean floor (as well as from 0 to the ocean floor).
 
-The OHC can be compared with results from reference v0 simulation.  If
+The OHC can be compared with results from a reference v0 simulation.  If
 ``preprocessedRunName`` in the ``[runs]`` section is not ``None``, the
 depth integrated time series will be read in with a file prefix given by
 ``preprocessedFilePrefix`` and a field prefix given by

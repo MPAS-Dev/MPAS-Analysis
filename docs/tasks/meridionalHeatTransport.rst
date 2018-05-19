@@ -47,7 +47,7 @@ The following configuration options are available for this task::
   movingAveragePoints = 1
 
 The option ``observationData`` allows the selection of the observational file
-to ccompare with (available largely for debugging purposes).
+to compare with (available largely for debugging purposes).
 
 By default, only a line plot of depth-integrated MHT is plotted.  Optionally,
 you can set ``plotVerticalSection = True`` to produce a plot of the MHT per

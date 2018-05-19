@@ -62,7 +62,7 @@ task::
   #sstClimatologyStartYear = 1990
   #sstClimatologyEndYear = 2011
 
-By default, A "preindustrial" climatology is computed for comparison with the
+By default, a "preindustrial" climatology is computed for comparison with the
 model results.  For simulations covering a different time period, the range of
 years should be updated.
 

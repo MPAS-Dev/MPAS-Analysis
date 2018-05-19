@@ -46,7 +46,7 @@ Ice Shelf and Region Names
 
 The ``iceShelvesToPlot`` can be set to ``['all']`` to plot all 106 ice shelves
 and regions (not recommended, as this is typically a waste of time). Otherwise,
-it is a list consists of any subset of the following ice shelves::
+it is a list consisting of any subset of the following ice shelves::
 
   ["Abbot", "Amery", "Atka", "Aviator", "Bach", "Baudouin", "Borchgrevink",
    "Brahms", "Brunt_Stancomb", "Campbell", "Cheetham", "Conger_Glenzer",
@@ -96,8 +96,8 @@ following `Zwally et al. (2012)`_
 Other Options
 -------------
 
-:ref:`config_moving_average`
-:ref:`config_time_axis_ticks`
+* :ref:`config_moving_average`
+* :ref:`config_time_axis_ticks`
 
 Observations
 ------------

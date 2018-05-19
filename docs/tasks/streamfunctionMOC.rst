@@ -116,3 +116,7 @@ Example Result
 .. image:: examples/moc.png
    :width: 500 px
    :align: center
+
+.. image:: examples/time_series_moc.png
+   :width: 500 px
+   :align: center
