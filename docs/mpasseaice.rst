@@ -1,5 +1,5 @@
 MPAS-Seaice
-============
+-----------
 
 The Model for Prediction Across Scales Sea Ice (MPAS-Seaice)
 is designed for the simulations of sea ice on unstructured grids supported by
@@ -7,7 +7,7 @@ the MPAS framework.  The model has not yet been publicly released and does not
 have public documentation.
 
 Setting up Standalone MPAS Sea Ice Runs
----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to support all sea=ice analysis tasks from MPAS-Analysis, certain
 "analysis members", Fortran modules that perform analysis during the
@@ -26,7 +26,7 @@ typically longer before most analysis is useful::
 
 Several streams must be defined in the streams file, typically
 ``streams.seaice`` or ``streams.cice`` in older E3SM runs, (even if they will
-not be written out -- ``output_interval=="none"``)::
+not be written out -- ``output_interval="none"``)::
 
   <stream name="timeSeriesStatsMonthlyRestart"
           type="input;output"

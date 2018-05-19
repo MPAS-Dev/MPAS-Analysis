@@ -43,10 +43,6 @@ preprocessedReferenceRunName = None
 # the number of parallel tasks (1 means tasks run in serial, the default)
 parallelTaskCount = 1
 
-# Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')
-# Default is no prefix (run_mpas_analysis is executed directly)
-commandPrefix =
-
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
@@ -110,7 +106,6 @@ maxChunkSize = 10000
 baseDirectory = /dir/for/analysis/output
 
 # subdirectories within baseDirectory for analysis output
-scratchSubdirectory = scratch
 plotsSubdirectory = plots
 logsSubdirectory = logs
 mpasClimatologySubdirectory = clim/mpas
@@ -172,11 +167,6 @@ comparisonAntarcticStereoResolution = 10.
 # interpolation order for model and observation results. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 mpasInterpolationMethod = bilinear
-
-# the number of years per cached climatology file.  These cached files are
-# aggregated together to create annual climatologies, for example, when
-# computing the MOC.
-yearsPerCacheFile = 1
 
 # should remapping be performed with ncremap or with the Remapper class
 # directly in MPAS-Analysis
@@ -249,13 +239,6 @@ interpolationMethod = bilinear
 climatologySubdirectory = clim/obs
 remappedClimSubdirectory = clim/obs/remapped
 
-[oceanReference]
-## options related to ocean reference run with which the results will be
-## compared
-
-# directory where ocean reference simulation results are stored
-baseDirectory = /dir/to/ocean/reference
-
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
@@ -298,13 +281,6 @@ interpolationMethod = bilinear
 # remapping.
 climatologySubdirectory = clim/obs
 remappedClimSubdirectory = clim/obs/remapped
-
-[seaIceReference]
-## options related to sea ice reference run with which the results will be
-## compared
-
-# directory where sea ice reference simulation results are stored
-baseDirectory = /dir/to/seaice/reference
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
@@ -431,10 +407,9 @@ contourLevels = np.arange(-0.1, 0.11, 0.02)
 [timeSeriesSST]
 ## options related to plotting time series of sea surface temperature (SST)
 
-# compare to observations?
-compareWithObservations = True
 # list of regions to plot from the region list in [regions] below
 regions = ['global']
+
 # Number of points over which to compute moving average (e.g., for monthly
 # output, movingAveragePoints=12 corresponds to a 12-month moving average
 # window)
@@ -457,9 +432,9 @@ movingAveragePoints = 12
 # The indexNino34 routine only accepts one value at a time
 region = nino3.4
 
-# Data source to read for comparison.  There are three options
-# 1 - ERS SSTv4 -- Updated version of previous -- 1854 - 2016
-# 2 - HADIsst -- Hadley center analysis -- 1870 - 2016
+# Data source to read for comparison.  There are two options
+# 1 - ERS SSTv4 -- Extended Reconstructed Sea Surface Temperature -- 1854 - 2016
+# 2 - HADIsst -- Hadley Center analysis -- 1870 - 2016
 observationData = HADIsst
 
 [meridionalHeatTransport]
@@ -469,21 +444,13 @@ observationData = HADIsst
 observationData = mht_TrenberthCaron.NoAtm.nc
 
 # colormap for model results
-colormapNameGlobal = balance
-colormapNameAtlantic = balance
-colormapNameIndoPacific = balance
+colormapName = balance
 # colormap indices for contour color
-colormapIndicesGlobal = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndicesAtlantic = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndicesIndoPacific = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsGlobal = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
-colorbarLevelsAtlantic = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
-colorbarLevelsIndoPacific = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
+colorbarLevels = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
 # contour line levels
-contourLevelsGlobal = [-0.1, -0.01, 0.01, 0.1]
-contourLevelsAtlantic = [-0.1, -0.01, 0.01, 0.1]
-contourLevelsPacific = [-0.1, -0.01, 0.01, 0.1]
+contourLevels = [-0.1, -0.01, 0.01, 0.1]
 
 # latitude and depth limits
 xLimGlobal = [-80, 80]
@@ -512,18 +479,6 @@ includeBolus = True
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# xarray (with dask) divides data sets into "chunks", allowing computations
-# to be made on data that is larger than the available memory.  MPAS-Analysis
-# supports setting a maximum chunk size for data sets generally, and a
-# separate option specific to loading the 3D velocity field in the MOC
-# specifically.  By default, maxChunkSize is left undefined, so that chunking
-# is handled automatically.  If the MOC calculation encounters memory problems,
-# consider setting maxChunkSize to a number significantly lower than nEdges
-# in your MPAS mesh so that the calculation will be divided into smaller
-# pieces.
-# Note, need to use maxChunkSize for the 18to6
-# maxChunkSize = 1000
-
 # Size of latitude bins over which MOC streamfunction is integrated
 latBinSizeGlobal = 1.
 latBinSizeAtlantic = 0.5
@@ -545,9 +500,6 @@ colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
 contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
 contourLevelsAtlantic = np.arange(-8, 20.1, 2)
 contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
-
-# compare to observations?
-compareWithObservations = True
 
 # Number of points over which to compute moving average for
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
@@ -611,7 +563,7 @@ colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 2
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
@@ -636,7 +588,7 @@ colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 2
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-3, -2, -1, -0.5, -0.02, 0,  0.02, 0.5, 1, 2, 3]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
@@ -661,7 +613,7 @@ colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 2
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
@@ -695,7 +647,7 @@ colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185, 20
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-100., -80., -60., -40., -20., -10., 0., 10., 20.,  40.,  60.,  80.,  100.]
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
@@ -722,7 +674,7 @@ colormapIndicesDifference = numpy.array(numpy.linspace(0, 255, 10), int)
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = numpy.linspace(-2., 2., 11)
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN']
 
@@ -744,7 +696,7 @@ depthRanges = [(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -100
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
@@ -798,7 +750,7 @@ movingAverageMonths = 1
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -833,7 +785,7 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # comparison grid(s)
 comparisonGrids = ['latlon']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JAS','JFM']
 
@@ -869,7 +821,7 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -903,7 +855,7 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # comparison grid(s)
 comparisonGrids = ['latlon']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -937,7 +889,7 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -968,7 +920,7 @@ colorbarTicksDifference = [-200., -100., -50., -20., -10., 0., 10., 20., 50., 10
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -1003,7 +955,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -1038,7 +990,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -1073,7 +1025,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # only the Antarctic really makes sense but lat-lon could technically work.
 comparisonGrids = ['antarctic']
 
-# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['ANN','JFM','JAS']
 
@@ -1162,7 +1114,7 @@ colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 2
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.]
 
-# Times for comparison times (These should be left unchanged, since
+# Months or seasons to plot (These should be left unchanged, since
 # observations are only available for these seasons)
 seasons =  ['JFM', 'JAS']
 
@@ -1198,7 +1150,7 @@ colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 2
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.]
 
-# Times for comparison times (These should be left unchanged, since
+# Months or seasons to plot (These should be left unchanged, since
 # observations are only available for these seasons)
 seasons =  ['DJF', 'JJA']
 
@@ -1234,7 +1186,7 @@ colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
 
-# Times for comparison times (These should be left unchanged, since
+# Months or seasons to plot (These should be left unchanged, since
 # observations are only available for these seasons)
 seasons =  ['FM', 'ON']
 
@@ -1270,7 +1222,7 @@ colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
 
-# Times for comparison times (These should be left unchanged, since
+# Months or seasons to plot (These should be left unchanged, since
 # observations are only available for these seasons)
 seasons =  ['FM', 'ON']
 

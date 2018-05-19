@@ -15,6 +15,7 @@ import re
 import os
 
 
+
 def markdown_links(data, footer):
     urlscmd = re.findall(r"\[.*?\]\n*\(.*?\)", data)
     urls = re.findall(r"\[.*?\]\n*\((.*?)\)", data)
@@ -37,6 +38,21 @@ def cleanup(linedata, footer):
     for acleanup in cleanups:
         linedata, footer = acleanup(linedata, footer)
     return linedata, footer
+
+
+def add_task_links(data):
+    lines = data.split('\n')
+    outLines = []
+    for line in lines:
+        line = line.strip()
+        if line[0:2] == '- ':
+            line = '- :ref:`task_{}`'.format(line[2:])
+        else:
+            line = ':ref:`task_{}`'.format(line)
+        outLines.append(line)
+
+    data = '\n'.join(outLines)
+    return data
 
 
 def build_rst_table_from_xml(xmlfile, rstfile, component):
@@ -66,6 +82,8 @@ def build_rst_table_from_xml(xmlfile, rstfile, component):
                 if len(nameInDocs) > 0:
                     nameInDocs = nameInDocs[0].text.strip()
                     linedata = ':ref:`{}`'.format(nameInDocs)
+            if aheader == 'tasks':
+                linedata = add_task_links(linedata)
             linedata, footer = cleanup(linedata, footer)
             line.append(linedata)
         data.append(line)
@@ -128,6 +146,8 @@ def build_obs_pages_from_xml(xmlfile):
             rst.write('{}\n'.format(title))
             rst.write('{}\n'.format('-'*len(title)))
             text = entry.findall(tag)[0].text.strip()
+            if tag == 'tasks':
+                text = add_task_links(text)
             if tag == 'references':
                 # add a link to the bibtex file
                 subdirectory = entry.findall('subdirectory')[0].text.strip()
