@@ -92,7 +92,7 @@ need to set ``baseDirectory`` for both ocean and sea ice observation to
 a directory ending in ``observations/Ocean`` and ``observations/SeaIce``,
 respectively.  The rest of these paths is determined by where you downloaded
 the observationsal data from the `E3SM public data repository`_ (see the
-Quick Start Guide for details).  Typically, the subdirectories and individual
+:ref:`quick_start` for details).  Typically, the subdirectories and individual
 files will not need to be changed except for debugging purposes.
 
 The directories for storing cached datasets before and afer remapping

@@ -20,6 +20,10 @@ def build_quick_start():
     outContent = []
     with open('../README.md', 'r') as inFile:
         with open('quick_start.md', 'w') as outFile:
+            outFile.write(
+                '```eval_rst\n'
+                '.. _quick_start:\n'
+                '```\n')
             for line in inFile.readlines():
                 for replaceString in replace:
                     if replaceString in line:

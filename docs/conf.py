@@ -14,11 +14,13 @@
 
 import os
 import sys
+import recommonmark
+from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
 sys.path.insert(0, os.path.abspath('..'))
 import mpas_analysis
 from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
 from docs.parse_quick_start import build_quick_start
-
 
 # -- General configuration ------------------------------------------------
 
@@ -51,7 +53,7 @@ source_suffix = ['.rst', '.md']
 # source_suffix = '.rst'
 
 source_parsers = {
-   '.md': 'recommonmark.parser.CommonMarkParser',
+   '.md': CommonMarkParser,
 }
 
 # The master toctree document.
@@ -62,8 +64,8 @@ project = u'MPAS-Analysis'
 copyright = u'2016-2018, Los Alamos National Security, LLC (LANS) (Ocean: ' \
             u'LA-CC-13-047; Land Ice: LA-CC-13-117) and the University ' \
             u'Corporation for Atmospheric Research (UCAR)'
-author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, ' \
-         u'Luke Van Roekel, Greg Streletz, Mark Petersen, Stephen Price, ' \
+author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, \n' \
+         u'Luke Van Roekel, Greg Streletz, Mark Petersen, Stephen Price, \n' \
          u'Joseph Kennedy, Adrian Turner, Matthew Hoffman, Jeremy Fyke'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -193,3 +195,13 @@ for component in ['ocean', 'seaice']:
 
 build_obs_pages_from_xml(xmlFileName)
 build_quick_start()
+
+github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
+
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: github_doc_root + url,
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify)

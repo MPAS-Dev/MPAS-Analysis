@@ -43,7 +43,7 @@ Currently, two analysis tasks (``streamfunctionMOC`` and
 as part of their analysis.  ``regionMaskDirectory`` specifies the path to
 these mask files.  Region masks for common MPAS Ocean and Seaice grids are
 supplied as part of the data from the `E3SM public data repository`_ (see
-the Quick Start Guide).  The path should typically end with
+the :ref:`quick_start`).  The path should typically end with
 ``mpas_analysis/maps``.
 
 .. _`E3SM public data repository`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/

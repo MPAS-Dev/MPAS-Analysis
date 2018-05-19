@@ -157,7 +157,7 @@ especially for high resolution meshes, so it is useful to store a cache of
 these mapping files for reuse.  Mapping files at three standard resolutions
 are avaliable on the `E3SM public data repository`_.  The mapping files for
 the two coarser resolution meshes will be downloaded automatically along with
-the publicly available observations. (See the Quick Start Guide for details
+the publicly available observations. (See the :ref:`quick_start` for details
 on downloading this data.)  To specify the path to the cache of mapping files,
 add the config option::
 
