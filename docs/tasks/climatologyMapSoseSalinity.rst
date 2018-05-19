@@ -71,7 +71,7 @@ Example Result
 --------------
 
 .. image:: examples/clim_sose_salin.png
-   :width: 500 px
+   :width: 720 px
    :align: center
 
 .. _`Southern Ocean State Estimate (SOSE)`: http://sose.ucsd.edu/sose_stateestimation_data_05to10.html

@@ -109,7 +109,7 @@ Example Result
 --------------
 
 .. image:: examples/schmidtko_temp.png
-   :width: 500 px
+   :width: 720 px
    :align: center
 
 .. _`Schmidtko et al. (2014)`: http://www.sciencemag.org/cgi/doi/10.1126/science.1256117
