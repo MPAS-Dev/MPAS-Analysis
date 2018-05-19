@@ -444,21 +444,13 @@ observationData = HADIsst
 observationData = mht_TrenberthCaron.NoAtm.nc
 
 # colormap for model results
-colormapNameGlobal = balance
-colormapNameAtlantic = balance
-colormapNameIndoPacific = balance
+colormapName = balance
 # colormap indices for contour color
-colormapIndicesGlobal = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndicesAtlantic = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndicesIndoPacific = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsGlobal = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
-colorbarLevelsAtlantic = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
-colorbarLevelsIndoPacific = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
+colorbarLevels = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
 # contour line levels
-contourLevelsGlobal = [-0.1, -0.01, 0.01, 0.1]
-contourLevelsAtlantic = [-0.1, -0.01, 0.01, 0.1]
-contourLevelsPacific = [-0.1, -0.01, 0.01, 0.1]
+contourLevels = [-0.1, -0.01, 0.01, 0.1]
 
 # latitude and depth limits
 xLimGlobal = [-80, 80]
