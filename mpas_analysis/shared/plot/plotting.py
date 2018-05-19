@@ -134,7 +134,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     minDays = []
     maxDays = []
-    plotLegend = False
+    labelCount = 0
     for dsIndex in range(len(dsvalues)):
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
@@ -158,7 +158,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
             label = None
         else:
             label = legendText[dsIndex]
-            plotLegend = True
+            labelCount += 1
         if lineColors is None:
             color = 'k'
         else:
@@ -197,8 +197,9 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              fmt=obsSymbols[np.mod(iObs, len(obsSymbols))],
                              ecolor='k',
                              capthick=2, label=obsLegend[iObs])
+                labelCount += 1
 
-    if plotLegend and len(dsvalues) > 1:
+    if labelCount > 1:
         plt.legend(loc=legendLocation)
 
     ax = plt.gca()
@@ -290,7 +291,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
 
     minDays = []
     maxDays = []
-    plotLegend = False
+    labelCount = 0
     for dsIndex in range(len(dsvalues)):
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
@@ -304,7 +305,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
             label = None
         else:
             label = legendText[dsIndex]
-            plotLegend = True
+            labelCount += 1
         if lineColors is None:
             color = 'k'
         else:
@@ -326,7 +327,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
                   linestyle=linestyle, marker=marker, linewidth=linewidth,
                   label=label)
 
-    if plotLegend and len(dsvalues) > 1:
+    if labelCount > 1:
         plt.legend(loc='lower left')
 
     ax = plt.gca()
