@@ -44,7 +44,7 @@ environment with the following packages:
 These can be installed via the conda command:
 ```
 conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
-    bottleneck basemap lxml nco pyproj pillow cmocean
+    bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests
 ```
 
 ## Download analysis input data
