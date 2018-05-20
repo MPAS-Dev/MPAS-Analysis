@@ -27,7 +27,7 @@ The following configuration options are available for this task::
   region = nino3.4
 
   # Data source to read for comparison.  There are two options
-  # 1 - ERS SSTv4 -- Extended Reconstructed Sea Surface Temperature -- 1854 - 2016
+  # 1 - ERS_SSTv4 -- Extended Reconstructed Sea Surface Temperature -- 1854 - 2016
   # 2 - HADIsst -- Hadley Center analysis -- 1870 - 2016
   observationData = HADIsst
 
@@ -35,15 +35,9 @@ While the default is the El Ni |n~| o 3.4 region, you may select among
 ``nino3``, ``nino4``, and ``nino3.4``.  See :ref:`config_regions` for more
 information about regions in MPAS-Analyis.
 
-.. note::
-
-  A bug in ``indexNino34`` means that plot titles and other output will
-  indicate that El Ni |n~| o 3.4 was plotted regarless of which of the three
-  El Ni |n~| o regions was actually selected.
-
 By default, observations are taken from the Hadley Center analysis.  To use
 the Extended Reconstructed Sea Surface Temperature (ERS SSTv4), set
-``observationData = ERS SSTv4``.
+``observationData = ERS_SSTv4``.
 
 Observations
 ------------
