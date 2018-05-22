@@ -220,8 +220,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             x = self.lat[region]
             y = self.depth
             z = self.moc[region]
-            plot_vertical_section(config, x, y, z, self.sectionName,
-                                  suffix=region, colorbarLabel=colorbarLabel,
+            sectionName = '{}{}'.format(self.sectionName, region)
+            plot_vertical_section(config, x, y, z, sectionName,
+                                  colorbarLabel=colorbarLabel,
                                   title=title, xlabel=xLabel, ylabel=yLabel,
                                   fileout=figureName,
                                   N=movingAveragePointsClimatological)
@@ -354,18 +355,34 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         mpasMeshName = config.get('input', 'mpasMeshName')
         regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
 
-        regionMaskFile = '{}/{}_SingleRegionAtlanticWTransportTransects_' \
-                         'masks.nc'.format(regionMaskDirectory, mpasMeshName)
+        regionMaskFile = '{}/{}_MOCBasinsAndTransectMasks.nc'.format(
+                regionMaskDirectory, mpasMeshName)
 
         if not os.path.exists(regionMaskFile):
             raise IOError('Regional masking file {} for MOC calculation '
                           'does not exist'.format(regionMaskFile))
-        iRegion = 0
+
+        ncFileRegional = netCDF4.Dataset(regionMaskFile, mode='r')
         self.dictRegion = {}
         for region in self.regionNames:
             self.logger.info('\n  Reading region and transect mask for '
                              '{}...'.format(region))
-            ncFileRegional = netCDF4.Dataset(regionMaskFile, mode='r')
+
+            nRegions = ncFileRegional.dimensions['nRegions'].size
+            found = False
+            for iRegion in range(nRegions):
+                name = ncFileRegional.variables['regionNames'][iRegion]
+                if type(name) == np.ma.MaskedArray:
+                    name = name.filled()
+                name = ''.join([char.decode('UTF-8') for char in name]).strip()
+                if name == '{}_MOC'.format(region):
+                    found = True
+                    break
+
+            if not found:
+                raise ValueError('Region {} not found in MOC region '
+                                 'masks'.format(region))
+
             maxEdgesInTransect = \
                 ncFileRegional.dimensions['maxEdgesInTransect'].size
             transectEdgeMaskSigns = \
@@ -374,7 +391,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                 ncFileRegional.variables['transectEdgeGlobalIDs'][iRegion, :]
             regionCellMask = \
                 ncFileRegional.variables['regionCellMasks'][:, iRegion]
-            ncFileRegional.close()
             iRegion += 1
 
             indRegion = np.where(regionCellMask == 1)
@@ -384,6 +400,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                 'maxEdgesInTransect': maxEdgesInTransect,
                 'transectEdgeMaskSigns': transectEdgeMaskSigns,
                 'transectEdgeGlobalIDs': transectEdgeGlobalIDs}
+
+        ncFileRegional.close()
         # Add Global regionCellMask=1 everywhere to make the algorithm
         # for the global moc similar to that of the regional moc
 
@@ -456,9 +474,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                                                          horizontalVel)
 
                 regionCellMask = self.dictRegion[region]['cellMask']
-                latBinSize = \
-                    config.getExpression(self.sectionName,
-                                         'latBinSize{}'.format(region))
+                sectionName = '{}{}'.format(self.sectionName, region)
+                latBinSize = config.getfloat(sectionName, 'latBinSize')
                 if region == 'Global':
                     latBins = np.arange(-90.0, 90.1, latBinSize)
                 else:
