@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20180129.DECKv1b_piControl.ne30_oEC.edison
+mainRunName = 20180209.GMPAS-IAF.T62_oRRS30to10v3wLI.cori-knl.afterSalinityFix
 
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
