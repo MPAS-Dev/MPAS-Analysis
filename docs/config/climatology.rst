@@ -92,13 +92,13 @@ This capability is available largely for debugging purposes.
 
 Remapped data typically only makes sense if it is renormalized after remapping.
 For remapping of conserved quatntities like fluxes, renormalization would not
-be desirable but for quantities like temperature, salinity and density commonly
-used in MPAS-Anlaysis tasks, values become physically meaningless near land
-boundaries and regions without data unless renormalization is performed.  A
-threshold is needed to determine how much of a cell's area on the output grid
-must contain valid data from the input grid or mesh, below which that cell is
-considered invalid and is masked out of the destination data set.  This
-threshold is specified as a fraction::
+be desirable but for quantities like potential temperature, salinity and
+potential density commonly used in MPAS-Anlaysis tasks, values become
+physically meaningless near land boundaries and regions without data unless
+renormalization is performed.  A threshold is needed to determine how much of a
+cell's area on the output grid must contain valid data from the input grid or
+mesh, below which that cell is considered invalid and is masked out of the
+destination data set.  This threshold is specified as a fraction::
 
   renormalizationThreshold = 0.01
 

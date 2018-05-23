@@ -345,7 +345,7 @@ contourLevels = np.arange(-2.5, 2.6, 0.5)
 # yearStrideXTicks = 1
 
 [hovmollerTemperatureAnomaly]
-## options related to plotting time series of temperature vs. depth
+## options related to plotting time series of potential temperature vs. depth
 
 # list of regions to plot from the region list in [regions] below
 regions = ['global']
@@ -426,7 +426,7 @@ movingAveragePoints = 12
 # yearStrideXTicks = 1
 
 [indexNino34]
-## options related to plotting time series of the El Nino 3.4 index (or 
+## options related to plotting time series of the El Nino 3.4 index (or
 ## optionally El Nino 3 or 4 index)
 
 # Specified region for the Nino Index,'nino3', 'nino4', or 'nino3.4'
@@ -1088,7 +1088,7 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
 
 [climatologyMapSchmidtkoSalinity]
-## options related to plotting climatology maps of potential temperature at the
+## options related to plotting climatology maps of salinity at the
 ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
 # colormap for model/observations
@@ -1110,7 +1110,7 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
 [climatologyMapSchmidtkoPotentialDensity]
-## options related to plotting climatology maps of potential temperature at the
+## options related to plotting climatology maps of potential density at the
 ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
 # colormap for model/observations
