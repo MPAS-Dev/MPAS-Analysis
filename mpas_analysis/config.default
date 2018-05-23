@@ -201,6 +201,46 @@ endYear = 9999
 startYear = 1
 endYear = 9999
 
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# list of region names (needs to be in the same order as region indices in
+# time-series stats)
+regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
+# list of plot titles (needs to be in the same order as region indices in
+# time-series stats)
+plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
+              'Nino 4', 'Nino 3.4', 'Global Ocean']
+
+# Directory for region mask files
+regionMaskDirectory = /path/to/masks/
+
+[plot]
+## options related to plotting that are the defaults across all analysis
+## modules
+
+# set to true if you want plots to be displayed (one by one) to the screen in
+# addition to being written out to png files
+# Note: displayToScreen = True seems to hang on Edison on large data sets,
+# so suggested use is just for debugging either locally or with small data sets
+displayToScreen = False
+
+# font size on axes
+axisFontSize = 16
+# title font properties
+titleFontSize = 20
+titleFontColor = black
+titleFontWeight = normal
+
+# the dots per inch of output figures
+dpi = 200
+
+[html]
+## options related to generating a webpage to display the analysis
+
+# generate the webpage?
+generate = True
+
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
 
@@ -1285,43 +1325,3 @@ areaNH = IceArea_timeseries/iceAreaNH_climo.nc
 areaSH = IceArea_timeseries/iceAreaSH_climo.nc
 volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
 volSH = none
-
-[regions]
-## options related to ocean regions used in several analysis modules
-
-# list of region names (needs to be in the same order as region indices in
-# time-series stats)
-regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
-# list of plot titles (needs to be in the same order as region indices in
-# time-series stats)
-plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
-              'Nino 4', 'Nino 3.4', 'Global Ocean']
-
-# Directory for region mask files
-regionMaskDirectory = /path/to/masks/
-
-[plot]
-## options related to plotting that are the defaults across all analysis
-## modules
-
-# set to true if you want plots to be displayed (one by one) to the screen in
-# addition to being written out to png files
-# Note: displayToScreen = True seems to hang on Edison on large data sets,
-# so suggested use is just for debugging either locally or with small data sets
-displayToScreen = False
-
-# font size on axes
-axisFontSize = 16
-# title font properties
-titleFontSize = 20
-titleFontColor = black
-titleFontWeight = normal
-
-# the dots per inch of output figures
-dpi = 200
-
-[html]
-## options related to generating a webpage to display the analysis
-
-# generate the webpage?
-generate = True
