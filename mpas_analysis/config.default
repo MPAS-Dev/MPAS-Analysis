@@ -217,15 +217,6 @@ sshSubdirectory = SSH
 argoSubdirectory = ARGO
 schmidtkoSubdirectory = Schmidtko
 
-# first and last year of SST observational climatology (preferably one of the
-# two ranges given below)
-# values for preindustrial
-sstClimatologyStartYear = 1870
-sstClimatologyEndYear = 1900
-# alternative values for present day
-#sstClimatologyStartYear = 1990
-#sstClimatologyEndYear = 2011
-
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 interpolationMethod = bilinear
@@ -570,6 +561,15 @@ seasons =  ['JFM', 'JAS', 'ANN']
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
+
+# first and last year of SST observational climatology (preferably one of the
+# two ranges given below)
+# values for preindustrial
+obsStartYear = 1870
+obsEndYear = 1900
+# alternative values for present day
+#obsStartYear = 1990
+#obsEndYear = 2011
 
 [climatologyMapSSS]
 ## options related to plotting horizontally remapped climatologies of

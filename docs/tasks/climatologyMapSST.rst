@@ -43,28 +43,23 @@ The following configuration options are available for this task::
   # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
   comparisonGrids = ['latlon']
 
-For more details, see:
- * :ref:`config_colormaps`
- * :ref:`config_seasons`
- * :ref:`config_comparison_grids`
-
-The following configuration options relate to the observations used by this
-task::
-
-  [oceanObservations]
-  ...
   # first and last year of SST observational climatology (preferably one of the
   # two ranges given below)
   # values for preindustrial
-  sstClimatologyStartYear = 1870
-  sstClimatologyEndYear = 1900
+  obsStartYear = 1870
+  obsEndYear = 1900
   # alternative values for present day
-  #sstClimatologyStartYear = 1990
-  #sstClimatologyEndYear = 2011
+  #obsStartYear = 1990
+  #obsEndYear = 2011
 
 By default, a "preindustrial" climatology is computed for comparison with the
 model results.  For simulations covering a different time period, the range of
-years should be updated.
+years (``obsStartYear`` and ``obsEndYear``) should be updated.
+
+For details on the remaining configuration options, see:
+ * :ref:`config_colormaps`
+ * :ref:`config_seasons`
+ * :ref:`config_comparison_grids`
 
 Observations
 ------------
