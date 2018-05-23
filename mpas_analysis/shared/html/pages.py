@@ -215,7 +215,7 @@ class MainPage(object):
                     pageText.encode('ascii',
                                     'xmlcharrefreplace').decode('ascii'))
 
-        # copy the css and js files
+        # copy the css and js files as well as general images
         fileName = \
             pkg_resources.resource_filename(__name__,
                                             "templates/style.css")
@@ -230,6 +230,15 @@ class MainPage(object):
             pkg_resources.resource_filename(__name__,
                                             "templates/mpas_logo.png")
         copyfile(fileName, '{}/mpas_logo.png'.format(htmlBaseDirectory))
+
+        fileName = \
+            pkg_resources.resource_filename(__name__,
+                                            "templates/config.png")
+        copyfile(fileName, '{}/config.png'.format(htmlBaseDirectory))
+
+        with open('{}/config.{}'.format(htmlBaseDirectory, runName), 'w') \
+                as configFile:
+            self.config.write(configFile)
 
 
 class ComponentPage(object):
