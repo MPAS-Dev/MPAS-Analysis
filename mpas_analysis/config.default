@@ -238,6 +238,13 @@ titleFontColor = black
 titleFontWeight = normal
 axisFontSize = 16
 
+# title and axis font properties for three-panel plots
+threePanelTitleFontSize = 20
+threePanelPlotTitleFontSize = 16
+threePanelTitleFontColor = black
+threePanelTitleFontWeight = normal
+threePanelAxisFontSize = 12
+
 # the dots per inch of output figures
 dpi = 200
 
@@ -1187,6 +1194,7 @@ horizontalResolution = obs
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
 # verticalComparisonGridName = obs
 verticalComparisonGridName = uniform_0_to_4000m_at_10m
+#verticalComparisonGridName = mpas
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
 # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
@@ -1201,14 +1209,17 @@ renormalizationThreshold = 0.01
 ## options related to plotting WOCE transects of potential temperature
 
 # colormap for model/observations
-colormapNameResult = RdBu_r
+colormapNameResult = RdYlBu_r
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeResult = linear
-# A dictionary with keywords for the SemiLogNorm
-#normArgsResult = {'vmin': -2., 'vmax': 30.}
+# A dictionary with keywords for the norm
 normArgsResult = {'vmin': 0.0, 'vmax': 18.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]
 # place the ticks automatically by default
-# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+# colorbarTicksResult = numpy.linspace(0.0, 18.0, 9)
 # contour line levels
 contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 
@@ -1216,28 +1227,16 @@ contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 colormapNameDifference = RdBu_r
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeDifference = linear
-# A dictionary with keywords for the SemiLogNorm
+# A dictionary with keywords for the norm
 normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
-# place the ticks automatically by default
-# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
-# contour line levels
-contourLevelsDifference = np.arange(-1.8, 1.9, 0.4)
-
-## colormap for model/observations
-#colormapNameResult = RdYlBu_r
-## color indices into colormapName for filled contours
-#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-## colormap levels/values for contour boundaries
-##colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
-#colorbarLevelsResult = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]
-
-## colormap for differences
-#colormapNameDifference = RdBu_r
-## color indices into colormapName for filled contours
+# color indices into colormapName for filled contours
 #colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
-## colormap levels/values for contour boundaries
-##colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# colormap levels/values for contour boundaries
 #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
+# contour line levels
+contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 
 
 
@@ -1248,11 +1247,14 @@ contourLevelsDifference = np.arange(-1.8, 1.9, 0.4)
 colormapNameResult = BuOr
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeResult = linear
-# A dictionary with keywords for the SemiLogNorm
-#normArgsResult = {'vmin': 30, 'vmax': 39.0}
-normArgsResult = {'vmin': 33, 'vmax': 36.0}
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 33.0, 'vmax': 36.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [33, 34, 34.25, 34.5, 34.6, 34.7, 34.8, 34.9, 35, 36]
 # place the ticks automatically by default
-# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+# colorbarTicksResult = numpy.linspace(33.0, 36.0, 9)
 # contour line levels
 contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 
@@ -1260,29 +1262,16 @@ contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 colormapNameDifference = RdBu_r
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeDifference = linear
-# A dictionary with keywords for the SemiLogNorm
-#normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# A dictionary with keywords for the norm
 normArgsDifference = {'vmin': -1.0, 'vmax': 1.0}
+# color indices into colormapName for filled contours
+#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsDifference = [-1, -0.5, -0.2, -0.05, -0.02, 0,  0.02, 0.05, 0.2, 0.5, 1]
 # place the ticks automatically by default
-# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+# colorbarTicksDifference = numpy.linspace(-1.0, 1.0, 9)
 # contour line levels
 contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
-
-## colormap for model/observations
-#colormapNameResult = RdYlBu_r
-## color indices into colormapName for filled contours
-#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-## colormap levels/values for contour boundaries
-##colorbarLevelsResult = [28, 29, 30, 31, 32, 33, 34, 35, 36, 38]
-#colorbarLevelsResult = [33, 34, 34.25, 34.5, 34.6, 34.7, 34.8, 34.9, 35, 36]
-
-## colormap for differences
-#colormapNameDifference = RdBu_r
-## color indices into colormapName for filled contours
-#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
-## colormap levels/values for contour boundaries
-##colorbarLevelsDifference = [-3, -2, -1, -0.5, -0.02, 0,  0.02, 0.5, 1, 2, 3]
-#colorbarLevelsDifference = [-1, -0.5, -0.2, -0.05, -0.02, 0,  0.02, 0.05, 0.2, 0.5, 1]
 
 
 [soseTransects]
@@ -1303,6 +1292,7 @@ horizontalResolution = obs
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
 # verticalComparisonGridName = obs
 verticalComparisonGridName = uniform_0_to_4000m_at_10m
+#verticalComparisonGridName = obs
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
 # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
@@ -1323,44 +1313,35 @@ longitudes = numpy.linspace(0, 330, 12)
 [soseTemperatureTransects]
 ## options related to plotting WOCE transects of potential temperature
 
-## colormap for model/observations
-colormapNameResult = RdBu_r
-## the type of norm used in the colormap
-normTypeResult = linear
-## A dictionary with keywords for the SemiLogNorm
-normArgsResult = {'vmin': -2., 'vmax': 30.}
-## place the ticks automatically by default
-## colorbarTicksResult = numpy.linspace(-2., 2., 9)
-# contour line levels
-contourLevelsResult = np.arange(0.5, 6.0, 1.0)
-
-## colormap for differences
-colormapNameDifference = RdBu_r
-## the type of norm used in the colormap
-normTypeDifference = linear
-## A dictionary with keywords for the SemiLogNorm
-normArgsDifference = {'vmin': -2., 'vmax': 2.}
-## place the ticks automatically by default
-## colorbarTicksDifference = numpy.linspace(-2., 2., 9)
-# contour line levels
-contourLevelsDifference = np.arange(-1.8, 1.9, 0.4)
-
 # colormap for model/observations
-#colormapNameResult = RdYlBu_r
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
 # color indices into colormapName for filled contours
 #colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-#colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
 #colorbarLevelsResult = [0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6]
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(0.0, 6.0, 9)
+# contour line levels
+contourLevelsResult = np.arange(0.5, 6.0, 1.0)
 
 # colormap for differences
-#colormapNameDifference = RdBu_r
+colormapNameDifference = RdBu_r
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
 # color indices into colormapName for filled contours
 #colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-#colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
 #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
-
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
+# contour line levels
+contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 
 
 [soseSalinityTransects]
@@ -1370,10 +1351,14 @@ contourLevelsDifference = np.arange(-1.8, 1.9, 0.4)
 colormapNameResult = BuOr
 # the type of norm used in the colormap
 normTypeResult = linear
-# A dictionary with keywords for the SemiLogNorm
-normArgsResult = {'vmin': 30, 'vmax': 39.0}
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]
 # place the ticks automatically by default
-# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+# colorbarTicksResult = numpy.linspace(34.0, 35.0, 9)
 # contour line levels
 contourLevelsResult = np.arange(34.1, 35.0, 0.1)
 
@@ -1381,28 +1366,16 @@ contourLevelsResult = np.arange(34.1, 35.0, 0.1)
 colormapNameDifference = RdBu_r
 # the type of norm used in the colormap
 normTypeDifference = linear
-# A dictionary with keywords for the SemiLogNorm
+# A dictionary with keywords for the norm
 normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# color indices into colormapName for filled contours
+#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 # contour line levels
 contourLevelsDifference = np.arange(-0.6, 0.5, 0.1)
-
-## colormap for model/observations
-#colormapNameResult = RdYlBu_r
-## color indices into colormapName for filled contours
-#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-## colormap levels/values for contour boundaries
-##colorbarLevelsResult = [28, 29, 30, 31, 32, 33, 34, 35, 36, 38]
-#colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]
-
-## colormap for differences
-#colormapNameDifference = RdBu_r
-## color indices into colormapName for filled contours
-#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
-## colormap levels/values for contour boundaries
-##colorbarLevelsDifference = [-3, -2, -1, -0.5, -0.02, 0,  0.02, 0.5, 1, 2, 3]
-#colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]
 
 
 [climatologyMapSeaIceConcNH]

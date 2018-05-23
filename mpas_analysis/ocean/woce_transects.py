@@ -126,10 +126,13 @@ class WoceTransects(AnalysisTask):  # {{{
 
             diffTitleLabel = 'Main - Reference'
 
+        fieldNameDict = {'temperature':'temperatureTransect',
+                         'salinity':'salinityTransect'}
+
         for fieldName in fields:
             for transectName in obsFileNames:
                 for season in seasons:
-                    outFileLabel = fieldName
+                    outFileLabel = fieldNameDict[fieldName]
                     if plotObs:
                         refFieldName = fields[fieldName]['obs']
                     else:

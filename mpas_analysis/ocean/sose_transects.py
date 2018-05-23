@@ -100,10 +100,14 @@ class SoseTransects(AnalysisTask):  # {{{
             transectCollectionName = '{}_{}km'.format(transectCollectionName,
                                                       horizontalResolution)
 
+        fieldNameDict = {'temperature':'temperatureTransect',
+                         'salinity':'salinityTransect'}
+
         obsFileNames = OrderedDict()
         for fieldName in fields:
             for lon in longitudes:
-                transectName = 'SOSE_{}_{}'.format(fieldName, lon)
+                transectName = '{}_SOSE_lon_{}'.format(fieldNameDict[fieldName],
+                                                       lon)
 
                 fileName = '{}/{}'.format(observationsDirectory,
                                           fields[fieldName]['obsFile'])
@@ -139,9 +143,10 @@ class SoseTransects(AnalysisTask):  # {{{
 
         for fieldName in fields:
             for lon in longitudes:
-                transectName = 'SOSE_{}_{}'.format(fieldName, lon)
+                transectName = '{}_SOSE_lon_{}'.format(fieldNameDict[fieldName],
+                                                       lon)
                 for season in seasons:
-                    outFileLabel = fieldName
+                    outFileLabel = ''
                     if plotObs:
                         refFieldName = fields[fieldName]['obs']
                     else:

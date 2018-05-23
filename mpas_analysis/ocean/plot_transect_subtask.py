@@ -265,7 +265,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         self.xmlFileNames = []
 
-        prefixPieces = [self.outFileLabel]
+        prefixPieces = []
+        if self.outFileLabel is not '':
+            prefixPieces.append(self.outFileLabel)
         prefixPieces.append(self.transectName)
         prefixPieces.append(mainRunName)
         years = 'years{:04d}-{:04d}'.format(self.startYear, self.endYear)
@@ -349,16 +351,17 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        x = remappedModelClimatology['x'].values
-        z = remappedModelClimatology['z'].values
+
+        # broadcast x and z to have the same dimensions
+        x, z = xr.broadcast(remappedModelClimatology.x,
+                            remappedModelClimatology.z)
+
+        # convert x and z to numpy arrays
+        x = x.values
+        z = z.values
+
         nPoints = remappedModelClimatology.sizes['nPoints']
         nz = remappedModelClimatology.sizes['nz']
-        
-#        if len(x.shape) == 1:
-#            x = numpy.tile(x.reshape((len(x), 1)), (1, nz))
-#
-#        if len(z.shape) == 1:
-#            z = numpy.tile(z.reshape((1, len(z))), (nPoints, 1))
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
@@ -379,18 +382,18 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        title = '{} ({}, years {:04d}-{:04d})'.format(
+        title = '{}\n({}, years {:04d}-{:04d})'.format(
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
         # construct a three-panel comparison  plot for the transect
 
-        xLabel = 'Distance [m]'
+        xLabel = 'Distance [km]'
         yLabel = 'Depth [m]'
 
         plot_vertical_section_comparison(config,
-                                         x,
-                                         z,
+                                         x.transpose(),
+                                         z.transpose(),
                                          modelOutput.transpose(),
                                          refOutput.transpose(),
                                          bias.transpose(),
@@ -404,35 +407,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                          refTitle=self.refTitleLabel,
                                          diffTitle=self.diffTitleLabel,
                                          invertYAxis=False)
-
-
-        if len(x.shape) == 1:
-            x = numpy.tile(x.reshape((len(x), 1)), (1, nz))
-
-        if len(z.shape) == 1:
-            z = numpy.tile(z.reshape((1, len(z))), (nPoints, 1))
-
-        #if len(x) != modelOutput.shape[1]:
-        #    raise ValueError('size mismatch between x array (%d) and modelOutput (%d) %d %d %d %d' % (len(x), modelOutput.shape[1], len(z), modelOutput.shape[0], nPoints, nz))
-        #if len(z) != modelOutput.shape[0]:
-        #    raise ValueError('size mismatch between z array (%d) and modelOutput (%d)' % (len(z), modelOutput.shape[0]))
-
-        # This is just a placeholder for testing
-        plt.figure(figsize=(8, 13))
-        plt.subplot('311')
-        plt.title(mainRunName)
-        plt.pcolormesh(x, z, modelOutput)
-        plt.colorbar()
-        plt.subplot('312')
-        plt.title(self.refTitleLabel)
-        plt.pcolormesh(x, z, refOutput)
-        plt.colorbar()
-        plt.subplot('313')
-        plt.title(self.diffTitleLabel)
-        plt.pcolormesh(x, z, bias)
-        plt.colorbar()
-        plt.suptitle(title)
-        plt.savefig(outFileName[:-4]+'_OLD.png', dpi=200)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

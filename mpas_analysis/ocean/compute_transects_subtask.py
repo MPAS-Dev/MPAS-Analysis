@@ -553,7 +553,6 @@ class TransectsObservations(object):  # {{{
             fileName = '{}/{}_{}_{}.nc'.format(
                 remappedDirectory, self.transectCollectionName, transectName,
                 verticalComparisonGridName)
-
         return fileName  # }}}
 
     def _add_distance(self, dsObs):  # {{{

@@ -459,7 +459,8 @@ def plot_polar_comparison(
                     lon_0=lon0, resolution='l', ax=ax)
         x, y = m(Lons, Lats)  # compute map proj coordinates
 
-        ax.set_title(title, y=1.06, **axis_font)
+        ax.set_title(title, y=1.06, **plottitle_font)
+
         m.drawcoastlines()
         m.fillcontinents(color='grey', lake_color='white')
         m.drawparallels(np.arange(-80., 81., 10.))
@@ -509,7 +510,8 @@ def plot_polar_comparison(
                       'color': config.get('plot', 'titleFontColor'),
                       'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
+
+    plottitle_font = {'size': config.get('plot', 'threePanelPlotTitleFontSize')}
 
     ax = plt.subplot(subplots[0])
     do_subplot(ax=ax, field=modelArray, title=modelTitle, **dictModelRef)
@@ -613,7 +615,9 @@ def plot_global_comparison(
 
     def plot_panel(title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
-        plt.title(title, y=1.06, **axis_font)
+
+        plt.title(title, y=1.06, **plottitle_font)
+
         m.drawcoastlines()
         m.fillcontinents(color='grey', lake_color='white')
         m.drawparallels(np.arange(-80., 80., 20.),
@@ -653,7 +657,8 @@ def plot_global_comparison(
                       'color': config.get('plot', 'titleFontColor'),
                       'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
+
+    plottitle_font = {'size': config.get('plot', 'threePanelPlotTitleFontSize')}
 
     m = Basemap(projection='cyl', llcrnrlat=-85, urcrnrlat=86, llcrnrlon=-180,
                 urcrnrlon=181, resolution='l')
@@ -775,7 +780,8 @@ def plot_polar_projection_comparison(
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
-        plt.title(title, y=1.06, **axis_font)
+
+        plt.title(title, y=1.06, **plottitle_font)
 
         if levels is None:
             plotHandle = plt.pcolormesh(x, y, array, cmap=colormap, norm=norm)
@@ -827,8 +833,8 @@ def plot_polar_projection_comparison(
     dictModelRef = setup_colormap(config, colorMapSectionName, suffix='Result')
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
 
-    # set up figure
     fig = plt.figure(figsize=figsize, dpi=dpi)
+
     if (title is not None):
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
@@ -836,7 +842,8 @@ def plot_polar_projection_comparison(
                       'color': config.get('plot', 'titleFontColor'),
                       'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
+
+    plottitle_font = {'size': config.get('plot', 'threePanelPlotTitleFontSize')}
 
     # set up land colormap
     colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
@@ -880,6 +887,7 @@ def plot_vertical_section_comparison(
         refTitle='Observations',
         diffTitle='Model-Observations',
         titleFontSize=None,
+        plotTitleFontSize=None,
         axisFontSize=None,
         figsize=None,
         dpi=None,
@@ -949,6 +957,9 @@ def plot_vertical_section_comparison(
     titleFontSize : int, optional
         size of the title font
 
+    plotTitleFontSize : int, optional
+        size of the title font for the individual plots
+
     axisFontSize : int, optional
         size of the axis font
 
@@ -966,7 +977,8 @@ def plot_vertical_section_comparison(
         the color of contour lines (if specified)
 
     backgroundColor : str, optional
-        the background color for the plot (NaNs will be shown in this color)
+        the background color for the plot (NaNs and masked areas will be
+        shown in this color)
 
     xLim : float array, optional
         x range of plot
@@ -1023,14 +1035,17 @@ def plot_vertical_section_comparison(
 
     if (title is not None):
         if titleFontSize is None:
-            titleFontSize = config.get('plot', 'titleFontSize')
+            titleFontSize = config.get('plot', 'threePanelTitleFontSize')
         title_font = {'size': titleFontSize,
-                      'color': config.get('plot', 'titleFontColor'),
-                      'weight': config.get('plot', 'titleFontWeight')}
+                      'color': config.get('plot', 'threePanelTitleFontColor'),
+                      'weight': config.get('plot', 'threePanelTitleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
 
+    if plotTitleFontSize is None:
+        plotTitleFontSize = config.get('plot', 'threePanelPlotTitleFontSize')
+
     if axisFontSize is None:
-        axisFontSize = config.get('plot', 'axisFontSize')
+        axisFontSize = config.get('plot', 'threePanelAxisFontSize')
 
     if refArray is not None:
         plt.subplot(3, 1, 1)
@@ -1046,8 +1061,8 @@ def plot_vertical_section_comparison(
                           xlabel=xlabel,
                           ylabel=ylabel,
                           fileout=None,
-                          titleFontSize=axisFontSize,
-                          axisFontSize=12,
+                          titleFontSize=plotTitleFontSize,
+                          axisFontSize=axisFontSize,
                           xLim=xLim,
                           yLim=yLim,
                           lineWidth=lineWidth,
@@ -1072,8 +1087,8 @@ def plot_vertical_section_comparison(
                               xlabel=xlabel,
                               ylabel=ylabel,
                               fileout=None,
-                              titleFontSize=axisFontSize,
-                              axisFontSize=12,
+                              titleFontSize=plotTitleFontSize,
+                              axisFontSize=axisFontSize,
                               xLim=xLim,
                               yLim=yLim,
                               lineWidth=lineWidth,
@@ -1098,8 +1113,8 @@ def plot_vertical_section_comparison(
                               xlabel=xlabel,
                               ylabel=ylabel,
                               fileout=None,
-                              titleFontSize=axisFontSize,
-                              axisFontSize=12,
+                              titleFontSize=plotTitleFontSize,
+                              axisFontSize=axisFontSize,
                               xLim=xLim,
                               yLim=yLim,
                               lineWidth=lineWidth,
@@ -1111,6 +1126,8 @@ def plot_vertical_section_comparison(
                               yearStrideXTicks=yearStrideXTicks,
                               maxXTicks=maxXTicks,
                               calendar=calendar)
+
+    plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -1387,20 +1404,86 @@ def plot_vertical_section(
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
 
+    dimX = xArray.shape
+    dimZ = depthArray.shape
+    dimF = fieldArray.shape
+
+    if len(dimX) != 1 and len(dimX) != 2:
+        raise ValueError('xArray must have either one or two dimensions (has %d)' % dimX)
+
+    if len(dimZ) != 1 and len(dimZ) != 2:
+        raise ValueError('depthArray must have either one or two dimensions (has %d)' % dimZ)
+
+    if len(dimF) != 2:
+        raise ValueError('fieldArray must have two dimensions (has %d)' % dimF)
+
     # verify that the dimensions of fieldArray are consistent with those of
     # xArray and depthArray
-    if len(xArray) != fieldArray.shape[1] or \
-       len(depthArray) != fieldArray.shape[0]:
-        raise ValueError('size mismatch between xArray (%d), '
-                         'depthArray (%d), and fieldArray (%d x %d)' %
-                         (len(xArray), len(depthArray), fieldArray.shape[0],
-                          fieldArray.shape[1]))
+    if len(dimX) == 1 and len(dimZ) == 1:
+        num_x = dimX[0]
+        num_z = dimZ[0]
+        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0]:
+            raise ValueError('size mismatch between xArray (%d), '
+                             'depthArray (%d), and fieldArray (%d x %d)' %
+                             (num_x, num_z, fieldArray.shape[0],
+                              fieldArray.shape[1]))
+    elif len(dimX) == 1:
+        num_x = dimX[0]
+        num_x_Z = dimZ[1]
+        num_z_Z = dimZ[0]
+        if num_x != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] or \
+           num_x != num_x_Z:
+            raise ValueError('size mismatch between xArray (%d), '
+                             'depthArray (%d x %d), and fieldArray (%d x %d)' %
+                             (num_x, num_z_Z, num_x_Z,
+                              fieldArray.shape[0],
+                              fieldArray.shape[1]))
+    elif len(dimZ) == 1:
+        num_x_X = dimX[1]
+        num_z_X = dimX[0]
+        num_z = dimZ[0]
+        if num_x_X != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
+           num_z != num_z_X:
+            raise ValueError('size mismatch between xArray (%d x %d), '
+                             'depthArray (%d), and fieldArray (%d x %d)' %
+                             (num_z_X, num_x_X, num_z,
+                              fieldArray.shape[0],
+                              fieldArray.shape[1]))
+    else:
+        num_x_X = dimX[1]
+        num_z_X = dimX[0]
+        num_x_Z = dimZ[1]
+        num_z_Z = dimZ[0]
+        if num_x_X != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] or \
+           num_x_X != num_x_Z or num_z_X != num_z_Z:
+            raise ValueError('size mismatch between xArray (%d x %d), '
+                             'depthArray (%d x %d), and fieldArray (%d x %d)' %
+                             (num_z_X, num_x_X, num_z_Z, num_x_Z,
+                              fieldArray.shape[0],
+                              fieldArray.shape[1]))
+
+        
+
+    # define x and y as the appropriate 2D arrays for plotting
+    if len(dimX) == 1 and len(dimZ) == 1:
+        x, y = np.meshgrid(xArray, depthArray)  # change to zMid
+    elif len(dimX) == 1:
+        x, y = np.meshgrid(xArray, np.zeros(numZ))
+        y = depthArray
+    elif len(dimZ) == 1:
+        x, y = np.meshgrid(np.zeros(numX), depthArray)
+        x = xArray
+    else:
+        x = xArray
+        y = depthArray
+
 
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
     if fileout is not None:
         plt.figure(figsize=figsize, dpi=dpi)
+
 
     # compute moving averages with respect to the x dimension
     if N is not None and N != 1:
@@ -1417,28 +1500,47 @@ def plot_vertical_section(
         xArray = xArray[int(N/2.0):-int(round(N/2.0)-1)]
         fieldArray = xr.DataArray(movingAverageDepthSlices)
 
-    x, y = np.meshgrid(xArray, depthArray)  # change to zMid
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
-    if levels is None:
-    #if True:
-        cs = plt.pcolormesh(x, y, fieldArray, cmap=colormapDict['colormap'],
-                            norm=colormapDict['norm'])
+    if colormapDict['levels'] is None:
+        # interpFieldArray contains the values at centers of grid cells,
+        # for pcolormesh plots (using bilinear interpolation)
+        interpFieldArray = 0.5 * \
+                           (0.5*(fieldArray[1:,1:] + fieldArray[0:-1,1:]) + \
+                            0.5 * (fieldArray[1:,0:-1] + fieldArray[0:-1,0:-1]))
+
+        plotHandle = plt.pcolormesh(x, y, interpFieldArray,
+                                    cmap=colormapDict['colormap'],
+                                    norm=colormapDict['norm'])
     else:
-        cs = plt.contourf(x, y, fieldArray, cmap=colormapDict['colormap'],
-                          norm=colormapDict['norm'],
-                          levels=colormapDict['levels'], extend='both')
+        plotHandle = plt.contourf(x, y, fieldArray,
+                                  cmap=colormapDict['colormap'],
+                                  norm=colormapDict['norm'],
+                                  levels=colormapDict['levels'],
+                                  extend='both')
+
+    cbar = plt.colorbar(plotHandle,
+                        orientation='vertical',
+                        spacing='uniform',
+                        aspect=9,
+                        ticks=colormapDict['ticks'],
+                        boundaries=colormapDict['ticks'])
+
+    if colorbarLabel is not None:
+        cbar.set_label(colorbarLabel)
 
 
     # set the color for NaN or masked regions, and draw a black
-    # outline around them
+    # outline around them; technically, the contour level used should
+    # be 1.0, but the contours don't show up when using 1.0, so 0.999
+    # is used instead
     ax = plt.gca()
     ax.set_facecolor(backgroundColor)
-    landArray = np.ma.where(fieldArray != np.nan, 2.0, fieldArray)
+    landArray = np.ma.where(fieldArray != np.nan, 1.0, fieldArray)
     landArray = np.ma.masked_where(landArray == np.nan, landArray, copy=True)
-    landArray = landArray.filled(1.0)
-    plt.contour(x, y, landArray, levels=[1.5], colors='black', linewidths=1)
+    landArray = landArray.filled(0.0)
+    plt.contour(x, y, landArray, levels=[0.999], colors='black', linewidths=1)
 
 
     # plot contours, if they were requested
@@ -1450,13 +1552,6 @@ def plot_vertical_section(
         plt.contour(x, y, fieldArray, levels=contourLevels, colors=lineColor,
                     linewidths=lineWidth)
 
-    cbar = plt.colorbar(cs, orientation='vertical', spacing='uniform',
-                        ticks=colormapDict['ticks'],
-                        boundaries=colormapDict['ticks'])
-
-    if colorbarLabel is not None:
-        cbar.set_label(colorbarLabel)
-
 
     if (title is not None):
         if titleFontSize is None:
@@ -1464,7 +1559,7 @@ def plot_vertical_section(
         title_font = {'size': titleFontSize,
                       'color': config.get('plot', 'titleFontColor'),
                       'weight': config.get('plot', 'titleFontWeight')}
-        plt.title(title, **title_font)
+        plt.title(title, y=1.06, **title_font)
 
     if (xlabel is not None) or (ylabel is not None):
         if axisFontSize is None:
