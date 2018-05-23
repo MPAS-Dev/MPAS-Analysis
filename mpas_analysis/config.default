@@ -754,7 +754,11 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
 # list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
 # See "regionNames" in the ice shelf masks file in regionMaskDirectory for
 # details.
-iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
+                    'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
+                    'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
+                    'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                    'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 # Number of months over which to compute moving average
 movingAverageMonths = 1
@@ -1271,11 +1275,22 @@ contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
 
 [geojsonTransects]
 ## options related to plotting model transects at points determined by a
-## geojson file.
+## geojson file.  To generate your own geojson file, go to:
+##   http://geojson.io/
+## and draw one or more polylines, then add a name to each:
+##
+##      "properties": {
+##        "name": "My Favorite Name"
+##      },
+## and save the file as GeoJSON (say transects.geojson).  Finally, set the
+## option:
+##      geojsonFiles = ['transects.geojson']
+## (giving an absolute path if necessary) in your custom config file.
 
 # a list of geojson files containing lat/lon points in LineStrings to be
 # plotted.  If relative paths are given, they are relative to the current
-# working directory.
+# working directory.  The files must be listed in quotes, e.g.:
+# geojsonFiles = ['file1.geojson', '/path/to/file2.geojson']
 geojsonFiles = []
 
 # a dictionary of fields and units to be plotted
