@@ -201,7 +201,7 @@ within the `mpas_analysis/shared` directory.
 
 To generate the `sphinx` documentation, run:
 ```bash
-conda install sphinx sphinx_rtd_theme numpydoc recommonmark
+conda install sphinx sphinx_rtd_theme numpydoc recommonmark tabulate
 cd docs
 make html
 ```

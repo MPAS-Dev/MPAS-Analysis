@@ -11,6 +11,7 @@ Analysis Tasks
    tasks/climatologyMapOHCAnomaly
    tasks/climatologyMapSoseTemperature
    tasks/climatologyMapSoseSalinity
+   tasks/climatologyMapSosePotentialDensity
    tasks/climatologyMapSoseMLD
    tasks/climatologyMapSoseZonalVel
    tasks/climatologyMapSoseMeridVel

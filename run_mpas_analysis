@@ -105,6 +105,8 @@ def build_analysis_list(config, refConfig):  # {{{
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseSalinity(
             config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSosePotentialDensity(
+            config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseMLD(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapSoseZonalVel(

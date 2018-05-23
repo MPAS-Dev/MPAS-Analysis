@@ -881,6 +881,41 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
+[climatologyMapSosePotentialDensity]
+## options related to plotting climatology maps of Antarctic
+## potential density at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
 [climatologyMapSoseMLD]
 ## options related to plotting climatology maps of Antarctic
 ## mixed layer depth against reference model results and SOSE reanalysis data

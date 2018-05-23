@@ -374,14 +374,15 @@
 
   <observation>
     <name>
-      SOSE potential temperature and salinity
+      2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)
     </name>
     <component>
       ocean
     </component>
     <description>
-      Monthly potential temperature and salinity output from the Southern Ocean
-      State Estimate (SOSE) covering years 2005-2010
+      Monthly potential temperature, salinity velocity components and neutral
+      density output from the Southern Ocean State Estimate (SOSE) covering
+      years 2005-2010
     </description>
     <source>
       [SOSE Website at UCSD]
@@ -416,10 +417,19 @@
       }
     </bibtex>
     <dataUrls>
+      - http://sose.ucsd.edu/DATA/SO6_V2/grid.mat
       - http://sose.ucsd.edu/DATA/SO6_V2/THETA_mnthlyBar.0000000100.data.gz
       - http://sose.ucsd.edu/DATA/SO6_V2/THETA_mnthlyBar.0000000100.meta
       - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.data.gz
       - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/MLD_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/MLD_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/UVEL_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/UVEL_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/VVEL_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/VVEL_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/GAMMA_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/GAMMA_mnthlyBar.0000000100.meta
     </dataUrls>
     <preprocessing>
       preprocess_observations/preprocess_SOSE_data.py
@@ -427,6 +437,11 @@
     <tasks>
       - climatologyMapSoseTemperature
       - climatologyMapSoseSalinity
+      - climatologyMapSosePotentialDensity
+      - climatologyMapSoseMLD
+      - climatologyMapSoseZonalVel
+      - climatologyMapSoseMeridVel
+      - climatologyMapSoseVelMag
     </tasks>
     <subdirectory>
       Ocean/SOSE
