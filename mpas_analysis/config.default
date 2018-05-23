@@ -243,22 +243,6 @@ baseDirectory = /dir/to/ocean/reference
 
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
-areaNH = IceArea_timeseries/iceAreaNH_climo.nc
-areaSH = IceArea_timeseries/iceAreaSH_climo.nc
-volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
-volSH = none
-concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
-concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
-concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
-concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
-concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
-concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
-thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
-thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
-thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
-thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -512,29 +496,6 @@ movingAveragePointsClimatological = 1
 
 # yearStrideXTicks = 1
 
-[timeSeriesSeaIceAreaVol]
-## options related to plotting time series of sea ice area and volume
-
-# compare to observations?
-compareWithObservations = True
-# Number of points over which to compute moving average (e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
-# window)
-movingAveragePoints = 1
-# title font properties
-titleFontSize = 18
-# plot on polar plot
-polarPlot = False
-
-# An optional first year for the tick marks on the x axis. Leare commented out
-# to start at the beginning of the time series.
-
-# firstYearXTicks = 1
-
-# An optional number of years between tick marks on the x axis.  Leave
-# commented out to determine the distance between ticks automatically.
-
-# yearStrideXTicks = 1
 
 [climatologyMapSST]
 ## options related to plotting horizontally remapped climatologies of
@@ -1167,6 +1128,12 @@ observationPrefixes = ['NASATeam', 'Bootstrap']
 # arrange subplots vertically?
 vertical = False
 
+# observations files
+concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
+
 [climatologyMapSeaIceConcSH]
 ## options related to plotting horizontally remapped climatologies of
 ## sea ice concentration against reference model results and observations
@@ -1202,6 +1169,12 @@ observationPrefixes = ['NASATeam', 'Bootstrap']
 
 # arrange subplots vertically?
 vertical = False
+
+# observations files
+concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
+concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
 
 [climatologyMapSeaIceThickNH]
 ## options related to plotting horizontally remapped climatologies of
@@ -1239,6 +1212,10 @@ observationPrefixes = ['']
 # arrange subplots vertically?
 vertical = False
 
+# observations files
+thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
+thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+
 [climatologyMapSeaIceThickSH]
 ## options related to plotting horizontally remapped climatologies of
 ## sea ice thickness against reference model results and observations
@@ -1274,6 +1251,40 @@ observationPrefixes = ['']
 
 # arrange subplots vertically?
 vertical = False
+
+# observations files
+thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
+thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
+
+[timeSeriesSeaIceAreaVol]
+## options related to plotting time series of sea ice area and volume
+
+# compare to observations?
+compareWithObservations = True
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 1
+# title font properties
+titleFontSize = 18
+# plot on polar plot
+polarPlot = False
+
+# An optional first year for the tick marks on the x axis. Leare commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+# observations files
+areaNH = IceArea_timeseries/iceAreaNH_climo.nc
+areaSH = IceArea_timeseries/iceAreaSH_climo.nc
+volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+volSH = none
 
 [regions]
 ## options related to ocean regions used in several analysis modules

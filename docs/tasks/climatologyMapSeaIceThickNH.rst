@@ -52,6 +52,10 @@ The following configuration options are available for this task::
   # arrange subplots vertically?
   vertical = False
 
+  # observations files
+  thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
+  thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+
 The option ``minimumLatitude`` determines what the southernmost latitude (in
 degrees) included in the plot will be.  The option ``referenceLongitude``
 defines which longitude will be at the bottom of the plot.
@@ -63,6 +67,10 @@ string and is included for allowing easy code reuse with the
 The option ``vertical = True`` can be used to plot 3 panels one above another
 (resulting in a tall, thin image) rather than next to each other, the default
 (resulting in a short, wide image).
+
+The ability to modify observations files pointed to by ``thicknessNH_ON`` and
+``thicknessNH_FM`` is provided for debugging purposes and these options
+should typically remain unchanged.
 
 For details on the remaining configration options, see:
  * :ref:`config_colormaps`

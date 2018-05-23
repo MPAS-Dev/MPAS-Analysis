@@ -54,6 +54,12 @@ The following configuration options are available for this task::
   # arrange subplots vertically?
   vertical = False
 
+  # observations files
+  concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
+  concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
+  concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
+  concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
+
 The option ``minimumLatitude`` determines what the northernmost latitude (in
 degrees) included in the plot will be.  The option ``referenceLongitude``
 defines which longitude will be at the bottom of the plot.
@@ -66,6 +72,12 @@ algorithms.  By altering ``observationPrefixes``, you can select only one
 The option ``vertical = True`` can be used to plot 3 panels one above another
 (resulting in a tall, thin image) rather than next to each other, the default
 (resulting in a short, wide image).
+
+The ability to modify observations files pointed to by
+``concentrationNASATeamSH_DJF``, ``concentrationNASATeamSH_JJA``,
+``concentrationBootstrapSH_DJF`` and ``concentrationBootstrapSH_JJA`` is
+provided for debugging purposes and these options
+should typically remain unchanged.
 
 For details on the remaining configration options, see:
  * :ref:`config_colormaps`

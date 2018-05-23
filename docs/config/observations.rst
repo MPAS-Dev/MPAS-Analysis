@@ -23,15 +23,6 @@ folders::
   argoSubdirectory = ARGO
   schmidtkoSubdirectory = Schmidtko
 
-  # first and last year of SST observational climatology (preferably one of the
-  # two ranges given below)
-  # values for preindustrial
-  sstClimatologyStartYear = 1870
-  sstClimatologyEndYear = 1900
-  # alternative values for present day
-  #sstClimatologyStartYear = 1990
-  #sstClimatologyEndYear = 2011
-
   # interpolation order for observations. Likely values are
   #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
   interpolationMethod = bilinear
@@ -53,22 +44,6 @@ folders::
 
   # directory where sea ice observations are stored
   baseDirectory = /dir/to/seaice/observations
-  areaNH = IceArea_timeseries/iceAreaNH_climo.nc
-  areaSH = IceArea_timeseries/iceAreaSH_climo.nc
-  volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
-  volSH = none
-  concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-  concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
-  concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
-  concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
-  concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-  concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
-  concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
-  concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
-  thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
-  thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
-  thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
-  thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
   # interpolation order for observations. Likely values are
   #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'

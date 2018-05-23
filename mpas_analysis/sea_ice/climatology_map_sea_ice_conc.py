@@ -116,8 +116,9 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                        mpasFieldName):  # {{{
         config = self.config
         obsFieldName = 'seaIceConc'
+        sectionName = self.taskName
 
-        observationPrefixes = config.getExpression(self.taskName,
+        observationPrefixes = config.getExpression(sectionName,
                                                    'observationPrefixes')
         for prefix in observationPrefixes:
             for season in seasons:
@@ -125,10 +126,10 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                     'Observations (SSM/I {})'.format(prefix)
 
                 obsFileName = build_config_full_path(
-                        config, 'seaIceObservations',
-                        'concentration{}{}_{}'.format(prefix,
-                                                      hemisphere,
-                                                      season))
+                        config=config, section='seaIceObservations',
+                        relativePathOption='concentration{}{}_{}'.format(
+                                prefix, hemisphere, season),
+                        relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedConcClimatology(
                         parentTask=self, seasons=[season],
