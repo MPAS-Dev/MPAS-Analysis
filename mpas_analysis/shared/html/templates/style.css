@@ -157,6 +157,11 @@ div.component {
     height: 290px;
 }
 
+div.provenance-title {
+    clear: left;
+    -webkit-padding-before: 6em;
+}
+
 
 .image-gallery figcaption {
     display: none;
