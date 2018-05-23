@@ -273,7 +273,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         # do some dropping and renaming so we end up wiht the right coordinates
         # and dimensions
-        dsObs = dsObs.rename({'lat': 'nPoints', 'depth': 'nz'})
+        dsObs = dsObs.rename({'lat': 'nPoints', 'z': 'nz'})
         dsObs['lat'] = dsObs.nPoints
         dsObs['z'] = dsObs.nz
         dsObs['lon'] = ('nPoints', lon*numpy.ones(dsObs.sizes['nPoints']))
