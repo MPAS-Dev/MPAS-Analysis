@@ -15,7 +15,6 @@ import re
 import os
 
 
-
 def markdown_links(data, footer):
     urlscmd = re.findall(r"\[.*?\]\n*\(.*?\)", data)
     urls = re.findall(r"\[.*?\]\n*\((.*?)\)", data)
@@ -149,10 +148,20 @@ def build_obs_pages_from_xml(xmlfile):
             if tag == 'tasks':
                 text = add_task_links(text)
             if tag == 'references':
-                # add a link to the bibtex file
-                subdirectory = entry.findall('subdirectory')[0].text.strip()
-                text = '{}\n\n[bibtex file]({}/{}/obs.bib)'.format(
-                        text, urlBase, subdirectory)
+                bibtexFound = False
+                bibtex = entry.findall('bibtex')
+                if len(bibtex) > 0:
+                    # there is a bibtex tag
+                    bibtex = bibtex[0].text.strip()
+                    if len(bibtex) > 0:
+                        # the bibtex tag is also not empty
+                        bibtexFound = True
+                if bibtexFound:
+                    # add a link to the bibtex file
+                    subdirectory = entry.findall('subdirectory')[0].text.strip()
+                    text = '{}\n\n[bibtex file]({}/{}/obs.bib)'.format(
+                            text, urlBase, subdirectory)
+
             text, footer = cleanup(text, footer)
             rst.write('{}\n\n'.format(text))
         rst.write(footer)
