@@ -470,6 +470,35 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
                 return analysisTask  # }}}
 
 
+def purge_output(config):
+    outputDirectory = config.get('output', 'baseDirectory')
+    if not os.path.exists(outputDirectory):
+        print('Output directory {} does not exist.\n'
+              'No purge necessary.'.format(outputDirectory))
+    else:
+        for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
+                             'timeSeries', 'html']:
+            option = '{}Subdirectory'.format(subdirectory)
+            directory = build_config_full_path(
+                    config=config, section='output',
+                    relativePathOption=option)
+            if os.path.exists(directory):
+                print('Deleting contents of {}'.format(directory))
+                shutil.rmtree(directory)
+
+        for component in ['ocean', 'seaIce']:
+            for subdirectory in ['climatology', 'remappedClim']:
+                option = '{}Subdirectory'.format(subdirectory)
+                section = '{}Observations'.format(component)
+                directory = build_config_full_path(
+                        config=config, section='output',
+                        relativePathOption=option,
+                        relativePathSection=section)
+                if os.path.exists(directory):
+                    print('Deleting contents of {}'.format(directory))
+                    shutil.rmtree(directory)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
@@ -546,13 +575,7 @@ if __name__ == "__main__":
         refConfig = None
 
     if args.purge:
-        outputDirectory = config.get('output', 'baseDirectory')
-        if not os.path.exists(outputDirectory):
-            print('Output directory {} does not exist.\n'
-                  'No purge necessary.'.format(outputDirectory))
-        else:
-            print('Deleting contents of {}'.format(outputDirectory))
-            shutil.rmtree(outputDirectory)
+        purge_output(config)
 
     if args.generate:
         update_generate(config, args.generate)

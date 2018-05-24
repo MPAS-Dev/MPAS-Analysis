@@ -146,8 +146,23 @@ the analysis, add the `--purge` flag:
 ```
 ./run_mpas_analysis --purge <config.file>
 ````
-The directory to delete is the `baseDirectory` option in the `output`
-section.
+All of the subdirectories listed in `output` will be deleted along with the
+climatology subdirectories in `oceanObservations` and `seaIceObservations`.
+
+It is a good policy to use the purge flag for most changes to the config file,
+for example, updating the start and/or end years of climatologies (and
+sometimes time series), changing the resolution of a comparison grid, renaming
+the run, changing the seasons over which climatologies are computed for a given
+task, updating the code to the latest version.
+
+Cases where it is reasonable not to purge would be, for example, changing
+options that only affect plotting (color map, ticks, ranges, font sizes, etc.),
+rerunning with a different set of tasks specified by the `generate` option
+(though this will often cause climatologies to be re-computed with new
+variables and may not save time compared with purging), generating only the
+final website with `--html_only`, and re-running after the simulation has
+progressed to extend time series (however, not recommended for changing the
+bounds on climatologies, see above).
 
 ## Running in parallel
 
