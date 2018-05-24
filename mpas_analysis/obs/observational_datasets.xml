@@ -317,9 +317,9 @@
     </component>
     <description>
       This new version of the Roemmich-Gilson Argo Climatology extends the
-      analysis of Argo-only derived temperature and salinity fields through
-      2016. Several marginal seas and the Artic Oean have been added. The
-      analysis method is similar to what was descibed in the Progress In
+      analysis of Argo-only derived potential temperature and salinity fields
+      through 2016. Several marginal seas and the Artic Oean have been added.
+      The analysis method is similar to what was descibed in the Progress In
       Oceanography Roemmich and Gilson paper (2009). The only modification has
       been to scale the zonal equatorial correlation of the optimal estimation
       step, by 8 times, versus 4 times as in the 2009 paper. The additional

@@ -196,6 +196,8 @@ class TimeSeriesSeaIce(AnalysisTask):
         config = self.config
         calendar = self.calendar
 
+        sectionName = self.taskName
+
         plotTitles = {'iceArea': 'Sea-ice area',
                       'iceVolume': 'Sea-ice volume',
                       'iceThickness': 'Sea-ice mean thickness'}
@@ -205,18 +207,22 @@ class TimeSeriesSeaIce(AnalysisTask):
                  'iceThickness': '[m]'}
 
         obsFileNames = {
-            'iceArea': {'NH': build_config_full_path(config,
-                                                     'seaIceObservations',
-                                                     'areaNH'),
-                        'SH': build_config_full_path(config,
-                                                     'seaIceObservations',
-                                                     'areaSH')},
-            'iceVolume': {'NH': build_config_full_path(config,
-                                                       'seaIceObservations',
-                                                       'volNH'),
-                          'SH': build_config_full_path(config,
-                                                       'seaIceObservations',
-                                                       'volSH')}}
+            'iceArea': {'NH': build_config_full_path(
+                                  config=config, section='seaIceObservations',
+                                  relativePathOption='areaNH',
+                                  relativePathSection=sectionName),
+                        'SH': build_config_full_path(
+                                  config=config, section='seaIceObservations',
+                                  relativePathOption='areaSH',
+                                  relativePathSection=sectionName)},
+            'iceVolume': {'NH': build_config_full_path(
+                                   config=config, section='seaIceObservations',
+                                   relativePathOption='volNH',
+                                   relativePathSection=sectionName),
+                          'SH': build_config_full_path(
+                                   config=config, section='seaIceObservations',
+                                   relativePathOption='volSH',
+                                   relativePathSection=sectionName)}}
 
         # Some plotting rules
         titleFontSize = config.get('timeSeriesSeaIceAreaVol', 'titleFontSize')
@@ -417,14 +423,14 @@ class TimeSeriesSeaIce(AnalysisTask):
                     lineColors.append('r')
                     lineWidths.append(1.2)
 
-                if config.has_option(self.taskName, 'firstYearXTicks'):
-                    firstYearXTicks = config.getint(self.taskName,
+                if config.has_option(sectionName, 'firstYearXTicks'):
+                    firstYearXTicks = config.getint(sectionName,
                                                     'firstYearXTicks')
                 else:
                     firstYearXTicks = None
 
-                if config.has_option(self.taskName, 'yearStrideXTicks'):
-                    yearStrideXTicks = config.getint(self.taskName,
+                if config.has_option(sectionName, 'yearStrideXTicks'):
+                    yearStrideXTicks = config.getint(sectionName,
                                                      'yearStrideXTicks')
                 else:
                     yearStrideXTicks = None

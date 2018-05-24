@@ -40,6 +40,12 @@ The following configuration options are available for this task::
 
   # yearStrideXTicks = 1
 
+  # observations files
+  areaNH = IceArea_timeseries/iceAreaNH_climo.nc
+  areaSH = IceArea_timeseries/iceAreaSH_climo.nc
+  volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+  volSH = none
+
 ``compareWithObservations`` can be set to ``False`` to disable comparison with
 both sets of observations (see below).
 
@@ -48,6 +54,10 @@ The title font size can be customized with ``titleFontSize``, given in points.
 To produce polar plots (with time progressing clockwise around the origin and
 sea ice area or volume the distance from the origin) in addition to the
 typical time series with time on the x axis, set ``polarPlot = True``.
+
+The ability to modify observations files pointed to by ``areaNH``, ``areaSH``,
+``volNH`` and ``volSH`` is provided for debugging purposes and these options
+should typically remain unchanged.
 
 For details on the remaining config options, see:
  * :ref:`config_moving_average`

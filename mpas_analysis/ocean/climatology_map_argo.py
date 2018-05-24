@@ -34,8 +34,8 @@ from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of antarctic temperature against SOSE
-    fields
+    An analysis task for comparison of potential temperature against Argo
+    observations
     """
     # Authors
     # -------
@@ -108,7 +108,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Temperature'
+            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
+                            'Temperature'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations', 'argoSubdirectory')
@@ -154,15 +155,15 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle='Temperature',
+                        fieldNameInTitle='Potential Temperature',
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Model temperature compared with Argo '
-                                     'observations',
-                        galleryGroup='Argo Temperature',
+                        imageCaption='Model potential temperature compared '
+                                     'with Argo observations',
+                        galleryGroup='Argo Potential Temperature',
                         groupSubtitle=None,
                         groupLink='tempArgo',
                         galleryName=galleryName)
@@ -175,8 +176,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
 class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of Global Temperature against Argo
-    fields
+    An analysis task for comparison of global salinity against Argo
+    observations
     """
     # Authors
     # -------

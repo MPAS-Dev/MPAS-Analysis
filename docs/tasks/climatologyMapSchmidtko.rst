@@ -52,7 +52,7 @@ The following configuration options are available for this task::
   # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
 
   [climatologyMapSchmidtkoSalinity]
-  ## options related to plotting climatology maps of potential temperature at the
+  ## options related to plotting climatology maps of salinity at the
   ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
   # colormap for model/observations
@@ -74,7 +74,7 @@ The following configuration options are available for this task::
   # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
   [climatologyMapSchmidtkoPotentialDensity]
-  ## options related to plotting climatology maps of potential temperature at the
+  ## options related to plotting climatology maps of potential density at the
   ## seafloor and comparing them against data from Schmidtko et al. (2014)
 
   # colormap for model/observations

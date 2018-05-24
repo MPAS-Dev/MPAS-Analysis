@@ -118,8 +118,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         for season in seasons:
             if refConfig is None:
                 obsFileName = build_config_full_path(
-                        config, 'seaIceObservations',
-                        'thickness{}_{}'.format(hemisphere, season))
+                        config=config, section='seaIceObservations',
+                        relativePathOption='thickness{}_{}'.format(hemisphere,
+                                                                   season),
+                        relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedThickClimatology(
                         parentTask=self, seasons=[season],

@@ -21,6 +21,9 @@ options that are most commonly modified.
    config/climatology
    config/timeSeries
    config/index
+   config/regions
+   config/plot
+   config/html
    config/observations
    config/preprocessed
    config/colormaps
@@ -28,9 +31,6 @@ options that are most commonly modified.
    config/comparison_grids
    config/moving_average
    config/time_axis_ticks
-   config/regions
-   config/plot
-   config/html
 
 
 .. _`GitHub`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs

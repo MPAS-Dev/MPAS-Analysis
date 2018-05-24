@@ -4,7 +4,7 @@ timeSeriesSalinityAnomaly
 =========================
 
 An analysis task for plotting a Hovmoller plot (time and depth axes) of the
-anomaly in ocean temperature from a reference year (usully the first year of
+anomaly in ocean salinity from a reference year (usully the first year of
 the simulation).
 
 Component and Tags::

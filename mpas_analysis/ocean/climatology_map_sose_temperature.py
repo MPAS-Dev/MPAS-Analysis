@@ -147,14 +147,14 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle='Temperature',
+                        fieldNameInTitle='Potential Temperature',
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^\circ$C',
-                        imageCaption='Temperature',
-                        galleryGroup='Temperature',
+                        imageCaption='Potential Temperature',
+                        galleryGroup='Potential Temperature',
                         groupSubtitle=None,
                         groupLink='tempSose',
                         galleryName=galleryName)

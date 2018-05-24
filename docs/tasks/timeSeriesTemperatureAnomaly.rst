@@ -18,7 +18,7 @@ Configuration Options
 The following configuration options are available for this task::
 
   [hovmollerTemperatureAnomaly]
-  ## options related to plotting time series of temperature vs. depth
+  ## options related to plotting time series of potential temperature vs. depth
 
   # list of regions to plot from the region list in [regions] below
   regions = ['global']

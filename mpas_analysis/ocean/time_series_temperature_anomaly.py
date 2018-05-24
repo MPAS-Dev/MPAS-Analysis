@@ -19,8 +19,8 @@ from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 
 class TimeSeriesTemperatureAnomaly(AnalysisTask):
     """
-    Performs analysis of time series of temperature anomalies from the first
-    simulation year as a function of depth.
+    Performs analysis of time series of potential temperature anomalies from
+    a reference simulation year as a function of depth.
     """
     # Authors
     # -------
@@ -67,18 +67,18 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
         self.add_subtask(anomalyTask)
 
         for regionName in regionNames:
-            caption = 'Trend of {} Temperature Anomaly vs depth'.format(
-                    regionName)
+            caption = 'Trend of {} Potential Temperature Anomaly vs ' \
+                      'Depth'.format(regionName)
             plotTask = PlotHovmollerSubtask(
                     parentTask=self,
                     regionName=regionName,
                     inFileName=timeSeriesFileName,
                     outFileLabel='TAnomalyZ',
-                    fieldNameInTitle='Temperature Anomaly',
+                    fieldNameInTitle='Potential Temperature Anomaly',
                     mpasFieldName=mpasFieldName,
                     unitsLabel='[$^\circ$C]',
                     sectionName=sectionName,
-                    thumbnailSuffix=u'ΔT',
+                    thumbnailSuffix=u'Δϴ',
                     imageCaption=caption,
                     galleryGroup='Trends vs Depth',
                     groupSubtitle=None,

@@ -66,7 +66,7 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                 {'mpas': 'timeMonthly_avg_activeTracers_temperature',
                  'units': r'$^\circ$C',
                  'obs': 'botTheta',
-                 'title': 'Temperature'},
+                 'title': 'Potential Temperature'},
              'salinity':
                 {'mpas': 'timeMonthly_avg_activeTracers_salinity',
                  'units': r'PSU',

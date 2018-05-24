@@ -65,10 +65,8 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        climStartYear = config.getint('oceanObservations',
-                                      'sstClimatologyStartYear')
-        climEndYear = config.getint('oceanObservations',
-                                    'sstClimatologyEndYear')
+        climStartYear = config.getint(sectionName, 'obsStartYear')
+        climEndYear = config.getint(sectionName, 'obsEndYear')
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -213,10 +211,9 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        climStartYear = self.config.getint('oceanObservations',
-                                           'sstClimatologyStartYear')
-        climEndYear = self.config.getint('oceanObservations',
-                                         'sstClimatologyEndYear')
+        sectionName = self.taskName
+        climStartYear = self.config.getint(sectionName, 'obsStartYear')
+        climEndYear = self.config.getint(sectionName, 'obsEndYear')
         timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
         timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
 

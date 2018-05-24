@@ -96,11 +96,16 @@ def build_bibtex(xmlFile, outDir):
         except OSError:
             pass
 
-        bibtex = open('{}/obs.bib'.format(path), 'w')
-
-        text = cleanup(entry.findall('bibtex')[0].text.strip())
-        bibtex.write('{}\n'.format(text))
-        bibtex.close()
+        saved = False
+        bibtex = entry.findall('bibtex')
+        if len(bibtex) > 0:
+            text = cleanup(bibtex[0].text.strip())
+            if len(text) > 0:
+                saved = True
+                with open('{}/obs.bib'.format(path), 'w') as bibtexFile:
+                    bibtexFile.write('{}\n'.format(text))
+        if not saved:
+            print('Warning: no bibtex for {}'.format(name))
 
 
 if __name__ == "__main__":

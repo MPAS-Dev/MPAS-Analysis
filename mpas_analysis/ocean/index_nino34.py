@@ -108,9 +108,18 @@ class IndexNino34(AnalysisTask):  # {{{
 
         mainRunName = self.config.get('runs', 'mainRunName')
 
+        config = self.config
+        regionToPlot = config.get('indexNino34', 'region')
+
+        if regionToPlot not in ['nino3.4', 'nino3', 'nino4']:
+            raise ValueError('Unexpectes El Nino Index region {}'.format(
+                    regionToPlot))
+        ninoIndexNumber = regionToPlot[4:]
+
         self.xmlFileNames = []
-        for filePrefix in ['NINO34_{}'.format(mainRunName),
-                           'NINO34_spectra_{}'.format(mainRunName)]:
+        for filePrefix in ['nino{}_{}'.format(ninoIndexNumber, mainRunName),
+                           'nino{}_spectra_{}'.format(ninoIndexNumber,
+                                                      mainRunName)]:
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
 
@@ -125,14 +134,18 @@ class IndexNino34(AnalysisTask):  # {{{
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
 
-        self.logger.info("\nPlotting Nino3.4 time series and power "
-                         "spectrum....")
+        config = self.config
+        calendar = self.calendar
+
+        regionToPlot = config.get('indexNino34', 'region')
+
+        ninoIndexNumber = regionToPlot[4:]
+
+        self.logger.info("\nPlotting El Nino {} Index time series and power "
+                         "spectrum....".format(ninoIndexNumber))
 
         self.logger.info('  Load SST data...')
         fieldName = 'nino'
-
-        config = self.config
-        calendar = self.calendar
 
         startDate = self.config.get('index', 'startDate')
         endDate = self.config.get('index', 'endDate')
@@ -151,10 +164,13 @@ class IndexNino34(AnalysisTask):  # {{{
             dataPath = "{}/HADIsst_nino34.nc".format(observationsDirectory)
             obsTitle = 'HADSST'
             refDate = '1870-01-01'
-        else:
+        elif dataSource == 'ERS_SSTv4':
             dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
             obsTitle = 'ERS SSTv4'
             refDate = '1800-01-01'
+        else:
+            raise ValueError('Bad value for config option observationData {} '
+                             'in [indexNino34] section.'.format(dataSource))
 
         mainRunName = config.get('runs', 'mainRunName')
 
@@ -179,7 +195,8 @@ class IndexNino34(AnalysisTask):  # {{{
             string_to_days_since_date(dateString=refDate, calendar=calendar)
         nino34Obs = dsObs.sst
 
-        self.logger.info('  Compute NINO3.4 index...')
+        self.logger.info('  Compute El Nino {} Index...'.format(
+                ninoIndexNumber))
         varName = self.variableList[0]
         regionSST = ds[varName].isel(nOceanRegions=regionIndex)
         nino34Main = self._compute_nino34_index(regionSST, calendar)
@@ -187,7 +204,8 @@ class IndexNino34(AnalysisTask):  # {{{
         # Compute the observational index over the entire time range
         # nino34Obs = compute_nino34_index(dsObs.sst, calendar)
 
-        self.logger.info(' Computing NINO3.4 power spectra...')
+        self.logger.info(' Computing El Nino {} power spectra...'.format(
+                ninoIndexNumber))
         spectraMain = self._compute_nino34_spectra(nino34Main)
 
         # Compute the observational spectra over the whole record
@@ -246,29 +264,35 @@ class IndexNino34(AnalysisTask):  # {{{
             s['period'] = \
                 1.0 / (constants.eps + s['f']*constants.sec_per_year)
 
-        self.logger.info(' Plot NINO3.4 index and spectra...')
+        self.logger.info(' Plot El Nino {} index and spectra...'.format(
+                ninoIndexNumber))
 
-        outFileName = '{}/NINO34_{}.png'.format(self.plotsDirectory,
-                                                mainRunName)
+        outFileName = '{}/nino{}_{}.png'.format(self.plotsDirectory,
+                                                ninoIndexNumber, mainRunName)
         self._nino34_timeseries_plot(
                 nino34s=nino34s,
-                title='NINO 3.4 Index',
+                title=u'El Niño {} Index'.format(ninoIndexNumber),
                 panelTitles=titles,
                 outFileName=outFileName)
 
-        self._write_xml(filePrefix='NINO34_{}'.format(mainRunName),
-                        plotType='Time Series')
+        self._write_xml(filePrefix='nino{}_{}'.format(ninoIndexNumber,
+                                                      mainRunName),
+                        plotType='Time Series',
+                        ninoIndexNumber=ninoIndexNumber)
 
-        outFileName = '{}/NINO34_spectra_{}.png'.format(self.plotsDirectory,
+        outFileName = '{}/nino{}_spectra_{}.png'.format(self.plotsDirectory,
+                                                        ninoIndexNumber,
                                                         mainRunName)
         self._nino34_spectra_plot(
                 spectra=spectra,
-                title='NINO3.4 power spectrum',
+                title=u'El Niño {} power spectrum'.format(ninoIndexNumber),
                 panelTitles=titles,
                 outFileName=outFileName)
 
-        self._write_xml(filePrefix='NINO34_spectra_{}'.format(mainRunName),
-                        plotType='Spectra')
+        self._write_xml(filePrefix='nino{}_spectra_{}'.format(ninoIndexNumber,
+                                                              mainRunName),
+                        plotType='Spectra',
+                        ninoIndexNumber=ninoIndexNumber)
 
     # }}}
 
@@ -698,15 +722,16 @@ class IndexNino34(AnalysisTask):  # {{{
             plt.ylabel(ylabel, **axis_font)
         # }}}
 
-    def _write_xml(self, filePrefix, plotType):  # {{{
-        caption = u'{} of El Niño 3.4 Climate Index'.format(plotType)
+    def _write_xml(self, filePrefix, plotType, ninoIndexNumber):  # {{{
+        caption = u'{} of El Niño {} Climate Index'.format(plotType,
+                                                           ninoIndexNumber)
         write_image_xml(
             config=self.config,
             filePrefix=filePrefix,
             componentName='Ocean',
             componentSubdirectory='ocean',
-            galleryGroup=u'El Niño 3.4 Climate Index',
-            groupLink='nino34',
+            galleryGroup=u'El Niño {} Climate Index'.format(ninoIndexNumber),
+            groupLink='nino',
             thumbnailDescription=plotType,
             imageDescription=caption,
             imageCaption=caption)  # }}}
