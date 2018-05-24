@@ -31,6 +31,7 @@ options that are most commonly modified.
    config/comparison_grids
    config/moving_average
    config/time_axis_ticks
+   config/transects
 
 
 .. _`GitHub`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs

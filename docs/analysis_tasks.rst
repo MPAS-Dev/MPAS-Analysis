@@ -29,6 +29,9 @@ Analysis Tasks
    tasks/meridionalHeatTransport
    tasks/streamfunctionMOC
    tasks/indexNino34
+   tasks/woceTransects
+   tasks/soseTransects
+
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH
