@@ -318,7 +318,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 monthValues = constants.monthDictionary[season]
                 remappedRefClimatology = compute_climatology(
                         remappedRefClimatology, monthValues, maskVaries=True)
-                print(remappedRefClimatology)
 
         elif self.refConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
@@ -339,6 +338,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             remappedRefClimatology = None
 
         self._plot_transect(remappedModelClimatology, remappedRefClimatology)
+
+        remappedModelClimatology.close()
+
+        if remappedRefClimatology is not None:
+            remappedRefClimatology.close()
+
         # }}}
 
     def _plot_transect(self, remappedModelClimatology, remappedRefClimatology):
@@ -356,12 +361,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         x, z = xr.broadcast(remappedModelClimatology.x,
                             remappedModelClimatology.z)
 
-        # convert x and z to numpy arrays
-        x = x.values
-        z = z.values
+        # convert x and z to numpy arrays, make a copy because they are
+        # sometimes read-only (not sure why)
+        x = x.values.copy()
+        z = z.values.copy()
 
-        nPoints = remappedModelClimatology.sizes['nPoints']
-        nz = remappedModelClimatology.sizes['nz']
+        # z is masked out with NaNs in some locations (where there is land) but
+        # this makes pcolormesh unhappy so we'll zero out those locations
+        z[numpy.isnan(z)] = 0.
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
@@ -372,7 +379,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         else:
             refOutput = remappedRefClimatology[self.refFieldName]
             dims = refOutput.dims
-            print(dims)
             refOutput = nans_to_numpy_mask(refOutput.values)
             if dims[0] != 'nPoints':
                 assert(dims[1] == 'nPoints')
