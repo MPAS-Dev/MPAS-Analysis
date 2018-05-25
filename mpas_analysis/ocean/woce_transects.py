@@ -126,8 +126,8 @@ class WoceTransects(AnalysisTask):  # {{{
 
             diffTitleLabel = 'Main - Reference'
 
-        fieldNameDict = {'temperature':'temperatureTransect',
-                         'salinity':'salinityTransect'}
+        fieldNameDict = {'temperature': 'temperatureTransect',
+                         'salinity': 'salinityTransect'}
 
         for fieldName in fields:
             for transectName in obsFileNames:

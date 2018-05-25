@@ -200,7 +200,6 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         for transectName in obsDatasets:
             obsDatasets[transectName].close()
 
-
     def run_task(self):  # {{{
         """
         Compute climatologies of melt rates from E3SM/MPAS output

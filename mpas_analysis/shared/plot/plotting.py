@@ -511,7 +511,8 @@ def plot_polar_comparison(
                       'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
 
-    plottitle_font = {'size': config.get('plot', 'threePanelPlotTitleFontSize')}
+    plottitle_font = {'size': config.get('plot',
+                                         'threePanelPlotTitleFontSize')}
 
     ax = plt.subplot(subplots[0])
     do_subplot(ax=ax, field=modelArray, title=modelTitle, **dictModelRef)
@@ -658,7 +659,8 @@ def plot_global_comparison(
                       'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
 
-    plottitle_font = {'size': config.get('plot', 'threePanelPlotTitleFontSize')}
+    plottitle_font = {'size': config.get('plot',
+                                         'threePanelPlotTitleFontSize')}
 
     m = Basemap(projection='cyl', llcrnrlat=-85, urcrnrlat=86, llcrnrlon=-180,
                 urcrnrlon=181, resolution='l')
@@ -843,7 +845,8 @@ def plot_polar_projection_comparison(
                       'weight': config.get('plot', 'titleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
 
-    plottitle_font = {'size': config.get('plot', 'threePanelPlotTitleFontSize')}
+    plottitle_font = {'size': config.get('plot',
+                                         'threePanelPlotTitleFontSize')}
 
     # set up land colormap
     colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
@@ -1038,7 +1041,8 @@ def plot_vertical_section_comparison(
             titleFontSize = config.get('plot', 'threePanelTitleFontSize')
         title_font = {'size': titleFontSize,
                       'color': config.get('plot', 'threePanelTitleFontColor'),
-                      'weight': config.get('plot', 'threePanelTitleFontWeight')}
+                      'weight': config.get('plot',
+                                           'threePanelTitleFontWeight')}
         fig.suptitle(title, y=0.95, **title_font)
 
     if plotTitleFontSize is None:
@@ -1409,10 +1413,12 @@ def plot_vertical_section(
     dimF = fieldArray.shape
 
     if len(dimX) != 1 and len(dimX) != 2:
-        raise ValueError('xArray must have either one or two dimensions (has %d)' % dimX)
+        raise ValueError('xArray must have either one or two dimensions '
+                         '(has %d)' % dimX)
 
     if len(dimZ) != 1 and len(dimZ) != 2:
-        raise ValueError('depthArray must have either one or two dimensions (has %d)' % dimZ)
+        raise ValueError('depthArray must have either one or two dimensions '
+                         '(has %d)' % dimZ)
 
     if len(dimF) != 2:
         raise ValueError('fieldArray must have two dimensions (has %d)' % dimF)
@@ -1432,7 +1438,7 @@ def plot_vertical_section(
         num_x_Z = dimZ[1]
         num_z_Z = dimZ[0]
         if num_x != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] or \
-           num_x != num_x_Z:
+                num_x != num_x_Z:
             raise ValueError('size mismatch between xArray (%d), '
                              'depthArray (%d x %d), and fieldArray (%d x %d)' %
                              (num_x, num_z_Z, num_x_Z,
@@ -1443,7 +1449,7 @@ def plot_vertical_section(
         num_z_X = dimX[0]
         num_z = dimZ[0]
         if num_x_X != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
-           num_z != num_z_X:
+                num_z != num_z_X:
             raise ValueError('size mismatch between xArray (%d x %d), '
                              'depthArray (%d), and fieldArray (%d x %d)' %
                              (num_z_X, num_x_X, num_z,
@@ -1454,36 +1460,32 @@ def plot_vertical_section(
         num_z_X = dimX[0]
         num_x_Z = dimZ[1]
         num_z_Z = dimZ[0]
-        if num_x_X != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] or \
-           num_x_X != num_x_Z or num_z_X != num_z_Z:
+        if num_x_X != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] \
+                or num_x_X != num_x_Z or num_z_X != num_z_Z:
             raise ValueError('size mismatch between xArray (%d x %d), '
                              'depthArray (%d x %d), and fieldArray (%d x %d)' %
                              (num_z_X, num_x_X, num_z_Z, num_x_Z,
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
 
-        
-
     # define x and y as the appropriate 2D arrays for plotting
     if len(dimX) == 1 and len(dimZ) == 1:
         x, y = np.meshgrid(xArray, depthArray)  # change to zMid
     elif len(dimX) == 1:
-        x, y = np.meshgrid(xArray, np.zeros(numZ))
+        x, y = np.meshgrid(xArray, np.zeros(num_z))
         y = depthArray
     elif len(dimZ) == 1:
-        x, y = np.meshgrid(np.zeros(numX), depthArray)
+        x, y = np.meshgrid(np.zeros(num_x), depthArray)
         x = xArray
     else:
         x = xArray
         y = depthArray
-
 
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
     if fileout is not None:
         plt.figure(figsize=figsize, dpi=dpi)
-
 
     # compute moving averages with respect to the x dimension
     if N is not None and N != 1:
@@ -1500,15 +1502,14 @@ def plot_vertical_section(
         xArray = xArray[int(N/2.0):-int(round(N/2.0)-1)]
         fieldArray = xr.DataArray(movingAverageDepthSlices)
 
-
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
     if colormapDict['levels'] is None:
         # interpFieldArray contains the values at centers of grid cells,
         # for pcolormesh plots (using bilinear interpolation)
-        interpFieldArray = 0.5 * \
-                           (0.5*(fieldArray[1:,1:] + fieldArray[0:-1,1:]) + \
-                            0.5 * (fieldArray[1:,0:-1] + fieldArray[0:-1,0:-1]))
+        interpFieldArray = \
+            0.5 * (0.5*(fieldArray[1:, 1:] + fieldArray[0:-1, 1:]) +
+                   0.5*(fieldArray[1:, 0:-1] + fieldArray[0:-1, 0:-1]))
 
         plotHandle = plt.pcolormesh(x, y, interpFieldArray,
                                     cmap=colormapDict['colormap'],
@@ -1530,7 +1531,6 @@ def plot_vertical_section(
     if colorbarLabel is not None:
         cbar.set_label(colorbarLabel)
 
-
     # set the color for NaN or masked regions, and draw a black
     # outline around them; technically, the contour level used should
     # be 1.0, but the contours don't show up when using 1.0, so 0.999
@@ -1542,7 +1542,6 @@ def plot_vertical_section(
     landArray = landArray.filled(0.0)
     plt.contour(x, y, landArray, levels=[0.999], colors='black', linewidths=1)
 
-
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
     if contourLevels is not None:
@@ -1551,7 +1550,6 @@ def plot_vertical_section(
             contourLevels = None
         plt.contour(x, y, fieldArray, levels=contourLevels, colors=lineColor,
                     linewidths=lineWidth)
-
 
     if (title is not None):
         if titleFontSize is None:
@@ -1592,7 +1590,8 @@ def plot_vertical_section(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen') and fileout is not None:
+    if not config.getboolean('plot', 'displayToScreen') and \
+            fileout is not None:
         plt.close()
 
     return  # }}}
