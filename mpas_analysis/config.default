@@ -1297,7 +1297,7 @@ geojsonFiles = []
 fields =
     {'temperature':
         {'mpas': 'timeMonthly_avg_activeTracers_temperature',
-         'units': r'$^\circ$C'},
+         'units': r'$\degree$C'},
      'salinity':
         {'mpas': 'timeMonthly_avg_activeTracers_salinity',
          'units': r'PSU'},
@@ -1318,7 +1318,7 @@ seasons =  ['ANN']
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
 # Use 'obs' to indicate no subsampling.
-horizontalResolution = 10
+horizontalResolution = 5
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid or any other name if the vertical grid is defined by
@@ -1334,11 +1334,12 @@ verticalComparisonGrid = numpy.linspace(0, -4000, 401)
 # weights lower than this threshold will therefore be masked out.
 renormalizationThreshold = 0.01
 
+
 [geojsonTemperatureTransects]
 ## options related to plotting geojson transects of potential temperature
 
 # colormap for model/observations
-colormapNameResult = RdBu_r
+colormapNameResult = RdYlBu_r
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1347,7 +1348,7 @@ normArgsResult = {'vmin': -2., 'vmax': 30.}
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1355,11 +1356,12 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
 
+
 [geojsonSalinityTransects]
 ## options related to plotting geojson transects of salinity
 
 # colormap for model/observations
-colormapNameResult = BuOr
+colormapNameResult = haline
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1368,13 +1370,82 @@ normArgsResult = {'vmin': 30, 'vmax': 39.0}
 # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
 normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+
+[geojsonPotentialDensityTransects]
+## options related to plotting geojson transects of potential density
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[geojsonZonalVelocityTransects]
+## options related to plotting geojson transects of zonal velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[geojsonMeridionalVelocityTransects]
+## options related to plotting geojson transects of meridional velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
 
 [soseTransects]
 ## options related to plotting model vs. Southern Ocean State Estimate (SOSE)

@@ -365,8 +365,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # convert x and z to numpy arrays, make a copy because they are
         # sometimes read-only (not sure why)
-        x = x.values.copy()
-        z = z.values.copy()
+        x = x.values.copy().transpose()
+        z = z.values.copy().transpose()
 
         # z is masked out with NaNs in some locations (where there is land) but
         # this makes pcolormesh unhappy so we'll zero out those locations
@@ -374,6 +374,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
+        modelOutput = modelOutput.transpose()
 
         if remappedRefClimatology is None:
             refOutput = None
@@ -382,8 +383,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             refOutput = remappedRefClimatology[self.refFieldName]
             dims = refOutput.dims
             refOutput = nans_to_numpy_mask(refOutput.values)
-            if dims[0] != 'nPoints':
-                assert(dims[1] == 'nPoints')
+            if dims[1] != 'nPoints':
+                assert(dims[0] == 'nPoints')
                 refOutput = refOutput.transpose()
 
             bias = modelOutput - refOutput
@@ -400,11 +401,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         yLabel = 'Depth [m]'
 
         plot_vertical_section_comparison(config,
-                                         x.transpose(),
-                                         z.transpose(),
-                                         modelOutput.transpose(),
-                                         refOutput.transpose(),
-                                         bias.transpose(),
+                                         x,
+                                         z,
+                                         modelOutput,
+                                         refOutput,
+                                         bias,
                                          outFileName,
                                          configSectionName,
                                          cbarLabel=self.unitsLabel,
@@ -414,7 +415,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                          modelTitle='{}'.format(mainRunName),
                                          refTitle=self.refTitleLabel,
                                          diffTitle=self.diffTitleLabel,
-                                         invertYAxis=False)
+                                         invertYAxis=False,
+                                         backgroundColor='#c49868')
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
