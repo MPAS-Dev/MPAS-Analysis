@@ -31,7 +31,14 @@ def interp_1d(ds, inInterpDim, inInterpCoord, outInterpDim,
     indices, weight0 = _compute_weights_and_indices(
             ds, inInterpDim, inInterpCoord, outInterpDim, outInterpCoord)
 
+    # conert coords to normal data variables
+    coords = list(ds.coords)
+    ds = ds.reset_coords(coords)
+
     ds = ds.apply(_interp_1d_array, args=(indices, weight0, inInterpDim))
+
+    # conert back to coords
+    ds = ds.set_coords(coords)
 
     return ds  # }}}
 
@@ -47,8 +54,6 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
 
     outDims = xOut.dims
     inDims = xIn.dims
-
-    # print(xIn, inInterpDim, xOut, outInterpDim)
 
     inAxis = inDims.index(inInterpDim)
     outAxis = outDims.index(outInterpDim)
