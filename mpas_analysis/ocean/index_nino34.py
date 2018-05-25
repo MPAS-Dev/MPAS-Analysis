@@ -590,7 +590,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # }}}
 
     def _nino34_timeseries_plot(self, nino34s, title, panelTitles, outFileName,
-                                xlabel='Time (years)', ylabel='($^\circ$C)',
+                                xlabel='Time (years)', ylabel='($\degree$C)',
                                 titleFontSize=None, figsize=(9, 21), dpi=None,
                                 maxXTicks=20, lineWidth=2):
         # {{{

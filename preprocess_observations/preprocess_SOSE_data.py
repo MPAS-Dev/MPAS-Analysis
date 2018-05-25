@@ -174,12 +174,12 @@ def sose_pt_to_nc(inPrefix, outFileName, lon, lat, z, cellFraction,
                      'data_vars': {'theta':
                                    {'dims': ('Time', 'lat', 'lon', 'z'),
                                     'data': field,
-                                    'attrs': {'units': '$^\circ$C',
+                                    'attrs': {'units': '$\degree$C',
                                               'description': description}},
                                    'botTheta':
                                    {'dims': ('Time', 'lat', 'lon'),
                                     'data': botField,
-                                    'attrs': {'units': '$^\circ$C',
+                                    'attrs': {'units': '$\degree$C',
                                               'description': botDescription}}}}
 
         dsT = xarray.Dataset.from_dict(dictonary)

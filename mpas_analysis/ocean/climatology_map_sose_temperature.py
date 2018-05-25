@@ -152,7 +152,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^\circ$C',
+                        unitsLabel=r'$\degree$C',
                         imageCaption='Potential Temperature',
                         galleryGroup='Potential Temperature',
                         groupSubtitle=None,

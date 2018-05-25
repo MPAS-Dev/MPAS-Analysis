@@ -87,7 +87,7 @@ class SoseTransects(AnalysisTask):  # {{{
                  'obs': 'theta',
                  'obsFile': 'SOSE_2005-2010_monthly_pot_temp_SouthernOcean'
                             '_0.167x0.167degree.nc',
-                 'units': r'$^\circ$C'},
+                 'units': r'$\degree$C'},
              'salinity':
                 {'mpas': 'timeMonthly_avg_activeTracers_salinity',
                  'obs': 'salinity',
@@ -148,7 +148,7 @@ class SoseTransects(AnalysisTask):  # {{{
                         refFieldName = fields[fieldName]['mpas']
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
-                    fieldNameInTytle = r'{} at {}$^\circ$Longitude'.format(
+                    fieldNameInTytle = r'{} at {}$\degree$ Longitude'.format(
                             fieldNameUpper, lon)
 
                     # make a new subtask for this season and comparison grid

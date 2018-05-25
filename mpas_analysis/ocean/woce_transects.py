@@ -87,7 +87,7 @@ class WoceTransects(AnalysisTask):  # {{{
             {'temperature':
                 {'mpas': 'timeMonthly_avg_activeTracers_temperature',
                  'obs': 'potentialTemperature',
-                 'units': r'$^\circ$C'},
+                 'units': r'$\degree$C'},
              'salinity':
                 {'mpas': 'timeMonthly_avg_activeTracers_salinity',
                  'obs': 'salinity',

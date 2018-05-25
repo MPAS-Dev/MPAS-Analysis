@@ -242,7 +242,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.logger.info('   Plot time series of max Atlantic MOC at 26.5N...')
         xLabel = 'Time [years]'
         yLabel = '[Sv]'
-        title = 'Max Atlantic MOC at $26.5^\circ$N\n {}'.format(mainRunName)
+        title = 'Max Atlantic MOC at $26.5\degree$N\n {}'.format(mainRunName)
         filePrefix = self.filePrefixes['timeSeries']
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)

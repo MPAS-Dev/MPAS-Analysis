@@ -98,7 +98,7 @@ def text_to_netcdf(inDir, outDir):
     PT = numpy.ma.masked_all(Lon.shape)
     PT[yIndices, xIndices] = inPT
     ds['botTheta'] = (('lat', 'lon'), PT)
-    ds.botTheta.attrs['units'] = '$^\circ$C'
+    ds.botTheta.attrs['units'] = '$\degree$C'
     ds.botTheta.attrs['description'] = \
         'potential temperature at sea floor'
 
@@ -106,7 +106,7 @@ def text_to_netcdf(inDir, outDir):
     # neglect difference between std of PT and CT
     PT_std[yIndices, xIndices] = inCT_std
     ds['botThetaStd'] = (('lat', 'lon'), PT_std)
-    ds.botThetaStd.attrs['units'] = '$^\circ$C'
+    ds.botThetaStd.attrs['units'] = '$\degree$C'
     ds.botThetaStd.attrs['description'] = \
         'standard deviation in potential temperature at sea floor'
 
