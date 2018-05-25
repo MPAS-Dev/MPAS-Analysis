@@ -21,6 +21,7 @@ import xarray as xr
 import numpy
 
 import matplotlib.pyplot as plt
+from mpas_analysis.shared.plot.plotting import plot_vertical_section_comparison
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -352,12 +353,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         z = remappedModelClimatology['z'].values
         nPoints = remappedModelClimatology.sizes['nPoints']
         nz = remappedModelClimatology.sizes['nz']
-
-        if len(x.shape) == 1:
-            x = numpy.tile(x.reshape((len(x), 1)), (1, nz))
-
-        if len(z.shape) == 1:
-            z = numpy.tile(z.reshape((1, len(z))), (nPoints, 1))
+        
+#        if len(x.shape) == 1:
+#            x = numpy.tile(x.reshape((len(x), 1)), (1, nz))
+#
+#        if len(z.shape) == 1:
+#            z = numpy.tile(z.reshape((1, len(z))), (nPoints, 1))
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
@@ -382,7 +383,39 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-        # make a call to plot the transect here!
+        # construct a three-panel comparison  plot for the transect
+
+        xLabel = 'Distance [m]'
+        yLabel = 'Depth [m]'
+
+        plot_vertical_section_comparison(config,
+                                         x,
+                                         z,
+                                         modelOutput.transpose(),
+                                         refOutput.transpose(),
+                                         bias.transpose(),
+                                         outFileName,
+                                         configSectionName,
+                                         cbarLabel=self.unitsLabel,
+                                         xlabel=xLabel,
+                                         ylabel=yLabel,
+                                         title=title,
+                                         modelTitle='{}'.format(mainRunName),
+                                         refTitle=self.refTitleLabel,
+                                         diffTitle=self.diffTitleLabel,
+                                         invertYAxis=False)
+
+
+        if len(x.shape) == 1:
+            x = numpy.tile(x.reshape((len(x), 1)), (1, nz))
+
+        if len(z.shape) == 1:
+            z = numpy.tile(z.reshape((1, len(z))), (nPoints, 1))
+
+        #if len(x) != modelOutput.shape[1]:
+        #    raise ValueError('size mismatch between x array (%d) and modelOutput (%d) %d %d %d %d' % (len(x), modelOutput.shape[1], len(z), modelOutput.shape[0], nPoints, nz))
+        #if len(z) != modelOutput.shape[0]:
+        #    raise ValueError('size mismatch between z array (%d) and modelOutput (%d)' % (len(z), modelOutput.shape[0]))
 
         # This is just a placeholder for testing
         plt.figure(figsize=(8, 13))
@@ -399,7 +432,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         plt.pcolormesh(x, z, bias)
         plt.colorbar()
         plt.suptitle(title)
-        plt.savefig(outFileName, dpi=200)
+        plt.savefig(outFileName[:-4]+'_OLD.png', dpi=200)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

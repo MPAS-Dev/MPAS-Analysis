@@ -148,7 +148,7 @@ class SoseTransects(AnalysisTask):  # {{{
                         refFieldName = fields[fieldName]['mpas']
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
-                    fieldNameInTytle = r'{} at {}$^\circ$ Longitude'.format(
+                    fieldNameInTytle = r'{} at {}$^\circ$Longitude'.format(
                             fieldNameUpper, lon)
 
                     # make a new subtask for this season and comparison grid

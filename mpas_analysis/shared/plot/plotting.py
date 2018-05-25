@@ -605,7 +605,7 @@ def plot_global_comparison(
         the line width of contour lines (if specified)
 
     lineColor : str, optional
-        the color contour lines (if specified)
+        the color of contour lines (if specified)
     """
     # Authors
     # -------
@@ -699,6 +699,8 @@ def plot_polar_projection_comparison(
         titleFontSize=None,
         figsize=None,
         dpi=None,
+        lineWidth=0.5,
+        lineColor='black',
         vertical=False):
 
     """
@@ -756,6 +758,12 @@ def plot_polar_projection_comparison(
     dpi : int, optional
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
+
+    lineWidth : int, optional
+        the line width of contour lines (if specified)
+
+    lineColor : str, optional
+        the color of contour lines (if specified)
 
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
@@ -847,6 +855,262 @@ def plot_polar_projection_comparison(
 
         ax = plt.subplot(subplots[2])
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
+
+    if (fileout is not None):
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    if not config.getboolean('plot', 'displayToScreen'):
+        plt.close()
+
+
+def plot_vertical_section_comparison(
+        config,
+        xArray,
+        depthArray,
+        modelArray,
+        refArray,
+        diffArray,
+        fileout,
+        colorMapSectionName,
+        cbarLabel=None,
+        xlabel=None,
+        ylabel=None,
+        title=None,
+        modelTitle='Model',
+        refTitle='Observations',
+        diffTitle='Model-Observations',
+        titleFontSize=None,
+        axisFontSize=None,
+        figsize=None,
+        dpi=None,
+        lineWidth=2,
+        lineColor='black',
+        backgroundColor='grey',
+        xLim=None,
+        yLim=None,
+        invertYAxis=True,
+        xArrayIsTime=False,
+        N=None,
+        firstYearXTicks=None,
+        yearStrideXTicks=None,
+        maxXTicks=20,
+        calendar='gregorian'):
+
+    """
+    Plots vertical section plots in a three-panel format, comparing model data
+    (in modelArray) to some reference dataset (in refArray), which can be
+    either observations or an alternative model, and also presenting the
+    difference plot of the two.  If refArray is None, then only one panel
+    is plotted, displaying the model data.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    xArray : float array
+        x array (latitude, longitude, spherical distance, or distance along
+        a transect;  or, time for Hovmoller plots)
+
+    depthArray : float array
+        depth array [m]
+
+    modelArray, refArray : float arrays
+        model and observational or reference run data sets
+
+    diffArray : float array
+        difference between modelArray and refArray
+
+    fileout : str
+        the file name to be written
+
+    colorMapSectionName : str
+        section name in ``config`` where color map info can be found.
+
+    cbarlabel : str, optional
+        label on the colorbar
+
+    xlabel, ylabel : str, optional
+        label of x- and y-axis
+
+    title : str, optional
+        the subtitle of the plot
+
+    modelTitle : str, optional
+        title of the model panel
+
+    refTitle : str, optional
+        title of the observations or reference run panel
+
+    diffTitle : str, optional
+        title of the difference (bias) panel
+
+    titleFontSize : int, optional
+        size of the title font
+
+    axisFontSize : int, optional
+        size of the axis font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
+
+    lineWidth : int, optional
+        the line width of contour lines (if specified)
+
+    lineColor : str, optional
+        the color of contour lines (if specified)
+
+    backgroundColor : str, optional
+        the background color for the plot (NaNs will be shown in this color)
+
+    xLim : float array, optional
+        x range of plot
+
+    yLim : float array, optional
+        y range of plot
+
+    invertYAxis : logical, optional
+        if True, invert Y axis
+
+    xArrayIsTime : logical, optional
+        if True, format X axis for time
+
+    N : int, optional
+        the number of points over which to perform a moving average
+        NOTE: this option is mostly intended for use when xArrayIsTime is True,
+        although it will work with other data as well.  Also, the moving
+        average calculation is based on number of points, not actual x axis
+        values, so for best results, the values in the xArray should be equally
+        spaced.
+
+    firstYearXTicks : int, optional
+        The year of the first tick on the x axis.  By default, the first time
+        entry is the first tick.
+
+    yearStrideXTicks : int, optional
+        The number of years between x ticks. By default, the stride is chosen
+        automatically to have ``maxXTicks`` tick marks or fewer.
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+
+    calendar : str, optional
+        the calendar to use for formatting the time axis
+        NOTE:  calendar is only used if xArrayIsTime is True
+    """
+    # Authors
+    # -------
+    # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
+
+    # set up figure
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    if figsize is None:
+        # set the defaults, depending on if we have 1 or 3 panels
+        if refArray is None:
+            figsize = (8, 5)
+        else:
+            figsize = (8, 13)
+
+    fig = plt.figure(figsize=figsize, dpi=dpi)
+
+    if (title is not None):
+        if titleFontSize is None:
+            titleFontSize = config.get('plot', 'titleFontSize')
+        title_font = {'size': titleFontSize,
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
+        fig.suptitle(title, y=0.95, **title_font)
+
+    if axisFontSize is None:
+        axisFontSize = config.get('plot', 'axisFontSize')
+
+    if refArray is not None:
+        plt.subplot(3, 1, 1)
+
+    plot_vertical_section(config,
+                          xArray,
+                          depthArray,
+                          modelArray,
+                          colorMapSectionName,
+                          suffix='Result',
+                          colorbarLabel=cbarLabel,
+                          title=modelTitle,
+                          xlabel=xlabel,
+                          ylabel=ylabel,
+                          fileout=None,
+                          titleFontSize=axisFontSize,
+                          axisFontSize=12,
+                          xLim=xLim,
+                          yLim=yLim,
+                          lineWidth=lineWidth,
+                          lineColor=lineColor,
+                          invertYAxis=invertYAxis,
+                          xArrayIsTime=xArrayIsTime,
+                          N=None,
+                          firstYearXTicks=firstYearXTicks,
+                          yearStrideXTicks=yearStrideXTicks,
+                          maxXTicks=maxXTicks, calendar=calendar)
+
+    if refArray is not None:
+        plt.subplot(3, 1, 2)
+        plot_vertical_section(config,
+                              xArray,
+                              depthArray,
+                              refArray,
+                              colorMapSectionName,
+                              suffix='Result',
+                              colorbarLabel=cbarLabel,
+                              title=refTitle,
+                              xlabel=xlabel,
+                              ylabel=ylabel,
+                              fileout=None,
+                              titleFontSize=axisFontSize,
+                              axisFontSize=12,
+                              xLim=xLim,
+                              yLim=yLim,
+                              lineWidth=lineWidth,
+                              lineColor=lineColor,
+                              invertYAxis=invertYAxis,
+                              xArrayIsTime=xArrayIsTime,
+                              N=None,
+                              firstYearXTicks=firstYearXTicks,
+                              yearStrideXTicks=yearStrideXTicks,
+                              maxXTicks=maxXTicks,
+                              calendar=calendar)
+
+        plt.subplot(3, 1, 3)
+        plot_vertical_section(config,
+                              xArray,
+                              depthArray,
+                              diffArray,
+                              colorMapSectionName,
+                              suffix='Difference',
+                              colorbarLabel=cbarLabel,
+                              title=diffTitle,
+                              xlabel=xlabel,
+                              ylabel=ylabel,
+                              fileout=None,
+                              titleFontSize=axisFontSize,
+                              axisFontSize=12,
+                              xLim=xLim,
+                              yLim=yLim,
+                              lineWidth=lineWidth,
+                              lineColor=lineColor,
+                              invertYAxis=invertYAxis,
+                              xArrayIsTime=xArrayIsTime,
+                              N=None,
+                              firstYearXTicks=firstYearXTicks,
+                              yearStrideXTicks=yearStrideXTicks,
+                              maxXTicks=maxXTicks,
+                              calendar=calendar)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -1004,12 +1268,16 @@ def plot_vertical_section(
         title=None,
         xlabel=None,
         ylabel=None,
-        fileout='moc.png',
+        fileout=None,
         figsize=(10, 4),
         dpi=None,
+        titleFontSize=None,
+        axisFontSize=None,
         xLim=None,
         yLim=None,
-        linewidths=2,
+        lineWidth=2,
+        lineColor='black',
+        backgroundColor='grey',
         invertYAxis=True,
         xArrayIsTime=False,
         N=None,
@@ -1063,14 +1331,26 @@ def plot_vertical_section(
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
 
+    titleFontSize : int, optional
+        size of the title font
+
+    axisFontSize : int, optional
+        size of the axis font
+
     xLim : float array, optional
         x range of plot
 
     yLim : float array, optional
         y range of plot
 
-    linewidths : int, optional
-        linewidths for contours
+    lineWidth : int, optional
+        the line width of contour lines (if specified)
+
+    lineColor : str, optional
+        the color of contour lines (if specified)
+
+    backgroundColor : str, optional
+        the background color for the plot (NaNs will be shown in this color)
 
     invertYAxis : logical, optional
         if True, invert Y axis
@@ -1109,15 +1389,18 @@ def plot_vertical_section(
 
     # verify that the dimensions of fieldArray are consistent with those of
     # xArray and depthArray
-    if len(xArray) != fieldArray.shape[1]:
-        raise ValueError('size mismatch between xArray and fieldArray')
-    elif len(depthArray) != fieldArray.shape[0]:
-        raise ValueError('size mismatch between depthArray and fieldArray')
+    if len(xArray) != fieldArray.shape[1] or \
+       len(depthArray) != fieldArray.shape[0]:
+        raise ValueError('size mismatch between xArray (%d), '
+                         'depthArray (%d), and fieldArray (%d x %d)' %
+                         (len(xArray), len(depthArray), fieldArray.shape[0],
+                          fieldArray.shape[1]))
 
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
-    plt.figure(figsize=figsize, dpi=dpi)
+    if fileout is not None:
+        plt.figure(figsize=figsize, dpi=dpi)
 
     # compute moving averages with respect to the x dimension
     if N is not None and N != 1:
@@ -1138,17 +1421,34 @@ def plot_vertical_section(
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
-    cs = plt.contourf(x, y, fieldArray, cmap=colormapDict['colormap'],
-                      norm=colormapDict['norm'],
-                      levels=colormapDict['levels'], extend='both')
+    if levels is None:
+    #if True:
+        cs = plt.pcolormesh(x, y, fieldArray, cmap=colormapDict['colormap'],
+                            norm=colormapDict['norm'])
+    else:
+        cs = plt.contourf(x, y, fieldArray, cmap=colormapDict['colormap'],
+                          norm=colormapDict['norm'],
+                          levels=colormapDict['levels'], extend='both')
 
+
+    # set the color for NaN or masked regions, and draw a black
+    # outline around them
+    ax = plt.gca()
+    ax.set_facecolor(backgroundColor)
+    landArray = np.ma.where(fieldArray != np.nan, 2.0, fieldArray)
+    landArray = np.ma.masked_where(landArray == np.nan, landArray, copy=True)
+    landArray = landArray.filled(1.0)
+    plt.contour(x, y, landArray, levels=[1.5], colors='black', linewidths=1)
+
+
+    # plot contours, if they were requested
     contourLevels = colormapDict['contours']
     if contourLevels is not None:
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        plt.contour(x, y, fieldArray, levels=contourLevels, colors='k',
-                    linewidths=linewidths)
+        plt.contour(x, y, fieldArray, levels=contourLevels, colors=lineColor,
+                    linewidths=lineWidth)
 
     cbar = plt.colorbar(cs, orientation='vertical', spacing='uniform',
                         ticks=colormapDict['ticks'],
@@ -1157,12 +1457,20 @@ def plot_vertical_section(
     if colorbarLabel is not None:
         cbar.set_label(colorbarLabel)
 
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
-    title_font = {'size': config.get('plot', 'titleFontSize'),
-                  'color': config.get('plot', 'titleFontColor'),
-                  'weight': config.get('plot', 'titleFontWeight')}
-    if title is not None:
+
+    if (title is not None):
+        if titleFontSize is None:
+            titleFontSize = config.get('plot', 'titleFontSize')
+        title_font = {'size': titleFontSize,
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
         plt.title(title, **title_font)
+
+    if (xlabel is not None) or (ylabel is not None):
+        if axisFontSize is None:
+            axisFontSize = config.get('plot', 'axisFontSize')
+        axis_font = {'size': axisFontSize}
+
     if xlabel is not None:
         plt.xlabel(xlabel, **axis_font)
     if ylabel is not None:
@@ -1189,7 +1497,7 @@ def plot_vertical_section(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
+    if not config.getboolean('plot', 'displayToScreen') and fileout is not None:
         plt.close()
 
     return  # }}}
