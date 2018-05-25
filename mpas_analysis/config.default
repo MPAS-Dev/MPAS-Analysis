@@ -1187,14 +1187,15 @@ seasons =  ['ANN']
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
 # Use 'obs' to indicate no subsampling.
-horizontalResolution = obs
+# horizontalResolution = obs
+horizontalResolution = 5
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
+# verticalComparisonGridName = mpas
 # verticalComparisonGridName = obs
 verticalComparisonGridName = uniform_0_to_4000m_at_10m
-#verticalComparisonGridName = mpas
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
 # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
@@ -1224,7 +1225,7 @@ normArgsResult = {'vmin': 0.0, 'vmax': 18.0}
 contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1244,7 +1245,7 @@ contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 ## options related to plotting WOCE transects of salinity
 
 # colormap for model/observations
-colormapNameResult = BuOr
+colormapNameResult = haline
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1259,7 +1260,7 @@ normArgsResult = {'vmin': 33.0, 'vmax': 36.0}
 contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1285,14 +1286,15 @@ seasons =  ['ANN']
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
 # Use 'obs' to indicate no subsampling.
-horizontalResolution = obs
+# horizontalResolution = obs
+horizontalResolution = 5
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
+# verticalComparisonGridName = mpas
 # verticalComparisonGridName = obs
 verticalComparisonGridName = uniform_0_to_4000m_at_10m
-#verticalComparisonGridName = obs
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
 # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
@@ -1329,7 +1331,7 @@ normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
 contourLevelsResult = np.arange(0.5, 6.0, 1.0)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1348,7 +1350,7 @@ contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 ## options related to plotting WOCE transects of salinity
 
 # colormap for model/observations
-colormapNameResult = BuOr
+colormapNameResult = haline
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1363,7 +1365,7 @@ normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
 contourLevelsResult = np.arange(34.1, 35.0, 0.1)
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
