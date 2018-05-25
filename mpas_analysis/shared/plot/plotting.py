@@ -1130,7 +1130,10 @@ def plot_vertical_section_comparison(
                               calendar=calendar,
                               backgroundColor=backgroundColor)
 
-    plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
+    if refArray is None:
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
+    else:
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
