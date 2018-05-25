@@ -197,6 +197,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         # (RemapMpasClimatologySubtask)
         super(ComputeTransectsSubtask, self).setup_and_check()
 
+        for transectName in obsDatasets:
+            obsDatasets[transectName].close()
+
+
     def run_task(self):  # {{{
         """
         Compute climatologies of melt rates from E3SM/MPAS output
@@ -224,10 +228,13 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             self.zMid = \
                 xr.DataArray.from_dict({'dims': ('nCells', 'nVertLevels'),
                                         'data': zMid})
+            ds.close()
 
         # then, call run from the base class (RemapMpasClimatologySubtask),
-        # which will perform the main function of the task
+        # which will perform the horizontal remapping
         super(ComputeTransectsSubtask, self).run_task()
+
+        obsDatasets = self.obsDatasets.get_observations()
 
         self.logger.info('Interpolating each transect vertically...')
         # finally, vertically interpolate and write out each transect
@@ -237,7 +244,6 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                     season, comparisonGridName=self.transectCollectionName)
 
             with xr.open_dataset(remappedFileName) as ds:
-                obsDatasets = self.obsDatasets.get_observations()
                 transectNames = list(obsDatasets.keys())
                 for transectIndex, transectName in enumerate(transectNames):
                     self.logger.info('  {}'.format(transectName))
@@ -248,7 +254,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                             transectName, self.verticalComparisonGridName)
                     self._vertical_interp(ds, transectIndex, dsObs,
                                           outFileName, outObsFileName)
+                ds.close()
 
+        for transectName in obsDatasets:
+            obsDatasets[transectName].close()
         # }}}
 
     def customize_masked_climatology(self, climatology, season):  # {{{
@@ -465,7 +474,12 @@ class TransectsObservations(object):  # {{{
             else:
                 dsObs = self.build_observational_dataset(
                         self.obsFileNames[name], name)
+
                 dsObs.load()
+                # make sure lat and lon are coordinates
+                for coord in ['lon', 'lat']:
+                    dsObs.coords[coord] = dsObs[coord]
+
                 if self.horizontalResolution == 'obs':
                     dsObs = self._add_distance(dsObs)
                 else:
@@ -546,7 +560,7 @@ class TransectsObservations(object):  # {{{
 
         make_directories(remappedDirectory)
 
-        if verticalComparisonGridName is 'obs':
+        if verticalComparisonGridName == 'obs':
             fileName = '{}/{}_{}.nc'.format(
                 remappedDirectory, self.transectCollectionName, transectName)
         else:
