@@ -33,7 +33,7 @@ The following configuration options are available for this task::
   colormapNameResult = erdc_iceFire_H
   # the type of norm used in the colormap
   normTypeResult = symLog
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsResult = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
                     'vmax': 100.}
   colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
@@ -43,7 +43,7 @@ The following configuration options are available for this task::
   colormapNameDifference = balance
   # the type of norm used in the colormap
   normTypeDifference = symLog
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
                         'vmax': 100.}
   colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1.,

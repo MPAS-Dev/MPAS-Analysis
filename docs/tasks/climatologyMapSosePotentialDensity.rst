@@ -37,7 +37,7 @@ The following configuration options are available for this task::
     colormapNameResult = Spectral_r
     # the type of norm used in the colormap
     normTypeResult = linear
-    # A dictionary with keywords for the SemiLogNorm
+    # A dictionary with keywords for the norm
     normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
     # place the ticks automatically by default
     # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
@@ -46,7 +46,7 @@ The following configuration options are available for this task::
     colormapNameDifference = balance
     # the type of norm used in the colormap
     normTypeDifference = linear
-    # A dictionary with keywords for the SemiLogNorm
+    # A dictionary with keywords for the norm
     normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
     # place the ticks automatically by default
     # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
