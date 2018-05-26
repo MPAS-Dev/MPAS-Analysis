@@ -1297,19 +1297,24 @@ geojsonFiles = []
 fields =
     {'temperature':
         {'mpas': 'timeMonthly_avg_activeTracers_temperature',
-         'units': r'$\degree$C'},
+         'units': r'$\degree$C',
+         'titleName': 'Potential Temperature'},
      'salinity':
         {'mpas': 'timeMonthly_avg_activeTracers_salinity',
-         'units': r'PSU'},
+         'units': r'PSU',
+         'titleName': 'Salinity'},
      'potentialDensity':
         {'mpas': 'timeMonthly_avg_potentialDensity',
-         'units': r'kg m$^{-3}$'},
+         'units': r'kg m$^{-3}$',
+         'titleName': 'Potential Density'},
      'zonalVelocity':
         {'mpas': 'timeMonthly_avg_velocityZonal',
-         'units': r'm s$^{-1}$'},
+         'units': r'm s$^{-1}$',
+         'titleName': 'Zonal Velocity'},
      'meridionalVelocity':
         {'mpas': 'timeMonthly_avg_velocityMeridional',
-         'units': r'm s$^{-1}$'}}
+         'units': r'm s$^{-1}$',
+         'titleName': 'Meridional Velocity'}}
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)

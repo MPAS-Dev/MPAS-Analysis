@@ -134,7 +134,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
                     fieldNameInTytle = '{} from {}'.format(
-                            fieldNameUpper,
+                            fields[fieldName]['titleName'],
                             transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
@@ -156,7 +156,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
                             galleryGroup='Geojson Transects',
                             groupSubtitle=None,
                             groupLink='geojson',
-                            galleryName=fieldNameUpper,
+                            galleryName=fields[fieldName]['titleName'],
                             configSectionName='geojson{}Transects'.format(
                                     fieldNameUpper))
 
