@@ -194,8 +194,8 @@ def determine_analyses_to_generate(analyses):  # {{{
 
     Returns
     -------
-    analysesToGenerate : list of ``AnalysisTask`` objects
-        A list of analysis tasks to run
+    analysesToGenerate : ``OrderedDict`` of ``AnalysisTask`` objects
+        A dictionary of analysis tasks to run
     """
     # Authors
     # -------

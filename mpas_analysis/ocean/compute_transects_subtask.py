@@ -257,6 +257,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         for transectName in obsDatasets:
             obsDatasets[transectName].close()
+
         # }}}
 
     def customize_masked_climatology(self, climatology, season):  # {{{
@@ -464,7 +465,7 @@ class TransectsObservations(object):  # {{{
         Xylar Asay-Davis
         '''
 
-        self.obsDatasets = OrderedDict()
+        obsDatasets = OrderedDict()
         for name in self.obsFileNames:
             outFileName = self.get_out_file_name(name)
             if os.path.exists(outFileName):
@@ -484,9 +485,9 @@ class TransectsObservations(object):  # {{{
                 else:
                     dsObs = self._subdivide_observations(dsObs)
                 write_netcdf(dsObs, outFileName)
-            self.obsDatasets[name] = dsObs
+            obsDatasets[name] = dsObs
 
-        return self.obsDatasets  # }}}
+        return obsDatasets  # }}}
 
     def build_observational_dataset(self, fileName, transectName):  # {{{
         '''
