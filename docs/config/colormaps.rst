@@ -12,8 +12,9 @@ Supported Colormaps
 --------------------
 
 MPAS-Analysis supports all `matplotlib colormaps`_, all `cmocean colormaps`_,
-all `Scientific Colour Map Suite 3.0`_ colormaps, and five custom color maps:
-``ferret``, ``erdc_iceFire_H``, ``erdc_iceFire_L``, ``BuOr`` and ``Maximenko``.
+all `Scientific Colour Map Suite 3.0`_ colormaps, the selection of key
+`SciVisColor colormaps`_ and five custom color maps: ``ferret``,
+``erdc_iceFire_H``, ``erdc_iceFire_L``, ``BuOr`` and ``Maximenko``.
 
 .. figure:: ../tasks/examples/ant_melt.png
    :width: 720 px
@@ -144,6 +145,7 @@ Again, append ``Result`` or ``Difference`` to these options for a 3-panel plot.
 .. _`matplotlib colormaps`: https://matplotlib.org/users/colormaps.html
 .. _`cmocean colormaps`: https://matplotlib.org/cmocean/
 .. _`Scientific Colour Map Suite 3.0`: http://www.fabiocrameri.ch/colourmaps.php
+.. _`SciVisColor colormaps`: https://sciviscolor.org/home/colormaps/
 .. _`linear`: https://matplotlib.org/users/colormapnorms.html
 .. _`log`: https://matplotlib.org/users/colormapnorms.html#logarithmic
 .. _`symLog`: https://matplotlib.org/users/colormapnorms.html#symmetric-logarithmic

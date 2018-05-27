@@ -1645,6 +1645,21 @@ def _register_custom_colormaps():
             __name__, 'ColourMapSuite3/{}/{}.xml'.format(mapName, mapName))
         _read_xml_colormap(xmlFile, mapName)
 
+    # add SciVisColor colormaps from
+    # https://sciviscolor.org/home/colormaps/
+
+    for mapName in ['3wave-yellow-grey-blue', '3Wbgy5',
+                    '4wave-grey-red-green-mgreen',  '5wave-yellow-brown-blue',
+                    'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
+                    'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
+                    'green-7', 'green-8', 'orange-5', 'orange-6',
+                    'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
+                    'red-3', 'red-4', 'yellow-1', 'yellow-7']:
+
+        xmlFile = pkg_resources.resource_filename(
+            __name__, 'SciVisColorColormaps/{}.xml'.format(mapName))
+        _read_xml_colormap(xmlFile, mapName)
+
 
 def _read_xml_colormap(xmlFile, mapName):
     '''Read in an XML colormap'''
