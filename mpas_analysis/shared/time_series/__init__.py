@@ -1,4 +1,5 @@
-from mpas_analysis.shared.time_series.time_series import cache_time_series
+from mpas_analysis.shared.time_series.time_series import cache_time_series, \
+    combine_time_series_with_ncrcat
 from mpas_analysis.shared.time_series.mpas_time_series_task import \
     MpasTimeSeriesTask
 
