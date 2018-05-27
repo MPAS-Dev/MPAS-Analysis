@@ -16,27 +16,16 @@ all `Scientific Colour Map Suite 3.0`_ colormaps, the selection of key
 `SciVisColor colormaps`_ and five custom color maps: ``ferret``,
 ``erdc_iceFire_H``, ``erdc_iceFire_L``, ``BuOr`` and ``Maximenko``.
 
-.. figure:: ../tasks/examples/ant_melt.png
+.. figure:: images/colormaps.png
    :width: 720 px
-   :alt: Example of erdc_iceFire_H colormap
+   :alt: All available colormaps
    :align: center
 
-   Example of ``erdc_iceFire_H`` colormap
+   All available colormaps
 
-.. figure:: ../tasks/examples/clim_ohc.png
-   :width: 500 px
-   :alt: Example of BuOr colormap
-   :align: center
+To plot all availabe colormpas (as above), run::
 
-   Example of ``BuOr`` colormap
-
-.. figure:: ../tasks/examples/ssh.png
-   :width: 500 px
-   :alt: Example of Maximenko colormap
-   :align: center
-
-   Example of ``Maximenko`` colormap
-
+    run_mpas_analysis --plot_colormaps
 
 Indexed Colormaps
 ------------------

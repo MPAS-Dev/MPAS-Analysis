@@ -1683,4 +1683,30 @@ def _read_xml_colormap(xmlFile, mapName):
         plt.register_cmap(mapName, cmap)
 
 
+def _plot_color_gradients():
+    '''from https://matplotlib.org/tutorials/colors/colormaps.html'''
+
+    cmap_list = [m for m in plt.cm.cmap_d if not m.endswith("_r")]
+
+    gradient = np.linspace(0, 1, 256)
+    gradient = np.vstack((gradient, gradient))
+
+    nrows = len(cmap_list)
+
+    fig, axes = plt.subplots(figsize=(7.2, 0.25*nrows), nrows=nrows)
+    fig.subplots_adjust(top=0.99, bottom=0.01, left=0.35, right=0.99)
+
+    for ax, name in zip(axes, cmap_list):
+        ax.imshow(gradient, aspect='auto', cmap=plt.get_cmap(name))
+        pos = list(ax.get_position().bounds)
+        x_text = pos[0] - 0.01
+        y_text = pos[1] + pos[3]/2.
+        fig.text(x_text, y_text, name, va='center', ha='right', fontsize=10)
+
+    # Turn off *all* ticks & spines, not just the ones with colormaps.
+    for ax in axes:
+        ax.set_axis_off()
+
+    plt.savefig('colormaps.png', dpi=100)
+
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
