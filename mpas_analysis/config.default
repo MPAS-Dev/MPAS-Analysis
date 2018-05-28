@@ -482,6 +482,7 @@ plotVerticalSection = False
 # for MHT vertical section plots
 movingAveragePoints = 1
 
+
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
@@ -492,30 +493,8 @@ movingAveragePoints = 1
 includeBolus = True
 
 # Region names for basin MOC calculation.
-# Supported options are Atlantic and IndoPacific
-regionNames = ['Atlantic']
-
-# Size of latitude bins over which MOC streamfunction is integrated
-latBinSizeGlobal = 1.
-latBinSizeAtlantic = 0.5
-latBinSizeIndoPacific = 0.5
-
-# colormap for model results
-colormapNameGlobal = RdYlBu_r
-colormapNameAtlantic = RdYlBu_r
-colormapNameIndoPacific = RdYlBu_r
-# colormap indices for contour color
-colormapIndicesGlobal = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesAtlantic = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesIndoPacific = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-# colorbar levels/values for contour boundaries
-colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
-colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
-colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
-# contour line levels
-contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
-contourLevelsAtlantic = np.arange(-8, 20.1, 2)
-contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
+# Supported options are Atlantic, Indian, Pacific and IndoPacific
+regionNames = ['Atlantic', 'IndoPacific']
 
 # Number of points over which to compute moving average for
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
@@ -535,6 +514,76 @@ movingAveragePointsClimatological = 1
 # commented out to determine the distance between ticks automatically.
 
 # yearStrideXTicks = 1
+
+
+[streamfunctionMOCGlobal]
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSize = 1.
+
+# colormap for model results
+colormapName = RdYlBu_r
+# colormap indices for contour color
+colormapIndices = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
+# contour line levels
+contourLevels = np.arange(-25.1, 35.1, 10)
+
+
+[streamfunctionMOCAtlantic]
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSize = 0.5
+
+# colormap for model results
+colormapName = RdYlBu_r
+# colormap indices for contour color
+colormapIndices = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+contourLevels = np.arange(-8, 20.1, 2)
+
+
+[streamfunctionMOCIndoPacific]
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSize = 0.5
+
+# colormap for model results
+colormapName = RdYlBu_r
+# colormap indices for contour color
+colormapIndices = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+contourLevels = np.arange(-8, 20.1, 2)
+
+
+[streamfunctionMOCIndian]
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSize = 0.5
+
+# colormap for model results
+colormapName = RdYlBu_r
+# colormap indices for contour color
+colormapIndices = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+contourLevels = np.arange(-8, 20.1, 2)
+
+
+[streamfunctionMOCPacific]
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSize = 0.5
+
+# colormap for model results
+colormapName = RdYlBu_r
+# colormap indices for contour color
+colormapIndices = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+contourLevels = np.arange(-8, 20.1, 2)
 
 
 [climatologyMapSST]
