@@ -59,7 +59,7 @@ class ClimatologyMapSoseMeridVel(AnalysisTask):  # {{{
                 config=config, taskName='climatologyMapSoseMeridVel',
                 componentName='ocean',
                 tags=['climatology', 'horizontalMap', 'sose', 'velocity',
-                      'meridional'])
+                      'meridional', 'publicObs'])
 
         sectionName = self.taskName
 

@@ -58,7 +58,8 @@ class ClimatologyMapSoseMLD(AnalysisTask):  # {{{
         super(ClimatologyMapSoseMLD, self).__init__(
                 config=config, taskName='climatologyMapSoseMLD',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', 'mld'])
+                tags=['climatology', 'horizontalMap', 'sose', 'mld',
+                      'publicObs'])
 
         sectionName = self.taskName
 

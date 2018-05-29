@@ -9,7 +9,7 @@ An analysis task for comparing mixed layer depth (MLD) against results from the
 Component and Tags::
 
   component: ocean
-  tags: climatology, horizontalMap, sose, mld
+  tags: climatology, horizontalMap, sose, mld, publicObs
 
 Configuration Options
 ---------------------

@@ -58,7 +58,8 @@ class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
         super(ClimatologyMapSoseSalinity, self).__init__(
                 config=config, taskName='climatologyMapSoseSalinity',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', 'salinity'])
+                tags=['climatology', 'horizontalMap', 'sose', 'salinity',
+                      'publicObs'])
 
         sectionName = self.taskName
 

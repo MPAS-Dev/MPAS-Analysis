@@ -9,7 +9,7 @@ results from the `Southern Ocean State Estimate (SOSE)`_.
 Component and Tags::
 
   component: ocean
-  tags: climatology, horizontalMap, sose, velocity, zonal
+  tags: climatology, horizontalMap, sose, velocity, zonal, publicObs
 
 Configuration Options
 ---------------------

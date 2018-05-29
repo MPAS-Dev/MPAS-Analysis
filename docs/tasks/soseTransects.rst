@@ -13,7 +13,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 Component and Tags::
 
     component: ocean
-    tags: climatology, transect, sose
+    tags: climatology, transect, sose, publicObs
 
 Configuration Options
 ---------------------

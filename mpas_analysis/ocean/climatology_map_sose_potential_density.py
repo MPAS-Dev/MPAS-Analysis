@@ -52,7 +52,7 @@ class ClimatologyMapSosePotentialDensity(AnalysisTask):  # {{{
                 config=config, taskName='climatologyMapSosePotentialDensity',
                 componentName='ocean',
                 tags=['climatology', 'horizontalMap', 'sose',
-                      'potentialDensity'])
+                      'potentialDensity', 'publicObs'])
 
         sectionName = self.taskName
 
