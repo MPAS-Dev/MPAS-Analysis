@@ -36,6 +36,9 @@ from mpas_analysis.shared.html import generate_html
 
 from mpas_analysis.shared import AnalysisTask
 
+from mpas_analysis.shared.plot.plotting import _register_custom_colormaps, \
+    _plot_color_gradients
+
 
 def build_analysis_list(config, refConfig):  # {{{
     """
@@ -520,6 +523,9 @@ if __name__ == "__main__":
                         "directory before running")
     parser.add_argument('configFiles', metavar='CONFIG',
                         type=str, nargs='*', help='config file')
+    parser.add_argument("--plot_colormaps", dest="plot_colormaps",
+                        action='store_true',
+                        help="Make a plot displaying all available colormaps")
     args = parser.parse_args()
 
     for configFile in args.configFiles:
@@ -548,6 +554,11 @@ if __name__ == "__main__":
             print('task: {}'.format(analysisTask.taskName))
             print('    component: {}'.format(analysisTask.componentName)),
             print('    tags: {}'.format(', '.join(analysisTask.tags)))
+        sys.exit(0)
+
+    if args.plot_colormaps:
+        _register_custom_colormaps()
+        _plot_color_gradients()
         sys.exit(0)
 
     if config.has_option('runs', 'referenceRunConfigFile'):

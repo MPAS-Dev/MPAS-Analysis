@@ -29,15 +29,16 @@ from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.colors import LinearSegmentedColormap
+import xml.etree.ElementTree as ET
+from six.moves import configparser
+import cmocean
+import pkg_resources
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime, \
     date_to_days
 
 from mpas_analysis.shared.constants import constants
-
-from six.moves import configparser
-
-import cmocean
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
@@ -1633,5 +1634,79 @@ def _register_custom_colormaps():
     for mapName in mapNames:
         plt.register_cmap(mapName, getattr(cmocean.cm, mapName))
 
+    # add Scientific Colour-Maps 3.0 from
+    # http://www.fabiocrameri.ch/colourmaps.php
+
+    for mapName in ['berlin', 'bilbao', 'broc', 'cork', 'davos', 'devon',
+                    'grayC', 'lajolla', 'lapaz', 'lisbon', 'oleron', 'oslo',
+                    'roma', 'tofino', 'tokyo', 'turku', 'vik']:
+
+        xmlFile = pkg_resources.resource_filename(
+            __name__, 'ColourMapSuite3/{}/{}.xml'.format(mapName, mapName))
+        _read_xml_colormap(xmlFile, mapName)
+
+    # add SciVisColor colormaps from
+    # https://sciviscolor.org/home/colormaps/
+
+    for mapName in ['3wave-yellow-grey-blue', '3Wbgy5',
+                    '4wave-grey-red-green-mgreen',  '5wave-yellow-brown-blue',
+                    'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
+                    'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
+                    'green-7', 'green-8', 'orange-5', 'orange-6',
+                    'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
+                    'red-3', 'red-4', 'yellow-1', 'yellow-7']:
+
+        xmlFile = pkg_resources.resource_filename(
+            __name__, 'SciVisColorColormaps/{}.xml'.format(mapName))
+        _read_xml_colormap(xmlFile, mapName)
+
+
+def _read_xml_colormap(xmlFile, mapName):
+    '''Read in an XML colormap'''
+
+    xml = ET.parse(xmlFile)
+
+    root = xml.getroot()
+    colormap = root.findall('ColorMap')
+    if len(colormap) > 0:
+        colormap = colormap[0]
+        colorDict = {'red': [], 'green': [], 'blue': []}
+        for point in colormap.findall('Point'):
+            x = float(point.get('x'))
+            color = [float(point.get('r')), float(point.get('g')),
+                     float(point.get('b'))]
+            colorDict['red'].append((x, color[0], color[0]))
+            colorDict['green'].append((x, color[1], color[1]))
+            colorDict['blue'].append((x, color[2], color[2]))
+        cmap = LinearSegmentedColormap(mapName,  colorDict, 256)
+
+        plt.register_cmap(mapName, cmap)
+
+
+def _plot_color_gradients():
+    '''from https://matplotlib.org/tutorials/colors/colormaps.html'''
+
+    cmap_list = [m for m in plt.cm.cmap_d if not m.endswith("_r")]
+
+    gradient = np.linspace(0, 1, 256)
+    gradient = np.vstack((gradient, gradient))
+
+    nrows = len(cmap_list)
+
+    fig, axes = plt.subplots(figsize=(7.2, 0.25*nrows), nrows=nrows)
+    fig.subplots_adjust(top=0.99, bottom=0.01, left=0.35, right=0.99)
+
+    for ax, name in zip(axes, cmap_list):
+        ax.imshow(gradient, aspect='auto', cmap=plt.get_cmap(name))
+        pos = list(ax.get_position().bounds)
+        x_text = pos[0] - 0.01
+        y_text = pos[1] + pos[3]/2.
+        fig.text(x_text, y_text, name, va='center', ha='right', fontsize=10)
+
+    # Turn off *all* ticks & spines, not just the ones with colormaps.
+    for ax in axes:
+        ax.set_axis_off()
+
+    plt.savefig('colormaps.png', dpi=100)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
