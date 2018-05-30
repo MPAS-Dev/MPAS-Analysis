@@ -19,6 +19,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import matplotlib as mpl
+mpl.use('Agg')
 import argparse
 import traceback
 import sys
@@ -38,6 +39,12 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import _register_custom_colormaps, \
     _plot_color_gradients
+
+from mpas_analysis import ocean
+from mpas_analysis import sea_ice
+from mpas_analysis.shared.climatology import MpasClimatologyTask, \
+    RefYearMpasClimatologyTask
+from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
 
 def build_analysis_list(config, refConfig):  # {{{
@@ -62,18 +69,6 @@ def build_analysis_list(config, refConfig):  # {{{
     # Authors
     # -------
     # Xylar Asay-Davis
-
-    # choose the right rendering backend, depending on whether we're displaying
-    # to the screen
-    if not config.getboolean('plot', 'displayToScreen'):
-        mpl.use('Agg')
-
-    # analysis can only be imported after the right MPL renderer is selected
-    from mpas_analysis import ocean
-    from mpas_analysis import sea_ice
-    from mpas_analysis.shared.climatology import MpasClimatologyTask, \
-        RefYearMpasClimatologyTask
-    from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
     analyses = []
 
@@ -433,10 +428,6 @@ def run_analysis(config, analyses):  # {{{
         else:
             if analysisTask._runStatus.value == AnalysisTask.FAIL:
                 sys.exit(1)
-
-    if not isParallel and config.getboolean('plot', 'displayToScreen'):
-        import matplotlib.pyplot as plt
-        plt.show()
 
     # raise the last exception so the process exits with an error
     errorCount = len(tasksWithErrors)

@@ -585,8 +585,7 @@ class IndexNino34(AnalysisTask):  # {{{
             fig.savefig(outFileName, dpi=dpi, bbox_inches='tight',
                         pad_inches=0.1)
 
-        if not config.getboolean('plot', 'displayToScreen'):
-            plt.close()
+        plt.close()
         # }}}
 
     def _nino34_timeseries_plot(self, nino34s, title, panelTitles, outFileName,
@@ -667,8 +666,7 @@ class IndexNino34(AnalysisTask):  # {{{
             plt.savefig(outFileName, dpi=dpi, bbox_inches='tight',
                         pad_inches=0.1)
 
-        if not config.getboolean('plot', 'displayToScreen'):
-            plt.close()
+        plt.close()
         # }}}
 
     def _plot_nino_timeseries(self, ninoIndex, time, xlabel, ylabel,
