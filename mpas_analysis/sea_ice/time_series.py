@@ -260,6 +260,32 @@ class TimeSeriesSeaIce(AnalysisTask):
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
                                calendar=calendar)
 
+        if preprocessedReferenceRunName != 'None':
+            # determine if we're beyond the end of the preprocessed data
+            # (and go ahead and cache the data set while we're checking)
+            outFolder = '{}/preprocessed'.format(outputDirectory)
+            make_directories(outFolder)
+            inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
+                preprocessedReferenceDirectory, preprocessedReferenceRunName)
+            outFileName = '{}/iceVolume.nc'.format(outFolder)
+
+            combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                            outFileName,
+                                            logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                               calendar=calendar,
+                                               timeVariableNames='xtime')
+            preprocessedYearEnd = days_to_datetime(dsPreprocessed.Time.max(),
+                                                   calendar=calendar).year
+            if yearStart <= preprocessedYearEnd:
+                dsPreprocessedTimeSlice = \
+                    dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
+            else:
+                self.logger.warning('Preprocessed time series ends before the '
+                                    'timeSeries startYear and will not be '
+                                    'plotted.')
+                preprocessedReferenceRunName = 'None'
+
         if self.refConfig is not None:
 
             dsTimeSeriesRef = {}
@@ -363,12 +389,11 @@ class TimeSeriesSeaIce(AnalysisTask):
 
             if preprocessedReferenceRunName != 'None':
                 outFolder = '{}/preprocessed'.format(outputDirectory)
-                make_directories(outFolder)
                 inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
                     preprocessedReferenceDirectory,
                     preprocessedReferenceRunName)
 
-                outFileName = '{}/iceArea{}.nc'.format(outFolder, hemisphere)
+                outFileName = '{}/iceArea.nc'.format(outFolder)
 
                 combine_time_series_with_ncrcat(inFilesPreprocessed,
                                                 outFileName,
@@ -385,7 +410,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                 inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
                     preprocessedReferenceDirectory,
                     preprocessedReferenceRunName)
-                outFileName = '{}/iceVolume{}.nc'.format(outFolder, hemisphere)
+                outFileName = '{}/iceVolume.nc'.format(outFolder)
 
                 combine_time_series_with_ncrcat(inFilesPreprocessed,
                                                 outFileName,
