@@ -754,7 +754,11 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
 # list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
 # See "regionNames" in the ice shelf masks file in regionMaskDirectory for
 # details.
-iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
+                    'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
+                    'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
+                    'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                    'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 # Number of months over which to compute moving average
 movingAverageMonths = 1
@@ -1267,6 +1271,188 @@ normArgsDifference = {'vmin': -1.0, 'vmax': 1.0}
 # colorbarTicksDifference = numpy.linspace(-1.0, 1.0, 9)
 # contour line levels
 contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
+
+
+[geojsonTransects]
+## options related to plotting model transects at points determined by a
+## geojson file.  To generate your own geojson file, go to:
+##   http://geojson.io/
+## and draw one or more polylines, then add a name to each:
+##
+##      "properties": {
+##        "name": "My Favorite Name"
+##      },
+## and save the file as GeoJSON (say transects.geojson).  Finally, set the
+## option:
+##      geojsonFiles = ['transects.geojson']
+## (giving an absolute path if necessary) in your custom config file.
+
+# a list of geojson files containing lat/lon points in LineStrings to be
+# plotted.  If relative paths are given, they are relative to the current
+# working directory.  The files must be listed in quotes, e.g.:
+# geojsonFiles = ['file1.geojson', '/path/to/file2.geojson']
+geojsonFiles = []
+
+# a list of dictionaries for each field to plot.  The dictionary includes
+# prefix (used for file names, task names and sections) as well as the mpas
+# name of the field, units for colorbars and a the name as it should appear
+# in figure titles and captions.
+fields =
+    [{'prefix': 'temperature',
+      'mpas': 'timeMonthly_avg_activeTracers_temperature',
+      'units': r'$\degree$C',
+      'titleName': 'Potential Temperature'},
+     {'prefix': 'salinity',
+      'mpas': 'timeMonthly_avg_activeTracers_salinity',
+      'units': r'PSU',
+      'titleName': 'Salinity'},
+     {'prefix': 'potentialDensity',
+      'mpas': 'timeMonthly_avg_potentialDensity',
+      'units': r'kg m$^{-3}$',
+      'titleName': 'Potential Density'},
+     {'prefix': 'zonalVelocity',
+      'mpas': 'timeMonthly_avg_velocityZonal',
+      'units': r'm s$^{-1}$',
+      'titleName': 'Zonal Velocity'},
+     {'prefix': 'meridionalVelocity',
+      'mpas': 'timeMonthly_avg_velocityMeridional',
+      'units': r'm s$^{-1}$',
+      'titleName': 'Meridional Velocity'}]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# The approximate horizontal resolution (in km) of each transect.  Latitude/
+# longitude between observation points will be subsampled at this interval.
+# Use 'obs' to indicate no subsampling.
+horizontalResolution = 5
+
+# The name of the vertical comparison grid.  Valid values are 'mpas' for the
+# MPAS vertical grid or any other name if the vertical grid is defined by
+# 'verticalComparisonGrid'
+#verticalComparisonGridName = mpas
+verticalComparisonGridName = uniform_0_to_4000m_at_10m
+
+# The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas'.
+# This should be numpy array of (typically negative) elevations (in m).
+verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+
+[geojsonTemperatureTransects]
+## options related to plotting geojson transects of potential temperature
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[geojsonSalinityTransects]
+## options related to plotting geojson transects of salinity
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+
+[geojsonPotentialDensityTransects]
+## options related to plotting geojson transects of potential density
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[geojsonZonalVelocityTransects]
+## options related to plotting geojson transects of zonal velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[geojsonMeridionalVelocityTransects]
+## options related to plotting geojson transects of meridional velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
 [soseTransects]

@@ -31,7 +31,7 @@ Analysis Tasks
    tasks/indexNino34
    tasks/woceTransects
    tasks/soseTransects
-
+   tasks/geojsonTransects
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH

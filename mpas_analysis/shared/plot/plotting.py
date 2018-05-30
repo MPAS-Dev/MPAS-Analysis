@@ -1072,7 +1072,8 @@ def plot_vertical_section_comparison(
                           N=None,
                           firstYearXTicks=firstYearXTicks,
                           yearStrideXTicks=yearStrideXTicks,
-                          maxXTicks=maxXTicks, calendar=calendar)
+                          maxXTicks=maxXTicks, calendar=calendar,
+                          backgroundColor=backgroundColor)
 
     if refArray is not None:
         plt.subplot(3, 1, 2)
@@ -1099,7 +1100,8 @@ def plot_vertical_section_comparison(
                               firstYearXTicks=firstYearXTicks,
                               yearStrideXTicks=yearStrideXTicks,
                               maxXTicks=maxXTicks,
-                              calendar=calendar)
+                              calendar=calendar,
+                              backgroundColor=backgroundColor)
 
         plt.subplot(3, 1, 3)
         plot_vertical_section(config,
@@ -1125,9 +1127,13 @@ def plot_vertical_section_comparison(
                               firstYearXTicks=firstYearXTicks,
                               yearStrideXTicks=yearStrideXTicks,
                               maxXTicks=maxXTicks,
-                              calendar=calendar)
+                              calendar=calendar,
+                              backgroundColor=backgroundColor)
 
-    plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
+    if refArray is None:
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
+    else:
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)

@@ -146,7 +146,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.plotObs = plotObs
         self.refConfig = refConfig
-        subtaskName = 'plot{}_{}_{}'.format(season, transectName, fieldName)
+        subtaskName = 'plot{}_{}_{}'.format(season,
+                                            transectName.replace(' ', '_'),
+                                            fieldName)
 
         config = parentTask.config
         taskName = parentTask.taskName
@@ -209,7 +211,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         galleryName : str
             the name of the gallery in which this plot belongs
 
-        sectionName : str
+        configSectionName : str
             the name of the section where the color map and range is defined
 
         diffTitleLabel : str, optional
@@ -268,7 +270,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         prefixPieces = []
         if self.outFileLabel is not '':
             prefixPieces.append(self.outFileLabel)
-        prefixPieces.append(self.transectName)
+        prefixPieces.append(self.transectName.replace(' ', '_'))
         prefixPieces.append(mainRunName)
         years = 'years{:04d}-{:04d}'.format(self.startYear, self.endYear)
         prefixPieces.extend([self.season, years])
@@ -363,8 +365,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # convert x and z to numpy arrays, make a copy because they are
         # sometimes read-only (not sure why)
-        x = x.values.copy()
-        z = z.values.copy()
+        x = x.values.copy().transpose()
+        z = z.values.copy().transpose()
 
         # z is masked out with NaNs in some locations (where there is land) but
         # this makes pcolormesh unhappy so we'll zero out those locations
@@ -372,6 +374,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
+        modelOutput = modelOutput.transpose()
 
         if remappedRefClimatology is None:
             refOutput = None
@@ -380,8 +383,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             refOutput = remappedRefClimatology[self.refFieldName]
             dims = refOutput.dims
             refOutput = nans_to_numpy_mask(refOutput.values)
-            if dims[0] != 'nPoints':
-                assert(dims[1] == 'nPoints')
+            if dims[1] != 'nPoints':
+                assert(dims[0] == 'nPoints')
                 refOutput = refOutput.transpose()
 
             bias = modelOutput - refOutput
@@ -398,11 +401,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         yLabel = 'Depth [m]'
 
         plot_vertical_section_comparison(config,
-                                         x.transpose(),
-                                         z.transpose(),
-                                         modelOutput.transpose(),
-                                         refOutput.transpose(),
-                                         bias.transpose(),
+                                         x,
+                                         z,
+                                         modelOutput,
+                                         refOutput,
+                                         bias,
                                          outFileName,
                                          configSectionName,
                                          cbarLabel=self.unitsLabel,
@@ -412,7 +415,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                          modelTitle='{}'.format(mainRunName),
                                          refTitle=self.refTitleLabel,
                                          diffTitle=self.diffTitleLabel,
-                                         invertYAxis=False)
+                                         invertYAxis=False,
+                                         backgroundColor='#918167')
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

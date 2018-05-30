@@ -212,7 +212,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         Xylar Asay-Davis
         """
-        # first, load the land-ice mask from the restart file
+        # first, compute zMid and cell mask from the restart file
         with xr.open_dataset(self.restartFileName) as ds:
             ds = mpas_xarray.subset_variables(ds, ['maxLevelCell',
                                                    'bottomDepth',
@@ -281,6 +281,17 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         Xylar Asay-Davis
         """
+
+        zIndex = xr.DataArray.from_dict(
+                {'dims': ('nVertLevels',),
+                 'data': numpy.arange(climatology.sizes['nVertLevels'])})
+
+        cellMask = zIndex < self.maxLevelCell
+
+        for variableName in self.variableList:
+            climatology[variableName] = \
+                climatology[variableName].where(cellMask)
+
         climatology['zMid'] = self.zMid
 
         return climatology  # }}}
@@ -370,7 +381,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                            outInterpDim='nzOut',  outInterpCoord='z')
             ds = ds.rename({'nzOut': 'nz'})
 
-        if self.verticalComparisonGridName != 'obs':
+        if self.verticalComparisonGridName != 'obs' and 'nz' in dsObs.dims:
             dsObs['zOut'] = z
             # remap each variable
             dsObs = interp_1d(dsObs, inInterpDim='nz', inInterpCoord='z',
