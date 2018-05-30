@@ -381,7 +381,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                            outInterpDim='nzOut',  outInterpCoord='z')
             ds = ds.rename({'nzOut': 'nz'})
 
-        if self.verticalComparisonGridName != 'obs':
+        if self.verticalComparisonGridName != 'obs' and 'nz' in dsObs.dims:
             dsObs['zOut'] = z
             # remap each variable
             dsObs = interp_1d(dsObs, inInterpDim='nz', inInterpCoord='z',
