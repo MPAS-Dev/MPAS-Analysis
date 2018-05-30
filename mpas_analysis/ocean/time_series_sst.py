@@ -13,7 +13,7 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from mpas_analysis.shared.generalized_reader import open_multifile_dataset
+from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
 from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
@@ -200,11 +200,16 @@ class TimeSeriesSST(AnalysisTask):
                              'run...')
             inFilesPreprocessed = '{}/SST.{}.year*.nc'.format(
                 preprocessedInputDirectory, preprocessedReferenceRunName)
-            dsPreprocessed = open_multifile_dataset(
-                fileNames=inFilesPreprocessed,
-                calendar=calendar,
-                config=config,
-                timeVariableName='xtime')
+
+            outFolder = '{}/preprocessed'.format(outputDirectory)
+            make_directories(outFolder)
+            outFileName = '{}/sst.nc'.format(outFolder)
+
+            combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                            outFileName, logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                               calendar=calendar,
+                                               timeVariableNames='xtime')
             yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year
             if yearStart <= yearEndPreprocessed:

@@ -18,17 +18,18 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from mpas_analysis.shared.generalized_reader import open_multifile_dataset
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
     days_to_datetime
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.time_series import compute_moving_avg
+from mpas_analysis.shared.time_series import compute_moving_avg, \
+    combine_time_series_with_ncrcat
 
 
 class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
@@ -223,7 +224,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             baseDirectory = build_config_full_path(
                 config, 'output', 'timeSeriesSubdirectory')
 
-            self.preprocessedFileName = '{}/preprocessed_{}'.format(
+            make_directories('{}/preprocessed'.format(baseDirectory))
+
+            self.preprocessedIntermediateFileName = \
+                '{}/preprocessed/intermediate_{}'.format(baseDirectory,
+                                                         self.inFileName)
+            self.preprocessedFileName = '{}/preprocessed/{}'.format(
                     baseDirectory, self.inFileName)
 
         if not os.path.isabs(self.inFileName):
@@ -337,18 +343,20 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             preprocessedInputDirectory = config.get(
                     'oceanPreprocessedReference', 'baseDirectory')
 
-            self.logger.info('  Load in OHC from preprocessed reference '
-                             'run...')
+            self.logger.info('  Load in preprocessed reference data...')
             preprocessedFilePrefix = config.get(self.sectionName,
                                                 'preprocessedFilePrefix')
             inFilesPreprocessed = '{}/{}.{}.year*.nc'.format(
                 preprocessedInputDirectory, preprocessedFilePrefix,
                 preprocessedReferenceRunName)
-            dsPreprocessed = open_multifile_dataset(
-                fileNames=inFilesPreprocessed,
-                calendar=calendar,
-                config=config,
-                timeVariableName='xtime')
+
+            combine_time_series_with_ncrcat(
+                    inFilesPreprocessed, self.preprocessedIntermediateFileName,
+                    logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(
+                    fileName=self.preprocessedIntermediateFileName,
+                    calendar=calendar,
+                    timeVariableNames='xtime')
 
             yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
             yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -378,7 +386,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         if preprocessedReferenceRunName != 'None':
             color = 'purple'
             title = '{} \n {} (purple)'.format(title,
-                                            preprocessedReferenceRunName)
+                                               preprocessedReferenceRunName)
 
             preprocessedFieldPrefix = config.get(self.sectionName,
                                                  'preprocessedFieldPrefix')
@@ -389,7 +397,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             suffixes = ['tot'] + ['{}m'.format(depth) for depth in
                                   divisionDepths] + ['btm']
 
-            # these preprocessed data are OHC *anomalies*
+            # these preprocessed data are already anomalies
             dsPreprocessed = compute_moving_avg(dsPreprocessed,
                                                 movingAveragePoints)
             for rangeIndex in range(len(suffixes)):

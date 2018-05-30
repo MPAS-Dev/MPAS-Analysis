@@ -24,7 +24,7 @@ from mpas_analysis.shared.timekeeping.utility import date_to_days, \
 from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
     MpasRelativeDelta
 
-from mpas_analysis.shared.generalized_reader import open_multifile_dataset
+from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 
@@ -261,13 +261,20 @@ class TimeSeriesSeaIce(AnalysisTask):
                                calendar=calendar)
 
         if preprocessedReferenceRunName != 'None':
+            # determine if we're beyond the end of the preprocessed data
+            # (and go ahead and cache the data set while we're checking)
+            outFolder = '{}/preprocessed'.format(outputDirectory)
+            make_directories(outFolder)
             inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
                 preprocessedReferenceDirectory, preprocessedReferenceRunName)
-            dsPreprocessed = open_multifile_dataset(
-                fileNames=inFilesPreprocessed,
-                calendar=calendar,
-                config=config,
-                timeVariableName='xtime')
+            outFileName = '{}/iceVolume.nc'.format(outFolder)
+
+            combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                            outFileName,
+                                            logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                               calendar=calendar,
+                                               timeVariableNames='xtime')
             preprocessedYearEnd = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year
             if yearStart <= preprocessedYearEnd:
@@ -349,22 +356,31 @@ class TimeSeriesSeaIce(AnalysisTask):
                     key = (hemisphere, variableName)
 
             if compareWithObservations:
-                dsObs = open_multifile_dataset(
-                    fileNames=obsFileNames['iceArea'][hemisphere],
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
+
+                outFolder = '{}/obs'.format(outputDirectory)
+                make_directories(outFolder)
+                outFileName = '{}/iceArea{}.nc'.format(outFolder, hemisphere)
+
+                combine_time_series_with_ncrcat(
+                    obsFileNames['iceArea'][hemisphere],
+                    outFileName, logger=self.logger)
+                dsObs = open_mpas_dataset(fileName=outFileName,
+                                          calendar=calendar,
+                                          timeVariableNames='xtime')
                 key = (hemisphere, 'iceArea')
                 obs[key] = self._replicate_cycle(plotVars[key], dsObs.IceArea,
                                                  calendar)
 
                 key = (hemisphere, 'iceVolume')
                 if hemisphere == 'NH':
-                    dsObs = open_multifile_dataset(
-                        fileNames=obsFileNames['iceVolume'][hemisphere],
-                        calendar=calendar,
-                        config=config,
-                        timeVariableName='xtime')
+                    outFileName = '{}/iceVolume{}.nc'.format(outFolder,
+                                                             hemisphere)
+                    combine_time_series_with_ncrcat(
+                        obsFileNames['iceVolume'][hemisphere],
+                        outFileName, logger=self.logger)
+                    dsObs = open_mpas_dataset(fileName=outFileName,
+                                              calendar=calendar,
+                                              timeVariableNames='xtime')
                     obs[key] = self._replicate_cycle(plotVars[key],
                                                      dsObs.IceVol,
                                                      calendar)
@@ -372,14 +388,19 @@ class TimeSeriesSeaIce(AnalysisTask):
                     obs[key] = None
 
             if preprocessedReferenceRunName != 'None':
+                outFolder = '{}/preprocessed'.format(outputDirectory)
                 inFilesPreprocessed = '{}/icearea.{}.year*.nc'.format(
                     preprocessedReferenceDirectory,
                     preprocessedReferenceRunName)
-                dsPreprocessed = open_multifile_dataset(
-                    fileNames=inFilesPreprocessed,
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
+
+                outFileName = '{}/iceArea.nc'.format(outFolder)
+
+                combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                                outFileName,
+                                                logger=self.logger)
+                dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                                   calendar=calendar,
+                                                   timeVariableNames='xtime')
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
                 key = (hemisphere, 'iceArea')
@@ -389,11 +410,14 @@ class TimeSeriesSeaIce(AnalysisTask):
                 inFilesPreprocessed = '{}/icevol.{}.year*.nc'.format(
                     preprocessedReferenceDirectory,
                     preprocessedReferenceRunName)
-                dsPreprocessed = open_multifile_dataset(
-                    fileNames=inFilesPreprocessed,
-                    calendar=calendar,
-                    config=config,
-                    timeVariableName='xtime')
+                outFileName = '{}/iceVolume.nc'.format(outFolder)
+
+                combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                                outFileName,
+                                                logger=self.logger)
+                dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                                   calendar=calendar,
+                                                   timeVariableNames='xtime')
                 dsPreprocessedTimeSlice = dsPreprocessed.sel(
                     Time=slice(timeStart, timeEnd))
                 key = (hemisphere, 'iceVolume')
