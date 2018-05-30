@@ -442,6 +442,7 @@
       - climatologyMapSoseZonalVel
       - climatologyMapSoseMeridVel
       - climatologyMapSoseVelMag
+      - soseTransects
     </tasks>
     <subdirectory>
       Ocean/SOSE
@@ -710,6 +711,76 @@
     </subdirectory>
     <nameInDocs>
       schmidtko
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
+      WOCE sections
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      WOCE
+      ----
+      The Hydrographic Programme of the international World Ocean Circulation
+      Experiment (WOCE) was a comprehensive global hydrographic survey of
+      physical and chemical properties, of unprecedented scope and quality, and
+      represents the "state of the oceans" during the 1990s.
+
+      The "Printed Atlas" is a copy of the published volume and contains full
+      introductory text. The "Digital Atlas" presents the same graphical
+      material, with additional properties and levels, ancillary data sets, and
+      bibliographic material for each of the vertical sections.
+
+      CCHDO
+      -----
+      The CCHDO's primary mission is to deliver the highest possible quality
+      global CTD and hydrographic data to users. These data are a product of
+      decades of observations related to the physical characteristics of ocean
+      waters carried out during WOCE, CLIVAR and numerous other oceanographic
+      research programs. Whenever possible we provide these data in three
+      easy-to-use formats: WHP-Exchange (which we recommend for data
+      submissions to the CCHDO), WOCE, and netCDF.
+      global Argo and OceanSITES programs.
+    </description>
+    <source>
+      - [WOCE Atlas Website](http://woceatlas.ucsd.edu/)
+      - [CCHDO](https://cchdo.ucsd.edu/)
+    </source>
+    <releasePolicy>
+      "Public" data may be placed on-line. They may be exchanged between
+      investigators as desired. They may or may not be preliminary, and
+      especially for preliminary public data users are strongly advised to
+      contact the originating investigators regarding the status of updates or
+      further data processing. [See Full Policy](https://cchdo.ucsd.edu/policy)
+    </releasePolicy>
+    <references>
+      [Orsi and Whitworth (2005)](https://doi.org/10.21976/C6BC78)
+    </references>
+    <bibtex>
+      @techreport{Orsi2015,
+        author = {A. H. Orsi and T. Whitworth},
+        title = {Hydrographic Atlas of the World Ocean Circulation Experiment (WOCE) Volume 1: Southern Ocean},
+        year = 2005,
+        url = {https://doi.org/10.21976/C6BC78},
+        note = {Accessed May 2018}
+      }
+    </bibtex>
+    <dataUrls>
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - woceTransects
+    </tasks>
+    <subdirectory>
+      Ocean/WOCE
+    </subdirectory>
+    <nameInDocs>
+      woce
     </nameInDocs>
   </observation>
 

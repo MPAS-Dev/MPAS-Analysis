@@ -518,8 +518,10 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
         The name of the climatology (typically the name of a field to mask
         and later remap)
 
-    comparisonGridName : {'latlon', 'antarctic'}
-        The name of the comparison grid to use for remapping
+    comparisonGridName : str
+        The name of the comparison grid to use for remapping.  If it is one
+        of the default comparison grid names ``{'latlon', 'antarctic'}``, the
+        full grid name is looked up via get_comparison_descriptor
     """
     # Authors
     # -------
@@ -541,9 +543,12 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     climatologyBaseDirectory = build_config_full_path(
         config, 'output', 'mpasClimatologySubdirectory')
 
-    comparisonDescriptor = get_comparison_descriptor(config,
-                                                     comparisonGridName)
-    comparisonFullMeshName = comparisonDescriptor.meshName
+    if comparisonGridName in ['latlon', 'antarctic']:
+        comparisonDescriptor = get_comparison_descriptor(config,
+                                                         comparisonGridName)
+        comparisonFullMeshName = comparisonDescriptor.meshName
+    else:
+        comparisonFullMeshName = comparisonGridName
 
     stageDirectory = '{}/remapped'.format(climatologyBaseDirectory)
 

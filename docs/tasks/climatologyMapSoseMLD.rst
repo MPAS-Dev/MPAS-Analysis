@@ -9,7 +9,7 @@ An analysis task for comparing mixed layer depth (MLD) against results from the
 Component and Tags::
 
   component: ocean
-  tags: climatology, horizontalMap, sose, mld
+  tags: climatology, horizontalMap, sose, mld, publicObs
 
 Configuration Options
 ---------------------
@@ -33,7 +33,7 @@ The following configuration options are available for this task::
   # color indices into colormapName for filled contours
   # the type of norm used in the colormap
   normTypeResult = log
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsResult = {'vmin': 10., 'vmax': 300.}
   # specify the ticks
   colorbarTicksResult = [10, 20, 40, 60, 80, 100, 200, 300]
@@ -42,7 +42,7 @@ The following configuration options are available for this task::
   colormapNameDifference = balance
   # the type of norm used in the colormap
   normTypeDifference = symLog
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsDifference = {'linthresh': 10., 'linscale': 0.5, 'vmin': -200.,
                         'vmax': 200.}
   colorbarTicksDifference = [-200., -100., -50., -20., -10., 0., 10., 20., 50.,

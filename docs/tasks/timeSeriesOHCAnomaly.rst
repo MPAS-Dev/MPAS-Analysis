@@ -39,7 +39,7 @@ The following configuration options are available for this task::
   # window)
   movingAveragePoints = 12
 
-  # An optional first year for the tick marks on the x axis. Leare commented out
+  # An optional first year for the tick marks on the x axis. Leave commented out
   # to start at the beginning of the time series.
   # firstYearXTicks = 1
 
@@ -63,7 +63,7 @@ The following configuration options are available for this task::
   # contour line levels
   contourLevels = np.arange(-2.5, 2.6, 0.5)
 
-  # An optional first year for the tick marks on the x axis. Leare commented out
+  # An optional first year for the tick marks on the x axis. Leave commented out
   # to start at the beginning of the time series.
 
   # firstYearXTicks = 1

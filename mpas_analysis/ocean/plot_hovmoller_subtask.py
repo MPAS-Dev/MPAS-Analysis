@@ -279,7 +279,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         plot_vertical_section(config, Time, depth, field, self.sectionName,
                               suffix='', colorbarLabel=self.unitsLabel,
                               title=title, xlabel=xLabel, ylabel=yLabel,
-                              fileout=figureName, linewidths=1,
+                              fileout=figureName, lineWidth=1,
                               xArrayIsTime=True, calendar=self.calendar,
                               firstYearXTicks=firstYearXTicks,
                               yearStrideXTicks=yearStrideXTicks)

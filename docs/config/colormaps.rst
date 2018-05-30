@@ -58,7 +58,7 @@ A continuous colormap is specified with a different set of options::
   colormapName = erdc_iceFire_H
   # the type of norm used in the colormap
   normType = symLog
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgs = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
               'vmax': 100.}
 

@@ -222,7 +222,7 @@ class TimeSeriesSST(AnalysisTask):
 
             title = '{} SST'.format(plotTitles[regionIndex])
             xLabel = 'Time [years]'
-            yLabel = '[$^\circ$C]'
+            yLabel = '[$\degree$C]'
 
             varName = self.variableList[0]
             SST = dsSST[varName].isel(nOceanRegions=regionIndex)

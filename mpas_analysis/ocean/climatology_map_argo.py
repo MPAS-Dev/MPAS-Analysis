@@ -160,7 +160,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^\circ$C',
+                        unitsLabel=r'$\degree$C',
                         imageCaption='Model potential temperature compared '
                                      'with Argo observations',
                         galleryGroup='Argo Potential Temperature',

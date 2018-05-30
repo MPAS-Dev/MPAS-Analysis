@@ -9,7 +9,7 @@ results from the `Southern Ocean State Estimate (SOSE)`_.
 Component and Tags::
 
   component: ocean
-  tags: climatology, horizontalMap, sose, temperature
+  tags: climatology, horizontalMap, sose, temperature, publicObs
 
 Configuration Options
 ---------------------
@@ -38,7 +38,7 @@ The following configuration options are available for this task::
   colormapNameResult = RdYlBu_r
   # the type of norm used in the colormap
   normTypeResult = linear
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsResult = {'vmin': -2., 'vmax': 2.}
   # place the ticks automatically by default
   # colorbarTicksResult = numpy.linspace(-2., 2., 9)
@@ -47,7 +47,7 @@ The following configuration options are available for this task::
   colormapNameDifference = balance
   # the type of norm used in the colormap
   normTypeDifference = linear
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsDifference = {'vmin': -2., 'vmax': 2.}
   # place the ticks automatically by default
   # colorbarTicksDifference = numpy.linspace(-2., 2., 9)

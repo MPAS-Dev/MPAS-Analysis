@@ -76,7 +76,7 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
                     outFileLabel='TAnomalyZ',
                     fieldNameInTitle='Potential Temperature Anomaly',
                     mpasFieldName=mpasFieldName,
-                    unitsLabel='[$^\circ$C]',
+                    unitsLabel='[$\degree$C]',
                     sectionName=sectionName,
                     thumbnailSuffix=u'Δϴ',
                     imageCaption=caption,

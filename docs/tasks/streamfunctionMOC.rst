@@ -65,7 +65,7 @@ The following configuration options are available for this task::
   # latitude) for climatological MOC plots
   movingAveragePointsClimatological = 1
 
-  # An optional first year for the tick marks on the x axis. Leare commented out
+  # An optional first year for the tick marks on the x axis. Leave commented out
   # to start at the beginning of the time series.
 
   # firstYearXTicks = 1

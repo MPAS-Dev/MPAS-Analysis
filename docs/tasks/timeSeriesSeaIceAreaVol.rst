@@ -30,7 +30,7 @@ The following configuration options are available for this task::
   # plot on polar plot
   polarPlot = False
 
-  # An optional first year for the tick marks on the x axis. Leare commented out
+  # An optional first year for the tick marks on the x axis. Leave commented out
   # to start at the beginning of the time series.
 
   # firstYearXTicks = 1

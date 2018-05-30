@@ -58,7 +58,8 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
         super(ClimatologyMapSoseTemperature, self).__init__(
                 config=config, taskName='climatologyMapSoseTemperature',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', 'temperature'])
+                tags=['climatology', 'horizontalMap', 'sose', 'temperature',
+                      'publicObs'])
 
         sectionName = self.taskName
 
@@ -152,7 +153,7 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^\circ$C',
+                        unitsLabel=r'$\degree$C',
                         imageCaption='Potential Temperature',
                         galleryGroup='Potential Temperature',
                         groupSubtitle=None,

@@ -68,6 +68,8 @@ Comparison Grids
 
 See :ref:`config_comparison_grids`.
 
+.. _config_remapping:
+
 Remapping Options
 -----------------
 

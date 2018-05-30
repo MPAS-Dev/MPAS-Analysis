@@ -31,11 +31,7 @@ from mpas_analysis.shared.grid import interp_extrap_corner
 from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 
-
-def nans_to_numpy_mask(field):
-    field = np.ma.masked_array(
-        field, np.isnan(field))
-    return field
+from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
@@ -58,10 +54,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``
         The subtask for remapping the observational climatology that this
         subtask will plot
-
-    remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``
-        The subtask for remapping the MPAS climatology for the reference
-        run that this subtask will plot
 
     removeMean : bool, optional
         If True, a common mask for the model and reference data sets is

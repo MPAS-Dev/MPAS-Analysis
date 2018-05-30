@@ -36,7 +36,7 @@ The following configuration options are available for this task::
   colormapNameResult = haline
   # the type of norm used in the colormap
   normTypeResult = linear
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsResult = {'vmin': 30, 'vmax': 39.0}
   # place the ticks automatically by default
   # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
@@ -45,7 +45,7 @@ The following configuration options are available for this task::
   colormapNameDifference = balance
   # the type of norm used in the colormap
   normTypeDifference = linear
-  # A dictionary with keywords for the SemiLogNorm
+  # A dictionary with keywords for the norm
   normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
   # place the ticks automatically by default
   # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
