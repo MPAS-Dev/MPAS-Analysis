@@ -416,7 +416,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                          refTitle=self.refTitleLabel,
                                          diffTitle=self.diffTitleLabel,
                                          invertYAxis=False,
-                                         backgroundColor='#c49868')
+                                         backgroundColor='#918167')
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
