@@ -226,12 +226,6 @@ regionMaskDirectory = /path/to/masks/
 ## options related to plotting that are the defaults across all analysis
 ## modules
 
-# set to true if you want plots to be displayed (one by one) to the screen in
-# addition to being written out to png files
-# Note: displayToScreen = True seems to hang on Edison on large data sets,
-# so suggested use is just for debugging either locally or with small data sets
-displayToScreen = False
-
 # title and axis font properties for single-panel plots
 titleFontSize = 20
 titleFontColor = black

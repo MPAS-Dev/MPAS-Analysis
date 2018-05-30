@@ -233,8 +233,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     if fileout is not None:
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
 
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
@@ -363,8 +362,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     if fileout is not None:
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
 
 def plot_polar_comparison(
@@ -532,8 +530,7 @@ def plot_polar_comparison(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
 
 def plot_global_comparison(
@@ -685,8 +682,7 @@ def plot_global_comparison(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
 
 def plot_polar_projection_comparison(
@@ -870,8 +866,7 @@ def plot_polar_projection_comparison(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
 
 def plot_vertical_section_comparison(
@@ -1137,8 +1132,7 @@ def plot_vertical_section_comparison(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
 
 def plot_1D(config, xArrays, fieldArrays, errArrays,
@@ -1273,8 +1267,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen'):
-        plt.close()
+    plt.close()
 
     return  # }}}
 
@@ -1591,8 +1584,7 @@ def plot_vertical_section(
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    if not config.getboolean('plot', 'displayToScreen') and \
-            fileout is not None:
+    if fileout is not None:
         plt.close()
 
     return  # }}}
