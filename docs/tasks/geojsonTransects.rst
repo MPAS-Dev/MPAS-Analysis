@@ -36,28 +36,31 @@ The following configuration options are available for this task::
     # geojsonFiles = ['file1.geojson', '/path/to/file2.geojson']
     geojsonFiles = []
 
-    # a dictionary of fields and units to be plotted
+    # a list of dictionaries for each field to plot.  The dictionary includes
+    # prefix (used for file names, task names and sections) as well as the mpas
+    # name of the field, units for colorbars and a the name as it should appear
+    # in figure titles and captions.
     fields =
-        {'temperature':
-            {'mpas': 'timeMonthly_avg_activeTracers_temperature',
-             'units': r'$\degree$C',
-             'titleName': 'Potential Temperature'},
-         'salinity':
-            {'mpas': 'timeMonthly_avg_activeTracers_salinity',
-             'units': r'PSU',
-             'titleName': 'Salinity'},
-         'potentialDensity':
-            {'mpas': 'timeMonthly_avg_potentialDensity',
-             'units': r'kg m$^{-3}$',
-             'titleName': 'Potential Density'},
-         'zonalVelocity':
-            {'mpas': 'timeMonthly_avg_velocityZonal',
-             'units': r'm s$^{-1}$',
-             'titleName': 'Zonal Velocity'},
-         'meridionalVelocity':
-            {'mpas': 'timeMonthly_avg_velocityMeridional',
-             'units': r'm s$^{-1}$',
-             'titleName': 'Meridional Velocity'}}
+        [{'prefix': 'temperature',
+          'mpas': 'timeMonthly_avg_activeTracers_temperature',
+          'units': r'$\degree$C',
+          'titleName': 'Potential Temperature'},
+         {'prefix': 'salinity',
+          'mpas': 'timeMonthly_avg_activeTracers_salinity',
+          'units': r'PSU',
+          'titleName': 'Salinity'},
+         {'prefix': 'potentialDensity',
+          'mpas': 'timeMonthly_avg_potentialDensity',
+          'units': r'kg m$^{-3}$',
+          'titleName': 'Potential Density'},
+         {'prefix': 'zonalVelocity',
+          'mpas': 'timeMonthly_avg_velocityZonal',
+          'units': r'm s$^{-1}$',
+          'titleName': 'Zonal Velocity'},
+         {'prefix': 'meridionalVelocity',
+          'mpas': 'timeMonthly_avg_velocityMeridional',
+          'units': r'm s$^{-1}$',
+          'titleName': 'Meridional Velocity'}]
 
     # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
     # Nov, Dec, JFM, AMJ, JAS, OND, ANN)

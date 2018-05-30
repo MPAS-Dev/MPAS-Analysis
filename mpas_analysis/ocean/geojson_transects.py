@@ -104,7 +104,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
             parentTask=self,
             climatologyName='geojson',
             transectCollectionName=transectCollectionName,
-            variableList=[field['mpas'] for field in fields.values()],
+            variableList=[field['mpas'] for field in fields],
             seasons=seasons,
             obsDatasets=transectsObservations,
             verticalComparisonGridName=verticalComparisonGridName,
@@ -123,42 +123,42 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
             diffTitleLabel = 'Main - Reference'
 
-        for fieldName in fields:
+        for field in fields:
+            fieldPrefix = field['prefix']
             for transectName in obsFileNames:
                 for season in seasons:
-                    outFileLabel = fieldName
+                    outFileLabel = fieldPrefix
                     if refConfig is None:
                         refFieldName = None
                     else:
-                        refFieldName = fields[fieldName]['mpas']
+                        refFieldName = field['mpas']
 
-                    fieldNameUpper = fieldName[0].upper() + fieldName[1:]
+                    fieldPrefixUpper = fieldPrefix[0].upper() + fieldPrefix[1:]
                     fieldNameInTytle = '{} from {}'.format(
-                            fields[fieldName]['titleName'],
+                            field['titleName'],
                             transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
-                                                  fieldName,
+                                                  fieldPrefix,
                                                   computeTransectsSubtask,
                                                   plotObs, refConfig)
 
                     subtask.set_plot_info(
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=fields[fieldName]['mpas'],
+                            mpasFieldName=field['mpas'],
                             refFieldName=refFieldName,
                             refTitleLabel=refTitleLabel,
                             diffTitleLabel=diffTitleLabel,
-                            unitsLabel=fields[fieldName]['units'],
-                            imageCaption='{} {}'.format(fieldNameInTytle,
-                                                        season),
+                            unitsLabel=field['units'],
+                            imageCaption=fieldNameInTytle,
                             galleryGroup='Geojson Transects',
                             groupSubtitle=None,
                             groupLink='geojson',
-                            galleryName=fields[fieldName]['titleName'],
+                            galleryName=field['titleName'],
                             configSectionName='geojson{}Transects'.format(
-                                    fieldNameUpper))
+                                    fieldPrefixUpper))
 
                     self.add_subtask(subtask)
         # }}}
