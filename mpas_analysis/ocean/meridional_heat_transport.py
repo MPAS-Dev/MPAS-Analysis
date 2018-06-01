@@ -203,7 +203,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             binBoundaryMerHeatTrans = None
             # first try timeSeriesStatsMonthly for bin boundaries, then try
-            # meridionalHeatTranspor steram as a backup option
+            # meridionalHeatTransport stream as a backup option
             for streamName in ['timeSeriesStatsMonthlyOutput',
                                'meridionalHeatTransportOutput']:
                 try:
