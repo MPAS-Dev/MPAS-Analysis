@@ -1,19 +1,17 @@
-.. |deg| unicode:: U+00B0 .. degree sign
-   :trim:
+.. _task_climatologyMapSose:
 
-.. _task_soseTransects:
+climatologyMapSose
+=============================
 
-soseTransects
-=============
-
-An analysis task for computing meridional transects of MPAS fields at evenly
-spaced latitudes around Antarctica and comparing them with results from the
-`Southern Ocean State Estimate (SOSE)`_.
+An analysis task for comparing fields at various depths against
+results from the `Southern Ocean State Estimate (SOSE)`_.
 
 Component and Tags::
 
-    component: ocean
-    tags: climatology, transect, sose, publicObs
+  component: ocean
+  tags: climatology, horizontalMap, sose, publicObs, temperature, salinity,
+        potentialDensity, mixedLayerDepth, zonalVelocity, meridionalVelocity,
+        velocityMagnitude
 
 Configuration Options
 ---------------------
@@ -223,39 +221,30 @@ The following configuration options are available for this task::
     # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
     contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
+There is a section for options that apply to all SOSE climatology maps and
+one for each field supported for specifying the color map.
 
-The options ``minLat`` and ``maxLat`` determine the start and end of each
-meridional transect (in degrees).  The option ``longitudes`` is a list or
-numpy array of longitudes for each transect, e.g.::
+The option ``depths`` is a list of (approximate) depths at which to sample
+the potential temperature field.  A value of ``'top'`` indicates the sea
+surface (or the ice-ocean interface under ice shelves) while a value of
+``'bot'`` indicates the seafloor.
 
-  longitudes = numpy.linspace(0, 330, 12)
-
-produces 12 transects spaced every 30 |deg|.
-
-.. note::
-
-  SOSE's domain extends only to 25 |deg| S, so ``maxLat`` should typically be
-  less than -25.
-
-Ater the ``soseTransects`` section, there is a section for each supported field
-specifying the information related to the colormap.
-
-For details on remaining configuration options, see:
- * :ref:`config_transects`
- * :ref:`config_remapping`
+For more details, see:
  * :ref:`config_colormaps`
  * :ref:`config_seasons`
+ * :ref:`config_comparison_grids`
 
-Observations
-------------
+
+State Estimate
+--------------
 
 :ref:`sose`
 
 Example Result
 --------------
 
-.. image:: examples/sose_transect.png
-   :width: 500 px
+.. image:: examples/clim_sose_temp.png
+   :width: 720 px
    :align: center
 
 .. _`Southern Ocean State Estimate (SOSE)`: http://sose.ucsd.edu/sose_stateestimation_data_05to10.html
