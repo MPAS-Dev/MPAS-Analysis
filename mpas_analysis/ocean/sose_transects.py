@@ -3,30 +3,32 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy
+import os
 
 from collections import OrderedDict
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.ocean.compute_transects_subtask import \
-    ComputeTransectsSubtask, TransectsObservations
+    TransectsObservations
+
+from mpas_analysis.ocean.compute_transects_with_vel_mag import \
+    ComputeTransectsWithVelMag
 
 from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
+from mpas_analysis.shared.io import write_netcdf
 
 
 class SoseTransects(AnalysisTask):  # {{{
     """
     Plot model output at WOCE transects and compare it against WOCE
     observations
-
-    Attributes
-    ----------
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refConfig=None):
 
@@ -46,11 +48,10 @@ class SoseTransects(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         tags = ['climatology', 'transect', 'sose', 'publicObs']
 
@@ -75,54 +76,65 @@ class SoseTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = config.getExpression(
                     sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'soseSubdirectory')
-
         longitudes = config.getExpression(sectionName, 'longitudes',
                                           usenumpyfunc=True)
 
         fields = \
-            {'temperature':
-                {'mpas': 'timeMonthly_avg_activeTracers_temperature',
-                 'obs': 'theta',
-                 'obsFile': 'SOSE_2005-2010_monthly_pot_temp_SouthernOcean'
-                            '_0.167x0.167degree.nc',
-                 'units': r'$\degree$C'},
-             'salinity':
-                {'mpas': 'timeMonthly_avg_activeTracers_salinity',
-                 'obs': 'salinity',
-                 'obsFile': 'SOSE_2005-2010_monthly_salinity_SouthernOcean'
-                            '_0.167x0.167degree.nc',
-                 'units': r'PSU'}}
+            [{'prefix': 'temperature',
+              'mpas': 'timeMonthly_avg_activeTracers_temperature',
+              'units': r'$\degree$C',
+              'titleName': 'Potential Temperature',
+              'obsFilePrefix': 'pot_temp',
+              'obsFieldName': 'theta'},
+             {'prefix': 'salinity',
+              'mpas': 'timeMonthly_avg_activeTracers_salinity',
+              'units': r'PSU',
+              'titleName': 'Salinity',
+              'obsFilePrefix': 'salinity',
+              'obsFieldName': 'salinity'},
+             {'prefix': 'potentialDensity',
+              'mpas': 'timeMonthly_avg_potentialDensity',
+              'units': r'kg m$^{-3}$',
+              'titleName': 'Potential Density',
+              'obsFilePrefix': 'pot_den',
+              'obsFieldName': 'potentialDensity'},
+             {'prefix': 'zonalVelocity',
+              'mpas': 'timeMonthly_avg_velocityZonal',
+              'units': r'm s$^{-1}$',
+              'titleName': 'Zonal Velocity',
+              'obsFilePrefix': 'zonal_vel',
+              'obsFieldName': 'zonalVel'},
+             {'prefix': 'meridionalVelocity',
+              'mpas': 'timeMonthly_avg_velocityMeridional',
+              'units': r'm s$^{-1}$',
+              'titleName': 'Meridional Velocity',
+              'obsFilePrefix': 'merid_vel',
+              'obsFieldName': 'meridVel'},
+             {'prefix': 'velocityMagnitude',
+              'mpas': 'velMag',
+              'units': r'm s$^{-1}$',
+              'titleName': 'Velocity Magnitude',
+              'obsFilePrefix': None,
+              'obsFieldName': 'velMag'}]
+
+        variableList = [field['mpas'] for field in fields
+                        if field['mpas'] != 'velMag']
 
         transectCollectionName = 'SOSE_transects'
         if horizontalResolution != 'obs':
             transectCollectionName = '{}_{}km'.format(transectCollectionName,
                                                       horizontalResolution)
 
-        fieldNameDict = {'temperature':'temperatureTransect',
-                         'salinity':'salinityTransect'}
-
-        obsFileNames = OrderedDict()
-        for fieldName in fields:
-            for lon in longitudes:
-                transectName = '{}_SOSE_lon_{}'.format(fieldNameDict[fieldName],
-                                                       lon)
-
-                fileName = '{}/{}'.format(observationsDirectory,
-                                          fields[fieldName]['obsFile'])
-                obsFileNames[transectName] = fileName
-
         transectsObservations = SoseTransectsObservations(
-                config, obsFileNames, horizontalResolution,
-                transectCollectionName)
+                config, horizontalResolution,
+                transectCollectionName, fields)
 
-        computeTransectsSubtask = ComputeTransectsSubtask(
+        computeTransectsSubtask = ComputeTransectsWithVelMag(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName='SOSE',
+            climatologyName='SOSE_transects',
             transectCollectionName=transectCollectionName,
-            variableList=[field['mpas'] for field in fields.values()],
+            variableList=variableList,
             seasons=seasons,
             obsDatasets=transectsObservations,
             verticalComparisonGridName=verticalComparisonGridName,
@@ -141,43 +153,44 @@ class SoseTransects(AnalysisTask):  # {{{
 
             diffTitleLabel = 'Main - Reference'
 
-        for fieldName in fields:
+        for field in fields:
+            fieldPrefix = field['prefix']
+            fieldPrefixUpper = fieldPrefix[0].upper() + fieldPrefix[1:]
             for lon in longitudes:
-                transectName = '{}_SOSE_lon_{}'.format(fieldNameDict[fieldName],
-                                                       lon)
-                for season in seasons:
-                    outFileLabel = ''
-                    if plotObs:
-                        refFieldName = fields[fieldName]['obs']
-                    else:
-                        refFieldName = fields[fieldName]['mpas']
+                transectName = 'lon_{}'.format(lon)
 
-                    fieldNameUpper = fieldName[0].upper() + fieldName[1:]
+                for season in seasons:
+                    outFileLabel = 'SOSE_{}_'.format(fieldPrefix)
+                    if plotObs:
+                        refFieldName = field['obsFieldName']
+                    else:
+                        refFieldName = field['mpas']
+
                     fieldNameInTytle = r'{} at {}$\degree$ Longitude'.format(
-                            fieldNameUpper, lon)
+                            field['titleName'], lon)
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
-                                                  fieldName,
+                                                  fieldPrefix,
                                                   computeTransectsSubtask,
                                                   plotObs, refConfig)
 
                     subtask.set_plot_info(
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=fields[fieldName]['mpas'],
+                            mpasFieldName=field['mpas'],
                             refFieldName=refFieldName,
                             refTitleLabel=refTitleLabel,
                             diffTitleLabel=diffTitleLabel,
-                            unitsLabel=fields[fieldName]['units'],
+                            unitsLabel=field['units'],
                             imageCaption='{} {}'.format(fieldNameInTytle,
                                                         season),
                             galleryGroup='SOSE Transects',
                             groupSubtitle=None,
                             groupLink='sose_transects',
-                            galleryName=fieldNameUpper,
+                            galleryName=field['titleName'],
                             configSectionName='sose{}Transects'.format(
-                                    fieldNameUpper))
+                                    fieldPrefixUpper))
 
                     self.add_subtask(subtask)
         # }}}
@@ -187,21 +200,21 @@ class SoseTransects(AnalysisTask):  # {{{
 
 class SoseTransectsObservations(TransectsObservations):  # {{{
     """
-    A class for loading and manipulating SOSE transect observations
+    A class for loading and manipulating SOSE transect data
 
     Attributes
     ----------
 
-    obsDatasets : OrderedDict
-        A dictionary of observational datasets
-
-    Authors
-    -------
-    Xylar Asay-Davis
+    fields : list of dict
+        dictionaries defining the fields with associated SOSE data
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
-    def __init__(self, config, obsFileName, horizontalResolution,
-                 transectCollectionName):  # {{{
+    def __init__(self, config, horizontalResolution,
+                 transectCollectionName, fields):
+        # {{{
         '''
         Construct the object, setting the observations dictionary to None.
 
@@ -209,10 +222,6 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         ----------
         config :  ``MpasAnalysisConfigParser``
             Configuration options
-
-        obsFileNames : OrderedDict
-            The names of transects and the file names of the corresponding
-            observations for a transect
 
         horizontalResolution : str
             'obs' for the obs as they are or a size in km if subdivision is
@@ -223,14 +232,141 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             of the collection of observations) used to name the
             destination "mesh" for regridding
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        fields : list of dict
+            dictionaries defining the fields with associated SOSE data
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # this will be constructed later
+        obsFileNames = None
+
         # call the constructor from the base class (TransectsObservations)
         super(SoseTransectsObservations, self).__init__(
-            config, obsFileName, horizontalResolution,
+            config, obsFileNames, horizontalResolution,
             transectCollectionName)
+
+        self.fields = fields
+
+        # }}}
+
+    def get_observations(self):  # {{{
+        '''
+        Read in and set up the observations.
+
+        Returns
+        -------
+        obsDatasets : OrderedDict
+            The observational dataset
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, combine the SOSE observations into a single data set
+        if self.obsFileNames is None:
+            self.combine_observations()
+
+        # then, call the method from the parent class
+        return super(SoseTransectsObservations, self).get_observations()  # }}}
+
+    def combine_observations(self):  # {{{
+        '''
+        Combine SOSE oservations into a single file
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+
+        longitudes = config.getExpression('soseTransects', 'longitudes',
+                                          usenumpyfunc=True)
+
+        observationsDirectory = build_config_full_path(
+            config, 'oceanObservations', 'soseSubdirectory')
+
+        outObsDirectory = build_config_full_path(
+            config=config, section='output',
+            relativePathOption='climatologySubdirectory',
+            relativePathSection='oceanObservations')
+
+        make_directories(outObsDirectory)
+
+        combinedFileName = '{}/{}.nc'.format(outObsDirectory,
+                                             self.transectCollectionName)
+        obsFileNames = OrderedDict()
+        for lon in longitudes:
+            transectName = 'lon_{}'.format(lon)
+            obsFileNames[transectName] = combinedFileName
+
+        self.obsFileNames = obsFileNames
+
+        if os.path.exists(combinedFileName):
+            return
+
+        print('Preprocessing SOSE transect data...')
+
+        minLat = config.getfloat('soseTransects', 'minLat')
+        maxLat = config.getfloat('soseTransects', 'maxLat')
+
+        dsObs = None
+        for field in self.fields:
+            prefix = field['obsFilePrefix']
+            fieldName = field['obsFieldName']
+            if prefix is None:
+                continue
+            print('  {}'.format(field['prefix']))
+
+            fileName = '{}/SOSE_2005-2010_monthly_{}_SouthernOcean' \
+                       '_0.167x0.167degree.nc'.format(
+                               observationsDirectory, prefix)
+
+            dsLocal = xr.open_dataset(fileName)
+            dsLocal.load()
+
+            if fieldName == 'zonalVel':
+                # need to average in longitude
+                nLon = dsLocal.sizes['lon']
+                lonIndicesP1 = numpy.mod(numpy.arange(nLon)+1, nLon)
+                dsLocal = 0.5*(dsLocal + dsLocal.isel(lon=lonIndicesP1))
+
+            if fieldName == 'meridVel':
+                # need to average in latitude
+                nLat = dsLocal.sizes['lat']
+                latIndicesP1 = numpy.mod(numpy.arange(nLat)+1, nLat)
+                dsLocal = 0.5*(dsLocal + dsLocal.isel(lat=latIndicesP1))
+
+            dsLocal = dsLocal.sel(lon=longitudes, method=str('nearest'))
+
+            lat = dsLocal.lat.values
+            mask = numpy.logical_and(lat >= minLat, lat <= maxLat)
+            indices = numpy.argwhere(mask)
+            dsLocal = dsLocal.isel(lat=slice(indices[0][0], indices[-1][0]))
+
+            if dsObs is None:
+                dsObs = dsLocal
+            else:
+                dsLocal['lon'] = dsObs.lon
+                dsLocal['lat'] = dsObs.lat
+                dsObs[fieldName] = dsLocal[fieldName]
+                dsLocal.close()
+
+        # compute the velocity magnitude
+        description = 'Monthly velocity magnitude climatologies from ' \
+                      '2005-2010 average of the Southern Ocean State ' \
+                      'Estimate (SOSE)'
+        dsObs['velMag'] = xr.ufuncs.sqrt(
+                dsObs.zonalVel**2 + dsObs.meridVel**2)
+        dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
+        dsObs.velMag.attrs['description'] = description
+
+        write_netcdf(dsObs, combinedFileName)
+
+        print('  Done.')
+
+        # }}}
 
     def build_observational_dataset(self, fileName, transectName):  # {{{
         '''
@@ -249,15 +385,10 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
-
-        config = self.config
-        minLat = config.getfloat('soseTransects', 'minLat')
-        maxLat = config.getfloat('soseTransects', 'maxLat')
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
 
@@ -265,11 +396,6 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         dsObs = dsObs.sel(method=str('nearest'), lon=lon)
         lon = dsObs.lon.values
-
-        lat = dsObs.lat.values
-        mask = numpy.logical_and(lat >= minLat, lat <= maxLat)
-        indices = numpy.argwhere(mask)
-        dsObs = dsObs.isel(lat=slice(indices[0][0], indices[-1][0]))
 
         # do some dropping and renaming so we end up wiht the right coordinates
         # and dimensions
@@ -280,6 +406,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         dsObs = dsObs.drop(['nPoints', 'nz'])
 
         return dsObs  # }}}
+
     # }}}
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

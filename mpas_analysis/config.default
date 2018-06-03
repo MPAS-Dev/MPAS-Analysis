@@ -1431,7 +1431,7 @@ longitudes = numpy.linspace(0, 330, 12)
 
 
 [soseTemperatureTransects]
-## options related to plotting WOCE transects of potential temperature
+## options related to plotting SOSE transects of potential temperature
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
@@ -1465,7 +1465,7 @@ contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 
 
 [soseSalinityTransects]
-## options related to plotting WOCE transects of salinity
+## options related to plotting SOSE transects of salinity
 
 # colormap for model/observations
 colormapNameResult = haline
@@ -1495,7 +1495,106 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 # contour line levels
-contourLevelsDifference = np.arange(-0.6, 0.5, 0.1)
+contourLevelsDifference = numpy.linspace(-0.6, 0.6, 9)
+
+
+[sosePotentialDensityTransects]
+## options related to plotting SOSE transects of potential density
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+contourLevelsResult = numpy.linspace(1026.5, 1028., 7)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+contourLevelsDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[soseZonalVelocityTransects]
+## options related to plotting SOSE transects of zonal velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[soseMeridionalVelocityTransects]
+## options related to plotting SOSE transects of meridional velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[soseVelocityMagnitudeTransects]
+## options related to plotting SOSE transects of velocity magnitude
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 0, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(0, 0.2, 9)
+contourLevelsResult = numpy.linspace(0, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
 [climatologyMapSeaIceConcNH]
