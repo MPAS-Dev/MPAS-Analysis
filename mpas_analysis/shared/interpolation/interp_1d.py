@@ -22,11 +22,10 @@ def interp_1d(ds, inInterpDim, inInterpCoord, outInterpDim,
     inInterpCoord, outInterpCoord : str
         The name of the coordinates to interpolate from and to.  Each
         of these can be 1D (vertical) or 2D fields
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     indices, weight0 = _compute_weights_and_indices(
             ds, inInterpDim, inInterpCoord, outInterpDim, outInterpCoord)

@@ -61,11 +61,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
     zMid : ``xarray.DataArray``
         Vertical coordinate at the center of layers, used to interpolate to
         reference depths
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  transectCollectionName, variableList, seasons, obsDatasets,
@@ -124,11 +123,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         subtaskName : str, optional
             The name of the subtask
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
@@ -156,11 +154,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         transectNumber = []
         lats = []
@@ -201,17 +198,17 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             obsDatasets[transectName].close()
 
     def run_task(self):  # {{{
-        """
+        '''
         Compute climatologies of melt rates from E3SM/MPAS output
 
         This function has been overridden to compute  ``zMid`` based on data
         from a restart file for later use in vertically interpolating to
         reference depths.
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
         # first, compute zMid and cell mask from the restart file
         with xr.open_dataset(self.restartFileName) as ds:
             ds = mpas_xarray.subset_variables(ds, ['maxLevelCell',
@@ -261,7 +258,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         # }}}
 
     def customize_masked_climatology(self, climatology, season):  # {{{
-        """
+        '''
         Add zMid to the climatologys
 
         Parameters
@@ -276,11 +273,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         climatology : ``xarray.Dataset`` object
             the modified climatology data set
-
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         zIndex = xr.DataArray.from_dict(
                 {'dims': ('nVertLevels',),
@@ -298,7 +294,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
     def customize_remapped_climatology(self, climatology, comparisonGridNames,
                                        season):  # {{{
-        """
+        '''
         Add the transect index to the data set
 
         Parameters
@@ -317,11 +313,11 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         climatology : ``xarray.Dataset```
             The same data set with any custom fields added or modifications
             made
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
         climatology['transectNumber'] = self.transectNumber
 
         climatology['x'] = self.x
@@ -330,7 +326,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
     def _vertical_interp(self, ds, transectIndex, dsObs, outFileName,
                          outObsFileName):
-        """
+        '''
         Vertically interpolate a transect and write it to a unique file
 
         Parameters
@@ -351,11 +347,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         outObsFileName : str
             The name of the file to which the resulting obs data set should be
             written if it is interpolated
-
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if os.path.exists(outFileName):
             return
@@ -420,11 +415,10 @@ class TransectsObservations(object):  # {{{
 
     obsDatasets : OrderedDict
         A dictionary of observational datasets
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, obsFileNames, horizontalResolution,
                  transectCollectionName):  # {{{
@@ -448,11 +442,11 @@ class TransectsObservations(object):  # {{{
             A name that describes the collection of transects (e.g. the name
             of the collection of observations) used to name the
             destination "mesh" for regridding
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.obsDatasets = None
         self.config = config
         self.obsFileNames = obsFileNames
@@ -470,11 +464,10 @@ class TransectsObservations(object):  # {{{
         -------
         obsDatasets : OrderedDict
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         obsDatasets = OrderedDict()
         for name in self.obsFileNames:
@@ -517,11 +510,10 @@ class TransectsObservations(object):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
 
@@ -534,7 +526,7 @@ class TransectsObservations(object):  # {{{
 
     def get_out_file_name(self, transectName,
                           verticalComparisonGridName='obs'):  # {{{
-        """
+        '''
         Given config options, the name of a field and a string identifying the
         months in a seasonal climatology, returns the full path for MPAS
         climatology files before and after remapping.
@@ -556,11 +548,10 @@ class TransectsObservations(object):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         config = self.config
 

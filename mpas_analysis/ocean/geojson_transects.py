@@ -16,14 +16,10 @@ from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 class GeojsonTransects(AnalysisTask):  # {{{
     """
     Plot model output at transects defined by lat/lon points in a geojson file
-
-    Attributes
-    ----------
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refConfig=None):
 
@@ -43,11 +39,10 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         tags = ['climatology', 'transect', 'geojson']
 
@@ -175,11 +170,11 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
 
     obsDatasets : OrderedDict
         A dictionary of observational datasets
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
 
     def build_observational_dataset(self, fileName, transectName):  # {{{
         '''
@@ -198,11 +193,10 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         with open(fileName) as filePointer:
             jsonFile = json.load(filePointer)
