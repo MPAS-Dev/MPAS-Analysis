@@ -117,6 +117,9 @@ class SoseTransects(AnalysisTask):  # {{{
               'obsFilePrefix': None,
               'obsFieldName': 'velMag'}]
 
+        fieldList = config.getExpression(sectionName, 'fieldList')
+        fields = [field for field in fields if field['prefix'] in fieldList]
+
         variableList = [field['mpas'] for field in fields
                         if field['mpas'] != 'velMag']
 
@@ -353,14 +356,15 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
                 dsObs[fieldName] = dsLocal[fieldName]
                 dsLocal.close()
 
-        # compute the velocity magnitude
-        description = 'Monthly velocity magnitude climatologies from ' \
-                      '2005-2010 average of the Southern Ocean State ' \
-                      'Estimate (SOSE)'
-        dsObs['velMag'] = xr.ufuncs.sqrt(
-                dsObs.zonalVel**2 + dsObs.meridVel**2)
-        dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
-        dsObs.velMag.attrs['description'] = description
+        if 'zonalVel' in dsObs and 'meridVel' in dsObs:
+            # compute the velocity magnitude
+            description = 'Monthly velocity magnitude climatologies from ' \
+                          '2005-2010 average of the Southern Ocean State ' \
+                          'Estimate (SOSE)'
+            dsObs['velMag'] = xr.ufuncs.sqrt(
+                    dsObs.zonalVel**2 + dsObs.meridVel**2)
+            dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
+            dsObs.velMag.attrs['description'] = description
 
         write_netcdf(dsObs, combinedFileName)
 

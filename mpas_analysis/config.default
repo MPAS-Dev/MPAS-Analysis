@@ -791,6 +791,10 @@ seasons =  ['ANN','JFM','JAS']
 # sea surface, 'bot' for the sea floor
 depths = ['top', -200, -400, -600, -800, 'bot']
 
+# a list of fields top plot for each transect.  All supported fields are listed
+# below
+fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
+             'zonalVelocity', 'meridionalVelocity', 'velocityMagnitude']
 
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
@@ -1428,6 +1432,13 @@ maxLat = -60
 
 # longitudes of transects
 longitudes = numpy.linspace(0, 330, 12)
+
+# a list of fields top plot for each transect.  All supported fields are listed
+# below.  Note that 'velocityMagnitude' cannot be plotted without
+# 'zonalVelocity' and 'meridionalVelocity' because the components are needed
+# to compute the magnitude.
+fieldList = ['temperature', 'salinity', 'potentialDensity', 'zonalVelocity',
+             'meridionalVelocity', 'velocityMagnitude']
 
 
 [soseTemperatureTransects]

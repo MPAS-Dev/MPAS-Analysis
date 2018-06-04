@@ -14,8 +14,11 @@ and reanalysis data.
 # Xylar Asay-Davis
 
 import xarray
+import numpy
 
 from mpas_analysis.shared import AnalysisTask
+
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
 from mpas_analysis.ocean.remap_depth_slices_subtask import \
     RemapDepthSlicesSubtask
@@ -124,6 +127,9 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
+        fieldList = config.getExpression(sectionName, 'fieldList')
+        fields = [field for field in fields if field['prefix'] in fieldList]
+
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
 
@@ -139,24 +145,37 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                              'list of comparison grids'.format(
                                      sectionName))
 
-        depths = config.getExpression(sectionName, 'depths')
+        if not numpy.any([field['3D'] for field in fields]):
+            depths = None
+        else:
+            depths = config.getExpression(sectionName, 'depths')
 
-        if len(depths) == 0:
-            raise ValueError('config section {} does not contain valid '
-                             'list of depths'.format(sectionName))
+            if len(depths) == 0:
+                raise ValueError('config section {} does not contain valid '
+                                 'list of depths'.format(sectionName))
 
         variableList = [field['mpas'] for field in fields
                         if field['mpas'] != 'velMag']
 
-        remapMpasSubtask = RemapMpasVelMagClimatology(
-            mpasClimatologyTask=mpasClimatologyTask,
-            parentTask=self,
-            climatologyName='SOSE',
-            variableList=variableList,
-            seasons=seasons,
-            depths=depths,
-            comparisonGridNames=comparisonGridNames,
-            iselValues=None)
+        if depths is None:
+            remapMpasSubtask = RemapMpasClimatologySubtask(
+                mpasClimatologyTask=mpasClimatologyTask,
+                parentTask=self,
+                climatologyName='SOSE',
+                variableList=variableList,
+                seasons=seasons,
+                comparisonGridNames=comparisonGridNames,
+                iselValues=None)
+        else:
+            remapMpasSubtask = RemapMpasVelMagClimatology(
+                mpasClimatologyTask=mpasClimatologyTask,
+                parentTask=self,
+                climatologyName='SOSE',
+                variableList=variableList,
+                seasons=seasons,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames,
+                iselValues=None)
 
         for field in fields:
             fieldPrefix = field['prefix']
@@ -290,11 +309,14 @@ class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
                             self).customize_masked_climatology(climatology,
                                                                season)
 
-        zonalVel = climatology.timeMonthly_avg_velocityZonal
-        meridVel = climatology.timeMonthly_avg_velocityMeridional
-        climatology['velMag'] = xarray.ufuncs.sqrt(zonalVel**2 + meridVel**2)
-        climatology.velMag.attrs['units'] = 'm s$^{-1}$'
-        climatology.velMag.attrs['description'] = 'velocity magnitude'
+        if 'timeMonthly_avg_velocityZonal' in climatology and \
+                'timeMonthly_avg_velocityMeridional' in climatology:
+            zonalVel = climatology.timeMonthly_avg_velocityZonal
+            meridVel = climatology.timeMonthly_avg_velocityMeridional
+            climatology['velMag'] = xarray.ufuncs.sqrt(zonalVel**2 +
+                                                       meridVel**2)
+            climatology.velMag.attrs['units'] = 'm s$^{-1}$'
+            climatology.velMag.attrs['description'] = 'velocity magnitude'
 
         return climatology  # }}}
 

@@ -18,94 +18,65 @@ Configuration Options
 
 The following configuration options are available for this task::
 
-    [soseTransects]
-    ## options related to plotting model vs. Southern Ocean State Estimate (SOSE)
-    ## transects.
+    [climatologyMapSose]
+    ## options related to plotting climatology maps of Antarctic fields at various
+    ## levels, including the sea floor against reference model results and SOSE
+    ## reanalysis data
 
-    # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+    # comparison grid(s)
+    # only the Antarctic really makes sense but lat-lon could technically work.
+    comparisonGrids = ['antarctic']
+
+    # Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
     # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-    seasons =  ['ANN']
+    seasons =  ['ANN','JFM','JAS']
 
-    # The approximate horizontal resolution (in km) of each transect.  Latitude/
-    # longitude between observation points will be subsampled at this interval.
-    # Use 'obs' to indicate no subsampling.
-    # horizontalResolution = obs
-    horizontalResolution = 5
+    # list of depths in meters (positive up) at which to analyze, 'top' for the
+    # sea surface, 'bot' for the sea floor
+    depths = ['top', -200, -400, -600, -800, 'bot']
 
-    # The name of the vertical comparison grid.  Valid values are 'mpas' for the
-    # MPAS vertical grid, 'obs' to use the locations of observations or
-    # any other name if the vertical grid is defined by 'verticalComparisonGrid'
-    # verticalComparisonGridName = mpas
-    # verticalComparisonGridName = obs
-    verticalComparisonGridName = uniform_0_to_4000m_at_10m
+    # a list of fields top plot for each transect.  All supported fields are listed
+    # below
+    fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
+                 'zonalVelocity', 'meridionalVelocity', 'velocityMagnitude']
 
-    # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
-    # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
-    verticalComparisonGrid = numpy.linspace(0, -4000, 401)
-
-    # The minimum weight of a destination cell after remapping. Any cell with
-    # weights lower than this threshold will therefore be masked out.
-    renormalizationThreshold = 0.01
-
-    # min and max latitude of transects
-    minLat = -80
-    maxLat = -60
-
-    # longitudes of transects
-    longitudes = numpy.linspace(0, 330, 12)
-
-
-    [soseTemperatureTransects]
-    ## options related to plotting SOSE transects of potential temperature
+    [climatologyMapSoseTemperature]
+    ## options related to plotting climatology maps of Antarctic
+    ## potential temperature at various levels, including the sea floor against
+    ## reference model results and SOSE reanalysis data
 
     # colormap for model/observations
     colormapNameResult = RdYlBu_r
     # the type of norm used in the colormap
     normTypeResult = linear
     # A dictionary with keywords for the norm
-    normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
-    # color indices into colormapName for filled contours
-    #colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-    # colormap levels/values for contour boundaries
-    #colorbarLevelsResult = [0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6]
+    normArgsResult = {'vmin': -2., 'vmax': 2.}
     # place the ticks automatically by default
-    # colorbarTicksResult = numpy.linspace(0.0, 6.0, 9)
-    # contour line levels
-    contourLevelsResult = np.arange(0.5, 6.0, 1.0)
+    # colorbarTicksResult = numpy.linspace(-2., 2., 9)
 
     # colormap for differences
     colormapNameDifference = balance
     # the type of norm used in the colormap
     normTypeDifference = linear
     # A dictionary with keywords for the norm
-    normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
-    # color indices into colormapName for filled contours
-    #colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
-    # colormap levels/values for contour boundaries
-    #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
+    normArgsDifference = {'vmin': -2., 'vmax': 2.}
     # place the ticks automatically by default
-    # colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
-    # contour line levels
-    contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
+    # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
 
 
-    [soseSalinityTransects]
-    ## options related to plotting SOSE transects of salinity
+    [climatologyMapSoseSalinity]
+    ## options related to plotting climatology maps of Antarctic
+    ## salinity at various levels, including the sea floor against
+    ## reference model results and SOSE reanalysis data
 
     # colormap for model/observations
     colormapNameResult = haline
     # the type of norm used in the colormap
     normTypeResult = linear
     # A dictionary with keywords for the norm
-    normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
-    # color indices into colormapName for filled contours
-    #colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-    # colormap levels/values for contour boundaries
-    #colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]
+    normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
     # place the ticks automatically by default
-    # colorbarTicksResult = numpy.linspace(34.0, 35.0, 9)
-    # contour line levels
-    contourLevelsResult = np.arange(34.1, 35.0, 0.1)
+    # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
 
     # colormap for differences
     colormapNameDifference = balance
@@ -113,18 +84,14 @@ The following configuration options are available for this task::
     normTypeDifference = linear
     # A dictionary with keywords for the norm
     normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
-    # color indices into colormapName for filled contours
-    #colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
-    # colormap levels/values for contour boundaries
-    #colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]
     # place the ticks automatically by default
     # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
-    # contour line levels
-    contourLevelsDifference = numpy.linspace(-0.6, 0.6, 9)
 
 
-    [sosePotentialDensityTransects]
-    ## options related to plotting SOSE transects of potential density
+    [climatologyMapSosePotentialDensity]
+    ## options related to plotting climatology maps of Antarctic
+    ## potential density at various levels, including the sea floor against
+    ## reference model results and SOSE reanalysis data
 
     # colormap for model/observations
     colormapNameResult = Spectral_r
@@ -134,7 +101,6 @@ The following configuration options are available for this task::
     normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
     # place the ticks automatically by default
     # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
-    contourLevelsResult = numpy.linspace(1026.5, 1028., 7)
 
     # colormap for differences
     colormapNameDifference = balance
@@ -144,11 +110,35 @@ The following configuration options are available for this task::
     normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
     # place the ticks automatically by default
     # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
-    contourLevelsDifference = numpy.linspace(-0.3, 0.3, 9)
 
 
-    [soseZonalVelocityTransects]
-    ## options related to plotting SOSE transects of zonal velocity
+    [climatologyMapSoseMixedLayerDepth]
+    ## options related to plotting climatology maps of Antarctic
+    ## mixed layer depth against reference model results and SOSE reanalysis data
+
+    # colormap for model/observations
+    colormapNameResult = viridis
+    # color indices into colormapName for filled contours
+    # the type of norm used in the colormap
+    normTypeResult = log
+    # A dictionary with keywords for the norm
+    normArgsResult = {'vmin': 10., 'vmax': 300.}
+    # specify the ticks
+    colorbarTicksResult = [10, 20, 40, 60, 80, 100, 200, 300]
+
+    # colormap for differences
+    colormapNameDifference = balance
+    # the type of norm used in the colormap
+    normTypeDifference = symLog
+    # A dictionary with keywords for the norm
+    normArgsDifference = {'linthresh': 10., 'linscale': 0.5, 'vmin': -200.,
+                          'vmax': 200.}
+    colorbarTicksDifference = [-200., -100., -50., -20., -10., 0., 10., 20., 50., 100., 200.]
+
+
+    [climatologyMapSoseZonalVelocity]
+    ## options related to plotting climatology maps of Antarctic
+    ## zonal velocity against reference model results and SOSE reanalysis data
 
     # colormap for model/observations
     colormapNameResult = delta
@@ -159,7 +149,6 @@ The following configuration options are available for this task::
     normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
     # determine the ticks automatically by default, uncomment to specify
     # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
-    contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
 
     # colormap for differences
     colormapNameDifference = balance
@@ -169,11 +158,11 @@ The following configuration options are available for this task::
     normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
     # determine the ticks automatically by default, uncomment to specify
     # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-    contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
-    [soseMeridionalVelocityTransects]
-    ## options related to plotting SOSE transects of meridional velocity
+    [climatologyMapSoseMeridionalVelocity]
+    ## options related to plotting climatology maps of Antarctic
+    ## meridional against reference model results and SOSE reanalysis data
 
     # colormap for model/observations
     colormapNameResult = delta
@@ -184,7 +173,6 @@ The following configuration options are available for this task::
     normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
     # determine the ticks automatically by default, uncomment to specify
     # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
-    contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
 
     # colormap for differences
     colormapNameDifference = balance
@@ -194,11 +182,11 @@ The following configuration options are available for this task::
     normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
     # determine the ticks automatically by default, uncomment to specify
     # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-    contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
-    [soseVelocityMagnitudeTransects]
-    ## options related to plotting SOSE transects of velocity magnitude
+    [climatologyMapSoseVelocityMagnitude]
+    ## options related to plotting climatology maps of Antarctic
+    ## meridional against reference model results and SOSE reanalysis data
 
     # colormap for model/observations
     colormapNameResult = ice
@@ -209,7 +197,6 @@ The following configuration options are available for this task::
     normArgsResult = {'vmin': 0, 'vmax': 0.2}
     # determine the ticks automatically by default, uncomment to specify
     # colorbarTicksResult = numpy.linspace(0, 0.2, 9)
-    contourLevelsResult = numpy.linspace(0, 0.2, 9)
 
     # colormap for differences
     colormapNameDifference = balance
@@ -219,7 +206,6 @@ The following configuration options are available for this task::
     normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
     # determine the ticks automatically by default, uncomment to specify
     # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-    contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 There is a section for options that apply to all SOSE climatology maps and
 one for each field supported for specifying the color map.
@@ -228,6 +214,10 @@ The option ``depths`` is a list of (approximate) depths at which to sample
 the potential temperature field.  A value of ``'top'`` indicates the sea
 surface (or the ice-ocean interface under ice shelves) while a value of
 ``'bot'`` indicates the seafloor.
+
+The user can select only to plot a subset of the supported fields by adding
+only the desired field names to ``fieldList``.  The default value shows the
+list of all available fields.
 
 For more details, see:
  * :ref:`config_colormaps`

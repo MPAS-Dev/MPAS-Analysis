@@ -56,6 +56,13 @@ The following configuration options are available for this task::
     # longitudes of transects
     longitudes = numpy.linspace(0, 330, 12)
 
+    # a list of fields top plot for each transect.  All supported fields are listed
+    # below.  Note that 'velocityMagnitude' cannot be plotted without
+    # 'zonalVelocity' and 'meridionalVelocity' because the components are needed
+    # to compute the magnitude.
+    fieldList = ['temperature', 'salinity', 'potentialDensity', 'zonalVelocity',
+                 'meridionalVelocity', 'velocityMagnitude']
+
 
     [soseTemperatureTransects]
     ## options related to plotting SOSE transects of potential temperature
@@ -236,6 +243,17 @@ produces 12 transects spaced every 30 |deg|.
 
   SOSE's domain extends only to 25 |deg| S, so ``maxLat`` should typically be
   less than -25.
+
+The user can select only to plot a subset of the supported fields by adding
+only the desired field names to ``fieldList``.  The default value shows the
+list of all available fields.
+
+.. note::
+
+  Because ``velocityMagnitude`` is computed internally rather than being stored
+  as a separate field with the other SOSE output, it is not possible to plot
+  ``velocityMagnitude`` without also plotting ``zonalVelocity`` and
+  ``meridionalVelocity``.
 
 Ater the ``soseTransects`` section, there is a section for each supported field
 specifying the information related to the colormap.
