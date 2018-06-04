@@ -124,21 +124,18 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.sectionName = 'streamfunctionMOC'
 
         if self.mocAnalysisMemberEnabled:
-            # I think the bolus velocity should always be included if GM is on
-            self.includeBolus = config.getboolean(self.sectionName, 'includeBolus')
-            if self.includeBolus:
-                # only add the bolus velocity if GM is enabled
-                self.includeBolus = self.namelist.getbool('config_use_standardgm')
-
+            self.variableList = ['timeMonthly_avg_mocStreamvalLatAndDepth',
+                                 'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
+        else:
             self.variableList = ['timeMonthly_avg_normalVelocity',
                                  'timeMonthly_avg_vertVelocityTop']
+
+            # Add the bolus velocity if GM is enabled
+            self.includeBolus = self.namelist.getbool('config_use_standardgm')
             if self.includeBolus:
                 self.variableList.extend(
                         ['timeMonthly_avg_normalGMBolusVelocity',
                          'timeMonthly_avg_vertGMBolusVelocityTop'])
-        else:
-            self.variableList = ['timeMonthly_avg_mocStreamvalLatAndDepth',
-                                 'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
 
         self.mpasClimatologyTask.add_variables(variableList=self.variableList,
                                                seasons=['ANN'])
@@ -191,7 +188,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             #                                     sectionName, dictClimo,
             #                                     dictTseries)
             self._compute_moc_climo_analysismember()
-            dsMOCTimeSeries = self._compute_moc_time_series()
+            dsMOCTimeSeries = self._compute_moc_time_series_analysismember()
         else:
             self._compute_moc_climo_postprocess()
             dsMOCTimeSeries = self._compute_moc_time_series_postprocess()
@@ -343,6 +340,11 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         config = self.config
 
+        self.regionNames = config.getExpression(self.sectionName,
+                                                'regionNames')
+        self.regionNames.append('Global')
+
+
         # Read in depth and bin latitudes
         try:
             restartFileName = self.runStreams.readpath('restart')[0]
@@ -359,7 +361,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         refLayerThickness[1:nVertLevels] = \
             refBottomDepth[1:nVertLevels] - refBottomDepth[0:nVertLevels-1]
 
-        refZMid = -refBottomDepth + 0.5*refLayerThickness
+        refZMid = refBottomDepth - 0.5*refLayerThickness
 
         binBoundaryMocStreamfunction = None
         # first try timeSeriesStatsMonthly for bin boundaries, then try
@@ -430,7 +432,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             self.logger.info('   Save global and regional MOC to file...')
             ncFile = netCDF4.Dataset(outputFileClimo, mode='w')
             # create dimensions
-            ncFile.createDimension('nz', len(refTopDepth))
+            ncFile.createDimension('nz', nVertLevels)
             for region in self.regionNames:
                 latBins = self.lat[region]
                 mocTop = self.moc[region]
@@ -513,7 +515,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         binBoundaryMocStreamfunction = np.rad2deg(binBoundaryMocStreamfunction)
         dLat = binBoundaryMocStreamfunction - 26.5
-        indlat26 = np.where(dLat == np.amin(np.abs(dLat)))
+        indlat26 = np.where(np.abs(dLat) == np.amin(np.abs(dLat)))
 
         inputFilesTseries = sorted(self.historyStreams.readpath(
                 streamName, startDate=self.startDateTseries,
@@ -576,7 +578,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
             # hard-wire region=0 (Atlantic) for now
             indRegion = 0
-            mocTop = dsLocal.timeMonthly_avg_mocStreamvalLatAndDepthRegion[timeIndex, indRegion, :, :].values
+            mocTop = dsLocal.timeMonthly_avg_mocStreamvalLatAndDepthRegion[indRegion, :, :].values
             mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
@@ -767,7 +769,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             depth = ncFile.createVariable('depth', 'f4', ('nz',))
             depth.description = 'depth'
             depth.units = 'meters'
-            depth[:] = refTopDepth
+            depth[:] = self.depth
             ncFile.close()
         else:
             # Read from file
@@ -807,7 +809,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         latAtlantic = self.lat['Atlantic']
         dLat = latAtlantic - 26.5
-        indlat26 = np.where(dLat == np.amin(np.abs(dLat)))
+        indlat26 = np.where(np.abs(dLat) == np.amin(np.abs(dLat)))
 
         dictRegion = self.dictRegion['Atlantic']
         maxEdgesInTransect = dictRegion['maxEdgesInTransect']
