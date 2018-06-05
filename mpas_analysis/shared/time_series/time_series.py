@@ -1,22 +1,119 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Utility functions related to time-series data sets
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 
 import xarray as xr
 import numpy
 import os
-import warnings
+from distutils.spawn import find_executable
+import glob
+import subprocess
+from six import string_types
 
-from ..timekeeping.utility import days_to_datetime
+from mpas_analysis.shared.timekeeping.utility import days_to_datetime
+
+
+def combine_time_series_with_ncrcat(inFileNames, outFileName,
+                                    variableList=None, logger=None):
+    # {{{
+    '''
+    Uses ncrcat to extact time series from a series of files
+
+    inFileNames : str or list of str
+        A file name with wildcard(s) or a list of input files from which to
+        extract the time series.
+
+    outFileName : str
+        The output NetCDF file where the time series should be written.
+
+    variableList : list of str, optional
+        A list of varibles to include.  All variables are included by default
+
+    logger : `logging.Logger``, optional
+        A logger to which ncclimo output should be redirected
+
+    Raises
+    ------
+    OSError
+        If ``ncrcat`` is not in the system path.
+
+    Author
+    ------
+    Xylar Asay-Davis
+    '''
+
+    if find_executable('ncrcat') is None:
+        raise OSError('ncrcat not found. Make sure the latest nco '
+                      'package is installed: \n'
+                      'conda install nco\n'
+                      'Note: this presumes use of the conda-forge '
+                      'channel.')
+
+    if os.path.exists(outFileName):
+        return
+
+    if isinstance(inFileNames, string_types):
+        inFileNames = sorted(glob.glob(inFileNames))
+
+    args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl']
+
+    if variableList is not None:
+        args.extend(['-v', ','.join(variableList)])
+
+    printCommand = '{} {} ... {} {}'.format(' '.join(args), inFileNames[0],
+                                            inFileNames[-1],
+                                            outFileName)
+    args.extend(inFileNames)
+    args.append(outFileName)
+
+    if logger is None:
+        print('running: {}'.format(printCommand))
+    else:
+        logger.info('running: {}'.format(printCommand))
+        for handler in logger.handlers:
+            handler.flush()
+    process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if stdout:
+        stdout = stdout.decode('utf-8')
+        for line in stdout.split('\n'):
+            if logger is None:
+                print(line)
+            else:
+                logger.info(line)
+    if stderr:
+        stderr = stderr.decode('utf-8')
+        for line in stderr.split('\n'):
+            if logger is None:
+                print(line)
+            else:
+                logger.error(line)
+
+    if process.returncode != 0:
+        raise subprocess.CalledProcessError(process.returncode,
+                                            ' '.join(args))
+
+    # }}}
 
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
                       calendar, yearsPerCacheUpdate=1,
-                      printProgress=False):  # {{{
+                      logger=None):  # {{{
     '''
     Create or update a NetCDF file ``cacheFileName`` containing the given time
     series, calculated with ``timeSeriesCalcFunction`` over the given times,
@@ -52,9 +149,8 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         output the file frequently.  If not, there will be needless overhead
         in caching the file too frequently.
 
-    printProgress: bool, optional
-        Whether progress messages should be printed as the climatology is
-        computed
+    logger : ``logging.Logger``, optional
+        A logger to which to write output as the time series is computed
 
     Returns
     -------
@@ -62,19 +158,18 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     timesProcessed = numpy.zeros(len(timesInDataSet), bool)
     # figure out which files to load and which years go in each file
     continueOutput = os.path.exists(cacheFileName)
     cacheDataSetExists = False
     if continueOutput:
-        if printProgress:
-            print '   Read in previously computed time series'
+        if logger is not None:
+            logger.info('   Read in previously computed time series')
         # read in what we have so far
 
         try:
@@ -84,7 +179,10 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
             # assuming the cache file is corrupt, so deleting it.
             message = 'Deleting cache file {}, which appears to have ' \
                       'been corrupted.'.format(cacheFileName)
-            warnings.warn(message)
+            if logger is None:
+                print('Warning: {}'.format(message))
+            else:
+                logger.warning(message)
             os.remove(cacheFileName)
 
         if cacheDataSetExists:
@@ -116,13 +214,13 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
             # no unprocessed time entries in this data range
             continue
 
-        if printProgress:
+        if logger is not None:
             if firstProcessed:
-                print '   Process and save time series'
+                logger.info('   Process and save time series')
             if yearsPerCacheUpdate == 1:
-                print '     {:04d}'.format(years[0])
+                logger.info('     {:04d}'.format(years[0]))
             else:
-                print '     {:04d}-{:04d}'.format(years[0], years[-1])
+                logger.info('     {:04d}-{:04d}'.format(years[0], years[-1]))
 
         ds = timeSeriesCalcFunction(timeIndices, firstProcessed)
         firstProcessed = False

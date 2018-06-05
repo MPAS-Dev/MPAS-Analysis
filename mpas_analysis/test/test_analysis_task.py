@@ -1,14 +1,23 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
-Unit tests for utility functions in run_analysis
+Unit tests for utility functions in run_mpas_analysis
 
 Xylar Asay-Davis
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pytest
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.analysis_task import AnalysisTask
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 class TestAnalysisTask(TestCase):
@@ -33,7 +42,7 @@ class TestAnalysisTask(TestCase):
         # a list of analyses to generate.  Valid names are:
         #   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
         #   'climatologyMapSSS', 'climatologyMapMLD', 'timeSeriesSeaIceAreaVol',
-        #   'climatologyMapSeaIceConcNH', 'climatologyMapSeaIceConcSH', 
+        #   'climatologyMapSeaIceConcNH', 'climatologyMapSeaIceConcSH',
         #   'climatologyMapSeaIceThickNH', 'climatologyMapSeaIceThickSH'
         # the following shortcuts exist:
         #   'all' -- all analyses will be run
@@ -48,7 +57,7 @@ class TestAnalysisTask(TestCase):
         #                                        the given category of analysis
         # an equivalent syntax can be used on the command line to override this
         # option:
-        #    ./run_analysis.py config.analysis --generate \
+        #    ./run_mpas_analysis config.analysis --generate \
         #         all,no_ocean,all_timeSeries
 
         cores = {'timeSeriesOHC': 'ocean',

@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Unit test infrastructure for the generalized_reader.
 
@@ -5,12 +12,15 @@ Xylar Asay-Davis
 02/16/2017
 """
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
+import numpy
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -62,7 +72,8 @@ class TestGeneralizedReader(TestCase):
                 variableMap=variableMap)
 
             # make sure the remapping happened as expected
-            self.assertEqual(sorted(ds.data_vars.keys()), sorted(variableList))
+            dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+            assert(numpy.all([var in dsVarList for var in variableList]))
 
     def test_open_dataset_fn(self):
         fileName = str(self.datadir.join('example_jan.nc'))
@@ -78,7 +89,8 @@ class TestGeneralizedReader(TestCase):
                 config=config,
                 timeVariableName=timestr,
                 variableList=variableList)
-            self.assertEqual(ds.data_vars.keys(), variableList)
+            dsVarList = list(ds.data_vars.keys()) + list(ds.coords.keys())
+            assert(numpy.all([var in dsVarList for var in variableList]))
 
     def test_start_end(self):
         fileName = str(self.datadir.join('example_jan_feb.nc'))

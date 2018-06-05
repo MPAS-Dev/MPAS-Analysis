@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 '''
 Functions for performing interpolation
 
@@ -7,11 +14,13 @@ build_remap_weights - constructs a mapping file containing the indices and
     weights needed to perform horizontal interpolation
 
 remap - perform horizontal interpolation on a data sets, given a mapping file
-
-Authors
--------
-Xylar Asay-Davis
 '''
+# Authors
+# -------
+# Xylar Asay-Davis
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 
 import subprocess
 import tempfile
@@ -22,8 +31,8 @@ from scipy.sparse import csr_matrix
 import xarray as xr
 import sys
 
-from ..grid import MpasMeshDescriptor, LatLonGridDescriptor, \
-    ProjectionGridDescriptor
+from mpas_analysis.shared.grid import MpasMeshDescriptor, \
+    LatLonGridDescriptor, ProjectionGridDescriptor, PointCollectionDescriptor
 
 
 class Remapper(object):
@@ -31,11 +40,10 @@ class Remapper(object):
     A class for remapping fields using a given mapping file.  The weights and
     indices from the mapping file can be loaded once and reused multiple times
     to map several fields between the same source and destination grids.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, sourceDescriptor, destinationDescriptor,
                  mappingFileName=None):  # {{{
@@ -60,21 +68,24 @@ class Remapper(object):
             This is useful if the source and destination grids are determined
             to be the same (though the Remapper does not attempt to determine
             if this is the case).
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
+        if isinstance(sourceDescriptor, PointCollectionDescriptor):
+            raise TypeError("sourceDescriptor of type "
+                            "PointCollectionDescriptor is not supported.")
         if not isinstance(sourceDescriptor,
                           (MpasMeshDescriptor,  LatLonGridDescriptor,
                            ProjectionGridDescriptor)):
-            raise ValueError("sourceDescriptor is not of a recognized type.")
+            raise TypeError("sourceDescriptor is not of a recognized type.")
 
         if not isinstance(destinationDescriptor,
                           (MpasMeshDescriptor,  LatLonGridDescriptor,
-                           ProjectionGridDescriptor)):
-            raise ValueError(
+                           ProjectionGridDescriptor,
+                           PointCollectionDescriptor)):
+            raise TypeError(
                 "destinationDescriptor is not of a recognized type.")
 
         self.sourceDescriptor = sourceDescriptor
@@ -86,7 +97,7 @@ class Remapper(object):
         # }}}
 
     def build_mapping_file(self, method='bilinear',
-                           additionalArgs=None):  # {{{
+                           additionalArgs=None, logger=None):  # {{{
         '''
         Given a source file defining either an MPAS mesh or a lat-lon grid and
         a destination file or set of arrays defining a lat-lon grid, constructs
@@ -102,6 +113,9 @@ class Remapper(object):
         additionalArgs : list of str, optional
             A list of additional arguments to ``ESMF_RegridWeightGen``
 
+        logger : ``logging.Logger``, optional
+            A logger to which ncclimo output should be redirected
+
         Raises
         ------
         OSError
@@ -109,11 +123,17 @@ class Remapper(object):
 
         ValueError
             If sourceDescriptor or destinationDescriptor is of an unknown type
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        if isinstance(self.destinationDescriptor,
+                      PointCollectionDescriptor) and \
+                method not in ['bilinear', 'neareststod']:
+            raise ValueError("method {} not supported for destination "
+                             "grid of type PointCollectionDescriptor."
+                             "".format(method))
 
         if self.mappingFileName is None or \
                 os.path.exists(self.mappingFileName):
@@ -153,15 +173,36 @@ class Remapper(object):
         if additionalArgs is not None:
             args.extend(additionalArgs)
 
-        # make sure any output is flushed before we add output from the
-        # subprocess
-        sys.stdout.flush()
-        sys.stderr.flush()
+        if logger is None:
+            print('running: {}'.format(' '.join(args)))
+            # make sure any output is flushed before we add output from the
+            # subprocess
+            sys.stdout.flush()
+            sys.stderr.flush()
 
-        # throw out the standard output from ESMF_RegridWeightGen, as it's
-        # rather verbose but keep stderr
-        DEVNULL = open(os.devnull, 'wb')
-        subprocess.check_call(args, stdout=DEVNULL)
+            # throw out the standard output from ESMF_RegridWeightGen, as it's
+            # rather verbose but keep stderr
+            DEVNULL = open(os.devnull, 'wb')
+            subprocess.check_call(args, stdout=DEVNULL)
+
+        else:
+            logger.info('running: {}'.format(' '.join(args)))
+            for handler in logger.handlers:
+                handler.flush()
+
+            process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+
+            # throw out the standard output from ESMF_RegridWeightGen, as it's
+            # rather verbose but keep stderr
+            if stderr:
+                for line in stderr.split('\n'):
+                    logger.error(line)
+
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode,
+                                                    ' '.join(args))
 
         # remove the temporary SCRIP files
         os.remove(self.sourceDescriptor.scripFileName)
@@ -170,7 +211,7 @@ class Remapper(object):
         # }}}
 
     def remap_file(self, inFileName, outFileName, variableList=None,
-                   overwrite=False, renormalize=None):  # {{{
+                   overwrite=False, renormalize=None, logger=None):  # {{{
         '''
         Given a source file defining either an MPAS mesh or a lat-lon grid and
         a destination file or set of arrays defining a lat-lon grid, constructs
@@ -197,6 +238,9 @@ class Remapper(object):
         renormalize : float, optional
             A threshold to use to renormalize the data
 
+        logger : ``logging.Logger``, optional
+            A logger to which ncclimo output should be redirected
+
         Raises
         ------
         OSError
@@ -205,11 +249,10 @@ class Remapper(object):
         ValueError
             If ``mappingFileName`` is ``None`` (meaning no remapping is
             needed).
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingFileName is None:
             raise ValueError('No mapping file was given because remapping is '
@@ -221,11 +264,14 @@ class Remapper(object):
             # a remapped file already exists, so nothing to do
             return
 
-        if isinstance(self.sourceDescriptor, ProjectionGridDescriptor):
+        if isinstance(self.sourceDescriptor, (ProjectionGridDescriptor,
+                                              PointCollectionDescriptor)):
             raise TypeError('Source grid is a projection grid, not supported '
                             'by ncremap.\n'
                             'Consider using Remapper.remap')
-        if isinstance(self.destinationDescriptor, ProjectionGridDescriptor):
+        if isinstance(self.destinationDescriptor,
+                      (ProjectionGridDescriptor,
+                       PointCollectionDescriptor)):
             raise TypeError('Destination grid is a projection grid, not '
                             'supported by ncremap.\n'
                             'Consider using Remapper.remap')
@@ -266,13 +312,41 @@ class Remapper(object):
         if variableList is not None:
             args.extend(['-v', ','.join(variableList)])
 
+        # set an environment variable to make sure we're not using czender's
+        # local version of NCO instead of one we have intentionally loaded
+        env = os.environ.copy()
+        env['NCO_PATH_OVERRIDE'] = 'No'
 
-        # make sure any output is flushed before we add output from the
-        # subprocess
-        sys.stdout.flush()
-        sys.stderr.flush()
+        if logger is None:
+            print('running: {}'.format(' '.join(args)))
+            # make sure any output is flushed before we add output from the
+            # subprocess
+            sys.stdout.flush()
+            sys.stderr.flush()
 
-        subprocess.check_call(args)  # }}}
+            subprocess.check_call(args, env=env)
+        else:
+            logger.info('running: {}'.format(' '.join(args)))
+            for handler in logger.handlers:
+                handler.flush()
+
+            process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, env=env)
+            stdout, stderr = process.communicate()
+
+            if stdout:
+                stdout = stdout.decode('utf-8')
+                for line in stdout.split('\n'):
+                    logger.info(line)
+            if stderr:
+                stderr = stderr.decode('utf-8')
+                for line in stderr.split('\n'):
+                    logger.error(line)
+
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode,
+                                                    ' '.join(args))
+        # }}}
 
     def remap(self, ds, renormalizationThreshold=None):  # {{{
         '''
@@ -306,11 +380,10 @@ class Remapper(object):
             (``self.src_grid_dims``).
         TypeError
             If ds is not an ``xarray.Dataset`` or ``xarray.DataArray`` object
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingFileName is None:
             # No remapping is needed
@@ -355,11 +428,10 @@ class Remapper(object):
         '''
         Load weights and indices from a mapping file, if this has not already
         been done
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if self.mappingLoaded:
             return
@@ -426,11 +498,10 @@ class Remapper(object):
     def _remap_data_array(self, dataArray, renormalizationThreshold):  # {{{
         '''
         Remap a single xarray data array
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         sourceDims = self.sourceDescriptor.dims
         destDims = self.destinationDescriptor.dims
@@ -497,11 +568,10 @@ class Remapper(object):
                            renormalizationThreshold):  # {{{
         '''
         Remap a single numpy array
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         # permute the dimensions of inField so the axes to remap are first,
         # then flatten the remapping and the extra dimensions separately for
@@ -558,16 +628,6 @@ class Remapper(object):
         outField = numpy.transpose(outField, axes=unpermuteAxes)
 
         return outField  # }}}
-
-
-def _get_lock_path(fileName):  # {{{
-    '''Returns the name of a temporary lock file unique to a given file name'''
-    directory = '{}/.locks/'.format(os.path.dirname(fileName))
-    try:
-        os.makedirs(directory)
-    except OSError:
-        pass
-    return '{}/{}.lock'.format(directory, os.path.basename(fileName))  # }}}
 
 
 def _get_temp_path():  # {{{

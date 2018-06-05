@@ -1,3 +1,13 @@
+/*
+/ Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+/ and the University Corporation for Atmospheric Research (UCAR).
+/
+/ Unless noted otherwise source code is licensed under the BSD license.
+/ Additional copyright and license information can be found in the LICENSE file
+/ distributed with this code, or at http://mpas-dev.github.com/license.html
+/ */
+
+
 body {
     background:#EEE;
     font-family:"myriad-pro","Myriad Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -145,6 +155,11 @@ img.component {
 div.component {
     width: 320px;
     height: 290px;
+}
+
+div.provenance-title {
+    clear: left;
+    -webkit-padding-before: 6em;
 }
 
 

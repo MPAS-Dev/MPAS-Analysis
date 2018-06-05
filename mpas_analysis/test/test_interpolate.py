@@ -1,9 +1,19 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 '''
 Unit test infrastructure for horizontal interpolation.
 
 Xylar Asay-Davis
 04/06/2017
 '''
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 
 import pytest
 import shutil
@@ -17,8 +27,7 @@ from mpas_analysis.shared.interpolation import Remapper
 from mpas_analysis.shared.grid import MpasMeshDescriptor, \
     LatLonGridDescriptor, ProjectionGridDescriptor
 from mpas_analysis.test import TestCase, loaddatadir
-from mpas_analysis.configuration.MpasAnalysisConfigParser \
-    import MpasAnalysisConfigParser
+from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures('loaddatadir')
@@ -42,8 +51,9 @@ class TestInterp(TestCase):
 
     def get_latlon_file_descriptor(self):
         latLonGridFileName = str(self.datadir.join('SST_annual_1870-1900.nc'))
-        descriptor = LatLonGridDescriptor()
-        descriptor.read(latLonGridFileName, latVarName='lat', lonVarName='lon')
+        descriptor = LatLonGridDescriptor.read(latLonGridFileName,
+                                               latVarName='lat',
+                                               lonVarName='lon')
 
         return (descriptor, latLonGridFileName)
 
@@ -57,8 +67,7 @@ class TestInterp(TestCase):
         lon = numpy.array(config.getExpression('interpolate', 'lon',
                                                usenumpyfunc=True))
 
-        descriptor = LatLonGridDescriptor()
-        descriptor.create(lat, lon, units='degrees')
+        descriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
         return descriptor
 
     def get_stereographic_array_descriptor(self):
@@ -73,9 +82,9 @@ class TestInterp(TestCase):
         res = 100e3
         nx = 2*int(xMax/res)+1
         x = numpy.linspace(-xMax, xMax, nx)
-        descriptor = ProjectionGridDescriptor(projection)
         meshName = '{}km_Antarctic_stereo'.format(int(res*1e-3))
-        descriptor.create(x, x, meshName)
+        descriptor = ProjectionGridDescriptor.create(projection, x, x,
+                                                     meshName)
         return descriptor
 
     def get_file_names(self, suffix):

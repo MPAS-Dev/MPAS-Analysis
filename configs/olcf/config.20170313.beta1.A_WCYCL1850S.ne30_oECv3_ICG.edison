@@ -11,14 +11,33 @@ mainRunName = 20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
 # MPAS-Analysis)
 preprocessedReferenceRunName = B1850C5_ne30_v0.4
 
+# config file for a reference run to which this run will be compared.  The
+# analysis should have already been run to completion once with this config
+# file, so that the relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid.  Leave this option commented out if no
+# reference run is desired.
+# referenceRunConfigFile = /path/to/config/file
+
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
 baseDirectory = /lustre/atlas1/cli115/proj-shared/milena/ACME/simulations/20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
-mpasMeshName = EC60to30v3
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+mpasMeshName = oEC60to30v3
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping/
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpas-o_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpas-cice_in
+seaIceStreamsFileName = streams.cice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -27,37 +46,37 @@ mpasMeshName = EC60to30v3
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
-# a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
-#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
-#   'climatologyMapSeaIceThickSH'
-# the following shortcuts exist:
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+# htmlSubdirectory = /ccs/proj/cli115/www/USERNAME/RUNNAME
+htmlSubdirectory = html
+
+# a list of analyses to generate.  Valid names can be seen by running:
+#   ./run_mpas_analysis --list
+# This command also lists tags for each analysis.
+# Shortcuts exist to generate (or not generate) several types of analysis.
+# These include:
 #   'all' -- all analyses will be run
-#   'all_timeSeries' -- all time-series analyses will be run
-#   'all_climatology' -- all analyses involving climatologies
-#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
-#   'all_ocean' -- all ocean analyses will be run
-#   'all_seaIce' -- all sea-ice analyses will be run
-#   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
-#                             other analyses).
-#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
-#                                            given category of analysis
+#   'all_<tag>' -- all analysis with a particular tag will be run
+#   'all_<component>' -- all analyses from a given component (either 'ocean'
+#                        or 'seaIce') will be run
+#   'only_<component>', 'only_<tag>' -- all analysis from this component or
+#                                       with this tag will be run, and all
+#                                       analysis for other components or
+#                                       without the tag will be skipped
+#   'no_<task_name>' -- skip the given task
+#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
+#                                   tasks from the given compoonent or with
+#                                   the given tag.  Do
+#                                      ./run_mpas_analysis --list
+#                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all']
-
-# alternative examples that would perform all analysis except
-#   'timeSeriesOHC'
-#generate = ['all', 'no_timeSeriesOHC']
-# Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would run all tasks that aren't ocean analyses,
-# except that it would also run ocean time series tasks:
-#generate = ['all', 'no_ocean', 'all_timeSeries']
+# All tasks with tag "landIceCavities" are disabled because this run did not
+# include land-ice cavities.
+generate = ['all', 'no_landIceCavities']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
@@ -67,13 +86,6 @@ generate = ['all']
 startYear = 10
 # the last year over which to average climatalogies
 endYear = 15
-
-# The names of the mapping file used for interpolation.  If a mapping file has
-# already been generated, supplying the absolute path can save the time of
-# generating a new one.  If nothing is supplied, the file name is automatically
-# generated based on the MPAS mesh name, the comparison grid resolution, and
-# the interpolation method
-mpasMappingFile = /lustre/atlas/proj-shared/cli115/mpas_analysis/mapping/map_oEC60to30v3_to_0.5x0.5degree_bilinear.nc
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -126,12 +138,15 @@ baseDirectory = /lustre/atlas/proj-shared/cli115/observations/SeaIce
 baseDirectory =  /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning 
+## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 
 # Region names for basin MOC calculation.
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# Mask file for ocean basin regional computation
-regionMaskFiles = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# Directory for region mask files
+regionMaskDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/

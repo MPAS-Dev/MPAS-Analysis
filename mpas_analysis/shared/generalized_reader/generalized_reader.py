@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 """
 Utility functions for importing MPAS files into xarray. These functions extend
 the capabilities of mpas_xarray to include mapping variable names from MPAS
@@ -7,18 +14,22 @@ start and end dates.
 open_multifile_dataset : opens a data set, maps variable names, preprocess
     the data set removes repeated time indices, and slices the time coordinate
     to lie between desired start and end dates.
-
-Authors
--------
-Xylar Asay-Davis
 """
+# Authors
+# -------
+# Xylar Asay-Davis
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
+import six
 import xarray
 from functools import partial
 import resource
 
-from ..mpas_xarray import mpas_xarray
-from ..timekeeping.utility import string_to_days_since_date, days_to_datetime
+from mpas_analysis.shared.mpas_xarray import mpas_xarray
+from mpas_analysis.shared.timekeeping.utility import \
+    string_to_days_since_date, days_to_datetime
 
 
 def open_multifile_dataset(fileNames, calendar, config,
@@ -112,11 +123,10 @@ def open_multifile_dataset(fileNames, calendar, config,
         If the time variable is not found in the data set or if the time
         variable is a number of days since the start of the simulation but
         simulationStartTime is None.
-
-    Authors
-    -------
-    Xylar Asay-Davis, Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Phillip J. Wolfram
 
     preprocess_partial = partial(_preprocess,
                                  calendar=calendar,
@@ -151,11 +161,11 @@ def open_multifile_dataset(fileNames, calendar, config,
         if 'autoclose' in str(e):
             if autoclose:
                 # This indicates that xarray version doesn't support autoclose
-                print 'Warning: open_multifile_dataset is trying to use ' \
-                      'autoclose=True but\n' \
-                      'it appears your xarray version doesn\'t support this ' \
-                      'argument. Will\n' \
-                      'try again without autoclose argument.'
+                print('Warning: open_multifile_dataset is trying to use '
+                      'autoclose=True but\n'
+                      'it appears your xarray version doesn\'t support this '
+                      'argument. Will\n'
+                      'try again without autoclose argument.')
 
             ds = xarray.open_mfdataset(fileNames,
                                        preprocess=preprocess_partial,
@@ -166,10 +176,10 @@ def open_multifile_dataset(fileNames, calendar, config,
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, str):
+        if isinstance(startDate, six.string_types):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, str):
+        if isinstance(endDate, six.string_types):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 
@@ -266,11 +276,10 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
     ds : xarray.DataSet object
         A copy of the data set with the time coordinate set and which
         has been sliced.
-
-    Authors
-    -------
-    Xylar Asay-Davis, Phillip J. Wolfram
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Phillip J. Wolfram
 
     submap = variableMap
 
@@ -338,11 +347,11 @@ def _map_variable_name(variableName, ds, variableMap):  # {{{
     ValueError
         If none of the possible variable names in `variableMap[variableName]`
         can be found in `ds`.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     possibleVariables = variableMap[variableName]
     for variable in possibleVariables:
         if isinstance(variable, (list, tuple)):
@@ -386,11 +395,10 @@ def _rename_variables(ds, variableMap):  # {{{
     Returns
     -------
     outDataSEt : A new `xarray.DataSet` object with the variable renamed.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     renameDict = {}
     for datasetVariable in ds.data_vars:

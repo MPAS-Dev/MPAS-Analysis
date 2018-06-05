@@ -1,0 +1,1757 @@
+## This file contains the default values of all possible configuration options
+## used to run analysis tasks.  Do not modify options in this file direct.
+## Instead, follow this procedure:
+##  1. Create and empty config file (say config.myrun) or copy one of the
+##     example files in the configs directory.
+##  2. Copy and modify any config options you want to change from this file into
+##     into your new config file. Make sure they have the right section name
+##     (e.g. [run] or [output]). If nothing else, you will need to set
+##     baseDirectory under [output] to the folder where output should be stored.
+##  3. run: ./run_mpas_analysis config.myrun.  This will read the configuraiton
+##     first from this file and then replace that configuraiton with any
+##     changes from from config.myrun
+##  4. If you want to run a subset of the analysis, you can either set the
+##     generate option under [output] in your config file or use the
+##     --generate flag on the command line.  See the comments for 'generate'
+##     in the '[output]' section below for more details on this option.
+
+
+[runs]
+## options related to the run to be analyzed and reference runs to be
+## compared against
+
+# mainRunName is a name that identifies the simulation being analyzed.
+mainRunName = runName
+
+# preprocessedReferenceRunName is the name of a reference run that has been
+# preprocessed to compare against (or None to turn off comparison).  Reference
+# runs of this type would have preprocessed results because they were not
+# performed with MPAS components (so they cannot be easily ingested by
+# MPAS-Analysis)
+preprocessedReferenceRunName = None
+
+# config file for a reference run to which this run will be compared.  The
+# analysis should have already been run to completion once with this config
+# file, so that the relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid.  Leave this option commented out if no
+# reference run is desired.
+# referenceRunConfigFile = /path/to/config/file
+
+
+[execute]
+## options related to executing parallel tasks
+
+# the number of parallel tasks (1 means tasks run in serial, the default)
+parallelTaskCount = 1
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = serial
+
+
+[input]
+## options related to reading in the results to be analyzed
+
+# directory containing model results
+baseDirectory = /dir/for/model/output
+
+# Note: an absolute path can be supplied for any of these subdirectories.
+# A relative path is assumed to be relative to baseDirectory.
+# By default, results are assumed to be directly in baseDirectory,
+# i.e. <baseDirecory>/./
+
+# subdirectory containing restart files
+runSubdirectory = .
+# subdirectory for ocean history files
+oceanHistorySubdirectory = .
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = .
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpaso_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpassi_in
+seaIceStreamsFileName = streams.seaice
+
+# names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
+mpasMeshName = mesh
+
+# The system has a limit to how many files can be open at one time.  By
+# default, xarray attempts to open all files in a data set simultaneously.
+# A new option allows files to be automatically closed as a data set is being
+# read to prevent hitting this limit.  Here, you can set what fraction of the
+# system limit of open files an analysis task is allowed to use.  Note: In the
+# future when multiple tasks can run simultaneously, the system file limit will
+# first be divided among the tasks before applying this fraction.
+autocloseFileLimitFraction = 0.5
+
+# Large datasets can encounter a memory error.  Specification of a maximum
+# chunk size `maxChunkSize` can be helpful to prevent the memory error.  The
+# current maximum chunk size assumes approximately 64GB of ram and large files
+# with a single time slice.
+maxChunkSize = 10000
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+# mappingDirectory = /dir/for/mapping/files
+
+
+[output]
+## options related to writing out plots, intermediate cached data sets, logs,
+## etc.
+
+# directory where analysis should be written
+# NOTE: This directory path must be specific to each test case.
+baseDirectory = /dir/for/analysis/output
+
+# subdirectories within baseDirectory for analysis output
+plotsSubdirectory = plots
+logsSubdirectory = logs
+mpasClimatologySubdirectory = clim/mpas
+mappingSubdirectory = mapping
+timeSeriesSubdirectory = timeseries
+# provide an absolute path to put HTML in an alternative location (e.g. a web
+# portal)
+htmlSubdirectory = html
+
+# a list of analyses to generate.  Valid names can be seen by running:
+#   ./run_mpas_analysis --list
+# This command also lists tags for each analysis.
+# Shortcuts exist to generate (or not generate) several types of analysis.
+# These include:
+#   'all' -- all analyses will be run
+#   'all_publicObs' -- all analyses for which observations are availabe on the
+#                      public server (the default)
+#   'all_<tag>' -- all analysis with a particular tag will be run
+#   'all_<component>' -- all analyses from a given component (either 'ocean'
+#                        or 'seaIce') will be run
+#   'only_<component>', 'only_<tag>' -- all analysis from this component or
+#                                       with this tag will be run, and all
+#                                       analysis for other components or
+#                                       without the tag will be skipped
+#   'no_<task_name>' -- skip the given task
+#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
+#                                   tasks from the given compoonent or with
+#                                   the given tag.  Do
+#                                      ./run_mpas_analysis --list
+#                                   to list all task names and their tags
+# an equivalent syntax can be used on the command line to override this
+# option:
+#    ./run_mpas_analysis config.analysis --generate \
+#         only_ocean,no_timeSeries,timeSeriesSST
+generate = ['all_publicObs']
+
+
+[climatology]
+## options related to producing climatologies, typically to compare against
+## observations and previous runs
+
+# the year from which to compute anomalies if not the start year of the
+# simulation.  This might be useful if a long spin-up cycle is performed and
+# only the anomaly over a later span of years is of interest.
+# anomalyRefYear = 249
+
+# the first year over which to average climatalogies
+startYear = 11
+# the last year over which to average climatalogies
+endYear = 20
+
+# The comparison lat/lon grid resolution in degrees
+comparisonLatResolution = 0.5
+comparisonLonResolution = 0.5
+
+# The comparison Antarctic polar stereographic grid size and resolution in km
+comparisonAntarcticStereoWidth = 6000.
+comparisonAntarcticStereoResolution = 10.
+
+# interpolation order for model and observation results. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+mpasInterpolationMethod = bilinear
+
+# should remapping be performed with ncremap or with the Remapper class
+# directly in MPAS-Analysis
+useNcremap = True
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+
+[timeSeries]
+## options related to producing time series plots, often to compare against
+## observations and previous runs
+
+# the year from which to compute anomalies if not the start year of the
+# simulation.  This might be useful if a long spin-up cycle is performed and
+# only the anomaly over a later span of years is of interest.
+# anomalyRefYear = 249
+
+# start and end years for timeseries analysis. Using out-of-bounds values
+#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
+#   of years, and is a good way of insuring that all values are used.
+startYear = 1
+endYear = 9999
+
+
+[index]
+## options related to producing nino index.
+
+# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
+#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
+#   of years, and is a good way of insuring that all values are used.
+# For valid statistics, index times should include at least 30 years
+startYear = 1
+endYear = 9999
+
+
+[regions]
+## options related to ocean regions used in several analysis modules
+
+# list of region names (needs to be in the same order as region indices in
+# time-series stats)
+regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
+# list of plot titles (needs to be in the same order as region indices in
+# time-series stats)
+plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
+              'Nino 4', 'Nino 3.4', 'Global Ocean']
+
+# Directory for region mask files
+regionMaskDirectory = /path/to/masks/
+
+
+[plot]
+## options related to plotting that are the defaults across all analysis
+## modules
+
+# title and axis font properties for single-panel plots
+titleFontSize = 20
+titleFontColor = black
+titleFontWeight = normal
+axisFontSize = 16
+
+# title and axis font properties for three-panel plots
+threePanelTitleFontSize = 20
+threePanelPlotTitleFontSize = 16
+threePanelTitleFontColor = black
+threePanelTitleFontWeight = normal
+threePanelAxisFontSize = 12
+
+# the dots per inch of output figures
+dpi = 200
+
+
+[html]
+## options related to generating a webpage to display the analysis
+
+# generate the webpage?
+generate = True
+
+
+[oceanObservations]
+## options related to ocean observations with which the results will be compared
+
+# directory where ocean observations are stored
+baseDirectory = /dir/to/ocean/observations
+sstSubdirectory = SST
+sssSubdirectory = SSS
+mldSubdirectory = MLD
+ninoSubdirectory = Nino
+mhtSubdirectory = MHT
+meltSubdirectory = Melt
+soseSubdirectory = SOSE
+sshSubdirectory = SSH
+argoSubdirectory = ARGO
+schmidtkoSubdirectory = Schmidtko
+woceSubdirectory = WOCE
+
+# interpolation order for observations. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+interpolationMethod = bilinear
+
+# The directories where observation climatologies will be stored if they need
+# to be computed.  If a relative path is supplied, it is relative to the output
+# base directory.  If an absolute path is supplied, this should point to
+# cached climatology files on the desired comparison grid.  If cached remapped
+# files are supplied, there is no need to provide cached files before
+# remapping.
+climatologySubdirectory = clim/obs
+remappedClimSubdirectory = clim/obs/remapped
+
+
+[oceanPreprocessedReference]
+## options related to preprocessed ocean reference run with which the results
+## will be compared (e.g. a POP, CESM or ACME v0 run)
+
+# directory where ocean reference simulation results are stored
+baseDirectory = /dir/to/ocean/reference
+
+
+[seaIceObservations]
+## options related to sea ice observations with which the results will be
+## compared
+
+# directory where sea ice observations are stored
+baseDirectory = /dir/to/seaice/observations
+
+# interpolation order for observations. Likely values are
+#   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
+interpolationMethod = bilinear
+
+# The directories where observation climatologies will be stored if they need
+# to be computed.  If a relative path is supplied, it is relative to the output
+# base directory.  If an absolute path is supplied, this should point to
+# cached climatology files on the desired comparison grid.  If cached remapped
+# files are supplied, there is no need to provide cached files before
+# remapping.
+climatologySubdirectory = clim/obs
+remappedClimSubdirectory = clim/obs/remapped
+
+[seaIcePreprocessedReference]
+## options related to preprocessed sea ice reference run with which the results
+## will be compared (e.g. a CICE, CESM or ACME v0 run)
+
+# directory where ocean reference simulation results are stored
+baseDirectory = /dir/to/seaice/reference
+
+
+[timeSeriesOHCAnomaly]
+## options related to plotting time series of ocean heat content (OHC)
+## anomalies from year 1
+
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
+
+# approximate depths (m) separating plots of the upper, middle and lower ocean
+depths = [700, 2000]
+
+# preprocessed file prefix, with format OHC.<preprocessedRunName>.year*.nc
+preprocessedFilePrefix = OHC
+
+# prefix on preprocessed field name, with format ohc_<suffix> for suffixes
+# 'tot', '700m', '2000m', 'btm'
+preprocessedFieldPrefix = ohc
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+# yearStrideXTicks = 1
+
+
+[hovmollerOHCAnomaly]
+## options related to time vs. depth Hovmoller plots of ocean heat content
+## (OHC) anomalies from year 1
+
+# Note: regions and moving average points are the same as for the time series
+# plot
+
+# colormap
+colormapName = balance
+# colormap indices for contour color
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
+# contour line levels
+contourLevels = np.arange(-2.5, 2.6, 0.5)
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+# yearStrideXTicks = 1
+
+
+[hovmollerTemperatureAnomaly]
+## options related to plotting time series of potential temperature vs. depth
+
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# colormap
+colormapName = balance
+# color indices into colormapName for filled contours
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
+# contour line levels
+contourLevels = np.arange(-1.0, 1.26, 0.25)
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+
+[hovmollerSalinityAnomaly]
+## options related to plotting time series of salinity vs. depth
+
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# colormap
+colormapName = balance
+# color indices into colormapName for filled contours
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+# contour line levels
+contourLevels = np.arange(-0.1, 0.11, 0.02)
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+
+[timeSeriesSST]
+## options related to plotting time series of sea surface temperature (SST)
+
+# list of regions to plot from the region list in [regions] below
+regions = ['global']
+
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+
+[indexNino34]
+## options related to plotting time series of the El Nino 3.4 index (or
+## optionally El Nino 3 or 4 index)
+
+# Specified region for the Nino Index,'nino3', 'nino4', or 'nino3.4'
+# The indexNino34 routine only accepts one value at a time
+region = nino3.4
+
+# Data source to read for comparison.  There are two options
+# 1 - ERS_SSTv4 -- Extended Reconstructed Sea Surface Temperature -- 1854 - 2016
+# 2 - HADIsst -- Hadley Center analysis -- 1870 - 2016
+observationData = HADIsst
+
+
+[meridionalHeatTransport]
+## options related to plotting meridional heat transport (MHT)
+
+# Data source to read for comparison
+observationData = mht_TrenberthCaron.NoAtm.nc
+
+# colormap for model results
+colormapName = balance
+# colormap indices for contour color
+colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevels = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
+# contour line levels
+contourLevels = [-0.1, -0.01, 0.01, 0.1]
+
+# latitude and depth limits
+xLimGlobal = [-80, 80]
+depthLimGlobal = [-1000, 0]
+
+# compare to observations?
+compareWithObservations = True
+
+# plot the vertical section of MHT?
+plotVerticalSection = False
+
+# Number of points over which to compute moving average (with respect to latitude)
+# for MHT vertical section plots
+movingAveragePoints = 1
+
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning
+## circulation (MOC)
+
+# Include the bolus velocity from the Gent-McWilliams parameterization?  This
+# only needs to be disabled if the simulation was run with GM turned on but
+# the MOC shouldn't include the bolus term
+includeBolus = True
+
+# Region names for basin MOC calculation.
+# Supported options are Atlantic and IndoPacific
+regionNames = ['Atlantic']
+
+# Size of latitude bins over which MOC streamfunction is integrated
+latBinSizeGlobal = 1.
+latBinSizeAtlantic = 0.5
+latBinSizeIndoPacific = 0.5
+
+# colormap for model results
+colormapNameGlobal = RdYlBu_r
+colormapNameAtlantic = RdYlBu_r
+colormapNameIndoPacific = RdYlBu_r
+# colormap indices for contour color
+colormapIndicesGlobal = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesAtlantic = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesIndoPacific = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
+colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels
+contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
+contourLevelsAtlantic = np.arange(-8, 20.1, 2)
+contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
+
+# Number of points over which to compute moving average for
+# MOC timeseries (e.g., for monthly output, movingAveragePoints=12
+# corresponds to a 12-month moving average window)
+movingAveragePoints = 12
+
+# Number of points over which to compute moving average (with respect to
+# latitude) for climatological MOC plots
+movingAveragePointsClimatological = 1
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+
+[climatologyMapSST]
+## options related to plotting horizontally remapped climatologies of
+## sea surface temperature (SST) against reference model results and
+## observations
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# first and last year of SST observational climatology (preferably one of the
+# two ranges given below)
+# values for preindustrial
+obsStartYear = 1870
+obsEndYear = 1900
+# alternative values for present day
+#obsStartYear = 1990
+#obsEndYear = 2011
+
+
+[climatologyMapSSS]
+## options related to plotting horizontally remapped climatologies of
+## sea surface salinity (SSS) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = haline
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [28, 29, 30, 31, 32, 33, 34, 35, 36, 38]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-3, -2, -1, -0.5, -0.02, 0,  0.02, 0.5, 1, 2, 3]
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+
+[climatologyMapMLD]
+## options related to plotting horizontally remapped climatologies of
+## mixed layer depth (MLD) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = viridis
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+
+[climatologyMapSSH]
+## options related to plotting horizontally remapped climatologies of
+## sea surface height (SSH) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = Maximenko
+# color indices into colormapName for filled contours
+colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = numpy.arange(-240., 130., 10.)
+# colormap levels/values for ticks (defaults to same as levels)
+colorbarTicksResult = numpy.arange(-240., 160., 40.)
+
+# contour line levels
+contourLevelsResult = numpy.arange(-240., 130., 10.)
+# contour line thickness
+contourThicknessResult = 0.25
+# contour color
+contourColorResult = 0.25
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185, 209, 232, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-100., -80., -60., -40., -20., -10., 0., 10., 20.,  40.,  60.,  80.,  100.]
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+
+[climatologyMapOHCAnomaly]
+## options related to plotting horizontally remapped climatologies of
+## ocean heat content (OHC) against reference model results (if available)
+
+# colormap for model/observations
+colormapNameResult = BuOr
+# color indices into colormapName for filled contours
+colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = numpy.linspace(-12., 12., 37)
+# colormap levels/values for ticks (defaults to same as levels)
+colorbarTicksResult = numpy.linspace(-12., 12., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = numpy.array(numpy.linspace(0, 255, 9), int)
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = numpy.linspace(-2., 2., 10)
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# A list of pairs of minimum and maximum depths (positive up, in meters) to
+# include in the vertical sums.  The default values are the equivalents of the
+# default ranges of the timeSeriesOHCAnomaly task, with a value of -10,000 m
+# intended to be well below the bottom of the ocean for all existing MPAS-O
+# meshes.
+depthRanges = [(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -10000.0)]
+
+
+[climatologyMapAntarcticMelt]
+## options related to plotting horizontally regridded maps of Antarctic
+## sub-ice-shelf melt rates against reference model results and observations
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# colormap for model/observations
+colormapNameResult = erdc_iceFire_H
+# the type of norm used in the colormap
+normTypeResult = symLog
+# A dictionary with keywords for the norm
+normArgsResult = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                  'vmax': 100.}
+colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,
+                       10., 20., 50., 100.]
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = symLog
+# A dictionary with keywords for the norm
+normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
+                      'vmax': 100.}
+colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
+                           5., 10., 20., 50., 100.]
+
+
+[timeSeriesAntarcticMelt]
+## options related to plotting time series of melt below Antarctic ice shelves
+
+# list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
+# See "regionNames" in the ice shelf masks file in regionMaskDirectory for
+# details.
+iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
+                    'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
+                    'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
+                    'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                    'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
+
+# Number of months over which to compute moving average
+movingAverageMonths = 1
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+
+[climatologyMapSoseTemperature]
+## options related to plotting climatology maps of Antarctic
+## potential temperature at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[climatologyMapArgoTemperature]
+## options related to plotting climatology maps of Global
+## potential temperature at various levels against
+## reference model results and Roemmich-Gilson Argo Climatology
+
+# comparison grid(s)
+comparisonGrids = ['latlon']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JAS','JFM']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface.  Argo data is only available above -2000 m
+depths = ['top', -25, -50, -100, -150, -200, -400, -800, -1500]
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[climatologyMapSoseSalinity]
+## options related to plotting climatology maps of Antarctic
+## salinity at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+
+[climatologyMapArgoSalinity]
+## options related to plotting climatology maps of Global
+## salinity at various levels against
+## reference model results and the Roemmich-Gilson Argo Climatology
+
+# comparison grid(s)
+comparisonGrids = ['latlon']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface.  Argo data is only available above -2000 m
+depths = ['top', -25, -50, -100, -150, -200, -400, -600, -800, -1500]
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+
+[climatologyMapSosePotentialDensity]
+## options related to plotting climatology maps of Antarctic
+## potential density at various levels, including the sea floor against
+## reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[climatologyMapSoseMLD]
+## options related to plotting climatology maps of Antarctic
+## mixed layer depth against reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# colormap for model/observations
+colormapNameResult = viridis
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = log
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 10., 'vmax': 300.}
+# specify the ticks
+colorbarTicksResult = [10, 20, 40, 60, 80, 100, 200, 300]
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = symLog
+# A dictionary with keywords for the norm
+normArgsDifference = {'linthresh': 10., 'linscale': 0.5, 'vmin': -200.,
+                      'vmax': 200.}
+colorbarTicksDifference = [-200., -100., -50., -20., -10., 0., 10., 20., 50., 100., 200.]
+
+
+[climatologyMapSoseZonalVel]
+## options related to plotting climatology maps of Antarctic
+## zonal velocity against reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[climatologyMapSoseMeridVel]
+## options related to plotting climatology maps of Antarctic
+## meridional against reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[climatologyMapSoseVelMag]
+## options related to plotting climatology maps of Antarctic
+## meridional against reference model results and SOSE reanalysis data
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface, 'bot' for the sea floor
+depths = ['top', -200, -400, -600, -800, 'bot']
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 0, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(0, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[climatologyMapSchmidtko]
+## options related to plotting climatology maps of Antarctic fields at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# comparison grid(s)
+# only the Antarctic really makes sense but lat-lon could technically work.
+comparisonGrids = ['antarctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+
+[climatologyMapSchmidtkoTemperature]
+## options related to plotting climatology maps of potential temperature at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[climatologyMapSchmidtkoSalinity]
+## options related to plotting climatology maps of salinity at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(33.8, 35.0, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+
+[climatologyMapSchmidtkoPotentialDensity]
+## options related to plotting climatology maps of potential density at the
+## seafloor and comparing them against data from Schmidtko et al. (2014)
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026.5, 1028., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[woceTransects]
+## options related to plotting model vs. World Ocean Circulation Experiment
+## (WOCE) transects.
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# The approximate horizontal resolution (in km) of each transect.  Latitude/
+# longitude between observation points will be subsampled at this interval.
+# Use 'obs' to indicate no subsampling.
+# horizontalResolution = obs
+horizontalResolution = 5
+
+# The name of the vertical comparison grid.  Valid values are 'mpas' for the
+# MPAS vertical grid, 'obs' to use the locations of observations or
+# any other name if the vertical grid is defined by 'verticalComparisonGrid'
+# verticalComparisonGridName = mpas
+# verticalComparisonGridName = obs
+verticalComparisonGridName = uniform_0_to_4000m_at_10m
+
+# The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
+# 'obs'.  This should be numpy array of (typically negative) elevations (in m).
+verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+
+[woceTemperatureTransects]
+## options related to plotting WOCE transects of potential temperature
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap (linear, log, or symLog)
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 0.0, 'vmax': 18.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(0.0, 18.0, 9)
+# contour line levels
+contourLevelsResult = np.arange(1.0, 18.0, 2.0)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap (linear, log, or symLog)
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
+# color indices into colormapName for filled contours
+#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
+# contour line levels
+contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
+
+
+
+[woceSalinityTransects]
+## options related to plotting WOCE transects of salinity
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap (linear, log, or symLog)
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 33.0, 'vmax': 36.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [33, 34, 34.25, 34.5, 34.6, 34.7, 34.8, 34.9, 35, 36]
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(33.0, 36.0, 9)
+# contour line levels
+contourLevelsResult = np.arange(33.3, 36.0, 0.3)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap (linear, log, or symLog)
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -1.0, 'vmax': 1.0}
+# color indices into colormapName for filled contours
+#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsDifference = [-1, -0.5, -0.2, -0.05, -0.02, 0,  0.02, 0.05, 0.2, 0.5, 1]
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-1.0, 1.0, 9)
+# contour line levels
+contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
+
+
+[geojsonTransects]
+## options related to plotting model transects at points determined by a
+## geojson file.  To generate your own geojson file, go to:
+##   http://geojson.io/
+## and draw one or more polylines, then add a name to each:
+##
+##      "properties": {
+##        "name": "My Favorite Name"
+##      },
+## and save the file as GeoJSON (say transects.geojson).  Finally, set the
+## option:
+##      geojsonFiles = ['transects.geojson']
+## (giving an absolute path if necessary) in your custom config file.
+
+# a list of geojson files containing lat/lon points in LineStrings to be
+# plotted.  If relative paths are given, they are relative to the current
+# working directory.  The files must be listed in quotes, e.g.:
+# geojsonFiles = ['file1.geojson', '/path/to/file2.geojson']
+geojsonFiles = []
+
+# a list of dictionaries for each field to plot.  The dictionary includes
+# prefix (used for file names, task names and sections) as well as the mpas
+# name of the field, units for colorbars and a the name as it should appear
+# in figure titles and captions.
+fields =
+    [{'prefix': 'temperature',
+      'mpas': 'timeMonthly_avg_activeTracers_temperature',
+      'units': r'$\degree$C',
+      'titleName': 'Potential Temperature'},
+     {'prefix': 'salinity',
+      'mpas': 'timeMonthly_avg_activeTracers_salinity',
+      'units': r'PSU',
+      'titleName': 'Salinity'},
+     {'prefix': 'potentialDensity',
+      'mpas': 'timeMonthly_avg_potentialDensity',
+      'units': r'kg m$^{-3}$',
+      'titleName': 'Potential Density'},
+     {'prefix': 'zonalVelocity',
+      'mpas': 'timeMonthly_avg_velocityZonal',
+      'units': r'm s$^{-1}$',
+      'titleName': 'Zonal Velocity'},
+     {'prefix': 'meridionalVelocity',
+      'mpas': 'timeMonthly_avg_velocityMeridional',
+      'units': r'm s$^{-1}$',
+      'titleName': 'Meridional Velocity'}]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# The approximate horizontal resolution (in km) of each transect.  Latitude/
+# longitude between observation points will be subsampled at this interval.
+# Use 'obs' to indicate no subsampling.
+horizontalResolution = 5
+
+# The name of the vertical comparison grid.  Valid values are 'mpas' for the
+# MPAS vertical grid or any other name if the vertical grid is defined by
+# 'verticalComparisonGrid'
+#verticalComparisonGridName = mpas
+verticalComparisonGridName = uniform_0_to_4000m_at_10m
+
+# The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas'.
+# This should be numpy array of (typically negative) elevations (in m).
+verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+
+[geojsonTemperatureTransects]
+## options related to plotting geojson transects of potential temperature
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[geojsonSalinityTransects]
+## options related to plotting geojson transects of salinity
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the SemiLogNorm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+
+
+[geojsonPotentialDensityTransects]
+## options related to plotting geojson transects of potential density
+
+# colormap for model/observations
+colormapNameResult = Spectral_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+[geojsonZonalVelocityTransects]
+## options related to plotting geojson transects of zonal velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[geojsonMeridionalVelocityTransects]
+## options related to plotting geojson transects of meridional velocity
+
+# colormap for model/observations
+colormapNameResult = delta
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+# determine the ticks automatically by default, uncomment to specify
+# colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[soseTransects]
+## options related to plotting model vs. Southern Ocean State Estimate (SOSE)
+## transects.
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
+
+# The approximate horizontal resolution (in km) of each transect.  Latitude/
+# longitude between observation points will be subsampled at this interval.
+# Use 'obs' to indicate no subsampling.
+# horizontalResolution = obs
+horizontalResolution = 5
+
+# The name of the vertical comparison grid.  Valid values are 'mpas' for the
+# MPAS vertical grid, 'obs' to use the locations of observations or
+# any other name if the vertical grid is defined by 'verticalComparisonGrid'
+# verticalComparisonGridName = mpas
+# verticalComparisonGridName = obs
+verticalComparisonGridName = uniform_0_to_4000m_at_10m
+
+# The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
+# 'obs'.  This should be numpy array of (typically negative) elevations (in m).
+verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+
+# The minimum weight of a destination cell after remapping. Any cell with
+# weights lower than this threshold will therefore be masked out.
+renormalizationThreshold = 0.01
+
+# min and max latitude of transects
+minLat = -80
+maxLat = -60
+
+# longitudes of transects
+longitudes = numpy.linspace(0, 330, 12)
+
+
+[soseTemperatureTransects]
+## options related to plotting WOCE transects of potential temperature
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6]
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(0.0, 6.0, 9)
+# contour line levels
+contourLevelsResult = np.arange(0.5, 6.0, 1.0)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
+# color indices into colormapName for filled contours
+#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
+# contour line levels
+contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
+
+
+[soseSalinityTransects]
+## options related to plotting WOCE transects of salinity
+
+# colormap for model/observations
+colormapNameResult = haline
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
+# color indices into colormapName for filled contours
+#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.0, 35.0, 9)
+# contour line levels
+contourLevelsResult = np.arange(34.1, 35.0, 0.1)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# color indices into colormapName for filled contours
+#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+#colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+# contour line levels
+contourLevelsDifference = np.arange(-0.6, 0.5, 0.1)
+
+
+[climatologyMapSeaIceConcNH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice concentration against reference model results and observations
+## in the northern hemisphere (NH)
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.]
+
+# Months or seasons to plot (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['JFM', 'JAS']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+# arrange subplots vertically?
+vertical = False
+
+# observations files
+concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
+concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
+
+
+[climatologyMapSeaIceConcSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice concentration against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.]
+
+# Months or seasons to plot (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['DJF', 'JJA']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['NASATeam', 'Bootstrap']
+
+# arrange subplots vertically?
+vertical = False
+
+# observations files
+concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
+concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
+concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
+
+
+[climatologyMapSeaIceThickNH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the northern hemisphere (NH)
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
+
+# Months or seasons to plot (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = 50
+referenceLongitude = 0
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
+
+# arrange subplots vertically?
+vertical = False
+
+# observations files
+thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
+thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+
+
+[climatologyMapSeaIceThickSH]
+## options related to plotting horizontally remapped climatologies of
+## sea ice thickness against reference model results and observations
+## in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
+
+# colormap for differences
+colormapNameDifference = balance
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
+
+# Months or seasons to plot (These should be left unchanged, since
+# observations are only available for these seasons)
+seasons =  ['FM', 'ON']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# a list of prefixes describing the sources of the observations to be used
+observationPrefixes = ['']
+
+# arrange subplots vertically?
+vertical = False
+
+# observations files
+thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
+thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
+
+
+[timeSeriesSeaIceAreaVol]
+## options related to plotting time series of sea ice area and volume
+
+# compare to observations?
+compareWithObservations = True
+# Number of points over which to compute moving average (e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 1
+# title font properties
+titleFontSize = 18
+# plot on polar plot
+polarPlot = False
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+# yearStrideXTicks = 1
+
+# observations files
+areaNH = IceArea_timeseries/iceAreaNH_climo.nc
+areaSH = IceArea_timeseries/iceAreaSH_climo.nc
+volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+volSH = none

@@ -6,18 +6,21 @@ dependencies:
   - pytest
   - numpy
   - scipy
-  - lxml
-  - xarray
   - matplotlib
-  - dask
   - netcdf4
+  - xarray
+  - dask
+  - bottleneck
+  - basemap
+  - lxml
   - hdf5
   - hdf4
   - nco
   - pyproj
   - pillow
+  - cmocean
   - sphinx
   - sphinx_rtd_theme
   - numpydoc
-  - pip:
-    - recommonmark
+  - tabulate >= 0.8.2
+  - recommonmark

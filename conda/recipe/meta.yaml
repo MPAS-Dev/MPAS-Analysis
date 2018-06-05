@@ -1,0 +1,50 @@
+{% set version = "0.7.5" %}
+
+package:
+    name: mpas_analysis
+    version: {{ version }}
+
+source:
+    path: ../..
+
+build:
+    number: 0
+
+test:
+    requires:
+        - pytest
+    imports:
+        - mpas_analysis
+        - pytest
+    commands:
+        - pytest --pyargs mpas_analysis
+
+requirements:
+    build:
+        - python
+        - setuptools
+    run:
+        - python
+        - numpy
+        - scipy
+        - matplotlib
+        - netcdf4
+        - xarray >=0.10.0
+        - dask
+        - bottleneck
+        - basemap
+        - lxml
+        - nco >=4.7.0
+        - pillow
+        - cmocean
+        - progressbar2
+        - requests
+
+about:
+    home:  http://gitub.com/MPAS-Dev/MPAS-Analysis
+
+extra:
+    recipe-maintainers:
+        - doutriaux1
+        - xylar
+

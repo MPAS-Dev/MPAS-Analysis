@@ -11,14 +11,33 @@ mainRunName = MPAS-SeaIce.QU60km_polar
 # MPAS-Analysis)
 preprocessedReferenceRunName = B1850C5_ne30_v0.4
 
+# config file for a reference run to which this run will be compared.  The
+# analysis should have already been run to completion once with this config
+# file, so that the relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid.  Leave this option commented out if no
+# reference run is desired.
+# referenceRunConfigFile = /path/to/config/file
+
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
 baseDirectory = /net/scratch2/akt/MPAS/rundirs/rundir_QU60km_polar
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = QU60
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+# mappingDirectory = /dir/for/mapping/files
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpas-o_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpas-cice_in
+seaIceStreamsFileName = streams.cice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -27,37 +46,28 @@ mpasMeshName = QU60
 # directory where analysis should be written
 baseDirectory = /dir/to/analysis/output
 
-# a list of analyses to generate.  Valid names are:
-#   'timeSeriesOHC', 'timeSeriesSST', 'climatologyMapSST',
-#   'climatologyMapSSS', 'climatologyMapMLD', 'streamfunctionMOC',
-#   'indexNino34', 'meridionalHeatTransport',
-#   'timeSeriesSeaIceAreaVol', 'climatologyMapSeaIceConcNH', 
-#   'climatologyMapSeaIceConcSH', 'climatologyMapSeaIceThickNH', 
-#   'climatologyMapSeaIceThickSH'
-# the following shortcuts exist:
+# a list of analyses to generate.  Valid names can be seen by running:
+#   ./run_mpas_analysis --list
+# This command also lists tags for each analysis.
+# Shortcuts exist to generate (or not generate) several types of analysis.
+# These include:
 #   'all' -- all analyses will be run
-#   'all_timeSeries' -- all time-series analyses will be run
-#   'all_climatology' -- all analyses involving climatologies
-#   'all_horizontalMap' -- all analyses involving horizontal climatology maps
-#   'all_ocean' -- all ocean analyses will be run
-#   'all_seaIce' -- all sea-ice analyses will be run
-#   'no_timeSeriesOHC' -- skip 'timeSeriesOHC' (and similarly with the
-#                             other analyses).
-#   'no_ocean', 'no_timeSeries', etc. -- in analogy to 'all_*', skip the
-#                                            given category of analysis
+#   'all_<tag>' -- all analysis with a particular tag will be run
+#   'all_<component>' -- all analyses from a given component (either 'ocean'
+#                        or 'seaIce') will be run
+#   'only_<component>', 'only_<tag>' -- all analysis from this component or
+#                                       with this tag will be run, and all
+#                                       analysis for other components or
+#                                       without the tag will be skipped
+#   'no_<task_name>' -- skip the given task
+#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
+#                                   tasks from the given compoonent or with
+#                                   the given tag
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_analysis.py config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 generate = ['all_seaIce']
-
-# alternative examples that would perform all analysis except
-#   'timeSeriesOHC'
-#generate = ['all', 'no_timeSeriesOHC']
-# Each subsequent list entry can be used to alter previous list entries. For
-# example, the following would run all tasks that aren't ocean analyses,
-# except that it would also run ocean time series tasks:
-#generate = ['all', 'no_ocean', 'all_timeSeries']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

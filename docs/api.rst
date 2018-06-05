@@ -6,18 +6,17 @@ This page provides an auto-generated summary of the MPAS-Analysis API. For
 more details and examples, refer to the relevant chapters in the main part of
 the documentation.
 
-Top-level script: run_analysis.py
-=================================
+Top-level script: run_mpas_analysis
+===================================
 .. autosummary::
    :toctree: generated/
 
-   run_analysis.update_generate
-   run_analysis.run_parallel_tasks
-   run_analysis.launch_tasks
-   run_analysis.wait_for_task
-   run_analysis.is_running
-   run_analysis.build_analysis_list
-   run_analysis.run_analysis
+   run_mpas_analysis.build_analysis_list
+   run_mpas_analysis.determine_analyses_to_generate
+   run_mpas_analysis.add_task_and_subtasks
+   run_mpas_analysis.update_generate
+   run_mpas_analysis.run_analysis
+   run_mpas_analysis.wait_for_task
 
 
 Analysis tasks
@@ -33,6 +32,9 @@ Base Class
 
    AnalysisTask
    AnalysisTask.setup_and_check
+   AnalysisTask.run_task
+   AnalysisTask.run_after
+   AnalysisTask.add_subtask
    AnalysisTask.run
    AnalysisTask.check_generate
    AnalysisTask.check_analysis_enabled
@@ -49,11 +51,55 @@ Ocean tasks
    ClimatologyMapSST
    ClimatologyMapSSS
    ClimatologyMapMLD
+   ClimatologyMapSSH
+   ClimatologyMapOHCAnomaly
+   ClimatologyMapAntarcticMelt
+   ClimatologyMapSoseTemperature
+   ClimatologyMapSoseSalinity
+   ClimatologyMapSoseMLD
+   ClimatologyMapSoseZonalVel
+   ClimatologyMapSoseMeridVel
+   ClimatologyMapSoseVelMag
+   ClimatologyMapArgoTemperature
+   ClimatologyMapArgoSalinity
    IndexNino34
    MeridionalHeatTransport
    StreamfunctionMOC
-   TimeSeriesOHC
+   TimeSeriesOHCAnomaly
+   TimeSeriesTemperatureAnomaly
+   TimeSeriesSalinityAnomaly
    TimeSeriesSST
+   TimeSeriesAntarcticMelt
+
+.. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   ComputeAnomalySubtask
+
+.. currentmodule:: mpas_analysis.ocean.plot_climatology_map_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotClimatologyMapSubtask
+   PlotClimatologyMapSubtask.set_plot_info
+
+.. currentmodule:: mpas_analysis.ocean.plot_depth_integrated_time_series_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotDepthIntegratedTimeSeriesSubtask
+
+.. currentmodule:: mpas_analysis.ocean.plot_hovmoller_subtask
+
+.. autosummary::
+   :toctree: generated/
+
+   PlotHovmollerSubtask
+
 
 Sea ice tasks
 -------------
@@ -67,14 +113,23 @@ Sea ice tasks
    ClimatologyMapSeaIceThick
    TimeSeriesSeaIce
 
-
-Configuration
-==============
-.. currentmodule:: mpas_analysis.configuration.MpasAnalysisConfigParser
+.. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
 
 .. autosummary::
    :toctree: generated/
 
+   PlotClimatologyMapSubtask
+   PlotClimatologyMapSubtask.set_plot_info
+
+
+Configuration
+==============
+.. currentmodule:: mpas_analysis.configuration
+
+.. autosummary::
+   :toctree: generated/
+
+   MpasAnalysisConfigParser
    MpasAnalysisConfigParser.getWithDefault
    MpasAnalysisConfigParser.getExpression
 
@@ -84,6 +139,13 @@ Shared modules
 
 Reading MPAS Datasets
 ---------------------
+.. currentmodule:: mpas_analysis.shared.io
+
+.. autosummary::
+   :toctree: generated/
+
+   open_mpas_dataset
+
 .. currentmodule:: mpas_analysis.shared.mpas_xarray
 
 .. autosummary::
@@ -109,17 +171,29 @@ Climatology
 .. autosummary::
    :toctree: generated/
 
-   get_lat_lon_comparison_descriptor
+   get_comparison_descriptor
+   get_antarctic_stereographic_projection
    get_remapper
-   get_mpas_climatology_dir_name
-   get_observation_climatology_file_names
    compute_monthly_climatology
    compute_climatology
-   cache_climatologies
-   update_climatology_bounds_from_file_names
    add_years_months_days_in_month
-   remap_and_write_climatology
-   compute_climatologies_with_ncclimo
+   get_unmasked_mpas_climatology_directory
+   get_unmasked_mpas_climatology_file_name
+   get_masked_mpas_climatology_file_name
+   get_remapped_mpas_climatology_file_name
+
+   MpasClimatologyTask
+   MpasClimatologyTask.add_variables
+   MpasClimatologyTask.get_file_name
+
+   RemapMpasClimatologySubtask
+   RemapMpasClimatologySubtask.get_masked_file_name
+   RemapMpasClimatologySubtask.get_remapped_file_name
+
+   RemapObservedClimatologySubtask
+   RemapObservedClimatologySubtask.get_observation_descriptor
+   RemapObservedClimatologySubtask.build_observational_dataset
+   RemapObservedClimatologySubtask.get_file_name
 
 Time Series
 -----------
@@ -129,7 +203,10 @@ Time Series
    :toctree: generated/
 
     cache_time_series
+    compute_moving_avg_anomaly_from_start
+    compute_moving_avg
 
+    MpasTimeSeriesTask
 
 Interpolation
 -------------
@@ -200,7 +277,6 @@ Plotting
    plotting.plot_1D
    plotting.plot_vertical_section
    plotting.setup_colormap
-   plotting.plot_size_y_axis
    plotting.plot_xtick_format
 
 

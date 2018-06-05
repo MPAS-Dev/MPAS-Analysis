@@ -1,53 +1,69 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import pkg_resources
 from os import makedirs
 from shutil import copyfile
 from lxml import etree
 from collections import OrderedDict
 
-from ..io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path
 
 
-def generate_html(config, analyses):  # {{{
+def generate_html(config, analyses, refConfig=None):  # {{{
     """
     Generates webpages for diplaying the plots from each analysis task
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
+    config : ``MpasAnalysisConfigParser``
+        Config options
 
-    analysis : list of ``AnalysisTask`` objects
+    analysis : ``OrderedDict`` of ``AnalysisTask`` objects
         the analysis tasks that generated the plots to include in the webpages.
         The ``list_xml_files()`` method will be called on each task to get
         the list of files to include on the webpage for the associated
         component.
 
-    Authors
-    -------
-    Xylar Asay-Davis
+    refConfig : ``MpasAnalysisConfigParser``, optional
+        Config options for a reference run
+
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
     generateHTML = config.getboolean('html', 'generate')
     if not generateHTML:
         return
 
-    print "Generating webpage for viewing results..."
+    print("Generating webpage for viewing results...")
 
-    page = MainPage(config)
+    page = MainPage(config, refConfig)
 
     components = OrderedDict()
 
     # add images from each analysis task, creating ga dictionary of components
     missingCount = 0
-    for analysisTask in analyses:
+    for analysisTask in analyses.values():
         for fileName in analysisTask.xmlFileNames:
             try:
-                ComponentPage.add_image(fileName, config, components)
+                ComponentPage.add_image(fileName, config, components,
+                                        refConfig)
             except IOError:
                 missingCount += 1
 
     if missingCount > 0:
-        print 'Warning: {} XML files were missing and the analysis website' \
-              ' will be incomplete.'.format(missingCount)
+        print('Warning: {} XML files were missing and the analysis website'
+              ' will be incomplete.'.format(missingCount))
     # generate the page for each component and add the component to the main
     # page
     for componentName, component in components.items():
@@ -67,8 +83,11 @@ class MainPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
+    config : ``MpasAnalysisConfigParser``
+        Config options
+
+    refConfig : ``MpasAnalysisConfigParser``
+        Config options for a reference run
 
     pageTemplate, componentTemplate : str
         The contents of templates used to construct the page
@@ -76,26 +95,29 @@ class MainPage(object):
     components : OrederdDict of dict
         Each component has a name, subdirectory and image name used to find
         the appropriate thumbnail.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
-    def __init__(self, config):
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, config, refConfig=None):
         """
         Create a MainPage object, reading in the templates
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser`` object
-            contains config options
+        config : ``MpasAnalysisConfigParser``
+            Config options
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a reference run
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.config = config
+        self.refConfig = refConfig
 
         # get template text
         fileName = \
@@ -132,11 +154,11 @@ class MainPage(object):
             The name of an image file (without path) that will be used as the
             thumbnail for the gallery.  Typically, this is the first image
             from the first gallery.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         self.components[name] = {'subdirectory': subdirectory,
                                  'imageFileName': imageFileName}
 
@@ -144,12 +166,18 @@ class MainPage(object):
         """
         Generate the webpage from templates and components, and write it out to
         the HTML directory.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         runName = self.config.get('runs', 'mainRunName')
+
+        if self.refConfig is None:
+            refRunText = ''
+        else:
+            refRunText = '<br> Ref: {}'.format(
+                    self.refConfig.get('runs', 'mainRunName'))
 
         componentsText = ''
 
@@ -166,6 +194,7 @@ class MainPage(object):
                 _replace_tempate_text(self.componentTemplate, replacements)
 
         replacements = {'@runName': runName,
+                        '@refRunText': refRunText,
                         '@components': componentsText}
 
         pageText = _replace_tempate_text(self.pageTemplate, replacements)
@@ -181,10 +210,12 @@ class MainPage(object):
 
         outFileName = '{}/index.html'.format(htmlBaseDirectory)
 
-        with open(outFileName, 'w') as mainFile:
-            mainFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
+        with open(outFileName, mode='w') as mainFile:
+            mainFile.write(
+                    pageText.encode('ascii',
+                                    'xmlcharrefreplace').decode('ascii'))
 
-        # copy the css and js files
+        # copy the css and js files as well as general images
         fileName = \
             pkg_resources.resource_filename(__name__,
                                             "templates/style.css")
@@ -200,6 +231,15 @@ class MainPage(object):
                                             "templates/mpas_logo.png")
         copyfile(fileName, '{}/mpas_logo.png'.format(htmlBaseDirectory))
 
+        fileName = \
+            pkg_resources.resource_filename(__name__,
+                                            "templates/config.png")
+        copyfile(fileName, '{}/config.png'.format(htmlBaseDirectory))
+
+        with open('{}/config.{}'.format(htmlBaseDirectory, runName), 'w') \
+                as configFile:
+            self.config.write(configFile)
+
 
 class ComponentPage(object):
     """
@@ -208,8 +248,11 @@ class ComponentPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser`` object
-        contains config options
+    config : ``MpasAnalysisConfigParser``
+        Config options
+
+    refConfig : ``MpasAnalysisConfigParser``
+        Config options for a reference run
 
     name : str
         The name of the component as it should appear in the list of
@@ -225,19 +268,19 @@ class ComponentPage(object):
     groups : tree of OrederdDict
         A tree of information describing the the gallery groups in the page,
         the galleries in each group and the images in each gallery.
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
-    def __init__(self, config, name, subdirectory):
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, config, name, subdirectory, refConfig=None):
         """
         Create a ComponentPage object, reading in the templates
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser`` object
-            contains config options
+        config : ``MpasAnalysisConfigParser``
+            Config options
 
         name : str
             The name of the component as it should appear in the list of
@@ -247,12 +290,15 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a reference run
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.config = config
+        self.refConfig = refConfig
         self.name = name
         self.subdirectory = subdirectory
 
@@ -277,7 +323,7 @@ class ComponentPage(object):
         self.groups = OrderedDict()
 
     @staticmethod
-    def add_image(xmlFileName, config, components):
+    def add_image(xmlFileName, config, components, refConfig=None):
         """
         Add the image to the appropriate component.  Note: this is a static
         method because we do not know which component to add the image to
@@ -297,10 +343,13 @@ class ComponentPage(object):
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
 
-        Authors
-        -------
-        Xylar Asay-Davis
+        refConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a reference run
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         xmlRoot = etree.parse(xmlFileName).getroot()
 
         componentName = ComponentPage._get_required_xml_text(xmlRoot,
@@ -321,7 +370,8 @@ class ComponentPage(object):
 
         if componentName not in components:
             components[componentName] = ComponentPage(config, componentName,
-                                                      componentSubdirectory)
+                                                      componentSubdirectory,
+                                                      refConfig)
 
         component = components[componentName]
 
@@ -362,12 +412,18 @@ class ComponentPage(object):
         """
         Generate the webpage from templates and groups, and write it out to
         the HTML directory.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         runName = self.config.get('runs', 'mainRunName')
+
+        if self.refConfig is None:
+            refRunText = ''
+        else:
+            refRunText = '<br> Ref: {}'.format(
+                    self.refConfig.get('runs', 'mainRunName'))
 
         quickLinkText = ''
         galleriesText = ''
@@ -379,6 +435,7 @@ class ComponentPage(object):
                 self._generate_group_text(groupName, groupDict)
 
         replacements = {'@runName': runName,
+                        '@refRunText': refRunText,
                         '@componentName': self.name,
                         '@quickLinks': quickLinkText,
                         '@galleries': galleriesText}
@@ -387,8 +444,10 @@ class ComponentPage(object):
 
         outFileName = '{}/index.html'.format(self.directory)
 
-        with open(outFileName, 'w') as componentFile:
-            componentFile.write(pageText.encode('ascii', 'xmlcharrefreplace'))
+        with open(outFileName, mode='w') as componentFile:
+            componentFile.write(
+                    pageText.encode('ascii',
+                                    'xmlcharrefreplace').decode('ascii'))
 
     def get_first_image(self):
         """
@@ -399,15 +458,15 @@ class ComponentPage(object):
         -------
         firstImageFilename : str
             The name (with out path) of the first image in the first gallery
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # get the first image name
-        firstGroup = self.groups.itervalues().next()
-        firstGallery = firstGroup['galleries'].itervalues().next()
-        firstImageFileName = firstGallery['images'].iterkeys().next()
+        firstGroup = next(iter(self.groups.values()))
+        firstGallery = next(iter(firstGroup['galleries'].values()))
+        firstImageFileName = next(iter(firstGallery['images']))
         return firstImageFileName
 
     @staticmethod
@@ -490,8 +549,8 @@ class ComponentPage(object):
         content
         """
 
-        firstGallery = groupDict['galleries'].itervalues().next()
-        firstImageFileName = firstGallery['images'].iterkeys().next()
+        firstGallery = next(iter(groupDict['galleries'].values()))
+        firstImageFileName = next(iter(firstGallery['images']))
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],
