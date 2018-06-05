@@ -27,6 +27,10 @@ import pkg_resources
 import shutil
 import os
 from collections import OrderedDict
+import progressbar
+import logging
+
+from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -241,7 +245,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     key = (analysisTask.taskName, analysisTask.subtaskName)
     if key in analysesToGenerate.keys():
         # The task was already added
-        assert(analysisTask._setupStatus == 'success')
+        if analysisTask._setupStatus != 'success':
+            ValueError("task {} already added but this version was not set up "
+                       "successfully. Typically, this indicates two tasks "
+                       "with the same full name".format(analysisTask.fullName))
         return
 
     # for each anlaysis task, check if we want to generate this task
@@ -357,10 +364,10 @@ def run_analysis(config, analyses):  # {{{
     config.write(configFile)
     configFile.close()
 
-    taskCount = config.getWithDefault('execute', 'parallelTaskCount',
+    parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
                                       default=1)
 
-    isParallel = taskCount > 1 and len(analyses) > 1
+    isParallel = parallelTaskCount > 1 and len(analyses) > 1
 
     for analysisTask in analyses.values():
         if not analysisTask.runAfterTasks and not analysisTask.subtasks:
@@ -370,6 +377,26 @@ def run_analysis(config, analyses):  # {{{
 
     tasksWithErrors = []
     runningTasks = {}
+
+    # redirect output to a log file
+    logsDirectory = build_config_full_path(config, 'output',
+                                           'logsSubdirectory')
+
+    logFileName = '{}/taskProgress.log'.format(logsDirectory)
+
+    logger = logging.getLogger('run_mpas_analysis')
+    handler = logging.FileHandler(logFileName)
+
+    formatter = AnalysisFormatter()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+    totalTaskCount = len(analyses)
+    widgets = ['Running tasks: ', progressbar.Percentage(), ' ',
+               progressbar.Bar(), ' ', progressbar.ETA()]
+    progress = progressbar.ProgressBar(widgets=widgets,
+                                       maxval=totalTaskCount).start()
 
     # run each analysis task
     while True:
@@ -393,6 +420,8 @@ def run_analysis(config, analyses):  # {{{
                                                      AnalysisTask.FAIL]:
                 unfinishedCount += 1
 
+        progress.update(totalTaskCount-unfinishedCount)
+
         if unfinishedCount <= 0:
             # we're done
             break
@@ -401,11 +430,12 @@ def run_analysis(config, analyses):  # {{{
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
-                    print('Running {}'.format(analysisTask.printTaskName))
+                    logger.info('Running {}'.format(
+                            analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
-                    if len(runningTasks.keys()) >= taskCount:
+                    if len(runningTasks.keys()) >= parallelTaskCount:
                         break
                 else:
                     analysisTask.run(writeLogFile=False)
@@ -419,18 +449,30 @@ def run_analysis(config, analyses):  # {{{
             taskTitle = analysisTask.printTaskName
 
             if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
-                print("   Task {} has finished successfully.".format(
+                logger.info("   Task {} has finished successfully.".format(
                         taskTitle))
             elif analysisTask._runStatus.value == AnalysisTask.FAIL:
-                print("ERROR in task {}.  See log file {} for details".format(
-                    taskTitle, analysisTask._logFileName))
+                message = "ERROR in task {}.  See log file {} for " \
+                          "details".format(taskTitle,
+                                           analysisTask._logFileName)
+                logger.error(message)
+                print(message)
                 tasksWithErrors.append(taskTitle)
             else:
-                print("Unexpected status from in task {}.  This may be a "
-                      "bug.".format(taskTitle))
+                message = "Unexpected status from in task {}.  This may be " \
+                          "a bug.".format(taskTitle)
+                logger.error(message)
+                print(message)
         else:
             if analysisTask._runStatus.value == AnalysisTask.FAIL:
                 sys.exit(1)
+
+    progress.finish()
+
+    # blank line to make sure remaining output is on a new line
+    print('')
+
+    logger.handlers = []
 
     # raise the last exception so the process exits with an error
     errorCount = len(tasksWithErrors)
@@ -440,6 +482,10 @@ def run_analysis(config, analyses):  # {{{
     elif errorCount > 0:
         print("There were errors in {} tasks: {}".format(
             errorCount, ', '.join(tasksWithErrors)))
+        print("See log files in {} for details.".format(logsDirectory))
+        print("The following commands may be helpful:")
+        print("  cd {}".format(logsDirectory))
+        print("  grep Error *.log")
         sys.exit(1)
     # }}}
 
