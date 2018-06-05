@@ -137,7 +137,6 @@ mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
 
-
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)

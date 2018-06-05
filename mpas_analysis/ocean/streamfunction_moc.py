@@ -37,7 +37,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     Computation and plotting of model meridional overturning circulation.
     Will eventually support:
 
-        * MOC streamfunction, post-processed (currently supported)
+        * MOC streamfunction, post-processed
         * MOC streamfunction, from MOC analysis member
         * MOC time series (max value at 24.5N), post-processed
         * MOC time series (max value at 24.5N), from MOC analysis member
@@ -123,7 +123,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        if self.mocAnalysisMemberEnabled:
+        self.usePostprocessing = config.getExpression(self.sectionName,
+                                                      'usePostprocessingScript')
+
+        if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
             self.variableList = ['timeMonthly_avg_mocStreamvalLatAndDepth',
                                  'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
         else:
@@ -181,12 +184,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         config = self.config
 
         # **** Compute MOC ****
-        # Check whether MOC Analysis Member is enabled
-        if self.mocAnalysisMemberEnabled:
-            #(mocDictClimo, mocDictTseries) = \
-            #    self._compute_moc_analysismember(config, streams, calendar,
-            #                                     sectionName, dictClimo,
-            #                                     dictTseries)
+        if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
             self._compute_moc_climo_analysismember()
             dsMOCTimeSeries = self._compute_moc_time_series_analysismember()
         else:
@@ -343,7 +341,6 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.regionNames = config.getExpression(self.sectionName,
                                                 'regionNames')
         self.regionNames.append('Global')
-
 
         # Read in depth and bin latitudes
         try:
