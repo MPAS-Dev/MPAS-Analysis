@@ -14,7 +14,6 @@ against observations from Schmidtko et al. (2014, DOI: 10.1126/science.1256117)
 # Xylar Asay-Davis
 
 import xarray as xr
-import numpy as np
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -29,8 +28,6 @@ from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
 
 from mpas_analysis.shared.grid import ProjectionGridDescriptor
-
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
@@ -62,23 +59,25 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         fields = \
-            {'temperature':
-                {'mpas': 'timeMonthly_avg_activeTracers_temperature',
-                 'units': r'$\degree$C',
-                 'obs': 'botTheta',
-                 'title': 'Potential Temperature'},
-             'salinity':
-                {'mpas': 'timeMonthly_avg_activeTracers_salinity',
-                 'units': r'PSU',
-                 'obs': 'botSalinity',
-                 'title': 'Salinity'},
-             'potentialDensity':
-                {'mpas': 'timeMonthly_avg_potentialDensity',
-                 'units': r'kg m$^{-3}$',
-                 'obs': 'botPotentialDensity',
-                 'title': 'Potential Density'}}
+            [{'prefix': 'temperature',
+              'mpas': 'timeMonthly_avg_activeTracers_temperature',
+              'units': r'$\degree$C',
+              'obs': 'botTheta',
+              'title': 'Potential Temperature'},
+             {'prefix': 'salinity',
+              'mpas': 'timeMonthly_avg_activeTracers_salinity',
+              'units': r'PSU',
+              'obs': 'botSalinity',
+              'title': 'Salinity'},
+             {'prefix': 'potentialDensity',
+              'mpas': 'timeMonthly_avg_potentialDensity',
+              'units': r'kg m$^{-3}$',
+              'obs': 'botPotentialDensity',
+              'title': 'Potential Density'}]
 
-        tags = ['climatology', 'horizontalMap'] + list(fields.keys())
+        tags = ['climatology', 'horizontalMap'] \
+            + [field['prefix'] for field in fields]
+
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSchmidtko, self).__init__(
                 config=config, taskName='climatologyMapSchmidtko',
@@ -113,7 +112,7 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
             climatologyName='schmidtko',
-            variableList=[field['mpas'] for field in fields.values()],
+            variableList=[field['mpas'] for field in fields],
             seasons=seasons,
             depths=['bot'],
             comparisonGridNames=comparisonGridNames)
@@ -128,19 +127,20 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             diffTitleLabel = 'Main - Reference'
             groupSubtitle = None
 
-        for fieldName in fields:
-            upperFieldName = fieldName[0].upper() + fieldName[1:]
+        for field in fields:
+            fieldPrefix = field['prefix']
+            upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
             if refConfig is None:
-                refFieldName = fields[fieldName]['obs']
-                outFileLabel = '{}Schmidtko'.format(fieldName)
+                refFieldName = field['obs']
+                outFileLabel = '{}Schmidtko'.format(fieldPrefix)
 
                 remapObservationsSubtask = RemapSchmidtko(
                         parentTask=self, seasons=seasons, fileName=obsFileName,
-                        outFilePrefix='{}Schmidtko'.format(fieldName),
+                        outFilePrefix='{}Schmidtko'.format(fieldPrefix),
                         fieldName=refFieldName,
                         comparisonGridNames=comparisonGridNames,
                         subtaskName='remapObservations{}'.format(
-                                upperFieldName))
+                                upperFieldPrefix))
 
                 self.add_subtask(remapObservationsSubtask)
 
@@ -148,8 +148,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                 remapObservationsSubtask = None
                 refRunName = refConfig.get('runs', 'mainRunName')
 
-                refFieldName = fields[fieldName]['mpas']
-                outFileLabel = '{}Bottom'.format(fieldName)
+                refFieldName = field['mpas']
+                outFileLabel = '{}Bottom'.format(fieldPrefix)
                 diffTitleLabel = 'Main - Reference'
 
             for comparisonGridName in comparisonGridNames:
@@ -162,25 +162,25 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                         remapObsClimatologySubtask=remapObservationsSubtask,
                         refConfig=refConfig,
                         depth='bot',
-                        subtaskName='plot{}_{}_{}'.format(upperFieldName,
+                        subtaskName='plot{}_{}_{}'.format(upperFieldPrefix,
                                                           season,
                                                           comparisonGridName))
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle=fields[fieldName]['title'],
-                        mpasFieldName=fields[fieldName]['mpas'],
+                        fieldNameInTitle=field['title'],
+                        mpasFieldName=field['mpas'],
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=fields[fieldName]['units'],
-                        imageCaption=fields[fieldName]['title'],
+                        unitsLabel=field['units'],
+                        imageCaption=field['title'],
                         galleryGroup='Seafloor Maps',
                         groupSubtitle=groupSubtitle,
                         groupLink='seafloor',
-                        galleryName=fields[fieldName]['title'],
+                        galleryName=field['title'],
                         configSectionName='climatologyMapSchmidtko{}'.format(
-                            upperFieldName))
+                            upperFieldPrefix))
 
                     self.add_subtask(subtask)
         # }}}

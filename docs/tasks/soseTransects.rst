@@ -31,14 +31,15 @@ The following configuration options are available for this task::
     # The approximate horizontal resolution (in km) of each transect.  Latitude/
     # longitude between observation points will be subsampled at this interval.
     # Use 'obs' to indicate no subsampling.
-    horizontalResolution = obs
+    # horizontalResolution = obs
+    horizontalResolution = 5
 
     # The name of the vertical comparison grid.  Valid values are 'mpas' for the
     # MPAS vertical grid, 'obs' to use the locations of observations or
     # any other name if the vertical grid is defined by 'verticalComparisonGrid'
+    # verticalComparisonGridName = mpas
     # verticalComparisonGridName = obs
     verticalComparisonGridName = uniform_0_to_4000m_at_10m
-    #verticalComparisonGridName = obs
 
     # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
     # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
@@ -55,9 +56,16 @@ The following configuration options are available for this task::
     # longitudes of transects
     longitudes = numpy.linspace(0, 330, 12)
 
+    # a list of fields top plot for each transect.  All supported fields are listed
+    # below.  Note that 'velocityMagnitude' cannot be plotted without
+    # 'zonalVelocity' and 'meridionalVelocity' because the components are needed
+    # to compute the magnitude.
+    fieldList = ['temperature', 'salinity', 'potentialDensity', 'zonalVelocity',
+                 'meridionalVelocity', 'velocityMagnitude']
+
 
     [soseTemperatureTransects]
-    ## options related to plotting WOCE transects of potential temperature
+    ## options related to plotting SOSE transects of potential temperature
 
     # colormap for model/observations
     colormapNameResult = RdYlBu_r
@@ -75,7 +83,7 @@ The following configuration options are available for this task::
     contourLevelsResult = np.arange(0.5, 6.0, 1.0)
 
     # colormap for differences
-    colormapNameDifference = RdBu_r
+    colormapNameDifference = balance
     # the type of norm used in the colormap
     normTypeDifference = linear
     # A dictionary with keywords for the norm
@@ -91,10 +99,10 @@ The following configuration options are available for this task::
 
 
     [soseSalinityTransects]
-    ## options related to plotting WOCE transects of salinity
+    ## options related to plotting SOSE transects of salinity
 
     # colormap for model/observations
-    colormapNameResult = BuOr
+    colormapNameResult = haline
     # the type of norm used in the colormap
     normTypeResult = linear
     # A dictionary with keywords for the norm
@@ -109,7 +117,7 @@ The following configuration options are available for this task::
     contourLevelsResult = np.arange(34.1, 35.0, 0.1)
 
     # colormap for differences
-    colormapNameDifference = RdBu_r
+    colormapNameDifference = balance
     # the type of norm used in the colormap
     normTypeDifference = linear
     # A dictionary with keywords for the norm
@@ -121,7 +129,106 @@ The following configuration options are available for this task::
     # place the ticks automatically by default
     # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
     # contour line levels
-    contourLevelsDifference = np.arange(-0.6, 0.5, 0.1)
+    contourLevelsDifference = numpy.linspace(-0.6, 0.6, 9)
+
+
+    [sosePotentialDensityTransects]
+    ## options related to plotting SOSE transects of potential density
+
+    # colormap for model/observations
+    colormapNameResult = Spectral_r
+    # the type of norm used in the colormap
+    normTypeResult = linear
+    # A dictionary with keywords for the norm
+    normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+    # place the ticks automatically by default
+    # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+    contourLevelsResult = numpy.linspace(1026.5, 1028., 7)
+
+    # colormap for differences
+    colormapNameDifference = balance
+    # the type of norm used in the colormap
+    normTypeDifference = linear
+    # A dictionary with keywords for the norm
+    normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
+    # place the ticks automatically by default
+    # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+    contourLevelsDifference = numpy.linspace(-0.3, 0.3, 9)
+
+
+    [soseZonalVelocityTransects]
+    ## options related to plotting SOSE transects of zonal velocity
+
+    # colormap for model/observations
+    colormapNameResult = delta
+    # color indices into colormapName for filled contours
+    # the type of norm used in the colormap
+    normTypeResult = linear
+    # A dictionary with keywords for the norm
+    normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+    # determine the ticks automatically by default, uncomment to specify
+    # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+    contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+
+    # colormap for differences
+    colormapNameDifference = balance
+    # the type of norm used in the colormap
+    normTypeDifference = linear
+    # A dictionary with keywords for the norm
+    normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+    # determine the ticks automatically by default, uncomment to specify
+    # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+    contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+    [soseMeridionalVelocityTransects]
+    ## options related to plotting SOSE transects of meridional velocity
+
+    # colormap for model/observations
+    colormapNameResult = delta
+    # color indices into colormapName for filled contours
+    # the type of norm used in the colormap
+    normTypeResult = linear
+    # A dictionary with keywords for the norm
+    normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
+    # determine the ticks automatically by default, uncomment to specify
+    # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+    contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+
+    # colormap for differences
+    colormapNameDifference = balance
+    # the type of norm used in the colormap
+    normTypeDifference = linear
+    # A dictionary with keywords for the norm
+    normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+    # determine the ticks automatically by default, uncomment to specify
+    # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+    contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+    [soseVelocityMagnitudeTransects]
+    ## options related to plotting SOSE transects of velocity magnitude
+
+    # colormap for model/observations
+    colormapNameResult = ice
+    # color indices into colormapName for filled contours
+    # the type of norm used in the colormap
+    normTypeResult = linear
+    # A dictionary with keywords for the norm
+    normArgsResult = {'vmin': 0, 'vmax': 0.2}
+    # determine the ticks automatically by default, uncomment to specify
+    # colorbarTicksResult = numpy.linspace(0, 0.2, 9)
+    contourLevelsResult = numpy.linspace(0, 0.2, 9)
+
+    # colormap for differences
+    colormapNameDifference = balance
+    # the type of norm used in the colormap
+    normTypeDifference = linear
+    # A dictionary with keywords for the norm
+    normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+    # determine the ticks automatically by default, uncomment to specify
+    # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+    contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
 The options ``minLat`` and ``maxLat`` determine the start and end of each
@@ -137,6 +244,19 @@ produces 12 transects spaced every 30 |deg|.
   SOSE's domain extends only to 25 |deg| S, so ``maxLat`` should typically be
   less than -25.
 
+The user can select only to plot a subset of the supported fields by adding
+only the desired field names to ``fieldList``.  The default value shows the
+list of all available fields.
+
+.. note::
+
+  Because ``velocityMagnitude`` is computed internally rather than being stored
+  as a separate field with the other SOSE output, it is not possible to plot
+  ``velocityMagnitude`` without also plotting ``zonalVelocity`` and
+  ``meridionalVelocity``.
+
+Ater the ``soseTransects`` section, there is a section for each supported field
+specifying the information related to the colormap.
 
 For details on remaining configuration options, see:
  * :ref:`config_transects`

@@ -9,13 +9,7 @@ Analysis Tasks
    tasks/climatologyMapSSS
    tasks/climatologyMapSSH
    tasks/climatologyMapOHCAnomaly
-   tasks/climatologyMapSoseTemperature
-   tasks/climatologyMapSoseSalinity
-   tasks/climatologyMapSosePotentialDensity
-   tasks/climatologyMapSoseMLD
-   tasks/climatologyMapSoseZonalVel
-   tasks/climatologyMapSoseMeridVel
-   tasks/climatologyMapSoseVelMag
+   tasks/climatologyMapSose
    tasks/climatologyMapArgoTemperature
    tasks/climatologyMapArgoSalinity
    tasks/climatologyMapSchmidtko

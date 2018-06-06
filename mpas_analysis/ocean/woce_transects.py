@@ -16,14 +16,10 @@ class WoceTransects(AnalysisTask):  # {{{
     """
     Plot model output at WOCE transects and compare it against WOCE
     observations
-
-    Attributes
-    ----------
-
-    Authors
-    -------
-    Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refConfig=None):
 
@@ -43,11 +39,10 @@ class WoceTransects(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         tags = ['climatology', 'transect', 'woce']
 

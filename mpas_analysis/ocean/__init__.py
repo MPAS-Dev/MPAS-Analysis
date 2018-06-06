@@ -6,20 +6,8 @@ from mpas_analysis.ocean.climatology_map_ohc_anomaly import \
     ClimatologyMapOHCAnomaly
 from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
-from mpas_analysis.ocean.climatology_map_sose_temperature import \
-    ClimatologyMapSoseTemperature
-from mpas_analysis.ocean.climatology_map_sose_salinity import \
-    ClimatologyMapSoseSalinity
-from mpas_analysis.ocean.climatology_map_sose_potential_density import \
-    ClimatologyMapSosePotentialDensity
-from mpas_analysis.ocean.climatology_map_sose_mld import \
-    ClimatologyMapSoseMLD
-from mpas_analysis.ocean.climatology_map_sose_zonal_vel import \
-    ClimatologyMapSoseZonalVel
-from mpas_analysis.ocean.climatology_map_sose_merid_vel import \
-    ClimatologyMapSoseMeridVel
-from mpas_analysis.ocean.climatology_map_sose_vel_mag import \
-    ClimatologyMapSoseVelMag
+from mpas_analysis.ocean.climatology_map_sose import \
+    ClimatologyMapSose
 
 from mpas_analysis.ocean.climatology_map_schmidtko import \
     ClimatologyMapSchmidtko

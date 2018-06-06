@@ -8,11 +8,10 @@
 """
 An analysis subtasks for plotting comparison of a model transect against
 observations or reference data.
-
-Authors
--------
-Xylar Asay-Davis, Greg Streletz
 """
+# Authors
+# -------
+# Xylar Asay-Davis, Greg Streletz
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -20,7 +19,6 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 
-import matplotlib.pyplot as plt
 from mpas_analysis.shared.plot.plotting import plot_vertical_section_comparison
 
 from mpas_analysis.shared import AnalysisTask
@@ -95,11 +93,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
     configSectionName : str
         the name of the section where the color map and range is defined
-
-    Authors
-    -------
-    Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
     """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Greg Streletz
 
     def __init__(self, parentTask, season, transectName, fieldName,
                  remapMpasClimatologySubtask, plotObs=True,
@@ -134,12 +131,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any), ignored if
             ``plotObs == True``
-
-        Authors
-        -------
-        Xylar Asay-Davis
-
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         self.season = season
         self.transectName = transectName
@@ -170,7 +165,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                       galleryName, configSectionName,
                       diffTitleLabel='Model - Observations'):
         # {{{
-        """
+        '''
         Store attributes related to plots, plot file names and HTML output.
 
         Parameters
@@ -216,11 +211,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         diffTitleLabel : str, optional
             the title of the difference subplot
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
-        Authors
-        -------
-        Xylar Asay-Davis
-        """
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
@@ -245,11 +240,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Authors
-        -------
-        Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
@@ -285,11 +280,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
         or a reference run
-
-        Authors
-        -------
-        Xylar Asay-Davis, Greg Streletz
         """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Greg Streletz
 
         season = self.season
         transectName = self.transectName
@@ -357,7 +351,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         configSectionName = self.configSectionName
 
         mainRunName = config.get('runs', 'mainRunName')
-
 
         # broadcast x and z to have the same dimensions
         x, z = xr.broadcast(remappedModelClimatology.x,

@@ -99,19 +99,7 @@ def build_analysis_list(config, refConfig):  # {{{
             config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
             refConfig))
 
-    analyses.append(ocean.ClimatologyMapSoseTemperature(
-            config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSoseSalinity(
-            config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSosePotentialDensity(
-            config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSoseMLD(
-            config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSoseZonalVel(
-            config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSoseMeridVel(
-            config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSoseVelMag(
+    analyses.append(ocean.ClimatologyMapSose(
             config, oceanClimatolgyTask, refConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(

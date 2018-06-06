@@ -662,15 +662,11 @@ class PointCollectionDescriptor(MeshDescriptor):  # {{{
         ----------
         scripFileName : str
             The path to which the SCRIP file should be written
-
-        Authors
-        ------
-        Xylar Asay-Davis
-
-        Last Modified
-        -------------
-        04/19/2017
         '''
+        # Authors
+        # ------
+        # Xylar Asay-Davis
+
         self.scripFileName = scripFileName
 
         outFile = netCDF4.Dataset(scripFileName, 'w')

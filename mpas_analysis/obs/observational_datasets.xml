@@ -435,13 +435,7 @@
       preprocess_observations/preprocess_SOSE_data.py
     </preprocessing>
     <tasks>
-      - climatologyMapSoseTemperature
-      - climatologyMapSoseSalinity
-      - climatologyMapSosePotentialDensity
-      - climatologyMapSoseMLD
-      - climatologyMapSoseZonalVel
-      - climatologyMapSoseMeridVel
-      - climatologyMapSoseVelMag
+      - climatologyMapSose
       - soseTransects
     </tasks>
     <subdirectory>
