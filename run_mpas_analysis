@@ -487,6 +487,10 @@ def run_analysis(config, analyses):  # {{{
         print("  cd {}".format(logsDirectory))
         print("  grep Error *.log")
         sys.exit(1)
+    else:
+        print('Log files for executed tasks can be found in {}'.format(
+                logsDirectory))
+
     # }}}
 
 
