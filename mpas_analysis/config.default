@@ -506,16 +506,30 @@ movingAveragePoints = 1
 ## options related to plotting the streamfunction of the meridional overturning
 ## circulation (MOC)
 
-# Include the bolus velocity from the Gent-McWilliams parameterization?  This
-# only needs to be disabled if the simulation was run with GM turned on but
-# the MOC shouldn't include the bolus term
-includeBolus = True
+# Use postprocessing script to compute the MOC? You want this to be True
+# for low-resolution simulations that use GM to parameterize eddies, because
+# the online MOC analysis member currently does not include the bolus velocity
+# in its calculation, whereas the postprocessing script does.
+# NOTE: this is a temporary option that will be removed once the online
+# MOC takes into account the bolus velocity when GM is on.
+usePostprocessingScript = False
 
 # Region names for basin MOC calculation.
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMinGlobal = -80.
+latBinMinAtlantic = -35.
+latBinMinIndoPacific = -80.
+
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMaxGlobal = 80.
+latBinMaxAtlantic = 70.
+latBinMaxIndoPacific = 70.
+
 # Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
 latBinSizeGlobal = 1.
 latBinSizeAtlantic = 0.5
 latBinSizeIndoPacific = 0.5

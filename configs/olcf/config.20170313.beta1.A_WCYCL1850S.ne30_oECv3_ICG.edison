@@ -137,16 +137,20 @@ baseDirectory = /lustre/atlas/proj-shared/cli115/observations/SeaIce
 # directory where ocean reference simulation results are stored
 baseDirectory =  /lustre/atlas/proj-shared/cli115/milena/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
-
-# Region names for basin MOC calculation.
-# Supported options are Atlantic and IndoPacific
-regionNames = ['Atlantic']
-
 [regions]
 ## options related to ocean regions used in several analysis modules
 
 # Directory for region mask files
 regionMaskDirectory = /lustre/atlas/proj-shared/cli115/mpas_analysis/region_masks/
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning
+## circulation (MOC)
+
+# Use postprocessing script to compute the MOC? You want this to be True
+# for low-resolution simulations that use GM to parameterize eddies, because
+# the online MOC analysis member currently does not include the bolus velocity
+# in its calculation, whereas the postprocessing script does.
+# NOTE: this is a temporary option that will be removed once the online
+# MOC takes into account the bolus velocity when GM is on.
+usePostprocessingScript = True

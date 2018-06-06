@@ -117,7 +117,6 @@ mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
 
-
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
@@ -150,3 +149,15 @@ polarPlot = False
 
 # Directory for region mask files
 regionMaskDirectory = /lcrc/group/acme/mpas_analysis/region_masks 
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning
+## circulation (MOC)
+
+# Use postprocessing script to compute the MOC? You want this to be True
+# for low-resolution simulations that use GM to parameterize eddies, because
+# the online MOC analysis member currently does not include the bolus velocity
+# in its calculation, whereas the postprocessing script does.
+# NOTE: this is a temporary option that will be removed once the online
+# MOC takes into account the bolus velocity when GM is on.
+usePostprocessingScript = True
