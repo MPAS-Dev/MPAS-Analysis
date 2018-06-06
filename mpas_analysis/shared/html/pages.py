@@ -74,7 +74,11 @@ def generate_html(config, analyses, refConfig=None):  # {{{
         page.add_component(componentName, component.subdirectory,
                            firstImageFileName)
 
-    page.generate()  # }}}
+    page.generate()
+
+    print("Done.")
+
+    # }}}
 
 
 class MainPage(object):
