@@ -214,6 +214,15 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             x = self.lat[region]
             y = self.depth
             z = self.moc[region]
+            # Subset lat range
+            minLat = config.getExpression(self.sectionName,
+                                         'latBinMin{}'.format(region))
+            maxLat = config.getExpression(self.sectionName,
+                                         'latBinMax{}'.format(region))
+            indLat = np.logical_and(x >= minLat, x <= maxLat)
+            x = x[indLat]
+            z = z[:, indLat]
+
             plot_vertical_section(config, x, y, z, self.sectionName,
                                   suffix=region, colorbarLabel=colorbarLabel,
                                   title=title, xlabel=xLabel, ylabel=yLabel,

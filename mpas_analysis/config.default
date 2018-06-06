@@ -518,7 +518,18 @@ usePostprocessingScript = False
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMinGlobal = -80.
+latBinMinAtlantic = -35.
+latBinMinIndoPacific = -80.
+
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMaxGlobal = 80.
+latBinMaxAtlantic = 70.
+latBinMaxIndoPacific = 70.
+
 # Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
 latBinSizeGlobal = 1.
 latBinSizeAtlantic = 0.5
 latBinSizeIndoPacific = 0.5
