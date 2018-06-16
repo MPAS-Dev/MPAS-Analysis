@@ -1,11 +1,4 @@
 #!/bin/bash
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
-#
-# Unless noted otherwise source code is licensed under the BSD license.
-# Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

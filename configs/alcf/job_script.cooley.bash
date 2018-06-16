@@ -2,13 +2,6 @@
 #COBALT -t 1:00:00
 #COBALT -n 1
 #COBALT -A ClimateEnergy_2
-#
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
-#
-# Unless noted otherwise source code is licensed under the BSD license.
-# Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
 
 source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base/etc/profile.d/conda.sh
 conda activate e3sm_unified_1.2.0_py2.7_nox
