@@ -14,7 +14,7 @@
 # (anything between 1 and the total number of tasks to run)
 #SBATCH --nodes=1
 #SBATCH --time=1:00:00
-#SBATCH --account=climateacme
+#SBATCH --account=w17_oceaneddies
 #SBATCH --job-name=mpas_analysis
 #SBATCH --output=mpas_analysis.o%j
 #SBATCH --error=mpas_analysis.e%j
@@ -31,7 +31,7 @@ export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
-run_config_file="config.run_name_here"
+run_config_file="/turquoise/usr/projects/climate/rileybrady/MPAS-Analysis/configs/lanl/config.20170207.MPAS-SeaIce.QU60km_polar.wolf"
 # prefix to run a serial job on a single node on edison
 command_prefix=""
 # change this if not submitting this script from the directory

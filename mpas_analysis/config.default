@@ -266,6 +266,20 @@ sshSubdirectory = SSH
 argoSubdirectory = ARGO
 schmidtkoSubdirectory = Schmidtko
 woceSubdirectory = WOCE
+no3Subdirectory = BGC/NO3
+po4Subdirectory = BGC/PO4
+sio3Subdirectory = BGC/SiO3
+o2Subdirectory = BGC/O2
+co2_gas_fluxSubdirectory = BGC/CO2_gas_flux
+
+# first and last year of SST observational climatology (preferably one of the
+# two ranges given below)
+# values for preindustrial
+sstClimatologyStartYear = 1870
+sstClimatologyEndYear = 1900
+# alternative values for present day
+#sstClimatologyStartYear = 1990
+#sstClimatologyEndYear = 2011
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -887,7 +901,6 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
-
 
 [climatologyMapSoseMixedLayerDepth]
 ## options related to plotting climatology maps of Antarctic
@@ -1663,6 +1676,126 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
 contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
+[climatologyMapBGC]
+## options related to plotting climatology mpas of BGC
+
+# Variables to plot:
+# pH : 'pH_3D'
+# DIC : 'DIC'
+# ALK : 'ALK'
+# PO4 : 'PO4'
+# NO3 : 'NO3'
+# SiO3 : 'SiO3'
+# CO2 flux : 'CO2_gas_flux'
+# O2 : 'O2'
+variables = ['PO4', 'NO3', 'SiO3', 'CO2_gas_flux', 'pH_3D', 'DIC', 'ALK', 'O2']
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons = ['ANN', 'JFM', 'JAS']
+
+# the first yearover which to average climatalogies
+startYear = 0 
+# the last year over which to average climatalogies
+endYear = 10 
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+# comparisonGrids = ['latlon', 'antarctic']
+comparisonGrids = ['latlon']
+
+[climatologyMapBGC_PO4]
+# Colormap for climatology
+colormapNameResult = dense 
+# Colormap for clim - obs difference
+colormapNameDifference = balance 
+# linear vs. log scaling for climatology
+normTypeResult = linear
+# Colorbar bounds for climatology
+normArgsResult = {'vmin': 0, 'vmax': 2.5}
+# linear vs. log scaling for obs
+normTypeDifference = linear
+# Colorbar bounds for obs
+normArgsDifference = {'vmin': -1, 'vmax': 1} 
+# BGC property units
+units = 'mmol m$^{-3}$'
+# Prefix to variable name in MPAS-O output
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
+# Acronym/label for observational dataset
+observationsLabel = 'WOA'
+
+[climatologyMapBGC_NO3]
+colormapNameResult = dense 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 0, 'vmax': 35.0}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -5, 'vmax': 5} 
+units = 'mmol m$^{-3}$'
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
+observationsLabel = 'WOA'
+
+[climatologyMapBGC_SiO3]
+colormapNameResult = dense 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 0, 'vmax': 80}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -15, 'vmax': 15} 
+units = 'mmol m$^{-3}$'
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
+observationsLabel = 'WOA'
+
+[climatologyMapBGC_CO2_gas_flux]
+colormapNameResult = delta 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': -5, 'vmax': 5}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -5, 'vmax': 5} 
+units = 'mol m$^{-2}$ yr$^{-1}$'
+filePrefix = 'timeMonthly_avg_'
+observationsLabel = 'SOM-FFNv2016'
+
+[climatologyMapBGC_O2]
+colormapNameResult = matter 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 2, 'vmax': 8}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -2, 'vmax': 2} # Need to set
+units = 'mL/L'
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
+observationsLabel = 'WOA'
+
+[climatologyMapBGC_pH_3D]
+colormapNameResult = PuBuGn_r
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 8, 'vmax': 8.2}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
+units = ''
+filePrefix = 'timeMonthly_avg_ecosys_diag_'
+
+[climatologyMapBGC_DIC]
+colormapNameResult = YlGnBu 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 1900, 'vmax': 2300}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
+units = 'mmol m$^{-3}$'
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
+
+[climatologyMapBGC_ALK]
+colormapNameResult = PuBuGn 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 2150, 'vmax': 2450}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # need to set
+units = 'meq m$^{-3}$'
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
@@ -1670,7 +1803,7 @@ contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 ## in the northern hemisphere (NH)
 
 # colormap for model/observations
-colormapNameResult = ice
+colormapNameResult = inferno
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries

@@ -98,6 +98,17 @@ def build_analysis_list(config, refConfig):  # {{{
 
     analyses.append(ocean.ClimatologyMapSose(
             config, oceanClimatolgyTask, refConfig))
+    for bgcvar in config.getExpression('climatologyMapBGC', 'variables'):
+        prefix = config.getExpression('climatologyMapBGC_' + bgcvar,
+            'filePrefix', elementType=str)
+        analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
+                                                bgcvar,
+                                                prefix + bgcvar,
+                                                refConfig))
+    #analyses.append(ocean.ClimatologyMapSoseTemperature(
+    #        config, oceanClimatolgyTask, refConfig))
+    #analyses.append(ocean.ClimatologyMapSoseSalinity(
+    #        config, oceanClimatolgyTask, refConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
             config, oceanClimatolgyTask, refConfig))
