@@ -1805,6 +1805,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -5, 'vmax': 5} # Need to set
 units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
+observationsLabel = 'WOA'
 
 [climatologyMapBGC_SiO3]
 colormapNameResult = dense 
@@ -1825,6 +1826,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
 units = 'mmol C m$^{-3}$ m s$^{-1}$'
 filePrefix = 'timeMonthly_avg_'
+observationsLabel = 'SOM-FFNv2016'
 
 [climatologyMapBGC_O2]
 colormapNameResult = matter 

@@ -18,6 +18,8 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # remapped to the comparison grid.  Leave this option commented out if no
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
+[execute]
+parallelTaskCount = 6
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -136,3 +138,8 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_
 
 # Directory for region mask files
 regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks
+
+[climatologyMapBGC]
+
+variables = ['NO3', 'CO2_gas_flux']
+seasons = ['ANN', 'AMJ']
