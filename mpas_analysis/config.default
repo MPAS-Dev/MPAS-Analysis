@@ -1802,7 +1802,7 @@ colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
+normArgsDifference = {'vmin': -5, 'vmax': 5} # Need to set
 units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 
