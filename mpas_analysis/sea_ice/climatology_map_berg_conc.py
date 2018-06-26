@@ -21,11 +21,11 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
     """
     An analysis task for comparison of iceberg concentration against
     observations
-
-    Authors
-    -------
-    Darin Comeau, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Darin Comeau, Xylar Asay-Davis
+
     def __init__(self, config, mpasClimatologyTask, hemisphere,
                  refConfig=None):  # {{{
         """
@@ -44,11 +44,11 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
 
         refConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a reference run (if any)
-
-        Authors
-        -------
-        Darin Comeau, Xylar Asay-Davis
         """
+        # Authors
+        # -------
+        # Darin Comeau, Xylar Asay-Davis
+
         taskName = 'climatologyMapIcebergConc{}'.format(hemisphere)
 
         fieldName = 'IcebergConc'
@@ -142,14 +142,14 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'm',
+                        unitsLabel=r'%',
                         imageDescription=imageDescription,
                         imageCaption=imageCaption,
                         galleryGroup=galleryGroup,
                         groupSubtitle=None,
                         groupLink='{}_conc'.format(hemisphere.lower()),
                         galleryName=galleryName,
-                        maskValue=0)
+                        maskValue=None)
 
                 self.add_subtask(subtask)
 
@@ -162,11 +162,10 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
     """
     A subtask for reading and remapping iceberg concentration from Altiberg
     observations
-
-    Authors
-    -------
-    Darin Comeau, Xylar Asay-Davis
     """
+    # Authors
+    # -------
+    # Darin Comeau, Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
         '''
@@ -181,11 +180,10 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-
-        Authors
-        -------
-        Darin Comeau, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Darin Comeau, Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
@@ -208,11 +206,10 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-
-        Authors
-        -------
-        Darin Comeau, Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Darin Comeau, Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
         dsObs.rename({'probability': 'icebergConc', 'time': 'Time'},

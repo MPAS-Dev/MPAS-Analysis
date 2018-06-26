@@ -1804,22 +1804,24 @@ thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 # in the southern hemisphere (SH)
 
 # colormap for model/observations
-colormapNameResult = inferno
+colormapNameResult = ice
 # color indices into colormapName for filled contours
-colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
-# colormap levels/values for contour boundaries
-colorbarLevelsResult = [0.0015, 0.003, 0.005, 0.007, 0.008, 0.0085, 0.009, 0.0095, 0.01]
+# the type of norm used in the colormap
+normTypeResult = log
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1e-4, 'vmax': 1e-2}
+# specify the ticks
+# colorbarTicksResult = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1.0]
 
 # colormap for differences
-colormapNameDifference = RdBu_r
+colormapNameDifference = balance
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
 colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.]
 
-# Times for comparison times (These should be left unchanged, since
-# observations are only available for these seasons)
-seasons =  ['DJF', 'JJA']
+# Times for comparison times
+seasons =  ['ANN', 'DJF', 'JJA']
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
