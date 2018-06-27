@@ -1809,16 +1809,16 @@ colormapNameResult = ice
 # the type of norm used in the colormap
 normTypeResult = log
 # A dictionary with keywords for the norm
-normArgsResult = {'vmin': 1e-4, 'vmax': 1e-2}
+normArgsResult = {'vmin': 1e-5, 'vmax': 1e-2}
 # specify the ticks
-# colorbarTicksResult = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1.0]
+# colorbarTicksResult = [1e-5, 1e-4, 1e-3, 1e-2]
 
 # colormap for differences
 colormapNameDifference = balance
 # color indices into colormapName for filled contours
-colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
-# colormap levels/values for contour boundaries
-colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.]
+normTypeDifference = symLog
+# A dictionary with keywords for the norm
+normArgsDifference = {'linthresh': 1e-5, 'linscale': 1, 'vmin': -1e-2, 'vmax': 1e-2}
 
 # Times for comparison times
 seasons =  ['ANN', 'DJF', 'JJA']

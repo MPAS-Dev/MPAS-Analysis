@@ -142,7 +142,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'%',
+                        unitsLabel=r'fraction',
                         imageDescription=imageDescription,
                         imageCaption=imageCaption,
                         galleryGroup=galleryGroup,
