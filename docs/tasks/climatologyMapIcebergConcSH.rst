@@ -9,7 +9,7 @@ observations.
 Component and Tags::
 
   component: seaIce
-  tags: icebergs, climatology, horizontalMap, publicObs
+  tags: icebergs, climatology, horizontalMap
 
 Configuration Options
 ---------------------
