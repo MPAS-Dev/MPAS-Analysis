@@ -321,10 +321,8 @@ baseDirectory = /dir/to/seaice/reference
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /dir/to/seaice/observations
+baseDirectory = /dir/to/iceberg/observations
 concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
-#concentrationFESOMSH = FESOM/FESOM_ALL_1997-2008.nc
-#concentrationNEMO-ICBSH = NEMO-ICB/NEMO-ICB_IAF.nc
 
 [timeSeriesOHCAnomaly]
 ## options related to plotting time series of ocean heat content (OHC)
