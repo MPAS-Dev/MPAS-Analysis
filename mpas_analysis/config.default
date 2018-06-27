@@ -1815,7 +1815,7 @@ normArgsResult = {'vmin': 1e-5, 'vmax': 1e-2}
 
 # colormap for differences
 colormapNameDifference = balance
-# color indices into colormapName for filled contours
+# the type of norm used in the colormap
 normTypeDifference = symLog
 # A dictionary with keywords for the norm
 normArgsDifference = {'linthresh': 1e-5, 'linscale': 1, 'vmin': -1e-2, 'vmax': 1e-2}
