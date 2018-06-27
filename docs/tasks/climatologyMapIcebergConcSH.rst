@@ -1,7 +1,7 @@
 .. _task_climatologyMapIcebergConcSH:
 
 climatologyMapIcebergConcSH
-==========================
+===========================
 
 An analysis task for plotting maps of Antarctic iceberg concentration against
 observations.
@@ -72,12 +72,10 @@ For details on the remaining configration options, see:
 
 Observations
 ------------
-# dcfix
 * :ref:`altiberg`
 
 Example Result
 --------------
-# dcfix
-.. image:: examples/berg_conc_sh.png
-   :width: 720 px
-   :align: center
+  image:: examples/berg_conc_sh.png
+  :width: 720 px
+  :align: center

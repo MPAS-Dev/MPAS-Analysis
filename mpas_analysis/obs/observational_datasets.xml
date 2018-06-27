@@ -1205,17 +1205,19 @@
 
   <observation>
     <name>
+      Iceberg Concentration: Altiberg
     </name>
     <component>
       seaice
     </component>
     <description>
-      Iceberg probabilities from the Altiberg dataset for small icebergs (<3km in length) detected by altimeters using the high resolution waveforms. The database is also available for other several altimeter mission (ERS-1, ERS-2, Jason-1, Jason-2, CryoSat-2, Topex, Envisat, AltiKa). A merged product combining all the available altimeters is also provided, which is used in MPAS-Analysis.
+      Iceberg probabilities from the Altiberg dataset for small icebergs (less than 3km in length) detected by altimeters using the high resolution waveforms. The database is also available for other several altimeter mission (ERS-1, ERS-2, Jason-1, Jason-2, CryoSat-2, Topex, Envisat, AltiKa). A merged product combining all the available altimeters is also provided, which is used in MPAS-Analysis.
     </description>
     <source>
-      [Altiberg website] (http://cersat.ifremer.fr/user-community/news/item/473-altiberg-a-database-for-small-icebergs)
+      [Altiberg website](http://cersat.ifremer.fr/user-community/news/item/473-altiberg-a-database-for-small-icebergs)
     </source>
     <releasePolicy>
+      Unknown, openly available on website.
     </releasePolicy>
     <references>
       - [Tournade et al (2017)](ftp://ftp.ifremer.fr/ifremer/cersat/projects/altiberg/v2/documentation/ALTIBERG-rep_v2_1.pdf)

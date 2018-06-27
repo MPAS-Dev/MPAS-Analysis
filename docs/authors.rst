@@ -6,6 +6,7 @@ Main Authors
 
 Contributors
 ============
+* Darin Comeau
 * Charles Doutriaux
 * Jeremy Fyke
 * Matthew Hoffman
