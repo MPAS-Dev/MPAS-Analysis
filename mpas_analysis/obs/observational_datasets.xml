@@ -777,6 +777,160 @@
       woce
     </nameInDocs>
   </observation>
+  
+  <observation>
+    <name>
+      World Ocean Atlas v2
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      The World Ocean Atlas (WOA) is a data product of the Ocean Climate 
+      Laboratory of the National Oceanographic Data Center. It consists of 
+      objectively analyzed climatological mean fields at 1 degree spatial
+      resolution. The climatology is based on all data that are available from
+      the early 1900s to present. 
+    </description>
+    <source>
+      - [World Ocean Atlas v2 Website](https://www.nodc.noaa.gov/OC5/woa13/) 
+    </source>
+    <releasePolicy>
+      Cite the World Ocean Atlas 2013 for the data sets used (see references).
+      The World Ocean Atlas 2013 (and all previous versions) are available free
+      of charge. 
+    </releasePolicy>
+    <references>
+      - [Oxygen: Garcia et al. 2014a](https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol3.pdf)
+      - [Nutrients: Garcia et al. 2014b](https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol4.pdf)
+    </references>
+    <bibtex>
+      @article{garcia64volume,
+      title={Volume 3: dissolved oxygen, apparent oxygen utilization, and oxygen saturation, edited by: Levitus},
+      author={Garcia, HE and Locarnini, RA and Boyer, TP and Antonov, JI},
+      journal={S., NOAA Atlas NESDIS},
+      volume={64}
+      }
+      @article{garciaNutrients}
+      title={Volume 4: dissolved inorganic nutrients (phosphate, nitrate, silicate), edited by: Levitus},
+      author={Garcia, HE and Locarnini, RA and Boyer, TP, and Atonov, JI},
+      journal={S., NOAA Atlas NESDIS},
+      volume={64}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://data.nodc.noaa.gov/woa/WOA13/DATA/nitrate/netcdf/all/1.00/
+      - https://data.nodc.noaa.gov/woa/WOA13/DATA/phosphate/netcdf/all/1.00/
+      - https://data.nodc.noaa.gov/woa/WOA13/DATA/silicate/netcdf/all/1.00/
+      - https://data.nodc.noaa.gov/woa/WOA13/DATA/oxygen/netcdf/all/1.00/
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_BGC_data.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapBGC
+    </tasks>
+    <subdirectory>
+      Ocean/BGC
+    </subdirectory>
+    <nameInDocs>
+      woa
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
+      Landschuetzerv2016 SOM-FFN
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      The observation-based pCO2 fields were created using a 2-step neural 
+      network method extensively described and validated in Landschützer et
+      al. 2013, 2014, 2016. The method first clusters the global ocean into 
+      biogeochemical provinces and in a second step reconstructs the non-liner 
+      relationship between CO2 driver variables and observations from the 4th 
+      release of the Surface Ocean CO2 Atlas (SOCATv4, Bakker et al. 2016). 
+      This file contains the resulting monthly pCO2 fields at 1°x1° resolion
+      covering the global ocean with the exception of the Arctic Ocean and few 
+      marginal seas. The air-sea CO2 fluxes are computed from the air-sea CO2 
+      partial pressure difference and a bulk gas transfer formulation 
+      following Landschützer et al. 2013, 2014, 2016. Furthermore, the monthly
+      climatology is created from the monthly average of the period 1985-2015.
+    </description>
+    <source>
+      [SOM-FFN Website](https://www.nodc.noaa.gov/ocads/oceans/SPCO2_1982_2015_ETH_SOM_FFN.html)
+    </source>
+    <releasePolicy>
+      This product is free to be used. Please cite the data set as:
+      Landschützer, P., N. Gruber and D.C.E. Bakker (2017). An updated observation-based global monthly gridded sea surface pCO2 and air-sea CO2 flux product from 1982 through 2015 and its monthly climatology (NCEI Accession 0160558). Version 2.2. NOAA National Centers for Environmental Information. Dataset. [2017-07-11]
+    </releasePolicy>
+    <references>
+      - [Landschuetzer et al. 2013](http://doi.org/10.5194/bg-10-7793-2013)
+      - [Landschuetzer et al. 2014](http://doi.org/10.1002/2014GB004853)
+      - [Landschuetzer et al. 2016](http://doi.org/10.1002/2015GB005359)
+      - [Bakker et al. 2016](http://doi.org/10.5194/essd-8-383-2016)
+    </references>
+    <bibtex>
+      @article{landschutzer2013neural,
+      title={A neural network-based estimate of the seasonal to inter-annual variability of the Atlantic Ocean carbon sink},
+      author={Landsch{\"u}tzer, P and Gruber, N and Bakker, DCE and Schuster, U and Nakaoka, S and Payne, MR and Sasse, TP and Zeng, J},
+      journal={Biogeosciences},
+      volume={10},
+      number={11},
+      pages={7793},
+      year={2013},
+      publisher={Copernicus GmbH}
+      }
+      @article{landschutzer2014recent,
+      title={Recent variability of the global ocean carbon sink},
+      author={Landsch{\"u}tzer, P and Gruber, N and Bakker, DCE and Schuster, U},
+      journal={Global Biogeochemical Cycles},
+      volume={28},
+      number={9},
+      pages={927--949},
+      year={2014},
+      publisher={Wiley Online Library}
+      }
+      @article{landschuetzer2016decadal,
+      title={Decadal variations and trends of the global ocean carbon sink},
+      author={Landschuetzer, Peter and Gruber, Nicolas and Bakker, Dorothee CE},
+      journal={Global Biogeochemical Cycles},
+      volume={30},
+      number={10},
+      pages={1396--1417},
+      year={2016},
+      publisher={Wiley Online Library}
+      }
+      @article{bakker2016multi,
+      title={A multi-decade record of high-quality fCO 2 data in version 3 of the Surface Ocean CO 2 Atlas (SOCAT)},
+      author={Bakker, Dorothee CE and Pfeil, Benjamin and Landa, Camilla S and Metzl, Nicolas and O'brien, Kevin M and Olsen, Are and Smith, Karl and Cosca, Cathy and Harasawa, Sumiko and Jones, Stephen D and others},
+      journal={Earth System Science Data},
+      volume={8},
+      number={2},
+      pages={383},
+      year={2016},
+      publisher={Copernicus GmbH}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://www.nodc.noaa.gov/archive/arc0105/0160558/3.3/data/0-data/
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_BGC_data.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapBGC
+    </tasks>
+    <subdirectory>
+      Ocean/BGC/CO2_gas_flux
+    </subdirectory>
+    <nameInDocs>
+      landschuetzer-som-ffn
+    </nameInDocs>
+  </observation>
+
 
 <!--
   <observation>
