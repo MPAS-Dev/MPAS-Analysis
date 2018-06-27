@@ -142,7 +142,7 @@ htmlSubdirectory = html
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         only_ocean,no_timeSeries,timeSeriesSST
-generate = ['all_publicObs']
+generate = ['all_publicObs', 'no_icebergs']
 
 
 [climatology]
@@ -322,7 +322,7 @@ baseDirectory = /dir/to/seaice/reference
 
 # directory where sea ice observations are stored
 baseDirectory = /dir/to/seaice/observations
-concentrationSH = Altiberg/Altiberg_1991-2017.nc
+concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
 #concentrationFESOMSH = FESOM/FESOM_ALL_1997-2008.nc
 #concentrationNEMO-ICBSH = NEMO-ICB/NEMO-ICB_IAF.nc
 
