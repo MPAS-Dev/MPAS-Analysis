@@ -20,8 +20,10 @@ from mpas_analysis.shared.climatology.climatology import \
     get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name
 
-from ..io.utility import build_config_full_path, make_directories, \
-    get_files_year_month
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, get_files_year_month
+
+from mpas_analysis.shared.constants import constants
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -42,7 +44,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
     seasons : list of str
         A list of seasons (keys in ``shared.constants.monthDictionary``)
-        over which the climatology should be computed or ['none'] if only
+        over which the climatology should be computed or ``[]`` if only
         monthly climatologies are needed.
 
     inputFiles : list of str
@@ -124,7 +126,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         seasons : list of str, optional
             A list of seasons (keys in ``shared.constants.monthDictionary``)
-            to be computed or ['none'] (not ``None``) if only monthly
+            to be computed or ``None`` if only monthly
             climatologies are needed.
 
         Raises
@@ -230,10 +232,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                                  os.path.basename(self.inputFiles[0]),
                                  os.path.basename(self.inputFiles[-1])))
 
-        if self.seasons[0] is 'none':
-            seasonsToCheck = ['{:02d}'.format(month) for month in range(1, 13)]
-        else:
-            seasonsToCheck = self.seasons
+        seasonsToCheck = list(constants.abrevMonthNames)
+        for season in self.seasons:
+            if season not in seasonsToCheck:
+                seasonsToCheck.append(season)
 
         allExist = True
         for season in seasonsToCheck:
@@ -449,6 +451,12 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         parallelMode = self.config.get('execute', 'ncclimoParallelMode')
 
+        seasons = [season for season in self.seasons
+                   if season not in constants.abrevMonthNames]
+
+        if len(seasons) == 0:
+            seasons = ['none']
+
         args = ['ncclimo',
                 '-4',
                 '--clm_md=mth',
@@ -456,7 +464,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 '-m', self.ncclimoModel,
                 '-p', parallelMode,
                 '-v', ','.join(self.variableList),
-                '--seasons={}'.format(','.join(self.seasons)),
+                '--seasons={}'.format(','.join(seasons)),
                 '-s', '{:04d}'.format(self.startYear),
                 '-e', '{:04d}'.format(self.endYear),
                 '-i', inDirectory,
