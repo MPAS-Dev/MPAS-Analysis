@@ -1795,6 +1795,8 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
 units = 'mmol m$^{-3}$'
 # Prefix to variable name in MPAS-O output
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
+# Acronym/label for observational dataset
+observationsLabel = 'WOA'
 
 [climatologyMapBGC_NO3]
 colormapNameResult = dense 
@@ -1802,7 +1804,7 @@ colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -5, 'vmax': 5} # Need to set
+normArgsDifference = {'vmin': -5, 'vmax': 5} 
 units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'WOA'
@@ -1821,9 +1823,9 @@ filePrefix = 'timeMonthly_avg_ecosysTracers_'
 colormapNameResult = delta 
 colormapNameDifference = balance 
 normTypeResult = linear
-normArgsResult = {'vmin': -0.0001, 'vmax': 0.0001}
+normArgsResult = {'vmin': -5, 'vmax': 5}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
+normArgsDifference = {'vmin': 5, 'vmax': 5} 
 units = 'mmol C m$^{-3}$ m s$^{-1}$'
 filePrefix = 'timeMonthly_avg_'
 observationsLabel = 'SOM-FFNv2016'
