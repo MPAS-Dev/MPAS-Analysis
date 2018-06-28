@@ -76,6 +76,6 @@ Observations
 
 Example Result
 --------------
-  image:: examples/berg_conc_sh.png
-  :width: 720 px
-  :align: center
+.. image:: examples/berg_conc_sh.png
+   :width: 720 px
+   :align: center
