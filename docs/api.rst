@@ -107,6 +107,7 @@ Sea ice tasks
    ClimatologyMapSeaIceConc
    ClimatologyMapSeaIceThick
    TimeSeriesSeaIce
+   ClimatologyMapIcebergConc
 
 .. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
 
