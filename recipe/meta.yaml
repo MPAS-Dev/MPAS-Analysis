@@ -1,0 +1,52 @@
+{% set version = "0.7.5" %}
+
+package:
+  name: mpas_analysis
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: $PYTHON setup.py install --single-version-externally-managed
+          --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - numpy
+    - scipy
+    - matplotlib
+    - netCDF4
+    - xarray >=0.10.0
+    - dask
+    - bottleneck
+    - basemap
+    - lxml
+    - nco >=4.7.0
+    - pyproj
+    - pillow
+    - cmocean
+    - progressbar2
+    - requests
+
+test:
+  imports:
+    - mpas_analysis
+  requires:
+    - pytest
+  commands:
+    - pytest --pyargs mpas_analysis
+about:
+  home: https://github.com/MPAS-Dev/MPAS-Analysis
+  license: BSD 3-Clause
+  license_file: LICENSE
+  summary: 'Analysis of MPAS-Ocean and MPAS-Seaice simulations results'
+
+extra:
+  recipe-maintainers:
+    - xylar
