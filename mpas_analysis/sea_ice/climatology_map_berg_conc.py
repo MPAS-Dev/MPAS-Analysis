@@ -1,3 +1,10 @@
+# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
+# and the University Corporation for Atmospheric Research (UCAR).
+#
+# Unless noted otherwise source code is licensed under the BSD license.
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at http://mpas-dev.github.com/license.html
+#
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -168,7 +175,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
     # Darin Comeau, Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
-        '''
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -180,7 +187,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Darin Comeau, Xylar Asay-Davis
@@ -193,7 +200,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         return obsDescriptor  # }}}
 
     def build_observational_dataset(self, fileName):  # {{{
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -206,7 +213,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Darin Comeau, Xylar Asay-Davis
