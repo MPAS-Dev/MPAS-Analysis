@@ -311,8 +311,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         remappedClimatology = xr.open_dataset(remappedFileName)
 
         modelOutput = remappedClimatology[self.mpasFieldName].values
-        if self.maskValue is not None:
-            modelOutput = ma.masked_values(modelOutput, self.maskValue)
+        # mask nans
+        modelOutput = np.ma.masked_array(modelOutput, np.isnan(modelOutput))
+
         lon = remappedClimatology['lon'].values
         lat = remappedClimatology['lat'].values
 
@@ -325,11 +326,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
             remappedRefClimatology = xr.open_dataset(remappedFileName)
 
-            refOutput = remappedRefClimatology[self.refFieldName].values
-            if self.maskValue is not None:
-                refOutput = ma.masked_values(refOutput, self.maskValue)
-
-            difference = modelOutput - refOutput
         elif self.refConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
@@ -352,10 +348,30 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             difference = None
         else:
             refOutput = remappedRefClimatology[self.refFieldName].values
-            if self.maskValue is not None:
-                refOutput = ma.masked_values(refOutput, self.maskValue)
+            # mask nans
+            refOutput = np.ma.masked_array(refOutput, np.isnan(refOutput))
 
             difference = modelOutput - refOutput
+
+            # mask with maskValue only after taking the diff
+            if self.maskValue is not None:
+                mask = np.logical_or(refOutput.mask, refOutput == self.maskValue)
+                refOutput = np.ma.masked_array(refOutput, mask)
+
+        # mask with maskValue only after taking the diff
+        if self.maskValue is not None:
+            mask = np.logical_or(modelOutput.mask, modelOutput == self.maskValue)
+            modelOutput = np.ma.masked_array(modelOutput, mask)
+
+        # for log plots, make sure the data is all positive to avoid masking
+        if config.has_option(sectionName, 'normTypeResult'):
+            normType = config.get(sectionName, 'normTypeResult')
+            normArgs = config.getExpression(sectionName, 'normArgsResult')
+            if normType == 'log':
+                epsilon = 1e-2*normArgs['vmin']
+                modelOutput = np.maximum(modelOutput, epsilon)
+                if refOutput is not None:
+                    refOutput = np.maximum(refOutput, epsilon)
 
         startYear = self.startYear
         endYear = self.endYear
