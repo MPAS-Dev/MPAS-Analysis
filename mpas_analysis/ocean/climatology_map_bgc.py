@@ -68,6 +68,12 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                   datasets. If this is not desired, set the preindustrial 
                   flag to 'False' under the ClimatologyMapBGC config section.
                   """)
+        else:
+            print("""
+                  You are comparing against modern observations. If you desire
+                  a preindustrial comparison, set the preindustrial flag to
+                  'True' under the ClimatologyMapBGC config section.
+                  """)
 
         # CO2 flux has no vertical levels, throws error if you try to select
         # any. Can add any other flux-like variables to this list.
