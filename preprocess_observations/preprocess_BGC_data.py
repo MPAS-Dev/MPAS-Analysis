@@ -51,21 +51,21 @@ def process_GLODAP(inDir, outDir):
         tar = tarfile.open(inDir + '/GLODAPv2.2016b_MappedClimatologies.tar.gz')
         tar.extractall(inDir)
         tar.close()
-
+    
     # Loop through files and delete if they aren't DIC, Alk
     print('Deleting unneeded observations...')
     keep_vars = ['TCO2', 'TAlk', 'pHtsinsitutp']
     for filename in os.listdir(inDir + '/GLODAPv2.2016b_MappedClimatologies'):
         if not any(s in filename for s in keep_vars):
-            os.remove(inDir + '/GLODAPv2.2016b_MappedClimatologies/' +
+            os.remove(inDir + '/GLODAPv2.2016b_MappedClimatologies/' + 
                       filename)
-
+    
     # Edit to align with MPAS-Analysis standards
-    updated_name = {'TCO2': 'DIC', 'TAlk': 'ALK', 'PI_TCO2': 'DIC',
+    updated_name = {'TCO2': 'DIC', 'TAlk': 'ALK', 'PI_TCO2': 'PI_DIC',
                     'pHtsinsitutp': 'pH_3D'}
     for v in ['TCO2', 'TAlk', 'PI_TCO2', 'pHtsinsitutp']:
         print("Processing and saving " + v + "...")
-        filename = (inDir + '/GLODAPv2.2016b_MappedClimatologies/' +
+        filename = (inDir + '/GLODAPv2.2016b_MappedClimatologies/' + 
                     'GLODAPv2.2016b.' + v + '.nc')
         ds = xr.open_dataset(filename)
         ds = ds[v].isel(depth_surface=0)
@@ -89,16 +89,18 @@ def process_landschuetzer(inDir, outDir):
     # Authors
     # -------
     # Riley X. Brady
-    print("Processing and saving CO2 flux data...")
-    ds = xr.open_dataset(inDir + '/spco2_1982-2015_MPI_SOM-FFN_v2016.nc',
+    updated_name = {'fgco2': 'CO2_gas_flux', 'spco2': 'pCO2surface'}
+    for v in ['fgco2', 'spco2']:
+        print("Processing and saving " + updated_name[v] + "...") 
+        ds = xr.open_dataset(inDir + '/spco2_1982-2015_MPI_SOM-FFN_v2016.nc',
                          drop_variables='date')
-    ds = ds['fgco2_smoothed']
-    ds = ds.rename({'time': 'Time'})
-    ds.name = 'CO2_gas_flux'
-    ds.coords['month'] = ds['Time.month']
-    ds.coords['year'] = ds['Time.year']
-    outFile = ('CO2_gas_flux_1.0x1.0degree.nc')
-    ds.to_dataset().to_netcdf(outDir + '/' + outFile)
+        ds = ds[v + '_smoothed']
+        ds = ds.rename({'time': 'Time'})
+        ds.name = updated_name[v] 
+        ds.coords['month'] = ds['Time.month']
+        ds.coords['year'] = ds['Time.year']
+        outFile = (updated_name[v] + '_1.0x1.0degree.nc')
+        ds.to_dataset().to_netcdf(outDir + '/' + outFile)
 
 
 def process_woa(variable, ref_char, inDir, outDir):
@@ -136,7 +138,7 @@ if __name__ == '__main__':
         os.makedirs(args.inDir)
     except OSError:
         pass
-
+   
     if '~' in args.inDir:
         raise ValueError("""
             Please avoid using '~' for your input directory.
@@ -147,7 +149,7 @@ if __name__ == '__main__':
     urlBase = ('https://www.nodc.noaa.gov/archive/arc0107/0162565/2.2/data/' +
                '0-data/mapped/')
     download_files(['GLODAPv2.2016b_MappedClimatologies.tar.gz'],
-                   urlBase=urlBase, outDir=args.inDir)
+                    urlBase=urlBase, outDir=args.inDir)
     process_GLODAP(args.inDir, args.outDir)
 
     # + + + Landschuetzer Carbon Flux + + +
@@ -155,9 +157,7 @@ if __name__ == '__main__':
                'data/0-data/')
     download_files(['spco2_1982-2015_MPI_SOM-FFN_v2016.nc'],
                    urlBase=urlBase, outDir=args.inDir)
-    # Skip processing and saving netCDF if it's already been done.
-    if not os.path.isfile(args.outDir + '/' + 'CO2_gas_flux_1.0x1.0degree.nc'):
-        process_landschuetzer(args.inDir, args.outDir)
+    process_landschuetzer(args.inDir, args.outDir)
 
     # + + +  World Ocean Atlas data + + +
     variables = ['NO3', 'PO4', 'SiO3', 'O2']
@@ -177,3 +177,4 @@ if __name__ == '__main__':
         if not os.path.isfile(args.outDir + '/' + v +
                               '_1.0x1.0degree.nc'):
             process_woa(v, ref_char[v], args.inDir, args.outDir)
+     

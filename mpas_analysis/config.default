@@ -274,6 +274,7 @@ co2_gas_fluxSubdirectory = BGC/CO2_gas_flux
 dicSubdirectory = BGC/DIC
 alkSubdirectory = BGC/ALK
 ph_3dSubdirectory = BGC/pH_3D
+pco2surfaceSubdirectory = BGC/pCO2surface
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -1804,6 +1805,18 @@ normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = 'meq m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'GLODAPv2'
+
+[climatologyMappCO2surface]
+colormapNameResult = viridis 
+colormapNameDifference = balance 
+normTypeResult = linear
+normArgsResult = {'vmin': 300, 'vmax': 450}
+normTypeDifference = linear
+normArgsDifference = {'vmin': -500, 'vmax': 50} 
+units = 'ppmv'
+filePrefix = 'timeMonthly_avg_ecosys_diag_'
+observationsLabel = 'SOM-FFNv2016'
+
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
