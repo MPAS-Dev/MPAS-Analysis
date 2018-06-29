@@ -9,6 +9,9 @@ source:
 
 build:
     number: 0
+    script: $PYTHON setup.py install --single-version-externally-managed
+            --record=record.txt
+
 
 test:
     requires:
@@ -42,6 +45,9 @@ requirements:
 
 about:
     home:  http://gitub.com/MPAS-Dev/MPAS-Analysis
+    license: BSD 3-Clause
+    license_file: LICENSE
+    summary: 'Analysis of MPAS-Ocean and MPAS-Seaice simulations results'
 
 extra:
     recipe-maintainers:
