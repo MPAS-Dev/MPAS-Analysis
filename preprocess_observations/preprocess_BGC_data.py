@@ -23,7 +23,62 @@ import xarray as xr
 import os
 import argparse
 import glob
+import tarfile
+
 from mpas_analysis.shared.io.download import download_files
+from mpas_analysis.shared.interpolation import Remapper
+from mpas_analysis.shared.grid import LatLonGridDescriptor
+from mpas_analysis.shared.climatology.comparison_descriptors \
+    import get_comparison_descriptor
+from mpas_analysis.configuration \
+    import MpasAnalysisConfigParser
+
+def process_GLODAP(inDir, outDir):
+    """
+    Unzip the gzipped data, trim folder, and process remaining data for
+    MPAS-Analysis
+    """
+    # Authors
+    # -------
+    # Riley X. Brady
+
+    # Check if already unzipped
+    if os.path.isdir(inDir + '/GLODAPv2.2016b_MappedClimatologies'):
+        print('GLODAP observations already unzipped.')
+    # Unzip otherwise
+    else:
+        print('Unzipping GLODAP data...')
+        tar = tarfile.open(inDir + '/GLODAPv2.2016b_MappedClimatologies.tar.gz')
+        tar.extractall(inDir)
+        tar.close()
+
+    # Loop through files and delete if they aren't DIC, Alk
+    print('Deleting unneeded observations...')
+    keep_vars = ['TCO2', 'TAlk', 'pHtsinsitutp']
+    for filename in os.listdir(inDir + '/GLODAPv2.2016b_MappedClimatologies'):
+        if not any(s in filename for s in keep_vars):
+            os.remove(inDir + '/GLODAPv2.2016b_MappedClimatologies/' +
+                      filename)
+
+    # Edit to align with MPAS-Analysis standards
+    updated_name = {'TCO2': 'DIC', 'TAlk': 'ALK', 'PI_TCO2': 'DIC',
+                    'pHtsinsitutp': 'pH_3D'}
+    for v in ['TCO2', 'TAlk', 'PI_TCO2', 'pHtsinsitutp']:
+        print("Processing and saving " + v + "...")
+        filename = (inDir + '/GLODAPv2.2016b_MappedClimatologies/' +
+                    'GLODAPv2.2016b.' + v + '.nc')
+        ds = xr.open_dataset(filename)
+        ds = ds[v].isel(depth_surface=0)
+        temp_vals = ds.values
+        # Repeat the annual data into 12 months to fake the system
+        temp_vals = np.repeat(temp_vals[np.newaxis, :, :], 12, axis=0)
+        ds = xr.DataArray(temp_vals, dims=['Time', 'lat', 'lon'],
+                          coords=[range(0, 12), ds.lat, ds.lon])
+        ds.coords['month'] = ('Time', range(1, 13))
+        ds.coords['year'] = ('Time', np.ones(12))
+        ds.name = updated_name[v]
+        outFile = (ds.name + '_1.0x1.0degree.nc')
+        ds.to_dataset().to_netcdf(outDir + '/' + outFile)
 
 
 def process_landschuetzer(inDir, outDir):
@@ -67,10 +122,6 @@ def process_woa(variable, ref_char, inDir, outDir):
 
 
 if __name__ == '__main__':
-    """
-    Process raw Landschuetzerv2016 and WOA observations for comparison to 
-    MPAS output.
-    """
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-i", "--inDir", dest="inDir", required=True,
@@ -85,6 +136,19 @@ if __name__ == '__main__':
         os.makedirs(args.inDir)
     except OSError:
         pass
+
+    if '~' in args.inDir:
+        raise ValueError("""
+            Please avoid using '~' for your input directory.
+            The tarfile package doesn't like it. Input the full path.
+            """)
+
+    # + + + GLODAPv2 data + + +
+    urlBase = ('https://www.nodc.noaa.gov/archive/arc0107/0162565/2.2/data/' +
+               '0-data/mapped/')
+    download_files(['GLODAPv2.2016b_MappedClimatologies.tar.gz'],
+                   urlBase=urlBase, outDir=args.inDir)
+    process_GLODAP(args.inDir, args.outDir)
 
     # + + + Landschuetzer Carbon Flux + + +
     urlBase = ('https://www.nodc.noaa.gov/archive/arc0105/0160558/3.3/' +
@@ -113,4 +177,3 @@ if __name__ == '__main__':
         if not os.path.isfile(args.outDir + '/' + v +
                               '_1.0x1.0degree.nc'):
             process_woa(v, ref_char[v], args.inDir, args.outDir)
-     

@@ -924,10 +924,73 @@
       - climatologyMapBGC
     </tasks>
     <subdirectory>
-      Ocean/BGC/CO2_gas_flux
+      Ocean/BGC
     </subdirectory>
     <nameInDocs>
       landschuetzer-som-ffn
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
+      GLODAPv2
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      GLODAPv2 (Global Ocean Data Analysis Project version 2) is an international
+      data synthesis project for interior ocean inorganic carbon data and
+      related variables for the global ocean. It includes data from all ocean
+      areas of the globe and synthesizes 724 unique cruises. 
+    </description>
+    <source>
+      [GLODAPv2 Website](https://www.nodc.noaa.gov/ocads/oceans/GLODAPv2/)
+    </source>
+    <releasePolicy>
+      The GLODAPv2 database is freely available.
+    </releasePolicy>
+    <references>
+      - [Olsen et al. 2016](http://cdiac.ess-dive.lbl.gov/ftp/oceans/GLODAPv2/Data_Products/essd-8-297-2016.pdf)
+      - [Lauvset et al. 2016](http://cdiac.ess-dive.lbl.gov/ftp/oceans/GLODAPv2/Data_Products/essd-8-325-2016.pdf)
+      - [Olsen et al. 2017](https://www.nodc.noaa.gov/ocads/data/0162565.xml)
+    </references>
+    <bibtex>
+      @article{olsen2016global,
+      title={The Global Ocean Data Analysis Project version 2 (GLODAPv2)--an internally consistent data product for the world ocean},
+      author={Olsen, Are and Key, Robert M and van Heuven, Steven and Lauvset, Siv K and Velo, Anton and Lin, Xiaohua and Schirnick, Carsten and Kozyr, Alex and Tanhua, Toste and Hoppema, Mario and others},
+      journal={Earth System Science Data},
+      volume={8},
+      number={2},
+      pages={297},
+      year={2016},
+      publisher={Copernicus GmbH}
+      }
+      @article{lauvset2016new,
+      title={A new global interior ocean mapped climatology: the 1°$\times$ 1° GLODAP version 2},
+      author={Lauvset, Siv K and Key, Robert M and Olsen, Are and van Heuven, Steven and Velo, Anton and Lin, Xiaohua and Schirnick, Carsten and Kozyr, Alex and Tanhua, Toste and Hoppema, Mario and others},
+      journal={Earth System Science Data},
+      volume={8},
+      number={2},
+      pages={325},
+      year={2016},
+      publisher={Copernicus GmbH}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://www.nodc.noaa.gov/archive/arc0107/0162565/2.2/data/0-data/mapped/
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_BGC_data.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapBGC
+    </tasks>
+    <subdirectory>
+      Ocean/BGC
+    </subdirectory>
+    <nameInDocs>
+      glodapv2
     </nameInDocs>
   </observation>
 

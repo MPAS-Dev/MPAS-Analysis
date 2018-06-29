@@ -58,14 +58,23 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['climatology', 'horizontalMap', 'BGC', afieldName])
 
+        sectionName = 'climatologyMapBGC'
+        
+        # Clarify that the user is doing preindustrial vs. modern
+        preindustrial = config.getboolean(sectionName, 'preindustrial')
+        if preindustrial:
+            print("""
+                  You are comparing against all available preindustrial 
+                  datasets. If this is not desired, set the preindustrial 
+                  flag to 'False' under the ClimatologyMapBGC config section.
+                  """)
+
         # CO2 flux has no vertical levels, throws error if you try to select
         # any. Can add any other flux-like variables to this list.
         if afieldName not in ['CO2_gas_flux']:
             iselValues = {'nVertLevels': 0}
         else:
             iselValues = None
-
-        sectionName = 'climatologyMapBGC'
 
         climStartYear = config.getint('climatology',
                                       'startYear')
@@ -102,14 +111,22 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
         if refConfig is None:
             refTitleLabel = 'Observations'
+            if preindustrial and 'DIC' in afieldName: 
+                refTitleLabel += ' (Preindustrial)'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations',
                 '{}Subdirectory'.format(afieldName))
-
-            obsFileName = \
-                "{}/{}_1.0x1.0degree.nc" .format(
-                    observationsDirectory, afieldName)
+            
+            # If user wants to compare to preindustrial data, make sure that
+            # we load in the right DIC field.
+            if preindustrial and 'DIC' in afieldName: 
+                obsFileName = \
+                    "{}/PI_DIC_1.0x1.0degree.nc".format(observationsDirectory)
+            else:
+                obsFileName = \
+                    "{}/{}_1.0x1.0degree.nc" .format(
+                        observationsDirectory, afieldName)
 
             observationsLabel = config.getExpression(sectionName + '_' +
                 afieldName, 'observationsLabel', elementType=str)
@@ -122,7 +139,15 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 outFilePrefix=refFieldName,
                 comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
+            
             diffTitleLabel = 'Model - Observations'
+
+            # Certain BGC observations are only available at annual resolution.
+            # Need to ensure that the user is aware that their seasonal or 
+            # monthly climatology is being compared to ANN. Currently,
+            # this is just with GLODAP.
+            if 'GLODAPv2' in observationsLabel:
+                diffTitleLabel += ' (Compared to ANN)'
         else:
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
