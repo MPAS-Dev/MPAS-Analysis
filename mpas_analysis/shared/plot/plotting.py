@@ -25,6 +25,7 @@ import matplotlib.colors as cols
 import xarray as xr
 import pandas as pd
 from mpl_toolkits.basemap import Basemap
+from mpl_toolkits.basemap import addcyclic
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np
 from functools import partial
@@ -456,7 +457,11 @@ def plot_polar_comparison(
 
         m = Basemap(projection=plotProjection, boundinglat=latmin,
                     lon_0=lon0, resolution='l', ax=ax)
-        x, y = m(Lons, Lats)  # compute map proj coordinates
+
+        fieldPeriodic, LatsPeriodic, LonsPeriodic = addcyclic(field, Lats,
+                                                              Lons)
+
+        x, y = m(LonsPeriodic, LatsPeriodic)  # compute map proj coordinates
 
         ax.set_title(title, y=1.06, **plottitle_font)
 
@@ -467,10 +472,11 @@ def plot_polar_comparison(
                         labels=[True, False, True, True])
 
         if levels is None:
-            plotHandle = m.pcolormesh(x, y, field, cmap=colormap, norm=norm)
+            plotHandle = m.pcolormesh(x, y, fieldPeriodic, cmap=colormap,
+                                      norm=norm)
         else:
-            plotHandle = m.contourf(x, y, field, cmap=colormap, norm=norm,
-                                    levels=levels)
+            plotHandle = m.contourf(x, y, fieldPeriodic, cmap=colormap,
+                                    norm=norm, levels=levels)
 
         if contours is not None:
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
