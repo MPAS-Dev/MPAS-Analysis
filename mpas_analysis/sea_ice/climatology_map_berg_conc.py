@@ -107,7 +107,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             refFieldName = 'icebergConc'
             obsFileName = build_config_full_path(
                     config, 'icebergObservations',
-                    'concentration{}'.format(hemisphere))
+                    'concentrationAltiberg{}'.format(hemisphere))
 
             remapObservationsSubtask = RemapAltibergConcClimatology(
                     parentTask=self, seasons=seasons,
