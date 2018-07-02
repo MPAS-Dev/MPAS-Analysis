@@ -933,6 +933,63 @@
 
   <observation>
     <name>
+      SeaWiFS 
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      SeaWiFS (Sea-Viewing Wide Field-of-View Senson) was a project dedicated
+      to monitoring ocean water quality and ecological characteristics covering
+      multiple optical bands with a resolution of roughly 1.1km. Chlorophyll
+      concentrations are derived from images of ocean color.
+    </description>
+    <source>
+      [Ocean Color Website](https://oceancolor.gsfc.nasa.gov/)
+    </source>
+    <releasePolicy>
+      Please provide acknowledgement of the use of Ocean Biology Processing
+      Group (OBPG) data products, images, and services, e.g.:
+    
+      NASA Goddard Space Flight Center, Ocean Ecology Laboratory, Ocean 
+      Biology Processing Group; (2014): Sea-viewing Wide Field-of-view Sensor 
+      (SeaWiFS) Ocean Color Data, NASA OB.DAAC. http://doi.org/10.5067/ORBVIEW
+      -2/SEAWIFS_OC.2014.0. Accessed on 2016/02/29.
+    </releasePolicy>
+    <references>
+      - [O'Reilly et al. 1998](https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/98JC02160)
+    </references>
+    <bibtex>
+      @article{o1998ocean,
+      title={Ocean color chlorophyll algorithms for SeaWiFS},
+      author={O'Reilly, John E and Maritorena, Stephane and Mitchell, B Greg and Siegel, David A and Carder, Kendall L and Garver, Sara A and Kahru, Mati and McClain, Charles},
+      journal={Journal of Geophysical Research: Oceans},
+      volume={103},
+      number={C11},
+      pages={24937--24953},
+      year={1998},
+      publisher={Wiley Online Library}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://oceandata.sci.gsfc.nasa.gov/SeaWiFS/Mapped/Monthly_Climatology/9km/chlor_a/
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_BGC_data.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapBGC
+    </tasks>
+    <subdirectory>
+      Ocean/BGC
+    </subdirectory>
+    <nameInDocs>
+      seawifs 
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
       GLODAPv2
     </name>
     <component>

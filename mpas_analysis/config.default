@@ -275,6 +275,7 @@ dicSubdirectory = BGC/DIC
 alkSubdirectory = BGC/ALK
 ph_3dSubdirectory = BGC/pH_3D
 pco2surfaceSubdirectory = BGC/pCO2surface
+chlSubdirectory = BGC/Chl
 
 # first and last year of SST observational climatology (preferably one of the
 # two ranges given below)
@@ -1692,7 +1693,7 @@ contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 # SiO3 : 'SiO3'
 # CO2 flux : 'CO2_gas_flux'
 # O2 : 'O2'
-variables = ['PO4', 'NO3', 'SiO3', 'CO2_gas_flux', 'pH_3D', 'DIC', 'ALK', 'O2']
+variables = ['PO4', 'NO3', 'SiO3', 'CO2_gas_flux', 'pH_3D', 'DIC', 'ALK', 'O2', 'pCO2surface', 'Chl']
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
@@ -1704,7 +1705,7 @@ startYear = 0
 endYear = 10 
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
-comparisonGrids = ['latlon']
+comparisonGrids = ['latlon', 'antarctic']
 
 # Whether to compare to preindustrial observations that are available.
 preindustrial = False
@@ -1728,6 +1729,8 @@ units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 # Acronym/label for observational dataset
 observationsLabel = 'WOA'
+# Acronym/label for gallery variable (can be different from MPAS name)
+galleryLabel = 'PO4'
 
 [climatologyMapBGC_NO3]
 colormapNameResult = dense 
@@ -1735,10 +1738,11 @@ colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -5, 'vmax': 5} 
+normArgsDifference = {'vmin': -10, 'vmax': 10} 
 units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'WOA'
+galleryLabel = 'NO3'
 
 [climatologyMapBGC_SiO3]
 colormapNameResult = dense 
@@ -1746,14 +1750,15 @@ colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 80}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -15, 'vmax': 15} 
+normArgsDifference = {'vmin': -20, 'vmax': 20} 
 units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'WOA'
+galleryLabel = 'SiO3'
 
 [climatologyMapBGC_CO2_gas_flux]
-colormapNameResult = delta 
-colormapNameDifference = balance 
+colormapNameResult = BrBG_r 
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': -5, 'vmax': 5}
 normTypeDifference = linear
@@ -1761,6 +1766,7 @@ normArgsDifference = {'vmin': -5, 'vmax': 5}
 units = 'mol m$^{-2}$ yr$^{-1}$'
 filePrefix = 'timeMonthly_avg_'
 observationsLabel = 'SOM-FFNv2016'
+galleryLabel = 'CO2 Flux'
 
 [climatologyMapBGC_O2]
 colormapNameResult = matter 
@@ -1772,6 +1778,7 @@ normArgsDifference = {'vmin': -2, 'vmax': 2}
 units = 'mL/L'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'WOA'
+galleryLabel = 'O2'
 
 [climatologyMapBGC_pH_3D]
 colormapNameResult = PuBuGn_r
@@ -1779,10 +1786,11 @@ colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 8, 'vmax': 8.2}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -0.5, 'vmax': 0.5} # Need to set
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2} 
 units = ''
 filePrefix = 'timeMonthly_avg_ecosys_diag_'
-observationsLabel = 'GLODAPv2' 
+observationsLabel = 'GLODAPv2'
+galleryLabel = 'pH'
 
 [climatologyMapBGC_DIC]
 colormapNameResult = YlGnBu 
@@ -1794,6 +1802,7 @@ normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = 'mmol m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'GLODAPv2'
+galleryLabel = 'DIC'
 
 [climatologyMapBGC_ALK]
 colormapNameResult = PuBuGn 
@@ -1805,18 +1814,31 @@ normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = 'meq m$^{-3}$'
 filePrefix = 'timeMonthly_avg_ecosysTracers_'
 observationsLabel = 'GLODAPv2'
+galleryLabel = 'Alkalinity'
 
-[climatologyMappCO2surface]
+[climatologyMapBGC_pCO2surface]
 colormapNameResult = viridis 
 colormapNameDifference = balance 
 normTypeResult = linear
 normArgsResult = {'vmin': 300, 'vmax': 450}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -500, 'vmax': 50} 
+normArgsDifference = {'vmin': -50, 'vmax': 50} 
 units = 'ppmv'
 filePrefix = 'timeMonthly_avg_ecosys_diag_'
 observationsLabel = 'SOM-FFNv2016'
+galleryLabel = 'pCO2'
 
+[climatologyMapBGC_Chl]
+colormapNameResult = viridis 
+colormapNameDifference = balance 
+normTypeResult = log
+normArgsResult = {'vmin': 0.01, 'vmax': 20}
+normTypeDifference = symLog 
+normArgsDifference = {'linthresh': 0.1, 'vmin': -10, 'vmax': 10} 
+units = 'mg m$^{-3}$'
+filePrefix = 'timeMonthly_avg_ecosysTracers_'
+observationsLabel = 'SeaWIFS'
+galleryLabel = 'Chlorophyll'
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
