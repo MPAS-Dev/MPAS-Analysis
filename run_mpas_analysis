@@ -105,10 +105,10 @@ def build_analysis_list(config, refConfig):  # {{{
                                                 bgcvar,
                                                 prefix + bgcvar,
                                                 refConfig))
-    #analyses.append(ocean.ClimatologyMapSoseTemperature(
-    #        config, oceanClimatolgyTask, refConfig))
-    #analyses.append(ocean.ClimatologyMapSoseSalinity(
-    #        config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSoseTemperature(
+            config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapSoseSalinity(
+            config, oceanClimatolgyTask, refConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
             config, oceanClimatolgyTask, refConfig))

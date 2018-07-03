@@ -75,7 +75,7 @@ baseDirectory = /dir/to/analysis/output
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['only_BGC']
+generate = ['only_BGC', 'no_pCO2surface']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
@@ -138,8 +138,3 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_
 
 # Directory for region mask files
 regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks
-
-[climatologyMapBGC]
-
-variables = ['NO3', 'CO2_gas_flux']
-seasons = ['ANN', 'AMJ']

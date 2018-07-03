@@ -889,6 +889,7 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 ## potential density at various levels, including the sea floor against
 ## reference model results and SOSE reanalysis data
 
+
 # colormap for model/observations
 colormapNameResult = Spectral_r
 # the type of norm used in the colormap
@@ -1846,7 +1847,7 @@ galleryLabel = 'Chlorophyll'
 ## in the northern hemisphere (NH)
 
 # colormap for model/observations
-colormapNameResult = inferno
+colormapNameResult = ice
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries

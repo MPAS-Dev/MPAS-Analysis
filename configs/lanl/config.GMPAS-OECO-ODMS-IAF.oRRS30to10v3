@@ -3,13 +3,14 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = A_BGCEXP_BCRC_CNPECACNT_1850_ne30_oEC60to30v3_anvil02
+mainRunName = GMPAS-OECO-ODMS-IAF.oRRS30to10v3 
+ 
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
 # performed with MPAS components (so they cannot be easily ingested by
 # MPAS-Analysis)
-preprocessedReferenceRunName = None
+preprocessedReferenceRunName = B1850C5_ne30_v0.4
 
 # config file for a reference run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
@@ -17,31 +18,37 @@ preprocessedReferenceRunName = None
 # remapped to the comparison grid.  Leave this option commented out if no
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
+[execute]
+parallelTaskCount = 6 
+ncclimoParallelMode = bck
 
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lcrc/group/acme/maltrud/acme_scratch/A_BGCEXP_BCRC_CNPECACNT_1850_ne30_oEC60to30v3_anvil02/run
+baseDirectory = /lustre/scratch3/turquoise/rileybrady/ACME/cases/GMPAS-OECO-ODMS-IAF_oRRS30to10v3_grizzly03/run 
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oEC60to30v3
+mpasMeshName = oRRS30to10v3
 
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-mappingDirectory = /lcrc/group/acme/mpas_analysis/mapping
+mappingDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/mapping/
+
+# names of namelist and streams files, either a path relative to baseDirectory
+# or an absolute path.
+oceanNamelistFileName = mpaso_in
+oceanStreamsFileName = streams.ocean
+seaIceNamelistFileName = mpascice_in
+seaIceStreamsFileName = streams.cice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /lcrc/group/acme/pwolfram/A_BGCEXP_BCRC_CNPECACNT_1850_ne30_oEC60to30v3_anvil02
-
-# Anvil doesn't have direct access to a web portal, so output will need
-# to be copied elsewhere (e.g. NERSC web portal)
-htmlSubdirectory = html
+baseDirectory = /path/to/mpas/analysis/output
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   ./run_mpas_analysis --list
@@ -68,17 +75,16 @@ htmlSubdirectory = html
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_landIceCavities']
-#generate = ['all_BGC']
+generate = ['only_BGC']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 50
+startYear = 1 
 # the last year over which to average climatalogies
-endYear = 60
+endYear = 100
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -87,8 +93,8 @@ endYear = 60
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
-startYear = 50
-endYear = 60
+startYear = 1
+endYear = 9999
 
 [index]
 ## options related to producing nino index.
@@ -97,53 +103,41 @@ endYear = 60
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
-startYear = 50
-endYear = 60
-
-[climatologyMapBGC]
-variables = ['spChl', 'NO3', 'PO4']
+startYear = 1
+endYear = 9999
 
 [oceanObservations]
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /lcrc/group/acme/mpas_analysis/observations/Ocean
-sstSubdirectory = SST
-sssSubdirectory = SSS
-mldSubdirectory = MLD
-ninoSubdirectory = Nino
-mhtSubdirectory = MHT
-
+baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations
 
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /lcrc/group/acme/mpas_analysis/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /lcrc/group/acme/mpas_analysis/observations/SeaIce
+baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations/SeaIce
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
-baseDirectory = /lcrc/group/acme/mpas_analysis/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[timeSeriesSeaIceAreaVol]
-## options related to plotting time series of sea ice area and volume
-
-# plot on polar plot
-polarPlot = False
+baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
 
 [regions]
 ## options related to ocean regions used in several analysis modules
 
 # Directory for region mask files
-regionMaskDirectory = /lcrc/group/acme/mpas_analysis/region_masks 
+regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks
+
+[climatologyMapBGC]
+preindustrial = True
