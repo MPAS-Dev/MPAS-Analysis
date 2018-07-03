@@ -277,15 +277,6 @@ ph_3dSubdirectory = BGC/pH_3D
 pco2surfaceSubdirectory = BGC/pCO2surface
 chlSubdirectory = BGC/Chl
 
-# first and last year of SST observational climatology (preferably one of the
-# two ranges given below)
-# values for preindustrial
-sstClimatologyStartYear = 1870
-sstClimatologyEndYear = 1900
-# alternative values for present day
-#sstClimatologyStartYear = 1990
-#sstClimatologyEndYear = 2011
-
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 interpolationMethod = bilinear
@@ -889,7 +880,6 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 ## potential density at various levels, including the sea floor against
 ## reference model results and SOSE reanalysis data
 
-
 # colormap for model/observations
 colormapNameResult = Spectral_r
 # the type of norm used in the colormap
@@ -907,6 +897,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+
 
 [climatologyMapSoseMixedLayerDepth]
 ## options related to plotting climatology maps of Antarctic
@@ -1824,7 +1815,7 @@ normTypeResult = linear
 normArgsResult = {'vmin': 300, 'vmax': 450}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -50, 'vmax': 50} 
-units = 'ppmv'
+units = '$\mu$atm'
 filePrefix = 'timeMonthly_avg_ecosys_diag_'
 observationsLabel = 'SOM-FFNv2016'
 galleryLabel = 'pCO2'
