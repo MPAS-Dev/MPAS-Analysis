@@ -59,23 +59,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
             tags=['climatology', 'horizontalMap', 'BGC', afieldName])
 
         sectionName = 'climatologyMapBGC'
-        
-        # Clarify that the user is doing preindustrial vs. modern
-        preindustrial = config.getboolean(sectionName, 'preindustrial')
-        if preindustrial:
-            print("""
-                  You are comparing against all available preindustrial 
-                  datasets. If this is not desired, set the preindustrial 
-                  flag to 'False' under the ClimatologyMapBGC config section.
-                  """)
-        else:
-            print("""
-                  You are comparing against modern observations. If you desire
-                  a preindustrial comparison, set the preindustrial flag to
-                  'True' under the ClimatologyMapBGC config section.
-                  """)
 
-        # CO2 flux and pCO2 has no vertical levels, throws error if you try to 
+        # CO2 flux and pCO2 has no vertical levels, throws error if you try to
         # select any. Can add any other flux-like variables to this list.
         if afieldName not in ['CO2_gas_flux', 'pCO2surface']:
             iselValues = {'nVertLevels': 0}
@@ -103,12 +88,12 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
-        
-        # Pass multiple variables if working with Chlorophyll to sum 
+
+        # Pass multiple variables if working with Chlorophyll to sum
         # them to total chlorophyll
-        if afieldName == 'Chl': 
+        if afieldName == 'Chl':
             prefix = 'timeMonthly_avg_ecosysTracers_'
-            variableList = [prefix + 'spChl', prefix + 'diatChl', 
+            variableList = [prefix + 'spChl', prefix + 'diatChl',
                             prefix + 'diazChl', prefix + 'phaeoChl']
             plotField = 'Chl'
         else:
@@ -126,13 +111,14 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
         if refConfig is None:
             refTitleLabel = 'Observations'
-            if preindustrial and 'DIC' in afieldName: 
+            preindustrial = config.getboolean(sectionName, 'preindustrial')
+            if preindustrial and 'DIC' in afieldName:
                 refTitleLabel += ' (Preindustrial)'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations',
                 '{}Subdirectory'.format(afieldName))
-            
+
             # If user wants to compare to preindustrial data, make sure that
             # we load in the right DIC field.
             if preindustrial and afieldName == 'DIC':
@@ -147,26 +133,28 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                         observationsDirectory, afieldName)
 
             observationsLabel = config.getExpression(sectionName + '_' +
-                afieldName, 'observationsLabel', elementType=str)
+                                                     afieldName,
+                                                     'observationsLabel',
+                                                     elementType=str)
             refFieldName = afieldName
             outFileLabel = afieldName + observationsLabel
-           
+
             galleryLabel = config.getExpression(sectionName + '_' + afieldName,
                                                 'galleryLabel',
                                                 elementType=str)
-            galleryName = (galleryLabel + ' (Compared to ' + observationsLabel 
-                           + ')') 
-            
+            galleryName = (galleryLabel + ' (Compared to ' + observationsLabel
+                           + ')')
+
             remapObservationsSubtask = RemapObservedBGCClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
                 outFilePrefix=refFieldName,
                 comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
-            
+
             diffTitleLabel = 'Model - Observations'
 
             # Certain BGC observations are only available at annual resolution.
-            # Need to ensure that the user is aware that their seasonal or 
+            # Need to ensure that the user is aware that their seasonal or
             # monthly climatology is being compared to ANN. Currently,
             # this is just with GLODAP.
             if observationsLabel == 'GLODAPv2':
@@ -206,6 +194,32 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                     diffTitleLabel=diffTitleLabel)
 
                 self.add_subtask(subtask)
+
+    def setup_and_check(self): # {{{
+        '''
+        Check if preindustrial flag is turned on or off.
+        '''
+        # Authors
+        # -------
+        # Riley X. Brady
+        super(ClimatologyMapBGC, self).setup_and_check()
+
+        # Clarify that the user is doing preindustrial vs. modern
+        preindustrial = self.config.getboolean('climatologyMapBGC',
+                                               'preindustrial')
+        if preindustrial:
+            print("""
+                  You are comparing against all available preindustrial 
+                  datasets. If this is not desired, set the preindustrial 
+                  flag to 'False' under the ClimatologyMapBGC config section.
+                  """)
+        else:
+            print("""
+                  You are comparing against modern observations. If you desire
+                  a preindustrial comparison, set the preindustrial flag to
+                  'True' under the ClimatologyMapBGC config section.
+                  """)
+
         # }}}
     # }}}
 
