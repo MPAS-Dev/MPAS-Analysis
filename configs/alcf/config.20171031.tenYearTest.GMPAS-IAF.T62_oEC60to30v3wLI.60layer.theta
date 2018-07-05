@@ -3,14 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta
-
-# preprocessedReferenceRunName is the name of a reference run that has been
-# preprocessed to compare against (or None to turn off comparison).  Reference
-# runs of this type would have preprocessed results because they were not
-# performed with MPAS components (so they cannot be easily ingested by
-# MPAS-Analysis)
-preprocessedReferenceRunName = None
+mainRunName = 20171031.tenYearTest.GMPAS-IAF.T62_oEC60to30v3wLI.60layer.theta
 
 # config file for a reference run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
@@ -34,15 +27,15 @@ ncclimoParallelMode = bck
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /projects/ClimateEnergy_2/azamatm/E3SM_simulations/20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta/run
+baseDirectory = /lus/theta-fs0/projects/OceanClimate_2/mpeterse/20171031.tenYearTest.GMPAS-IAF.T62_oEC60to30v3wLI.60layer.theta/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oRRS18to6v3
+mpasMeshName = oEC60to30v3wLI
 
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-mappingDirectory = /projects/ccsm/acme/diagnostics_data/mapping
+mappingDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics/mpas_analysis/maps
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -81,14 +74,14 @@ baseDirectory = /dir/to/analysis/output
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_landIceCavities']
+generate = ['all']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 10
+startYear = 5
 # the last year over which to average climatalogies
 endYear = 10
 
@@ -99,8 +92,8 @@ endYear = 10
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
-startYear = 8
-endYear = 10
+startYear = 1
+endYear = 9999
 
 [index]
 ## options related to producing nino index.
@@ -116,34 +109,14 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /projects/ccsm/acme/diagnostics_data/observations/Ocean
-sstSubdirectory = SST
-sssSubdirectory = SSS
-mldSubdirectory = MLD
-ninoSubdirectory = Nino
-mhtSubdirectory = MHT
-soseSubdirectory = SOSE
-
-[oceanPreprocessedReference]
-## options related to preprocessed ocean reference run with which the results
-## will be compared (e.g. a POP, CESM or ACME v0 run)
-
-# directory where ocean reference simulation results are stored
-baseDirectory = /projects/ccsm/acme/diagnostics_data/reference_runs/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics/observations/Ocean
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /projects/ccsm/acme/diagnostics_data/observations/SeaIce
-
-[seaIcePreprocessedReference]
-## options related to preprocessed sea ice reference run with which the results
-## will be compared (e.g. a CICE, CESM or ACME v0 run)
-
-# directory where ocean reference simulation results are stored
-baseDirectory = /projects/ccsm/acme/diagnostics_data/reference_runs/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics/observations/SeaIce
 
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
@@ -153,7 +126,19 @@ polarPlot = False
 
 [regions]
 # Directory containing mask files for ocean basins and ice shelves
-regionMaskDirectory = /projects/ccsm/acme/diagnostics_data/region_masks
+regionMaskDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics/mpas_analysis/region_masks
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning
+## circulation (MOC)
+
+# Use postprocessing script to compute the MOC? You want this to be True
+# for low-resolution simulations that use GM to parameterize eddies, because
+# the online MOC analysis member currently does not include the bolus velocity
+# in its calculation, whereas the postprocessing script does.
+# NOTE: this is a temporary option that will be removed once the online
+# MOC takes into account the bolus velocity when GM is on.
+usePostprocessingScript = True
 
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
@@ -180,3 +165,7 @@ seasons =  ['JFM', 'JAS', 'ANN']
 # list of depths in meters (positive up) at which to analyze, 'top' for the
 # sea surface, 'bot' for the sea floor
 depths = ['top', -200, -400, -600, -800, 'bot']
+
+[timeSeriesAntarcticMelt]
+# a list of ice shelves to plot
+#iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica', 'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne', 'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery', 'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz', 'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']

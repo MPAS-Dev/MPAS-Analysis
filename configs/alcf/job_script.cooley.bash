@@ -1,27 +1,21 @@
 #!/bin/bash
+#COBALT -t 1:00:00
+#COBALT -n 1
+#COBALT -A ClimateEnergy_2
+#
 # Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
 # and the University Corporation for Atmospheric Research (UCAR).
 #
 # Unless noted otherwise source code is licensed under the BSD license.
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at http://mpas-dev.github.com/license.html
-#
-#COBALT -t 1:00:00
-#COBALT -n 1
-#COBALT -A OceanClimate
-#COBALT -q debug-flat-quad
 
-export OMP_NUM_THREADS=1
-
-module unload python
-module use /projects/OceanClimate/modulefiles/all
-module load e3sm-unified/1.1.2
+source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base/etc/profile.d/conda.sh
+conda activate e3sm_unified_1.2.0_py2.7_nox
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
-# prefix to run a serial job on a single node on edison
-command_prefix="aprun -N 1 -n 1"
 # change this if not submitting this script from the directory
 # containing run_mpas_analysis
 mpas_analysis_dir="."
@@ -59,20 +53,5 @@ ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-# write a batch script to prevent issues with cobalt or aprun trying to
-# symlink run_mpas_analysis
-cat <<EOF > run_mpas_analysis.bash
-#!/bin/bash
-
-module unload python
-module use /projects/OceanClimate/modulefiles/all
-module load python/anaconda-2.7-acme
-
-$mpas_analysis_dir/run_mpas_analysis \
-    $run_config_file $job_config_file
-EOF
-
-chmod u+x run_mpas_analysis.bash
-
-$command_prefix ./run_mpas_analysis.bash
+$mpas_analysis_dir/run_mpas_analysis $run_config_file $job_config_file
 
