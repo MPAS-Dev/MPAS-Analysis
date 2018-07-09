@@ -61,9 +61,11 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MPAS-Analysis'
-copyright = u'2016-2018, Los Alamos National Security, LLC (LANS) (Ocean: ' \
-            u'LA-CC-13-047; Land Ice: LA-CC-13-117) and the University ' \
-            u'Corporation for Atmospheric Research (UCAR)'
+copyright = u'This software is open source software available under the BSD-3' \
+            u'license. Copyright (c) 2018 Los Alamos National Security, LLC. ' \
+            u'All rights reserved. Copyright (c) 2018 Lawrence Livermore ' \
+            u'National Security, LLC. All rights reserved. Copyright (c) ' \
+            u'2018 UT-Battelle, LLC. All rights reserved.'
 author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, \n' \
          u'Luke Van Roekel, Greg Streletz, Mark Petersen, Stephen Price, \n' \
          u'Joseph Kennedy, Adrian Turner, Matthew Hoffman, Jeremy Fyke'
