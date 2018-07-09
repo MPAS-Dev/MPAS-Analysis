@@ -30,8 +30,10 @@ ALWAYS_IGNORE=(-not -path "*.git*" \
 FILE_IGNORE=(-not -iname "*.ocean" -not -iname "*_in" \
              -not -iname "*.md" -not -iname "*.json" -not -iname "*.txt" \
              -not -iname "*.png" -not -iname "*.jpg" -not -iname "*.svg" \
-             -not -iname "config.*" -not -iname "*.nc"\
+             -not -iname "config.*" -not -iname "*.nc" \
              -not -iname "*.pyc" \
-             -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml")
+             -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml"\
+             -not -iname "*.pdf" -not -iname "*.xml" -not -iname "*.m" \
+             -not -iname "*.ipynb")
 
 PYTHON_IGNORE=(-not -iname "__init__.py")
