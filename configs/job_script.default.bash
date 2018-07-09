@@ -1,4 +1,14 @@
 #!/bin/bash
+# This software is open source software available under the BSD-3 license.
+#
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

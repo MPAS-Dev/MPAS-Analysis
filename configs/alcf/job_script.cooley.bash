@@ -2,6 +2,16 @@
 #COBALT -t 1:00:00
 #COBALT -n 1
 #COBALT -A ClimateEnergy_2
+# This software is open source software available under the BSD-3 license.
+#
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base/etc/profile.d/conda.sh
 conda activate e3sm_unified_1.2.0_py2.7_nox
