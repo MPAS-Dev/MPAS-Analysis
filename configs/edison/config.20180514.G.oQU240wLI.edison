@@ -4,12 +4,6 @@
 
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = 20180514.G.oQU240wLI.edison
-# preprocessedReferenceRunName is the name of a reference run that has been
-# preprocessed to compare against (or None to turn off comparison).  Reference
-# runs of this type would have preprocessed results because they were not
-# performed with MPAS components (so they cannot be easily ingested by
-# MPAS-Analysis)
-preprocessedReferenceRunName = B1850C5_ne30_v0.4
 
 # config file for a reference run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
@@ -48,7 +42,7 @@ seaIceHistorySubdirectory = run
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-mappingDirectory = /global/project/projectdirs/acme/mpas_analysis/mapping
+mappingDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/maps
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -129,45 +123,20 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /global/project/projectdirs/acme/observations/Ocean/
-sstSubdirectory = SST
-sssSubdirectory = SSS
-mldSubdirectory = MLD
-ninoSubdirectory = Nino
-mhtSubdirectory = MHT
-
-[oceanPreprocessedReference]
-## options related to preprocessed ocean reference run with which the results
-## will be compared (e.g. a POP, CESM or ACME v0 run)
-
-# directory where ocean reference simulation results are stored
-baseDirectory = /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
+baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/Ocean/
 
 [seaIceObservations]
 ## options related to sea ice observations with which the results will be
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /global/project/projectdirs/acme/observations/SeaIce
-
-[seaIcePreprocessedReference]
-## options related to preprocessed sea ice reference run with which the results
-## will be compared (e.g. a CICE, CESM or ACME v0 run)
-
-# directory where ocean reference simulation results are stored
-baseDirectory =  /global/project/projectdirs/acme/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[timeSeriesSeaIceAreaVol]
-## options related to plotting time series of sea ice area and volume
-
-# plot on polar plot
-polarPlot = False
+baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/SeaIce
 
 [regions]
 ## options related to ocean regions used in several analysis modules
 
 # Directory for region mask files
-regionMaskDirectory = /global/project/projectdirs/acme/mpas_analysis/region_masks
+regionMaskDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/region_masks
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
