@@ -18,9 +18,10 @@
 
 cd $PBS_O_WORKDIR
 
+source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
+conda activate e3sm_unified_1.2.0_py2.7_nox
 # needed to prevent interference with acme-unified
 unset LD_LIBRARY_PATH
-soft add +e3sm-unified-1.1.2-nox
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
@@ -63,7 +64,7 @@ EOF
 # first, perform setup only without mpirun to create the mapping files
 $mpas_analysis_dir/run_mpas_analysis --setup_only $run_config_file \
     $job_config_file
-# next, do the full run now tht we have mapping files, but this time launching
+# next, do the full run now that we have mapping files, but this time launching
 # with mpirun
 mpirun -n 1 $mpas_analysis_dir/run_mpas_analysis $run_config_file \
     $job_config_file

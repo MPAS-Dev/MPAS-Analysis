@@ -1,12 +1,11 @@
-mpas_analysis/maps/map_oEC60to30v3_TO_0.5x0.5degree_blin.nc
+mpas_analysis/maps/map_oEC60to30v3_to_0.5x0.5degree_bilinear.nc
+mpas_analysis/maps/map_oEC60to30v3_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc
 mpas_analysis/maps/map_obs_sss_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_zos_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_thetaArgo_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_salinityArgo_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
-mpas_analysis/maps/map_oRRS30to10_TO_0.5x0.5degree_blin.160412.nc
 mpas_analysis/maps/map_obs_mld_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_sst_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
-mpas_analysis/region_masks/oRRS30to10v3_SingleRegionAtlanticWTransportTransects_masks.nc
 mpas_analysis/region_masks/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
 observations/Ocean/SST/obs.bib
 observations/Ocean/SST/MODEL.SST.HAD187001-198110.OI198111-201203.nc
