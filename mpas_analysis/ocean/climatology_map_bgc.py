@@ -299,11 +299,11 @@ class RemapBGCClimatology(RemapMpasClimatologySubtask): # {{{
         fieldName = self.variableList[0]
         # Convert CO2 gas flux from native mmol/m2 m/s to mol/m2/yr for
         # comparison to the SOM-FFN product
-        if 'CO2_gas_flux' in fieldName:
+        if fieldName == 'timeMonthly_avg_CO2_gas_flux':
             conversion = -1 * (60 * 60 * 24 * 365.25) / 10**3
             climatology[fieldName] = conversion * climatology[fieldName]
         # Convert O2 from mmol/m3 to mL/L for comparison to WOA product
-        elif 'O2' in fieldName:
+        elif fieldName == 'timeMonthly_avg_ecosysTracers_O2':
             conversion = 22.391 / 10**3
             climatology[fieldName] = conversion * climatology[fieldName]
         return climatology # }}}
