@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -58,17 +61,15 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
         super(ClimatologyMapSST, self).__init__(
                 config=config, taskName='climatologyMapSST',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         iselValues = {'nVertLevels': 0}
 
         sectionName = self.taskName
 
-        climStartYear = config.getint('oceanObservations',
-                                      'sstClimatologyStartYear')
-        climEndYear = config.getint('oceanObservations',
-                                    'sstClimatologyEndYear')
+        climStartYear = config.getint(sectionName, 'obsStartYear')
+        climEndYear = config.getint(sectionName, 'obsEndYear')
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
@@ -213,10 +214,9 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        climStartYear = self.config.getint('oceanObservations',
-                                           'sstClimatologyStartYear')
-        climEndYear = self.config.getint('oceanObservations',
-                                         'sstClimatologyEndYear')
+        sectionName = self.taskName
+        climStartYear = self.config.getint(sectionName, 'obsStartYear')
+        climEndYear = self.config.getint(sectionName, 'obsEndYear')
         timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
         timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
 

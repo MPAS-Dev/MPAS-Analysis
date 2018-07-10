@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
 Utility functions related to time-series data sets
 """
@@ -18,8 +21,97 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 import os
+from distutils.spawn import find_executable
+import glob
+import subprocess
+from six import string_types
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
+
+
+def combine_time_series_with_ncrcat(inFileNames, outFileName,
+                                    variableList=None, logger=None):
+    # {{{
+    '''
+    Uses ncrcat to extact time series from a series of files
+
+    inFileNames : str or list of str
+        A file name with wildcard(s) or a list of input files from which to
+        extract the time series.
+
+    outFileName : str
+        The output NetCDF file where the time series should be written.
+
+    variableList : list of str, optional
+        A list of varibles to include.  All variables are included by default
+
+    logger : `logging.Logger``, optional
+        A logger to which ncclimo output should be redirected
+
+    Raises
+    ------
+    OSError
+        If ``ncrcat`` is not in the system path.
+
+    Author
+    ------
+    Xylar Asay-Davis
+    '''
+
+    if find_executable('ncrcat') is None:
+        raise OSError('ncrcat not found. Make sure the latest nco '
+                      'package is installed: \n'
+                      'conda install nco\n'
+                      'Note: this presumes use of the conda-forge '
+                      'channel.')
+
+    if os.path.exists(outFileName):
+        return
+
+    if isinstance(inFileNames, string_types):
+        inFileNames = sorted(glob.glob(inFileNames))
+
+    args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl']
+
+    if variableList is not None:
+        args.extend(['-v', ','.join(variableList)])
+
+    printCommand = '{} {} ... {} {}'.format(' '.join(args), inFileNames[0],
+                                            inFileNames[-1],
+                                            outFileName)
+    args.extend(inFileNames)
+    args.append(outFileName)
+
+    if logger is None:
+        print('running: {}'.format(printCommand))
+    else:
+        logger.info('running: {}'.format(printCommand))
+        for handler in logger.handlers:
+            handler.flush()
+    process = subprocess.Popen(args, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if stdout:
+        stdout = stdout.decode('utf-8')
+        for line in stdout.split('\n'):
+            if logger is None:
+                print(line)
+            else:
+                logger.info(line)
+    if stderr:
+        stderr = stderr.decode('utf-8')
+        for line in stderr.split('\n'):
+            if logger is None:
+                print(line)
+            else:
+                logger.error(line)
+
+    if process.returncode != 0:
+        raise subprocess.CalledProcessError(process.returncode,
+                                            ' '.join(args))
+
+    # }}}
 
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,

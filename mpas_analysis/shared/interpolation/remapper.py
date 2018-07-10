@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 '''
 Functions for performing interpolation
 
@@ -32,7 +35,7 @@ import xarray as xr
 import sys
 
 from mpas_analysis.shared.grid import MpasMeshDescriptor, \
-    LatLonGridDescriptor, ProjectionGridDescriptor
+    LatLonGridDescriptor, ProjectionGridDescriptor, PointCollectionDescriptor
 
 
 class Remapper(object):
@@ -73,15 +76,19 @@ class Remapper(object):
         # -------
         # Xylar Asay-Davis
 
+        if isinstance(sourceDescriptor, PointCollectionDescriptor):
+            raise TypeError("sourceDescriptor of type "
+                            "PointCollectionDescriptor is not supported.")
         if not isinstance(sourceDescriptor,
                           (MpasMeshDescriptor,  LatLonGridDescriptor,
                            ProjectionGridDescriptor)):
-            raise ValueError("sourceDescriptor is not of a recognized type.")
+            raise TypeError("sourceDescriptor is not of a recognized type.")
 
         if not isinstance(destinationDescriptor,
                           (MpasMeshDescriptor,  LatLonGridDescriptor,
-                           ProjectionGridDescriptor)):
-            raise ValueError(
+                           ProjectionGridDescriptor,
+                           PointCollectionDescriptor)):
+            raise TypeError(
                 "destinationDescriptor is not of a recognized type.")
 
         self.sourceDescriptor = sourceDescriptor
@@ -123,6 +130,13 @@ class Remapper(object):
         # Authors
         # -------
         # Xylar Asay-Davis
+
+        if isinstance(self.destinationDescriptor,
+                      PointCollectionDescriptor) and \
+                method not in ['bilinear', 'neareststod']:
+            raise ValueError("method {} not supported for destination "
+                             "grid of type PointCollectionDescriptor."
+                             "".format(method))
 
         if self.mappingFileName is None or \
                 os.path.exists(self.mappingFileName):
@@ -253,11 +267,14 @@ class Remapper(object):
             # a remapped file already exists, so nothing to do
             return
 
-        if isinstance(self.sourceDescriptor, ProjectionGridDescriptor):
+        if isinstance(self.sourceDescriptor, (ProjectionGridDescriptor,
+                                              PointCollectionDescriptor)):
             raise TypeError('Source grid is a projection grid, not supported '
                             'by ncremap.\n'
                             'Consider using Remapper.remap')
-        if isinstance(self.destinationDescriptor, ProjectionGridDescriptor):
+        if isinstance(self.destinationDescriptor,
+                      (ProjectionGridDescriptor,
+                       PointCollectionDescriptor)):
             raise TypeError('Destination grid is a projection grid, not '
                             'supported by ncremap.\n'
                             'Consider using Remapper.remap')

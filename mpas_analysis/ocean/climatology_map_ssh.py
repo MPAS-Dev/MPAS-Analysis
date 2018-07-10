@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -59,7 +62,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
         super(ClimatologyMapSSH, self).__init__(
                 config=config, taskName='climatologyMapSSH',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_pressureAdjustedSSH'
 
@@ -161,14 +164,18 @@ class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def customize_masked_climatology(self, climatology):  # {{{
+    def customize_masked_climatology(self, climatology, season):  # {{{
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
         Parameters
         ----------
-        climatology : ``xarray.Dataset`` object
-            the climatology data set
+        climatology : ``xarray.Dataset```
+            The MPAS climatology data set that has had a mask added but has
+            not yet been remapped
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------

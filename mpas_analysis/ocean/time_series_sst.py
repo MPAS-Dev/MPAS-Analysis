@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -13,7 +16,7 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from mpas_analysis.shared.generalized_reader import open_multifile_dataset
+from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
 from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
@@ -67,7 +70,7 @@ class TimeSeriesSST(AnalysisTask):
             config=config,
             taskName='timeSeriesSST',
             componentName='ocean',
-            tags=['timeSeries', 'sst'])
+            tags=['timeSeries', 'sst', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
         self.refConfig = refConfig
@@ -200,11 +203,16 @@ class TimeSeriesSST(AnalysisTask):
                              'run...')
             inFilesPreprocessed = '{}/SST.{}.year*.nc'.format(
                 preprocessedInputDirectory, preprocessedReferenceRunName)
-            dsPreprocessed = open_multifile_dataset(
-                fileNames=inFilesPreprocessed,
-                calendar=calendar,
-                config=config,
-                timeVariableName='xtime')
+
+            outFolder = '{}/preprocessed'.format(outputDirectory)
+            make_directories(outFolder)
+            outFileName = '{}/sst.nc'.format(outFolder)
+
+            combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                            outFileName, logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                               calendar=calendar,
+                                               timeVariableNames='xtime')
             yearEndPreprocessed = days_to_datetime(dsPreprocessed.Time.max(),
                                                    calendar=calendar).year
             if yearStart <= yearEndPreprocessed:
@@ -222,7 +230,7 @@ class TimeSeriesSST(AnalysisTask):
 
             title = '{} SST'.format(plotTitles[regionIndex])
             xLabel = 'Time [years]'
-            yLabel = '[$^\circ$C]'
+            yLabel = '[$\degree$C]'
 
             varName = self.variableList[0]
             SST = dsSST[varName].isel(nOceanRegions=regionIndex)
@@ -231,7 +239,7 @@ class TimeSeriesSST(AnalysisTask):
 
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-            lineStyles = ['k-']
+            lineColors = ['k']
             lineWidths = [3]
 
             fields = [SST]
@@ -240,7 +248,7 @@ class TimeSeriesSST(AnalysisTask):
             if dsRefSST is not None:
                 refSST = dsRefSST[varName].isel(nOceanRegions=regionIndex)
                 fields.append(refSST)
-                lineStyles.append('b-')
+                lineColors.append('r')
                 lineWidths.append(1.5)
                 refRunName = self.refConfig.get('runs', 'mainRunName')
                 legendText.append(refRunName)
@@ -248,7 +256,7 @@ class TimeSeriesSST(AnalysisTask):
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST
                 fields.append(SST_v0)
-                lineStyles.append('r-')
+                lineColors.append('purple')
                 lineWidths.append(1.5)
                 legendText.append(preprocessedReferenceRunName)
 
@@ -266,9 +274,10 @@ class TimeSeriesSST(AnalysisTask):
 
             timeseries_analysis_plot(config, fields, movingAveragePoints,
                                      title, xLabel, yLabel, figureName,
-                                     lineStyles=lineStyles,
+                                     calendar=calendar,
+                                     lineColors=lineColors,
                                      lineWidths=lineWidths,
-                                     legendText=legendText, calendar=calendar,
+                                     legendText=legendText,
                                      firstYearXTicks=firstYearXTicks,
                                      yearStrideXTicks=yearStrideXTicks)
 

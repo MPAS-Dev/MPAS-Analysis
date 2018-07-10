@@ -1,18 +1,21 @@
 #!/usr/bin/env python
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from setuptools import setup, find_packages
 import warnings
 
 isrelease = True
 
-version = '0.7.5'
+version = '1.0'
 
 if not isrelease:
     import subprocess
@@ -46,8 +49,11 @@ setup(name='mpas_analysis',
       packages=find_packages(),
       package_data={'mpas_analysis': ['config.default'],
                     'mpas_analysis.shared.html': ['templates/*'],
-                    'mpas_analysis.test': ['test*/*', 'test*/*/*']},
+                    'mpas_analysis.test': ['test*/*', 'test*/*/*'],
+                    'mpas_analysis.shared.plot': ['ColourMapSuite3/*/*.xml'],
+                    'mpas_analysis.obs': ['analysis_input_files', 'observational_datasets.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'bottleneck', 'basemap', 'lxml', 'nco',
-                        ' pyproj', 'pillow'],
-      scripts=['run_mpas_analysis'])
+                        'pyproj', 'pillow', 'cmocean', 'progressbar2',
+                        'requests'],
+      scripts=['run_mpas_analysis', 'download_analysis_data.py'])

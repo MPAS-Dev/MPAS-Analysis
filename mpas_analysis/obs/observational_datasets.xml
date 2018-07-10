@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <observations
-  headers="name, tasks, source, references"
-  headernames="Observational Dataset, MPAS-Analysis Task(s), Source, References">
+  headers="name, source, references"
+  headernames="Observational Dataset, Source, References">
 
   <!-- OCEAN -->
 
@@ -59,6 +59,12 @@
     <tasks>
       - climatologyMapSST
     </tasks>
+    <subdirectory>
+      Ocean/SST
+    </subdirectory>
+    <nameInDocs>
+      hadley_center_sst
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -71,15 +77,13 @@
     <description>
       Level 3 Aquarius sea surface salinity (SSS) data products have a temporal
       resolutions of daily, 8 day, monthly, 3 months, and annual.  Monthly and
-      seasonal climatology
-      products from Aqaurius are also available. The Aquarius instrument
-      provides global coverage every 7 days. L3 products are gridded at 1
-      degree spatial resolution.
+      seasonal climatology products from Aquarius are also available. The Aquarius
+      instrument provides global coverage every 7 days. L3 products are gridded
+      at 1 degree spatial resolution.
     </description>
     <source>
       [NASA Aquarius Website]
       (https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4)
-
     </source>
     <releasePolicy>
       NASA data are not copyrighted; however, when you publish our data or
@@ -102,6 +106,12 @@
     <tasks>
       - climatologyMapSSS
     </tasks>
+    <subdirectory>
+      Ocean/SSS
+    </subdirectory>
+    <nameInDocs>
+      aquarius_sss
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -127,7 +137,7 @@
       co-located on the same 1 degree grids.
     </description>
     <source>
-      - [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
+      [NASA JPL AVISO website](https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO)
     </source>
     <releasePolicy>
       When using Ssalto/Duacs data (NRT or DT along-track Absolute Dynamic
@@ -151,6 +161,12 @@
     <tasks>
       - climatologyMapSSH
     </tasks>
+    <subdirectory>
+      Ocean/SSH
+    </subdirectory>
+    <nameInDocs>
+      aviso_ssh
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -178,7 +194,7 @@
       [Acknowledgment:](http://mixedlayer.ucsd.edu/) If you use this data,
       please cite it as: Holte, J., L. D. Talley, J. Gilson, and D. Roemmich
       (2017), An Argo mixed layer climatology and database, Geophys. Res.
-      Lett., 44, 5618–5626, doi:10.1002/2017GL073426.
+      Lett., 44, 5618-5626, doi:10.1002/2017GL073426.
     </releasePolicy>
     <references>
       - [Holte et al. (2017)](http://onlinelibrary.wiley.com/doi/10.1002/2017GL073426/full)
@@ -198,7 +214,6 @@
       doi = {10.1002/2017GL073426},
       url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2017GL073426}
       }
-
       @article{Holte2009,
       author = { James  Holte  and  Lynne  Talley },
       title = {A New Algorithm for Finding Mixed Layer Depths with Applications to Argo Data and Subantarctic Mode Water Formation},
@@ -210,10 +225,9 @@
       doi = {10.1175/2009JTECHO543.1},
       URL = {https://doi.org/10.1175/2009JTECHO543.1}
       }
-
       @article{deBoyerMontegut2004,
       author = {Cl\'{e}ment {de Boyer Mont\'{e}gut} and Gurvan Madec and Albert S. Fischer and Alban Lazar and Daniele Iudicone},
-      title = {Mixed layer depth over the global ocean: An examination of profile data and a profile‐based climatology},
+      title = {Mixed layer depth over the global ocean: An examination of profile data and a profile-based climatology},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {109},
       number = {C12},
@@ -232,6 +246,12 @@
     <tasks>
       - climatologyMapMLD
     </tasks>
+    <subdirectory>
+      Ocean/MLD
+    </subdirectory>
+    <nameInDocs>
+      argo_mld
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -242,39 +262,50 @@
       ocean
     </component>
     <description>
-     (missing)
+      The Trenbert and Caron oceanic meridional heat transport is computed
+      by computation of energy balance of the atmosphere, adjusted to fit
+      physical constraints, and using two reanalysis products: the National
+      Centers for Environmental Prediction-National Center for Atmospheric
+      Research (NCEP-NCAR) reanalysis and the European Centre for Medium-Range
+      Weather Forecasts (ECMWF) product. The analysis focuses on the period
+      from February 1985 to April 1989 when there are reliable top-of-the-atmosphere
+      radiation data from the Earth Radiation Budget Experiment.
     </description>
     <source>
-      (missing)
+      Data available upon request from Dr. Kevin Trenberth
     </source>
     <releasePolicy>
-      (missing)
+      Acknowledgment: please cite: Trenberth and Caron (2001). Estimates of
+      Meridional Atmosphere and Ocean Heat Transports, J. of Climate, 14, 3433-3443.
     </releasePolicy>
     <references>
-      [Trenberth and Caron (2000)](https://doi.org/10.1175/1520-0442%282000%29013&lt;4358%3ATSORSL&gt;2.0.CO%3B2)
+      [Trenberth and Caron (2001)](https://doi.org/10.1175/1520-0442%282001%29014&lt;3433%3AEOMAAO&gt;2.0.CO%3B2)
     </references>
     <bibtex>
-      @article{Trenberth2000,
+      @article{Trenberth2001,
       author = { Kevin E.  Trenberth  and  Julie M.  Caron },
-      title = {The Southern Oscillation Revisited: Sea Level Pressures, Surface Temperatures, and Precipitation},
+      title = {Estimates of Meridional Atmosphere and Ocean Heat Transports},
       journal = {Journal of Climate},
-      volume = {13},
-      number = {24},
-      pages = {4358-4365},
-      year = {2000},
-      doi = {10.1175/1520-0442(2000)013&lt;4358:TSORSL&gt;2.0.CO;2},
-      URL = {https://doi.org/10.1175/1520-0442(2000)013&lt;4358:TSORSL&gt;2.0.CO;2}
+      volume = {14},
+      pages = {3433-3443},
+      year = {2001},
+      doi = {10.1175/1520-0442%282001%29014&lt;3433%3AEOMAAO&gt;2.0.CO%3B2},
+      URL = {https://doi.org/10.1175/1520-0442%282001%29014&lt;3433%3AEOMAAO&gt;2.0.CO%3B2}
       }
     </bibtex>
     <dataUrls>
-      (missing)
     </dataUrls>
     <preprocessing>
-      (missing)
     </preprocessing>
     <tasks>
       - meridionalHeatTransport
     </tasks>
+    <subdirectory>
+      Ocean/MHT
+    </subdirectory>
+    <nameInDocs>
+      trenberth_mht
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -286,9 +317,9 @@
     </component>
     <description>
       This new version of the Roemmich-Gilson Argo Climatology extends the
-      analysis of Argo-only derived temperature and salinity fields through
-      2016. Several marginal seas and the Artic Oean have been added. The
-      analysis method is similar to what was descibed in the Progress In
+      analysis of Argo-only derived potential temperature and salinity fields
+      through 2016. Several marginal seas and the Artic Oean have been added.
+      The analysis method is similar to what was descibed in the Progress In
       Oceanography Roemmich and Gilson paper (2009). The only modification has
       been to scale the zonal equatorial correlation of the optimal estimation
       step, by 8 times, versus 4 times as in the 2009 paper. The additional
@@ -310,7 +341,7 @@
     </references>
     <bibtex>
       @article{Roemmich2009,
-      title = "The 2004–2008 mean and annual cycle of temperature, salinity, and steric height in the global ocean from the Argo Program",
+      title = "The 2004--2008 mean and annual cycle of temperature, salinity, and steric height in the global ocean from the Argo Program",
       journal = "Progress in Oceanography",
       volume = "82",
       number = "2",
@@ -333,18 +364,25 @@
       - climatologyMapArgoTemperature
       - climatologyMapArgoSalinity
     </tasks>
+    <subdirectory>
+      Ocean/ARGO
+    </subdirectory>
+    <nameInDocs>
+      roemmich_gilson_argo
+    </nameInDocs>
   </observation>
 
   <observation>
     <name>
-      SOSE potential temperature and salinity
+      2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)
     </name>
     <component>
       ocean
     </component>
     <description>
-      Monthly potential temperature and salinity output from the Southern Ocean
-      State Estimate (SOSE) covering years 2005-2010
+      Monthly potential temperature, salinity velocity components and neutral
+      density output from the Southern Ocean State Estimate (SOSE) covering
+      years 2005-2010
     </description>
     <source>
       [SOSE Website at UCSD]
@@ -379,18 +417,33 @@
       }
     </bibtex>
     <dataUrls>
+      - http://sose.ucsd.edu/DATA/SO6_V2/grid.mat
       - http://sose.ucsd.edu/DATA/SO6_V2/THETA_mnthlyBar.0000000100.data.gz
       - http://sose.ucsd.edu/DATA/SO6_V2/THETA_mnthlyBar.0000000100.meta
       - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.data.gz
       - http://sose.ucsd.edu/DATA/SO6_V2/SALT_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/MLD_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/MLD_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/UVEL_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/UVEL_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/VVEL_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/VVEL_mnthlyBar.0000000100.meta
+      - http://sose.ucsd.edu/DATA/SO6_V2/GAMMA_mnthlyBar.0000000100.data.gz
+      - http://sose.ucsd.edu/DATA/SO6_V2/GAMMA_mnthlyBar.0000000100.meta
     </dataUrls>
     <preprocessing>
-      preprocess_observations/remap_SOSE_T_S.py
+      preprocess_observations/preprocess_SOSE_data.py
     </preprocessing>
     <tasks>
-      - climatologyMapSoseTemperature
-      - climatologyMapSoseSalinity
+      - climatologyMapSose
+      - soseTransects
     </tasks>
+    <subdirectory>
+      Ocean/SOSE
+    </subdirectory>
+    <nameInDocs>
+      sose
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -437,6 +490,12 @@
       - climatologyMapAntarcticMelt
       - timeSeriesAntarcticMelt
     </tasks>
+    <subdirectory>
+      Ocean/Melt
+    </subdirectory>
+    <nameInDocs>
+      rignot_melt
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -447,22 +506,47 @@
       ocean
     </component>
     <description>
-      (missing)
+      Nino 3.4 Index is computed from the Hadley-OI sea surface temperature
+      (SST) and sea ice concentration (SIC) data set. This product was
+      specifically developed as surface forcing data set for AMIP style
+      uncoupled simulations of the Community Atmosphere Model (CAM). The
+      Hadley Centre's SST/SIC version 1.1 (HADISST1), which is derived gridded,
+      bias-adjusted in situ observations, were merged with the NOAA-Optimal
+      Interpolation (version 2; OI.v2) analyses. The HADISST1 spanned 1870
+      onward but the OI.v2, which started in November 1981, better resolved
+      features such as the Gulf Stream and Kuroshio Current which are important
+      components of the climate system. Since the two data sets used different
+      development methods, anomalies from a base period were used to create
+      a more homogeneous record. Also, additional adjustments were made to
+      the SIC data set.
     </description>
     <source>
-      (missing)
+      [NCAR Hadley-NOAA/OI SST website]
+      (https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008)
     </source>
     <releasePolicy>
-      (missing)
+      Acknowledgment: Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
+      2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
+      Atmosphere Model. Journal of Climate, 21, 5145-5153.
     </releasePolicy>
     <references>
-      (missing)
+      [Hurrell et al. (2008)](https://doi.org/10.1175/2008JCLI2292.1)
     </references>
     <bibtex>
-      (missing)
+      @article{Hurrell2008,
+      author = {James W.  Hurrell  and  James J.  Hack  and  Dennis  Shea  and  Julie M.  Caron  and  James  Rosinski},
+      title = {A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community Atmosphere Model},
+      journal = {Journal of Climate},
+      volume = {21},
+      number = {19},
+      pages = {5145-5153},
+      year = {2008},
+      doi = {10.1175/2008JCLI2292.1},
+      URL = {https://doi.org/10.1175/2008JCLI2292.1}
+      }
     </bibtex>
     <dataUrls>
-      (missing)
+      - ftp://ftp.cgd.ucar.edu/archive/SSTICE/MODEL.SST.HAD187001-198110.OI198111-201712.nc
     </dataUrls>
     <preprocessing>
       (missing)
@@ -470,6 +554,12 @@
     <tasks>
       - indexNino34
     </tasks>
+    <subdirectory>
+      Ocean/Nino/HadISST
+    </subdirectory>
+    <nameInDocs>
+      hadisst_nino
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -480,22 +570,76 @@
       ocean
     </component>
     <description>
-      (missing)
+      The Nino 3.4 Index is also computed using the Extended Reconstructed
+      Sea Surface Temperature (ERSST) dataset, which is a global monthly
+      sea surface temperature dataset derived from the International Comprehensive
+      Ocean-Atmosphere Dataset (ICOADS). It is produced on a 2 degree by 2 degree
+      grid with spatial completeness enhanced using statistical methods. This
+      monthly analysis begins in January 1854 continuing to the present and
+      includes anomalies computed with respect to a 1971-2000 monthly climatology.
+      The newest version of ERSST, version 4, is based on optimally tuned parameters
+      using the latest datasets and improved analysis methods. ERSST is suitable
+      for long-term global and basin-wide studies, and smoothed local and
+      short-term variations are used in the dataset.
     </description>
     <source>
-      (missing)
+      [NOAA ERSST v4 website]
+      (https://www.ncdc.noaa.gov/data-access/marineocean-data/extended-reconstructed-sea-surface-temperature-ersst-v4)
     </source>
     <releasePolicy>
-      (missing)
+      Cite this dataset when used as a source: Boyin Huang, Viva F. Banzon, Eric Freeman,
+      Jay Lawrimore, Wei Liu, Thomas C. Peterson, Thomas M. Smith, Peter W. Thorne,
+      Scott D. Woodruff, and Huai-Min Zhang, 2015: Extended Reconstructed Sea Surface
+      Temperature (ERSST), Version 4. NOAA National Centers for Environmental Information.
+      doi:10.7289/V5KD1VVF [access date: January 2017].
     </releasePolicy>
     <references>
-      (missing)
+      - [Huang et al. (2014)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00006.1)
+      - [Liu et al. (2014)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00007.1)
+      - [Huang et al. (2015)](https://journals.ametsoc.org/doi/10.1175/JCLI-D-15-0430.1)
     </references>
     <bibtex>
-      (missing)
+      @article{Huang2014,
+      author = {Boyin Huang  and  Viva F. Banzon and Eric Freeman and Jay Lawrimore and Wei Liu
+                and Thomas C. Peterson and Thomas M. Smith and Peter W. Thorne and Scott D. Woodruff
+                and Huai-Min Zhang},
+      title = {Extended Reconstructed Sea Surface Temperature Version 4 (ERSST.v4).
+               Part I: Upgrades and Intercomparisons},
+      journal = {Journal of Climate},
+      volume = {28},
+      pages = {911-930},
+      year = {2014},
+      doi = {10.1175/JCLI-D-14-00006.1},
+      URL = {https://doi.org/10.1175/JCLI-D-14-00006.1}
+      }
+      @article{Liu2014,
+      author = {Wei Liu and Boyin Huang and Peter W. Thorne and Viva F. Banzon and
+                Huai-Min Zhang and Eric Freeman and Jay Lawrimore and Thomas C. Peterson and
+                Thomas M. Smith and Scott D. Woodruff},
+      title = {Extended Reconstructed Sea Surface Temperature Version 4 (ERSST.v4).
+               Part II. Parametric and Structural Uncertainty Estimations},
+      journal = {Journal of Climate},
+      volume = {28},
+      pages = {931-951},
+      year = {2014},
+      doi = {10.1175/JCLI-D-14-00007.1},
+      URL = {https://doi.org/10.1175/JCLI-D-14-00007.1}
+      }
+      @article{Huang2015,
+      author = {Boyin Huang and Peter W. Thorne and Thomas M. Smith and Wei Liu and
+                Jay Lawrimore and Viva F. Banzon and Huai-Min Zhang and Thomas C. Peterson and Matthew Menne},
+      title = {Further Exploring and Quantifying Uncertainties for Extended Reconstructed
+               Sea Surface Temperature (ERSST) Version 4 (v4)},
+      journal = {Journal of Climate},
+      volume = {29},
+      pages = {3119-3142},
+      year = {2015},
+      doi = {10.1175/JCLI-D-15-0430.1},
+      URL = {https://doi.org/10.1175/JCLI-D-15-0430.1}
+      }
     </bibtex>
     <dataUrls>
-      (missing)
+      - https://www1.ncdc.noaa.gov/pub/data/cmb/ersst/v4/netcdf
     </dataUrls>
     <preprocessing>
       (missing)
@@ -503,6 +647,135 @@
     <tasks>
       - indexNino34
     </tasks>
+    <subdirectory>
+      Ocean/Nino/ERS_SSTv4
+    </subdirectory>
+    <nameInDocs>
+      ers_sst_nino
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
+      Antarctic Seafloor Temperature and Salinity
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Temporal means in conservative temperature and absolute salinity
+      of Antarctic Continental Shelf Bottom Water (ASBW) for depths shallower
+      than 1500 m for the period 1975 to 2012.
+    </description>
+    <source>
+      [ASCII data file](https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/Antarctic_shelf_data.txt)
+    </source>
+    <releasePolicy>
+     (missings)
+    </releasePolicy>
+    <references>
+      [Schmidtko et al. (2014)](http://www.sciencemag.org/cgi/doi/10.1126/science.1256117)
+    </references>
+    <bibtex>
+      @article {Schmidtko2014,
+        author = {Schmidtko, Sunke and Heywood, Karen J. and Thompson, Andrew F. and Aoki, Shigeru},
+        title = {Multidecadal warming of Antarctic waters},
+        volume = {346},
+        number = {6214},
+        pages = {1227--1231},
+        year = {2014},
+        doi = {10.1126/science.1256117},
+        publisher = {American Association for the Advancement of Science},
+        issn = {0036-8075},
+        url = {http://science.sciencemag.org/content/346/6214/1227},
+        journal = {Science}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/Antarctic_shelf_data.txt
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_Schmidtko_data.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapSchmidtko
+    </tasks>
+    <subdirectory>
+      Ocean/Schmidtko
+    </subdirectory>
+    <nameInDocs>
+      schmidtko
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
+      WOCE sections
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      WOCE
+      ----
+      The Hydrographic Programme of the international World Ocean Circulation
+      Experiment (WOCE) was a comprehensive global hydrographic survey of
+      physical and chemical properties, of unprecedented scope and quality, and
+      represents the "state of the oceans" during the 1990s.
+
+      The "Printed Atlas" is a copy of the published volume and contains full
+      introductory text. The "Digital Atlas" presents the same graphical
+      material, with additional properties and levels, ancillary data sets, and
+      bibliographic material for each of the vertical sections.
+
+      CCHDO
+      -----
+      The CCHDO's primary mission is to deliver the highest possible quality
+      global CTD and hydrographic data to users. These data are a product of
+      decades of observations related to the physical characteristics of ocean
+      waters carried out during WOCE, CLIVAR and numerous other oceanographic
+      research programs. Whenever possible we provide these data in three
+      easy-to-use formats: WHP-Exchange (which we recommend for data
+      submissions to the CCHDO), WOCE, and netCDF.
+      global Argo and OceanSITES programs.
+    </description>
+    <source>
+      - [WOCE Atlas Website](http://woceatlas.ucsd.edu/)
+      - [CCHDO](https://cchdo.ucsd.edu/)
+    </source>
+    <releasePolicy>
+      "Public" data may be placed on-line. They may be exchanged between
+      investigators as desired. They may or may not be preliminary, and
+      especially for preliminary public data users are strongly advised to
+      contact the originating investigators regarding the status of updates or
+      further data processing. [See Full Policy](https://cchdo.ucsd.edu/policy)
+    </releasePolicy>
+    <references>
+      [Orsi and Whitworth (2005)](https://doi.org/10.21976/C6BC78)
+    </references>
+    <bibtex>
+      @techreport{Orsi2015,
+        author = {A. H. Orsi and T. Whitworth},
+        title = {Hydrographic Atlas of the World Ocean Circulation Experiment (WOCE) Volume 1: Southern Ocean},
+        year = 2005,
+        url = {https://doi.org/10.21976/C6BC78},
+        note = {Accessed May 2018}
+      }
+    </bibtex>
+    <dataUrls>
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - woceTransects
+    </tasks>
+    <subdirectory>
+      Ocean/WOCE
+    </subdirectory>
+    <nameInDocs>
+      woce
+    </nameInDocs>
   </observation>
 
 <!--
@@ -532,6 +805,11 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      Ocean/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
 
@@ -586,6 +864,12 @@
       - climatologyMapSeaIceConcNH
       - climatologyMapSeaIceConcSH
     </tasks>
+    <subdirectory>
+      SeaIce/SSMI/NASATeam_NSIDC0051
+    </subdirectory>
+    <nameInDocs>
+      nasateam_conc
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -644,6 +928,12 @@
       - climatologyMapSeaIceConcNH
       - climatologyMapSeaIceConcSH
     </tasks>
+    <subdirectory>
+      SeaIce/SSMI/Bootstrap_NSIDC0079
+    </subdirectory>
+    <nameInDocs>
+      bootstrap_conc
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -694,14 +984,14 @@
       - [Cavalieri et al. (1999)](https://doi.org/10.1029/1999JC900081)
       - [Cavalieri et al. (2012)](https://doi.org/10.1109/LGRS.2011.2166754)
       - [Cavalieri and Parkinson (2012)](https://doi.org/10.5194/tc-6-881-2012)
-      - [Parkinson et al. (1999)](https://doi.org/0.1029/1999JC900082)
+      - [Parkinson et al. (1999)](https://doi.org/10.1029/1999JC900082)
       - [Parkinson and Cavalieri (2012)](https://doi.org/10.5194/tc-6-871-2012)
       - [Zwally et al. (2002)](https://doi.org/10.1029/2000JC000733)
     </references>
     <bibtex>
       @article{Cavalieri1999,
       author = {D. J. Cavalieri and C. L. Parkinson and P. Gloersen and J. C. Comiso and H. J. Zwally},
-      title = {Deriving long‐term time series of sea ice cover from satellite passive‐microwave multisensor data sets},
+      title = {Deriving long-term time series of sea ice cover from satellite passive-microwave multisensor data sets},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {104},
       number = {C7},
@@ -735,7 +1025,7 @@
       }
       @article{Parkinson1999,
       author = {Claire L. Parkinson and Donald J. Cavalieri and Per Gloersen and H. Jay Zwally and Josefino C. Comiso},
-      title = {Arctic sea ice extents, areas, and trends, 1978–1996},
+      title = {Arctic sea ice extents, areas, and trends, 1978--1996},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {104},
       number = {C9},
@@ -757,7 +1047,7 @@
       }
       @article{Zwally2002,
       author = {H. Jay Zwally and Josefino C. Comiso and Claire L. Parkinson and Donald J. Cavalieri and Per Gloersen},
-      title = {Variability of Antarctic sea ice 1979–1998},
+      title = {Variability of Antarctic sea ice 1979--1998},
       journal = {Journal of Geophysical Research: Oceans},
       volume = {107},
       number = {C5},
@@ -780,6 +1070,12 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/IceArea_timeseries
+    </subdirectory>
+    <nameInDocs>
+      ssmi_ice_area
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -829,6 +1125,12 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/ICESat
+    </subdirectory>
+    <nameInDocs>
+      icesat_thickness
+    </nameInDocs>
   </observation>
 
   <observation>
@@ -842,7 +1144,7 @@
       Sea Ice Volume is calculated using the Pan-Arctic Ice Ocean Modeling and
       Assimilation System (PIOMAS, Zhang and Rothrock, 2003) developed at
       APL/PSC.  Anomalies for each day are calculated relative to the average
-      over the 1979 -2016 period for that day of the year to remove the annual
+      over the 1979-2016 period for that day of the year to remove the annual
       cycle. The model mean annual cycle of sea ice volume over this period
       ranges from 28,000 km3 in April to 11,500 km3 in September.
     </description>
@@ -891,6 +1193,12 @@
     <tasks>
       - timeSeriesSeaIceAreaVol
     </tasks>
+    <subdirectory>
+      SeaIce/PIOMAS
+    </subdirectory>
+    <nameInDocs>
+      piomass_ice_volume
+    </nameInDocs>
   </observation>
 
 <!--
@@ -920,6 +1228,11 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      SeaIce/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
 
@@ -952,6 +1265,12 @@
     <tasks>
       -
     </tasks>
+    <subdirectory>
+      LandIce/
+    </subdirectory>
+    <nameInDocs>
+    </nameInDocs>
   </observation>
 -->
+
 </observations>

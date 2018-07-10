@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 '''
 Analysis tasks for comparing Antarctic climatology maps against observations
 and reanalysis data.
@@ -13,30 +16,26 @@ and reanalysis data.
 # -------
 # Xylar Asay-Davis
 
-import xarray as xr
+import xarray
+import numpy
 
 from mpas_analysis.shared import AnalysisTask
 
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
+
 from mpas_analysis.ocean.remap_depth_slices_subtask import \
     RemapDepthSlicesSubtask
-
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
+from mpas_analysis.ocean.remap_sose_climatology import RemapSoseClimatology
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 
-from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
-    get_antarctic_stereographic_projection
 
-from mpas_analysis.shared.grid import ProjectionGridDescriptor
-
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
-
-class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
+class ClimatologyMapSose(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of antarctic temperature against SOSE
-    fields
+    An analysis task for comparison of antarctic field against the Southern
+    Ocean State Estimate
     """
     # Authors
     # -------
@@ -62,395 +61,267 @@ class ClimatologyMapSoseTemperature(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        fieldName = 'temperatureSOSE'
+        fields = \
+            [{'prefix': 'temperature',
+              'mpas': 'timeMonthly_avg_activeTracers_temperature',
+              'units': r'$\degree$C',
+              'titleName': 'Potential Temperature',
+              '3D': True,
+              'obsFilePrefix': 'pot_temp',
+              'obsFieldName': 'theta',
+              'obsBotFieldName': 'botTheta'},
+             {'prefix': 'salinity',
+              'mpas': 'timeMonthly_avg_activeTracers_salinity',
+              'units': r'PSU',
+              'titleName': 'Salinity',
+              '3D': True,
+              'obsFilePrefix': 'salinity',
+              'obsFieldName': 'salinity',
+              'obsBotFieldName': 'botSalinity'},
+             {'prefix': 'potentialDensity',
+              'mpas': 'timeMonthly_avg_potentialDensity',
+              'units': r'kg m$^{-3}$',
+              'titleName': 'Potential Density',
+              '3D': True,
+              'obsFilePrefix': 'pot_den',
+              'obsFieldName': 'potentialDensity',
+              'obsBotFieldName': 'botPotentialDensity'},
+             {'prefix': 'mixedLayerDepth',
+              'mpas': 'timeMonthly_avg_dThreshMLD',
+              'units': r'm',
+              'titleName': 'Mixed Layer Depth',
+              '3D': False,
+              'obsFilePrefix': 'mld',
+              'obsFieldName': 'mld',
+              'obsBotFieldName': None},
+             {'prefix': 'zonalVelocity',
+              'mpas': 'timeMonthly_avg_velocityZonal',
+              'units': r'm s$^{-1}$',
+              'titleName': 'Zonal Velocity',
+              '3D': True,
+              'obsFilePrefix': 'zonal_vel',
+              'obsFieldName': 'zonalVel',
+              'obsBotFieldName': 'botZonalVel'},
+             {'prefix': 'meridionalVelocity',
+              'mpas': 'timeMonthly_avg_velocityMeridional',
+              'units': r'm s$^{-1}$',
+              'titleName': 'Meridional Velocity',
+              '3D': True,
+              'obsFilePrefix': 'merid_vel',
+              'obsFieldName': 'meridVel',
+              'obsBotFieldName': 'botMeridVel'},
+             {'prefix': 'velocityMagnitude',
+              'mpas': 'velMag',
+              'units': r'm s$^{-1}$',
+              'titleName': 'Velocity Magnitude',
+              '3D': True,
+              'obsFilePrefix': 'vel_mag',
+              'obsFieldName': 'velMag',
+              'obsBotFieldName': 'botVelMag'}]
+
+        tags = ['climatology', 'horizontalMap', 'sose', 'publicObs'] \
+            + [field['prefix'] for field in fields]
+
         # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSoseTemperature, self).__init__(
-                config=config, taskName='climatologyMapSoseTemperature',
+        super(ClimatologyMapSose, self).__init__(
+                config=config, taskName='climatologyMapSose',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', fieldName])
+                tags=tags)
 
         sectionName = self.taskName
 
-        mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
-        iselValues = None
+        fieldList = config.getExpression(sectionName, 'fieldList')
+        fields = [field for field in fields if field['prefix'] in fieldList]
 
         # read in what seasons we want to plot
         seasons = config.getExpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of seasons'.format(sectionName))
+            raise ValueError('config section {} does not contain valid '
+                             'list of seasons'.format(sectionName))
 
         comparisonGridNames = config.getExpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of comparison grids'.format(sectionName))
-
-        depths = config.getExpression(sectionName, 'depths')
-
-        if len(depths) == 0:
             raise ValueError('config section {} does not contain valid '
-                             'list of depths'.format(sectionName))
+                             'list of comparison grids'.format(
+                                     sectionName))
 
-        # the variable 'timeMonthly_avg_landIceFreshwaterFlux' will be added to
-        # mpasClimatologyTask along with the seasons.
-        remapClimatologySubtask = RemapDepthSlicesSubtask(
-            mpasClimatologyTask=mpasClimatologyTask,
-            parentTask=self,
-            climatologyName=fieldName,
-            variableList=[mpasFieldName],
-            seasons=seasons,
-            depths=depths,
-            comparisonGridNames=comparisonGridNames,
-            iselValues=iselValues)
-
-        if refConfig is None:
-
-            refTitleLabel = 'State Estimate (SOSE)'
-
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'soseSubdirectory')
-
-            obsFileName = \
-                '{}/SOSE_2005-2010_monthly_pot_temp_6000.0x' \
-                '6000.0km_10.0km_Antarctic_stereo.nc'.format(
-                        observationsDirectory)
-            refFieldName = 'theta'
-            outFileLabel = 'tempSOSE'
-            galleryName = 'State Estimate: SOSE'
-            diffTitleLabel = 'Model - State Estimate'
-
-            remapObservationsSubtask = RemapSoseClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}SOSE'.format(refFieldName),
-                    fieldName=refFieldName,
-                    botFieldName='botTheta',
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames)
-
-            self.add_subtask(remapObservationsSubtask)
-
+        if not numpy.any([field['3D'] for field in fields]):
+            depths = None
         else:
-            remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
-            galleryName = 'Ref: {}'.format(refRunName)
-            refTitleLabel = galleryName
+            depths = config.getExpression(sectionName, 'depths')
 
-            refFieldName = mpasFieldName
-            outFileLabel = 'temp'
-            diffTitleLabel = 'Main - Reference'
+            if len(depths) == 0:
+                raise ValueError('config section {} does not contain valid '
+                                 'list of depths'.format(sectionName))
 
-        for comparisonGridName in comparisonGridNames:
-            for season in seasons:
-                for depth in depths:
-                    subtask = PlotClimatologyMapSubtask(
-                        parentTask=self,
-                        season=season,
-                        comparisonGridName=comparisonGridName,
-                        remapMpasClimatologySubtask=remapClimatologySubtask,
-                        remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
-                        depth=depth)
+        variableList = [field['mpas'] for field in fields
+                        if field['mpas'] != 'velMag']
 
-                    subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='Temperature',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^\circ$C',
-                        imageCaption='Temperature compared with SOSE',
-                        galleryGroup='Temperature',
-                        groupSubtitle=None,
-                        groupLink='tempSose',
-                        galleryName=galleryName)
-
-                    self.add_subtask(subtask)
-        # }}}
-
-    # }}}
-
-
-class ClimatologyMapSoseSalinity(AnalysisTask):  # {{{
-    """
-    An analysis task for comparison of antarctic salinity against SOSE
-    fields
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-
-    def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
-        """
-        Construct the analysis task.
-
-        Parameters
-        ----------
-        config :  ``MpasAnalysisConfigParser``
-            Configuration options
-
-        mpasClimatologyTask : ``MpasClimatologyTask``
-            The task that produced the climatology to be remapped and plotted
-
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
-        """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        fieldName = 'salinitySOSE'
-        # call the constructor from the base class (AnalysisTask)
-        super(ClimatologyMapSoseSalinity, self).__init__(
-                config=config, taskName='climatologyMapSoseSalinity',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'sose', fieldName])
-
-        sectionName = self.taskName
-
-        mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
-        iselValues = None
-
-        # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
-
-        if len(seasons) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of seasons'.format(sectionName))
-
-        comparisonGridNames = config.getExpression(sectionName,
-                                                   'comparisonGrids')
-
-        if len(comparisonGridNames) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of comparison grids'.format(sectionName))
-
-        depths = config.getExpression(sectionName, 'depths')
-
-        if len(depths) == 0:
-            raise ValueError('config section {} does not contain valid '
-                             'list of depths'.format(sectionName))
-
-        # the variable 'timeMonthly_avg_landIceFreshwaterFlux' will be added to
-        # mpasClimatologyTask along with the seasons.
-        remapClimatologySubtask = RemapDepthSlicesSubtask(
-            mpasClimatologyTask=mpasClimatologyTask,
-            parentTask=self,
-            climatologyName=fieldName,
-            variableList=[mpasFieldName],
-            seasons=seasons,
-            depths=depths,
-            comparisonGridNames=comparisonGridNames,
-            iselValues=iselValues)
-
-        if refConfig is None:
-
-            refTitleLabel = 'State Estimate (SOSE)'
-
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'soseSubdirectory')
-
-            obsFileName = \
-                '{}/SOSE_2005-2010_monthly_salinity_6000.0x' \
-                '6000.0km_10.0km_Antarctic_stereo.nc'.format(
-                        observationsDirectory)
-            refFieldName = 'salinity'
-            outFileLabel = 'salinSOSE'
-            galleryName = 'State Estimate: SOSE'
-            diffTitleLabel = 'Model - State Estimate'
-
-            remapObservationsSubtask = RemapSoseClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}SOSE'.format(refFieldName),
-                    fieldName=refFieldName,
-                    botFieldName='botSalinity',
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames)
-
-            self.add_subtask(remapObservationsSubtask)
-
+        if depths is None:
+            remapMpasSubtask = RemapMpasClimatologySubtask(
+                mpasClimatologyTask=mpasClimatologyTask,
+                parentTask=self,
+                climatologyName='SOSE',
+                variableList=variableList,
+                seasons=seasons,
+                comparisonGridNames=comparisonGridNames,
+                iselValues=None)
         else:
-            remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
-            galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            remapMpasSubtask = RemapMpasVelMagClimatology(
+                mpasClimatologyTask=mpasClimatologyTask,
+                parentTask=self,
+                climatologyName='SOSE',
+                variableList=variableList,
+                seasons=seasons,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames,
+                iselValues=None)
 
-            refFieldName = mpasFieldName
-            outFileLabel = 'salin'
-            diffTitleLabel = 'Main - Reference'
+        for field in fields:
+            fieldPrefix = field['prefix']
+            upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
+            sectionName = '{}{}'.format(self.taskName, upperFieldPrefix)
 
-        for comparisonGridName in comparisonGridNames:
-            for season in seasons:
-                for depth in depths:
-                    subtask = PlotClimatologyMapSubtask(
-                        parentTask=self,
-                        season=season,
-                        comparisonGridName=comparisonGridName,
-                        remapMpasClimatologySubtask=remapClimatologySubtask,
-                        remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
-                        depth=depth)
-
-                    subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='Salinity',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'PSU',
-                        imageCaption='Salinity compared with SOSE',
-                        galleryGroup='Salinity',
-                        groupSubtitle=None,
-                        groupLink='salinSose',
-                        galleryName=galleryName)
-
-                    self.add_subtask(subtask)
-        # }}}
-
-    # }}}
-
-
-class RemapSoseClimatology(RemapObservedClimatologySubtask):
-    # {{{
-    """
-    A subtask for reading and remapping SOSE fields to the comparison grid
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-
-    def __init__(self, parentTask, seasons, fileName, outFilePrefix,
-                 fieldName, botFieldName, depths,
-                 comparisonGridNames=['latlon'],
-                 subtaskName='remapObservations'):
-        # {{{
-        '''
-        Construct one analysis subtask for each plot (i.e. each season and
-        comparison grid) and a subtask for computing climatologies.
-
-        Parameters
-        ----------
-        parentTask :  ``AnalysisTask``
-            The parent (master) task for this subtask
-
-        seasons : list of str
-           A list of seasons (keys in ``constants.monthDictionary``) over
-           which the climatology should be computed.
-
-        fileName : str
-            The name of the observation file
-
-        outFilePrefix : str
-            The prefix in front of output files and mapping files, typically
-            the name of the field being remapped
-
-        fieldName : str
-            The name of the 3D field to remap
-
-        botFieldName : str
-            The name of the same field as ``fieldName`` but sampled at the
-            sea floor
-
-        depths : list of {None, float, 'top', 'bot'}
-            A list of depths at which the climatology will be sliced in the
-            vertical.
-
-        comparisonGridNames : list of {'latlon', 'antarctic'}, optional
-            The name(s) of the comparison grid to use for remapping.
-
-        subtaskName : str, optional
-            The name of the subtask
-        '''
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        self.fieldName = fieldName
-        self.botFieldName = botFieldName
-        self.depths = depths
-
-        # call the constructor from the base class
-        # (RemapObservedClimatologySubtask)
-        super(RemapSoseClimatology, self).__init__(
-                parentTask, seasons, fileName, outFilePrefix,
-                comparisonGridNames, subtaskName)
-        # }}}
-
-    def get_observation_descriptor(self, fileName):  # {{{
-        '''
-        get a MeshDescriptor for the observation grid
-
-        Parameters
-        ----------
-        fileName : str
-            observation file name describing the source grid
-
-        Returns
-        -------
-        obsDescriptor : ``MeshDescriptor``
-            The descriptor for the observation grid
-        '''
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        # create a descriptor of the observation grid using the x/y polar
-        # stereographic coordinates
-        projection = get_antarctic_stereographic_projection()
-        obsDescriptor = ProjectionGridDescriptor.read(
-            projection, fileName=fileName, xVarName='x', yVarName='y')
-        return obsDescriptor  # }}}
-
-    def build_observational_dataset(self, fileName):  # {{{
-        '''
-        read in the data sets for observations, and possibly rename some
-        variables and dimensions
-
-        Parameters
-        ----------
-        fileName : str
-            observation file name
-
-        Returns
-        -------
-        dsObs : ``xarray.Dataset``
-            The observational dataset
-        '''
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        # Load MLD observational data
-        dsObs = xr.open_dataset(fileName)
-
-        dsObs = mpas_xarray.subset_variables(dsObs, [self.fieldName,
-                                                     self.botFieldName,
-                                                     'month', 'year'])
-        slices = []
-        field = dsObs[self.fieldName]
-        botField = dsObs[self.botFieldName]
-        for depth in self.depths:
-            if depth == 'top':
-                slices.append(field.sel(method='nearest', depth=0.).drop(
-                        'depth'))
-            elif depth == 'bot':
-                slices.append(botField)
+            if field['3D']:
+                fieldDepths = depths
             else:
-                slices.append(field.sel(method='nearest', depth=depth).drop(
-                        'depth'))
+                fieldDepths = None
 
-        depthNames = [str(depth) for depth in self.depths]
-        field = xr.concat(slices, dim='depthSlice')
+            if refConfig is None:
 
-        dsObs = xr.Dataset(data_vars={self.fieldName: field},
-                           coords={'depthSlice': depthNames})
+                refTitleLabel = 'State Estimate (SOSE)'
 
-        return dsObs  # }}}
+                observationsDirectory = build_config_full_path(
+                    config, 'oceanObservations', 'soseSubdirectory')
+
+                obsFileName = \
+                    '{}/SOSE_2005-2010_monthly_{}_6000.0x' \
+                    '6000.0km_10.0km_Antarctic_stereo.nc'.format(
+                            observationsDirectory, field['obsFilePrefix'])
+                refFieldName = field['obsFieldName']
+                outFileLabel = '{}SOSE'.format(fieldPrefix)
+                galleryName = 'State Estimate: SOSE'
+                diffTitleLabel = 'Model - State Estimate'
+
+                remapObsSubtask = RemapSoseClimatology(
+                        parentTask=self, seasons=seasons, fileName=obsFileName,
+                        outFilePrefix='{}SOSE'.format(refFieldName),
+                        fieldName=refFieldName,
+                        botFieldName=field['obsBotFieldName'],
+                        depths=fieldDepths,
+                        comparisonGridNames=comparisonGridNames,
+                        subtaskName='remapObservations{}'.format(
+                                upperFieldPrefix))
+
+                self.add_subtask(remapObsSubtask)
+
+            else:
+                remapObsSubtask = None
+                refRunName = refConfig.get('runs', 'mainRunName')
+                galleryName = 'Ref: {}'.format(refRunName)
+                refTitleLabel = galleryName
+
+                refFieldName = field['mpas']
+                outFileLabel = fieldPrefix
+                diffTitleLabel = 'Main - Reference'
+
+            if field['3D']:
+                fieldDepths = depths
+            else:
+                fieldDepths = [None]
+
+            for comparisonGridName in comparisonGridNames:
+                for season in seasons:
+                    for depth in fieldDepths:
+
+                        subtaskName = 'plot{}_{}_{}'.format(upperFieldPrefix,
+                                                            season,
+                                                            comparisonGridName)
+                        if depth is not None:
+                            subtaskName = '{}_depth_{}'.format(subtaskName,
+                                                               depth)
+
+                        subtask = PlotClimatologyMapSubtask(
+                            parentTask=self,
+                            season=season,
+                            comparisonGridName=comparisonGridName,
+                            remapMpasClimatologySubtask=remapMpasSubtask,
+                            remapObsClimatologySubtask=remapObsSubtask,
+                            refConfig=refConfig,
+                            depth=depth,
+                            subtaskName=subtaskName)
+
+                        subtask.set_plot_info(
+                            outFileLabel=outFileLabel,
+                            fieldNameInTitle=field['titleName'],
+                            mpasFieldName=field['mpas'],
+                            refFieldName=refFieldName,
+                            refTitleLabel=refTitleLabel,
+                            diffTitleLabel=diffTitleLabel,
+                            unitsLabel=field['units'],
+                            imageCaption=field['titleName'],
+                            galleryGroup=field['titleName'],
+                            groupSubtitle=None,
+                            groupLink='{}Sose'.format(fieldPrefix),
+                            galleryName=galleryName,
+                            configSectionName='climatologyMapSose{}'.format(
+                                upperFieldPrefix))
+
+                        self.add_subtask(subtask)
+        # }}}
+
+    # }}}
+
+
+class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
+    """
+    A subtask for computing climatologies of velocity magnitude from zonal
+    and meridional components
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def customize_masked_climatology(self, climatology, season):  # {{{
+        """
+        Construct velocity magnitude as part of the climatology
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset`` object
+            the climatology data set
+
+        season : str
+            The name of the season to be masked
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset`` object
+            the modified climatology data set
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the base class's version of this function so we extract
+        # the desired slices.
+        climatology = super(RemapMpasVelMagClimatology,
+                            self).customize_masked_climatology(climatology,
+                                                               season)
+
+        if 'timeMonthly_avg_velocityZonal' in climatology and \
+                'timeMonthly_avg_velocityMeridional' in climatology:
+            zonalVel = climatology.timeMonthly_avg_velocityZonal
+            meridVel = climatology.timeMonthly_avg_velocityMeridional
+            climatology['velMag'] = xarray.ufuncs.sqrt(zonalVel**2 +
+                                                       meridVel**2)
+            climatology.velMag.attrs['units'] = 'm s$^{-1}$'
+            climatology.velMag.attrs['description'] = 'velocity magnitude'
+
+        return climatology  # }}}
 
     # }}}
 

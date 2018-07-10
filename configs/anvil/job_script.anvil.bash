@@ -1,11 +1,14 @@
 #!/bin/bash
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 # comment out if using debug queue
 #PBS -q acme
@@ -18,9 +21,10 @@
 
 cd $PBS_O_WORKDIR
 
+source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
+conda activate e3sm_unified_1.2.0_py2.7_nox
 # needed to prevent interference with acme-unified
 unset LD_LIBRARY_PATH
-soft add +e3sm-unified-1.1.2-nox
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
@@ -63,7 +67,7 @@ EOF
 # first, perform setup only without mpirun to create the mapping files
 $mpas_analysis_dir/run_mpas_analysis --setup_only $run_config_file \
     $job_config_file
-# next, do the full run now tht we have mapping files, but this time launching
+# next, do the full run now that we have mapping files, but this time launching
 # with mpirun
 mpirun -n 1 $mpas_analysis_dir/run_mpas_analysis $run_config_file \
     $job_config_file

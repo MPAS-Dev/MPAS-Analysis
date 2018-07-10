@@ -1,5 +1,5 @@
 MPAS Ocean
-==========
+----------
 
 The Model for Prediction Across Scales Ocean (MPAS-O) is designed for the
 simulation of the ocean system from time scales of months to millenia and
@@ -17,14 +17,14 @@ Full documentaiton is available at:
 https://mpas-dev.github.io/ocean/ocean.html
 
 Setting up Standalone MPAS-O Runs
----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to support all ocean analysis tasks from MPAS-Analysis, certain
 "analysis members", Fortran modules that perform analysis during the
 simulation, need to be enabled.
 
 The following is a list of suggested values for namelist options, typically
-found in ``namelist.ocean`` or ``mpas-o_in``::
+found in ``namelist.ocean`` or ``mpaso_in`` (or ``mpas-o_in`` in older E3SM runs)::
 
    config_AM_surfaceAreaWeightedAverages_enable = .true.
    config_AM_surfaceAreaWeightedAverages_compute_interval = '0000-00-00_01:00:00'
@@ -42,7 +42,7 @@ typically longer before most analysis is useful::
 
 Several streams must be defined in the streams file, typically
 ``streams.ocean``, (even if they will not be written out --
-``output_intervale=="none"``)::
+``output_interval="none"``)::
 
   <stream name="timeSeriesStatsMonthlyRestart"
           type="input;output"

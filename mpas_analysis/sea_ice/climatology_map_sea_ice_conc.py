@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -63,7 +66,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         super(ClimatologyMapSeaIceConc, self).__init__(
                 config=config, taskName=taskName,
                 componentName='seaIce',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_iceAreaCell'
         iselValues = None
@@ -116,8 +119,9 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                        mpasFieldName):  # {{{
         config = self.config
         obsFieldName = 'seaIceConc'
+        sectionName = self.taskName
 
-        observationPrefixes = config.getExpression(self.taskName,
+        observationPrefixes = config.getExpression(sectionName,
                                                    'observationPrefixes')
         for prefix in observationPrefixes:
             for season in seasons:
@@ -125,10 +129,10 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                     'Observations (SSM/I {})'.format(prefix)
 
                 obsFileName = build_config_full_path(
-                        config, 'seaIceObservations',
-                        'concentration{}{}_{}'.format(prefix,
-                                                      hemisphere,
-                                                      season))
+                        config=config, section='seaIceObservations',
+                        relativePathOption='concentration{}{}_{}'.format(
+                                prefix, hemisphere, season),
+                        relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedConcClimatology(
                         parentTask=self, seasons=[season],

@@ -1,11 +1,14 @@
 #!/bin/bash -l
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 # comment out if using debug queue
 #SBATCH --partition=regular
@@ -28,8 +31,8 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 export OMP_NUM_THREADS=1
 
 module unload python python/base
-module use /global/project/projectdirs/acme/software/modulefiles/all
-module load e3sm-unified/1.1.2
+source /global/project/projectdirs/acme/software/anaconda_envs/cori/base/etc/profile.d/conda.sh
+conda activate e3sm_unified_1.2.0_py2.7_nox
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

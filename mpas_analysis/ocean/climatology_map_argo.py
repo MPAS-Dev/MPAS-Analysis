@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 '''
 Analysis tasks for comparing Global climatology maps against Argo data.
 '''
@@ -34,8 +37,8 @@ from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of antarctic temperature against SOSE
-    fields
+    An analysis task for comparison of potential temperature against Argo
+    observations
     """
     # Authors
     # -------
@@ -66,7 +69,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         super(ClimatologyMapArgoTemperature, self).__init__(
                 config=config, taskName='climatologyMapArgoTemperature',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', fieldName])
+                tags=['climatology', 'horizontalMap', 'argo', 'temperature',
+                      'publicObs'])
 
         sectionName = self.taskName
 
@@ -107,7 +111,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Temperature'
+            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
+                            'Temperature'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations', 'argoSubdirectory')
@@ -153,15 +158,15 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle='Temperature',
+                        fieldNameInTitle='Potential Temperature',
                         mpasFieldName=mpasFieldName,
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^\circ$C',
-                        imageCaption='Model temperature compared with Argo '
-                                     'observations',
-                        galleryGroup='Argo Temperature',
+                        unitsLabel=r'$\degree$C',
+                        imageCaption='Model potential temperature compared '
+                                     'with Argo observations',
+                        galleryGroup='Argo Potential Temperature',
                         groupSubtitle=None,
                         groupLink='tempArgo',
                         galleryName=galleryName)
@@ -174,8 +179,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
 class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
     """
-    An analysis task for comparison of Global Temperature against Argo
-    fields
+    An analysis task for comparison of global salinity against Argo
+    observations
     """
     # Authors
     # -------
@@ -206,7 +211,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         super(ClimatologyMapArgoSalinity, self).__init__(
                 config=config, taskName='climatologyMapArgoSalinity',
                 componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', fieldName])
+                tags=['climatology', 'horizontalMap', 'argo', 'salinity'])
 
         sectionName = self.taskName
 

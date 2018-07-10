@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
 A utility for computing common ocean fields (e.g. zMid) from datasets
 """
@@ -45,8 +48,7 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    nVertLevels = \
-        layerThickness.shape[layerThickness.dims.index('nVertLevels')]
+    nVertLevels = layerThickness.sizes['nVertLevels']
 
     vertIndex = \
         xarray.DataArray.from_dict({'dims': ('nVertLevels',),
@@ -63,5 +65,14 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):  # {{{
     zMid = zLayerBot + 0.5*layerThickness
 
     return zMid  # }}}
+
+
+def nans_to_numpy_mask(field):  # {{{
+    """
+    Convert a numpy array with NaNs to a masked numpy array
+    """
+    field = numpy.ma.masked_array(
+        field, numpy.isnan(field))
+    return field  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

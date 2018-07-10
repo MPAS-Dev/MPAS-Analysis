@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -290,21 +293,22 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             fields = [timeSeries]
-            lineStyles = ['k-']
+            lineColors = ['k']
             lineWidths = [2.5]
             legendText = [mainRunName]
             if plotRef:
                 fields.append(refTotalMeltFlux.isel(nRegions=iRegion))
-                lineStyles.append('r-')
+                lineColors.append('r')
                 lineWidths.append(1.2)
                 legendText.append(refRunName)
 
             timeseries_analysis_plot(config, fields, movingAverageMonths,
                                      title, xLabel, yLabel, figureName,
-                                     lineStyles=lineStyles,
+                                     calendar=calendar,
+                                     lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,
-                                     calendar=calendar, obsMean=obsMeltFlux,
+                                     obsMean=obsMeltFlux,
                                      obsUncertainty=obsMeltFluxUnc,
                                      obsLegend=list(obsDict.keys()))
 
@@ -331,12 +335,12 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             fields = [timeSeries]
-            lineStyles = ['k-']
+            lineColors = ['k']
             lineWidths = [2.5]
             legendText = [mainRunName]
             if plotRef:
                 fields.append(refMeltRates.isel(nRegions=iRegion))
-                lineStyles.append('r-')
+                lineColors.append('r')
                 lineWidths.append(1.2)
                 legendText.append(refRunName)
 
@@ -354,10 +358,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
             timeseries_analysis_plot(config, fields, movingAverageMonths,
                                      title, xLabel, yLabel, figureName,
-                                     lineStyles=lineStyles,
+                                     calendar=calendar,
+                                     lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,
-                                     calendar=calendar, obsMean=obsMeltRate,
+                                     obsMean=obsMeltRate,
                                      obsUncertainty=obsMeltRateUnc,
                                      obsLegend=list(obsDict.keys()),
                                      firstYearXTicks=firstYearXTicks,

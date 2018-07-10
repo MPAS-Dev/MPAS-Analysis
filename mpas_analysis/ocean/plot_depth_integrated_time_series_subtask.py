@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+# This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
 from __future__ import absolute_import, division, print_function, \
@@ -18,17 +21,18 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 
-from mpas_analysis.shared.generalized_reader import open_multifile_dataset
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
     days_to_datetime
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.time_series import compute_moving_avg
+from mpas_analysis.shared.time_series import compute_moving_avg, \
+    combine_time_series_with_ncrcat
 
 
 class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
@@ -223,7 +227,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             baseDirectory = build_config_full_path(
                 config, 'output', 'timeSeriesSubdirectory')
 
-            self.preprocessedFileName = '{}/preprocessed_{}'.format(
+            make_directories('{}/preprocessed'.format(baseDirectory))
+
+            self.preprocessedIntermediateFileName = \
+                '{}/preprocessed/intermediate_{}'.format(baseDirectory,
+                                                         self.inFileName)
+            self.preprocessedFileName = '{}/preprocessed/{}'.format(
                     baseDirectory, self.inFileName)
 
         if not os.path.isabs(self.inFileName):
@@ -293,7 +302,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 legends.append('{}m-{}m'.format(top, bottom))
 
         # more possible symbols than we typically use
-        lines = ['-', '-', '--', '+', 'o', '^', 'v']
+        lines = ['-', '-', '--', None, None, None, None]
+        markers = [None, None, None, '+', 'o', '^', 'v']
         widths = [5, 3, 3, 3, 3, 3, 3]
         points = [None, None, None, 300, 300, 300, 300]
 
@@ -309,7 +319,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
         timeSeries = []
+        lineColors = []
         lineStyles = []
+        lineMarkers = []
         lineWidths = []
         maxPoints = []
         legendText = []
@@ -321,7 +333,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             field = field.where(ds.depth <= bottom)
             timeSeries.append(field.sum('nVertLevels'))
 
-            lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+            lineColors.append(color)
+            lineStyles.append(lines[rangeIndex])
+            lineMarkers.append(markers[rangeIndex])
             lineWidths.append(widths[rangeIndex])
             maxPoints.append(points[rangeIndex])
             legendText.append(legends[rangeIndex])
@@ -332,18 +346,20 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             preprocessedInputDirectory = config.get(
                     'oceanPreprocessedReference', 'baseDirectory')
 
-            self.logger.info('  Load in OHC from preprocessed reference '
-                             'run...')
+            self.logger.info('  Load in preprocessed reference data...')
             preprocessedFilePrefix = config.get(self.sectionName,
                                                 'preprocessedFilePrefix')
             inFilesPreprocessed = '{}/{}.{}.year*.nc'.format(
                 preprocessedInputDirectory, preprocessedFilePrefix,
                 preprocessedReferenceRunName)
-            dsPreprocessed = open_multifile_dataset(
-                fileNames=inFilesPreprocessed,
-                calendar=calendar,
-                config=config,
-                timeVariableName='xtime')
+
+            combine_time_series_with_ncrcat(
+                    inFilesPreprocessed, self.preprocessedIntermediateFileName,
+                    logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(
+                    fileName=self.preprocessedIntermediateFileName,
+                    calendar=calendar,
+                    timeVariableNames='xtime')
 
             yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
             yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -371,9 +387,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             dsPreprocessed = xarray.open_dataset(self.preprocessedFileName)
 
         if preprocessedReferenceRunName != 'None':
-            color = 'r'
-            title = '{} \n {} (red)'.format(title,
-                                            preprocessedReferenceRunName)
+            color = 'purple'
+            title = '{} \n {} (purple)'.format(title,
+                                               preprocessedReferenceRunName)
 
             preprocessedFieldPrefix = config.get(self.sectionName,
                                                  'preprocessedFieldPrefix')
@@ -384,7 +400,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             suffixes = ['tot'] + ['{}m'.format(depth) for depth in
                                   divisionDepths] + ['btm']
 
-            # these preprocessed data are OHC *anomalies*
+            # these preprocessed data are already anomalies
             dsPreprocessed = compute_moving_avg(dsPreprocessed,
                                                 movingAveragePoints)
             for rangeIndex in range(len(suffixes)):
@@ -398,7 +414,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                                 variableName))
                     timeSeries.extend(None)
 
-                lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+                lineColors.append(color)
+                lineStyles.append(lines[rangeIndex])
+                lineMarkers.append(markers[rangeIndex])
                 lineWidths.append(widths[rangeIndex])
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
@@ -407,7 +425,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
             refRunName = self.refConfig.get('runs', 'mainRunName')
 
-            title = '{} \n {} (blue)'.format(title, refRunName)
+            title = '{} \n {} (red)'.format(title, refRunName)
 
             self.logger.info('  Load ocean data from reference run...')
             refStartYear = self.refConfig.getint('timeSeries', 'startYear')
@@ -423,7 +441,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                       endDate=refEndDate)
             dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
 
-            color = 'b'
+            color = 'r'
 
             for rangeIndex in range(len(topDepths)):
                 top = topDepths[rangeIndex]
@@ -432,7 +450,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 field = field.where(dsRef.depth <= bottom)
                 timeSeries.append(field.sum('nVertLevels'))
 
-                lineStyles.append('{}{}'.format(color, lines[rangeIndex]))
+                lineColors.append(color)
+                lineStyles.append(lines[rangeIndex])
+                lineMarkers.append(markers[rangeIndex])
                 lineWidths.append(widths[rangeIndex])
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
@@ -451,9 +471,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
                                  title=title, xlabel=xLabel, ylabel=yLabel,
-                                 fileout=figureName, lineStyles=lineStyles,
-                                 lineWidths=lineWidths, maxPoints=maxPoints,
-                                 legendText=legendText, calendar=calendar,
+                                 fileout=figureName, calendar=calendar,
+                                 lineColors=lineColors, lineStyles=lineStyles,
+                                 markers=lineMarkers, lineWidths=lineWidths,
+                                 maxPoints=maxPoints, legendText=legendText,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
 

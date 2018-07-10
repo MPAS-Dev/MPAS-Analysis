@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
 Functions for creating climatologies from monthly time series data
 """
@@ -518,8 +521,10 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
         The name of the climatology (typically the name of a field to mask
         and later remap)
 
-    comparisonGridName : {'latlon', 'antarctic'}
-        The name of the comparison grid to use for remapping
+    comparisonGridName : str
+        The name of the comparison grid to use for remapping.  If it is one
+        of the default comparison grid names ``{'latlon', 'antarctic'}``, the
+        full grid name is looked up via get_comparison_descriptor
     """
     # Authors
     # -------
@@ -541,9 +546,12 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     climatologyBaseDirectory = build_config_full_path(
         config, 'output', 'mpasClimatologySubdirectory')
 
-    comparisonDescriptor = get_comparison_descriptor(config,
-                                                     comparisonGridName)
-    comparisonFullMeshName = comparisonDescriptor.meshName
+    if comparisonGridName in ['latlon', 'antarctic']:
+        comparisonDescriptor = get_comparison_descriptor(config,
+                                                         comparisonGridName)
+        comparisonFullMeshName = comparisonDescriptor.meshName
+    else:
+        comparisonFullMeshName = comparisonGridName
 
     stageDirectory = '{}/remapped'.format(climatologyBaseDirectory)
 

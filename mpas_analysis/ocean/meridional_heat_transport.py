@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -64,7 +67,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             config=config,
             taskName='meridionalHeatTransport',
             componentName='ocean',
-            tags=['climatology'])
+            tags=['climatology', 'publicObs'])
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
@@ -203,7 +206,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             binBoundaryMerHeatTrans = None
             # first try timeSeriesStatsMonthly for bin boundaries, then try
-            # meridionalHeatTranspor steram as a backup option
+            # meridionalHeatTransport stream as a backup option
             for streamName in ['timeSeriesStatsMonthlyOutput',
                                'meridionalHeatTransportOutput']:
                 try:
@@ -266,7 +269,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                  self.startYear, self.endYear, mainRunName)
         filePrefix = self.filePrefixes['mht']
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        lineColors = ['r']
+        lineColors = ['k']
         lineWidths = [1.6]
         legendText = [mainRunName]
         xArrays = [x]
@@ -283,7 +286,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             lineColors.extend(['b', 'g'])
             lineWidths.extend([1.2, 1.2])
-            legendText.extend(['NCEP', 'ECMWF'])
+            legendText.extend(['Trenberth and Caron - NCEP',
+                               'Trenberth and Caron - ECMWF'])
             xArrays.extend([xObs, xObs])
             fieldArrays.extend([ncepGlobal, ecmwfGlobal])
             errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
@@ -302,7 +306,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             dsRef = xr.open_dataset(refFileName)
             refRunName = self.refConfig.get('runs', 'mainRunName')
 
-            lineColors.append('k')
+            lineColors.append('r')
             lineWidths.append(1.2)
             legendText.append(refRunName)
             xArrays.append(dsRef.binBoundaryMerHeatTrans)
@@ -315,9 +319,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             legendText = [None]
 
         plot_1D(config, xArrays, fieldArrays, errArrays,
-                lineColors, lineWidths, legendText,
-                title, xLabel, yLabel, figureName,
-                xLim=xLimGlobal)
+                lineColors=lineColors, lineWidths=lineWidths,
+                legendText=legendText, title=title, xlabel=xLabel,
+                ylabel=yLabel, fileout=figureName, xLim=xLimGlobal)
 
         self._write_xml(filePrefix)
 

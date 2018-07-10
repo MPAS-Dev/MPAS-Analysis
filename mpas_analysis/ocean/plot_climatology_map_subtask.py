@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
 An analysis subtasks for plotting comparison of 2D model fields against
 observations.
@@ -31,11 +34,7 @@ from mpas_analysis.shared.grid import interp_extrap_corner
 from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 
-
-def nans_to_numpy_mask(field):
-    field = np.ma.masked_array(
-        field, np.isnan(field))
-    return field
+from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
@@ -58,10 +57,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``
         The subtask for remapping the observational climatology that this
         subtask will plot
-
-    remapMpasRefClimatologySubtask : ``RemapMpasReferenceClimatologySubtask``
-        The subtask for remapping the MPAS climatology for the reference
-        run that this subtask will plot
 
     removeMean : bool, optional
         If True, a common mask for the model and reference data sets is
@@ -111,6 +106,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     depth : {None, float, 'top', 'bot'}
         Depth at which to perform the comparison, 'top' for the sea surface
         'bot' for the sea floor
+
+    configSectionName : str
+        the name of the section where the color map and range is defined
     """
     # Authors
     # -------
@@ -118,8 +116,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 refConfig=None, depth=None, removeMean=False):
-        # {{{
+                 refConfig=None, depth=None, removeMean=False,
+                 subtaskName=None):  # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -157,6 +155,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             subtracted from both the model and reference results.  This is
             useful for data sets where the desire is to compare the spatial
             pattern but the mean offset is not meaningful (e.g. SSH)
+
+        subtaskName : str, optinal
+            The name of the subtask.  If not specified, it is
+            ``plot<season>_<comparisonGridName>`` with a suffix indicating the
+            depth being sliced (if any)
         '''
         # Authors
         # -------
@@ -169,13 +172,16 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
         self.refConfig = refConfig
         self.removeMean = removeMean
-        subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
 
         if depth is None:
             self.depthSuffix = ''
         else:
             self.depthSuffix = 'depth_{}'.format(depth)
-            subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
+
+        if subtaskName is None:
+            subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
+            if depth is not None:
+                subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
 
         config = parentTask.config
         taskName = parentTask.taskName
@@ -196,7 +202,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
-                      galleryName, diffTitleLabel='Model - Observations'):
+                      galleryName, diffTitleLabel='Model - Observations',
+                      configSectionName=None):
         # {{{
         """
         Store attributes related to plots, plot file names and HTML output.
@@ -241,6 +248,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         diffTitleLabel : str, optional
             the title of the difference subplot
+
+        configSectionName : str, optional
+            the name of the section where the color map and range is defined,
+            default is the name of the task
         """
         # Authors
         # -------
@@ -260,6 +271,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.groupSubtitle = groupSubtitle
         self.groupLink = groupLink
         self.galleryName = galleryName
+
+        if configSectionName is None:
+            self.configSectionName = self.taskName
+        else:
+            self.configSectionName = configSectionName
 
         season = self.season
         depth = self.depth
@@ -417,7 +433,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         season = self.season
         config = self.config
-        configSectionName = self.taskName
+        configSectionName = self.configSectionName
 
         mainRunName = config.get('runs', 'mainRunName')
 
@@ -480,7 +496,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         season = self.season
         comparisonGridName = self.comparisonGridName
         config = self.config
-        configSectionName = self.taskName
+        configSectionName = self.configSectionName
 
         mainRunName = config.get('runs', 'mainRunName')
 

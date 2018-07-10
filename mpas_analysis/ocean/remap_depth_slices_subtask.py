@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -172,7 +175,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # which will perform the main function of the task
         super(RemapDepthSlicesSubtask, self).run_task()
 
-    def customize_masked_climatology(self, climatology):  # {{{
+    def customize_masked_climatology(self, climatology, season):  # {{{
         """
         Uses ``verticalIndex`` to slice the 3D climatology field at each
         requested depth.  The resulting field has the depth appended to
@@ -182,6 +185,9 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         ----------
         climatology : ``xarray.Dataset`` object
             the climatology data set
+
+        season : str
+            The name of the season to be masked
 
         Returns
         -------

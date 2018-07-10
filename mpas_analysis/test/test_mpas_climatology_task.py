@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
 Unit test infrastructure for MpasClimatologyTask.
 
@@ -63,10 +66,9 @@ class TestMpasClimatologyTask(TestCase):
         variableList = ['timeMonthly_avg_ssh']
         seasons = [mpasClimatologyTask.seasons[0]]
 
-        remapSubtask = RemapMpasClimatologySubtask(mpasClimatologyTask,
-                                                   parentTask,
-                                                   climatologyName,
-                                                   variableList, seasons)
+        remapSubtask = RemapMpasClimatologySubtask(
+                mpasClimatologyTask, parentTask, climatologyName,
+                variableList, seasons, comparisonGridNames=['latlon'])
 
         remapSubtask.setup_and_check()
         return remapSubtask
@@ -130,7 +132,8 @@ class TestMpasClimatologyTask(TestCase):
         startDate = '{:04d}-01-01_00:00:00'.format(startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(endYear)
 
-        mpasClimatologyTask._update_climatology_bounds_and_create_symlinks()
+        mpasClimatologyTask._update_climatology_bounds()
+        mpasClimatologyTask._create_symlinks()
 
         assert(mpasClimatologyTask.startYear == startYear)
         assert(mpasClimatologyTask.endYear == endYear)
@@ -149,7 +152,8 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        mpasClimatologyTask._update_climatology_bounds_and_create_symlinks()
+        mpasClimatologyTask._update_climatology_bounds()
+        mpasClimatologyTask._create_symlinks()
 
         startYear = 2
         endYear = 2

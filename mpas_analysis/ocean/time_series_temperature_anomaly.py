@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+# This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
 from __future__ import absolute_import, division, print_function, \
@@ -19,8 +22,8 @@ from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 
 class TimeSeriesTemperatureAnomaly(AnalysisTask):
     """
-    Performs analysis of time series of temperature anomalies from the first
-    simulation year as a function of depth.
+    Performs analysis of time series of potential temperature anomalies from
+    a reference simulation year as a function of depth.
     """
     # Authors
     # -------
@@ -47,7 +50,7 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
             config=config,
             taskName='timeSeriesTemperatureAnomaly',
             componentName='ocean',
-            tags=['timeSeries', 'temperature'])
+            tags=['timeSeries', 'temperature', 'publicObs'])
 
         sectionName = 'hovmollerTemperatureAnomaly'
         regionNames = config.getExpression(sectionName, 'regions')
@@ -67,18 +70,18 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
         self.add_subtask(anomalyTask)
 
         for regionName in regionNames:
-            caption = 'Trend of {} Temperature Anomaly vs depth'.format(
-                    regionName)
+            caption = 'Trend of {} Potential Temperature Anomaly vs ' \
+                      'Depth'.format(regionName)
             plotTask = PlotHovmollerSubtask(
                     parentTask=self,
                     regionName=regionName,
                     inFileName=timeSeriesFileName,
                     outFileLabel='TAnomalyZ',
-                    fieldNameInTitle='Temperature Anomaly',
+                    fieldNameInTitle='Potential Temperature Anomaly',
                     mpasFieldName=mpasFieldName,
-                    unitsLabel='[$^\circ$C]',
+                    unitsLabel='[$\degree$C]',
                     sectionName=sectionName,
-                    thumbnailSuffix=u'ΔT',
+                    thumbnailSuffix=u'Δϴ',
                     imageCaption=caption,
                     galleryGroup='Trends vs Depth',
                     groupSubtitle=None,

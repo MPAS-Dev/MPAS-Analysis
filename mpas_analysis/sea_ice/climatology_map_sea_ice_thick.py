@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -63,7 +66,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         super(ClimatologyMapSeaIceThick, self).__init__(
                 config=config, taskName=taskName,
                 componentName='seaIce',
-                tags=['climatology', 'horizontalMap', fieldName])
+                tags=['climatology', 'horizontalMap', fieldName,
+                      'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
         iselValues = None
@@ -117,8 +121,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         for season in seasons:
             if refConfig is None:
                 obsFileName = build_config_full_path(
-                        config, 'seaIceObservations',
-                        'thickness{}_{}'.format(hemisphere, season))
+                        config=config, section='seaIceObservations',
+                        relativePathOption='thickness{}_{}'.format(hemisphere,
+                                                                   season),
+                        relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedThickClimatology(
                         parentTask=self, seasons=[season],

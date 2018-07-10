@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -74,7 +77,11 @@ def generate_html(config, analyses, refConfig=None):  # {{{
         page.add_component(componentName, component.subdirectory,
                            firstImageFileName)
 
-    page.generate()  # }}}
+    page.generate()
+
+    print("Done.")
+
+    # }}}
 
 
 class MainPage(object):
@@ -215,7 +222,7 @@ class MainPage(object):
                     pageText.encode('ascii',
                                     'xmlcharrefreplace').decode('ascii'))
 
-        # copy the css and js files
+        # copy the css and js files as well as general images
         fileName = \
             pkg_resources.resource_filename(__name__,
                                             "templates/style.css")
@@ -230,6 +237,15 @@ class MainPage(object):
             pkg_resources.resource_filename(__name__,
                                             "templates/mpas_logo.png")
         copyfile(fileName, '{}/mpas_logo.png'.format(htmlBaseDirectory))
+
+        fileName = \
+            pkg_resources.resource_filename(__name__,
+                                            "templates/config.png")
+        copyfile(fileName, '{}/config.png'.format(htmlBaseDirectory))
+
+        with open('{}/config.{}'.format(htmlBaseDirectory, runName), 'w') \
+                as configFile:
+            self.config.write(configFile)
 
 
 class ComponentPage(object):

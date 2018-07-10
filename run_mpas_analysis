@@ -1,11 +1,4 @@
 #!/usr/bin/env python
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
-#
-# Unless noted otherwise source code is licensed under the BSD license.
-# Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
 
 """
 Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
@@ -19,6 +12,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import matplotlib as mpl
+mpl.use('Agg')
 import argparse
 import traceback
 import sys
@@ -26,6 +20,10 @@ import pkg_resources
 import shutil
 import os
 from collections import OrderedDict
+import progressbar
+import logging
+
+from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
@@ -35,6 +33,15 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.html import generate_html
 
 from mpas_analysis.shared import AnalysisTask
+
+from mpas_analysis.shared.plot.plotting import _register_custom_colormaps, \
+    _plot_color_gradients
+
+from mpas_analysis import ocean
+from mpas_analysis import sea_ice
+from mpas_analysis.shared.climatology import MpasClimatologyTask, \
+    RefYearMpasClimatologyTask
+from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
 
 def build_analysis_list(config, refConfig):  # {{{
@@ -60,17 +67,6 @@ def build_analysis_list(config, refConfig):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    # choose the right rendering backend, depending on whether we're displaying
-    # to the screen
-    if not config.getboolean('plot', 'displayToScreen'):
-        mpl.use('Agg')
-
-    # analysis can only be imported after the right MPL renderer is selected
-    from mpas_analysis import ocean
-    from mpas_analysis import sea_ice
-    from mpas_analysis.shared.climatology import MpasClimatologyTask
-    from mpas_analysis.shared.time_series import MpasTimeSeriesTask
-
     analyses = []
 
     # Ocean Analyses
@@ -82,7 +78,11 @@ def build_analysis_list(config, refConfig):  # {{{
                                         componentName='ocean',
                                         section='index')
 
+    oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
+            config=config,  componentName='ocean')
+
     analyses.append(oceanClimatolgyTask)
+    analyses.append(oceanRefYearClimatolgyTask)
 
     analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask,
                                             refConfig))
@@ -92,13 +92,19 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
                                             refConfig))
-    analyses.append(ocean.ClimatologyMapSoseTemperature(
+    analyses.append(ocean.ClimatologyMapOHCAnomaly(
+            config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
+            refConfig))
+
+    analyses.append(ocean.ClimatologyMapSose(
             config, oceanClimatolgyTask, refConfig))
-    analyses.append(ocean.ClimatologyMapSoseSalinity(
-            config, oceanClimatolgyTask, refConfig))
+
     analyses.append(ocean.ClimatologyMapArgoTemperature(
             config, oceanClimatolgyTask, refConfig))
     analyses.append(ocean.ClimatologyMapArgoSalinity(
+            config, oceanClimatolgyTask, refConfig))
+
+    analyses.append(ocean.ClimatologyMapSchmidtko(
             config, oceanClimatolgyTask, refConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
@@ -120,8 +126,18 @@ def build_analysis_list(config, refConfig):  # {{{
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
                                                   refConfig))
 
-    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask))
+    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask,
+                                            refConfig))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
+
+    analyses.append(ocean.WoceTransects(config, oceanClimatolgyTask,
+                                        refConfig))
+
+    analyses.append(ocean.SoseTransects(config, oceanClimatolgyTask,
+                                        refConfig))
+
+    analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTask,
+                                           refConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
@@ -164,8 +180,8 @@ def determine_analyses_to_generate(analyses):  # {{{
 
     Returns
     -------
-    analysesToGenerate : list of ``AnalysisTask`` objects
-        A list of analysis tasks to run
+    analysesToGenerate : ``OrderedDict`` of ``AnalysisTask`` objects
+        A dictionary of analysis tasks to run
     """
     # Authors
     # -------
@@ -210,7 +226,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     key = (analysisTask.taskName, analysisTask.subtaskName)
     if key in analysesToGenerate.keys():
         # The task was already added
-        assert(analysisTask._setupStatus == 'success')
+        if analysisTask._setupStatus != 'success':
+            ValueError("task {} already added but this version was not set up "
+                       "successfully. Typically, this indicates two tasks "
+                       "with the same full name".format(analysisTask.fullName))
         return
 
     # for each anlaysis task, check if we want to generate this task
@@ -326,10 +345,10 @@ def run_analysis(config, analyses):  # {{{
     config.write(configFile)
     configFile.close()
 
-    taskCount = config.getWithDefault('execute', 'parallelTaskCount',
+    parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
                                       default=1)
 
-    isParallel = taskCount > 1 and len(analyses) > 1
+    isParallel = parallelTaskCount > 1 and len(analyses) > 1
 
     for analysisTask in analyses.values():
         if not analysisTask.runAfterTasks and not analysisTask.subtasks:
@@ -339,6 +358,26 @@ def run_analysis(config, analyses):  # {{{
 
     tasksWithErrors = []
     runningTasks = {}
+
+    # redirect output to a log file
+    logsDirectory = build_config_full_path(config, 'output',
+                                           'logsSubdirectory')
+
+    logFileName = '{}/taskProgress.log'.format(logsDirectory)
+
+    logger = logging.getLogger('run_mpas_analysis')
+    handler = logging.FileHandler(logFileName)
+
+    formatter = AnalysisFormatter()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+    totalTaskCount = len(analyses)
+    widgets = ['Running tasks: ', progressbar.Percentage(), ' ',
+               progressbar.Bar(), ' ', progressbar.ETA()]
+    progress = progressbar.ProgressBar(widgets=widgets,
+                                       maxval=totalTaskCount).start()
 
     # run each analysis task
     while True:
@@ -362,6 +401,8 @@ def run_analysis(config, analyses):  # {{{
                                                      AnalysisTask.FAIL]:
                 unfinishedCount += 1
 
+        progress.update(totalTaskCount-unfinishedCount)
+
         if unfinishedCount <= 0:
             # we're done
             break
@@ -370,11 +411,12 @@ def run_analysis(config, analyses):  # {{{
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
-                    print('Running {}'.format(analysisTask.printTaskName))
+                    logger.info('Running {}'.format(
+                            analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
-                    if len(runningTasks.keys()) >= taskCount:
+                    if len(runningTasks.keys()) >= parallelTaskCount:
                         break
                 else:
                     analysisTask.run(writeLogFile=False)
@@ -388,22 +430,30 @@ def run_analysis(config, analyses):  # {{{
             taskTitle = analysisTask.printTaskName
 
             if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
-                print("   Task {} has finished successfully.".format(
+                logger.info("   Task {} has finished successfully.".format(
                         taskTitle))
             elif analysisTask._runStatus.value == AnalysisTask.FAIL:
-                print("ERROR in task {}.  See log file {} for details".format(
-                    taskTitle, analysisTask._logFileName))
+                message = "ERROR in task {}.  See log file {} for " \
+                          "details".format(taskTitle,
+                                           analysisTask._logFileName)
+                logger.error(message)
+                print(message)
                 tasksWithErrors.append(taskTitle)
             else:
-                print("Unexpected status from in task {}.  This may be a "
-                      "bug.".format(taskTitle))
+                message = "Unexpected status from in task {}.  This may be " \
+                          "a bug.".format(taskTitle)
+                logger.error(message)
+                print(message)
         else:
             if analysisTask._runStatus.value == AnalysisTask.FAIL:
                 sys.exit(1)
 
-    if not isParallel and config.getboolean('plot', 'displayToScreen'):
-        import matplotlib.pyplot as plt
-        plt.show()
+    progress.finish()
+
+    # blank line to make sure remaining output is on a new line
+    print('')
+
+    logger.handlers = []
 
     # raise the last exception so the process exits with an error
     errorCount = len(tasksWithErrors)
@@ -413,7 +463,15 @@ def run_analysis(config, analyses):  # {{{
     elif errorCount > 0:
         print("There were errors in {} tasks: {}".format(
             errorCount, ', '.join(tasksWithErrors)))
+        print("See log files in {} for details.".format(logsDirectory))
+        print("The following commands may be helpful:")
+        print("  cd {}".format(logsDirectory))
+        print("  grep Error *.log")
         sys.exit(1)
+    else:
+        print('Log files for executed tasks can be found in {}'.format(
+                logsDirectory))
+
     # }}}
 
 
@@ -446,6 +504,35 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
                 return analysisTask  # }}}
 
 
+def purge_output(config):
+    outputDirectory = config.get('output', 'baseDirectory')
+    if not os.path.exists(outputDirectory):
+        print('Output directory {} does not exist.\n'
+              'No purge necessary.'.format(outputDirectory))
+    else:
+        for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
+                             'timeSeries', 'html']:
+            option = '{}Subdirectory'.format(subdirectory)
+            directory = build_config_full_path(
+                    config=config, section='output',
+                    relativePathOption=option)
+            if os.path.exists(directory):
+                print('Deleting contents of {}'.format(directory))
+                shutil.rmtree(directory)
+
+        for component in ['ocean', 'seaIce']:
+            for subdirectory in ['climatology', 'remappedClim']:
+                option = '{}Subdirectory'.format(subdirectory)
+                section = '{}Observations'.format(component)
+                directory = build_config_full_path(
+                        config=config, section='output',
+                        relativePathOption=option,
+                        relativePathSection=section)
+                if os.path.exists(directory):
+                    print('Deleting contents of {}'.format(directory))
+                    shutil.rmtree(directory)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
@@ -467,6 +554,9 @@ if __name__ == "__main__":
                         "directory before running")
     parser.add_argument('configFiles', metavar='CONFIG',
                         type=str, nargs='*', help='config file')
+    parser.add_argument("--plot_colormaps", dest="plot_colormaps",
+                        action='store_true',
+                        help="Make a plot displaying all available colormaps")
     args = parser.parse_args()
 
     for configFile in args.configFiles:
@@ -497,6 +587,11 @@ if __name__ == "__main__":
             print('    tags: {}'.format(', '.join(analysisTask.tags)))
         sys.exit(0)
 
+    if args.plot_colormaps:
+        _register_custom_colormaps()
+        _plot_color_gradients()
+        sys.exit(0)
+
     if config.has_option('runs', 'referenceRunConfigFile'):
         refConfigFile = config.get('runs', 'referenceRunConfigFile')
         if not os.path.exists(refConfigFile):
@@ -522,13 +617,7 @@ if __name__ == "__main__":
         refConfig = None
 
     if args.purge:
-        outputDirectory = config.get('output', 'baseDirectory')
-        if not os.path.exists(outputDirectory):
-            print('Output directory {} does not exist.\n'
-                  'No purge necessary.'.format(outputDirectory))
-        else:
-            print('Deleting contents of {}'.format(outputDirectory))
-            shutil.rmtree(outputDirectory)
+        purge_output(config)
 
     if args.generate:
         update_generate(config, args.generate)

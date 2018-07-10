@@ -1,10 +1,13 @@
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
@@ -20,8 +23,10 @@ from mpas_analysis.shared.climatology.climatology import \
     get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name
 
-from ..io.utility import build_config_full_path, make_directories, \
-    get_files_year_month
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    make_directories, get_files_year_month
+
+from mpas_analysis.shared.constants import constants
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -42,7 +47,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
     seasons : list of str
         A list of seasons (keys in ``shared.constants.monthDictionary``)
-        over which the climatology should be computed or ['none'] if only
+        over which the climatology should be computed or ``[]`` if only
         monthly climatologies are needed.
 
     inputFiles : list of str
@@ -124,7 +129,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         seasons : list of str, optional
             A list of seasons (keys in ``shared.constants.monthDictionary``)
-            to be computed or ['none'] (not ``None``) if only monthly
+            to be computed or ``None`` if only monthly
             climatologies are needed.
 
         Raises
@@ -188,21 +193,25 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        # get a list of timeSeriesStats output files from the streams file,
+        self.startYear, self.endYear = self.get_start_and_end()
+
+        self.startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
+        self.endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
+
+        # get a list of timeSeriesSta output files from the streams file,
         # reading only those that are between the start and end dates
-        startDate = self.config.get('climatology', 'startDate')
-        endDate = self.config.get('climatology', 'endDate')
         streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
-                streamName, startDate=startDate, endDate=endDate,
+                streamName, startDate=self.startDate, endDate=self.endDate,
                 calendar=self.calendar)
 
         if len(self.inputFiles) == 0:
             raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, startDate, endDate))
+                          '{}.'.format(streamName, self.startDate,
+                                       self.endDate))
 
-        self.symlinkDirectory = \
-            self._update_climatology_bounds_and_create_symlinks()
+        self._update_climatology_bounds()
+        self.symlinkDirectory = self._create_symlinks()
 
         with xarray.open_dataset(self.inputFiles[0]) as ds:
             self.allVariables = list(ds.data_vars.keys())
@@ -226,10 +235,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                                  os.path.basename(self.inputFiles[0]),
                                  os.path.basename(self.inputFiles[-1])))
 
-        if self.seasons[0] is 'none':
-            seasonsToCheck = ['{:02d}'.format(month) for month in range(1, 13)]
-        else:
-            seasonsToCheck = self.seasons
+        seasonsToCheck = list(constants.abrevMonthNames)
+        for season in self.seasons:
+            if season not in seasonsToCheck:
+                seasonsToCheck.append(season)
 
         allExist = True
         for season in seasonsToCheck:
@@ -258,6 +267,30 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # }}}
 
+    def get_start_and_end(self):  # {{{
+        """
+        Get the start and end years and dates for the climatology.  This
+        function is provided to allow a custom method for setting the start
+        and end years of the climatology.  By default, they are read from the
+        climatology section of the config file
+
+        Returns
+        -------
+        startYear, endYear : int
+           The start and end years of the climatology
+
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        startYear = self.config.getint('climatology', 'startYear')
+        endYear = self.config.getint('climatology', 'endYear')
+
+        return startYear, endYear
+
+        # }}}
+
     def get_file_name(self, season):  # {{{
         """
 
@@ -282,18 +315,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # }}}
 
-    def _update_climatology_bounds_and_create_symlinks(self):  # {{{
+    def _update_climatology_bounds(self):  # {{{
         """
         Update the start and end years and dates for climatologies based on the
-        years actually available in the list of files.  Create symlinks to
-        monthly mean files so they have the expected file naming convention
-        for ncclimo.
-
-        Returns
-        -------
-        symlinkDirectory : str
-            The path to the symlinks created for each timeSeriesStatsMonthly
-            input file
+        years actually available in the list of files.
         """
         # Authors
         # -------
@@ -301,8 +326,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         config = self.config
 
-        requestedStartYear = config.getint('climatology', 'startYear')
-        requestedEndYear = config.getint('climatology', 'endYear')
+        requestedStartYear = self.startYear
+        requestedEndYear = self.endYear
 
         fileNames = sorted(self.inputFiles)
         years, months = get_files_year_month(fileNames,
@@ -321,6 +346,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             lastIndex -= 1
         endYear = years[lastIndex]
 
+        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
+        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+
         if startYear != requestedStartYear or endYear != requestedEndYear:
             print("Warning: climatology start and/or end year different from "
                   "requested\n"
@@ -329,24 +357,40 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                                                      requestedEndYear,
                                                      startYear,
                                                      endYear))
+
             config.set('climatology', 'startYear', str(startYear))
-            config.set('climatology', 'endYear', str(endYear))
-
-            startDate = '{:04d}-01-01_00:00:00'.format(startYear)
             config.set('climatology', 'startDate', startDate)
-            endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+            config.set('climatology', 'endYear', str(endYear))
             config.set('climatology', 'endDate', endDate)
-
-        else:
-            startDate = config.get('climatology', 'startDate')
-            endDate = config.get('climatology', 'endDate')
 
         self.startDate = startDate
         self.endDate = endDate
         self.startYear = startYear
         self.endYear = endYear
+        # }}}
 
-        # now, create the symlinks
+    def _create_symlinks(self):  # {{{
+        """
+        Create symlinks to monthly mean files so they have the expected file
+        naming convention for ncclimo.
+
+        Returns
+        -------
+        symlinkDirectory : str
+            The path to the symlinks created for each timeSeriesStatsMonthly
+            input file
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
+
         climatologyBaseDirectory = build_config_full_path(
             config, 'output', 'mpasClimatologySubdirectory')
 
@@ -410,6 +454,12 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         parallelMode = self.config.get('execute', 'ncclimoParallelMode')
 
+        seasons = [season for season in self.seasons
+                   if season not in constants.abrevMonthNames]
+
+        if len(seasons) == 0:
+            seasons = ['none']
+
         args = ['ncclimo',
                 '-4',
                 '--clm_md=mth',
@@ -417,7 +467,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 '-m', self.ncclimoModel,
                 '-p', parallelMode,
                 '-v', ','.join(self.variableList),
-                '--seasons={}'.format(','.join(self.seasons)),
+                '--seasons={}'.format(','.join(seasons)),
                 '-s', '{:04d}'.format(self.startYear),
                 '-e', '{:04d}'.format(self.endYear),
                 '-i', inDirectory,

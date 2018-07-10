@@ -2,10 +2,16 @@ from mpas_analysis.ocean.climatology_map_sst import ClimatologyMapSST
 from mpas_analysis.ocean.climatology_map_mld import ClimatologyMapMLD
 from mpas_analysis.ocean.climatology_map_sss import ClimatologyMapSSS
 from mpas_analysis.ocean.climatology_map_ssh import ClimatologyMapSSH
+from mpas_analysis.ocean.climatology_map_ohc_anomaly import \
+    ClimatologyMapOHCAnomaly
 from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
 from mpas_analysis.ocean.climatology_map_sose import \
-    ClimatologyMapSoseTemperature, ClimatologyMapSoseSalinity
+    ClimatologyMapSose
+
+from mpas_analysis.ocean.climatology_map_schmidtko import \
+    ClimatologyMapSchmidtko
+
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 
@@ -22,3 +28,7 @@ from mpas_analysis.ocean.meridional_heat_transport import \
     MeridionalHeatTransport
 from mpas_analysis.ocean.time_series_antarctic_melt import \
     TimeSeriesAntarcticMelt
+
+from mpas_analysis.ocean.woce_transects import WoceTransects
+from mpas_analysis.ocean.sose_transects import SoseTransects
+from mpas_analysis.ocean.geojson_transects import GeojsonTransects

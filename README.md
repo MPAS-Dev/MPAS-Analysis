@@ -1,18 +1,13 @@
 # MPAS-Analysis
 [![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=develop)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
-[![Documentation Status](http://readthedocs.org/projects/mpas-analysis/badge/?version=latest)](http://mpas-analysis.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](http://readthedocs.org/projects/mpas-analysis/badge/?version=develop)](http://mpas-analysis.readthedocs.io/en/develop/?badge=develop)
 
 
 Analysis for simulations produced with Model for Prediction Across Scales
-(MPAS) components and the Accelerated Climate Model for Energy (ACME), which
+(MPAS) components and the Energy Exascale Earth System Model (E3SM), which
 used those components.
 
 ![sea surface temperature](docs/_static/sst_example.png)
-
-Analysis is stored in a directory corresponding to each core component, e.g.,
-`ocean` for MPAS-Ocean. Shared functionality is contained within the `shared`
-directory.
-
 
 ## Documentation
 
@@ -20,8 +15,15 @@ directory.
 
 
 ## Installation
-This analysis repository presumes that the following python packages are
-available:
+
+MPAS-Analysis is available as an anaconda package via the `e3sm` channel:
+
+```
+conda install -c conda-forge -c e3sm mpas_analysis
+```
+
+To use the latest version for developers, you will need to set up a conda
+environment with the following packages:
 
  * numpy
  * scipy
@@ -35,14 +37,32 @@ available:
  * nco >= 4.7.0
  * pyproj
  * pillow
+ * cmocean
+ * progressbar2
+ * requests
 
-You can easily install them via the conda command:
+These can be installed via the conda command:
+```
+conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
+    bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests
+```
+
+## Download analysis input data
+
+To download the data that is necessary to MPAS-Analysis, run:
 
 ```
-conda config --add channels conda-forge
-conda install numpy scipy matplotlib netCDF4 xarray dask bottleneck basemap \
-    lxml nco pyproj pillow
+./download_analysis_data.py -o /path/to/output/directory
 ```
+
+where `/path/to/output/directory` is the main folder that will contain
+two subdirectories:
+
+* `mpas_analysis`, which includes mapping and region mask files for
+  standard resolution MPAS meshes
+* `observations`, which includes the pre-processed observations listed in the
+  [Observations table](http://mpas-analysis.readthedocs.io/en/latest/observations.html)
+  and used to evaluate the model results
 
 ## List Analysis
 
@@ -57,10 +77,10 @@ for more details.
 
 ## Running the analysis
 
-  1. Create and empty config file (say `config.myrun`) or copy one of the
-     example files in the `configs` directory.
-  2. Copy and modify any config options you want to change from
-     `mpas_analysis/config.default` into your new config file.
+  1. Create and empty config file (say `config.myrun`), copy `config.example`,
+     or copy one of the example files in the `configs` directory.
+  2. Either modify config options in your new file or copy and modify config
+     options from `mpas_analysis/config.default`.
 
      **Requirements for custom config files:**
      * At minimum you should set `baseDirectory` under `[output]` to the folder
@@ -70,11 +90,10 @@ for more details.
        updated correctly.
      * Any options you copy into the config file **must** include the
        appropriate section header (e.g. '[run]' or '[output]')
-     * The entire `mpas_analysis/config.default` does not need to be used.
+     * You do not need to copy all options from `mpas_analysis/config.default`.
        This file will automatically be used for any options you do not include
        in your custom config file.
-     * Given the automatic sourcing of `mpas_analysis/config.default` you
-       should **not** alter that file directly.
+     * You should **not** modify `mpas_analysis/config.default` directly.
   3. run: `./run_mpas_analysis config.myrun`.  This will read the configuraiton
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
@@ -102,19 +121,21 @@ for more details.
         `hist.am.meridionalHeatTransport` file)
       * `mpaso.rst.0002-01-01_00000.nc` (or any other mpas-o restart file)
       * `streams.ocean`
-      * `mpas-o_in`
+      * `mpaso_in`
   * mpas-seaice files:
       * `mpasseaice.hist.am.timeSeriesStatsMonthly.*.nc`
       * `mpasseaice.rst.0002-01-01_00000.nc` (or any other mpas-seaice restart
         file)
       * `streams.seaice`
-      * `mpas-seaice_in`
+      * `mpassi_in`
 
 Note: for older runs, mpas-seaice files will be named:
   * `mpascice.hist.am.timeSeriesStatsMonthly.*.nc`
   * `mpascice.rst.0002-01-01_00000.nc`
   * `streams.cice`
   * `mpas-cice_in`
+  Also, for older runs mpaso-in will be named:
+  * `mpas-o_in`
 
 
 ## Purge Old Analysis
@@ -125,8 +146,23 @@ the analysis, add the `--purge` flag:
 ```
 ./run_mpas_analysis --purge <config.file>
 ````
-The directory to delete is the `baseDirectory` option in the `output`
-section.
+All of the subdirectories listed in `output` will be deleted along with the
+climatology subdirectories in `oceanObservations` and `seaIceObservations`.
+
+It is a good policy to use the purge flag for most changes to the config file,
+for example, updating the start and/or end years of climatologies (and
+sometimes time series), changing the resolution of a comparison grid, renaming
+the run, changing the seasons over which climatologies are computed for a given
+task, updating the code to the latest version.
+
+Cases where it is reasonable not to purge would be, for example, changing
+options that only affect plotting (color map, ticks, ranges, font sizes, etc.),
+rerunning with a different set of tasks specified by the `generate` option
+(though this will often cause climatologies to be re-computed with new
+variables and may not save time compared with purging), generating only the
+final website with `--html_only`, and re-running after the simulation has
+progressed to extend time series (however, not recommended for changing the
+bounds on climatologies, see above).
 
 ## Running in parallel
 
@@ -152,6 +188,10 @@ another machine to fit your needs.
 
 ## Instructions for creating a new analysis task
 
+Analysis tasks can be found in a directory corresponding to each component,
+e.g., `mpas_analysis/ocean` for MPAS-Ocean. Shared functionality is contained
+within the `mpas_analysis/shared` directory.
+
 1. create a new task by `copying mpas_analysis/analysis_task_template.py` to
    the appropriate folder (`ocean`, `sea_ice`, etc.) and modifying it as
    described in the template.  Take a look at
@@ -176,7 +216,7 @@ another machine to fit your needs.
 
 To generate the `sphinx` documentation, run:
 ```bash
-conda install sphinx sphinx_rtd_theme numpydoc recommonmark
+conda install sphinx sphinx_rtd_theme numpydoc recommonmark tabulate
 cd docs
 make html
 ```

@@ -11,3 +11,6 @@ Sea Ice Observations
 --------------------
 .. include::  seaice_obs_table.rst
 
+Details on Each Data Set
+------------------------
+.. include::  all_obs.rst
