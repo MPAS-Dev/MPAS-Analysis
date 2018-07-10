@@ -6,12 +6,16 @@
 # This software is released under the BSD license detailed
 # in the file licenses/A-PRIME_LICENSE
 #
-# Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 SOURCE_DIR="../.."
 
@@ -30,8 +34,10 @@ ALWAYS_IGNORE=(-not -path "*.git*" \
 FILE_IGNORE=(-not -iname "*.ocean" -not -iname "*_in" \
              -not -iname "*.md" -not -iname "*.json" -not -iname "*.txt" \
              -not -iname "*.png" -not -iname "*.jpg" -not -iname "*.svg" \
-             -not -iname "config.*" -not -iname "*.nc"\
+             -not -iname "config.*" -not -iname "*.nc" \
              -not -iname "*.pyc" \
-             -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml")
+             -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml"\
+             -not -iname "*.pdf" -not -iname "*.xml" -not -iname "*.m" \
+             -not -iname "*.ipynb")
 
 PYTHON_IGNORE=(-not -iname "__init__.py")
