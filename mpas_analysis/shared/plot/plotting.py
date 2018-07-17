@@ -895,6 +895,12 @@ def plot_vertical_section_comparison(
         backgroundColor='grey',
         xLim=None,
         yLim=None,
+        secondXAxisData=None,
+        secondXAxisLabel=None,
+        thirdXAxisData=None,
+        thirdXAxisLabel=None,
+        numUpperTicks=None,
+        upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
         xArrayIsTime=False,
         N=None,
@@ -985,11 +991,44 @@ def plot_vertical_section_comparison(
     yLim : float array, optional
         y range of plot
 
+    secondXAxisData : the data to use to display a second x axis (which will be
+        placed above the plot).  This array must have the same number of values
+        as xArray, and it is assumed that the values in this array define
+        locations along the x axis that are the same as those defined by the
+        corresponding values in xArray, but in some different unit system.
+
+    secondXAxisLabel : the label for the second x axis, if requested
+
+    thirdXAxisData : the data to use to display a third x axis (which will be
+        placed above the plot and above the second x axis, which must be
+        specified if a third x axis is to be specified).  This array must have
+        the same number of values as xArray, and it is assumed that the values
+        in this array define locations along the x axis that are the same as
+        those defined by the corresponding values in xArray, but in some
+        different unit system (which is presumably also different from the unit
+        system used for the values in the secondXAxisData array).  The typical
+        use for this third axis is for transects, for which the primary x axis
+        represents distance along a transect, and the second and third x axes
+        are used to display the corresponding latitudes and longitudes.
+
+    thirdXAxisLabel : the label for the third x axis, if requested
+
+    numUpperTicks : the approximate number of ticks to use on the upper x axis
+        or axes (these are the second and third x axes, which are placed above
+        the plot if they have been requested by specifying the secondXAxisData
+        or thirdXAxisData arrays above)
+
+    upperXAxisTickLabelPrecision : the number of decimal places (to the right
+        of the decimal point) to use for values at upper axis ticks.  This
+        value can be adjusted (in concert with numUpperTicks) to avoid problems
+        with overlapping numbers along the upper axis.
+
     invertYAxis : logical, optional
         if True, invert Y axis
 
     xArrayIsTime : logical, optional
-        if True, format X axis for time
+        if True, format the x axis for time (this applies only to the primary
+        x axis, not to the optional second or third x axes)
 
     N : int, optional
         the number of points over which to perform a moving average
@@ -1008,9 +1047,9 @@ def plot_vertical_section_comparison(
         automatically to have ``maxXTicks`` tick marks or fewer.
 
     maxXTicks : int, optional
-        the maximum number of tick marks that will be allowed along the x axis.
-        This may need to be adjusted depending on the figure size and aspect
-        ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+        the maximum number of tick marks that will be allowed along the primary
+        x axis.  This may need to be adjusted depending on the figure size and
+        aspect ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
 
     calendar : str, optional
         the calendar to use for formatting the time axis
@@ -1024,9 +1063,12 @@ def plot_vertical_section_comparison(
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
     if figsize is None:
-        # set the defaults, depending on if we have 1 or 3 panels
+        # set the defaults, depending on if we have 1 or 3 panels, and
+        # depending on how many x axes are to be displayed on the plots
         if refArray is None:
             figsize = (8, 5)
+        elif thirdXAxisData is not None:
+            figsize = (8, 17)
         else:
             figsize = (8, 13)
 
@@ -1043,6 +1085,16 @@ def plot_vertical_section_comparison(
 
     if plotTitleFontSize is None:
         plotTitleFontSize = config.get('plot', 'threePanelPlotTitleFontSize')
+
+    if thirdXAxisData is not None:
+        if refArray is not None:
+            titleY = 1.34
+        else:
+            titleY = 1.64
+    elif secondXAxisData is not None:
+        titleY = 1.20
+    else:
+        titleY = 1.06
 
     if axisFontSize is None:
         axisFontSize = config.get('plot', 'threePanelAxisFontSize')
@@ -1062,11 +1114,19 @@ def plot_vertical_section_comparison(
                           ylabel=ylabel,
                           fileout=None,
                           titleFontSize=plotTitleFontSize,
+                          titleY=titleY,
                           axisFontSize=axisFontSize,
                           xLim=xLim,
                           yLim=yLim,
                           lineWidth=lineWidth,
                           lineColor=lineColor,
+                          secondXAxisData=secondXAxisData,
+                          secondXAxisLabel=secondXAxisLabel,
+                          thirdXAxisData=thirdXAxisData,
+                          thirdXAxisLabel=thirdXAxisLabel,
+                          numUpperTicks=numUpperTicks,
+                          upperXAxisTickLabelPrecision=
+                              upperXAxisTickLabelPrecision,
                           invertYAxis=invertYAxis,
                           xArrayIsTime=xArrayIsTime,
                           N=None,
@@ -1089,11 +1149,19 @@ def plot_vertical_section_comparison(
                               ylabel=ylabel,
                               fileout=None,
                               titleFontSize=plotTitleFontSize,
+                              titleY=titleY,
                               axisFontSize=axisFontSize,
                               xLim=xLim,
                               yLim=yLim,
                               lineWidth=lineWidth,
                               lineColor=lineColor,
+                              secondXAxisData=secondXAxisData,
+                              secondXAxisLabel=secondXAxisLabel,
+                              thirdXAxisData=thirdXAxisData,
+                              thirdXAxisLabel=thirdXAxisLabel,
+                              upperXAxisTickLabelPrecision=
+                                  upperXAxisTickLabelPrecision,
+                              numUpperTicks=numUpperTicks,
                               invertYAxis=invertYAxis,
                               xArrayIsTime=xArrayIsTime,
                               N=None,
@@ -1116,11 +1184,19 @@ def plot_vertical_section_comparison(
                               ylabel=ylabel,
                               fileout=None,
                               titleFontSize=plotTitleFontSize,
+                              titleY=titleY,
                               axisFontSize=axisFontSize,
                               xLim=xLim,
                               yLim=yLim,
                               lineWidth=lineWidth,
                               lineColor=lineColor,
+                              secondXAxisData=secondXAxisData,
+                              secondXAxisLabel=secondXAxisLabel,
+                              thirdXAxisData=thirdXAxisData,
+                              thirdXAxisLabel=thirdXAxisLabel,
+                              upperXAxisTickLabelPrecision= 
+                                  upperXAxisTickLabelPrecision,
+                              numUpperTicks=numUpperTicks,
                               invertYAxis=invertYAxis,
                               xArrayIsTime=xArrayIsTime,
                               N=None,
@@ -1131,7 +1207,10 @@ def plot_vertical_section_comparison(
                               backgroundColor=backgroundColor)
 
     if refArray is None:
-        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
+        if thirdXAxisData is not None:
+            plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
+        else:
+            plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
     else:
         plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
 
@@ -1293,12 +1372,19 @@ def plot_vertical_section(
         figsize=(10, 4),
         dpi=None,
         titleFontSize=None,
+        titleY=None,
         axisFontSize=None,
         xLim=None,
         yLim=None,
         lineWidth=2,
         lineColor='black',
         backgroundColor='grey',
+        secondXAxisData=None,
+        secondXAxisLabel=None,
+        thirdXAxisData=None,
+        thirdXAxisLabel=None,
+        numUpperTicks=None,
+        upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
         xArrayIsTime=False,
         N=None,
@@ -1336,6 +1422,9 @@ def plot_vertical_section(
     suffix : str, optional
         the suffix used for colorbar config options
 
+    colorbarLabel : str, optional
+        the label for the colorbar
+
     title : str, optional
         title of plot
 
@@ -1355,6 +1444,9 @@ def plot_vertical_section(
     titleFontSize : int, optional
         size of the title font
 
+    titleY : float, optional
+        the y value to use for placing the plot title
+
     axisFontSize : int, optional
         size of the axis font
 
@@ -1373,11 +1465,44 @@ def plot_vertical_section(
     backgroundColor : str, optional
         the background color for the plot (NaNs will be shown in this color)
 
+    secondXAxisData : the data to use to display a second x axis (which will be
+        placed above the plot).  This array must have the same number of values
+        as xArray, and it is assumed that the values in this array define
+        locations along the x axis that are the same as those defined by the
+        corresponding values in xArray, but in some different unit system.
+
+    secondXAxisLabel : the label for the second x axis, if requested
+
+    thirdXAxisData : the data to use to display a third x axis (which will be
+        placed above the plot and above the second x axis, which must be
+        specified if a third x axis is to be specified).  This array must have
+        the same number of values as xArray, and it is assumed that the values
+        in this array define locations along the x axis that are the same as
+        those defined by the corresponding values in xArray, but in some
+        different unit system (which is presumably also different from the unit
+        system used for the values in the secondXAxisData array).  The typical
+        use for this third axis is for transects, for which the primary x axis
+        represents distance along a transect, and the second and third x axes
+        are used to display the corresponding latitudes and longitudes.
+
+    thirdXAxisLabel : the label for the third x axis, if requested
+
+    numUpperTicks : the approximate number of ticks to use on the upper x axis
+        or axes (these are the second and third x axes, which are placed above
+        the plot if they have been requested by specifying the secondXAxisData
+        or thirdXAxisData arrays above)
+
+    upperXAxisTickLabelPrecision : the number of decimal places (to the right
+        of the decimal point) to use for values at upper axis ticks.  This
+        value can be adjusted (in concert with numUpperTicks) to avoid problems
+        with overlapping numbers along the upper axis.
+
     invertYAxis : logical, optional
         if True, invert Y axis
 
     xArrayIsTime : logical, optional
-        if True, format X axis for time
+        if True, format the x axis for time (this applies only to the primary
+        x axis, not to the optional second or third x axes)
 
     N : int, optional
         the number of points over which to perform a moving average
@@ -1396,9 +1521,9 @@ def plot_vertical_section(
         automatically to have ``maxXTicks`` tick marks or fewer.
 
     maxXTicks : int, optional
-        the maximum number of tick marks that will be allowed along the x axis.
-        This may need to be adjusted depending on the figure size and aspect
-        ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+        the maximum number of tick marks that will be allowed along the primary
+        x axis.  This may need to be adjusted depending on the figure size and
+        aspect ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
 
     calendar : str, optional
         the calendar to use for formatting the time axis
@@ -1436,8 +1561,8 @@ def plot_vertical_section(
     elif len(dimX) == 1:
         num_x = dimX[0]
         num_x_Z = dimZ[1]
-        num_z_Z = dimZ[0]
-        if num_x != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] or \
+        num_z = dimZ[0]
+        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
                 num_x != num_x_Z:
             raise ValueError('size mismatch between xArray (%d), '
                              'depthArray (%d x %d), and fieldArray (%d x %d)' %
@@ -1445,10 +1570,10 @@ def plot_vertical_section(
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
     elif len(dimZ) == 1:
-        num_x_X = dimX[1]
+        num_x = dimX[1]
         num_z_X = dimX[0]
         num_z = dimZ[0]
-        if num_x_X != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
+        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
                 num_z != num_z_X:
             raise ValueError('size mismatch between xArray (%d x %d), '
                              'depthArray (%d), and fieldArray (%d x %d)' %
@@ -1456,21 +1581,56 @@ def plot_vertical_section(
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
     else:
-        num_x_X = dimX[1]
+        num_x = dimX[1]
         num_z_X = dimX[0]
         num_x_Z = dimZ[1]
-        num_z_Z = dimZ[0]
-        if num_x_X != fieldArray.shape[1] or num_z_Z != fieldArray.shape[0] \
-                or num_x_X != num_x_Z or num_z_X != num_z_Z:
+        num_z = dimZ[0]
+        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0] \
+                or num_x != num_x_Z or num_z != num_z_X:
             raise ValueError('size mismatch between xArray (%d x %d), '
                              'depthArray (%d x %d), and fieldArray (%d x %d)' %
                              (num_z_X, num_x_X, num_z_Z, num_x_Z,
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
 
+    # Verify that the upper x-axis parameters are consistent with each other
+    # and with xArray
+    if (secondXAxisData is None and thirdXAxisData is not None):
+        raise ValueError('secondXAxisData cannot be None if thirdXAxisData '
+                         'is not None')
+    if (secondXAxisData is not None):
+        arrayShape = secondXAxisData.shape
+        if len(arrayShape) == 1 and arrayShape[0] != num_x:
+            raise ValueError('secondXAxisData has %d x values, '
+                             'but should have num_x = %d x values' %
+                             (arrayShape[0], num_x))
+        elif len(arrayShape) == 2 and arrayShape[1] != num_x:
+            raise ValueError('secondXAxisData has %d x values, '
+                             'but should have num_x = %d x values' %
+                              (arrayShape[1], num_x))
+        elif len(arrayShape) > 2:
+            raise ValueError('secondXAxisData must be a 1D or 2D array, '
+                             'but is of dimension %d' %
+                             (len(arrayShape)))
+    if (thirdXAxisData is not None):
+        arrayShape = thirdXAxisData.shape
+        if len(arrayShape) == 1 and arrayShape[0] != num_x:
+            raise ValueError('thirdXAxisData has %d x values, '
+                             'but should have num_x = %d x values' %
+                             (arrayShape[0], num_x))
+        elif len(arrayShape) == 2 and arrayShape[1] != num_x:
+            raise ValueError('thirdXAxisData has %d x values, '
+                             'but should have num_x = %d x values' %
+                              (arrayShape[1], num_x))
+        elif len(arrayShape) > 2:
+            raise ValueError('thirdXAxisData must be a 1D or 2D array, '
+                             'but is of dimension %d' %
+                             (len(arrayShape)))
+
+
     # define x and y as the appropriate 2D arrays for plotting
     if len(dimX) == 1 and len(dimZ) == 1:
-        x, y = np.meshgrid(xArray, depthArray)  # change to zMid
+        x, y = np.meshgrid(xArray, depthArray)
     elif len(dimX) == 1:
         x, y = np.meshgrid(xArray, np.zeros(num_z))
         y = depthArray
@@ -1557,7 +1717,10 @@ def plot_vertical_section(
         title_font = {'size': titleFontSize,
                       'color': config.get('plot', 'titleFontColor'),
                       'weight': config.get('plot', 'titleFontWeight')}
-        plt.title(title, y=1.06, **title_font)
+        if titleY is not None:
+            plt.title(title, y=titleY, **title_font)
+        else:
+            plt.title(title, **title_font)
 
     if (xlabel is not None) or (ylabel is not None):
         if axisFontSize is None:
@@ -1586,6 +1749,36 @@ def plot_vertical_section(
 
         plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
                           yearStride=yearStrideXTicks)
+
+
+    # add a second x-axis scale, if it was requested
+    if secondXAxisData is not None:
+        ax2 = ax.twiny()
+        ax2.set_facecolor(backgroundColor)
+        ax2.set_xlabel(secondXAxisLabel, **axis_font)
+        ax2.set_xlim(ax.get_xlim())
+        stride = int(round(float(num_x) / (float(numUpperTicks) - 1.0))) - 1
+        if stride <= 0:
+            stride = 1
+        elif stride == 1:
+            stride = 2
+        ax2.set_xticks(x.flatten()[:num_x:stride])
+        formatString = "{{0:.{0:d}f}}$\degree$".format(
+            upperXAxisTickLabelPrecision)
+        ax2.set_xticklabels([formatString.format(member) 
+                             for member in secondXAxisData[::stride]])
+
+    # add a third x-axis scale, if it was requested
+    if thirdXAxisData is not None:
+        ax3 = ax.twiny()
+        ax3.set_facecolor(backgroundColor)
+        ax3.set_xlabel(thirdXAxisLabel, **axis_font)
+        ax3.set_xlim(ax.get_xlim())
+        ax3.set_xticks(x.flatten()[:num_x:stride])
+        ax3.set_xticklabels([formatString.format(member)
+                             for member in thirdXAxisData[::stride]])
+        ax3.spines['top'].set_position(('outward',36))
+
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
