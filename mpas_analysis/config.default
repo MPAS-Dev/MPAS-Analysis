@@ -1130,6 +1130,40 @@ normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
 
 
+[transects]
+## options related to the plotting of transects
+
+# Which upper x axes to display, if any, in addition to the distance along
+# the transect, which is displayed on the lower x axis.  Use 'lat' to show
+# latitude, 'lon' to show longitude, 'both' to show both simultaneously,
+# or 'neither' to show neither.  Use 'greatestExtent' to automatically determine
+# whether to display latitude or longitude based on which of the two spans a
+# greater extent (in degrees).  Use 'strictlyMonotonic' to automatically
+# determine whether to display latitude or longitude based on which of the two
+# is strictly monotonic (if both are, latitude will be used;  if neither are,
+# an error will be raised).  Note that this option is not usually practical for
+# transects constructed from observations from cruises (e.g., WOCE transects),
+# as these tend to have small excursions that render them nonmonotonic, even
+# though they are nominally meridional or zonal transects.  Use 'mostMonotonic'
+# to automatically determine whether to display latitude or longitude based on
+# which of the two is more monotonic (in terms of the difference between the
+# total number of degrees traversed and the net number of degrees traversed).
+# Use 'mostStepsInSameDirection' to automatically determine whether to display
+# latitude or longitude based on which has more steps in the same direction.
+# Use 'fewestDirectionChanges' to automatically determine whether to display
+# latitude or longitude based on which has fewer changes in direction.
+upperXAxes = greatestExtent
+
+# The approximate number of ticks to use on the upper x axis or axes
+numUpperTicks = 8
+
+# The number of decimal places (to the right of the decimal point) to use
+# for values at upper axis ticks.  This value can be adjusted (in concert
+# with numUpperTicks) to avoid problems with overlapping numbers along the
+# upper axis.
+upperXAxisTickLabelPrecision = 2
+
+
 [woceTransects]
 ## options related to plotting model vs. World Ocean Circulation Experiment
 ## (WOCE) transects.
@@ -1141,14 +1175,14 @@ seasons =  ['ANN']
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
 # Use 'obs' to indicate no subsampling.
-# horizontalResolution = obs
+#horizontalResolution = obs
 horizontalResolution = 5
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
-# verticalComparisonGridName = mpas
-# verticalComparisonGridName = obs
+#verticalComparisonGridName = mpas
+#verticalComparisonGridName = obs
 verticalComparisonGridName = uniform_0_to_4000m_at_10m
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
@@ -1282,6 +1316,7 @@ seasons =  ['ANN']
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
 # Use 'obs' to indicate no subsampling.
+#horizontalResolution = obs
 horizontalResolution = 5
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
@@ -1422,14 +1457,14 @@ seasons =  ['ANN']
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
 # Use 'obs' to indicate no subsampling.
-# horizontalResolution = obs
+#horizontalResolution = obs
 horizontalResolution = 5
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
-# verticalComparisonGridName = mpas
-# verticalComparisonGridName = obs
+#verticalComparisonGridName = mpas
+#verticalComparisonGridName = obs
 verticalComparisonGridName = uniform_0_to_4000m_at_10m
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or

@@ -359,10 +359,18 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         x, z = xr.broadcast(remappedModelClimatology.x,
                             remappedModelClimatology.z)
 
-        # convert x and z to numpy arrays, make a copy because they are
-        # sometimes read-only (not sure why)
+        # set lat and lon in case we want to plot versus these quantities
+        lat = remappedModelClimatology.lat
+        lon = remappedModelClimatology.lon
+
+        # convert x, z, lat, and lon to numpy arrays; make a copy because
+        # they are sometimes read-only (not sure why)
         x = x.values.copy().transpose()
         z = z.values.copy().transpose()
+        lat = lat.values.copy().transpose()
+        lon = lon.values.copy().transpose()
+        self.lat = lat
+        self.lon = lon
 
         # z is masked out with NaNs in some locations (where there is land) but
         # this makes pcolormesh unhappy so we'll zero out those locations
@@ -391,10 +399,61 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-        # construct a three-panel comparison  plot for the transect
 
         xLabel = 'Distance [km]'
         yLabel = 'Depth [m]'
+
+
+        # define the axis labels and the data to use for the upper
+        # x axis or axes, if such additional axes have been requested
+
+        upperXAxes = config.get('transects', 'upperXAxes')
+        numUpperTicks = config.getint('transects', 'numUpperTicks')
+        upperXAxisTickLabelPrecision = config.getint(
+            'transects',
+            'upperXAxisTickLabelPrecision')
+
+        self._set_third_x_axis_to_none()
+
+        if upperXAxes == 'neither':
+            self._set_second_x_axis_to_none()
+        elif upperXAxes == 'lat':
+            self._set_second_x_axis_to_latitude()
+        elif upperXAxes == 'lon':
+            self._set_second_x_axis_to_longitude()
+        elif upperXAxes == 'both':
+            self._set_second_x_axis_to_longitude()
+            self._set_third_x_axis_to_latitude()
+        elif upperXAxes == 'greatestExtent':
+            if self._greatest_extent(lat, lon):
+                self._set_second_x_axis_to_latitude()
+            else:
+                self._set_second_x_axis_to_longitude()
+        elif upperXAxes == 'strictlyMonotonic':
+            if self._strictly_monotonic(lat, lon):
+                self._set_second_x_axis_to_latitude()
+            else:
+                self._set_second_x_axis_to_longitude()
+        elif upperXAxes == 'mostMonotonic':
+            if self._most_monotonic(lat, lon):
+                self._set_second_x_axis_to_latitude()
+            else:
+                self._set_second_x_axis_to_longitude()
+        elif upperXAxes == 'mostStepsInSameDirection':
+            if self._most_steps_in_same_direction(lat, lon):
+                self._set_second_x_axis_to_latitude()
+            else:
+                self._set_second_x_axis_to_longitude()
+        elif upperXAxes == 'fewestDirectionChanges':
+            if self._fewest_direction_changes(lat, lon):
+                self._set_second_x_axis_to_latitude()
+            else:
+                self._set_second_x_axis_to_longitude()
+        else:
+            raise ValueError('invalid option for upperXAxes')
+
+
+        # construct a three-panel comparison plot for the transect
 
         plot_vertical_section_comparison(config,
                                          x,
@@ -411,6 +470,13 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                          modelTitle='{}'.format(mainRunName),
                                          refTitle=self.refTitleLabel,
                                          diffTitle=self.diffTitleLabel,
+                                         secondXAxisData=self.secondXAxisData,
+                                         secondXAxisLabel=self.secondXAxisLabel,
+                                         thirdXAxisData=self.thirdXAxisData,
+                                         thirdXAxisLabel=self.thirdXAxisLabel,
+                                         numUpperTicks=numUpperTicks,
+                                         upperXAxisTickLabelPrecision=
+                                             upperXAxisTickLabelPrecision,
                                          invertYAxis=False,
                                          backgroundColor='#918167')
 
@@ -428,6 +494,224 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
+        # }}}
+
+    def _set_second_x_axis_to_latitude(self):
+        self.secondXAxisData = self.lat
+        self.secondXAxisLabel = 'Latitude'
+
+    def _set_second_x_axis_to_longitude(self):
+        self.secondXAxisData = self.lon
+        self.secondXAxisLabel = 'Longitude'
+
+    def _set_second_x_axis_to_none(self):
+        self.secondXAxisData = None
+        self.secondXAxisLabel = None
+
+    def _set_third_x_axis_to_latitude(self):
+        self.thirdXAxisData = self.lat
+        self.thirdXAxisLabel = 'Latitude'
+
+    def _set_third_x_axis_to_longitude(self):
+        self.thirdXAxisData = self.lon
+        self.thirdXAxisLabel = 'Longitude'
+
+    def _set_third_x_axis_to_none(self):
+        self.thirdXAxisData = None
+        self.thirdXAxisLabel = None
+
+    def _greatest_extent(self, lat, lon):
+        # {{{
+        """
+        Returns True if lat has a greater extent (in degrees) than lon (or the
+        same extent as lon), and False otherwise.
+
+        Authors
+        -------
+        Greg Streletz
+        """
+        lat_extent = numpy.max(lat) - numpy.min(lat)
+
+        lon_diff = numpy.diff(lon)
+        lon_jump = numpy.where(
+            numpy.logical_or(lon_diff > 180, lon_diff < -180), True, False)
+
+        if numpy.all(lon_jump == False):  # transect does not cross
+                                          # periodic boundary
+
+            lon_extent = numpy.max(lon) - numpy.min(lon)
+
+        else:  # transect crosses periodic boundary at least once, so min and
+               # max cannot be used to calculate the longitudinal extent
+
+            # calculate the indices at which the transect crosses the right-hand
+            # periodic boundary and enters the leftmost region of the domain
+            lon_r = numpy.sort(numpy.nonzero(lon_diff < -180)[0] + 1)
+
+            # calculate the indices at which the transect crosses the left-hand
+            # periodic boundary and enters the rightmost region of the domain
+            lon_l = numpy.sort(numpy.nonzero(lon_diff > 180)[0] + 1)
+
+            mins = []
+            maxes = []
+            last_idx = 0
+
+            while(len(lon_r) > 0 and len(lon_l) > 0):
+                if lon_r[0] < lon_l[0]:
+                    mins.append(numpy.min(lon[last_idx:lon_r[0]]))
+                    last_idx = lon_r[0]
+                    lon_r = lon_r[1:]
+                else:
+                    maxes.append(numpy.max(lon[last_idx:lon_l[0]]))
+                    last_idx = lon_l[0]
+                    lon_l = lon_l[1:]
+
+            min = numpy.min(mins)
+            max = numpy.max(maxes)
+
+            if min > max:
+
+                lon_extent = 360.0 - (min - max)
+
+                # The transect has crossed the periodic boundary,
+                # so unless the transect has covered the entire
+                # longitudinal range (360 degrees), the "leftmost"
+                # or "min" coordinate of the transect will have a
+                # greater value (in degrees longitude) that the
+                # "rightmost" or "max" coordinate of the transect,
+                # and (min - max) is the size (in degrees longitude)
+                # of the region *not* accessed by the transect.  So,
+                # the longitudinal extent of the transect is 360
+                # degrees minus this value.
+
+            else:   # if max >= min, the transect has covered the
+                    # entire longitudinal range (360 degrees)
+
+                lon_extent = 360.0
+
+        if lat_extent >= lon_extent:
+            return True
+        else:
+            return False
+        # }}}
+
+    def _strictly_monotonic(self, lat, lon):
+        # {{{
+        """
+        Returns True if lat is strictly monotonic;  returns false if lon is
+        strictly monotonic and lat is not strictly monotonic;  throws an error
+        if neither are strictly monotonic.
+
+        Authors
+        -------
+        Greg Streletz
+        """
+        lat_diff = numpy.diff(lat)
+        if numpy.all(lat_diff > 0) or numpy.all(lat_diff < 0):
+            return True
+        lon_diff = numpy.diff(lon)
+        lon_diff = numpy.where(lon_diff > 180, lon_diff - 360, lon_diff)
+        lon_diff = numpy.where(lon_diff < -180, lon_diff + 360, lon_diff)
+        if numpy.all(lon_diff > 0) or numpy.all(lon_diff < 0):
+            return False
+        else:
+            raise ValueError('neither input array is strictly monotonic')
+        # }}}
+
+    def _most_monotonic(self, lat, lon):
+        # {{{
+        """
+        Returns True if lat is "more monotonic" than lon in terms of the
+        difference between the total number of degrees traversed and the net
+        number of degrees traversed (or if both are equally as monotonic in
+        this sense), and False otherwise.
+
+        Authors
+        -------
+        Greg Streletz
+        """
+        lat_diff = numpy.diff(lat)
+        lat_score = numpy.sum(numpy.fabs(lat_diff)) - abs(numpy.sum(lat_diff))
+
+        lon_diff = numpy.diff(lon)
+        lon_diff = numpy.where(lon_diff > 180, lon_diff - 360, lon_diff)
+        lon_diff = numpy.where(lon_diff < -180, lon_diff + 360, lon_diff)
+        lon_score = numpy.sum(numpy.fabs(lon_diff)) - abs(numpy.sum(lon_diff))
+
+        if lat_score <= lon_score:
+            return True
+        else:
+            return False
+        # }}}
+
+    def _most_steps_in_same_direction(self, lat, lon):
+        # {{{
+        """
+        Returns True if lat is has more steps in the same direction (either
+        steps that increase the latitude or steps that decrease the latitude)
+        than lon (or the same number as lon), and False otherwise.
+
+        Authors
+        -------
+        Greg Streletz
+        """
+        lat_changes = numpy.diff(lat)
+        lat_changes = lat_changes[lat_changes != 0.0]  # ignore flat regions
+        lat_changedirs = lat_changes / numpy.fabs(lat_changes)
+        num_lat_positive = numpy.sum(numpy.where(lat_changedirs == 1, 1, 0))
+        num_lat_negative = numpy.sum(numpy.where(lat_changedirs == -1, 1, 0))
+        max_steps_lat = max(num_lat_positive, num_lat_negative)
+
+        lon_changes = numpy.diff(lon)
+        lon_changes = \
+            numpy.where(lon_changes > 180, lon_changes - 360, lon_changes)
+        lon_changes = \
+            numpy.where(lon_changes < -180, lon_changes + 360, lon_changes)
+        lon_changes = lon_changes[lon_changes != 0.0]  # ignore flat regions
+        lon_changedirs = lon_changes / numpy.fabs(lon_changes)
+        num_lon_positive = numpy.sum(numpy.where(lon_changedirs == 1, 1, 0))
+        num_lon_negative = numpy.sum(numpy.where(lon_changedirs == -1, 1, 0))
+        max_steps_lon = max(num_lon_positive, num_lon_negative)
+
+        if max_steps_lat >= max_steps_lon:
+            return True
+        else:
+            return False
+        # }}}
+
+    def _fewest_direction_changes(self, lat, lon):
+        # {{{
+        """
+        Returns True if lat is has fewer changes in direction (from increasing
+        in value to decreasing in value, or vice versa) than lon (or if both
+        have to same number of changes), and False otherwise.
+
+        Authors
+        -------
+        Greg Streletz
+        """
+        lat_changes = numpy.diff(lat)
+        lat_changes = lat_changes[lat_changes != 0.0]  # ignore flat regions
+        lat_changedirs = lat_changes / numpy.fabs(lat_changes)
+        lat_changedir_changes = numpy.diff(lat_changedirs)
+        num_lat_dirchanges = \
+            len(lat_changedir_changes[lat_changedir_changes != 0.0])
+
+        lon_changes = numpy.diff(lon)
+        lon_changes = \
+            numpy.where(lon_changes > 180, lon_changes - 360, lon_changes)
+        lon_changes = \
+            numpy.where(lon_changes < -180, lon_changes + 360, lon_changes)
+        lon_changes = lon_changes[lon_changes != 0.0]  # ignore flat regions
+        lon_changedirs = lon_changes / numpy.fabs(lon_changes)
+        lon_changedir_changes = numpy.diff(lon_changedirs)
+        num_lon_dirchanges = \
+            len(lon_changedir_changes[lon_changedir_changes != 0.0])
+
+        if num_lat_dirchanges <= num_lon_dirchanges:
+            return True
+        else:
+            return False
         # }}}
 
     # }}}
