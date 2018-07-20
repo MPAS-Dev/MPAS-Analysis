@@ -24,9 +24,10 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-module unload python
-source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base/etc/profile.d/conda.sh
-conda activate e3sm_unified_1.2.0_py2.7_nox
+module unload python e3sm-unified
+module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
+module load e3sm-unified/1.2.0
+export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

@@ -25,9 +25,10 @@
 
 cd $PBS_O_WORKDIR
 
-module unload python
-source /ccs/proj/cli900/sw/rhea/e3sm-unified/base/etc/profile.d/conda.sh
-conda activate e3sm_unified_1.2.0_py2.7_nox
+module unload python e3sm-unified
+module use /ccs/proj/cli900/sw/rhea/modulefiles/all
+module load e3sm-unified/1.2.0
+export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
