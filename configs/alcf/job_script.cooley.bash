@@ -13,8 +13,9 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
-source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base/etc/profile.d/conda.sh
-conda activate e3sm_unified_1.2.0_py2.7_nox
+module use /lus/theta-fs0/projects/ccsm/acme/tools/modulefiles
+module load e3sm-unified/1.2.0
+export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

@@ -10,6 +10,8 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
+export HDF5_USE_FILE_LOCKING=FALSE
+
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
