@@ -1,11 +1,12 @@
 Main Authors
 ============
 * Xylar Asay-Davis
-* Milena Veniziani
+* Milena Veneziani
 * Phillip J. Wolfram
 
 Contributors
 ============
+* Darin Comeau
 * Charles Doutriaux
 * Jeremy Fyke
 * Matthew Hoffman

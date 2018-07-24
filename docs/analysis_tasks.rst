@@ -32,3 +32,5 @@ Analysis Tasks
    tasks/climatologyMapSeaIceConcSH
    tasks/climatologyMapSeaIceThickSH
    tasks/timeSeriesSeaIceAreaVol
+
+   tasks/climatologyMapIcebergConcSH

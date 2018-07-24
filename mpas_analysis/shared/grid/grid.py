@@ -365,13 +365,22 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         dLon = self.lon[1]-self.lon[0]
         if 'degree' in self.units:
             units = 'degree'
+            if numpy.abs(self.lon[-1] - self.lon[0] - 360.) > 1e-10:
+                self.regional = True
+            if numpy.abs(self.lat[-1] - self.lat[0] - 180.) > 1e-10:
+                self.regional = True
         elif 'rad' in self.units:
+            if numpy.abs(self.lon[-1] - self.lon[0] - 2.*numpy.pi) > 1e-10:
+                self.regional = True
+            if numpy.abs(self.lat[-1] - self.lat[0] - numpy.pi) > 1e-10:
+                self.regional = True
             units = 'radian'
         else:
             raise ValueError('Could not figure out units {}'.format(
                 self.units))
         if self.meshName is None:
             self.meshName = '{}x{}{}'.format(abs(dLat), abs(dLon), units)
+
         # }}}
     # }}}
 

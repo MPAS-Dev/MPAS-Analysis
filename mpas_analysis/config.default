@@ -142,7 +142,7 @@ htmlSubdirectory = html
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         only_ocean,no_timeSeries,timeSeriesSST
-generate = ['all_publicObs']
+generate = ['all_publicObs', 'no_icebergs']
 
 
 [climatology]
@@ -316,6 +316,13 @@ remappedClimSubdirectory = clim/obs/remapped
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/seaice/reference
 
+[icebergObservations]
+## options related to iceberg observations with which the results will be
+## compared
+
+# directory where sea ice observations are stored
+baseDirectory = /dir/to/iceberg/observations
+concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
 
 [timeSeriesOHCAnomaly]
 ## options related to plotting time series of ocean heat content (OHC)
@@ -1824,6 +1831,40 @@ vertical = False
 thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
 thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
+[climatologyMapIcebergConcSH]
+# options related to plotting horizontally remapped climatologies of
+# iceberg concentration against reference model results and observations
+# in the southern hemisphere (SH)
+
+# colormap for model/observations
+colormapNameResult = ice
+# color indices into colormapName for filled contours
+# the type of norm used in the colormap
+normTypeResult = log
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 1e-5, 'vmax': 1e-2}
+# specify the ticks
+# colorbarTicksResult = [1e-5, 1e-4, 1e-3, 1e-2]
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = symLog
+# A dictionary with keywords for the norm
+normArgsDifference = {'linthresh': 1e-5, 'linscale': 1, 'vmin': -1e-2, 'vmax': 1e-2}
+
+# Times for comparison times
+seasons =  ['ANN', 'DJF', 'JJA']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+# reference lat/lon for sea ice plots in the northern hemisphere
+minimumLatitude = -50
+referenceLongitude = 180
+
+# arrange subplots vertically?
+vertical = False
 
 [timeSeriesSeaIceAreaVol]
 ## options related to plotting time series of sea ice area and volume
