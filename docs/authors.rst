@@ -1,7 +1,7 @@
 Main Authors
 ============
 * Xylar Asay-Davis
-* Milena Veniziani
+* Milena Veneziani
 * Phillip J. Wolfram
 
 Contributors
