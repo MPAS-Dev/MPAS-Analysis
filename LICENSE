@@ -7,13 +7,7 @@ Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 Copyright 2018. Los Alamos National Security, LLC. This software was produced
 under U.S. Government contract DE-AC52-06NA25396 for Los Alamos National
 Laboratory (LANL), which is operated by Los Alamos National Security, LLC for
-the U.S. Department of Energy. Contributions to this code were also made by
-UT-Battelle, LLC ("UT-Battelle"), management and operations contractor for the
-Oak Ridge National Laboratory ("ORNL") under the authority of its DOE Prime
-Contract No. DE-AC05-00OR22725 and Lawrence Livermore National Security, LLC,
-management and operations contractor for Lawrence Livermore National
-Laboratory (“LLNL”) under the authority of its U.S. Department of Energy
-(“DOE”) Prime Contract No. DE-AC52-07NA27344.
+the U.S. Department of Energy.
 
 The U.S. Government has rights to use, reproduce, and distribute this software.
 NEITHER THE GOVERNMENT NOR LOS ALAMOS NATIONAL SECURITY, LLC MAKES ANY
@@ -37,6 +31,20 @@ Livermore National Security, LLC. The views and opinions of authors expressed
 herein do not necessarily state or reflect those of the United States
 Government or Lawrence Livermore National Security, LLC, and shall not be used
 for advertising or product endorsement purposes.
+
+Copyright 2018 UT-Battelle. LLC. This technology acquired under license from
+UT-Battelle, LLC, the management and operating contractor of the Oak Ridge
+National Laboratory acting on behalf of the U.S. Department of Energy under
+Contract No. DE-AC05-00OR22725. The United States Government and UT-Battelle,
+LLC make no representations and disclaim all warranties, both expressed and
+implied.  There are no express or implied warranties of merchantability or
+fitness for a particular purpose, or that the use of the software will not
+infringe any patent, copyright, trademark, or other proprietary rights, or that
+the software will accomplish the intended results or that the software or its
+use will not result in injury or damage.  The user assumes responsibility for
+all liabilities, penalties, fines, claims, causes of action, and costs and
+expenses, caused by, resulting from or arising out of, in whole or in part the
+use, storage or disposal of the software.
 
 Additionally, redistribution and use in source and binary forms, with or
 without modification, are permitted provided that the following conditions are
