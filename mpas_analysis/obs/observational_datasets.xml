@@ -7,6 +7,84 @@
 
   <observation>
     <name>
+      Surface Current Variance from Drifter Data
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Contains information about current variance (eddy kinetic energy) derived from
+      residuals with respect to the time-mean, seasonal, spatial gradient, and
+      SOI-related currents. The file contains the following variables:
+        Lon (1x720): longitude (degrees), negative=West.
+        Lat (1x317): latitude (degrees), 73S to 85N.
+        Up2bar (317x720): Zonal Velocity Variance, mean(u' ^2) (m^2/s^2).
+        Vp2bar (317x720): Meridional Velocity Variance, mean(v' ^2) (m^2/s^2).
+        rA (317x720): Variance ellipse semimajor axis (m^2/s^2).
+        rB (317x720): Variance ellipse semiminor axis (m^2/s^2).
+        angle (317x720): Orientation angle of variance ellipse (degrees, 0=east/west).
+        N (317x720): Number of drifter-days per square degree.
+
+      Note that Up2bar+Vp2bar=rA+rB, which is twice the eddy kinetic energy.
+
+      For more information, see: <http://www.aoml.noaa.gov/phod/gdp/mean_velocity.php>
+    </description>
+    <source>
+      The global near-surface current climatology described here is publicly available
+      through the [Gulf of Mexico Research Initiative Information & Data Cooperative
+      (GRIIDC)](http://dx.doi.org/10.7266/N7SJ1HN5), and through
+      [NOAA/AOML](http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php) at
+      <http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc>.
+    </source>
+    <releasePolicy>
+      Please cite as reference:
+      Laurindo, L., A. Mariano, and R. Lumpkin, 2017: An improved near-surface
+      velocity climatology for the global ocean from drifter observations Deep-Sea
+      Res. I, 124, pp.73-92, doi:10.1016/j.dsr.2017.04.009.
+    </releasePolicy>
+    <references>
+      [Laurindo et al. (2017)](https://doi.org/10.1016/j.dsr.2017.04.009)
+      (ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf)
+
+      This climatology was developed by Rick Lumpkin (NOAA/AOML) and Lucas Laurindo
+      (Univ. Miami), in collaboration with Arthur Mariano (Univ. Miami), Mayra Pazos
+      (NOAA/AOML), and Erik Valdes (CIMAS/AOML). Previous versions were developed with
+      Gregory Johnson (NOAA/PMEL), Silvia Garzoli (NOAA/AOML), Jessica Redman (CIMAS),
+      and Zulema Garraffo(Univ. Miami).
+    </references>
+    <bibtex>
+      @article{LAURINDO201773,
+      title = "An improved near-surface velocity climatology for the global ocean from drifter observations",
+      journal = "Deep Sea Research Part I: Oceanographic Research Papers",
+      volume = "124",
+      pages = "73 - 92",
+      year = "2017",
+      issn = "0967-0637",
+      doi = "https://doi.org/10.1016/j.dsr.2017.04.009",
+      url = "http://www.sciencedirect.com/science/article/pii/S0967063716302850",
+      author = "Lucas C. Laurindo and Arthur J. Mariano and Rick Lumpkin",
+      keywords = "Near-surface velocity climatology, Ocean drifters, Gauss-Markov estimation, Drifter slip bias, Error analysis"
+      }
+    </bibtex>
+    <dataUrls>
+      http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - climatologyMapEKE
+    </tasks>
+    <subdirectory>
+      Ocean/EKE
+    </subdirectory>
+    <nameInDocs>
+      drifter_eke
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
       SST merged Hadley Center-NOAA/OI data set
     </name>
     <component>

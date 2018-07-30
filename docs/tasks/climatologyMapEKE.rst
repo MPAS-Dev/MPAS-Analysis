@@ -23,33 +23,26 @@ The following configuration options are available for this task::
   ## eddy kinetic energy (EKE) against reference model results and observations
 
   # colormap for model/observations
-  colormapNameResult = Maximenko
-  # color indices into colormapName for filled contours
-  colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
-  # colormap levels/values for contour boundaries
-  colorbarLevelsResult = numpy.arange(-240., 130., 10.)
-  # colormap levels/values for ticks (defaults to same as levels)
-  colorbarTicksResult = numpy.arange(-240., 160., 40.)
-
-  # contour line levels
-  contourLevelsResult = numpy.arange(-240., 130., 10.)
-  # contour line thickness
-  contourThicknessResult = 0.25
-  # contour color
-  contourColorResult = 0.25
+  colormapNameResult = magma_r
+  # the type of norm used in the colormap
+  normTypeResult = linear
+  # A dictionary with keywords for the norm
+  normArgsResult = {'vmin': 0., 'vmax': 1000.}
+  # place the ticks automatically by default
+  # colorbarTicksResult = numpy.linspace(-2., 2., 9)
 
   # colormap for differences
   colormapNameDifference = balance
-  # color indices into colormapName for filled contours
-  colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185,
-                               209, 232, 255]
-  # colormap levels/values for contour boundaries
-  colorbarLevelsDifference = [-100., -80., -60., -40., -20., -10., 0., 10.,
-                              20.,  40.,  60.,  80.,  100.]
+  # the type of norm used in the colormap
+  normTypeDifference = linear
+  # A dictionary with keywords for the norm
+  normArgsDifference = {'vmin': -300., 'vmax': 300.}
+  # place the ticks automatically by default
+  # colorbarTicksDifference = numpy.linspace(-2., 2., 9
 
   # Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
   # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-  seasons =  ['JFM', 'JAS', 'ANN']
+  seasons =  ['ANN']
 
   # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
   comparisonGrids = ['latlon']
@@ -65,12 +58,11 @@ For more details, see:
 Observations
 ------------
 
-:ref:`aviso_ssh`
+:ref:`drifter_eke`
 
 Example Result
 --------------
 
-.. image:: examples/ssh.png
+.. image:: examples/eke.png
    :width: 500 px
    :align: center
-

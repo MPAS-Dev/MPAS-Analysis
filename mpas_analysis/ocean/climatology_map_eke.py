@@ -1,10 +1,13 @@
-# Copyright (c) 2018,  Los Alamos National Security, LLC (LANS)
-# and the University Corporation for Atmospheric Research (UCAR).
+# This software is open source software available under the BSD-3 license.
 #
-# Unless noted otherwise source code is licensed under the BSD license.
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
 # Additional copyright and license information can be found in the LICENSE file
-# distributed with this code, or at http://mpas-dev.github.com/license.html
-#
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -72,7 +75,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         seasons = config.getExpression(sectionName, 'seasons')
 
         # EKE observations are annual climatology so only accept annual
-        # climatology
+        # climatology **should move this to setup_and_check()
         if seasons != ['ANN']:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons. For EKE, may only request annual '
@@ -105,7 +108,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         if refConfig is None:
 
             refTitleLabel = \
-                'Observations (Surface Current Variance from Drifter Data)'
+                'Observations (Surface EKE from Drifter Data)'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations',
@@ -116,7 +119,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                     observationsDirectory)
             refFieldName = 'eke'
             outFileLabel = 'ekeDRIFTER'
-            galleryName = 'Observations: Current Variance from Drifters'
+            galleryName = 'Observations: EKE from Drifters'
 
             remapObservationsSubtask = RemapObservedEKEClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
@@ -205,20 +208,21 @@ class RemapMpasEKEClimatology(RemapDepthSlicesSubtask):  # {{{
         scaleFactor = 100 * 100  # m2/s2 to cm2/s2
         eke = 0.5 * scaleFactor * \
             (climatology.timeMonthly_avg_velocityZonalSquared
-             - climatology.timeMonthly_avg_velocityZonal ** 2
-             + climatology.timeMonthly_avg_velocityMeridionalSquared
-                - climatology.timeMonthly_avg_velocityMeridional ** 2)
-
-        # this creates a new variable eke in climatology (like netcdf)
-        climatology['eke'] = eke
-        climatology.eke.attrs['units'] = 'cm$^[2]$ s$^{-2}$'
-        climatology.eke.attrs['description'] = 'eddy kinetic energy'
+            - climatology.timeMonthly_avg_velocityZonal ** 2
+            + climatology.timeMonthly_avg_velocityMeridionalSquared
+            - climatology.timeMonthly_avg_velocityMeridional ** 2)
 
         # drop unnecessary fields before re-mapping
         climatology.drop(['timeMonthly_avg_velocityZonal',
                           'timeMonthly_avg_velocityMeridional',
                           'timeMonthly_avg_velocityZonalSquared',
                           'timeMonthly_avg_velocityMeridionalSquared'])
+
+        # this creates a new variable eke in climatology (like netcdf)
+        climatology['eke'] = eke
+        climatology.eke.attrs['units'] = 'cm$^[2]$ s$^{-2}$'
+        climatology.eke.attrs['description'] = 'eddy kinetic energy'
+
         return climatology  # }}}
 
     # }}}
