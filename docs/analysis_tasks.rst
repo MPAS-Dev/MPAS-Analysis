@@ -8,6 +8,7 @@ Analysis Tasks
    tasks/climatologyMapSST
    tasks/climatologyMapSSS
    tasks/climatologyMapSSH
+   tasks/climatologyMapEKE
    tasks/climatologyMapOHCAnomaly
    tasks/climatologyMapSose
    tasks/climatologyMapArgoTemperature

@@ -257,6 +257,7 @@ generate = True
 baseDirectory = /dir/to/ocean/observations
 sstSubdirectory = SST
 sssSubdirectory = SSS
+ekeSubdirectory = EKE
 mldSubdirectory = MLD
 ninoSubdirectory = Nino
 mhtSubdirectory = MHT
@@ -696,6 +697,36 @@ colorbarLevelsDifference = [-100., -80., -60., -40., -20., -10., 0., 10., 20.,  
 # Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+
+[climatologyMapEKE]
+## options related to plotting horizontally remapped climatologies of
+## eddy kinetic energy (EKE) against reference model results and observations
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 0., 'vmax': 1000.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -20., 'vmax': 20.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN']
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']

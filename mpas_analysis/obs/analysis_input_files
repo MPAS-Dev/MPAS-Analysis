@@ -50,6 +50,9 @@ observations/Ocean/MLD/README.md
 observations/Ocean/SSS/obs.bib
 observations/Ocean/SSS/Aquarius_V3_SSS_Monthly.nc
 observations/Ocean/SSS/README.md
+observations/Ocean/EKE/obs.bib
+observations/Ocean/EKE/drifter_variance.nc
+observations/Ocean/EKE/README.md
 observations/SeaIce/PIOMAS/obs.bib
 observations/SeaIce/PIOMAS/PIOMASvolume_monthly_climo.nc
 observations/SeaIce/PIOMAS/README.md
