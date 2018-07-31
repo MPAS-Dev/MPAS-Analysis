@@ -4,6 +4,7 @@ from mpas_analysis.ocean.climatology_map_sss import ClimatologyMapSSS
 from mpas_analysis.ocean.climatology_map_ssh import ClimatologyMapSSH
 from mpas_analysis.ocean.climatology_map_ohc_anomaly import \
     ClimatologyMapOHCAnomaly
+from mpas_analysis.ocean.climatology_map_bgc import ClimatologyMapBGC
 from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
 from mpas_analysis.ocean.climatology_map_sose import \
