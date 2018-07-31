@@ -67,7 +67,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
             tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'eke'
-        iselValues = None  # {'nVertLevels': 0}
+        iselValues = {'nVertLevels': 0}
 
         sectionName = self.taskName
 
@@ -101,7 +101,6 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
             variableList=variableList,
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
-            depths=['top'],
             iselValues=iselValues)
 
         # to compare to observations:
@@ -168,7 +167,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
 
 
 # adds to the functionality of RemapDepthSlicesSubtask
-class RemapMpasEKEClimatology(RemapDepthSlicesSubtask):  # {{{
+class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
     """
     A subtask for computing climatologies of eddy kinetic energy from means of
     velocity and velocity-squared.

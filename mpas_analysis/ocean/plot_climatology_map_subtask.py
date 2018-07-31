@@ -439,7 +439,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         modelOutput = nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
-        modelOutput = np.squeeze(modelOutput)
 
         lon = remappedModelClimatology['lon'].values
         lat = remappedModelClimatology['lat'].values
@@ -452,7 +451,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         else:
             refOutput = nans_to_numpy_mask(
                 remappedRefClimatology[self.refFieldName].values)
-            refOutput = np.squeeze(refOutput)
 
             bias = modelOutput - refOutput
 
