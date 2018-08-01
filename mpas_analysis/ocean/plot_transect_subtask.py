@@ -22,7 +22,8 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 
-from mpas_analysis.shared.plot.plotting import plot_vertical_section_comparison
+from mpas_analysis.shared.plot.plotting import \
+    plot_vertical_section, plot_vertical_section_comparison
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -453,32 +454,66 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             raise ValueError('invalid option for upperXAxes')
 
 
-        # construct a three-panel comparison plot for the transect
+        # get the parameters determining what type of plot to use,
+        # what line styles and line colors to use, and whether and how
+        # to label contours
 
-        plot_vertical_section_comparison(config,
-                                         x,
-                                         z,
-                                         modelOutput,
-                                         refOutput,
-                                         bias,
-                                         outFileName,
-                                         configSectionName,
-                                         cbarLabel=self.unitsLabel,
-                                         xlabel=xLabel,
-                                         ylabel=yLabel,
-                                         title=title,
-                                         modelTitle='{}'.format(mainRunName),
-                                         refTitle=self.refTitleLabel,
-                                         diffTitle=self.diffTitleLabel,
-                                         secondXAxisData=self.secondXAxisData,
-                                         secondXAxisLabel=self.secondXAxisLabel,
-                                         thirdXAxisData=self.thirdXAxisData,
-                                         thirdXAxisLabel=self.thirdXAxisLabel,
-                                         numUpperTicks=numUpperTicks,
-                                         upperXAxisTickLabelPrecision=
-                                             upperXAxisTickLabelPrecision,
-                                         invertYAxis=False,
-                                         backgroundColor='#918167')
+        compareAsContours = config.getboolean('transects',
+                                              'compareAsContoursOnSinglePlot')
+
+        contourLineStyle = config.get('transects', 'contourLineStyle')
+        contourLineColor = config.get('transects', 'contourLineColor')
+        comparisonContourLineStyle = config.get('transects',
+                                                'comparisonContourLineStyle')
+        comparisonContourLineColor = config.get('transects',
+                                                'comparisonContourLineColor')
+
+        if compareAsContours:
+            labelContours = config.getboolean('transects',
+                                    'labelContoursOnContourComparisonPlots')
+        else:
+            labelContours = config.getboolean('transects',
+                                              'labelContoursOnHeatmaps')
+        
+        contourLabelPrecision = config.getint('transects',
+                                              'contourLabelPrecision')
+
+
+        # construct a three-panel comparison plot for the transect, or a
+        # single-panel contour comparison plot if compareAsContours is True
+        
+        plot_vertical_section_comparison(
+            config,
+            x,
+            z,
+            modelOutput,
+            refOutput,
+            bias,
+            outFileName,
+            configSectionName,
+            cbarLabel=self.unitsLabel,
+            xlabel=xLabel,
+            ylabel=yLabel,
+            title=title,
+            modelTitle='{}'.format(mainRunName),
+            refTitle=self.refTitleLabel,
+            diffTitle=self.diffTitleLabel,
+            secondXAxisData=self.secondXAxisData,
+            secondXAxisLabel=self.secondXAxisLabel,
+            thirdXAxisData=self.thirdXAxisData,
+            thirdXAxisLabel=self.thirdXAxisLabel,
+            numUpperTicks=numUpperTicks,
+            upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+            invertYAxis=False,
+            backgroundColor='#918167',
+            compareAsContours=compareAsContours,
+            lineStyle=contourLineStyle,
+            lineColor=contourLineColor,
+            comparisonContourLineStyle=comparisonContourLineStyle,
+            comparisonContourLineColor=comparisonContourLineColor,
+            labelContours=labelContours,
+            contourLabelPrecision=contourLabelPrecision
+            )
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
