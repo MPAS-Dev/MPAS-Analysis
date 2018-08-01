@@ -1159,7 +1159,7 @@ normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # latitude or longitude based on which has more steps in the same direction.
 # Use 'fewestDirectionChanges' to automatically determine whether to display
 # latitude or longitude based on which has fewer changes in direction.
-upperXAxes = both
+upperXAxes = greatestExtent
 
 # The approximate number of ticks to use on the upper x axis or axes
 numUpperTicks = 8
@@ -1178,7 +1178,7 @@ upperXAxisTickLabelPrecision = 2
 # the selection of contours governed by the contourLevels parameters in
 # config sections for specific types of transects);  if False the model field
 # will be displayed as a heatmap (possibly also with contours)
-compareAsContoursOnSinglePlot = True
+compareAsContoursOnSinglePlot = False
 
 # the line style to use for contours on heatmaps and for
 # contours of the model field on contour comparison plots
