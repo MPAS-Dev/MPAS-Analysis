@@ -1190,7 +1190,7 @@ contourLineColor = black
 
 # the line style to use for contours of the reference field
 # on contour comparison plots
-comparisonContourLineStyle = dashed
+comparisonContourLineStyle = solid
 
 # the line color to use for contours of the reference field
 # on contour comparison plots
