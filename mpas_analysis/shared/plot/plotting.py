@@ -900,6 +900,7 @@ def plot_vertical_section_comparison(
         figsize=None,
         dpi=None,
         lineWidth=2,
+        lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
         xLim=None,
@@ -916,7 +917,13 @@ def plot_vertical_section_comparison(
         firstYearXTicks=None,
         yearStrideXTicks=None,
         maxXTicks=20,
-        calendar='gregorian'):
+        calendar='gregorian',
+        compareAsContours=False,
+        contourLineStyle=None,
+        comparisonContourLineStyle=None,
+        comparisonContourLineColor=None,
+        labelContours=False,
+        contourLabelPrecision=1):
 
     """
     Plots vertical section plots in a three-panel format, comparing model data
@@ -924,6 +931,9 @@ def plot_vertical_section_comparison(
     either observations or an alternative model, and also presenting the
     difference plot of the two.  If refArray is None, then only one panel
     is plotted, displaying the model data.
+
+    If compareAsContours is true, the contours of modelArray and refArray are
+    plotted on a single plot.
 
     Parameters
     ----------
@@ -950,8 +960,14 @@ def plot_vertical_section_comparison(
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
 
-    cbarlabel : str, optional
-        label on the colorbar
+    cbarLabel : str, optional
+        the label for the colorbar.  If compareAsContours and labelContours are
+        both True, colorbarLabel is used as follows (typically in order to
+        indicate the units that are associated with the contour labels):
+        if refArray is None, the colorbarLabel string is parenthetically
+        appended to the plot title;  if refArray is not None, it is
+        parenthetically appended to the legend entries of the contour
+        comparison plot.
 
     xlabel, ylabel : str, optional
         label of x- and y-axis
@@ -987,8 +1003,19 @@ def plot_vertical_section_comparison(
     lineWidth : int, optional
         the line width of contour lines (if specified)
 
+    lineStyle : str, optional
+        the line style of contour lines (if specified); this applies to the
+        contour lines on heatmaps and to the contour lines of the model field
+        on contour comparison plots (the line style of the contour lines of
+        the reference field on contour comparison plots is set using the
+        contourComparisonLineStyle argument).
+
     lineColor : str, optional
-        the color of contour lines (if specified)
+        the color of contour lines (if specified); this applies to the
+        contour lines on heatmaps and to the contour lines of the model field
+        on contour comparison plots (the line color of the contour lines of
+        the reference field on contour comparison plots is set using the
+        contourComparisonLineColor argument).
 
     backgroundColor : str, optional
         the background color for the plot (NaNs and masked areas will be
@@ -1063,10 +1090,38 @@ def plot_vertical_section_comparison(
     calendar : str, optional
         the calendar to use for formatting the time axis
         NOTE:  calendar is only used if xArrayIsTime is True
+
+    compareAsContours : bool, optional
+       if compareAsContours is True, instead of creating a three panel plot
+       showing modelArray, refArray, and their difference, the function will
+       plot the contours of modelArray and refArray on a single plot (unless
+       refArray is None, in which case only the contours of modelArray will be
+       plotted on the single panel plot).
+
+    comparisonContourLineStyle : str, optional
+        the line style of contour lines of the reference field on a contour
+        comparison plot
+
+    comparisonContourLineColor : str, optional
+        the line color of contour lines of the reference field on a contour
+        comparison plot
+
+    labelContours : bool, optional
+        whether or not to label contour lines (if specified) with their values
+
+    contourLabelPrecision : int, optional
+        the precision (in terms of number of figures to the right of the
+        decimal point) of contour labels
+
     """
     # Authors
     # -------
     # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
+
+    if refArray is None or compareAsContours:
+        singlePanel = True
+    else:
+        singlePanel = False
 
     # set up figure
     if dpi is None:
@@ -1074,8 +1129,14 @@ def plot_vertical_section_comparison(
     if figsize is None:
         # set the defaults, depending on if we have 1 or 3 panels, and
         # depending on how many x axes are to be displayed on the plots
-        if refArray is None:
-            figsize = (8, 5)
+        if singlePanel:
+            if compareAsContours and refArray is not None:
+                if thirdXAxisData is not None:
+                    figsize = (8, 8)
+                else:
+                    figsize = (8, 7)
+            else:
+                figsize = (8, 5)
         elif thirdXAxisData is not None:
             figsize = (8, 17)
         else:
@@ -1096,10 +1157,10 @@ def plot_vertical_section_comparison(
         plotTitleFontSize = config.get('plot', 'threePanelPlotTitleFontSize')
 
     if thirdXAxisData is not None:
-        if refArray is not None:
-            titleY = 1.34
-        else:
+        if singlePanel:
             titleY = 1.64
+        else:
+            titleY = 1.34
     elif secondXAxisData is not None:
         titleY = 1.20
     else:
@@ -1108,8 +1169,19 @@ def plot_vertical_section_comparison(
     if axisFontSize is None:
         axisFontSize = config.get('plot', 'threePanelAxisFontSize')
 
-    if refArray is not None:
+    if not singlePanel:
         plt.subplot(3, 1, 1)
+
+    if not compareAsContours or refArray is None:
+        title = modelTitle
+        contourComparisonFieldArray=None
+        comparisonFieldName = None
+        originalFieldName = None
+    else:
+        title = None
+        contourComparisonFieldArray=refArray
+        comparisonFieldName = refTitle
+        originalFieldName = modelTitle
 
     plot_vertical_section(config,
                           xArray,
@@ -1118,7 +1190,7 @@ def plot_vertical_section_comparison(
                           colorMapSectionName,
                           suffix='Result',
                           colorbarLabel=cbarLabel,
-                          title=modelTitle,
+                          title=title,
                           xlabel=xlabel,
                           ylabel=ylabel,
                           fileout=None,
@@ -1128,6 +1200,7 @@ def plot_vertical_section_comparison(
                           xLim=xLim,
                           yLim=yLim,
                           lineWidth=lineWidth,
+                          lineStyle=lineStyle,
                           lineColor=lineColor,
                           secondXAxisData=secondXAxisData,
                           secondXAxisLabel=secondXAxisLabel,
@@ -1142,9 +1215,20 @@ def plot_vertical_section_comparison(
                           firstYearXTicks=firstYearXTicks,
                           yearStrideXTicks=yearStrideXTicks,
                           maxXTicks=maxXTicks, calendar=calendar,
-                          backgroundColor=backgroundColor)
+                          backgroundColor=backgroundColor,
+                          plotAsContours=compareAsContours,
+                          contourComparisonFieldArray=
+                              contourComparisonFieldArray,
+                          comparisonFieldName=comparisonFieldName,
+                          originalFieldName=originalFieldName,
+                          comparisonContourLineStyle=
+                              comparisonContourLineStyle,
+                          comparisonContourLineColor=
+                              comparisonContourLineColor,
+                          labelContours=labelContours,
+                          contourLabelPrecision=contourLabelPrecision)
 
-    if refArray is not None:
+    if not singlePanel:
         plt.subplot(3, 1, 2)
         plot_vertical_section(config,
                               xArray,
@@ -1163,6 +1247,7 @@ def plot_vertical_section_comparison(
                               xLim=xLim,
                               yLim=yLim,
                               lineWidth=lineWidth,
+                              lineStyle=lineStyle,
                               lineColor=lineColor,
                               secondXAxisData=secondXAxisData,
                               secondXAxisLabel=secondXAxisLabel,
@@ -1178,7 +1263,9 @@ def plot_vertical_section_comparison(
                               yearStrideXTicks=yearStrideXTicks,
                               maxXTicks=maxXTicks,
                               calendar=calendar,
-                              backgroundColor=backgroundColor)
+                              backgroundColor=backgroundColor,
+                              labelContours=labelContours,
+                              contourLabelPrecision=contourLabelPrecision)
 
         plt.subplot(3, 1, 3)
         plot_vertical_section(config,
@@ -1198,6 +1285,7 @@ def plot_vertical_section_comparison(
                               xLim=xLim,
                               yLim=yLim,
                               lineWidth=lineWidth,
+                              lineStyle=lineStyle,
                               lineColor=lineColor,
                               secondXAxisData=secondXAxisData,
                               secondXAxisLabel=secondXAxisLabel,
@@ -1213,10 +1301,12 @@ def plot_vertical_section_comparison(
                               yearStrideXTicks=yearStrideXTicks,
                               maxXTicks=maxXTicks,
                               calendar=calendar,
-                              backgroundColor=backgroundColor)
+                              backgroundColor=backgroundColor,
+                              labelContours=labelContours,
+                              contourLabelPrecision=contourLabelPrecision)
 
-    if refArray is None:
-        if thirdXAxisData is not None:
+    if singlePanel:
+        if thirdXAxisData is not None and refArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
@@ -1386,6 +1476,7 @@ def plot_vertical_section(
         xLim=None,
         yLim=None,
         lineWidth=2,
+        lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
         secondXAxisData=None,
@@ -1400,7 +1491,15 @@ def plot_vertical_section(
         firstYearXTicks=None,
         yearStrideXTicks=None,
         maxXTicks=20,
-        calendar='gregorian'):  # {{{
+        calendar='gregorian',
+        plotAsContours=False,
+        contourComparisonFieldArray=None,
+        comparisonFieldName=None,
+        originalFieldName=None,
+        comparisonContourLineStyle=None,
+        comparisonContourLineColor=None,
+        labelContours=False,
+        contourLabelPrecision=1):  # {{{
 
     """
     Plots a data set as a x distance (latitude, longitude,
@@ -1408,6 +1507,10 @@ def plot_vertical_section(
 
     Or, if xArrayIsTime is True, plots data set on a vertical
     Hovmoller plot (depth vs. time).
+
+    Typically, the fieldArray data are plotted using a heatmap, but if
+    contourComparisonFieldArray is not None, then contours of both
+    fieldArray and contourComparisonFieldArray are plotted instead.
 
     Parameters
     ----------
@@ -1432,8 +1535,14 @@ def plot_vertical_section(
         the suffix used for colorbar config options
 
     colorbarLabel : str, optional
-        the label for the colorbar
-
+        the label for the colorbar.  If plotAsContours and labelContours are
+        both True, colorbarLabel is used as follows (typically in order to
+        indicate the units that are associated with the contour labels):
+        if contourComparisonFieldArray is None, the colorbarLabel string is
+        parenthetically appended to the plot title;  if
+        contourComparisonFieldArray is not None, it is parenthetically appended
+        to the legend entries of the contour comparison plot.
+    
     title : str, optional
         title of plot
 
@@ -1468,8 +1577,15 @@ def plot_vertical_section(
     lineWidth : int, optional
         the line width of contour lines (if specified)
 
+    lineStyle : str, optional
+        the line style of contour lines (if specified); this applies to the 
+        style of contour lines of fieldArray (the style of the contour lines
+        of contourComparisonFieldArray is set using contourComparisonLineStyle).
+
     lineColor : str, optional
-        the color of contour lines (if specified)
+        the color of contour lines (if specified); this applies to the
+        contour lines of fieldArray (the color of the contour lines of
+        contourComparisonFieldArray is set using contourComparisonLineColor
 
     backgroundColor : str, optional
         the background color for the plot (NaNs will be shown in this color)
@@ -1537,6 +1653,49 @@ def plot_vertical_section(
     calendar : str, optional
         the calendar to use for formatting the time axis
         NOTE:  calendar is only used if xArrayIsTime is True
+
+    plotAsContours : bool, optional
+        if plotAsContours is True, instead of plotting fieldArray as a
+        heatmap, the function will plot only the contours of fieldArray.  In
+        addition, if contourComparisonFieldArray is not None, the contours
+        of this field will be plotted on the same plot.  The selection of
+        contour levels is still determined as for the contours on the heatmap
+        plots, via the 'contours' entry in colorMapSectionName.
+
+    contourComparisonFieldArray : float array, optional
+        a comparison field array (typically observational data or results from
+        another simulation run), assumed to be of the same shape as fieldArray,
+        and related to xArray and depthArray in the same way fieldArray is.
+        If contourComparisonFieldArray is None, then fieldArray will be plotted
+        as a heatmap.  However, if countourComparisonFieldArray is not None,
+        then contours of both fieldArray and contourComparisonFieldArray will
+        be plotted in order to enable a comparison of the two fields on the
+        same plot.  If plotAsContours is False, this parameter is ignored.
+
+    comparisonFieldName : str, optional
+       the name for the comparison field.  If contourComparisonFieldArray is
+       None, this parameter is ignored.
+
+    originalFieldName : str, optional
+       the name for the fieldArray field (for the purposes of labeling the
+       contours on a contour comparison plot).  If contourComparisonFieldArray
+       is None, this parameter is ignored.
+
+    comparisonContourLineStyle : str, optional
+        the line style of contour lines of the comparisonFieldName field on
+        a contour comparison plot
+
+    comparisonContourLineColor : str, optional
+        the line color of contour lines of the comparisonFieldName field on
+        a contour comparison plot
+
+    labelContours : bool, optional
+        whether or not to label contour lines (if specified) with their values
+
+    contourLabelPrecision : int, optional
+        the precision (in terms of number of figures to the right of the
+        decimal point) of contour labels
+
     """
     # Authors
     # -------
@@ -1545,6 +1704,8 @@ def plot_vertical_section(
     dimX = xArray.shape
     dimZ = depthArray.shape
     dimF = fieldArray.shape
+    if contourComparisonFieldArray is not None:
+        dimC = contourComparisonFieldArray.shape
 
     if len(dimX) != 1 and len(dimX) != 2:
         raise ValueError('xArray must have either one or two dimensions '
@@ -1556,6 +1717,18 @@ def plot_vertical_section(
 
     if len(dimF) != 2:
         raise ValueError('fieldArray must have two dimensions (has %d)' % dimF)
+
+    if contourComparisonFieldArray is not None:
+        if len(dimC) != 2:
+            raise ValueError('contourComparisonFieldArray must have two '
+                             'dimensions (has %d)' % dimC)
+        elif (fieldArray.shape[0] != contourComparisonFieldArray.shape[0]) or \
+             (fieldArray.shape[1] != contourComparisonFieldArray.shape[1]):
+            raise ValueError('size mismatch between fieldArray (%d x %d) and '
+                             'contourComparisonFieldArray (%d x %d)' %
+                             (fieldArray.shape[0], fieldArray.shape[1],
+                              contourComparisonFieldArray.shape[0],
+                              contourComparisonFieldArray.shape[1]))
 
     # verify that the dimensions of fieldArray are consistent with those of
     # xArray and depthArray
@@ -1673,32 +1846,40 @@ def plot_vertical_section(
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
-    if colormapDict['levels'] is None:
-        # interpFieldArray contains the values at centers of grid cells,
-        # for pcolormesh plots (using bilinear interpolation)
-        interpFieldArray = \
-            0.5 * (0.5*(fieldArray[1:, 1:] + fieldArray[0:-1, 1:]) +
-                   0.5*(fieldArray[1:, 0:-1] + fieldArray[0:-1, 0:-1]))
 
-        plotHandle = plt.pcolormesh(x, y, interpFieldArray,
-                                    cmap=colormapDict['colormap'],
-                                    norm=colormapDict['norm'])
-    else:
-        plotHandle = plt.contourf(x, y, fieldArray,
-                                  cmap=colormapDict['colormap'],
-                                  norm=colormapDict['norm'],
-                                  levels=colormapDict['levels'],
-                                  extend='both')
+    if not plotAsContours:    # display a heatmap of fieldArray
 
-    cbar = plt.colorbar(plotHandle,
-                        orientation='vertical',
-                        spacing='uniform',
-                        aspect=9,
-                        ticks=colormapDict['ticks'],
-                        boundaries=colormapDict['ticks'])
+        if colormapDict['levels'] is None:
+            # interpFieldArray contains the values at centers of grid cells,
+            # for pcolormesh plots (using bilinear interpolation)
+            interpFieldArray = \
+                    0.5 * (0.5*(fieldArray[1:, 1:] + fieldArray[0:-1, 1:]) +
+                           0.5*(fieldArray[1:, 0:-1] + fieldArray[0:-1, 0:-1]))
 
-    if colorbarLabel is not None:
-        cbar.set_label(colorbarLabel)
+            plotHandle = plt.pcolormesh(x, y, interpFieldArray,
+                                        cmap=colormapDict['colormap'],
+                                        norm=colormapDict['norm'])
+        else:
+            plotHandle = plt.contourf(x, y, fieldArray,
+                                      cmap=colormapDict['colormap'],
+                                      norm=colormapDict['norm'],
+                                      levels=colormapDict['levels'],
+                                      extend='both')
+
+        cbar = plt.colorbar(plotHandle,
+                            orientation='vertical',
+                            spacing='uniform',
+                            aspect=9,
+                            ticks=colormapDict['ticks'],
+                            boundaries=colormapDict['ticks'])
+
+        if colorbarLabel is not None:
+            cbar.set_label(colorbarLabel)
+
+    else:     # display a white heatmap to get a white background for non-land
+        zeroArray = np.ma.where(fieldArray != np.nan, 0.0, fieldArray)
+        plotHandle = plt.contourf(x, y, zeroArray, colors='white')
+
 
     # set the color for NaN or masked regions, and draw a black
     # outline around them; technically, the contour level used should
@@ -1711,16 +1892,44 @@ def plot_vertical_section(
     landArray = landArray.filled(0.0)
     plt.contour(x, y, landArray, levels=[0.999], colors='black', linewidths=1)
 
+
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
     if contourLevels is not None:
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        plt.contour(x, y, fieldArray, levels=contourLevels, colors=lineColor,
-                    linewidths=lineWidth)
+        cs1 = plt.contour(x, y, fieldArray,
+                          levels=contourLevels,
+                          colors=lineColor,
+                          linestyles=lineStyle,
+                          linewidths=lineWidth)
+        if labelContours:
+            fmt_string = "%%1.%df" % int(contourLabelPrecision) 
+            plt.clabel(cs1, fmt=fmt_string)
+        if plotAsContours and contourComparisonFieldArray is not None:
+            cs2 = plt.contour(x, y, contourComparisonFieldArray,
+                              levels=contourLevels,
+                              colors=comparisonContourLineColor,
+                              linestyles=comparisonContourLineStyle,
+                              linewidths=lineWidth)
+            if labelContours:
+                plt.clabel(cs2, fmt=fmt_string)
+        
+    if plotAsContours and contourComparisonFieldArray is not None:
+        h1,_ = cs1.legend_elements()
+        h2,_ = cs2.legend_elements()
+        if labelContours:
+            originalFieldName = originalFieldName + " (" + colorbarLabel + ")"
+            comparisonFieldName = comparisonFieldName + " (" + \
+                                  colorbarLabel + ")"
+        ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
+                  loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
 
     if (title is not None):
+        if plotAsContours and labelContours \
+           and contourComparisonFieldArray is None:
+            title = title + " (" + colorbarLabel + ")"
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
         title_font = {'size': titleFontSize,

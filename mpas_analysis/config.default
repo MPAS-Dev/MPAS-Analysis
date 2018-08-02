@@ -378,7 +378,7 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevels = np.arange(-2.5, 2.6, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
@@ -408,7 +408,7 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevels = np.arange(-1.0, 1.26, 0.25)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
@@ -439,7 +439,7 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevels = np.arange(-0.1, 0.11, 0.02)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
@@ -501,7 +501,7 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevels = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevels = [-0.1, -0.01, 0.01, 0.1]
 
 # latitude and depth limits
@@ -563,7 +563,7 @@ colormapIndicesIndoPacific = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
 colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
 colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
 contourLevelsAtlantic = np.arange(-8, 20.1, 2)
 contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
@@ -689,7 +689,7 @@ colorbarLevelsResult = numpy.arange(-240., 130., 10.)
 # colormap levels/values for ticks (defaults to same as levels)
 colorbarTicksResult = numpy.arange(-240., 160., 40.)
 
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = numpy.arange(-240., 130., 10.)
 # contour line thickness
 contourThicknessResult = 0.25
@@ -1180,6 +1180,41 @@ numUpperTicks = 8
 # upper axis.
 upperXAxisTickLabelPrecision = 2
 
+# Whether or not to compare fields on transects by displaying their contours
+# on a single pane plot.  If True, this will be done;  if False, the fields
+# and their difference will be displayed using a three panel plot.  If there
+# is no reference field for comparison, then the model field will be displayed
+# in a single pane plot using contours only if this variable is True (with
+# the selection of contours governed by the contourLevels parameters in
+# config sections for specific types of transects);  if False the model field
+# will be displayed as a heatmap (possibly also with contours)
+compareAsContoursOnSinglePlot = False
+
+# the line style to use for contours on heatmaps and for
+# contours of the model field on contour comparison plots
+contourLineStyle = solid
+
+# the line color to use for contours on heatmaps and for
+# contours of the model field on contour comparison plots
+contourLineColor = black
+
+# the line style to use for contours of the reference field
+# on contour comparison plots
+comparisonContourLineStyle = solid
+
+# the line color to use for contours of the reference field
+# on contour comparison plots
+comparisonContourLineColor = red
+
+# whether or not to label contours on transect heatmaps
+labelContoursOnHeatmaps = False
+
+# whether or not to label contours on contour comparison plots
+labelContoursOnContourComparisonPlots = True
+
+# the precision to use for contour labels
+contourLabelPrecision = 1
+
 
 [woceTransects]
 ## options related to plotting model vs. World Ocean Circulation Experiment
@@ -1226,7 +1261,7 @@ normArgsResult = {'vmin': 0.0, 'vmax': 18.0}
 #colorbarLevelsResult = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(0.0, 18.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 
 # colormap for differences
@@ -1241,9 +1276,8 @@ normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
 #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
-
 
 
 [woceSalinityTransects]
@@ -1261,7 +1295,7 @@ normArgsResult = {'vmin': 33.0, 'vmax': 36.0}
 #colorbarLevelsResult = [33, 34, 34.25, 34.5, 34.6, 34.7, 34.8, 34.9, 35, 36]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(33.0, 36.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 
 # colormap for differences
@@ -1276,7 +1310,7 @@ normArgsDifference = {'vmin': -1.0, 'vmax': 1.0}
 #colorbarLevelsDifference = [-1, -0.5, -0.2, -0.05, -0.02, 0,  0.02, 0.05, 0.2, 0.5, 1]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-1.0, 1.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
 
 
@@ -1362,6 +1396,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': -2., 'vmax': 30.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1371,6 +1407,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsDifference = []
 
 
 [geojsonSalinityTransects]
@@ -1384,6 +1422,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': 30, 'vmax': 39.0}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1393,6 +1433,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsDifference = []
 
 
 [geojsonPotentialDensityTransects]
@@ -1406,6 +1448,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1415,6 +1459,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsDifference = []
 
 
 [geojsonZonalVelocityTransects]
@@ -1429,6 +1475,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1438,6 +1486,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsDifference = []
 
 
 [geojsonMeridionalVelocityTransects]
@@ -1452,6 +1502,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1461,6 +1513,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
+contourLevelsDifference = []
 
 
 [soseTransects]
@@ -1522,7 +1576,7 @@ normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
 #colorbarLevelsResult = [0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(0.0, 6.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = np.arange(0.5, 6.0, 1.0)
 
 # colormap for differences
@@ -1537,7 +1591,7 @@ normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
 #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 
 
@@ -1556,7 +1610,7 @@ normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
 #colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(34.0, 35.0, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = np.arange(34.1, 35.0, 0.1)
 
 # colormap for differences
@@ -1571,7 +1625,7 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 #colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
-# contour line levels
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = numpy.linspace(-0.6, 0.6, 9)
 
 
@@ -1586,6 +1640,7 @@ normTypeResult = linear
 normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = numpy.linspace(1026.5, 1028., 7)
 
 # colormap for differences
@@ -1596,6 +1651,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = numpy.linspace(-0.3, 0.3, 9)
 
 
@@ -1611,6 +1667,7 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
 
 # colormap for differences
@@ -1621,6 +1678,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
@@ -1636,6 +1694,7 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
 
 # colormap for differences
@@ -1646,6 +1705,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 
@@ -1661,6 +1721,7 @@ normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(0, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsResult = numpy.linspace(0, 0.2, 9)
 
 # colormap for differences
@@ -1671,6 +1732,7 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection)
 contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
 
 [climatologyMapBGC]
