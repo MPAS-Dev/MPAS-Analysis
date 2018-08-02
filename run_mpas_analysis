@@ -415,7 +415,7 @@ def run_analysis(config, analyses):  # {{{
 
         progress.update(totalTaskCount-unfinishedCount)
 
-        if unfinishedCount <= 0:
+        if unfinishedCount <= 0 and len(runningTasks.keys()) == 0:
             # we're done
             break
 
