@@ -1778,13 +1778,13 @@ normTypeDifference = linear
 # Colorbar bounds for obs
 normArgsDifference = {'vmin': -1, 'vmax': 1} 
 # BGC property units
-units = 'mmol m$^{-3}$'
+units = mmol m$^{-3}$
 # Prefix to variable name in MPAS-O output
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
+filePrefix = timeMonthly_avg_ecosysTracers_
 # Acronym/label for observational dataset
-observationsLabel = 'WOA'
+observationsLabel = WOA
 # Acronym/label for gallery variable (can be different from MPAS name)
-galleryLabel = 'PO4'
+galleryLabel = PO4
 
 [climatologyMapBGC_NO3]
 colormapNameResult = dense 
@@ -1793,10 +1793,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -10, 'vmax': 10} 
-units = 'mmol m$^{-3}$'
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
-observationsLabel = 'WOA'
-galleryLabel = 'NO3'
+units = mmol m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = WOA
+galleryLabel = NO3
 
 [climatologyMapBGC_SiO3]
 colormapNameResult = dense 
@@ -1805,10 +1805,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 80}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -20, 'vmax': 20} 
-units = 'mmol m$^{-3}$'
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
-observationsLabel = 'WOA'
-galleryLabel = 'SiO3'
+units = mmol m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = WOA
+galleryLabel = SiO3
 
 [climatologyMapBGC_CO2_gas_flux]
 colormapNameResult = BrBG_r 
@@ -1817,10 +1817,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': -5, 'vmax': 5}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -5, 'vmax': 5} 
-units = 'mol m$^{-2}$ yr$^{-1}$'
-filePrefix = 'timeMonthly_avg_'
-observationsLabel = 'SOM-FFNv2016'
-galleryLabel = 'CO2 Flux'
+units = mol m$^{-2}$ yr$^{-1}$
+filePrefix = timeMonthly_avg_
+observationsLabel = SOM-FFNv2016
+galleryLabel = CO2 Flux
 
 [climatologyMapBGC_O2]
 colormapNameResult = matter 
@@ -1829,10 +1829,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 2, 'vmax': 8}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -2, 'vmax': 2} 
-units = 'mL/L'
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
-observationsLabel = 'WOA'
-galleryLabel = 'O2'
+units = mL/L
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = WOA
+galleryLabel = O2
 
 [climatologyMapBGC_pH_3D]
 colormapNameResult = PuBuGn_r
@@ -1841,10 +1841,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 8, 'vmax': 8.2}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2} 
-units = ''
-filePrefix = 'timeMonthly_avg_ecosys_diag_'
-observationsLabel = 'GLODAPv2'
-galleryLabel = 'pH'
+units = 
+filePrefix = timeMonthly_avg_ecosys_diag_
+observationsLabel = GLODAPv2
+galleryLabel = pH
 
 [climatologyMapBGC_DIC]
 colormapNameResult = YlGnBu 
@@ -1853,10 +1853,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 1900, 'vmax': 2300}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -100, 'vmax': 100} 
-units = 'mmol m$^{-3}$'
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
-observationsLabel = 'GLODAPv2'
-galleryLabel = 'DIC'
+units = mmol m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = GLODAPv2
+galleryLabel = DIC
 
 [climatologyMapBGC_ALK]
 colormapNameResult = PuBuGn 
@@ -1865,10 +1865,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 2150, 'vmax': 2450}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -100, 'vmax': 100} 
-units = 'meq m$^{-3}$'
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
-observationsLabel = 'GLODAPv2'
-galleryLabel = 'Alkalinity'
+units = meq m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = GLODAPv2
+galleryLabel = Alkalinity
 
 [climatologyMapBGC_pCO2surface]
 colormapNameResult = viridis 
@@ -1877,10 +1877,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 300, 'vmax': 450}
 normTypeDifference = linear
 normArgsDifference = {'vmin': -50, 'vmax': 50} 
-units = '$\mu$atm'
-filePrefix = 'timeMonthly_avg_ecosys_diag_'
-observationsLabel = 'SOM-FFNv2016'
-galleryLabel = 'pCO2'
+units = $\mu$atm
+filePrefix = timeMonthly_avg_ecosys_diag_
+observationsLabel = SOM-FFNv2016
+galleryLabel = pCO2
 
 [climatologyMapBGC_Chl]
 colormapNameResult = viridis 
@@ -1889,10 +1889,10 @@ normTypeResult = log
 normArgsResult = {'vmin': 0.01, 'vmax': 20}
 normTypeDifference = symLog 
 normArgsDifference = {'linthresh': 0.1, 'vmin': -10, 'vmax': 10} 
-units = 'mg m$^{-3}$'
-filePrefix = 'timeMonthly_avg_ecosysTracers_'
-observationsLabel = 'SeaWIFS'
-galleryLabel = 'Chlorophyll'
+units = mg m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = SeaWIFS
+galleryLabel = Chlorophyll
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of

@@ -98,13 +98,8 @@ def build_analysis_list(config, refConfig):  # {{{
 
     analyses.append(ocean.ClimatologyMapSose(
             config, oceanClimatolgyTask, refConfig))
-    for bgcvar in config.getExpression('climatologyMapBGC', 'variables'):
-        prefix = config.getExpression('climatologyMapBGC_' + bgcvar,
-            'filePrefix', elementType=str)
-        analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
-                                                bgcvar,
-                                                prefix + bgcvar,
-                                                refConfig))
+    analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
+                                            refConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
             config, oceanClimatolgyTask, refConfig))
@@ -241,7 +236,8 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
         if analysisTask._setupStatus != 'success':
             ValueError("task {} already added but this version was not set up "
                        "successfully. Typically, this indicates two tasks "
-                       "with the same full name".format(analysisTask.fullName))
+                       "with the same full name".format(
+                               analysisTask.fullTaskName))
         return
 
     # for each anlaysis task, check if we want to generate this task
@@ -290,9 +286,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
                               callCheckGenerate=False)
         if subtask._setupStatus != 'success':
             # a subtask failed setup_and_check
-            print("ERROR: a subtask of analysis task {}"
+            print("ERROR: subtask {} of analysis task {}"
                   " failed during check,\n"
-                  "       so this task will not be run".format(taskTitle))
+                  "       so this task will not be run".format(
+                  subtask.subtaskName, taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -358,7 +355,7 @@ def run_analysis(config, analyses):  # {{{
     configFile.close()
 
     parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
-                                      default=1)
+                                              default=1)
 
     isParallel = parallelTaskCount > 1 and len(analyses) > 1
 

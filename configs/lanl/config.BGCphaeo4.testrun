@@ -20,6 +20,7 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # referenceRunConfigFile = /path/to/config/file
 [execute]
 parallelTaskCount = 6
+ncclimoParallelMode = bck
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -34,7 +35,7 @@ mpasMeshName = oEC60to30v3
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory
-mappingDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/mapping/
+mappingDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics/mpas_analysis/maps/
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -75,7 +76,7 @@ baseDirectory = /dir/to/analysis/output
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['only_BGC', 'no_pCO2surface']
+generate = ['only_BGC']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
@@ -110,7 +111,7 @@ endYear = 9999
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations
+baseDirectory = /usr/projects/climate/SHARED_CLIMATE/diagnostics/observations/Ocean
 
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
@@ -124,7 +125,7 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /usr/projects/climate/SHARED_CLIMATE/observations/SeaIce
+baseDirectory = /usr/projects/climate/SHARED_CLIMATE/diagnostics/observations/SeaIce
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
@@ -137,4 +138,8 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_
 ## options related to ocean regions used in several analysis modules
 
 # Directory for region mask files
-regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/mpas_analysis/region_masks
+regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics/mpas_analysis/region_masks
+
+[climatologyMapBGC]
+# Variables to plot:
+variables = ['PO4', 'NO3', 'SiO3', 'CO2_gas_flux', 'pH_3D', 'DIC', 'ALK', 'O2', 'Chl']
