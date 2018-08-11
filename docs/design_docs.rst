@@ -13,3 +13,4 @@ Design Documents
     design_docs/analysis_task_template
     design_docs/remapper
     design_docs/prerequisite_tasks
+    design_docs/eddykineticenergy

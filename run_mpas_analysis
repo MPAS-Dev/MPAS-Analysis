@@ -92,6 +92,8 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
                                             refConfig))
+    analyses.append(ocean.ClimatologyMapEKE(config, oceanClimatolgyTask,
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
             config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
             refConfig))

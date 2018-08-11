@@ -52,6 +52,7 @@ Ocean tasks
    ClimatologyMapSSS
    ClimatologyMapMLD
    ClimatologyMapSSH
+   ClimatologyMapEKE
    ClimatologyMapOHCAnomaly
    ClimatologyMapAntarcticMelt
    ClimatologyMapSose
