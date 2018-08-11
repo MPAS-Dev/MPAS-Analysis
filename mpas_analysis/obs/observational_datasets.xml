@@ -7,84 +7,6 @@
 
   <observation>
     <name>
-      Surface Current Variance from Drifter Data
-    </name>
-    <component>
-      ocean
-    </component>
-    <description>
-      Contains information about current variance (eddy kinetic energy) derived from
-      residuals with respect to the time-mean, seasonal, spatial gradient, and
-      SOI-related currents. The file contains the following variables:
-        Lon (1x720): longitude (degrees), negative=West.
-        Lat (1x317): latitude (degrees), 73S to 85N.
-        Up2bar (317x720): Zonal Velocity Variance, mean(u' ^2) (m^2/s^2).
-        Vp2bar (317x720): Meridional Velocity Variance, mean(v' ^2) (m^2/s^2).
-        rA (317x720): Variance ellipse semimajor axis (m^2/s^2).
-        rB (317x720): Variance ellipse semiminor axis (m^2/s^2).
-        angle (317x720): Orientation angle of variance ellipse (degrees, 0=east/west).
-        N (317x720): Number of drifter-days per square degree.
-
-      Note that Up2bar+Vp2bar=rA+rB, which is twice the eddy kinetic energy.
-
-      For more information, see: <http://www.aoml.noaa.gov/phod/gdp/mean_velocity.php>
-    </description>
-    <source>
-      The global near-surface current climatology described here is publicly available
-      through the [Gulf of Mexico Research Initiative Information & Data Cooperative
-      (GRIIDC)](http://dx.doi.org/10.7266/N7SJ1HN5), and through
-      [NOAA/AOML](http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php) at
-      <http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc>.
-    </source>
-    <releasePolicy>
-      Please cite as reference:
-      Laurindo, L., A. Mariano, and R. Lumpkin, 2017: An improved near-surface
-      velocity climatology for the global ocean from drifter observations Deep-Sea
-      Res. I, 124, pp.73-92, doi:10.1016/j.dsr.2017.04.009.
-    </releasePolicy>
-    <references>
-      [Laurindo et al. (2017)](https://doi.org/10.1016/j.dsr.2017.04.009)
-      (ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf)
-
-      This climatology was developed by Rick Lumpkin (NOAA/AOML) and Lucas Laurindo
-      (Univ. Miami), in collaboration with Arthur Mariano (Univ. Miami), Mayra Pazos
-      (NOAA/AOML), and Erik Valdes (CIMAS/AOML). Previous versions were developed with
-      Gregory Johnson (NOAA/PMEL), Silvia Garzoli (NOAA/AOML), Jessica Redman (CIMAS),
-      and Zulema Garraffo(Univ. Miami).
-    </references>
-    <bibtex>
-      @article{LAURINDO201773,
-      title = "An improved near-surface velocity climatology for the global ocean from drifter observations",
-      journal = "Deep Sea Research Part I: Oceanographic Research Papers",
-      volume = "124",
-      pages = "73 - 92",
-      year = "2017",
-      issn = "0967-0637",
-      doi = "https://doi.org/10.1016/j.dsr.2017.04.009",
-      url = "http://www.sciencedirect.com/science/article/pii/S0967063716302850",
-      author = "Lucas C. Laurindo and Arthur J. Mariano and Rick Lumpkin",
-      keywords = "Near-surface velocity climatology, Ocean drifters, Gauss-Markov estimation, Drifter slip bias, Error analysis"
-      }
-    </bibtex>
-    <dataUrls>
-      http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc
-    </dataUrls>
-    <preprocessing>
-      (missing)
-    </preprocessing>
-    <tasks>
-      - climatologyMapEKE
-    </tasks>
-    <subdirectory>
-      Ocean/EKE
-    </subdirectory>
-    <nameInDocs>
-      drifter_eke
-    </nameInDocs>
-  </observation>
-
-  <observation>
-    <name>
       SST merged Hadley Center-NOAA/OI data set
     </name>
     <component>
@@ -855,7 +777,7 @@
       woce
     </nameInDocs>
   </observation>
-  
+
   <observation>
     <name>
       World Ocean Atlas v2
@@ -864,19 +786,19 @@
       ocean
     </component>
     <description>
-      The World Ocean Atlas (WOA) is a data product of the Ocean Climate 
-      Laboratory of the National Oceanographic Data Center. It consists of 
+      The World Ocean Atlas (WOA) is a data product of the Ocean Climate
+      Laboratory of the National Oceanographic Data Center. It consists of
       objectively analyzed climatological mean fields at 1 degree spatial
       resolution. The climatology is based on all data that are available from
-      the early 1900s to present. 
+      the early 1900s to present.
     </description>
     <source>
-      - [World Ocean Atlas v2 Website](https://www.nodc.noaa.gov/OC5/woa13/) 
+      - [World Ocean Atlas v2 Website](https://www.nodc.noaa.gov/OC5/woa13/)
     </source>
     <releasePolicy>
       Cite the World Ocean Atlas 2013 for the data sets used (see references).
       The World Ocean Atlas 2013 (and all previous versions) are available free
-      of charge. 
+      of charge.
     </releasePolicy>
     <references>
       - [Oxygen: Garcia et al. 2014a](https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol3.pdf)
@@ -924,16 +846,16 @@
       ocean
     </component>
     <description>
-      The observation-based pCO2 fields were created using a 2-step neural 
+      The observation-based pCO2 fields were created using a 2-step neural
       network method extensively described and validated in Landschützer et
-      al. 2013, 2014, 2016. The method first clusters the global ocean into 
-      biogeochemical provinces and in a second step reconstructs the non-liner 
-      relationship between CO2 driver variables and observations from the 4th 
-      release of the Surface Ocean CO2 Atlas (SOCATv4, Bakker et al. 2016). 
+      al. 2013, 2014, 2016. The method first clusters the global ocean into
+      biogeochemical provinces and in a second step reconstructs the non-liner
+      relationship between CO2 driver variables and observations from the 4th
+      release of the Surface Ocean CO2 Atlas (SOCATv4, Bakker et al. 2016).
       This file contains the resulting monthly pCO2 fields at 1°x1° resolion
-      covering the global ocean with the exception of the Arctic Ocean and few 
-      marginal seas. The air-sea CO2 fluxes are computed from the air-sea CO2 
-      partial pressure difference and a bulk gas transfer formulation 
+      covering the global ocean with the exception of the Arctic Ocean and few
+      marginal seas. The air-sea CO2 fluxes are computed from the air-sea CO2
+      partial pressure difference and a bulk gas transfer formulation
       following Landschützer et al. 2013, 2014, 2016. Furthermore, the monthly
       climatology is created from the monthly average of the period 1985-2015.
     </description>
@@ -1011,7 +933,7 @@
 
   <observation>
     <name>
-      SeaWiFS 
+      SeaWiFS
     </name>
     <component>
       ocean
@@ -1028,9 +950,9 @@
     <releasePolicy>
       Please provide acknowledgement of the use of Ocean Biology Processing
       Group (OBPG) data products, images, and services, e.g.:
-    
-      NASA Goddard Space Flight Center, Ocean Ecology Laboratory, Ocean 
-      Biology Processing Group; (2014): Sea-viewing Wide Field-of-view Sensor 
+
+      NASA Goddard Space Flight Center, Ocean Ecology Laboratory, Ocean
+      Biology Processing Group; (2014): Sea-viewing Wide Field-of-view Sensor
       (SeaWiFS) Ocean Color Data, NASA OB.DAAC. http://doi.org/10.5067/ORBVIEW
       -2/SEAWIFS_OC.2014.0. Accessed on 2016/02/29.
     </releasePolicy>
@@ -1062,7 +984,7 @@
       Ocean/BGC
     </subdirectory>
     <nameInDocs>
-      seawifs 
+      seawifs
     </nameInDocs>
   </observation>
 
@@ -1077,7 +999,7 @@
       GLODAPv2 (Global Ocean Data Analysis Project version 2) is an international
       data synthesis project for interior ocean inorganic carbon data and
       related variables for the global ocean. It includes data from all ocean
-      areas of the globe and synthesizes 724 unique cruises. 
+      areas of the globe and synthesizes 724 unique cruises.
     </description>
     <source>
       [GLODAPv2 Website](https://www.nodc.noaa.gov/ocads/oceans/GLODAPv2/)
@@ -1129,6 +1051,84 @@
     </nameInDocs>
   </observation>
 
+  <observation>
+    <name>
+      Surface Current Variance from Drifter Data
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Contains information about current variance (eddy kinetic energy) derived from
+      residuals with respect to the time-mean, seasonal, spatial gradient, and
+      SOI-related currents. The file contains the following variables:
+
+        * Lon (1x720): longitude (degrees), negative=West.
+        * Lat (1x317): latitude (degrees), 73S to 85N.
+        * Up2bar (317x720): Zonal Velocity Variance, mean(u' ^2) (m^2/s^2).
+        * Vp2bar (317x720): Meridional Velocity Variance, mean(v' ^2) (m^2/s^2).
+        * rA (317x720): Variance ellipse semimajor axis (m^2/s^2).
+        * rB (317x720): Variance ellipse semiminor axis (m^2/s^2).
+        * angle (317x720): Orientation angle of variance ellipse (degrees, 0=east/west).
+        * N (317x720): Number of drifter-days per square degree.
+
+      Note that Up2bar+Vp2bar=rA+rB, which is twice the eddy kinetic energy.
+
+      For more information, see: http://www.aoml.noaa.gov/phod/gdp/mean_velocity.php
+
+      The global near-surface current climatology described here is publicly available
+      through the [Gulf of Mexico Research Initiative Information &amp; Data Cooperative (GRIIDC)](http://dx.doi.org/10.7266/N7SJ1HN5), and through
+      [NOAA/AOML](http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php) at
+      http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc.
+
+      This climatology was developed by Rick Lumpkin (NOAA/AOML) and Lucas Laurindo
+      (Univ. Miami), in collaboration with Arthur Mariano (Univ. Miami), Mayra Pazos
+      (NOAA/AOML), and Erik Valdes (CIMAS/AOML). Previous versions were developed with
+      Gregory Johnson (NOAA/PMEL), Silvia Garzoli (NOAA/AOML), Jessica Redman (CIMAS),
+      and Zulema Garraffo(Univ. Miami).
+    </description>
+    <source>
+      [NOAA/AOML](http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php)
+    </source>
+    <releasePolicy>
+      Please cite as reference:
+      Laurindo, L., A. Mariano, and R. Lumpkin, 2017: An improved near-surface
+      velocity climatology for the global ocean from drifter observations Deep-Sea
+      Res. I, 124, pp.73-92, doi:10.1016/j.dsr.2017.04.009.
+    </releasePolicy>
+    <references>
+      [Laurindo et al. (2017)](https://doi.org/10.1016/j.dsr.2017.04.009)
+    </references>
+    <bibtex>
+      @article{LAURINDO201773,
+      title = {An improved near-surface velocity climatology for the global ocean from drifter observations},
+      journal = {Deep Sea Research Part I: Oceanographic Research Papers},
+      volume = {124},
+      pages = {73-92},
+      year = {2017},
+      issn = {0967-0637},
+      doi = {10.1016/j.dsr.2017.04.009},
+      url = {http://www.sciencedirect.com/science/article/pii/S0967063716302850},
+      author = {Lucas C. Laurindo and Arthur J. Mariano and Rick Lumpkin},
+      keywords = {Near-surface velocity climatology, Ocean drifters, Gauss-Markov estimation, Drifter slip bias, Error analysis}
+      }
+    </bibtex>
+    <dataUrls>
+      http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - climatologyMapEKE
+    </tasks>
+    <subdirectory>
+      Ocean/EKE
+    </subdirectory>
+    <nameInDocs>
+      drifter_eke
+    </nameInDocs>
+  </observation>
 
 <!--
   <observation>
