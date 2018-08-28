@@ -847,16 +847,16 @@
     </component>
     <description>
       The observation-based pCO2 fields were created using a 2-step neural
-      network method extensively described and validated in Landschützer et
+      network method extensively described and validated in Landschuetzer et
       al. 2013, 2014, 2016. The method first clusters the global ocean into
       biogeochemical provinces and in a second step reconstructs the non-liner
       relationship between CO2 driver variables and observations from the 4th
       release of the Surface Ocean CO2 Atlas (SOCATv4, Bakker et al. 2016).
-      This file contains the resulting monthly pCO2 fields at 1°x1° resolion
+      This file contains the resulting monthly pCO2 fields at 1 x 1 deg resolution
       covering the global ocean with the exception of the Arctic Ocean and few
       marginal seas. The air-sea CO2 fluxes are computed from the air-sea CO2
       partial pressure difference and a bulk gas transfer formulation
-      following Landschützer et al. 2013, 2014, 2016. Furthermore, the monthly
+      following Landschuetzer et al. 2013, 2014, 2016. Furthermore, the monthly
       climatology is created from the monthly average of the period 1985-2015.
     </description>
     <source>
@@ -864,7 +864,7 @@
     </source>
     <releasePolicy>
       This product is free to be used. Please cite the data set as:
-      Landschützer, P., N. Gruber and D.C.E. Bakker (2017). An updated observation-based global monthly gridded sea surface pCO2 and air-sea CO2 flux product from 1982 through 2015 and its monthly climatology (NCEI Accession 0160558). Version 2.2. NOAA National Centers for Environmental Information. Dataset. [2017-07-11]
+      Landschuetzer, P., N. Gruber and D.C.E. Bakker (2017). An updated observation-based global monthly gridded sea surface pCO2 and air-sea CO2 flux product from 1982 through 2015 and its monthly climatology (NCEI Accession 0160558). Version 2.2. NOAA National Centers for Environmental Information. Dataset. [2017-07-11]
     </releasePolicy>
     <references>
       - [Landschuetzer et al. 2013](http://doi.org/10.5194/bg-10-7793-2013)
@@ -1024,7 +1024,7 @@
       publisher={Copernicus GmbH}
       }
       @article{lauvset2016new,
-      title={A new global interior ocean mapped climatology: the 1°$\times$ 1° GLODAP version 2},
+      title={A new global interior ocean mapped climatology: the 1$^\circ$ $\times$ 1$^\circ$ GLODAP version 2},
       author={Lauvset, Siv K and Key, Robert M and Olsen, Are and van Heuven, Steven and Velo, Anton and Lin, Xiaohua and Schirnick, Carsten and Kozyr, Alex and Tanhua, Toste and Hoppema, Mario and others},
       journal={Earth System Science Data},
       volume={8},
