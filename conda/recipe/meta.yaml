@@ -42,6 +42,7 @@ requirements:
         - cmocean
         - progressbar2
         - requests
+        - pyproj
 
 about:
     home:  http://gitub.com/MPAS-Dev/MPAS-Analysis
