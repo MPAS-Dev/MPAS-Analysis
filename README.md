@@ -40,11 +40,13 @@ environment with the following packages:
  * cmocean
  * progressbar2
  * requests
+ * setuptools
 
 These can be installed via the conda command:
 ```
 conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
-    bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests
+    bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests \
+    setuptools
 ```
 
 ## Download analysis input data
