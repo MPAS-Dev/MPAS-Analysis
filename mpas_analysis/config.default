@@ -379,7 +379,8 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevels = np.arange(-2.5, 2.6, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
@@ -409,7 +410,8 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevels = np.arange(-1.0, 1.26, 0.25)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
@@ -440,7 +442,8 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
 colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevels = np.arange(-0.1, 0.11, 0.02)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
@@ -502,7 +505,8 @@ colormapName = balance
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevels = [-0.1, -0.05, -0.02, -0.01, -0.005, 0, 0.005, 0.01, 0.02, 0.05, 0.1]
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevels = [-0.1, -0.01, 0.01, 0.1]
 
 # latitude and depth limits
@@ -564,7 +568,8 @@ colormapIndicesIndoPacific = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
 colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
 colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
 contourLevelsAtlantic = np.arange(-8, 20.1, 2)
 contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
@@ -690,7 +695,8 @@ colorbarLevelsResult = numpy.arange(-240., 130., 10.)
 # colormap levels/values for ticks (defaults to same as levels)
 colorbarTicksResult = numpy.arange(-240., 160., 40.)
 
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = numpy.arange(-240., 130., 10.)
 # contour line thickness
 contourThicknessResult = 0.25
@@ -1292,7 +1298,8 @@ normArgsResult = {'vmin': 0.0, 'vmax': 18.0}
 #colorbarLevelsResult = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(0.0, 18.0, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 
 # colormap for differences
@@ -1307,7 +1314,8 @@ normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
 #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 
 
@@ -1326,7 +1334,8 @@ normArgsResult = {'vmin': 33.0, 'vmax': 36.0}
 #colorbarLevelsResult = [33, 34, 34.25, 34.5, 34.6, 34.7, 34.8, 34.9, 35, 36]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(33.0, 36.0, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 
 # colormap for differences
@@ -1341,7 +1350,8 @@ normArgsDifference = {'vmin': -1.0, 'vmax': 1.0}
 #colorbarLevelsDifference = [-1, -0.5, -0.2, -0.05, -0.02, 0,  0.02, 0.05, 0.2, 0.5, 1]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-1.0, 1.0, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = np.arange(-0.9, 1.0, 0.4)
 
 
@@ -1427,7 +1437,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': -2., 'vmax': 30.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = []
 
 # colormap for differences
@@ -1438,7 +1449,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = []
 
 
@@ -1453,7 +1465,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': 30, 'vmax': 39.0}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = []
 
 # colormap for differences
@@ -1464,7 +1477,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = []
 
 
@@ -1479,7 +1493,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = []
 
 # colormap for differences
@@ -1490,7 +1505,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = []
 
 
@@ -1506,7 +1522,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = []
 
 # colormap for differences
@@ -1517,7 +1534,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = []
 
 
@@ -1533,7 +1551,8 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsResult = []
 
 # colormap for differences
@@ -1544,7 +1563,8 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
 contourLevelsDifference = []
 
 
@@ -1554,7 +1574,7 @@ contourLevelsDifference = []
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-seasons =  ['ANN']
+seasons =  ['ANN', 'JFM', 'JAS']
 
 # The approximate horizontal resolution (in km) of each transect.  Latitude/
 # longitude between observation points will be subsampled at this interval.
@@ -1567,11 +1587,11 @@ horizontalResolution = 5
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
 #verticalComparisonGridName = mpas
 #verticalComparisonGridName = obs
-verticalComparisonGridName = uniform_0_to_4000m_at_10m
+verticalComparisonGridName = uniform_10_to_1500m_at_10m
 
 # The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or
 # 'obs'.  This should be numpy array of (typically negative) elevations (in m).
-verticalComparisonGrid = numpy.linspace(0, -4000, 401)
+verticalComparisonGrid = numpy.linspace(-10, -1500, 150)
 
 # The minimum weight of a destination cell after remapping. Any cell with
 # weights lower than this threshold will therefore be masked out.
@@ -1582,7 +1602,8 @@ minLat = -80
 maxLat = -60
 
 # longitudes of transects
-longitudes = numpy.linspace(0, 330, 12)
+# Default transects are at Filchner, Thwaites, Ross, Totten, Amery, Fimbul
+longitudes = [318., 253., 187., 117., 75., 0.]
 
 # a list of fields top plot for each transect.  All supported fields are listed
 # below.  Note that 'velocityMagnitude' cannot be plotted without
@@ -1607,8 +1628,10 @@ normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
 #colorbarLevelsResult = [0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(0.0, 6.0, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsResult = np.arange(0.5, 6.0, 1.0)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsResult = np.arange(0.5, 6.0, 1.0)
+contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1622,8 +1645,10 @@ normArgsDifference = {'vmin': -2.0, 'vmax': 2.0}
 #colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
+contourLevelsDifference = 'none'
 
 
 [soseSalinityTransects]
@@ -1641,8 +1666,10 @@ normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
 #colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(34.0, 35.0, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsResult = np.arange(34.1, 35.0, 0.1)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsResult = np.arange(34.1, 35.0, 0.1)
+contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1656,8 +1683,10 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 #colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsDifference = numpy.linspace(-0.6, 0.6, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsDifference = numpy.linspace(-0.6, 0.6, 9)
+contourLevelsDifference = 'none'
 
 
 [sosePotentialDensityTransects]
@@ -1671,8 +1700,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(1026., 1028., 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsResult = numpy.linspace(1026.5, 1028., 7)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsResult = numpy.linspace(1026.5, 1028., 7)
+contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1682,8 +1713,10 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsDifference = numpy.linspace(-0.3, 0.3, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsDifference = numpy.linspace(-0.3, 0.3, 9)
+contourLevelsDifference = 'none'
 
 
 [soseZonalVelocityTransects]
@@ -1698,8 +1731,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1709,8 +1744,10 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsDifference = 'none'
 
 
 [soseMeridionalVelocityTransects]
@@ -1725,8 +1762,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsResult = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1736,8 +1775,10 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsDifference = 'none'
 
 
 [soseVelocityMagnitudeTransects]
@@ -1752,8 +1793,10 @@ normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksResult = numpy.linspace(0, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsResult = numpy.linspace(0, 0.2, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsResult = numpy.linspace(0, 0.2, 9)
+contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1763,8 +1806,10 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
-# contour line levels (use [] for automatic contour selection)
-contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+#contourLevelsDifference = numpy.linspace(-0.2, 0.2, 9)
+contourLevelsDifference = 'none'
 
 [climatologyMapBGC]
 ## options related to plotting climatology mpas of BGC
@@ -1785,9 +1830,9 @@ variables = ['PO4', 'NO3', 'SiO3', 'CO2_gas_flux', 'pH_3D', 'DIC', 'ALK', 'O2', 
 seasons = ['ANN', 'JFM', 'JAS']
 
 # the first yearover which to average climatalogies
-startYear = 0 
+startYear = 0
 # the last year over which to average climatalogies
-endYear = 10 
+endYear = 10
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon', 'antarctic']
@@ -1797,9 +1842,9 @@ preindustrial = False
 
 [climatologyMapBGC_PO4]
 # Colormap for climatology
-colormapNameResult = dense 
+colormapNameResult = dense
 # Colormap for clim - obs difference
-colormapNameDifference = balance 
+colormapNameDifference = balance
 # linear vs. log scaling for climatology
 normTypeResult = linear
 # Colorbar bounds for climatology
@@ -1807,7 +1852,7 @@ normArgsResult = {'vmin': 0, 'vmax': 2.5}
 # linear vs. log scaling for obs
 normTypeDifference = linear
 # Colorbar bounds for obs
-normArgsDifference = {'vmin': -1, 'vmax': 1} 
+normArgsDifference = {'vmin': -1, 'vmax': 1}
 # BGC property units
 units = mmol m$^{-3}$
 # Prefix to variable name in MPAS-O output
@@ -1818,48 +1863,48 @@ observationsLabel = WOA
 galleryLabel = PO4
 
 [climatologyMapBGC_NO3]
-colormapNameResult = dense 
-colormapNameDifference = balance 
+colormapNameResult = dense
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -10, 'vmax': 10} 
+normArgsDifference = {'vmin': -10, 'vmax': 10}
 units = mmol m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = WOA
 galleryLabel = NO3
 
 [climatologyMapBGC_SiO3]
-colormapNameResult = dense 
-colormapNameDifference = balance 
+colormapNameResult = dense
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 80}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -20, 'vmax': 20} 
+normArgsDifference = {'vmin': -20, 'vmax': 20}
 units = mmol m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = WOA
 galleryLabel = SiO3
 
 [climatologyMapBGC_CO2_gas_flux]
-colormapNameResult = BrBG_r 
+colormapNameResult = BrBG_r
 colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': -5, 'vmax': 5}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -5, 'vmax': 5} 
+normArgsDifference = {'vmin': -5, 'vmax': 5}
 units = mol m$^{-2}$ yr$^{-1}$
 filePrefix = timeMonthly_avg_
 observationsLabel = SOM-FFNv2016
 galleryLabel = CO2 Flux
 
 [climatologyMapBGC_O2]
-colormapNameResult = matter 
-colormapNameDifference = balance 
+colormapNameResult = matter
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 2, 'vmax': 8}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -2, 'vmax': 2} 
+normArgsDifference = {'vmin': -2, 'vmax': 2}
 units = mL/L
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = WOA
@@ -1867,59 +1912,59 @@ galleryLabel = O2
 
 [climatologyMapBGC_pH_3D]
 colormapNameResult = PuBuGn_r
-colormapNameDifference = balance 
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 8, 'vmax': 8.2}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -0.2, 'vmax': 0.2} 
-units = 
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
+units =
 filePrefix = timeMonthly_avg_ecosys_diag_
 observationsLabel = GLODAPv2
 galleryLabel = pH
 
 [climatologyMapBGC_DIC]
-colormapNameResult = YlGnBu 
-colormapNameDifference = balance 
+colormapNameResult = YlGnBu
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 1900, 'vmax': 2300}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -100, 'vmax': 100} 
+normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = mmol m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = GLODAPv2
 galleryLabel = DIC
 
 [climatologyMapBGC_ALK]
-colormapNameResult = PuBuGn 
-colormapNameDifference = balance 
+colormapNameResult = PuBuGn
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 2150, 'vmax': 2450}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -100, 'vmax': 100} 
+normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = meq m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = GLODAPv2
 galleryLabel = Alkalinity
 
 [climatologyMapBGC_pCO2surface]
-colormapNameResult = viridis 
-colormapNameDifference = balance 
+colormapNameResult = viridis
+colormapNameDifference = balance
 normTypeResult = linear
 normArgsResult = {'vmin': 300, 'vmax': 450}
 normTypeDifference = linear
-normArgsDifference = {'vmin': -50, 'vmax': 50} 
+normArgsDifference = {'vmin': -50, 'vmax': 50}
 units = $\mu$atm
 filePrefix = timeMonthly_avg_ecosys_diag_
 observationsLabel = SOM-FFNv2016
 galleryLabel = pCO2
 
 [climatologyMapBGC_Chl]
-colormapNameResult = viridis 
-colormapNameDifference = balance 
+colormapNameResult = viridis
+colormapNameDifference = balance
 normTypeResult = log
 normArgsResult = {'vmin': 0.01, 'vmax': 20}
-normTypeDifference = symLog 
-normArgsDifference = {'linthresh': 0.1, 'vmin': -10, 'vmax': 10} 
+normTypeDifference = symLog
+normArgsDifference = {'linthresh': 0.1, 'vmin': -10, 'vmax': 10}
 units = mg m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = SeaWIFS
