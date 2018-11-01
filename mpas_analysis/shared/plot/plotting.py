@@ -1291,7 +1291,7 @@ def plot_vertical_section_comparison(
                               secondXAxisLabel=secondXAxisLabel,
                               thirdXAxisData=thirdXAxisData,
                               thirdXAxisLabel=thirdXAxisLabel,
-                              upperXAxisTickLabelPrecision= 
+                              upperXAxisTickLabelPrecision=
                                   upperXAxisTickLabelPrecision,
                               numUpperTicks=numUpperTicks,
                               invertYAxis=invertYAxis,
@@ -1542,7 +1542,7 @@ def plot_vertical_section(
         parenthetically appended to the plot title;  if
         contourComparisonFieldArray is not None, it is parenthetically appended
         to the legend entries of the contour comparison plot.
-    
+
     title : str, optional
         title of plot
 
@@ -1578,7 +1578,7 @@ def plot_vertical_section(
         the line width of contour lines (if specified)
 
     lineStyle : str, optional
-        the line style of contour lines (if specified); this applies to the 
+        the line style of contour lines (if specified); this applies to the
         style of contour lines of fieldArray (the style of the contour lines
         of contourComparisonFieldArray is set using contourComparisonLineStyle).
 
@@ -1905,7 +1905,7 @@ def plot_vertical_section(
                           linestyles=lineStyle,
                           linewidths=lineWidth)
         if labelContours:
-            fmt_string = "%%1.%df" % int(contourLabelPrecision) 
+            fmt_string = "%%1.%df" % int(contourLabelPrecision)
             plt.clabel(cs1, fmt=fmt_string)
         if plotAsContours and contourComparisonFieldArray is not None:
             cs2 = plt.contour(x, y, contourComparisonFieldArray,
@@ -1915,7 +1915,7 @@ def plot_vertical_section(
                               linewidths=lineWidth)
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
-        
+
     if plotAsContours and contourComparisonFieldArray is not None:
         h1,_ = cs1.legend_elements()
         h2,_ = cs2.legend_elements()
@@ -1983,7 +1983,7 @@ def plot_vertical_section(
         ax2.set_xticks(x.flatten()[:num_x:stride])
         formatString = "{{0:.{0:d}f}}$\degree$".format(
             upperXAxisTickLabelPrecision)
-        ax2.set_xticklabels([formatString.format(member) 
+        ax2.set_xticklabels([formatString.format(member)
                              for member in secondXAxisData[::stride]])
 
     # add a third x-axis scale, if it was requested
@@ -2069,6 +2069,8 @@ def setup_colormap(config, configSectionName, suffix=''):
         contours = config.getExpression(configSectionName,
                                         option,
                                         usenumpyfunc=True)
+        if contours == 'none':
+            contours = None
     else:
         contours = None
 
