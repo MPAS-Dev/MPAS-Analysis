@@ -1602,8 +1602,9 @@ minLat = -80
 maxLat = -60
 
 # longitudes of transects
-# Default transects are at Filchner, Thwaites, Ross, Totten, Amery, Fimbul
-longitudes = [318., 253., 187., 117., 75., 0.]
+# Default transects are at Filchner, Bellingshausen Sea, Thwaites, Ross, Totten,
+# Amery, Fimbul
+longitudes = [318., 280., 253., 187., 117., 75., 0.]
 
 # a list of fields top plot for each transect.  All supported fields are listed
 # below.  Note that 'velocityMagnitude' cannot be plotted without
@@ -1621,7 +1622,7 @@ colormapNameResult = RdYlBu_r
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgsResult = {'vmin': 0.0, 'vmax': 6.0}
+normArgsResult = {'vmin': -2.0, 'vmax': 2.0}
 # color indices into colormapName for filled contours
 #colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -1659,7 +1660,7 @@ colormapNameResult = haline
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgsResult = {'vmin': 34.0, 'vmax': 35.0}
+normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
 # color indices into colormapName for filled contours
 #colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
