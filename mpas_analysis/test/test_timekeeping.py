@@ -204,9 +204,9 @@ class TestTimekeeping(TestCase):
 
         # make sure there's an error when we try to add MpasRelativeDeltas
         # with different calendars
-        with self.assertRaisesRegexp(ValueError,
-                                     'MpasRelativeDelta objects can only be '
-                                     'added if their calendars match.'):
+        with self.assertRaisesRegex(ValueError,
+                                    'MpasRelativeDelta objects can only be '
+                                    'added if their calendars match.'):
             delta1 = string_to_relative_delta('0000-01-00',
                                               calendar='gregorian')
             delta2 = string_to_relative_delta('0000-00-01',
