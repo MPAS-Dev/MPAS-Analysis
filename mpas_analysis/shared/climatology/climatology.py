@@ -210,7 +210,7 @@ def compute_climatology(ds, monthValues, calendar=None,
     mask = xr.zeros_like(ds.month, bool)
 
     for month in monthValues:
-        mask = xr.ufuncs.logical_or(mask, ds.month == month)
+        mask = numpy.logical_or(mask, ds.month == month)
 
     climatologyMonths = ds.where(mask, drop=True)
 

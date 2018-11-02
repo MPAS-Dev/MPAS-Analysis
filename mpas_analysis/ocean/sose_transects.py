@@ -371,7 +371,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             description = 'Monthly velocity magnitude climatologies from ' \
                           '2005-2010 average of the Southern Ocean State ' \
                           'Estimate (SOSE)'
-            dsObs['velMag'] = xr.ufuncs.sqrt(
+            dsObs['velMag'] = numpy.sqrt(
                     dsObs.zonalVel**2 + dsObs.meridVel**2)
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
             dsObs.velMag.attrs['description'] = description

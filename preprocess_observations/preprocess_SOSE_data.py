@@ -666,12 +666,12 @@ def compute_vel_mag(prefix, inGridName, inDir):
             with xarray.open_dataset(uFileName) as dsU:
                 with xarray.open_dataset(vFileName) as dsV:
                     dsVelMag = dsU.drop(['zonalVel', 'botZonalVel'])
-                    dsVelMag['velMag'] = xarray.ufuncs.sqrt(
+                    dsVelMag['velMag'] = numpy.sqrt(
                             dsU.zonalVel**2 + dsV.meridVel**2)
                     dsVelMag.velMag.attrs['units'] = 'm s$^{-1}$'
                     dsVelMag.velMag.attrs['description'] = description
 
-                    dsVelMag['botVelMag'] = xarray.ufuncs.sqrt(
+                    dsVelMag['botVelMag'] = numpy.sqrt(
                             dsU.botZonalVel**2 + dsV.botMeridVel**2)
                     dsVelMag.botVelMag.attrs['units'] = 'm s$^{-1}$'
                     dsVelMag.botVelMag.attrs['description'] = botDescription
