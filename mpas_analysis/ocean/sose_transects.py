@@ -89,6 +89,8 @@ class SoseTransects(AnalysisTask):  # {{{
         longitudes = config.getExpression(sectionName, 'longitudes',
                                           usenumpyfunc=True)
 
+        longitudes.sort()
+
         fields = \
             [{'prefix': 'temperature',
               'mpas': 'timeMonthly_avg_activeTracers_temperature',
@@ -296,6 +298,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         longitudes = config.getExpression('soseTransects', 'longitudes',
                                           usenumpyfunc=True)
+
+        longitudes.sort()
 
         observationsDirectory = build_config_full_path(
             config, 'oceanObservations', 'soseSubdirectory')
