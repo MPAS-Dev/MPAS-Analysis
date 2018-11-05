@@ -38,7 +38,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'numpydoc']
 
-autosummary_generate = True
+autosummary_generate = False
 
 numpydoc_class_members_toctree = True
 numpydoc_show_class_members = False
