@@ -52,9 +52,6 @@ For more details, see:
  * :ref:`config_seasons`
  * :ref:`config_comparison_grids`
 
-.. note::
-
-
 Observations
 ------------
 
