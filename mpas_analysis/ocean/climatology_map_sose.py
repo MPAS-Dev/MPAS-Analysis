@@ -16,7 +16,6 @@ and reanalysis data.
 # -------
 # Xylar Asay-Davis
 
-import xarray
 import numpy
 
 from mpas_analysis.shared import AnalysisTask
@@ -316,8 +315,7 @@ class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
                 'timeMonthly_avg_velocityMeridional' in climatology:
             zonalVel = climatology.timeMonthly_avg_velocityZonal
             meridVel = climatology.timeMonthly_avg_velocityMeridional
-            climatology['velMag'] = xarray.ufuncs.sqrt(zonalVel**2 +
-                                                       meridVel**2)
+            climatology['velMag'] = numpy.sqrt(zonalVel**2 + meridVel**2)
             climatology.velMag.attrs['units'] = 'm s$^{-1}$'
             climatology.velMag.attrs['description'] = 'velocity magnitude'
 

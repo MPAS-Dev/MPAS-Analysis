@@ -56,8 +56,8 @@ class TestMpasXarray(TestCase):
                                                 variableList=variableList)
         self.assertEqual(list(ds.data_vars.keys()), variableList)
 
-        with self.assertRaisesRegexp(ValueError,
-                                     'Empty dataset is returned.'):
+        with self.assertRaisesRegex(ValueError,
+                                    'Empty dataset is returned.'):
             missingvars = ['foo', 'bar']
             ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
                                                     calendar=calendar,
@@ -128,9 +128,9 @@ class TestMpasXarray(TestCase):
              'refBottomDepth']
 
         selvals = {'refBottomDepth': 8.77999997138977}
-        with self.assertRaisesRegexp(AssertionError,
-                                     'not a dimension in the dataset that '
-                                     'can be used for selection'):
+        with self.assertRaisesRegex(AssertionError,
+                                    'not a dimension in the dataset that '
+                                    'can be used for selection'):
             mpas_xarray.open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
