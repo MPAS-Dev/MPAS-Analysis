@@ -18,7 +18,7 @@ used those components.
 
 MPAS-Analysis is available as an anaconda package via the `e3sm` channel:
 
-```
+``` bash
 conda install -c conda-forge -c e3sm mpas_analysis
 ```
 
@@ -43,7 +43,7 @@ environment with the following packages:
  * setuptools
 
 These can be installed via the conda command:
-```
+``` bash
 conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
     bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests \
     setuptools
@@ -53,7 +53,7 @@ conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
 
 To download the data that is necessary to MPAS-Analysis, run:
 
-```
+``` bash
 ./download_analysis_data.py -o /path/to/output/directory
 ```
 
@@ -70,7 +70,7 @@ two subdirectories:
 
 To list the available analysis tasks, run:
 
-```
+``` bash
 ./run_mpas_analysis --list
 ```
 This lists all tasks and their tags.  These can be used in the `generate`
@@ -84,18 +84,6 @@ for more details.
   2. Either modify config options in your new file or copy and modify config
      options from `mpas_analysis/config.default`.
 
-     **Requirements for custom config files:**
-     * At minimum you should set `baseDirectory` under `[output]` to the folder
-       where output is stored.  **NOTE** this value should be a unique
-       directory for each run being analyzed.  If multiple runs are analyzed in
-       the same directory, cached results from a previous analysis will not be
-       updated correctly.
-     * Any options you copy into the config file **must** include the
-       appropriate section header (e.g. '[run]' or '[output]')
-     * You do not need to copy all options from `mpas_analysis/config.default`.
-       This file will automatically be used for any options you do not include
-       in your custom config file.
-     * You should **not** modify `mpas_analysis/config.default` directly.
   3. run: `./run_mpas_analysis config.myrun`.  This will read the configuraiton
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
@@ -103,6 +91,19 @@ for more details.
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
      `mpas_analysis/config.default` for more details on this option.
+
+  **Requirements for custom config files:**
+  * At minimum you should set `baseDirectory` under `[output]` to the folder
+    where output is stored.  **NOTE** this value should be a unique
+    directory for each run being analyzed.  If multiple runs are analyzed in
+    the same directory, cached results from a previous analysis will not be
+    updated correctly.
+  * Any options you copy into the config file **must** include the
+    appropriate section header (e.g. '[run]' or '[output]')
+  * You do not need to copy all options from `mpas_analysis/config.default`.
+    This file will automatically be used for any options you do not include
+    in your custom config file.
+  * You should **not** modify `mpas_analysis/config.default` directly.
 
 ## List of MPAS output files that are needed by MPAS-Analysis:
 
@@ -145,7 +146,7 @@ Note: for older runs, mpas-seaice files will be named:
 To purge old analysis (delete the whole output directory) before running run
 the analysis, add the `--purge` flag:
 
-```
+``` bash
 ./run_mpas_analysis --purge <config.file>
 ````
 All of the subdirectories listed in `output` will be deleted along with the
@@ -218,7 +219,7 @@ within the `mpas_analysis/shared` directory.
 
 To generate the `sphinx` documentation, run:
 ```bash
-conda install sphinx sphinx_rtd_theme numpydoc recommonmark tabulate
+conda install sphinx sphinx_rtd_theme numpydoc m2r tabulate
 cd docs
 make html
 ```

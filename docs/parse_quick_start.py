@@ -4,8 +4,10 @@ A script for converting the README.md to a quick-start guide for inclusion
 in the documentation
 
 Xylar Asay-Davis
-05/15/2018
+11/06/2018
 """
+
+from m2r import convert
 
 
 def build_quick_start():
@@ -17,17 +19,17 @@ def build_quick_start():
                '[http://mpas-analysis.readthedocs.io]': '',
                '![sea surface temperature](docs/_static/sst_example.png)':
                    '![sea surface temperature](_static/sst_example.png)\n'}
-    outContent = []
+    outContent = ''
     with open('../README.md', 'r') as inFile:
-        with open('quick_start.md', 'w') as outFile:
-            outFile.write(
-                '```eval_rst\n'
-                '.. _quick_start:\n'
-                '```\n')
-            for line in inFile.readlines():
-                for replaceString in replace:
-                    if replaceString in line:
-                        line = replace[replaceString]
-                        break
-                outContent.append(line)
-            outFile.writelines(outContent)
+        for line in inFile.readlines():
+            for replaceString in replace:
+                if replaceString in line:
+                    line = replace[replaceString]
+                    break
+            outContent = outContent + line + '\n'
+
+    outContent = convert(outContent)
+
+    with open('quick_start.rst', 'w') as outFile:
+        outFile.write('.. _quick_start:\n\n')
+        outFile.write(outContent)

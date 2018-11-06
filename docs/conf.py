@@ -14,9 +14,8 @@
 
 import os
 import sys
-import recommonmark
-from recommonmark.parser import CommonMarkParser
-from recommonmark.transform import AutoStructify
+import m2r
+from glob import glob
 sys.path.insert(0, os.path.abspath('..'))
 import mpas_analysis
 from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
@@ -38,7 +37,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'numpydoc']
 
-autosummary_generate = False
+autosummary_generate = True
 
 numpydoc_class_members_toctree = True
 numpydoc_show_class_members = False
@@ -49,12 +48,8 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-source_suffix = ['.rst', '.md']
+source_suffix = ['.rst']
 # source_suffix = '.rst'
-
-source_parsers = {
-   '.md': CommonMarkParser,
-}
 
 # The master toctree document.
 master_doc = 'index'
@@ -198,12 +193,10 @@ for component in ['ocean', 'seaice']:
 build_obs_pages_from_xml(xmlFileName)
 build_quick_start()
 
+for mdFileName in glob('design_docs/*.md'):
+    output = m2r.parse_from_file(mdFileName)
+    rstFileName = os.path.splitext(mdFileName)[0]+'.rst'
+    outFile = open(rstFileName, 'w')
+    outFile.write(output)
+
 github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
-
-
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-            'url_resolver': lambda url: github_doc_root + url,
-            'auto_toc_tree_section': 'Contents',
-            }, True)
-    app.add_transform(AutoStructify)

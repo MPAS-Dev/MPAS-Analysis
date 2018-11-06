@@ -94,7 +94,7 @@ be possible to use a combination of `os.kill(pid, 0)`, which checks if a
 process is running, and `os.waitpid(-1,0)`, which waits for any subprocess to finish,
 to accomplish launching several processes and waiting until the first one finishes
 before launching the next task, or in pseudo-code:
-```
+``` python
 processes = launchTasks(taskNames[0:taskCount])
 remainingTasks = taskNames[taskCount:]
 while len(processes) > 0:
@@ -296,7 +296,7 @@ Contributors: Xylar Asay-Davis
 </h4>
 
 There is a configuration option, `parallelTaskCount`, which defaults to 1, meaning tasks run in serial:
-```
+``` ini
 [execute]
 ## options related to executing parallel tasks
 
@@ -309,7 +309,7 @@ Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 
-Here is the code for locking the mapping file within `shared.interpolation.interpolate:
+Here is the code for locking the mapping file within `shared.interpolation.interpolate`:
 ```python
 import fasteners
 ...
@@ -332,7 +332,7 @@ I have included a config option `commandPrefix` that *should* be able to be used
 run the analysis on compute nodes.  If the command prefix is empty, the code should run
 as normal on the compute nodes.
 
-```
+``` ini
 [execute]
 ## options related to executing parallel tasks
 
