@@ -30,6 +30,7 @@ Developer's Guide
 .. toctree::
    :maxdepth: 2
 
+   api
    design_docs
 
 Indices and tables
