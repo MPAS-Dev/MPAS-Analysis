@@ -67,7 +67,9 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        mpasFieldName = 'timeMonthly_avg_dThreshMLD'
+        mpasFieldNames = ['timeMonthly_avg_dThreshMLD',
+                          'timeMonthly_avg_pressureAdjustedSSH']
+
         iselValues = None
 
         # read in what seasons we want to plot
@@ -86,11 +88,11 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
 
         # the variable 'timeMonthly_avg_dThreshMLD' will be added to
         # mpasClimatologyTask along with the seasons.
-        remapClimatologySubtask = RemapMpasClimatologySubtask(
+        remapClimatologySubtask = RemapMLDClimatology(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
             climatologyName=fieldName,
-            variableList=[mpasFieldName],
+            variableList=mpasFieldNames,
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=iselValues)
@@ -123,7 +125,7 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
             galleryName = None
             refTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            refFieldName = 'mld'
             outFileLabel = 'mld'
             diffTitleLabel = 'Main - Reference'
 
@@ -139,7 +141,7 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
                 subtask.set_plot_info(
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='MLD',
-                        mpasFieldName=mpasFieldName,
+                        mpasFieldName='mld',
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
@@ -173,6 +175,47 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
             raiseException=True)
 
         # }}}
+
+    # }}}
+
+
+class RemapMLDClimatology(RemapMpasClimatologySubtask):  # {{{
+    """
+    A subtask for remapping climatologies of MLD to subtract the SSH under
+    ice shelves (or rather add it because it's negative)
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def customize_masked_climatology(self, climatology, season):  # {{{
+        """
+        subtract SSH from MLD
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset`` object
+            the climatology data set
+
+        season : str
+            The name of the season to be masked
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset`` object
+            the modified climatology data set
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        climatology['mld'] = (
+                climatology['timeMonthly_avg_dThreshMLD'] +
+                climatology['timeMonthly_avg_pressureAdjustedSSH'])
+        climatology.drop(['timeMonthly_avg_dThreshMLD',
+                          'timeMonthly_avg_pressureAdjustedSSH'])
+
+        return climatology  # }}}
 
     # }}}
 
