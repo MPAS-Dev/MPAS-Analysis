@@ -375,6 +375,8 @@ movingAveragePoints = 12
 
 # colormap
 colormapName = balance
+# whether the colormap is indexed or continuous
+colormapType = indexed
 # colormap indices for contour color
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
@@ -406,6 +408,8 @@ movingAveragePoints = 12
 
 # colormap
 colormapName = balance
+# whether the colormap is indexed or continuous
+colormapType = indexed
 # color indices into colormapName for filled contours
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -438,6 +442,8 @@ movingAveragePoints = 12
 
 # colormap
 colormapName = balance
+# whether the colormap is indexed or continuous
+colormapType = indexed
 # color indices into colormapName for filled contours
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -501,6 +507,8 @@ observationData = mht_TrenberthCaron.NoAtm.nc
 
 # colormap for model results
 colormapName = balance
+# whether the colormap is indexed or continuous
+colormapType = indexed
 # colormap indices for contour color
 colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
@@ -560,6 +568,10 @@ latBinSizeIndoPacific = 0.5
 colormapNameGlobal = RdYlBu_r
 colormapNameAtlantic = RdYlBu_r
 colormapNameIndoPacific = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeGlobal = indexed
+colormapTypeAtlantic = indexed
+colormapTypeIndoPacific = indexed
 # colormap indices for contour color
 colormapIndicesGlobal = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 colormapIndicesAtlantic = [0, 40, 80, 110, 140, 170, 200, 230, 255]
@@ -601,6 +613,8 @@ movingAveragePointsClimatological = 1
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -608,6 +622,8 @@ colorbarLevelsResult = [-2, 0, 2, 6, 10, 16, 22, 26, 28, 32]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -636,6 +652,8 @@ obsEndYear = 1900
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -643,6 +661,8 @@ colorbarLevelsResult = [28, 29, 30, 31, 32, 33, 34, 35, 36, 38]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -662,6 +682,8 @@ comparisonGrids = ['latlon']
 
 # colormap for model/observations
 colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -669,6 +691,8 @@ colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
@@ -688,6 +712,8 @@ comparisonGrids = ['latlon']
 
 # colormap for model/observations
 colormapNameResult = Maximenko
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
 # colormap levels/values for contour boundaries
@@ -705,6 +731,8 @@ contourColorResult = 0.25
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 23, 46, 70, 93, 116, 128, 128, 139, 162, 185, 209, 232, 255]
 # colormap levels/values for contour boundaries
@@ -724,6 +752,8 @@ comparisonGrids = ['latlon']
 
 # colormap for model/observations
 colormapNameResult = magma_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -733,6 +763,8 @@ normArgsResult = {'vmin': 0., 'vmax': 1000.}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -754,6 +786,8 @@ comparisonGrids = ['latlon']
 
 # colormap for model/observations
 colormapNameResult = BuOr
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = numpy.array(numpy.linspace(0, 255, 38), int)
 # colormap levels/values for contour boundaries
@@ -763,6 +797,8 @@ colorbarTicksResult = numpy.linspace(-12., 12., 9)
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = numpy.array(numpy.linspace(0, 255, 9), int)
 # colormap levels/values for contour boundaries
@@ -797,6 +833,8 @@ seasons =  ['JFM', 'JAS', 'ANN']
 
 # colormap for model/observations
 colormapNameResult = erdc_iceFire_H
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = symLog
 # A dictionary with keywords for the norm
@@ -807,6 +845,8 @@ colorbarTicksResult = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = symLog
 # A dictionary with keywords for the norm
@@ -871,6 +911,8 @@ fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -880,6 +922,8 @@ normArgsResult = {'vmin': -2., 'vmax': 2.}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -895,6 +939,8 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -904,6 +950,8 @@ normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -919,6 +967,8 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 
 # colormap for model/observations
 colormapNameResult = Spectral_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -928,6 +978,8 @@ normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -942,7 +994,8 @@ normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 
 # colormap for model/observations
 colormapNameResult = viridis
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = log
 # A dictionary with keywords for the norm
@@ -952,6 +1005,8 @@ colorbarTicksResult = [10, 20, 40, 60, 80, 100, 200, 300]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = symLog
 # A dictionary with keywords for the norm
@@ -966,7 +1021,8 @@ colorbarTicksDifference = [-200., -100., -50., -20., -10., 0., 10., 20., 50., 10
 
 # colormap for model/observations
 colormapNameResult = delta
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -976,6 +1032,8 @@ normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -990,7 +1048,8 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 
 # colormap for model/observations
 colormapNameResult = delta
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1000,6 +1059,8 @@ normArgsResult = {'vmin': -0.2, 'vmax': 0.2}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1014,7 +1075,8 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 
 # colormap for model/observations
 colormapNameResult = ice
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1025,6 +1087,8 @@ normArgsResult = {'vmin': 0, 'vmax': 0.2}
 # colormap for differences
 colormapNameDifference = balance
 # the type of norm used in the colormap
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 normTypeDifference = linear
 # A dictionary with keywords for the norm
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
@@ -1050,6 +1114,8 @@ depths = ['top', -25, -50, -100, -150, -200, -400, -800, -1500]
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1059,6 +1125,8 @@ normArgsResult = {'vmin': -2., 'vmax': 30.}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1085,6 +1153,8 @@ depths = ['top', -25, -50, -100, -150, -200, -400, -600, -800, -1500]
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1094,6 +1164,8 @@ normArgsResult = {'vmin': 30, 'vmax': 39.0}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1121,6 +1193,8 @@ seasons =  ['ANN','JFM','JAS']
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1130,6 +1204,8 @@ normArgsResult = {'vmin': -2., 'vmax': 2.}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1144,6 +1220,8 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1153,6 +1231,8 @@ normArgsResult = {'vmin': 33.8, 'vmax': 35.0}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1167,6 +1247,8 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 
 # colormap for model/observations
 colormapNameResult = Spectral_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1176,6 +1258,8 @@ normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1288,6 +1372,8 @@ renormalizationThreshold = 0.01
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1304,6 +1390,8 @@ contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1324,6 +1412,8 @@ contourLevelsDifference = np.arange(-1.8, 2.0, 0.4)
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1340,6 +1430,8 @@ contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap (linear, log, or symLog)
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1431,6 +1523,8 @@ renormalizationThreshold = 0.01
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1443,6 +1537,8 @@ contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1459,6 +1555,8 @@ contourLevelsDifference = []
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1471,6 +1569,8 @@ contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the SemiLogNorm
@@ -1487,6 +1587,8 @@ contourLevelsDifference = []
 
 # colormap for model/observations
 colormapNameResult = Spectral_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1499,6 +1601,8 @@ contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1515,7 +1619,8 @@ contourLevelsDifference = []
 
 # colormap for model/observations
 colormapNameResult = delta
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1528,6 +1633,8 @@ contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1544,7 +1651,8 @@ contourLevelsDifference = []
 
 # colormap for model/observations
 colormapNameResult = delta
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1557,6 +1665,8 @@ contourLevelsResult = []
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1619,6 +1729,8 @@ fieldList = ['temperature', 'salinity', 'potentialDensity', 'zonalVelocity',
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1636,6 +1748,8 @@ contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1657,6 +1771,8 @@ contourLevelsDifference = 'none'
 
 # colormap for model/observations
 colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1674,6 +1790,8 @@ contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1695,6 +1813,8 @@ contourLevelsDifference = 'none'
 
 # colormap for model/observations
 colormapNameResult = Spectral_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1708,6 +1828,8 @@ contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1725,7 +1847,8 @@ contourLevelsDifference = 'none'
 
 # colormap for model/observations
 colormapNameResult = delta
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1739,6 +1862,8 @@ contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1756,7 +1881,8 @@ contourLevelsDifference = 'none'
 
 # colormap for model/observations
 colormapNameResult = delta
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1770,6 +1896,8 @@ contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1787,7 +1915,8 @@ contourLevelsDifference = 'none'
 
 # colormap for model/observations
 colormapNameResult = ice
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
 # A dictionary with keywords for the norm
@@ -1801,6 +1930,8 @@ contourLevelsResult = 'none'
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
@@ -1840,8 +1971,12 @@ preindustrial = False
 [climatologyMapBGC_PO4]
 # Colormap for climatology
 colormapNameResult = dense
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # Colormap for clim - obs difference
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # linear vs. log scaling for climatology
 normTypeResult = linear
 # Colorbar bounds for climatology
@@ -1861,7 +1996,9 @@ galleryLabel = PO4
 
 [climatologyMapBGC_NO3]
 colormapNameResult = dense
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
@@ -1873,7 +2010,9 @@ galleryLabel = NO3
 
 [climatologyMapBGC_SiO3]
 colormapNameResult = dense
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 0, 'vmax': 80}
 normTypeDifference = linear
@@ -1885,7 +2024,9 @@ galleryLabel = SiO3
 
 [climatologyMapBGC_CO2_gas_flux]
 colormapNameResult = BrBG_r
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': -5, 'vmax': 5}
 normTypeDifference = linear
@@ -1897,7 +2038,9 @@ galleryLabel = CO2 Flux
 
 [climatologyMapBGC_O2]
 colormapNameResult = matter
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 2, 'vmax': 8}
 normTypeDifference = linear
@@ -1909,7 +2052,9 @@ galleryLabel = O2
 
 [climatologyMapBGC_pH_3D]
 colormapNameResult = PuBuGn_r
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 8, 'vmax': 8.2}
 normTypeDifference = linear
@@ -1921,7 +2066,9 @@ galleryLabel = pH
 
 [climatologyMapBGC_DIC]
 colormapNameResult = YlGnBu
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 1900, 'vmax': 2300}
 normTypeDifference = linear
@@ -1933,7 +2080,9 @@ galleryLabel = DIC
 
 [climatologyMapBGC_ALK]
 colormapNameResult = PuBuGn
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 2150, 'vmax': 2450}
 normTypeDifference = linear
@@ -1945,7 +2094,9 @@ galleryLabel = Alkalinity
 
 [climatologyMapBGC_pCO2surface]
 colormapNameResult = viridis
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = linear
 normArgsResult = {'vmin': 300, 'vmax': 450}
 normTypeDifference = linear
@@ -1957,7 +2108,9 @@ galleryLabel = pCO2
 
 [climatologyMapBGC_Chl]
 colormapNameResult = viridis
+colormapTypeResult = continuous
 colormapNameDifference = balance
+colormapTypeDifference = continuous
 normTypeResult = log
 normArgsResult = {'vmin': 0.01, 'vmax': 20}
 normTypeDifference = symLog
@@ -1974,6 +2127,8 @@ galleryLabel = Chlorophyll
 
 # colormap for model/observations
 colormapNameResult = ice
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -1981,6 +2136,8 @@ colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -2017,6 +2174,8 @@ concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_c
 
 # colormap for model/observations
 colormapNameResult = ice
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -2024,6 +2183,8 @@ colorbarLevelsResult = [0.15, 0.3, 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 1]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -2060,6 +2221,8 @@ concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_c
 
 # colormap for model/observations
 colormapNameResult = ice
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -2067,6 +2230,8 @@ colorbarLevelsResult = [0, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -2101,6 +2266,8 @@ thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
 
 # colormap for model/observations
 colormapNameResult = ice
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
 colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
@@ -2108,6 +2275,8 @@ colorbarLevelsResult = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.5, 2, 2.5]
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
 # color indices into colormapName for filled contours
 colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
 # colormap levels/values for contour boundaries
@@ -2141,7 +2310,8 @@ thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
 # colormap for model/observations
 colormapNameResult = ice
-# color indices into colormapName for filled contours
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = log
 # A dictionary with keywords for the norm
@@ -2151,6 +2321,8 @@ normArgsResult = {'vmin': 1e-5, 'vmax': 1e-2}
 
 # colormap for differences
 colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = symLog
 # A dictionary with keywords for the norm
