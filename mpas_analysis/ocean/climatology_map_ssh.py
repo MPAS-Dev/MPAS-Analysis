@@ -249,7 +249,7 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
         # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
-        dsObs.rename({'time': 'Time'}, inplace=True)
+        dsObs = dsObs.rename({'time': 'Time'})
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
 
