@@ -87,7 +87,8 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key2': -12,
                                     'key3': False})
 
-        with self.assertRaisesRegex(
+        with six.assertRaisesRegex(
+                self,
                 configparser.NoOptionError,
                 "No option 'doesntexist' in section: 'Test'"):
             self.config.getExpression(str('Test'), str('doesntexist'))
@@ -113,7 +114,8 @@ class TestMPASAnalysisConfigParser(TestCase):
             self.assertEqual(self.config.getExpression('TestNumpy', testNumpy,
                                                        usenumpyfunc=True),
                              np.pi)
-        with self.assertRaisesRegex(
+        with six.assertRaisesRegex(
+                self,
                 AssertionError,
                 "'__' is not allowed in .* for `usenumpyfunc=True`"):
             self.config.getExpression('TestNumpy', 'testBadStr',
