@@ -50,13 +50,16 @@ setup(name='mpas_analysis',
       package_data={'mpas_analysis': ['config.default'],
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
-                    'mpas_analysis.shared.plot': ['ColourMapSuite3/*/*.xml'],
+                    'mpas_analysis.shared.plot':
+                        ['ColourMapSuite3/*/*.xml',
+                         'SciVisColorColormaps/*.xml'],
                     'mpas_analysis.obs': ['analysis_input_files',
                                           'observational_datasets.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
-                        'dask', 'bottleneck', 'basemap', 'lxml', 
+                        'dask', 'bottleneck', 'basemap', 'lxml',
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',
                         'requests'],
       entry_points={'console_scripts':
                     ['mpas_analysis = mpas_analysis.__main__:main',
-                     'download_analysis_data = mpas_analysis.__main__:download_analysis_data']})
+                     'download_analysis_data = '
+                     'mpas_analysis.__main__:download_analysis_data']})
