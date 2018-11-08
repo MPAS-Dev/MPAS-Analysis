@@ -6,17 +6,22 @@ This page provides an auto-generated summary of the MPAS-Analysis API. For
 more details and examples, refer to the relevant chapters in the main part of
 the documentation.
 
-Top-level script: run_mpas_analysis
+Top-level script: mpas_analysis
 ===================================
+
+.. currentmodule:: mpas_analysis.__main__
+
 .. autosummary::
    :toctree: generated/
 
-   run_mpas_analysis.build_analysis_list
-   run_mpas_analysis.determine_analyses_to_generate
-   run_mpas_analysis.add_task_and_subtasks
-   run_mpas_analysis.update_generate
-   run_mpas_analysis.run_analysis
-   run_mpas_analysis.wait_for_task
+   main
+   build_analysis_list
+   determine_analyses_to_generate
+   add_task_and_subtasks
+   update_generate
+   run_analysis
+   wait_for_task
+   download_analysis_data
 
 
 Analysis tasks
