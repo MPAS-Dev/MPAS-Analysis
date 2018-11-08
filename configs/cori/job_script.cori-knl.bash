@@ -43,10 +43,9 @@ if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
     exit 1
 fi
-if [ ! -f ./run_mpas_analysis ]; then
-    echo "run_mpas_analysis not found in current directory!"
-    exit 1
-fi
 
-srun -N 1 -n 1 ./run_mpas_analysis $run_config_file
+# if using the mpas_analysis conda package instead of the git repo, remove
+# "python -m"
+
+srun -N 1 -n 1 python -m mpas_analysis $run_config_file
 

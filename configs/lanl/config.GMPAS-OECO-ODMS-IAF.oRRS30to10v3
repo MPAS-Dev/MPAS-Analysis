@@ -3,8 +3,8 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = GMPAS-OECO-ODMS-IAF.oRRS30to10v3 
- 
+mainRunName = GMPAS-OECO-ODMS-IAF.oRRS30to10v3
+
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
@@ -19,14 +19,14 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
 [execute]
-parallelTaskCount = 6 
+parallelTaskCount = 6
 ncclimoParallelMode = bck
 
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lustre/scratch3/turquoise/rileybrady/ACME/cases/GMPAS-OECO-ODMS-IAF_oRRS30to10v3_grizzly03/run 
+baseDirectory = /lustre/scratch3/turquoise/rileybrady/ACME/cases/GMPAS-OECO-ODMS-IAF_oRRS30to10v3_grizzly03/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oRRS30to10v3
@@ -51,7 +51,7 @@ seaIceStreamsFileName = streams.cice
 baseDirectory = /path/to/mpas/analysis/output
 
 # a list of analyses to generate.  Valid names can be seen by running:
-#   ./run_mpas_analysis --list
+#   mpas_analysis --list
 # This command also lists tags for each analysis.
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
@@ -67,11 +67,11 @@ baseDirectory = /path/to/mpas/analysis/output
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
 #                                   the given tag.  Do
-#                                      ./run_mpas_analysis --list
+#                                      mpas_analysis --list
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_mpas_analysis config.analysis --generate \
+#    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
@@ -82,7 +82,7 @@ generate = ['only_BGC']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 1 
+startYear = 1
 # the last year over which to average climatalogies
 endYear = 100
 
