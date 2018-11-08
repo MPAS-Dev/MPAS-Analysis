@@ -172,13 +172,13 @@ a package, run:
 
 ``` bash
 mpas_analysis --purge <config.file>
-````
+```
 
 If you are running in the repo, use:
 
 ``` bash
 python -m mpas_analysis --purge <config.file>
-````
+```
 
 All of the subdirectories listed in `output` will be deleted along with the
 climatology subdirectories in `oceanObservations` and `seaIceObservations`.
@@ -239,17 +239,19 @@ within the `mpas_analysis/shared` directory.
    config files in `configs/<machine>`)
 4. import new analysis task in `mpas_analysis/<component>/__init__.py`
 5. add new analysis task to `mpas_analysis/__main__.py` under
-   `build_analysis_list`:
-   ```python
-      analyses.append(<component>.MyTask(config, myArg='argValue'))
-   ```
-   This will add a new object of the `MyTask` class to a list of analysis tasks
-   created in `build_analysis_list`.  Later on in `run_analysis`, it will first
-   go through the list to make sure each task needs to be generated
-   (by calling `check_generate`, which is defined in `AnalysisTask`), then,
-   will call `setup_and_check` on each task (to make sure the appropriate AM is
-   on and files are present), and will finally call `run` on each task that is
-   to be generated and is set up properly.
+   `build_analysis_list`, see below.
+
+A new analysis task can be added with:
+```python
+   analyses.append(<component>.MyTask(config, myArg='argValue'))
+```
+This will add a new object of the `MyTask` class to a list of analysis tasks
+created in `build_analysis_list`.  Later on in `run_analysis`, it will first
+go through the list to make sure each task needs to be generated
+(by calling `check_generate`, which is defined in `AnalysisTask`), then,
+will call `setup_and_check` on each task (to make sure the appropriate AM is
+on and files are present), and will finally call `run` on each task that is
+to be generated and is set up properly.
 
 ## Generating Documentation
 
