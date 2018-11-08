@@ -54,7 +54,7 @@ setup(name='mpas_analysis',
                     'mpas_analysis.obs': ['analysis_input_files',
                                           'observational_datasets.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
-                        'dask', 'bottleneck', 'basemap', 'lxml', 'nco',
+                        'dask', 'bottleneck', 'basemap', 'lxml', 
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',
                         'requests'],
       entry_points={'console_scripts':
