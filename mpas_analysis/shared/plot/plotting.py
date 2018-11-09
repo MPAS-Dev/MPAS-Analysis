@@ -2051,18 +2051,19 @@ def setup_colormap(config, configSectionName, suffix=''):
 
     _register_custom_colormaps()
 
-    if config.has_option(configSectionName,
-                         'colormapIndices{}'.format(suffix)):
+    colormapType = config.get(configSectionName,
+                              'colormapType{}'.format(suffix))
+    if colormapType == 'indexed':
         (colormap, norm, levels, ticks) = _setup_indexed_colormap(
             config, configSectionName, suffix=suffix)
-    elif config.has_option(configSectionName, 'normType{}'.format(suffix)):
+    elif colormapType == 'continuous':
         (colormap, norm, ticks) = _setup_colormap_and_norm(
             config, configSectionName, suffix=suffix)
         levels = None
     else:
-        raise ValueError('config section {} contains neither the info '
-                         'for an indexed color map nor for computing a '
-                         'norm'.format(configSectionName))
+        raise ValueError('config section {} option colormapType{} is not '
+                         '"indexed" or "continuous"'.format(
+                                 configSectionName, suffix))
 
     option = 'contourLevels{}'.format(suffix)
     if config.has_option(configSectionName, option):
