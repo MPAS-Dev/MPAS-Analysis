@@ -45,6 +45,7 @@ requirements:
         - requests
         - pyproj
         - setuptools
+        - shapely
 
 about:
     home:  http://gitub.com/MPAS-Dev/MPAS-Analysis
