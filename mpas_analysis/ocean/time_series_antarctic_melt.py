@@ -33,23 +33,10 @@ from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
     get_feature_list
 
 
-class TimeSeriesAntarcticMelt(AnalysisTask):
+class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
     """
     Performs analysis of the time-series output of Antarctic sub-ice-shelf
     melt rates.
-
-    Attributes
-    ----------
-
-    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
-        The task that extracts the time series from MPAS monthly output
-
-    refConfig : ``MpasAnalysisConfigParser``
-        The configuration options for the reference run (if any)
-
-    masksSubtask : ``ComputeRegionMasksSubtask``
-        A task for creating mask files for each ice shelf to plot
-
     """
     # Authors
     # -------
@@ -82,11 +69,6 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             componentName='ocean',
             tags=['timeSeries', 'melt', 'landIceCavities'])
 
-        self.mpasTimeSeriesTask = mpasTimeSeriesTask
-
-        self.run_after(mpasTimeSeriesTask)
-        self.refConfig = refConfig
-
         regionMaskDirectory = build_config_full_path(config,
                                                      'regions',
                                                      'regionMaskDirectory')
@@ -97,14 +79,85 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         if 'all' in iceShelvesToPlot:
             iceShelvesToPlot = get_feature_list(config, iceShelfMasksFile)
 
-        self.iceShelvesToPlot = iceShelvesToPlot
-
-        self.masksSubtask = ComputeRegionMasksSubtask(
+        masksSubtask = ComputeRegionMasksSubtask(
                 self, iceShelfMasksFile,
                 outFileSuffix='iceShelfMasks',
                 featureList=iceShelvesToPlot)
 
-        self.add_subtask(self.masksSubtask)
+        self.add_subtask(masksSubtask)
+
+        computeMeltSubtask = ComputeMeltSubtask(self, mpasTimeSeriesTask,
+                                                masksSubtask, iceShelvesToPlot)
+        self.add_subtask(computeMeltSubtask)
+
+        for index, iceShelf in enumerate(iceShelvesToPlot):
+            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index, refConfig)
+            plotMeltSubtask.run_after(computeMeltSubtask)
+            self.add_subtask(plotMeltSubtask)
+
+        # }}}
+
+    # }}}
+
+
+class ComputeMeltSubtask(AnalysisTask):  # {{{
+    """
+    Computes time-series of Antarctic sub-ice-shelf melt rates.
+
+    Attributes
+    ----------
+    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+        The task that extracts the time series from MPAS monthly output
+
+    masksSubtask : ``ComputeRegionMasksSubtask``
+        A task for creating mask files for each ice shelf to plot
+
+    iceShelvesToPlot : list of str
+        A list of ice shelves to plot
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Stephen Price
+
+    def __init__(self, parentTask, mpasTimeSeriesTask, masksSubtask,
+                 iceShelvesToPlot):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask :  ``AnalysisTask``
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
+            The task that extracts the time series from MPAS monthly output
+
+        masksSubtask : ``ComputeRegionMasksSubtask``
+            A task for creating mask files for each ice shelf to plot
+
+        iceShelvesToPlot : list of str
+            A list of ice shelves to plot
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(ComputeMeltSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='computeMeltRates')
+
+        self.mpasTimeSeriesTask = mpasTimeSeriesTask
+        self.run_after(mpasTimeSeriesTask)
+
+        self.masksSubtask = masksSubtask
+        self.run_after(masksSubtask)
+
+        self.iceShelvesToPlot = iceShelvesToPlot
 
         # }}}
 
@@ -115,7 +168,11 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         Raises
         ------
         IOError
-            If files are not present
+            If a restart file is not present
+
+        ValueError
+            If ``config_land_ice_flux_mode`` is not one of ``standalone`` or
+            ``coupled``
         """
         # Authors
         # -------
@@ -125,7 +182,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         # which will perform some common setup, including storing:
         #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
         #   self.calendar
-        super(TimeSeriesAntarcticMelt, self).setup_and_check()
+        super(ComputeMeltSubtask, self).setup_and_check()
 
         self.check_analysis_enabled(
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
@@ -153,234 +210,23 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         self.startDate = config.get('timeSeries', 'startDate')
         self.endDate = config.get('timeSeries', 'endDate')
 
-        self.outFileName = 'iceShelfAggregatedFluxes.nc'
-
         self.variableList = \
             ['timeMonthly_avg_landIceFreshwaterFlux']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
-        self.xmlFileNames = []
-
-        for prefix in ['melt_flux', 'melt_rate']:
-            for regionName in self.iceShelvesToPlot:
-                regionName = regionName.replace(' ', '_')
-                self.xmlFileNames.append(
-                    '{}/{}_{}.xml'.format(self.plotsDirectory, prefix,
-                                          regionName))
         return  # }}}
 
     def run_task(self):  # {{{
         """
-        Performs analysis of the time-series output of Antarctic sub-ice-shelf
-        melt rates.
+        Computes time-series of Antarctic sub-ice-shelf melt rates.
         """
         # Authors
         # -------
         # Xylar Asay-Davis, Stephen Price
 
-        self.logger.info("\nPlotting Antarctic melt rate time series...")
+        self.logger.info("\Computing Antarctic melt rate time series...")
 
         self.logger.info('  Load melt rate data...')
-
-        config = self.config
-        calendar = self.calendar
-
-        totalMeltFlux, meltRates = self._compute_ice_shelf_fluxes()
-
-        plotRef = self.refConfig is not None
-        if plotRef:
-            refRunName = self.refConfig.get('runs', 'mainRunName')
-
-            refTotalMeltFlux, refMeltRates = \
-                self._load_ice_shelf_fluxes(self.refConfig)
-
-        # Load observations from multiple files and put in dictionary based
-        # on shelf keyname
-        observationsDirectory = build_config_full_path(config,
-                                                       'oceanObservations',
-                                                       'meltSubdirectory')
-        obsFileNameDict = {'Rignot et al. (2013)':
-                           'Rignot_2013_melt_rates.csv',
-                           'Rignot et al. (2013) SS':
-                           'Rignot_2013_melt_rates_SS.csv'}
-
-        obsDict = {}  # dict for storing dict of obs data
-        for obsName in obsFileNameDict:
-            obsFileName = '{}/{}'.format(observationsDirectory,
-                                         obsFileNameDict[obsName])
-            obsDict[obsName] = {}
-            obsFile = csv.reader(open(obsFileName, 'rU'))
-            next(obsFile, None)  # skip the header line
-            for line in obsFile:  # some later useful values commented out
-                shelfName = line[0]
-                # surveyArea = line[1]
-                meltFlux = float(line[2])
-                meltFluxUncertainty = float(line[3])
-                meltRate = float(line[4])
-                meltRateUncertainty = float(line[5])
-                # actualArea = float( line[6] )  # actual area here is in sq km
-
-                # build dict of obs. keyed to filename description
-                # (which will be used for plotting)
-                obsDict[obsName][shelfName] = {
-                        'meltFlux': meltFlux,
-                        'meltFluxUncertainty': meltFluxUncertainty,
-                        'meltRate': meltRate,
-                        'meltRateUncertainty': meltRateUncertainty}
-
-        # If areas from obs file used need to be converted from sq km to sq m
-
-        mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
-                                            'movingAverageMonths')
-
-        nRegions = totalMeltFlux.sizes['nRegions']
-
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'timeseriesSubdirectory')
-
-        make_directories(outputDirectory)
-
-        self.logger.info('  Make plots...')
-        for iRegion in range(nRegions):
-
-            regionName = self.iceShelvesToPlot[iRegion]
-
-            # get obs melt flux and unc. for shelf (similar for rates)
-            obsMeltFlux = []
-            obsMeltFluxUnc = []
-            obsMeltRate = []
-            obsMeltRateUnc = []
-            for obsName in obsDict:
-                if regionName in obsDict[obsName]:
-                    obsMeltFlux.append(
-                        obsDict[obsName][regionName]['meltFlux'])
-                    obsMeltFluxUnc.append(
-                        obsDict[obsName][regionName]['meltFluxUncertainty'])
-                    obsMeltRate.append(
-                        obsDict[obsName][regionName]['meltRate'])
-                    obsMeltRateUnc.append(
-                        obsDict[obsName][regionName]['meltRateUncertainty'])
-                else:
-                    # append NaN so this particular obs won't plot
-                    self.logger.warning('{} observations not available for '
-                                        '{}'.format(obsName, regionName))
-                    obsMeltFlux.append(None)
-                    obsMeltFluxUnc.append(None)
-                    obsMeltRate.append(None)
-                    obsMeltRateUnc.append(None)
-
-            title = regionName.replace('_', ' ')
-
-            regionName = regionName.replace(' ', '_')
-
-            xLabel = 'Time (yr)'
-            yLabel = 'Melt Flux (GT/yr)'
-
-            timeSeries = totalMeltFlux.isel(nRegions=iRegion)
-
-            filePrefix = 'melt_flux_{}'.format(regionName)
-            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-
-            fields = [timeSeries]
-            lineColors = ['k']
-            lineWidths = [2.5]
-            legendText = [mainRunName]
-            if plotRef:
-                fields.append(refTotalMeltFlux.isel(nRegions=iRegion))
-                lineColors.append('r')
-                lineWidths.append(1.2)
-                legendText.append(refRunName)
-
-            timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                     title, xLabel, yLabel, figureName,
-                                     calendar=calendar,
-                                     lineColors=lineColors,
-                                     lineWidths=lineWidths,
-                                     legendText=legendText,
-                                     obsMean=obsMeltFlux,
-                                     obsUncertainty=obsMeltFluxUnc,
-                                     obsLegend=list(obsDict.keys()))
-
-            caption = 'Running Mean of Total Melt Flux  under Ice ' \
-                      'Shelves in the {} Region'.format(title)
-            write_image_xml(
-                config=config,
-                filePrefix=filePrefix,
-                componentName='Ocean',
-                componentSubdirectory='ocean',
-                galleryGroup='Antarctic Melt Time Series',
-                groupLink='antmelttime',
-                gallery='Total Melt Flux',
-                thumbnailDescription=title,
-                imageDescription=caption,
-                imageCaption=caption)
-
-            xLabel = 'Time (yr)'
-            yLabel = 'Melt Rate (m/yr)'
-
-            timeSeries = meltRates.isel(nRegions=iRegion)
-
-            filePrefix = 'melt_rate_{}'.format(regionName)
-            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-
-            fields = [timeSeries]
-            lineColors = ['k']
-            lineWidths = [2.5]
-            legendText = [mainRunName]
-            if plotRef:
-                fields.append(refMeltRates.isel(nRegions=iRegion))
-                lineColors.append('r')
-                lineWidths.append(1.2)
-                legendText.append(refRunName)
-
-            if config.has_option(self.taskName, 'firstYearXTicks'):
-                firstYearXTicks = config.getint(self.taskName,
-                                                'firstYearXTicks')
-            else:
-                firstYearXTicks = None
-
-            if config.has_option(self.taskName, 'yearStrideXTicks'):
-                yearStrideXTicks = config.getint(self.taskName,
-                                                 'yearStrideXTicks')
-            else:
-                yearStrideXTicks = None
-
-            timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                     title, xLabel, yLabel, figureName,
-                                     calendar=calendar,
-                                     lineColors=lineColors,
-                                     lineWidths=lineWidths,
-                                     legendText=legendText,
-                                     obsMean=obsMeltRate,
-                                     obsUncertainty=obsMeltRateUnc,
-                                     obsLegend=list(obsDict.keys()),
-                                     firstYearXTicks=firstYearXTicks,
-                                     yearStrideXTicks=yearStrideXTicks)
-
-            caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
-                      'Shelves in the {} Region'.format(title)
-            write_image_xml(
-                config=config,
-                filePrefix=filePrefix,
-                componentName='Ocean',
-                componentSubdirectory='ocean',
-                galleryGroup='Antarctic Melt Time Series',
-                groupLink='antmelttime',
-                gallery='Area-averaged Melt Rate',
-                thumbnailDescription=title,
-                imageDescription=caption,
-                imageCaption=caption)
-        # }}}
-
-    def _compute_ice_shelf_fluxes(self):  # {{{
-        """
-        Reads melt flux time series and computes regional total melt flux and
-        mean melt rate.
-        """
-        # Authors
-        # -------
-        # Xylar Asay-Davis, Stephen Price
 
         mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
@@ -388,7 +234,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 
-        outFileName = '{}/{}'.format(baseDirectory, self.outFileName)
+        outFileName = '{}/iceShelfAggregatedFluxes.nc'.format(baseDirectory)
 
         # Load data:
         inputFile = mpasTimeSeriesTask.outputFile
@@ -402,7 +248,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                 # The file already exists so load it
                 dsOut = xarray.open_dataset(outFileName)
                 if numpy.all(dsOut.Time.values == dsIn.Time.values):
-                    return dsOut.totalMeltFlux, dsOut.meltRates
+                    return
                 else:
                     self.logger.warning('File {} is incomplete. Deleting '
                                         'it.'.format(outFileName))
@@ -465,7 +311,296 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         write_netcdf(dsOut, outFileName)
 
-        return totalMeltFlux, meltRates  # }}}
+        # }}}
+
+    # }}}
+
+
+class PlotMeltSubtask(AnalysisTask):
+    """
+    Plots time-series output of Antarctic sub-ice-shelf melt rates.
+
+    Attributes
+    ----------
+    iceShelf : str
+        Name of the ice shelf to plot
+
+    regionIndex : int
+        The index into the dimension ``nRegions`` of the ice shelf to plot
+
+    refConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the reference run (if any)
+
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Stephen Price
+
+    def __init__(self, parentTask, iceShelf, regionIndex, refConfig):
+        # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask :  ``AnalysisTask``
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        iceShelf : str
+            Name of the ice shelf to plot
+
+        regionIndex : int
+            The index into the dimension ``nRegions`` of the ice shelf to plot
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(PlotMeltSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='plotMeltRates_{}'.format(iceShelf.replace(' ', '_')))
+
+        self.iceShelf = iceShelf
+        self.regionIndex = regionIndex
+        self.refConfig = refConfig
+
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+
+        Raises
+        ------
+        IOError
+            If files are not present
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
+        #   self.calendar
+        super(PlotMeltSubtask, self).setup_and_check()
+
+        self.xmlFileNames = []
+
+        for prefix in ['melt_flux', 'melt_rate']:
+            self.xmlFileNames.append(
+                '{}/{}_{}.xml'.format(self.plotsDirectory, prefix,
+                                      self.iceShelf.replace(' ', '_')))
+        return  # }}}
+
+    def run_task(self):  # {{{
+        """
+        Plots time-series output of Antarctic sub-ice-shelf melt rates.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis, Stephen Price
+
+        self.logger.info("\nPlotting Antarctic melt rate time series for "
+                         "{}...".format(self.iceShelf))
+
+        self.logger.info('  Load melt rate data...')
+
+        config = self.config
+        calendar = self.calendar
+
+        totalMeltFlux, meltRates = self._load_ice_shelf_fluxes(config)
+
+        plotRef = self.refConfig is not None
+        if plotRef:
+            refRunName = self.refConfig.get('runs', 'mainRunName')
+
+            refTotalMeltFlux, refMeltRates = \
+                self._load_ice_shelf_fluxes(self.refConfig)
+
+        # Load observations from multiple files and put in dictionary based
+        # on shelf keyname
+        observationsDirectory = build_config_full_path(config,
+                                                       'oceanObservations',
+                                                       'meltSubdirectory')
+        obsFileNameDict = {'Rignot et al. (2013)':
+                           'Rignot_2013_melt_rates.csv',
+                           'Rignot et al. (2013) SS':
+                           'Rignot_2013_melt_rates_SS.csv'}
+
+        obsDict = {}  # dict for storing dict of obs data
+        for obsName in obsFileNameDict:
+            obsFileName = '{}/{}'.format(observationsDirectory,
+                                         obsFileNameDict[obsName])
+            obsDict[obsName] = {}
+            obsFile = csv.reader(open(obsFileName, 'rU'))
+            next(obsFile, None)  # skip the header line
+            for line in obsFile:  # some later useful values commented out
+                shelfName = line[0]
+                if shelfName != self.iceShelf:
+                    continue
+
+                # surveyArea = line[1]
+                meltFlux = float(line[2])
+                meltFluxUncertainty = float(line[3])
+                meltRate = float(line[4])
+                meltRateUncertainty = float(line[5])
+                # actualArea = float( line[6] )  # actual area here is in sq km
+
+                # build dict of obs. keyed to filename description
+                # (which will be used for plotting)
+                obsDict[obsName] = {
+                        'meltFlux': meltFlux,
+                        'meltFluxUncertainty': meltFluxUncertainty,
+                        'meltRate': meltRate,
+                        'meltRateUncertainty': meltRateUncertainty}
+                break
+
+        # If areas from obs file used need to be converted from sq km to sq m
+
+        mainRunName = config.get('runs', 'mainRunName')
+        movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
+                                            'movingAverageMonths')
+
+        outputDirectory = build_config_full_path(config, 'output',
+                                                 'timeseriesSubdirectory')
+
+        make_directories(outputDirectory)
+
+        self.logger.info('  Make plots...')
+
+        # get obs melt flux and unc. for shelf (similar for rates)
+        obsMeltFlux = []
+        obsMeltFluxUnc = []
+        obsMeltRate = []
+        obsMeltRateUnc = []
+        for obsName in obsDict:
+            if self.iceShelf in obsDict[obsName]:
+                obsMeltFlux.append(
+                    obsDict[obsName]['meltFlux'])
+                obsMeltFluxUnc.append(
+                    obsDict[obsName]['meltFluxUncertainty'])
+                obsMeltRate.append(
+                    obsDict[obsName]['meltRate'])
+                obsMeltRateUnc.append(
+                    obsDict[obsName]['meltRateUncertainty'])
+            else:
+                # append NaN so this particular obs won't plot
+                self.logger.warning('{} observations not available for '
+                                    '{}'.format(obsName, self.iceShelf))
+                obsMeltFlux.append(None)
+                obsMeltFluxUnc.append(None)
+                obsMeltRate.append(None)
+                obsMeltRateUnc.append(None)
+
+        title = self.iceShelf.replace('_', ' ')
+
+        xLabel = 'Time (yr)'
+        yLabel = 'Melt Flux (GT/yr)'
+
+        timeSeries = totalMeltFlux.isel(nRegions=self.regionIndex)
+
+        filePrefix = 'melt_flux_{}'.format(self.iceShelf.replace(' ', '_'))
+        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+
+        fields = [timeSeries]
+        lineColors = ['k']
+        lineWidths = [2.5]
+        legendText = [mainRunName]
+        if plotRef:
+            fields.append(refTotalMeltFlux.isel(nRegions=self.regionIndex))
+            lineColors.append('r')
+            lineWidths.append(1.2)
+            legendText.append(refRunName)
+
+        timeseries_analysis_plot(config, fields, movingAverageMonths,
+                                 title, xLabel, yLabel, figureName,
+                                 calendar=calendar,
+                                 lineColors=lineColors,
+                                 lineWidths=lineWidths,
+                                 legendText=legendText,
+                                 obsMean=obsMeltFlux,
+                                 obsUncertainty=obsMeltFluxUnc,
+                                 obsLegend=list(obsDict.keys()))
+
+        caption = 'Running Mean of Total Melt Flux  under Ice ' \
+                  'Shelves in the {} Region'.format(title)
+        write_image_xml(
+            config=config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup='Antarctic Melt Time Series',
+            groupLink='antmelttime',
+            gallery='Total Melt Flux',
+            thumbnailDescription=title,
+            imageDescription=caption,
+            imageCaption=caption)
+
+        xLabel = 'Time (yr)'
+        yLabel = 'Melt Rate (m/yr)'
+
+        timeSeries = meltRates.isel(nRegions=self.regionIndex)
+
+        filePrefix = 'melt_rate_{}'.format(self.iceShelf.replace(' ', '_'))
+        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+
+        fields = [timeSeries]
+        lineColors = ['k']
+        lineWidths = [2.5]
+        legendText = [mainRunName]
+        if plotRef:
+            fields.append(refMeltRates.isel(nRegions=self.regionIndex))
+            lineColors.append('r')
+            lineWidths.append(1.2)
+            legendText.append(refRunName)
+
+        if config.has_option(self.taskName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(self.taskName,
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option(self.taskName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(self.taskName,
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
+        timeseries_analysis_plot(config, fields, movingAverageMonths,
+                                 title, xLabel, yLabel, figureName,
+                                 calendar=calendar,
+                                 lineColors=lineColors,
+                                 lineWidths=lineWidths,
+                                 legendText=legendText,
+                                 obsMean=obsMeltRate,
+                                 obsUncertainty=obsMeltRateUnc,
+                                 obsLegend=list(obsDict.keys()),
+                                 firstYearXTicks=firstYearXTicks,
+                                 yearStrideXTicks=yearStrideXTicks)
+
+        caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
+                  'Shelves in the {} Region'.format(title)
+        write_image_xml(
+            config=config,
+            filePrefix=filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup='Antarctic Melt Time Series',
+            groupLink='antmelttime',
+            gallery='Area-averaged Melt Rate',
+            thumbnailDescription=title,
+            imageDescription=caption,
+            imageCaption=caption)
+        # }}}
 
     def _load_ice_shelf_fluxes(self, config):  # {{{
         """
@@ -479,12 +614,12 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 
-        outFileName = '{}/{}'.format(baseDirectory, self.outFileName)
+        outFileName = '{}/iceShelfAggregatedFluxes.nc'.format(baseDirectory)
 
         dsOut = xarray.open_dataset(outFileName)
         return dsOut.totalMeltFlux, dsOut.meltRates
+        # }}}
 
-
-# }}}
+    # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
