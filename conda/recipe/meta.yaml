@@ -8,11 +8,12 @@ source:
     path: ../..
 
 build:
-    number: 0
+    number: 3
     script: $PYTHON setup.py install --single-version-externally-managed
             --record=record.txt
     noarch: python
-
+    entry_points:
+        - mpas_analysis = mpas_analysis.__main__:main
 test:
     requires:
         - pytest
