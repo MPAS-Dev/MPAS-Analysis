@@ -126,12 +126,13 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        self.usePostprocessing = config.getExpression(self.sectionName,
-                                                      'usePostprocessingScript')
+        self.usePostprocessing = config.getExpression(
+                self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
-            self.variableList = ['timeMonthly_avg_mocStreamvalLatAndDepth',
-                                 'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
+            self.variableList = \
+                ['timeMonthly_avg_mocStreamvalLatAndDepth',
+                 'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
         else:
             self.variableList = ['timeMonthly_avg_normalVelocity',
                                  'timeMonthly_avg_vertVelocityTop']
@@ -219,9 +220,9 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
             z = self.moc[region]
             # Subset lat range
             minLat = config.getExpression(self.sectionName,
-                                         'latBinMin{}'.format(region))
+                                          'latBinMin{}'.format(region))
             maxLat = config.getExpression(self.sectionName,
-                                         'latBinMax{}'.format(region))
+                                          'latBinMax{}'.format(region))
             indLat = np.logical_and(x >= minLat, x <= maxLat)
             x = x[indLat]
             z = z[:, indLat]
@@ -417,8 +418,10 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
             # rename some variables for convenience
             annualClimatology = annualClimatology.rename(
-                {'timeMonthly_avg_mocStreamvalLatAndDepth': 'avgMocStreamfunGlobal',
-                 'timeMonthly_avg_mocStreamvalLatAndDepthRegion': 'avgMocStreamfunRegional'})
+                {'timeMonthly_avg_mocStreamvalLatAndDepth':
+                    'avgMocStreamfunGlobal',
+                 'timeMonthly_avg_mocStreamvalLatAndDepthRegion':
+                     'avgMocStreamfunRegional'})
 
             # Create dictionary for MOC climatology (NB: need this form
             # in order to convert it to xarray dataset later in the script)
@@ -432,7 +435,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                 else:
                     # hard-wire region=0 (Atlantic) for now
                     indRegion = 0
-                    mocTop = annualClimatology.avgMocStreamfunRegional[indRegion, :, :].values
+                    mocVar = annualClimatology.avgMocStreamfunRegional
+                    mocTop = mocVar[indRegion, :, :].values
                 # Store computed MOC to dictionary
                 self.lat[region] = binBoundaryMocStreamfunction
                 self.moc[region] = mocTop
@@ -485,7 +489,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         '''compute MOC time series from analysis member'''
 
         # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
-        self.logger.info('\n  Compute Atlantic MOC time series from analysis member...')
+        self.logger.info('\n  Compute Atlantic MOC time series from analysis '
+                         'member...')
         self.logger.info('   Load data...')
 
         outputDirectory = build_config_full_path(self.config, 'output',
@@ -587,7 +592,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
             # hard-wire region=0 (Atlantic) for now
             indRegion = 0
-            mocTop = dsLocal.timeMonthly_avg_mocStreamvalLatAndDepthRegion[indRegion, :, :].values
+            mocVar = dsLocal.timeMonthly_avg_mocStreamvalLatAndDepthRegion
+            mocTop = mocVar[indRegion, :, :].values
             mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
