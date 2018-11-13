@@ -20,8 +20,8 @@ import netCDF4
 import os
 
 from mpas_analysis.shared.constants.constants import m3ps_to_Sv
-from mpas_analysis.shared.plot.plotting import plot_vertical_section,\
-    timeseries_analysis_plot
+from mpas_analysis.shared.plot.plotting import \
+    plot_vertical_section_comparison, timeseries_analysis_plot
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
@@ -78,7 +78,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         computeClimSubtask = ComputeMOCClimatologySubtask(
                 self, mpasClimatologyTask)
-        plotClimSubtask = PlotMOCClimatologySubtask(self)
+        plotClimSubtask = PlotMOCClimatologySubtask(self, refConfig)
         plotClimSubtask.run_after(computeClimSubtask)
 
         computeTimeSeriesSubtask = ComputeMOCTimeSeriesSubtask(self)
@@ -200,7 +200,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         # -------
         # Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
 
-        self.logger.info("\Computing climatology of Meridional Overturning "
+        self.logger.info("Computing climatology of Meridional Overturning "
                          "Circulation (MOC)...")
 
         # **** Compute MOC ****
@@ -431,8 +431,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
             regionCellMask = dictRegion[region]['cellMask']
             latBinSize = \
-                config.getExpression(self.sectionName,
-                                     'latBinSize{}'.format(region))
+                config.getfloat('streamfunctionMOC{}'.format(region),
+                                'latBinSize')
             if region == 'Global':
                 latBins = np.arange(-90.0, 90.1, latBinSize)
             else:
@@ -490,7 +490,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask):  # {{{
+    def __init__(self, parentTask, refConfig):  # {{{
         '''
         Construct the analysis task.
 
@@ -498,6 +498,9 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         ----------
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
         '''
         # Authors
         # -------
@@ -512,6 +515,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             subtaskName='plotMOCClimatology')
 
         parentTask.add_subtask(self)
+
+        self.refConfig = refConfig
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -573,7 +578,15 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         config = self.config
 
-        depth, lat, moc = self._load_moc()
+        depth, lat, moc = self._load_moc(config)
+
+        if self.refConfig is None:
+            refTitle = None
+            diffTitle = None
+        else:
+            refDepth, refLat, refMOC = self._load_moc(self.refConfig)
+            refTitle = self.refConfig.get('runs', 'mainRunName')
+            diffTitle = 'Main - Reference'
 
         # **** Plot MOC ****
         # Define plotting variables
@@ -586,30 +599,56 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         for region in self.regionNames:
             self.logger.info('   Plot climatological {} MOC...'.format(region))
-            title = '{} MOC (ANN, years {:04d}-{:04d})\n {}'.format(
+            title = '{} MOC (ANN, years {:04d}-{:04d})'.format(
                      region, self.startYear,
-                     self.endYear,
-                     mainRunName)
+                     self.endYear)
             filePrefix = self.filePrefixes[region]
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             x = lat[region]
-            y = depth
-            z = moc[region]
+            z = depth
+            regionMOC = moc[region]
             # Subset lat range
-            minLat = config.getExpression(self.sectionName,
-                                          'latBinMin{}'.format(region))
-            maxLat = config.getExpression(self.sectionName,
-                                          'latBinMax{}'.format(region))
+            minLat = config.getExpression('streamfunctionMOC{}'.format(region),
+                                          'latBinMin')
+            maxLat = config.getExpression('streamfunctionMOC{}'.format(region),
+                                          'latBinMax')
             indLat = np.logical_and(x >= minLat, x <= maxLat)
             x = x[indLat]
-            z = z[:, indLat]
+            regionMOC = regionMOC[:, indLat]
+            if self.refConfig is None:
+                refRegionMOC = None
+                diff = None
+            else:
+                # the coords of the ref MOC won't necessarily match this MOC
+                # so we need to interpolate
+                nz, nx = regionMOC.shape
+                refNz, refNx = refMOC[region].shape
+                temp = np.zeros((refNz, nx))
+                for zIndex in range(refNz):
+                    temp[zIndex, :] = np.interp(
+                            x, refLat[region], refMOC[region][zIndex, :],
+                            left=np.nan, right=np.nan)
+                refRegionMOC = np.zeros((nz, nx))
+                for xIndex in range(nx):
+                    refRegionMOC[:, xIndex] = np.interp(
+                            depth, refDepth, temp[:, xIndex],
+                            left=np.nan, right=np.nan)
 
-            plot_vertical_section(config, x, y, z, self.sectionName,
-                                  suffix=region, colorbarLabel=colorbarLabel,
-                                  title=title, xlabel=xLabel, ylabel=yLabel,
-                                  fileout=figureName,
-                                  N=movingAveragePointsClimatological)
+                diff = regionMOC - refRegionMOC
+
+            plot_vertical_section_comparison(
+                    config, x, z, regionMOC, refRegionMOC, diff,
+                    fileout=figureName,
+                    colorMapSectionName='streamfunctionMOC{}'.format(region),
+                    cbarLabel=colorbarLabel,
+                    title=title,
+                    modelTitle=mainRunName,
+                    refTitle=refTitle,
+                    diffTitle=diffTitle,
+                    xlabel=xLabel,
+                    ylabel=yLabel,
+                    N=movingAveragePointsClimatological)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
             write_image_xml(
@@ -623,11 +662,12 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 imageDescription=caption,
                 imageCaption=caption)  # }}}
 
-    def _load_moc(self):  # {{{
+    def _load_moc(self, config):  # {{{
 
         '''compute mean MOC streamfunction from analysis member'''
 
-        config = self.config
+        startYear = config.getint('climatology', 'startYear')
+        endYear = config.getint('climatology', 'endYear')
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'mpasClimatologySubdirectory')
@@ -635,8 +675,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         make_directories(outputDirectory)
 
         inputFileName = '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
-                           outputDirectory, self.startYear,
-                           self.endYear)
+                           outputDirectory, startYear,
+                           endYear)
 
         # Read from file
         ncFile = netCDF4.Dataset(inputFileName, mode='r')
@@ -922,8 +962,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                              mpasMeshName, self.logger)
         dictRegion = dictRegion['Atlantic']
 
-        latBinSize = config.getExpression(self.sectionName,
-                                          'latBinSizeAtlantic')
+        latBinSize = config.getfloat('streamfunctionMOCAtlantic',
+                                     'latBinSize')
         indRegion = dictRegion['indices']
         latBins = latCell[indRegion]
         latBins = np.arange(np.amin(latBins),
@@ -1060,7 +1100,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, refConfig=None):  # {{{
+    def __init__(self, parentTask, refConfig):  # {{{
         '''
         Construct the analysis task.
 
