@@ -27,6 +27,8 @@ from mpas_analysis.configuration import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RemapMpasClimatologySubtask
 from mpas_analysis.shared import AnalysisTask
+from mpas_analysis.shared.analysis_task import \
+    update_time_bounds_from_file_names
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
 
@@ -132,7 +134,7 @@ class TestMpasClimatologyTask(TestCase):
         startDate = '{:04d}-01-01_00:00:00'.format(startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(endYear)
 
-        mpasClimatologyTask._update_climatology_bounds()
+        update_time_bounds_from_file_names(config, 'climatology', 'ocean')
         mpasClimatologyTask._create_symlinks()
 
         assert(mpasClimatologyTask.startYear == startYear)
@@ -152,7 +154,7 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        mpasClimatologyTask._update_climatology_bounds()
+        update_time_bounds_from_file_names(config, 'climatology', 'ocean')
         mpasClimatologyTask._create_symlinks()
 
         startYear = 2
