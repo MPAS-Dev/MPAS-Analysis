@@ -210,7 +210,6 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                           '{}.'.format(streamName, self.startDate,
                                        self.endDate))
 
-        self._update_climatology_bounds()
         self.symlinkDirectory = self._create_symlinks()
 
         with xarray.open_dataset(self.inputFiles[0]) as ds:
@@ -313,60 +312,6 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         return get_unmasked_mpas_climatology_file_name(self.config, season,
                                                        self.componentName)
 
-        # }}}
-
-    def _update_climatology_bounds(self):  # {{{
-        """
-        Update the start and end years and dates for climatologies based on the
-        years actually available in the list of files.
-        """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        config = self.config
-
-        requestedStartYear = self.startYear
-        requestedEndYear = self.endYear
-
-        fileNames = sorted(self.inputFiles)
-        years, months = get_files_year_month(fileNames,
-                                             self.historyStreams,
-                                             'timeSeriesStatsMonthlyOutput')
-
-        # search for the start of the first full year
-        firstIndex = 0
-        while(firstIndex < len(years) and months[firstIndex] != 1):
-            firstIndex += 1
-        startYear = years[firstIndex]
-
-        # search for the end of the last full year
-        lastIndex = len(years)-1
-        while(lastIndex >= 0 and months[lastIndex] != 12):
-            lastIndex -= 1
-        endYear = years[lastIndex]
-
-        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
-        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
-
-        if startYear != requestedStartYear or endYear != requestedEndYear:
-            print("Warning: climatology start and/or end year different from "
-                  "requested\n"
-                  "requestd: {:04d}-{:04d}\n"
-                  "actual:   {:04d}-{:04d}\n".format(requestedStartYear,
-                                                     requestedEndYear,
-                                                     startYear,
-                                                     endYear))
-
-            config.set('climatology', 'startYear', str(startYear))
-            config.set('climatology', 'startDate', startDate)
-            config.set('climatology', 'endYear', str(endYear))
-            config.set('climatology', 'endDate', endDate)
-
-        self.startDate = startDate
-        self.endDate = endDate
-        self.startYear = startYear
-        self.endYear = endYear
         # }}}
 
     def _create_symlinks(self):  # {{{
