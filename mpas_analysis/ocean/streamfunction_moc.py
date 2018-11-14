@@ -81,9 +81,25 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         plotClimSubtask = PlotMOCClimatologySubtask(self, refConfig)
         plotClimSubtask.run_after(computeClimSubtask)
 
-        computeTimeSeriesSubtask = ComputeMOCTimeSeriesSubtask(self)
+        startYear = config.getint('timeSeries', 'startYear')
+        endYear = config.getint('timeSeries', 'endYear')
+
+        years = range(startYear, endYear+1)
+
+        # in the end, we'll combine all the time series into one, but we create
+        # this task first so it's easier to tell it to run after all the
+        # compute tasks
+        combineTimeSeriesSubtask = CombineMOCTimeSeriesSubtask(
+                self, startYears=years, endYears=years)
+
+        # run one subtask per year
+        for year in years:
+            computeTimeSeriesSubtask = ComputeMOCTimeSeriesSubtask(
+                    self, startYear=year, endYear=year)
+            combineTimeSeriesSubtask.run_after(computeTimeSeriesSubtask)
+
         plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, refConfig)
-        plotTimeSeriesSubtask.run_after(computeTimeSeriesSubtask)
+        plotTimeSeriesSubtask.run_after(combineTimeSeriesSubtask)
 
         # }}}
     # }}}
@@ -701,7 +717,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask):  # {{{
+    def __init__(self, parentTask, startYear, endYear):  # {{{
         '''
         Construct the analysis task.
 
@@ -720,9 +736,12 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='computeMOCTimeSeries')
+            subtaskName='computeMOCTimeSeries_{:04d}-{:04d}'.format(
+                    startYear, endYear))
 
         parentTask.add_subtask(self)
+        self.startYear = startYear
+        self.endYear = endYear
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -750,11 +769,6 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.mocAnalysisMemberEnabled = self.check_analysis_enabled(
             analysisOptionName='config_am_mocstreamfunction_enable',
             raiseException=False)
-
-        self.startDate = config.get('timeSeries', 'startDate')
-        self.endDate = config.get('timeSeries', 'endDate')
-        self.startYear = config.getint('timeSeries', 'startYear')
-        self.endYear = config.getint('timeSeries', 'endYear')
 
         self.sectionName = 'streamfunctionMOC'
 
@@ -789,6 +803,9 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.logger.info("\nCompute time series of Meridional Overturning "
                          "Circulation (MOC)...")
 
+        self.startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
+        self.endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
+
         # **** Compute MOC ****
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
             self._compute_moc_time_series_analysismember()
@@ -812,7 +829,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         except OSError:
             pass
 
-        outputFileName = '{}/mocTimeSeries.nc'.format(outputDirectory)
+        outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
+                outputDirectory, self.startYear, self.endYear)
 
         streamName = 'timeSeriesStatsMonthlyOutput'
 
@@ -944,14 +962,16 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                          'time series...')
         self.logger.info('   Load data...')
 
-        outputDirectory = build_config_full_path(self.config, 'output',
-                                                 'timeseriesSubdirectory')
+        outputDirectory = '{}/moc/'.format(
+                build_config_full_path(self.config, 'output',
+                                       'timeseriesSubdirectory'))
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
-        outputFileName = '{}/mocTimeSeries.nc'.format(outputDirectory)
+        outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
+                outputDirectory, self.startYear, self.endYear)
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
@@ -1089,6 +1109,74 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
         # }}}
+    # }}}
+
+
+class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
+    '''
+    Combine individual time series of max Atlantic MOC at 26.5N into a single
+    data set
+    '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, startYears, endYears):  # {{{
+        '''
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask : ``StreamfunctionMOC``
+            The main task of which this is a subtask
+
+        refConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a reference run (if any)
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(CombineMOCTimeSeriesSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='combineMOCTimeSeries')
+
+        parentTask.add_subtask(self)
+        self.startYears = startYears
+        self.endYears = endYears
+        # }}}
+
+    def run_task(self):  # {{{
+        '''
+        Plot the MOC time series
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+        outputDirectory = '{}/moc/'.format(
+                build_config_full_path(self.config, 'output',
+                                       'timeseriesSubdirectory'))
+        try:
+            os.makedirs(outputDirectory)
+        except OSError:
+            pass
+
+        outputFileNames = []
+        for startYear, endYear in zip(self.startYears, self.endYears):
+            outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
+                    outputDirectory, startYear, endYear)
+            outputFileNames.append(outputFileName)
+
+        ds = xr.open_mfdataset(outputFileNames, concat_dim='Time',
+                               decode_times=False)
+
+        outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
+                outputDirectory, self.startYears[0], self.endYears[-1])
+        write_netcdf(ds, outputFileName)  # }}}
     # }}}
 
 
@@ -1248,7 +1336,12 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'timeseriesSubdirectory')
-        inputFileName = '{}/mocTimeSeries.nc'.format(outputDirectory)
+
+        startYear = config.getint('timeSeries', 'startYear')
+        endYear = config.getint('timeSeries', 'endYear')
+
+        inputFileName = '{}/moc/mocTimeSeries_{:04d}-{:04d}.nc'.format(
+                outputDirectory, startYear, endYear)
 
         dsMOCTimeSeries = xr.open_dataset(inputFileName, decode_times=False)
         return dsMOCTimeSeries  # }}}
