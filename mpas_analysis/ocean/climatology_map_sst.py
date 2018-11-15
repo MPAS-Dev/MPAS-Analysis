@@ -221,7 +221,7 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
 
         dsObs = xr.open_dataset(fileName)
-        dsObs.rename({'time': 'Time', 'SST': 'sst'}, inplace=True)
+        dsObs = dsObs.rename({'time': 'Time', 'SST': 'sst'})
         dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']

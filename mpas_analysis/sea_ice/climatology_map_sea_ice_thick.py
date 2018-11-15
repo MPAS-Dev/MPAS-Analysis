@@ -227,7 +227,7 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
-        dsObs.rename({'HI': 'seaIceThick'}, inplace=True)
+        dsObs = dsObs.rename({'HI': 'seaIceThick'})
         return dsObs
         # }}}
     # }}}

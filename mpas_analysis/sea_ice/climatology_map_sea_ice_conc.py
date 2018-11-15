@@ -280,7 +280,7 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
         # Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
-        dsObs.rename({'AICE': 'seaIceConc'}, inplace=True)
+        dsObs = dsObs.rename({'AICE': 'seaIceConc'})
         return dsObs
         # }}}
     # }}}
