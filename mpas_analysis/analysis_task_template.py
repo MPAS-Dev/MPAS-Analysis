@@ -26,7 +26,8 @@ Instructions for creating a new analysis task:
 3. modify config.default (and possibly any machine-specific config files in
    configs/<machine>)
 4. import new analysis task in mpas_analysis/<component>/__init__.py
-5. add new analysis task to run_mpas_analysis under build_analysis_list:
+5. add new analysis task to mpas_analysis/__main__.py under
+   build_analysis_list:
       analyses.append(<component>.MyTask(config, myArg='argValue'))
    This will add a new object of the MyTask class to a list of analysis tasks
    created in build_analysis_list.  Later on in run_task, it will first

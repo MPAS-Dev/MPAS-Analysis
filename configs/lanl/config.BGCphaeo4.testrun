@@ -4,7 +4,7 @@
 
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = BGCacme.phaeo4
- 
+
 # preprocessedReferenceRunName is the name of a reference run that has been
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
@@ -52,7 +52,7 @@ seaIceStreamsFileName = streams.cice
 baseDirectory = /dir/to/analysis/output
 
 # a list of analyses to generate.  Valid names can be seen by running:
-#   ./run_mpas_analysis --list
+#   mpas_analysis --list
 # This command also lists tags for each analysis.
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
@@ -68,11 +68,11 @@ baseDirectory = /dir/to/analysis/output
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
 #                                   the given tag.  Do
-#                                      ./run_mpas_analysis --list
+#                                      mpas_analysis --list
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_mpas_analysis config.analysis --generate \
+#    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
@@ -83,7 +83,7 @@ generate = ['only_BGC']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 1 
+startYear = 1
 # the last year over which to average climatalogies
 endYear = 100
 

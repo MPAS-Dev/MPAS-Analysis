@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+# This software is open source software available under the BSD-3 license.
+#
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 """
 Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
@@ -6,13 +16,13 @@ specifying analysis options.
 """
 # Authors
 # -------
-# Xylar Asay-Davis, Phillip J. Wolfram
+# Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import matplotlib as mpl
-mpl.use('Agg')
+import mpas_analysis
+
 import argparse
 import traceback
 import sys
@@ -42,6 +52,8 @@ from mpas_analysis import sea_ice
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RefYearMpasClimatologyTask
 from mpas_analysis.shared.time_series import MpasTimeSeriesTask
+
+from mpas_analysis.shared.io.download import download_files
 
 
 def build_analysis_list(config, refConfig):  # {{{
@@ -291,7 +303,7 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
             print("ERROR: subtask {} of analysis task {}"
                   " failed during check,\n"
                   "       so this task will not be run".format(
-                  subtask.subtaskName, taskTitle))
+                      subtask.subtaskName, taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -376,7 +388,7 @@ def run_analysis(config, analyses):  # {{{
 
     logFileName = '{}/taskProgress.log'.format(logsDirectory)
 
-    logger = logging.getLogger('run_mpas_analysis')
+    logger = logging.getLogger('mpas_analysis')
     handler = logging.FileHandler(logFileName)
 
     formatter = AnalysisFormatter()
@@ -544,10 +556,19 @@ def purge_output(config):
                     shutil.rmtree(directory)
 
 
-if __name__ == "__main__":
+def main():
+
+    """
+    Entry point for the main script ``mpas_analysis``
+    """
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('-v', '--version',
+                        action='version',
+                        version='mpas_analysis {}'.format(
+                                mpas_analysis.__version__),
+                        help="Show version number and exit")
     parser.add_argument("--setup_only", dest="setup_only", action='store_true',
                         help="If only the setup phase, not the run or HTML "
                         "generation phases, should be executed.")
@@ -650,5 +671,38 @@ if __name__ == "__main__":
 
     if not args.setup_only:
         generate_html(config, analyses, refConfig)
+
+
+def download_analysis_data():
+    """
+    Entry point for downloading the input data set from public repository for
+    MPAS-Analysis to work. The input data set includes: pre-processed
+    observations data, MPAS mapping files and MPAS regional mask files
+    (which are used for the MOC computation), for a subset of MPAS meshes.
+    """
+
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("-o", "--outDir", dest="outDir", required=True,
+                        help="Directory where MPAS-Analysis input data will"
+                             "be downloaded")
+    args = parser.parse_args()
+
+    try:
+        os.makedirs(args.outDir)
+    except OSError:
+        pass
+
+    urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
+    analysisFileList = pkg_resources.resource_string(
+            'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
+
+    # remove any empty strings from the list
+    analysisFileList = list(filter(None, analysisFileList.split('\n')))
+    download_files(analysisFileList, urlBase, args.outDir)
+
+
+if __name__ == "__main__":
+    main()
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

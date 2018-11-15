@@ -49,9 +49,20 @@ conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
     setuptools
 ```
 
+Then, get the code from:
+ [https://github.com/MPAS-Dev/MPAS-Analysis](https://github.com/MPAS-Dev/MPAS-Analysis)
+
+
 ## Download analysis input data
 
-To download the data that is necessary to MPAS-Analysis, run:
+If you installed the `mpas_analysis` package, download the data that is
+necessary to MPAS-Analysis by running:
+
+``` bash
+download_analysis_data -o /path/to/output/directory
+```
+
+If you are using the git repository, run:
 
 ``` bash
 ./download_analysis_data.py -o /path/to/output/directory
@@ -68,11 +79,18 @@ two subdirectories:
 
 ## List Analysis
 
-To list the available analysis tasks, run:
+If you installed the `mpas_analysis` package, list the available analysis tasks
+by running:
 
 ``` bash
-./run_mpas_analysis --list
+mpas_analysis --list
 ```
+
+If using a git repository, run:
+``` bash
+python -m mpas_analysis --list
+```
+
 This lists all tasks and their tags.  These can be used in the `generate`
 command-line option or config option.  See `mpas_analysis/config.default`
 for more details.
@@ -80,11 +98,16 @@ for more details.
 ## Running the analysis
 
   1. Create and empty config file (say `config.myrun`), copy `config.example`,
-     or copy one of the example files in the `configs` directory.
+     or copy one of the example files in the `configs` directory (if using a
+     git repo) or download one from the
+     [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
   2. Either modify config options in your new file or copy and modify config
-     options from `mpas_analysis/config.default`.
-
-  3. run: `./run_mpas_analysis config.myrun`.  This will read the configuraiton
+     options from `mpas_analysis/config.default` (in a git repo) or directly
+     from GitHub:
+     [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_anlysis/config.default).
+  3. If you installed the `mpas_analysis` package, run:
+     `mpas_analysis config.myrun`.  If using a git checkout, run:
+     `python -m mpas_analysis config.myrun`.  This will read the configuraiton
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
   4. If you want to run a subset of the analysis, you can either set the
@@ -144,11 +167,19 @@ Note: for older runs, mpas-seaice files will be named:
 ## Purge Old Analysis
 
 To purge old analysis (delete the whole output directory) before running run
-the analysis, add the `--purge` flag:
+the analysis, add the `--purge` flag.  If you installed `mpas_analysis` as
+a package, run:
 
 ``` bash
-./run_mpas_analysis --purge <config.file>
-````
+mpas_analysis --purge <config.file>
+```
+
+If you are running in the repo, use:
+
+``` bash
+python -m mpas_analysis --purge <config.file>
+```
+
 All of the subdirectories listed in `output` will be deleted along with the
 climatology subdirectories in `oceanObservations` and `seaIceObservations`.
 
@@ -167,22 +198,26 @@ final website with `--html_only`, and re-running after the simulation has
 progressed to extend time series (however, not recommended for changing the
 bounds on climatologies, see above).
 
-## Running in parallel
+## Running in parallel via a queueing system
 
-  1. Copy the appropriate job script file from `configs/<machine_name>` to
-     the same directory as `run_mpas_analysis` (or another directory if
-     preferred). The default script, `configs/job_script.default.bash`, is
+If you are running from a git repo:
+
+  1. If you are running from a git repo, copy the appropriate job script file
+     from `configs/<machine_name>` to the root directory (or another directory
+     if preferred). The default cript, `configs/job_script.default.bash`, is
      appropriate for a laptop or desktop computer with multiple cores.
-  2. Modify the number of nodes (equal to the number of parallel tasks), the
-     run name and optionally the output directory and the path to the config
-     file for the run (default: `./configs/<machine_name>/config.<run_name>`)
-     Note: in `job_script.default.bash`, the number of parallel tasks is set
-     manually, since there are no nodes.
+  2. If using the `mpas_analysis` conda package, download the job script and/or
+     sample config file from the
+     [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
+  2. Modify the number of parallel tasks, the run name, the output directory
+     and the path to the config file for the run.
   3. Note: the number of parallel tasks can be anything between 1 and the
      number of analysis tasks to be performed.  If there are more tasks than
      parallel tasks, later tasks will simply wait until earlier tasks have
      finished.
   4. Submit the job using the modified job script
+
+
 
 If a job script for your machine is not available, try modifying the default
 job script in `configs/job_script.default.bash` or one of the job scripts for
@@ -203,17 +238,20 @@ within the `mpas_analysis/shared` directory.
 3. modify `mpas_analysis/config.default` (and possibly any machine-specific
    config files in `configs/<machine>`)
 4. import new analysis task in `mpas_analysis/<component>/__init__.py`
-5. add new analysis task to `run_mpas_analysis` under `build_analysis_list`:
-   ```python
-      analyses.append(<component>.MyTask(config, myArg='argValue'))
-   ```
-   This will add a new object of the `MyTask` class to a list of analysis tasks
-   created in `build_analysis_list`.  Later on in `run_analysis`, it will first
-   go through the list to make sure each task needs to be generated
-   (by calling `check_generate`, which is defined in `AnalysisTask`), then,
-   will call `setup_and_check` on each task (to make sure the appropriate AM is
-   on and files are present), and will finally call `run` on each task that is
-   to be generated and is set up properly.
+5. add new analysis task to `mpas_analysis/__main__.py` under
+   `build_analysis_list`, see below.
+
+A new analysis task can be added with:
+```python
+   analyses.append(<component>.MyTask(config, myArg='argValue'))
+```
+This will add a new object of the `MyTask` class to a list of analysis tasks
+created in `build_analysis_list`.  Later on in `run_analysis`, it will first
+go through the list to make sure each task needs to be generated
+(by calling `check_generate`, which is defined in `AnalysisTask`), then,
+will call `setup_and_check` on each task (to make sure the appropriate AM is
+on and files are present), and will finally call `run` on each task that is
+to be generated and is set up properly.
 
 ## Generating Documentation
 

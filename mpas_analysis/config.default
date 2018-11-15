@@ -7,7 +7,7 @@
 ##     into your new config file. Make sure they have the right section name
 ##     (e.g. [run] or [output]). If nothing else, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
-##  3. run: ./run_mpas_analysis config.myrun.  This will read the configuraiton
+##  3. run: mpas_analysis config.myrun.  This will read the configuraiton
 ##     first from this file and then replace that configuraiton with any
 ##     changes from from config.myrun
 ##  4. If you want to run a subset of the analysis, you can either set the
@@ -118,7 +118,7 @@ timeSeriesSubdirectory = timeseries
 htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names can be seen by running:
-#   ./run_mpas_analysis --list
+#   mpas_analysis --list
 # This command also lists tags for each analysis.
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
@@ -136,11 +136,11 @@ htmlSubdirectory = html
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
 #                                   the given tag.  Do
-#                                      ./run_mpas_analysis --list
+#                                      mpas_analysis --list
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_mpas_analysis config.analysis --generate \
+#    mpas_analysis config.analysis --generate \
 #         only_ocean,no_timeSeries,timeSeriesSST
 generate = ['all_publicObs', 'no_icebergs']
 

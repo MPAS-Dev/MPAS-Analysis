@@ -15,7 +15,7 @@ import warnings
 
 isrelease = True
 
-version = '1.0'
+version = '1.1'
 
 if not isrelease:
     import subprocess
@@ -44,16 +44,25 @@ setup(name='mpas_analysis',
           'Programming Language :: Python',
           'Programming Language :: Python :: 2',
           'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
           'Topic :: Scientific/Engineering',
       ],
       packages=find_packages(),
       package_data={'mpas_analysis': ['config.default'],
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
-                    'mpas_analysis.shared.plot': ['ColourMapSuite3/*/*.xml'],
-                    'mpas_analysis.obs': ['analysis_input_files', 'observational_datasets.xml']},
+                    'mpas_analysis.shared.plot':
+                        ['ColourMapSuite3/*/*.xml',
+                         'SciVisColorColormaps/*.xml'],
+                    'mpas_analysis.obs': ['analysis_input_files',
+                                          'observational_datasets.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
-                        'dask', 'bottleneck', 'basemap', 'lxml', 'nco',
+                        'dask', 'bottleneck', 'basemap', 'lxml',
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',
                         'requests'],
-      scripts=['run_mpas_analysis', 'download_analysis_data.py'])
+      entry_points={'console_scripts':
+                    ['mpas_analysis = mpas_analysis.__main__:main',
+                     'download_analysis_data = '
+                     'mpas_analysis.__main__:download_analysis_data']})

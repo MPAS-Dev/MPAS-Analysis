@@ -25,7 +25,7 @@ all `Scientific Colour Map Suite 3.0`_ colormaps, the selection of key
 
 To plot all availabe colormpas (as above), run::
 
-    run_mpas_analysis --plot_colormaps
+    mpas_analysis --plot_colormaps
 
 Indexed Colormaps
 ------------------

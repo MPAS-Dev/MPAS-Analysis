@@ -26,7 +26,7 @@ def build_quick_start():
                 if replaceString in line:
                     line = replace[replaceString]
                     break
-            outContent = outContent + line + '\n'
+            outContent = outContent + line
 
     outContent = convert(outContent)
 

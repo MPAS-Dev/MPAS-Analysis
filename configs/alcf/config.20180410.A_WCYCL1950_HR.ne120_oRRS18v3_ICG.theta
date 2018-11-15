@@ -16,12 +16,12 @@ mainRunName = 20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta
 ## options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
-parallelTaskCount = 4
+parallelTaskCount = 1
 
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
-ncclimoParallelMode = bck
+ncclimoParallelMode = serial
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -52,7 +52,7 @@ seaIceStreamsFileName = streams.cice
 baseDirectory = /dir/to/analysis/output
 
 # a list of analyses to generate.  Valid names can be seen by running:
-#   ./run_mpas_analysis --list
+#   mpas_analysis --list
 # This command also lists tags for each analysis.
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
@@ -68,13 +68,13 @@ baseDirectory = /dir/to/analysis/output
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
 #                                   the given tag.  Do
-#                                      ./run_mpas_analysis --list
+#                                      mpas_analysis --list
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_mpas_analysis config.analysis --generate \
+#    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_landIceCavities']
+generate = ['all', 'no_landIceCavities', 'no_climatologyMapBGC', 'no_climatologyMapIcebergConcSH']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

@@ -28,7 +28,7 @@ specify the location of the "main" simulation::
   htmlSubdirectory = html
 
   # a list of analyses to generate.  Valid names can be seen by running:
-  #   ./run_mpas_analysis --list
+  #   mpas_analysis --list
   # This command also lists tags for each analysis.
   # Shortcuts exist to generate (or not generate) several types of analysis.
   # These include:
@@ -46,11 +46,11 @@ specify the location of the "main" simulation::
   #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
   #                                   tasks from the given compoonent or with
   #                                   the given tag.  Do
-  #                                      ./run_mpas_analysis --list
+  #                                      mpas_analysis --list
   #                                   to list all task names and their tags
   # an equivalent syntax can be used on the command line to override this
   # option:
-  #    ./run_mpas_analysis config.analysis --generate \
+  #    mpas_analysis config.analysis --generate \
   #         only_ocean,no_timeSeries,timeSeriesSST
   generate = ['all_publicObs']
 
@@ -100,7 +100,7 @@ in which case only the listed tasks are run.
 A third way to determine which tasks to generate is to make use of "tags" for
 each task.  To see what tags each task has, run::
 
-  ./run_mpas_analysis --list
+  mpas_analysis --list
 
 This will show all available tasks together with the component they belong to
 and the tags for each.  To run only those analysis tasks with a particular tag,
@@ -144,7 +144,7 @@ either climatologies or time series, you could use::
 Finally, we note that the ``generate`` option in the configuration file can
 be overridden by specifying the ``--generate`` option on the command line::
 
-  ./run_mpas_analysis --generate=all_publicObs,no_index,no_climatologyMapSST \
+  mpas_analysis --generate=all_publicObs,no_index,no_climatologyMapSST \
       config.my_run
 
 This example would override whatever ``generate`` option was specified in
