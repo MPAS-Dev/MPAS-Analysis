@@ -21,8 +21,7 @@
 
 cd $PBS_O_WORKDIR
 
-source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
-conda activate e3sm_unified_1.2.0_py2.7_nox
+source /lcrc/soft/climate/e3sm-unified/load_latest_e3sm_unified.sh
 export HDF5_USE_FILE_LOCKING=FALSE
 # needed to prevent interference with acme-unified
 unset LD_LIBRARY_PATH

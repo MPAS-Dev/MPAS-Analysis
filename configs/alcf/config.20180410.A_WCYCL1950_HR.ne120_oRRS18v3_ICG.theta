@@ -16,12 +16,12 @@ mainRunName = 20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta
 ## options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
-parallelTaskCount = 4
+parallelTaskCount = 1
 
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
-ncclimoParallelMode = bck
+ncclimoParallelMode = serial
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -74,7 +74,7 @@ baseDirectory = /dir/to/analysis/output
 # option:
 #    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_landIceCavities']
+generate = ['all', 'no_landIceCavities', 'no_climatologyMapBGC', 'no_climatologyMapIcebergConcSH']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

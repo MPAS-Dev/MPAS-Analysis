@@ -30,9 +30,7 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-module unload python python/base e3sm-unified
-module use /global/project/projectdirs/acme/software/modulefiles/all
-module load e3sm-unified/1.2.0
+source /global/project/projectdirs/acme/software/anaconda_envs/load_latest_e3sm_unified.sh
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
