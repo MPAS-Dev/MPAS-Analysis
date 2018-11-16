@@ -21,6 +21,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.grid import LatLonGridDescriptor
+from mpas_analysis.shared.interpolation.utility import add_periodic_lon
 
 
 class ClimatologyMapBGC(AnalysisTask):  # {{{
@@ -337,11 +338,12 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Riley X. Brady
+        # Riley X. Brady, Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
+        dsObs = self.build_observational_dataset(fileName)
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
                                                   latVarName='lat',
                                                   lonVarName='lon')
         return obsDescriptor  # }}}
@@ -363,9 +365,11 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Riley X. Brady
+        # Riley X. Brady, Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
+        degrees = 'degree' in dsObs.lon.units
+        dsObs = add_periodic_lon(ds=dsObs, lonDim='lon', degrees=degrees)
         return dsObs  # }}}
 
     # }}}
