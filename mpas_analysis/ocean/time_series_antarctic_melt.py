@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import xarray
 import numpy
+import csv
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -28,7 +29,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-import csv
+from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
+    get_feature_list
 
 
 class TimeSeriesAntarcticMelt(AnalysisTask):
@@ -44,6 +46,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
     refConfig : ``MpasAnalysisConfigParser``
         The configuration options for the reference run (if any)
+
+    masksSubtask : ``ComputeRegionMasksSubtask``
+        A task for creating mask files for each ice shelf to plot
+
     """
     # Authors
     # -------
@@ -81,6 +87,25 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         self.run_after(mpasTimeSeriesTask)
         self.refConfig = refConfig
 
+        regionMaskDirectory = build_config_full_path(config,
+                                                     'regions',
+                                                     'regionMaskDirectory')
+        iceShelfMasksFile = '{}/iceShelves.geojson'.format(regionMaskDirectory)
+
+        iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
+                                                'iceShelvesToPlot')
+        if 'all' in iceShelvesToPlot:
+            iceShelvesToPlot = get_feature_list(config, iceShelfMasksFile)
+
+        self.iceShelvesToPlot = iceShelvesToPlot
+
+        self.masksSubtask = ComputeRegionMasksSubtask(
+                self, iceShelfMasksFile,
+                outFileSuffix='iceShelfMasks',
+                featureList=iceShelvesToPlot)
+
+        self.add_subtask(self.masksSubtask)
+
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -116,17 +141,6 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
                              'melt rates are available \n'
                              '    for plotting.')
 
-        mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
-
-        self.regionMaskFileName = '{}/{}_iceShelfMasks.nc'.format(
-                regionMaskDirectory, mpasMeshName)
-
-        if not os.path.exists(self.regionMaskFileName):
-            raise IOError('Regional masking file {} for Antarctica melt-rate '
-                          'calculation does not exist'.format(
-                                  self.regionMaskFileName))
-
         # Load mesh related variables
         try:
             self.restartFileName = self.runStreams.readpath('restart')[0]
@@ -145,34 +159,10 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             ['timeMonthly_avg_landIceFreshwaterFlux']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
-        iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
-                                                'iceShelvesToPlot')
-
-        with xarray.open_dataset(self.regionMaskFileName) as dsRegionMask:
-            regionNames = [bytes.decode(name) for name in
-                           dsRegionMask.regionNames.values]
-            nRegions = dsRegionMask.dims['nRegions']
-
-        if 'all' in iceShelvesToPlot:
-            iceShelvesToPlot = regionNames
-            regionIndices = [iRegion for iRegion in range(nRegions)]
-
-        else:
-            regionIndices = []
-            for regionName in iceShelvesToPlot:
-                if regionName not in regionNames:
-                    raise ValueError('Unknown ice shelf name {}'.format(
-                            regionName))
-
-                iRegion = regionNames.index(regionName)
-                regionIndices.append(iRegion)
-
-        self.regionIndices = regionIndices
-        self.iceShelvesToPlot = iceShelvesToPlot
         self.xmlFileNames = []
 
         for prefix in ['melt_flux', 'melt_rate']:
-            for regionName in iceShelvesToPlot:
+            for regionName in self.iceShelvesToPlot:
                 regionName = regionName.replace(' ', '_')
                 self.xmlFileNames.append(
                     '{}/{}_{}.xml'.format(self.plotsDirectory, prefix,
@@ -433,16 +423,22 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         dsRestart = xarray.open_dataset(restartFileName)
         areaCell = dsRestart.landIceFraction.isel(Time=0)*dsRestart.areaCell
 
-        mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
-
-        regionMaskFileName = '{}/{}_iceShelfMasks.nc'.format(
-                regionMaskDirectory, mpasMeshName)
+        regionMaskFileName = self.masksSubtask.maskFileName
 
         dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
+        # figure out the indices of the regions to plot
+        regionNames = [bytes.decode(name) for name in
+                       dsRegionMask.regionNames.values]
+        regionIndices = []
+        for iceShelf in self.iceShelvesToPlot:
+            for index, regionName in enumerate(regionNames):
+                if iceShelf == regionName:
+                    regionIndices.append(index)
+                    break
+
         # select only those regions we want to plot
-        dsRegionMask = dsRegionMask.isel(nRegions=self.regionIndices)
+        dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
         cellMasks = dsRegionMask.regionCellMasks
 
         # convert from kg/s to kg/yr
@@ -456,11 +452,6 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         # convert from kg/yr to GT/yr
         totalMeltFlux /= constants.kg_per_GT
-
-        baseDirectory = build_config_full_path(
-            config, 'output', 'timeSeriesSubdirectory')
-
-        outFileName = '{}/iceShelfAggregatedFluxes.nc'.format(baseDirectory)
 
         dsOut = xarray.Dataset()
         dsOut['totalMeltFlux'] = totalMeltFlux

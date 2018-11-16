@@ -41,12 +41,13 @@ environment with the following packages:
  * progressbar2
  * requests
  * setuptools
+ * shapely
 
 These can be installed via the conda command:
 ``` bash
 conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
     bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests \
-    setuptools
+    setuptools shapely
 ```
 
 Then, get the code from:

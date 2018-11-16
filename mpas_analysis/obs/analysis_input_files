@@ -25,6 +25,7 @@ mpas_analysis/maps/map_obs_PO4_1.0x1.0degree_to_6000.0x6000.0km_10.0km_Antarctic
 mpas_analysis/maps/map_obs_SiO3_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_SiO3_1.0x1.0degree_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc
 mpas_analysis/region_masks/oEC60to30v3_SingleRegionAtlanticWTransportTransects_masks.nc
+mpas_analysis/region_masks/iceShelves.geojson
 observations/Icebergs/obs.bib
 observations/Icebergs/Altiberg/Altiberg_1991-2017.nc
 observations/Icebergs/README.md

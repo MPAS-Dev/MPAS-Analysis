@@ -534,7 +534,7 @@ def purge_output(config):
               'No purge necessary.'.format(outputDirectory))
     else:
         for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
-                             'timeSeries', 'html']:
+                             'timeSeries', 'html', 'mask']:
             option = '{}Subdirectory'.format(subdirectory)
             directory = build_config_full_path(
                     config=config, section='output',

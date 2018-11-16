@@ -282,6 +282,17 @@ Plotting
    plotting.plot_xtick_format
 
 
+Regions
+-------
+.. currentmodule:: mpas_analysis.shared.regions
+
+.. autosummary::
+   :toctree: generated/
+
+   compute_region_masks_subtask.ComputeRegionMasksSubtask
+   compute_region_masks_subtask.get_feature_list
+
+
 Timekeeping
 -----------
 .. currentmodule:: mpas_analysis.shared.timekeeping
