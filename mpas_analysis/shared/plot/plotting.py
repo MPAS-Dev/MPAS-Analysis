@@ -1174,136 +1174,133 @@ def plot_vertical_section_comparison(
 
     if not compareAsContours or refArray is None:
         title = modelTitle
-        contourComparisonFieldArray=None
+        contourComparisonFieldArray = None
         comparisonFieldName = None
         originalFieldName = None
     else:
         title = None
-        contourComparisonFieldArray=refArray
+        contourComparisonFieldArray = refArray
         comparisonFieldName = refTitle
         originalFieldName = modelTitle
 
-    plot_vertical_section(config,
-                          xArray,
-                          depthArray,
-                          modelArray,
-                          colorMapSectionName,
-                          suffix='Result',
-                          colorbarLabel=cbarLabel,
-                          title=title,
-                          xlabel=xlabel,
-                          ylabel=ylabel,
-                          fileout=None,
-                          titleFontSize=plotTitleFontSize,
-                          titleY=titleY,
-                          axisFontSize=axisFontSize,
-                          xLim=xLim,
-                          yLim=yLim,
-                          lineWidth=lineWidth,
-                          lineStyle=lineStyle,
-                          lineColor=lineColor,
-                          secondXAxisData=secondXAxisData,
-                          secondXAxisLabel=secondXAxisLabel,
-                          thirdXAxisData=thirdXAxisData,
-                          thirdXAxisLabel=thirdXAxisLabel,
-                          numUpperTicks=numUpperTicks,
-                          upperXAxisTickLabelPrecision=
-                              upperXAxisTickLabelPrecision,
-                          invertYAxis=invertYAxis,
-                          xArrayIsTime=xArrayIsTime,
-                          N=None,
-                          firstYearXTicks=firstYearXTicks,
-                          yearStrideXTicks=yearStrideXTicks,
-                          maxXTicks=maxXTicks, calendar=calendar,
-                          backgroundColor=backgroundColor,
-                          plotAsContours=compareAsContours,
-                          contourComparisonFieldArray=
-                              contourComparisonFieldArray,
-                          comparisonFieldName=comparisonFieldName,
-                          originalFieldName=originalFieldName,
-                          comparisonContourLineStyle=
-                              comparisonContourLineStyle,
-                          comparisonContourLineColor=
-                              comparisonContourLineColor,
-                          labelContours=labelContours,
-                          contourLabelPrecision=contourLabelPrecision)
+    plot_vertical_section(
+            config,
+            xArray,
+            depthArray,
+            modelArray,
+            colorMapSectionName,
+            suffix='Result',
+            colorbarLabel=cbarLabel,
+            title=title,
+            xlabel=xlabel,
+            ylabel=ylabel,
+            fileout=None,
+            titleFontSize=plotTitleFontSize,
+            titleY=titleY,
+            axisFontSize=axisFontSize,
+            xLim=xLim,
+            yLim=yLim,
+            lineWidth=lineWidth,
+            lineStyle=lineStyle,
+            lineColor=lineColor,
+            secondXAxisData=secondXAxisData,
+            secondXAxisLabel=secondXAxisLabel,
+            thirdXAxisData=thirdXAxisData,
+            thirdXAxisLabel=thirdXAxisLabel,
+            numUpperTicks=numUpperTicks,
+            upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+            invertYAxis=invertYAxis,
+            xArrayIsTime=xArrayIsTime,
+            N=None,
+            firstYearXTicks=firstYearXTicks,
+            yearStrideXTicks=yearStrideXTicks,
+            maxXTicks=maxXTicks, calendar=calendar,
+            backgroundColor=backgroundColor,
+            plotAsContours=compareAsContours,
+            contourComparisonFieldArray=contourComparisonFieldArray,
+            comparisonFieldName=comparisonFieldName,
+            originalFieldName=originalFieldName,
+            comparisonContourLineStyle=comparisonContourLineStyle,
+            comparisonContourLineColor=comparisonContourLineColor,
+            labelContours=labelContours,
+            contourLabelPrecision=contourLabelPrecision)
 
     if not singlePanel:
         plt.subplot(3, 1, 2)
-        plot_vertical_section(config,
-                              xArray,
-                              depthArray,
-                              refArray,
-                              colorMapSectionName,
-                              suffix='Result',
-                              colorbarLabel=cbarLabel,
-                              title=refTitle,
-                              xlabel=xlabel,
-                              ylabel=ylabel,
-                              fileout=None,
-                              titleFontSize=plotTitleFontSize,
-                              titleY=titleY,
-                              axisFontSize=axisFontSize,
-                              xLim=xLim,
-                              yLim=yLim,
-                              lineWidth=lineWidth,
-                              lineStyle=lineStyle,
-                              lineColor=lineColor,
-                              secondXAxisData=secondXAxisData,
-                              secondXAxisLabel=secondXAxisLabel,
-                              thirdXAxisData=thirdXAxisData,
-                              thirdXAxisLabel=thirdXAxisLabel,
-                              upperXAxisTickLabelPrecision=
-                                  upperXAxisTickLabelPrecision,
-                              numUpperTicks=numUpperTicks,
-                              invertYAxis=invertYAxis,
-                              xArrayIsTime=xArrayIsTime,
-                              N=None,
-                              firstYearXTicks=firstYearXTicks,
-                              yearStrideXTicks=yearStrideXTicks,
-                              maxXTicks=maxXTicks,
-                              calendar=calendar,
-                              backgroundColor=backgroundColor,
-                              labelContours=labelContours,
-                              contourLabelPrecision=contourLabelPrecision)
+        plot_vertical_section(
+                config,
+                xArray,
+                depthArray,
+                refArray,
+                colorMapSectionName,
+                suffix='Result',
+                colorbarLabel=cbarLabel,
+                title=refTitle,
+                xlabel=xlabel,
+                ylabel=ylabel,
+                fileout=None,
+                titleFontSize=plotTitleFontSize,
+                titleY=titleY,
+                axisFontSize=axisFontSize,
+                xLim=xLim,
+                yLim=yLim,
+                lineWidth=lineWidth,
+                lineStyle=lineStyle,
+                lineColor=lineColor,
+                secondXAxisData=secondXAxisData,
+                secondXAxisLabel=secondXAxisLabel,
+                thirdXAxisData=thirdXAxisData,
+                thirdXAxisLabel=thirdXAxisLabel,
+                upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+                numUpperTicks=numUpperTicks,
+                invertYAxis=invertYAxis,
+                xArrayIsTime=xArrayIsTime,
+                N=None,
+                firstYearXTicks=firstYearXTicks,
+                yearStrideXTicks=yearStrideXTicks,
+                maxXTicks=maxXTicks,
+                calendar=calendar,
+                backgroundColor=backgroundColor,
+                labelContours=labelContours,
+                contourLabelPrecision=contourLabelPrecision)
 
         plt.subplot(3, 1, 3)
-        plot_vertical_section(config,
-                              xArray,
-                              depthArray,
-                              diffArray,
-                              colorMapSectionName,
-                              suffix='Difference',
-                              colorbarLabel=cbarLabel,
-                              title=diffTitle,
-                              xlabel=xlabel,
-                              ylabel=ylabel,
-                              fileout=None,
-                              titleFontSize=plotTitleFontSize,
-                              titleY=titleY,
-                              axisFontSize=axisFontSize,
-                              xLim=xLim,
-                              yLim=yLim,
-                              lineWidth=lineWidth,
-                              lineStyle=lineStyle,
-                              lineColor=lineColor,
-                              secondXAxisData=secondXAxisData,
-                              secondXAxisLabel=secondXAxisLabel,
-                              thirdXAxisData=thirdXAxisData,
-                              thirdXAxisLabel=thirdXAxisLabel,
-                              upperXAxisTickLabelPrecision=
-                                  upperXAxisTickLabelPrecision,
-                              numUpperTicks=numUpperTicks,
-                              invertYAxis=invertYAxis,
-                              xArrayIsTime=xArrayIsTime,
-                              N=None,
-                              firstYearXTicks=firstYearXTicks,
-                              yearStrideXTicks=yearStrideXTicks,
-                              maxXTicks=maxXTicks,
-                              calendar=calendar,
-                              backgroundColor=backgroundColor,
-                              labelContours=labelContours,
-                              contourLabelPrecision=contourLabelPrecision)
+        plot_vertical_section(
+                config,
+                xArray,
+                depthArray,
+                diffArray,
+                colorMapSectionName,
+                suffix='Difference',
+                colorbarLabel=cbarLabel,
+                title=diffTitle,
+                xlabel=xlabel,
+                ylabel=ylabel,
+                fileout=None,
+                titleFontSize=plotTitleFontSize,
+                titleY=titleY,
+                axisFontSize=axisFontSize,
+                xLim=xLim,
+                yLim=yLim,
+                lineWidth=lineWidth,
+                lineStyle=lineStyle,
+                lineColor=lineColor,
+                secondXAxisData=secondXAxisData,
+                secondXAxisLabel=secondXAxisLabel,
+                thirdXAxisData=thirdXAxisData,
+                thirdXAxisLabel=thirdXAxisLabel,
+                upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+                numUpperTicks=numUpperTicks,
+                invertYAxis=invertYAxis,
+                xArrayIsTime=xArrayIsTime,
+                N=None,
+                firstYearXTicks=firstYearXTicks,
+                yearStrideXTicks=yearStrideXTicks,
+                maxXTicks=maxXTicks,
+                calendar=calendar,
+                backgroundColor=backgroundColor,
+                labelContours=labelContours,
+                contourLabelPrecision=contourLabelPrecision)
 
     if singlePanel:
         if thirdXAxisData is not None and refArray is None:
@@ -1580,7 +1577,8 @@ def plot_vertical_section(
     lineStyle : str, optional
         the line style of contour lines (if specified); this applies to the
         style of contour lines of fieldArray (the style of the contour lines
-        of contourComparisonFieldArray is set using contourComparisonLineStyle).
+        of contourComparisonFieldArray is set using
+        contourComparisonLineStyle).
 
     lineColor : str, optional
         the color of contour lines (if specified); this applies to the
@@ -1748,7 +1746,7 @@ def plot_vertical_section(
                 num_x != num_x_Z:
             raise ValueError('size mismatch between xArray (%d), '
                              'depthArray (%d x %d), and fieldArray (%d x %d)' %
-                             (num_x, num_z_Z, num_x_Z,
+                             (num_x, num_z, num_x_Z,
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
     elif len(dimZ) == 1:
@@ -1759,7 +1757,7 @@ def plot_vertical_section(
                 num_z != num_z_X:
             raise ValueError('size mismatch between xArray (%d x %d), '
                              'depthArray (%d), and fieldArray (%d x %d)' %
-                             (num_z_X, num_x_X, num_z,
+                             (num_z_X, num_x, num_z,
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
     else:
@@ -1771,7 +1769,7 @@ def plot_vertical_section(
                 or num_x != num_x_Z or num_z != num_z_X:
             raise ValueError('size mismatch between xArray (%d x %d), '
                              'depthArray (%d x %d), and fieldArray (%d x %d)' %
-                             (num_z_X, num_x_X, num_z_Z, num_x_Z,
+                             (num_z_X, num_x, num_z, num_x_Z,
                               fieldArray.shape[0],
                               fieldArray.shape[1]))
 
@@ -1789,7 +1787,7 @@ def plot_vertical_section(
         elif len(arrayShape) == 2 and arrayShape[1] != num_x:
             raise ValueError('secondXAxisData has %d x values, '
                              'but should have num_x = %d x values' %
-                              (arrayShape[1], num_x))
+                             (arrayShape[1], num_x))
         elif len(arrayShape) > 2:
             raise ValueError('secondXAxisData must be a 1D or 2D array, '
                              'but is of dimension %d' %
@@ -1803,12 +1801,11 @@ def plot_vertical_section(
         elif len(arrayShape) == 2 and arrayShape[1] != num_x:
             raise ValueError('thirdXAxisData has %d x values, '
                              'but should have num_x = %d x values' %
-                              (arrayShape[1], num_x))
+                             (arrayShape[1], num_x))
         elif len(arrayShape) > 2:
             raise ValueError('thirdXAxisData must be a 1D or 2D array, '
                              'but is of dimension %d' %
                              (len(arrayShape)))
-
 
     # define x and y as the appropriate 2D arrays for plotting
     if len(dimX) == 1 and len(dimZ) == 1:
@@ -1846,7 +1843,6 @@ def plot_vertical_section(
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
-
     if not plotAsContours:    # display a heatmap of fieldArray
 
         if colormapDict['levels'] is None:
@@ -1880,7 +1876,6 @@ def plot_vertical_section(
         zeroArray = np.ma.where(fieldArray != np.nan, 0.0, fieldArray)
         plotHandle = plt.contourf(x, y, zeroArray, colors='white')
 
-
     # set the color for NaN or masked regions, and draw a black
     # outline around them; technically, the contour level used should
     # be 1.0, but the contours don't show up when using 1.0, so 0.999
@@ -1891,7 +1886,6 @@ def plot_vertical_section(
     landArray = np.ma.masked_where(landArray == np.nan, landArray, copy=True)
     landArray = landArray.filled(0.0)
     plt.contour(x, y, landArray, levels=[0.999], colors='black', linewidths=1)
-
 
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
@@ -1917,12 +1911,12 @@ def plot_vertical_section(
                 plt.clabel(cs2, fmt=fmt_string)
 
     if plotAsContours and contourComparisonFieldArray is not None:
-        h1,_ = cs1.legend_elements()
-        h2,_ = cs2.legend_elements()
+        h1, _ = cs1.legend_elements()
+        h2, _ = cs2.legend_elements()
         if labelContours:
             originalFieldName = originalFieldName + " (" + colorbarLabel + ")"
             comparisonFieldName = comparisonFieldName + " (" + \
-                                  colorbarLabel + ")"
+                colorbarLabel + ")"
         ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
                   loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
 
@@ -1968,7 +1962,6 @@ def plot_vertical_section(
         plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
                           yearStride=yearStrideXTicks)
 
-
     # add a second x-axis scale, if it was requested
     if secondXAxisData is not None:
         ax2 = ax.twiny()
@@ -1995,8 +1988,7 @@ def plot_vertical_section(
         ax3.set_xticks(x.flatten()[:num_x:stride])
         ax3.set_xticklabels([formatString.format(member)
                              for member in thirdXAxisData[::stride]])
-        ax3.spines['top'].set_position(('outward',36))
-
+        ax3.spines['top'].set_position(('outward', 36))
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
