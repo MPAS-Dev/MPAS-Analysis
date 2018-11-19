@@ -483,7 +483,7 @@ class PlotMeltSubtask(AnalysisTask):
         obsMeltRate = []
         obsMeltRateUnc = []
         for obsName in obsDict:
-            if self.iceShelf in obsDict[obsName]:
+            if len(obsDict[obsName]) > 0:
                 obsMeltFlux.append(
                     obsDict[obsName]['meltFlux'])
                 obsMeltFluxUnc.append(
