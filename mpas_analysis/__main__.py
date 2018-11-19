@@ -591,6 +591,10 @@ def main():
                         help="Make a plot displaying all available colormaps")
     args = parser.parse_args()
 
+    if len(sys.argv) == 1: 
+        parser.print_help()
+        sys.exit(0)
+
     for configFile in args.configFiles:
         if not os.path.exists(configFile):
             raise OSError('Config file {} not found.'.format(configFile))
