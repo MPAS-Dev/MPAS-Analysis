@@ -822,8 +822,9 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                          'member...')
         self.logger.info('   Load data...')
 
-        outputDirectory = build_config_full_path(self.config, 'output',
-                                                 'timeseriesSubdirectory')
+        outputDirectory = '{}/moc/'.format(
+                build_config_full_path(self.config, 'output',
+                                       'timeseriesSubdirectory'))
         try:
             os.makedirs(outputDirectory)
         except OSError:
