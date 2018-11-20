@@ -6,6 +6,7 @@ Main Authors
 
 Contributors
 ============
+* Sterling Baldwin
 * Riley X. Brady
 * Darin Comeau
 * Charles Doutriaux
@@ -14,6 +15,7 @@ Contributors
 * Joseph Kennedy
 * Mark Petersen
 * Stephen Price
+* Kevin Rosa
 * Greg Streletz
 * Adrian Turner
 * Luke Van Roekel
