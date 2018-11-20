@@ -45,7 +45,7 @@ baseDirectory = /dir/to/analysis/output
 htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names can be seen by running:
-#   ./run_mpas_analysis --list
+#   mpas_analysis --list
 # This command also lists tags for each analysis.
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
@@ -61,15 +61,15 @@ htmlSubdirectory = html
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
 #                                   the given tag.  Do
-#                                      ./run_mpas_analysis --list
+#                                      mpas_analysis --list
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    ./run_mpas_analysis config.analysis --generate \
+#    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_landIceCavities']
+generate = ['all', 'no_landIceCavities', 'no_eke', 'no_BGC', 'no_icebergs']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

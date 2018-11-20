@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+# This software is open source software available under the BSD-3 license.
+#
+# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
+# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+#
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 """
 Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
@@ -6,13 +16,13 @@ specifying analysis options.
 """
 # Authors
 # -------
-# Xylar Asay-Davis, Phillip J. Wolfram
+# Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani
 
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import matplotlib as mpl
-mpl.use('Agg')
+import mpas_analysis
+
 import argparse
 import traceback
 import sys
@@ -33,6 +43,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.html import generate_html
 
 from mpas_analysis.shared import AnalysisTask
+from mpas_analysis.shared.analysis_task import \
+    update_time_bounds_from_file_names
 
 from mpas_analysis.shared.plot.plotting import _register_custom_colormaps, \
     _plot_color_gradients
@@ -42,6 +54,28 @@ from mpas_analysis import sea_ice
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RefYearMpasClimatologyTask
 from mpas_analysis.shared.time_series import MpasTimeSeriesTask
+
+from mpas_analysis.shared.io.download import download_files
+
+
+def update_time_bounds_in_config(config):  # {{{
+    """
+    Updates the start and end year (and associated full date) for
+    climatologies, time series and climate indices based on the files that are
+    actually available.
+
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    """
+    # By updating the bounds for each component, we should end up with the
+    # more constrained time bounds if any component has less output than others
+    for componentName in ['ocean', 'seaIce']:
+        for section in ['climatology', 'timeSeries', 'index']:
+            update_time_bounds_from_file_names(config, section, componentName)
+    # }}}
 
 
 def build_analysis_list(config, refConfig):  # {{{
@@ -92,12 +126,16 @@ def build_analysis_list(config, refConfig):  # {{{
                                             refConfig))
     analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
                                             refConfig))
+    analyses.append(ocean.ClimatologyMapEKE(config, oceanClimatolgyTask,
+                                            refConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
             config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
             refConfig))
 
     analyses.append(ocean.ClimatologyMapSose(
             config, oceanClimatolgyTask, refConfig))
+    analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
+                                            refConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
             config, oceanClimatolgyTask, refConfig))
@@ -162,6 +200,11 @@ def build_analysis_list(config, refConfig):  # {{{
 
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
                                              refConfig))
+
+    # Iceberg Analyses
+    analyses.append(sea_ice.ClimatologyMapIcebergConc(
+            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+            hemisphere='SH', refConfig=refConfig))
 
     return analyses  # }}}
 
@@ -229,7 +272,8 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
         if analysisTask._setupStatus != 'success':
             ValueError("task {} already added but this version was not set up "
                        "successfully. Typically, this indicates two tasks "
-                       "with the same full name".format(analysisTask.fullName))
+                       "with the same full name".format(
+                               analysisTask.fullTaskName))
         return
 
     # for each anlaysis task, check if we want to generate this task
@@ -278,9 +322,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
                               callCheckGenerate=False)
         if subtask._setupStatus != 'success':
             # a subtask failed setup_and_check
-            print("ERROR: a subtask of analysis task {}"
+            print("ERROR: subtask {} of analysis task {}"
                   " failed during check,\n"
-                  "       so this task will not be run".format(taskTitle))
+                  "       so this task will not be run".format(
+                      subtask.subtaskName, taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -346,7 +391,7 @@ def run_analysis(config, analyses):  # {{{
     configFile.close()
 
     parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
-                                      default=1)
+                                              default=1)
 
     isParallel = parallelTaskCount > 1 and len(analyses) > 1
 
@@ -365,7 +410,7 @@ def run_analysis(config, analyses):  # {{{
 
     logFileName = '{}/taskProgress.log'.format(logsDirectory)
 
-    logger = logging.getLogger('run_mpas_analysis')
+    logger = logging.getLogger('mpas_analysis')
     handler = logging.FileHandler(logFileName)
 
     formatter = AnalysisFormatter()
@@ -403,7 +448,7 @@ def run_analysis(config, analyses):  # {{{
 
         progress.update(totalTaskCount-unfinishedCount)
 
-        if unfinishedCount <= 0:
+        if unfinishedCount <= 0 and len(runningTasks.keys()) == 0:
             # we're done
             break
 
@@ -511,7 +556,7 @@ def purge_output(config):
               'No purge necessary.'.format(outputDirectory))
     else:
         for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
-                             'timeSeries', 'html']:
+                             'timeSeries', 'html', 'mask']:
             option = '{}Subdirectory'.format(subdirectory)
             directory = build_config_full_path(
                     config=config, section='output',
@@ -533,10 +578,19 @@ def purge_output(config):
                     shutil.rmtree(directory)
 
 
-if __name__ == "__main__":
+def main():
+
+    """
+    Entry point for the main script ``mpas_analysis``
+    """
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('-v', '--version',
+                        action='version',
+                        version='mpas_analysis {}'.format(
+                                mpas_analysis.__version__),
+                        help="Show version number and exit")
     parser.add_argument("--setup_only", dest="setup_only", action='store_true',
                         help="If only the setup phase, not the run or HTML "
                         "generation phases, should be executed.")
@@ -558,6 +612,10 @@ if __name__ == "__main__":
                         action='store_true',
                         help="Make a plot displaying all available colormaps")
     args = parser.parse_args()
+
+    if len(sys.argv) == 1: 
+        parser.print_help()
+        sys.exit(0)
 
     for configFile in args.configFiles:
         if not os.path.exists(configFile):
@@ -631,6 +689,8 @@ if __name__ == "__main__":
                                            'logsSubdirectory')
     make_directories(logsDirectory)
 
+    update_time_bounds_in_config(config)
+
     analyses = build_analysis_list(config, refConfig)
     analyses = determine_analyses_to_generate(analyses)
 
@@ -639,5 +699,38 @@ if __name__ == "__main__":
 
     if not args.setup_only:
         generate_html(config, analyses, refConfig)
+
+
+def download_analysis_data():
+    """
+    Entry point for downloading the input data set from public repository for
+    MPAS-Analysis to work. The input data set includes: pre-processed
+    observations data, MPAS mapping files and MPAS regional mask files
+    (which are used for the MOC computation), for a subset of MPAS meshes.
+    """
+
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("-o", "--outDir", dest="outDir", required=True,
+                        help="Directory where MPAS-Analysis input data will"
+                             "be downloaded")
+    args = parser.parse_args()
+
+    try:
+        os.makedirs(args.outDir)
+    except OSError:
+        pass
+
+    urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
+    analysisFileList = pkg_resources.resource_string(
+            'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
+
+    # remove any empty strings from the list
+    analysisFileList = list(filter(None, analysisFileList.split('\n')))
+    download_files(analysisFileList, urlBase, args.outDir)
+
+
+if __name__ == "__main__":
+    main()
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -51,7 +51,7 @@ Implementation of the `config.template` file can be found [here](https://github.
 
 
 The following comment describes the planned implementation in the config file.
-```
+``` ini
 # a list of analyses to generate.  Valid names are:
 #   'timeSeriesOHC', 'timeSeriesSST', 'regriddedSST',
 #   'regriddedSSS', 'regriddedMLD', 'timeSeriesSeaIceAreaVol',
@@ -76,7 +76,7 @@ generate = ['all']
 Where there are conflicts between items in the `generate` list, successive items will override earlier items.  For example, `generate = ['all', 'no_timeSeriesOHC']` will generate all analyses except `timeSeriesOHC`.  As another example, `generate = ['all', 'no_ocean', 'all_timeSeries']` would generate all diagnostics except those comparing ocean model results with observations (and previous model results).  (Note that a more efficient and intuitive way to do the same would be `generate = ['all_seaIce', 'all_timeSeries']`.)
 
 An analogous approach has also been added at the command line, for example:
-```
+``` bash
 ./run_analysis.py config.analysis --generate all,no_ocean,all_timeSeries
 ```
 If the `--generate` flag is used on the command line, it will replace the generate option in the config file.

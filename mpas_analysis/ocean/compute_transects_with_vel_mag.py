@@ -11,7 +11,7 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import xarray as xr
+import numpy
 
 from mpas_analysis.ocean.compute_transects_subtask import \
     ComputeTransectsSubtask
@@ -56,7 +56,7 @@ class ComputeTransectsWithVelMag(ComputeTransectsSubtask):  # {{{
                 'timeMonthly_avg_velocityMeridional' in climatology:
             zonalVel = climatology.timeMonthly_avg_velocityZonal
             meridVel = climatology.timeMonthly_avg_velocityMeridional
-            climatology['velMag'] = xr.ufuncs.sqrt(zonalVel**2 + meridVel**2)
+            climatology['velMag'] = numpy.sqrt(zonalVel**2 + meridVel**2)
             climatology.velMag.attrs['units'] = 'm s$^{-1}$'
             climatology.velMag.attrs['description'] = 'velocity magnitude'
 

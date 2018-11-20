@@ -182,7 +182,7 @@ Contributors: Xylar Asay-Davis
 In the same branch as above, I have added a `generalized_reader` module that
 extends the capabilities of `mpas_xarray` to include mapping of variable names.
 The file structure is as follows:
-```
+``` bash
 mpas_analysis/shared/
              -  generalized_reader/
                      __init__.py

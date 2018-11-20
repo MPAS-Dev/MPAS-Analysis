@@ -13,15 +13,12 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
-source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/base/etc/profile.d/conda.sh
-conda activate e3sm_unified_1.2.0_py2.7_nox
+source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/load_latest_e3sm_unified.sh
+export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
-# change this if not submitting this script from the directory
-# containing run_mpas_analysis
-mpas_analysis_dir="."
 # one parallel task per node by default
 parallel_task_count=12
 # ncclimo can run with 1 (serial) or 12 (bck) threads
@@ -31,11 +28,6 @@ if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
     exit 1
 fi
-if [ ! -f $mpas_analysis_dir/run_mpas_analysis ]; then
-    echo "run_mpas_analysis not found in $mpas_analysis_dir!"
-    exit 1
-fi
-
 
 # This is a config file generated just for this job with the output directory,
 # command prefix and parallel task count from above.
@@ -56,5 +48,8 @@ ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-$mpas_analysis_dir/run_mpas_analysis $run_config_file $job_config_file
+# if using the mpas_analysis conda package instead of the git repo, remove
+# "python -m"
+
+python -m mpas_analysis $run_config_file $job_config_file
 

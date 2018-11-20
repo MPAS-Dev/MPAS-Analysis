@@ -1,4 +1,4 @@
-{% set version = "1.0" %}
+{% set version = "1.1" %}
 
 package:
     name: mpas_analysis
@@ -12,7 +12,8 @@ build:
     script: $PYTHON setup.py install --single-version-externally-managed
             --record=record.txt
     noarch: python
-
+    entry_points:
+        - mpas_analysis = mpas_analysis.__main__:main
 test:
     requires:
         - pytest
@@ -30,18 +31,21 @@ requirements:
         - python
         - numpy
         - scipy
-        - matplotlib
+        - matplotlib <3.0.0|>=3.0.2
         - netcdf4
         - xarray >=0.10.0
         - dask
         - bottleneck
-        - basemap
+        - basemap <1.2.0|>1.2.0
         - lxml
         - nco >=4.7.0
         - pillow
         - cmocean
         - progressbar2
         - requests
+        - pyproj
+        - setuptools
+        - shapely
 
 about:
     home:  http://gitub.com/MPAS-Dev/MPAS-Analysis

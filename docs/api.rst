@@ -6,17 +6,22 @@ This page provides an auto-generated summary of the MPAS-Analysis API. For
 more details and examples, refer to the relevant chapters in the main part of
 the documentation.
 
-Top-level script: run_mpas_analysis
+Top-level script: mpas_analysis
 ===================================
+
+.. currentmodule:: mpas_analysis.__main__
+
 .. autosummary::
    :toctree: generated/
 
-   run_mpas_analysis.build_analysis_list
-   run_mpas_analysis.determine_analyses_to_generate
-   run_mpas_analysis.add_task_and_subtasks
-   run_mpas_analysis.update_generate
-   run_mpas_analysis.run_analysis
-   run_mpas_analysis.wait_for_task
+   main
+   build_analysis_list
+   determine_analyses_to_generate
+   add_task_and_subtasks
+   update_generate
+   run_analysis
+   wait_for_task
+   download_analysis_data
 
 
 Analysis tasks
@@ -52,6 +57,7 @@ Ocean tasks
    ClimatologyMapSSS
    ClimatologyMapMLD
    ClimatologyMapSSH
+   ClimatologyMapEKE
    ClimatologyMapOHCAnomaly
    ClimatologyMapAntarcticMelt
    ClimatologyMapSose
@@ -107,6 +113,7 @@ Sea ice tasks
    ClimatologyMapSeaIceConc
    ClimatologyMapSeaIceThick
    TimeSeriesSeaIce
+   ClimatologyMapIcebergConc
 
 .. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
 
@@ -273,6 +280,17 @@ Plotting
    plotting.plot_vertical_section
    plotting.setup_colormap
    plotting.plot_xtick_format
+
+
+Regions
+-------
+.. currentmodule:: mpas_analysis.shared.regions
+
+.. autosummary::
+   :toctree: generated/
+
+   compute_region_masks_subtask.ComputeRegionMasksSubtask
+   compute_region_masks_subtask.get_feature_list
 
 
 Timekeeping

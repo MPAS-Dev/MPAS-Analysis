@@ -620,7 +620,7 @@ class TransectsObservations(object):  # {{{
         outIndex = []
         for index in range(len(xIn)-1):
             n = nSegments[index]
-            outIndex.extend(index + numpy.arange(0, 1, 1./n))
+            outIndex.extend(index + numpy.arange(0, n)/n)
         outIndex.append(len(xIn)-1)
 
         xOut = numpy.interp(outIndex, numpy.arange(len(xIn)), xIn)

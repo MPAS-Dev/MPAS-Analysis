@@ -87,7 +87,8 @@ class TestMPASAnalysisConfigParser(TestCase):
                                     'key2': -12,
                                     'key3': False})
 
-        with self.assertRaisesRegexp(
+        with six.assertRaisesRegex(
+                self,
                 configparser.NoOptionError,
                 "No option 'doesntexist' in section: 'Test'"):
             self.config.getExpression(str('Test'), str('doesntexist'))
@@ -113,7 +114,8 @@ class TestMPASAnalysisConfigParser(TestCase):
             self.assertEqual(self.config.getExpression('TestNumpy', testNumpy,
                                                        usenumpyfunc=True),
                              np.pi)
-        with self.assertRaisesRegexp(
+        with six.assertRaisesRegex(
+                self,
                 AssertionError,
                 "'__' is not allowed in .* for `usenumpyfunc=True`"):
             self.config.getExpression('TestNumpy', 'testBadStr',
@@ -135,6 +137,7 @@ class TestMPASAnalysisConfigParser(TestCase):
         check_get_with_default(name='aList', value=[1, 2, 3], dtype=list)
         check_get_with_default(name='aTuple', value=(1, 2, 3), dtype=tuple)
         check_get_with_default(name='aDict', value={'blah': 1}, dtype=dict)
-        check_get_with_default(name='aStr', value='blah', dtype=six.string_types)
+        check_get_with_default(name='aStr', value='blah',
+                               dtype=six.string_types)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

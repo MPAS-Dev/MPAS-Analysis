@@ -430,8 +430,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         dsObs = xr.open_dataset(fileName)
 
         # Rename coordinates to be consistent with other datasets
-        dsObs.rename({'month': 'calmonth', 'LATITUDE': 'latCoord',
-                      'LONGITUDE': 'lonCoord', 'DEPTH': 'depth'}, inplace=True)
+        dsObs = dsObs.rename({'month': 'calmonth', 'LATITUDE': 'latCoord',
+                              'LONGITUDE': 'lonCoord', 'DEPTH': 'depth'})
         dsObs.coords['LATITUDE'] = dsObs['latCoord']
         dsObs.coords['LONGITUDE'] = dsObs['lonCoord']
         dsObs.coords['DEPTH'] = dsObs['depth']

@@ -66,6 +66,13 @@ def download_files(fileList, urlBase, outDir):
             print('  {} could not be reached!'.format(fileName))
             continue
 
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            print('ERROR while downloading {}:'.format(fileName))
+            print(e)
+            continue
+
         if totalSize is None:
             # no content length header
             if not os.path.exists(outFileName):

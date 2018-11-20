@@ -28,9 +28,9 @@ from mpas_analysis.shared.io import paths
 class TestPaths(TestCase):
     def test_paths(self):
         os.chdir(str(self.datadir))
-        self.assertEquals(paths('[0-9]*', '[a-z]*'),
-                          ['0.txt', '1.txt', '2.txt', 'a.txt', 'b.txt',
-                           'c.txt'])
+        self.assertEqual(paths('[0-9]*', '[a-z]*'),
+                         ['0.txt', '1.txt', '2.txt', 'a.txt', 'b.txt',
+                          'c.txt'])
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

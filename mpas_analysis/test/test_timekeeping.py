@@ -20,6 +20,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import pytest
 import datetime
+import six
 from mpas_analysis.shared.timekeeping.MpasRelativeDelta \
     import MpasRelativeDelta
 from mpas_analysis.test import TestCase
@@ -204,9 +205,9 @@ class TestTimekeeping(TestCase):
 
         # make sure there's an error when we try to add MpasRelativeDeltas
         # with different calendars
-        with self.assertRaisesRegexp(ValueError,
-                                     'MpasRelativeDelta objects can only be '
-                                     'added if their calendars match.'):
+        with six.assertRaisesRegex(self, ValueError,
+                                   'MpasRelativeDelta objects can only be '
+                                   'added if their calendars match.'):
             delta1 = string_to_relative_delta('0000-01-00',
                                               calendar='gregorian')
             delta2 = string_to_relative_delta('0000-00-01',
@@ -223,7 +224,7 @@ class TestTimekeeping(TestCase):
                 days = string_to_days_since_date(dateString=dateString,
                                                  calendar=calendar,
                                                  referenceDate=referenceDate)
-                self.assertEqual(days, expected_days)
+                self.assertApproxEqual(days, expected_days)
 
         referenceDate = '2016-01-01'
         for calendar, expected_days in [('gregorian', 366.),
@@ -231,7 +232,7 @@ class TestTimekeeping(TestCase):
             days = string_to_days_since_date(dateString='2017-01-01',
                                              calendar=calendar,
                                              referenceDate=referenceDate)
-            self.assertEqual(days, expected_days)
+            self.assertApproxEqual(days, expected_days)
 
     def test_days_to_datetime(self):
         referenceDate = '0001-01-01'
@@ -263,7 +264,7 @@ class TestTimekeeping(TestCase):
                 days = datetime_to_days(dates=string_to_datetime(dateString),
                                         calendar=calendar,
                                         referenceDate=referenceDate)
-                self.assertEqual(days, expected_days)
+                self.assertApproxEqual(days, expected_days)
 
         referenceDate = '2016-01-01'
         for calendar, expected_days in [('gregorian', 366.),
@@ -271,23 +272,23 @@ class TestTimekeeping(TestCase):
             days = datetime_to_days(dates=string_to_datetime('2017-01-01'),
                                     calendar=calendar,
                                     referenceDate=referenceDate)
-            self.assertEqual(days, expected_days)
+            self.assertApproxEqual(days, expected_days)
 
     def test_date_to_days(self):
         referenceDate = '0001-01-01'
         for calendar in ['gregorian', 'gregorian_noleap']:
             days = date_to_days(year=1, month=1, day=1, calendar=calendar,
                                 referenceDate=referenceDate)
-            self.assertEqual(days, 0.)
+            self.assertApproxEqual(days, 0.)
             days = date_to_days(year=1, month=1, day=2, calendar=calendar,
                                 referenceDate=referenceDate)
-            self.assertEqual(days, 1.)
+            self.assertApproxEqual(days, 1.)
             days = date_to_days(year=1, month=2, day=1, calendar=calendar,
                                 referenceDate=referenceDate)
-            self.assertEqual(days, 31.)
+            self.assertApproxEqual(days, 31.)
             days = date_to_days(year=2, month=1, day=1, calendar=calendar,
                                 referenceDate=referenceDate)
-            self.assertEqual(days, 365.)
+            self.assertApproxEqual(days, 365.)
 
         referenceDate = '2016-01-01'
         for calendar, expected_days in [('gregorian', 366.),
@@ -295,6 +296,6 @@ class TestTimekeeping(TestCase):
             days = date_to_days(year=2017, month=1, day=1,
                                 calendar=calendar,
                                 referenceDate=referenceDate)
-            self.assertEqual(days, expected_days)
+            self.assertApproxEqual(days, expected_days)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

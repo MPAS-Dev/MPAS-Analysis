@@ -24,18 +24,18 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-module unload python
-source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base/etc/profile.d/conda.sh
-conda activate e3sm_unified_1.2.0_py2.7_nox
+module unload python e3sm-unified
+module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
+module load e3sm-unified/1.2.0
+export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
-# prefix to run a serial job on a single node on edison
-command_prefix=""
-# change this if not submitting this script from the directory
-# containing run_mpas_analysis
-mpas_analysis_dir="."
+# command to run a serial job on a single node on edison
+command="python -m mpas_analysis"
+# to use the verison of mpas_analysis from a conda package instead, use:
+#command="mpas_analysis"
 # one parallel task per node by default
 parallel_task_count=12
 # ncclimo can run with 1 (serial) or 12 (bck) threads
@@ -43,10 +43,6 @@ ncclimo_mode=bck
 
 if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
-    exit 1
-fi
-if [ ! -f $mpas_analysis_dir/run_mpas_analysis ]; then
-    echo "run_mpas_analysis not found in $mpas_analysis_dir!"
     exit 1
 fi
 
@@ -70,6 +66,5 @@ ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-$command_prefix $mpas_analysis_dir/run_mpas_analysis $run_config_file \
-    $job_config_file
+$command $run_config_file $job_config_file
 

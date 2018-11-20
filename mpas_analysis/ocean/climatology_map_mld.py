@@ -239,10 +239,9 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         # Increment month value to be consistent with the model output
         dsObs.iMONTH.values += 1
         # Rename the dimensions to be consistent with other obs. data sets
-        dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
-                      'lon': 'lonCoord', 'mld_dt_mean': 'mld'}, inplace=True)
-        dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'},
-                     inplace=True)
+        dsObs = dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
+                              'lon': 'lonCoord', 'mld_dt_mean': 'mld'})
+        dsObs = dsObs.rename({'iMONTH': 'Time', 'iLAT': 'lat', 'iLON': 'lon'})
 
         # set the coordinates now that the dimensions have the same names
         dsObs.coords['lat'] = dsObs['latCoord']

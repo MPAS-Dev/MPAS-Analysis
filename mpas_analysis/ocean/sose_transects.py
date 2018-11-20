@@ -89,6 +89,8 @@ class SoseTransects(AnalysisTask):  # {{{
         longitudes = config.getExpression(sectionName, 'longitudes',
                                           usenumpyfunc=True)
 
+        longitudes.sort()
+
         fields = \
             [{'prefix': 'temperature',
               'mpas': 'timeMonthly_avg_activeTracers_temperature',
@@ -297,6 +299,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         longitudes = config.getExpression('soseTransects', 'longitudes',
                                           usenumpyfunc=True)
 
+        longitudes.sort()
+
         observationsDirectory = build_config_full_path(
             config, 'oceanObservations', 'soseSubdirectory')
 
@@ -371,7 +375,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             description = 'Monthly velocity magnitude climatologies from ' \
                           '2005-2010 average of the Southern Ocean State ' \
                           'Estimate (SOSE)'
-            dsObs['velMag'] = xr.ufuncs.sqrt(
+            dsObs['velMag'] = numpy.sqrt(
                     dsObs.zonalVel**2 + dsObs.meridVel**2)
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
             dsObs.velMag.attrs['description'] = description

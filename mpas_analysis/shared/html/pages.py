@@ -62,6 +62,7 @@ def generate_html(config, analyses, refConfig=None):  # {{{
                 ComponentPage.add_image(fileName, config, components,
                                         refConfig)
             except IOError:
+                print('  missing file {}'.format(fileName))
                 missingCount += 1
 
     if missingCount > 0:

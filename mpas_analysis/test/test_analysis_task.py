@@ -9,7 +9,7 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
-Unit tests for utility functions in run_mpas_analysis
+Unit tests for utility functions in AnalysisTask
 
 Xylar Asay-Davis
 """
@@ -60,7 +60,7 @@ class TestAnalysisTask(TestCase):
         #                                        the given category of analysis
         # an equivalent syntax can be used on the command line to override this
         # option:
-        #    ./run_mpas_analysis config.analysis --generate \
+        #    mpas_analysis config.analysis --generate \
         #         all,no_ocean,all_timeSeries
 
         cores = {'timeSeriesOHC': 'ocean',

@@ -93,7 +93,7 @@ It will show examples of:
   * `run`: runs the analysis task
 
 The template will be located at:
-```
+``` bash
 mpas_analysis/
     - analysis_task_template.py
 ```
