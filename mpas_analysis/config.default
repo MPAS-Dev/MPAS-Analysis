@@ -549,44 +549,6 @@ usePostprocessingScript = False
 # Supported options are Atlantic and IndoPacific
 regionNames = ['Atlantic']
 
-# Minium value of latitudinal extent for MOC streamfunction plot
-latBinMinGlobal = -80.
-latBinMinAtlantic = -35.
-latBinMinIndoPacific = -80.
-
-# Maximum value of latitudinal extent for MOC streamfunction plot
-latBinMaxGlobal = 80.
-latBinMaxAtlantic = 70.
-latBinMaxIndoPacific = 70.
-
-# Size of latitude bins over which MOC streamfunction is integrated
-# (this is only relevant for the postprocessing MOC script)
-latBinSizeGlobal = 1.
-latBinSizeAtlantic = 0.5
-latBinSizeIndoPacific = 0.5
-
-# colormap for model results
-colormapNameGlobal = RdYlBu_r
-colormapNameAtlantic = RdYlBu_r
-colormapNameIndoPacific = RdYlBu_r
-# whether the colormap is indexed or continuous
-colormapTypeGlobal = indexed
-colormapTypeAtlantic = indexed
-colormapTypeIndoPacific = indexed
-# colormap indices for contour color
-colormapIndicesGlobal = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesAtlantic = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-colormapIndicesIndoPacific = [0, 40, 80, 110, 140, 170, 200, 230, 255]
-# colorbar levels/values for contour boundaries
-colorbarLevelsGlobal = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
-colorbarLevelsAtlantic = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
-colorbarLevelsIndoPacific = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
-# contour line levels (use [] for automatic contour selection, 'none' for no
-# contour lines)
-contourLevelsGlobal = np.arange(-25.1, 35.1, 10)
-contourLevelsAtlantic = np.arange(-8, 20.1, 2)
-contourLevelsIndoPacific = np.arange(-8, 20.1, 2)
-
 # Number of points over which to compute moving average for
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
 # corresponds to a 12-month moving average window)
@@ -605,6 +567,114 @@ movingAveragePointsClimatological = 1
 # commented out to determine the distance between ticks automatically.
 
 # yearStrideXTicks = 1
+
+[streamfunctionMOCGlobal]
+## options related to plotting the Global MOC
+
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMin = -80.
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMax = 80.
+# Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
+latBinSize = 1.
+
+# colormap for model results
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# colormap indices for contour color
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsResult = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsResult = np.arange(-25.1, 35.1, 10)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# colormap indices for contour color
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsDifference = np.arange(-5., 6., 2.)
+
+[streamfunctionMOCAtlantic]
+## options related to plotting the Global MOC
+
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMin = -35.
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMax = 70.
+# Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
+latBinSize = 0.5
+
+# colormap for model results
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# colormap indices for contour color
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsResult = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsResult = np.arange(-8, 20.1, 2)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# colormap indices for contour color
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsDifference = np.arange(-5., 6., 2.)
+
+[streamfunctionMOCIndoPacific]
+## options related to plotting the Global MOC
+
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMin = -80.
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMax = 70.
+# Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
+latBinSize = 0.5
+
+# colormap for model results
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# colormap indices for contour color
+colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsResult = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsResult = np.arange(-8, 20.1, 2)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# colormap indices for contour color
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsDifference = np.arange(-5., 6., 2.)
 
 
 [climatologyMapSST]

@@ -12,11 +12,8 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import sys
-if sys.version_info[0] == 3:
-    from io import StringIO
-else:
-    from io import BytesIO as StringIO
+from six import StringIO
+
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 from mpas_analysis.shared.climatology import MpasClimatologyTask

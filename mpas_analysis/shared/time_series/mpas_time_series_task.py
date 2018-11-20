@@ -185,8 +185,6 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, startDate, endDate))
 
-        self._update_time_series_bounds_from_file_names()
-
         self.runMessage = '\nComputing MPAS time series from first year ' \
                           'plus files:\n' \
                           '    {} through\n    {}'.format(
@@ -232,65 +230,6 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         self.logger.info(self.runMessage)
 
         self._compute_time_series_with_ncrcat()
-
-        # }}}
-
-    def _update_time_series_bounds_from_file_names(self):  # {{{
-        """
-        Update the start and end years and dates for time series based on the
-        years actually available in the list of files.
-        """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        config = self.config
-        section = self.section
-
-        requestedStartYear = config.getint(section, 'startYear')
-        requestedEndYear = config.getint(section, 'endYear')
-
-        fileNames = sorted(self.inputFiles)
-        years, months = get_files_year_month(fileNames,
-                                             self.historyStreams,
-                                             'timeSeriesStatsMonthlyOutput')
-
-        # search for the start of the first full year
-        firstIndex = 0
-        while(firstIndex < len(years) and months[firstIndex] != 1):
-            firstIndex += 1
-        startYear = years[firstIndex]
-
-        # search for the end of the last full year
-        lastIndex = len(years)-1
-        while(lastIndex >= 0 and months[lastIndex] != 12):
-            lastIndex -= 1
-        endYear = years[lastIndex]
-
-        if startYear != requestedStartYear or endYear != requestedEndYear:
-            print("Warning: {} start and/or end year different from "
-                  "requested\n"
-                  "requestd: {:04d}-{:04d}\n"
-                  "actual:   {:04d}-{:04d}\n".format(section,
-                                                     requestedStartYear,
-                                                     requestedEndYear,
-                                                     startYear,
-                                                     endYear))
-            config.set(section, 'startYear', str(startYear))
-            config.set(section, 'endYear', str(endYear))
-
-            startDate = '{:04d}-01-01_00:00:00'.format(startYear)
-            config.set(section, 'startDate', startDate)
-            endDate = '{:04d}-12-31_23:59:59'.format(endYear)
-            config.set(section, 'endDate', endDate)
-        else:
-            startDate = config.get(section, 'startDate')
-            endDate = config.get(section, 'endDate')
-
-        self.startDate = startDate
-        self.endDate = endDate
-        self.startYear = startYear
-        self.endYear = endYear
 
         # }}}
 

@@ -43,6 +43,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.html import generate_html
 
 from mpas_analysis.shared import AnalysisTask
+from mpas_analysis.shared.analysis_task import \
+    update_time_bounds_from_file_names
 
 from mpas_analysis.shared.plot.plotting import _register_custom_colormaps, \
     _plot_color_gradients
@@ -54,6 +56,26 @@ from mpas_analysis.shared.climatology import MpasClimatologyTask, \
 from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
 from mpas_analysis.shared.io.download import download_files
+
+
+def update_time_bounds_in_config(config):  # {{{
+    """
+    Updates the start and end year (and associated full date) for
+    climatologies, time series and climate indices based on the files that are
+    actually available.
+
+    Parameters
+    ----------
+    config : ``MpasAnalysisConfigParser`` object
+        contains config options
+
+    """
+    # By updating the bounds for each component, we should end up with the
+    # more constrained time bounds if any component has less output than others
+    for componentName in ['ocean', 'seaIce']:
+        for section in ['climatology', 'timeSeries', 'index']:
+            update_time_bounds_from_file_names(config, section, componentName)
+    # }}}
 
 
 def build_analysis_list(config, refConfig):  # {{{
@@ -666,6 +688,8 @@ def main():
     logsDirectory = build_config_full_path(config, 'output',
                                            'logsSubdirectory')
     make_directories(logsDirectory)
+
+    update_time_bounds_in_config(config)
 
     analyses = build_analysis_list(config, refConfig)
     analyses = determine_analyses_to_generate(analyses)

@@ -26,7 +26,7 @@ import sys
 
 from mpas_analysis.shared.io import NameList, StreamsFile
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, get_files_year_month
 
 
 class AnalysisTask(Process):  # {{{
@@ -561,6 +561,97 @@ class StreamToLogger(object):  # {{{
 
     def flush(self):
         pass
+
+    # }}}
+
+
+def update_time_bounds_from_file_names(config, section, componentName):  # {{{
+    """
+    Update the start and end years and dates for time series, climatologies or
+    climate indices based on the years actually available in the list of files.
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    # read parameters from config file
+    # the run directory contains the restart files
+    runDirectory = build_config_full_path(config, 'input', 'runSubdirectory')
+    # if the history directory exists, use it; if not, fall back on
+    # runDirectory
+    historyDirectory = build_config_full_path(
+        config, 'input',
+        '{}HistorySubdirectory'.format(componentName),
+        defaultPath=runDirectory)
+
+    namelistFileName = build_config_full_path(
+        config,  'input',
+        '{}NamelistFileName'.format(componentName))
+    try:
+        namelist = NameList(namelistFileName)
+    except OSError:
+        # this component likely doesn't have output in this run
+        return
+
+    streamsFileName = build_config_full_path(
+        config, 'input',
+        '{}StreamsFileName'.format(componentName))
+    try:
+        historyStreams = StreamsFile(streamsFileName,
+                                     streamsdir=historyDirectory)
+    except OSError:
+        # this component likely doesn't have output in this run
+        return
+
+    calendar = namelist.get('config_calendar_type')
+
+    requestedStartYear = config.getint(section, 'startYear')
+    requestedEndYear = config.getint(section, 'endYear')
+
+    startDate = '{:04d}-01-01_00:00:00'.format(requestedStartYear)
+    endDate = '{:04d}-12-31_23:59:59'.format(requestedEndYear)
+
+    streamName = 'timeSeriesStatsMonthlyOutput'
+    try:
+        inputFiles = historyStreams.readpath(
+                streamName, startDate=startDate, endDate=endDate,
+                calendar=calendar)
+    except ValueError:
+        # this component likely doesn't have output in this run
+        return
+
+    years, months = get_files_year_month(sorted(inputFiles),
+                                         historyStreams,
+                                         streamName)
+
+    # search for the start of the first full year
+    firstIndex = 0
+    while(firstIndex < len(years) and months[firstIndex] != 1):
+        firstIndex += 1
+    startYear = years[firstIndex]
+
+    # search for the end of the last full year
+    lastIndex = len(years)-1
+    while(lastIndex >= 0 and months[lastIndex] != 12):
+        lastIndex -= 1
+    endYear = years[lastIndex]
+
+    if startYear != requestedStartYear or endYear != requestedEndYear:
+        print("Warning: {} start and/or end year different from "
+              "requested\n"
+              "requested: {:04d}-{:04d}\n"
+              "actual:   {:04d}-{:04d}\n".format(section,
+                                                 requestedStartYear,
+                                                 requestedEndYear,
+                                                 startYear,
+                                                 endYear))
+        config.set(section, 'startYear', str(startYear))
+        config.set(section, 'endYear', str(endYear))
+
+        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
+        config.set(section, 'startDate', startDate)
+        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
+        config.set(section, 'endDate', endDate)
 
     # }}}
 
