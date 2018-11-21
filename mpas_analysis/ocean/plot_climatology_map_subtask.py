@@ -393,14 +393,19 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             remappedRefClimatology = None
 
         if remappedRefClimatology is not None and depth is not None:
-            if str(depth) not in remappedRefClimatology.depthSlice.values:
+            depthIndex = -1
+            for index, depthSlice in enumerate(
+                    remappedRefClimatology.depthSlice.values):
+                if depthSlice.decode("utf-8") == str(depth):
+                    depthIndex = index
+            if depthIndex == -1:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created\n'
+                               'depth slices of was originally created'
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
-            remappedRefClimatology = remappedRefClimatology.sel(
-                depthSlice=str(depth), drop=True)
+            remappedRefClimatology = remappedRefClimatology.isel(
+                depthSlice=depthIndex, drop=True)
 
         if self.removeMean:
             if remappedRefClimatology is None:
