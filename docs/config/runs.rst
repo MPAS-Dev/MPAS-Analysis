@@ -28,6 +28,13 @@ of a reference E3SM v1 or standalone MPAS run (if any)::
   # reference run is desired.
   # referenceRunConfigFile = /path/to/config/file
 
+  # config file for a main run on which the analysis was already run to
+  # completion.  The relevant MPAS climatologies already exist and have been
+  # remapped to the comparison grid and time series have been extracted.
+  # Leave this option commented out if the analysis for the main run should be
+  # performed.
+  # mainRunConfigFile = /path/to/config/file
+
 The name of the "main" run (as opposed to a reference run, if any) can be any
 identifier that will be used in figure titles, legends, web pages and file
 names to identify this run.  It does not need to be the name of the simulation
@@ -53,8 +60,8 @@ disabled by commenting out the configuration option::
 To specify a reference run, first run MPAS analysis on the reference run.  Be
 sure that:
 
-  * the start and endy year for climatologies is covered by the simulation
-    output.
+  * the start and end year for climatologies, time series and climate indices
+    is covered by the simulation output.
   * most configuration options for the reference run are the same as for the
     main run.  The exceptions are contents of the ``[run]``, ``[input]`` and
     ``[output]`` sections.  The range of years for climatologies can be
@@ -65,4 +72,35 @@ uncommenting ``referenceRunConfigFile`` and specifying the path to the
 configuration file use in this analysis, e.g.::
 
   referenceRunConfigFile = config.reference_run
+
+If analysis has already been run on the "main" run in a "main vs ref"
+comparison, some time can be saved in performing the comparison
+(particularly for higher resolution output, for which a lot of the
+computation time goes into computing climatologies and extracting time
+series).  By default, this feature is disabled by commenting out the
+configuration option::
+
+  # mainRunConfigFile = /path/to/config/file
+
+To specify a main run, first run MPAS analysis on the main run.  The
+"comparison" config file should be nearly identical to the "main" config
+file except that:
+
+  * The output ``baseDirectory`` should be different.
+  * the start and end year for climatologies, time series and climate indices
+    must be the actual range used if output data was not available to span
+    the requested range in the "main" run.
+
+All configuration information for the "main" run in the "main vs ref"
+comparison is taken from the "comparsion" config file, not the "main" config.
+Only the output directories and subdirectories for climatologies, time series,
+mapping files and mask files (if these latter 2 were generated on the fly)
+will be taken from the "main" config file.  Symbolic links will be made to
+these directories so the comparison analysis run can reuse this data.
+Specify the path to the configuration file use in "main" analysis by
+uncommenting the option and providing a relative or absolute path to the
+config file::
+
+  mainRunConfigFile = config.main_run
+
 
