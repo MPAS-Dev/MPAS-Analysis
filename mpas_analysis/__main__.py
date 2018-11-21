@@ -563,7 +563,10 @@ def purge_output(config):
                     relativePathOption=option)
             if os.path.exists(directory):
                 print('Deleting contents of {}'.format(directory))
-                shutil.rmtree(directory)
+                if os.path.islink(directory):
+                    os.unlink(directory)
+                else:
+                    shutil.rmtree(directory)
 
         for component in ['ocean', 'seaIce']:
             for subdirectory in ['climatology', 'remappedClim']:
@@ -575,7 +578,55 @@ def purge_output(config):
                         relativePathSection=section)
                 if os.path.exists(directory):
                     print('Deleting contents of {}'.format(directory))
-                    shutil.rmtree(directory)
+                    if os.path.islink(directory):
+                        os.unlink(directory)
+                    else:
+                        shutil.rmtree(directory)
+
+
+def symlink_main_run(config, defaultConfig):
+    '''
+    Create symlinks to the climatology and time-series directories for the
+    main run that has aleady been computed so we don't have to recompute
+    the analysis.
+    '''
+
+    def link_dir(section, option):
+        destDirectory = build_config_full_path(config=config, section='output',
+                                               relativePathOption=option,
+                                               relativePathSection=section)
+        if not os.path.exists(destDirectory):
+
+            destBase, _ = os.path.split(destDirectory)
+
+            make_directories(destBase)
+
+            sourceDirectory = build_config_full_path(
+                    config=mainConfig, section='output',
+                    relativePathOption=option, relativePathSection=section)
+
+            os.symlink(sourceDirectory, destDirectory)
+
+    mainConfigFile = config.get('runs', 'mainRunConfigFile')
+    if not os.path.exists(mainConfigFile):
+        raise OSError('A main config file {} was specified but the '
+                      'file does not exist'.format(mainConfigFile))
+    mainConfigFiles = [mainConfigFile]
+    if defaultConfig is not None:
+        mainConfigFiles = [defaultConfig] + mainConfigFiles
+    mainConfig = MpasAnalysisConfigParser()
+    mainConfig.read(mainConfigFiles)
+
+    for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask']:
+        section = 'output'
+        option = '{}Subdirectory'.format(subdirectory)
+        link_dir(section=section, option=option)
+
+    for component in ['ocean', 'seaIce']:
+        for subdirectory in ['climatology', 'remappedClim']:
+            section = '{}Observations'.format(component)
+            option = '{}Subdirectory'.format(subdirectory)
+            link_dir(section=section, option=option)
 
 
 def main():
@@ -613,7 +664,7 @@ def main():
                         help="Make a plot displaying all available colormaps")
     args = parser.parse_args()
 
-    if len(sys.argv) == 1: 
+    if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(0)
 
@@ -676,6 +727,9 @@ def main():
 
     if args.purge:
         purge_output(config)
+
+    if config.has_option('runs', 'mainRunConfigFile'):
+        symlink_main_run(config, defaultConfig)
 
     if args.generate:
         update_generate(config, args.generate)
