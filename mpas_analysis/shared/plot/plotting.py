@@ -10,8 +10,8 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 """
 Plotting utilities, including routines for plotting:
-    * time series (and comparing with reference data sets)
-    * remapped horizontal fields (and comparing with reference data sets)
+    * time series (and comparing with control data sets)
+    * remapped horizontal fields (and comparing with control data sets)
     * vertical sections on native grid
     * NINO34 time series and spectra
 """
@@ -389,7 +389,7 @@ def plot_polar_comparison(
         Lons,
         Lats,
         modelArray,
-        refArray,
+        controlArray,
         diffArray,
         colorMapSectionName,
         fileout,
@@ -398,7 +398,7 @@ def plot_polar_comparison(
         latmin=50.0,
         lon0=0,
         modelTitle='Model',
-        refTitle='Observations',
+        controlTitle='Observations',
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
@@ -418,11 +418,11 @@ def plot_polar_comparison(
     Lons, Lats : float arrays
         longitude and latitude arrays
 
-    modelArray, refArray : float arrays
+    modelArray, controlArray : float arrays
         model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and refArray
+        difference between modelArray and controlArray
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -439,7 +439,7 @@ def plot_polar_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    refTitle : str, optional
+    controlTitle : str, optional
         title of the observations or reference run panel
 
     diffTitle : str, optional
@@ -511,7 +511,7 @@ def plot_polar_comparison(
     dictModelRef = setup_colormap(config, colorMapSectionName, suffix='Result')
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
 
-    if refArray is None:
+    if controlArray is None:
         if figsize is None:
             figsize = (8, 8.5)
         subplots = [111]
@@ -540,9 +540,10 @@ def plot_polar_comparison(
     ax = plt.subplot(subplots[0])
     do_subplot(ax=ax, field=modelArray, title=modelTitle, **dictModelRef)
 
-    if refArray is not None:
+    if controlArray is not None:
         ax = plt.subplot(subplots[1])
-        do_subplot(ax=ax, field=refArray, title=refTitle, **dictModelRef)
+        do_subplot(ax=ax, field=controlArray, title=controlTitle,
+                   **dictModelRef)
 
         ax = plt.subplot(subplots[2])
         do_subplot(ax=ax, field=diffArray, title=diffTitle, **dictDiff)
@@ -562,13 +563,13 @@ def plot_global_comparison(
         Lons,
         Lats,
         modelArray,
-        refArray,
+        controlArray,
         diffArray,
         colorMapSectionName,
         fileout,
         title=None,
         modelTitle='Model',
-        refTitle='Observations',
+        controlTitle='Observations',
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
@@ -589,11 +590,11 @@ def plot_global_comparison(
     Lons, Lats : float arrays
         longitude and latitude arrays
 
-    modelArray, refArray : float arrays
+    modelArray, controlArray : float arrays
         model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and refArray
+        difference between modelArray and controlArray
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -607,7 +608,7 @@ def plot_global_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    refTitle : str, optional
+    controlTitle : str, optional
         title of the observations or reference run panel
 
     diffTitle : str, optional
@@ -668,7 +669,7 @@ def plot_global_comparison(
         dpi = config.getint('plot', 'dpi')
     if figsize is None:
         # set the defaults, depending on if we have 1 or 3 panels
-        if refArray is None:
+        if controlArray is None:
             figsize = (8, 5)
         else:
             figsize = (8, 13)
@@ -691,14 +692,14 @@ def plot_global_comparison(
     dictModelRef = setup_colormap(config, colorMapSectionName, suffix='Result')
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
 
-    if refArray is not None:
+    if controlArray is not None:
         plt.subplot(3, 1, 1)
 
     plot_panel(modelTitle, modelArray, **dictModelRef)
 
-    if refArray is not None:
+    if controlArray is not None:
         plt.subplot(3, 1, 2)
-        plot_panel(refTitle, refArray, **dictModelRef)
+        plot_panel(controlTitle, controlArray, **dictModelRef)
 
         plt.subplot(3, 1, 3)
         plot_panel(diffTitle, diffArray, **dictDiff)
@@ -713,15 +714,15 @@ def plot_polar_projection_comparison(
         config,
         x,
         y,
-        landMask,
+        invalidMask,
         modelArray,
-        refArray,
+        controlArray,
         diffArray,
         fileout,
         colorMapSectionName,
         title=None,
         modelTitle='Model',
-        refTitle='Observations',
+        controlTitle='Observations',
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
@@ -743,14 +744,14 @@ def plot_polar_projection_comparison(
     x, y : numpy ndarrays
         1D x and y arrays defining the projection grid
 
-    landMask : numpy ndarrays
-        model and observational or reference run data sets
+    ivalidMask : numpy ndarray
+        mask of where there is no data (e.g. land, for ocean or sea-ice output)
 
-    modelArray, refArray : numpy ndarrays
+    modelArray, controlArray : numpy ndarrays
         model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and refArray
+        difference between modelArray and controlArray
 
     fileout : str
         the file name to be written
@@ -767,7 +768,7 @@ def plot_polar_projection_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    refTitle : str, optional
+    controlTitle : str, optional
         title of the observations or reference run panel
 
     diffTitle : str, optional
@@ -812,8 +813,8 @@ def plot_polar_projection_comparison(
             plotHandle = plt.contourf(xCenter, yCenter, array, cmap=colormap,
                                       norm=norm, levels=levels, extend='both')
 
-        plt.pcolormesh(x, y, landMask, cmap=landColorMap)
-        plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
+        plt.pcolormesh(x, y, invalidMask, cmap=landColorMap)
+        plt.contour(xCenter, yCenter, invalidMask.mask, (0.5,), colors='k',
                     linewidths=0.5)
 
         if contours is not None:
@@ -840,7 +841,7 @@ def plot_polar_projection_comparison(
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
 
-    if refArray is None:
+    if controlArray is None:
         if figsize is None:
             figsize = (8, 7.5)
         subplots = [111]
@@ -880,9 +881,9 @@ def plot_polar_projection_comparison(
     ax = plt.subplot(subplots[0])
     plot_panel(ax, modelTitle, modelArray, **dictModelRef)
 
-    if refArray is not None:
+    if controlArray is not None:
         ax = plt.subplot(subplots[1])
-        plot_panel(ax, refTitle, refArray, **dictModelRef)
+        plot_panel(ax, controlTitle, controlArray, **dictModelRef)
 
         ax = plt.subplot(subplots[2])
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
@@ -898,7 +899,7 @@ def plot_vertical_section_comparison(
         xArray,
         depthArray,
         modelArray,
-        refArray,
+        controlArray,
         diffArray,
         fileout,
         colorMapSectionName,
@@ -907,7 +908,7 @@ def plot_vertical_section_comparison(
         ylabel=None,
         title=None,
         modelTitle='Model',
-        refTitle='Observations',
+        controlTitle='Observations',
         diffTitle='Model-Observations',
         titleFontSize=None,
         plotTitleFontSize=None,
@@ -942,13 +943,13 @@ def plot_vertical_section_comparison(
 
     """
     Plots vertical section plots in a three-panel format, comparing model data
-    (in modelArray) to some reference dataset (in refArray), which can be
+    (in modelArray) to some control dataset (in controlArray), which can be
     either observations or an alternative model, and also presenting the
-    difference plot of the two.  If refArray is None, then only one panel
+    difference plot of the two.  If controlArray is None, then only one panel
     is plotted, displaying the model data.
 
-    If compareAsContours is true, the contours of modelArray and refArray are
-    plotted on a single plot.
+    If compareAsContours is true, the contours of modelArray and controlArray
+    are plotted on a single plot.
 
     Parameters
     ----------
@@ -963,11 +964,11 @@ def plot_vertical_section_comparison(
     depthArray : float array
         depth array [m]
 
-    modelArray, refArray : float arrays
+    modelArray, controlArray : float arrays
         model and observational or reference run data sets
 
     diffArray : float array
-        difference between modelArray and refArray
+        difference between modelArray and controlArray
 
     fileout : str
         the file name to be written
@@ -979,8 +980,8 @@ def plot_vertical_section_comparison(
         the label for the colorbar.  If compareAsContours and labelContours are
         both True, colorbarLabel is used as follows (typically in order to
         indicate the units that are associated with the contour labels):
-        if refArray is None, the colorbarLabel string is parenthetically
-        appended to the plot title;  if refArray is not None, it is
+        if controlArray is None, the colorbarLabel string is parenthetically
+        appended to the plot title;  if controlArray is not None, it is
         parenthetically appended to the legend entries of the contour
         comparison plot.
 
@@ -993,7 +994,7 @@ def plot_vertical_section_comparison(
     modelTitle : str, optional
         title of the model panel
 
-    refTitle : str, optional
+    controlTitle : str, optional
         title of the observations or reference run panel
 
     diffTitle : str, optional
@@ -1022,14 +1023,14 @@ def plot_vertical_section_comparison(
         the line style of contour lines (if specified); this applies to the
         contour lines on heatmaps and to the contour lines of the model field
         on contour comparison plots (the line style of the contour lines of
-        the reference field on contour comparison plots is set using the
+        the control field on contour comparison plots is set using the
         contourComparisonLineStyle argument).
 
     lineColor : str, optional
         the color of contour lines (if specified); this applies to the
         contour lines on heatmaps and to the contour lines of the model field
         on contour comparison plots (the line color of the contour lines of
-        the reference field on contour comparison plots is set using the
+        the control field on contour comparison plots is set using the
         contourComparisonLineColor argument).
 
     backgroundColor : str, optional
@@ -1108,17 +1109,17 @@ def plot_vertical_section_comparison(
 
     compareAsContours : bool, optional
        if compareAsContours is True, instead of creating a three panel plot
-       showing modelArray, refArray, and their difference, the function will
-       plot the contours of modelArray and refArray on a single plot (unless
-       refArray is None, in which case only the contours of modelArray will be
-       plotted on the single panel plot).
+       showing modelArray, controlArray, and their difference, the function
+       will plot the contours of modelArray and controlArray on a single plot
+       (unless controlArray is None, in which case only the contours of
+       modelArray will be plotted on the single panel plot).
 
     comparisonContourLineStyle : str, optional
-        the line style of contour lines of the reference field on a contour
+        the line style of contour lines of the control field on a contour
         comparison plot
 
     comparisonContourLineColor : str, optional
-        the line color of contour lines of the reference field on a contour
+        the line color of contour lines of the control field on a contour
         comparison plot
 
     labelContours : bool, optional
@@ -1133,7 +1134,7 @@ def plot_vertical_section_comparison(
     # -------
     # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
 
-    if refArray is None or compareAsContours:
+    if controlArray is None or compareAsContours:
         singlePanel = True
     else:
         singlePanel = False
@@ -1145,7 +1146,7 @@ def plot_vertical_section_comparison(
         # set the defaults, depending on if we have 1 or 3 panels, and
         # depending on how many x axes are to be displayed on the plots
         if singlePanel:
-            if compareAsContours and refArray is not None:
+            if compareAsContours and controlArray is not None:
                 if thirdXAxisData is not None:
                     figsize = (8, 8)
                 else:
@@ -1187,15 +1188,15 @@ def plot_vertical_section_comparison(
     if not singlePanel:
         plt.subplot(3, 1, 1)
 
-    if not compareAsContours or refArray is None:
+    if not compareAsContours or controlArray is None:
         title = modelTitle
         contourComparisonFieldArray = None
         comparisonFieldName = None
         originalFieldName = None
     else:
         title = None
-        contourComparisonFieldArray = refArray
-        comparisonFieldName = refTitle
+        contourComparisonFieldArray = controlArray
+        comparisonFieldName = controlTitle
         originalFieldName = modelTitle
 
     plot_vertical_section(
@@ -1246,11 +1247,11 @@ def plot_vertical_section_comparison(
                 config,
                 xArray,
                 depthArray,
-                refArray,
+                controlArray,
                 colorMapSectionName,
                 suffix='Result',
                 colorbarLabel=cbarLabel,
-                title=refTitle,
+                title=controlTitle,
                 xlabel=xlabel,
                 ylabel=ylabel,
                 fileout=None,
@@ -1318,7 +1319,7 @@ def plot_vertical_section_comparison(
                 contourLabelPrecision=contourLabelPrecision)
 
     if singlePanel:
-        if thirdXAxisData is not None and refArray is None:
+        if thirdXAxisData is not None and controlArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])

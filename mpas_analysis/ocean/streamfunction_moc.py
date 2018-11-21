@@ -597,11 +597,11 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         depth, lat, moc = self._load_moc(config)
 
         if self.refConfig is None:
-            refTitle = None
+            controlTitle = None
             diffTitle = None
         else:
             refDepth, refLat, refMOC = self._load_moc(self.refConfig)
-            refTitle = self.refConfig.get('runs', 'mainRunName')
+            controlTitle = self.refConfig.get('runs', 'mainRunName')
             diffTitle = 'Main - Reference'
 
         # **** Plot MOC ****
@@ -633,7 +633,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             x = x[indLat]
             regionMOC = regionMOC[:, indLat]
             if self.refConfig is None:
-                refRegionMOC = None
+                controlRegionMOC = None
                 diff = None
             else:
                 # the coords of the ref MOC won't necessarily match this MOC
@@ -645,22 +645,22 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                     temp[zIndex, :] = np.interp(
                             x, refLat[region], refMOC[region][zIndex, :],
                             left=np.nan, right=np.nan)
-                refRegionMOC = np.zeros((nz, nx))
+                controlRegionMOC = np.zeros((nz, nx))
                 for xIndex in range(nx):
-                    refRegionMOC[:, xIndex] = np.interp(
+                    controlRegionMOC[:, xIndex] = np.interp(
                             depth, refDepth, temp[:, xIndex],
                             left=np.nan, right=np.nan)
 
-                diff = regionMOC - refRegionMOC
+                diff = regionMOC - controlRegionMOC
 
             plot_vertical_section_comparison(
-                    config, x, z, regionMOC, refRegionMOC, diff,
+                    config, x, z, regionMOC, controlRegionMOC, diff,
                     fileout=figureName,
                     colorMapSectionName='streamfunctionMOC{}'.format(region),
                     cbarLabel=colorbarLabel,
                     title=title,
                     modelTitle=mainRunName,
-                    refTitle=refTitle,
+                    controlTitle=controlTitle,
                     diffTitle=diffTitle,
                     xlabel=xLabel,
                     ylabel=yLabel,

@@ -111,7 +111,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
+            controlTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
                             'Temperature'
 
             observationsDirectory = build_config_full_path(
@@ -120,15 +120,15 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
-            refFieldName = 'theta'
+            controlFieldName = 'theta'
             outFileLabel = 'tempArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}Argo'.format(refFieldName),
-                    fieldName=refFieldName,
+                    outFilePrefix='{}Argo'.format(controlFieldName),
+                    fieldName=controlFieldName,
                     depths=depths,
                     comparisonGridNames=comparisonGridNames)
 
@@ -138,9 +138,9 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = 'Ref: {}'.format(refRunName)
-            refTitleLabel = galleryName
+            controlTitleLabel = galleryName
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'temp'
             diffTitleLabel = 'Main - Reference'
 
@@ -160,8 +160,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='Potential Temperature',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$\degree$C',
                         imageCaption='Model potential temperature compared '
@@ -252,7 +252,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Roemmich-Gilson Argo Climatology: Salinity'
+            controlTitleLabel = 'Roemmich-Gilson Argo Climatology: Salinity'
 
             observationsDirectory = build_config_full_path(
                 config, 'oceanObservations', 'argoSubdirectory')
@@ -260,15 +260,15 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
                         observationsDirectory)
-            refFieldName = 'salinity'
+            controlFieldName = 'salinity'
             outFileLabel = 'salinArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}Argo'.format(refFieldName),
-                    fieldName=refFieldName,
+                    outFilePrefix='{}Argo'.format(controlFieldName),
+                    fieldName=controlFieldName,
                     depths=depths,
                     comparisonGridNames=comparisonGridNames)
 
@@ -278,9 +278,9 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'salin'
             diffTitleLabel = 'Main - Reference'
 
@@ -300,8 +300,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='Salinity',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
                         imageCaption='Model Salinity compared with Argo '

@@ -108,14 +108,14 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             outFileLabel = 'deltaOHC_{}'.format(depthRangeString)
             remapObservationsSubtask = None
             if refConfig is None:
-                refTitleLabel = None
-                refFieldName = None
+                controlTitleLabel = None
+                controlFieldName = None
                 diffTitleLabel = 'Model - Observations'
 
             else:
                 refRunName = refConfig.get('runs', 'mainRunName')
-                refTitleLabel = 'Ref: {}'.format(refRunName)
-                refFieldName = mpasFieldName
+                controlTitleLabel = 'Ref: {}'.format(refRunName)
+                controlFieldName = mpasFieldName
                 diffTitleLabel = 'Main - Reference'
 
             for comparisonGridName in comparisonGridNames:
@@ -134,8 +134,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                             fieldNameInTitle=r'$\Delta$OHC over {}'.format(
                                     depthRangeString),
                             mpasFieldName=mpasFieldName,
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
+                            controlFieldName=controlFieldName,
+                            controlTitleLabel=controlTitleLabel,
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=r'GJ m$^{-2}$',
                             imageCaption='Anomaly in Ocean Heat Content over '

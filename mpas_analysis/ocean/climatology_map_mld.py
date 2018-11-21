@@ -104,16 +104,16 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
             obsFileName = "{}/holtetalley_mld_climatology.nc".format(
                     observationsDirectory)
 
-            refFieldName = 'mld'
+            controlFieldName = 'mld'
             outFileLabel = 'mldHolteTalleyARGO'
 
             remapObservationsSubtask = RemapObservedMLDClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix=controlFieldName,
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             galleryName = 'Observations: Holte-Talley ARGO'
-            refTitleLabel = \
+            controlTitleLabel = \
                 'Observations (HolteTalley density threshold MLD)'
             diffTitleLabel = 'Model - Observations'
 
@@ -121,9 +121,9 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'mld'
             diffTitleLabel = 'Main - Reference'
 
@@ -140,8 +140,8 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='MLD',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'm',
                         imageCaption='Mean Mixed-Layer Depth',

@@ -167,8 +167,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                                                           hemisphere),
                         fieldNameInTitle='Sea ice concentration',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=obsFieldName,
-                        refTitleLabel=observationTitleLabel,
+                        controlFieldName=obsFieldName,
+                        controlTitleLabel=observationTitleLabel,
                         diffTitleLabel='Model - Observations',
                         unitsLabel=r'fraction',
                         imageDescription=imageDescription,
@@ -189,7 +189,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
 
         refRunName = refConfig.get('runs', 'mainRunName')
         galleryName = None
-        refTitleLabel = 'Ref: {}'.format(refRunName)
+        controlTitleLabel = 'Ref: {}'.format(refRunName)
 
         for season in seasons:
             for comparisonGridName in comparisonGridNames:
@@ -211,8 +211,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                         outFileLabel='iceconc{}'.format(hemisphere),
                         fieldNameInTitle='Sea ice concentration',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=mpasFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=mpasFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel='Main - Reference',
                         unitsLabel=r'fraction',
                         imageDescription=imageDescription,

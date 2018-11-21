@@ -101,10 +101,10 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             iselValues=iselValues)
 
         if refConfig is None:
-            refTitleLabel = 'Observations (Altiberg)'
+            controlTitleLabel = 'Observations (Altiberg)'
             galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
-            refFieldName = 'icebergConc'
+            controlFieldName = 'icebergConc'
             obsFileName = build_config_full_path(
                     config, 'icebergObservations',
                     'concentrationAltiberg{}'.format(hemisphere))
@@ -112,7 +112,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             remapObservationsSubtask = RemapAltibergConcClimatology(
                     parentTask=self, seasons=seasons,
                     fileName=obsFileName,
-                    outFilePrefix='{}{}'.format(refFieldName,
+                    outFilePrefix='{}{}'.format(controlFieldName,
                                                 hemisphere),
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
@@ -120,8 +120,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
-            refFieldName = mpasFieldName
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
+            controlFieldName = mpasFieldName
             diffTitleLabel = 'Main - Reference'
 
             remapObservationsSubtask = None
@@ -146,8 +146,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                         outFileLabel='bergconc{}'.format(hemisphere),
                         fieldNameInTitle='Iceberg concentration',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'fraction',
                         imageDescription=imageDescription,

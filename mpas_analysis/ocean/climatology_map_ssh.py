@@ -97,7 +97,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = 'Observations (AVISO Dynamic ' \
+            controlTitleLabel = 'Observations (AVISO Dynamic ' \
                 'Topography, 1993-2010)'
 
             observationsDirectory = build_config_full_path(
@@ -107,13 +107,13 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
             obsFileName = \
                 "{}/zos_AVISO_L4_199210-201012.nc".format(
                     observationsDirectory)
-            refFieldName = 'zos'
+            controlFieldName = 'zos'
             outFileLabel = 'sshAVISO'
             galleryName = 'Observations: AVISO'
 
             remapObservationsSubtask = RemapObservedSSHClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix=controlFieldName,
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
@@ -122,9 +122,9 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'ssh'
             diffTitleLabel = 'Main - Reference'
 
@@ -141,8 +141,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='Zero-mean SSH',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'cm',
                         imageCaption='Mean Sea Surface Height',

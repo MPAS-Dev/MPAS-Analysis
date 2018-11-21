@@ -118,13 +118,13 @@ class GeojsonTransects(AnalysisTask):  # {{{
         plotObs = False
         if refConfig is None:
 
-            refTitleLabel = None
+            controlTitleLabel = None
 
             diffTitleLabel = None
 
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
             diffTitleLabel = 'Main - Reference'
 
@@ -134,9 +134,9 @@ class GeojsonTransects(AnalysisTask):  # {{{
                 for season in seasons:
                     outFileLabel = fieldPrefix
                     if refConfig is None:
-                        refFieldName = None
+                        controlFieldName = None
                     else:
-                        refFieldName = field['mpas']
+                        controlFieldName = field['mpas']
 
                     fieldPrefixUpper = fieldPrefix[0].upper() + fieldPrefix[1:]
                     fieldNameInTytle = '{} from {}'.format(
@@ -153,8 +153,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=fieldNameInTytle,
                             mpasFieldName=field['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
+                            controlFieldName=controlFieldName,
+                            controlTitleLabel=controlTitleLabel,
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=field['units'],
                             imageCaption=fieldNameInTytle,

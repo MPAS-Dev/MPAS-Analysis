@@ -106,7 +106,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         # to compare to observations:
         if refConfig is None:
 
-            refTitleLabel = \
+            controlTitleLabel = \
                 'Observations (Surface EKE from Drifter Data)'
 
             observationsDirectory = build_config_full_path(
@@ -116,13 +116,13 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
             obsFileName = \
                 "{}/drifter_variance.nc".format(
                     observationsDirectory)
-            refFieldName = 'eke'
+            controlFieldName = 'eke'
             outFileLabel = 'ekeDRIFTER'
             galleryName = 'Observations: EKE from Drifters'
 
             remapObservationsSubtask = RemapObservedEKEClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=refFieldName,
+                outFilePrefix=controlFieldName,
                 comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
@@ -132,9 +132,9 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'eke'
             diffTitleLabel = 'Main - Reference'
 
@@ -151,8 +151,8 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                     outFileLabel=outFileLabel,
                     fieldNameInTitle='EKE',
                     mpasFieldName=mpasFieldName,
-                    refFieldName=refFieldName,
-                    refTitleLabel=refTitleLabel,
+                    controlFieldName=controlFieldName,
+                    controlTitleLabel=controlTitleLabel,
                     diffTitleLabel=diffTitleLabel,
                     unitsLabel=r'cm$^2$/s$^2$',
                     imageCaption='Mean Surface Eddy Kinetic Energy',

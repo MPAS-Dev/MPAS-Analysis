@@ -164,7 +164,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
-                      refFieldName, refTitleLabel, unitsLabel,
+                      controlFieldName, controlTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, configSectionName,
                       diffTitleLabel='Model - Observations'):
@@ -183,11 +183,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         mpasFieldName : str
             The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-        refFieldName : str
+        controlFieldName : str
             The name of the variable to use from the observations or reference
             file
 
-        refTitleLabel : str
+        controlTitleLabel : str
             the title of the observations or reference subplot
 
         unitsLabel : str
@@ -223,8 +223,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
-        self.refFieldName = refFieldName
-        self.refTitleLabel = refTitleLabel
+        self.controlFieldName = controlFieldName
+        self.controlTitleLabel = controlTitleLabel
         self.diffTitleLabel = diffTitleLabel
         self.unitsLabel = unitsLabel
 
@@ -331,8 +331,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             refStartYear = self.refConfig.getint('climatology', 'startYear')
             refEndYear = self.refConfig.getint('climatology', 'endYear')
             if refStartYear != self.startYear or refEndYear != self.endYear:
-                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                        self.refTitleLabel, refStartYear, refEndYear)
+                self.controlTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
+                        self.controlTitleLabel, refStartYear, refEndYear)
 
         else:
             remappedRefClimatology = None
@@ -382,17 +382,17 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         modelOutput = modelOutput.transpose()
 
         if remappedRefClimatology is None:
-            refOutput = None
+            controlOutput = None
             bias = None
         else:
-            refOutput = remappedRefClimatology[self.refFieldName]
-            dims = refOutput.dims
-            refOutput = nans_to_numpy_mask(refOutput.values)
+            controlOutput = remappedRefClimatology[self.controlFieldName]
+            dims = controlOutput.dims
+            controlOutput = nans_to_numpy_mask(controlOutput.values)
             if dims[1] != 'nPoints':
                 assert(dims[0] == 'nPoints')
-                refOutput = refOutput.transpose()
+                controlOutput = controlOutput.transpose()
 
-            bias = modelOutput - refOutput
+            bias = modelOutput - controlOutput
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -483,7 +483,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             x,
             z,
             modelOutput,
-            refOutput,
+            controlOutput,
             bias,
             outFileName,
             configSectionName,
@@ -492,7 +492,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             ylabel=yLabel,
             title=title,
             modelTitle='{}'.format(mainRunName),
-            refTitle=self.refTitleLabel,
+            controlTitle=self.controlTitleLabel,
             diffTitle=self.diffTitleLabel,
             secondXAxisData=self.secondXAxisData,
             secondXAxisLabel=self.secondXAxisLabel,

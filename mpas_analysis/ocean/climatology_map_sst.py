@@ -102,7 +102,7 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
             else:
                 period = 'present-day'
 
-            refTitleLabel = \
+            controlTitleLabel = \
                 'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(
                         period, climStartYear, climEndYear)
 
@@ -113,13 +113,13 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
             obsFileName = \
                 "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
                     observationsDirectory)
-            refFieldName = 'sst'
+            controlFieldName = 'sst'
             outFileLabel = 'sstHADOI'
             galleryName = 'Observations: Hadley-NOAA-OI'
 
             remapObservationsSubtask = RemapObservedSSTClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix=controlFieldName,
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
@@ -128,9 +128,9 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'sst'
             diffTitleLabel = 'Main - Reference'
 
@@ -147,8 +147,8 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='SST',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'$^o$C',
                         imageCaption='Mean Sea Surface Temperature',

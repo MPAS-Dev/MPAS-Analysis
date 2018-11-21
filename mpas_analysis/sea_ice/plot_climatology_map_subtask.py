@@ -64,10 +64,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     mpasFieldName : str
         The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-    refFieldName : str
+    controlFieldName : str
         The name of the variable to use from the observations or reference file
 
-    refTitleLabel : str
+    controlTitleLabel : str
         the title of the observations or reference run subplot
 
     diffTitleLabel : str
@@ -167,8 +167,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
-                      refFieldName, refTitleLabel, diffTitleLabel, unitsLabel,
-                      imageDescription, imageCaption, galleryGroup,
+                      controlFieldName, controlTitleLabel, diffTitleLabel,
+                      unitsLabel, imageDescription, imageCaption, galleryGroup,
                       groupSubtitle, groupLink, galleryName, maskValue=None):
         # {{{
         """
@@ -185,11 +185,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         mpasFieldName : str
             The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-        refFieldName : str
+        controlFieldName : str
             The name of the variable to use from the observations or reference
             run file
 
-        refTitleLabel : str
+        controlTitleLabel : str
             the title of the observations or reference run subplot
 
         diffTitleLabel : str
@@ -227,8 +227,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
-        self.refFieldName = refFieldName
-        self.refTitleLabel = refTitleLabel
+        self.controlFieldName = controlFieldName
+        self.controlTitleLabel = controlTitleLabel
         self.diffTitleLabel = diffTitleLabel
         self.unitsLabel = unitsLabel
 
@@ -289,7 +289,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.logger.info("\nPlotting 2-d maps of {} climatologies for "
                          "{} against {}...".format(
                                  self.fieldNameInTitle,
-                                 season, self.refTitleLabel))
+                                 season, self.controlTitleLabel))
 
         mainRunName = config.get('runs', 'mainRunName')
         startYear = self.startYear
@@ -327,7 +327,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 stage='remapped', season=season,
                 comparisonGridName=comparisonGridName)
 
-            remappedRefClimatology = xr.open_dataset(remappedFileName)
+            remappedControlClimatology = xr.open_dataset(remappedFileName)
 
         elif self.refConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
@@ -337,33 +337,37 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                     componentName=self.componentName,
                     climatologyName=climatologyName,
                     comparisonGridName=comparisonGridName)
-            remappedRefClimatology = xr.open_dataset(remappedFileName)
+            remappedControlClimatology = xr.open_dataset(remappedFileName)
             refStartYear = self.refConfig.getint('climatology', 'startYear')
             refEndYear = self.refConfig.getint('climatology', 'endYear')
             if refStartYear != self.startYear or refEndYear != self.endYear:
-                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                        self.refTitleLabel, refStartYear, refEndYear)
+                self.controlTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
+                        self.controlTitleLabel, refStartYear, refEndYear)
         else:
-            remappedRefClimatology = None
+            remappedControlClimatology = None
 
-        if remappedRefClimatology is None:
-            refOutput = None
+        if remappedControlClimatology is None:
+            controlOutput = None
             difference = None
         else:
-            refOutput = remappedRefClimatology[self.refFieldName].values
+            controlOutput = \
+                remappedControlClimatology[self.controlFieldName].values
             # mask nans
-            refOutput = np.ma.masked_array(refOutput, np.isnan(refOutput))
+            controlOutput = \
+                np.ma.masked_array(controlOutput, np.isnan(controlOutput))
 
-            difference = modelOutput - refOutput
+            difference = modelOutput - controlOutput
 
             # mask with maskValue only after taking the diff
             if self.maskValue is not None:
-                mask = np.logical_or(refOutput.mask, refOutput == self.maskValue)
-                refOutput = np.ma.masked_array(refOutput, mask)
+                mask = np.logical_or(controlOutput.mask,
+                                     controlOutput == self.maskValue)
+                controlOutput = np.ma.masked_array(controlOutput, mask)
 
         # mask with maskValue only after taking the diff
         if self.maskValue is not None:
-            mask = np.logical_or(modelOutput.mask, modelOutput == self.maskValue)
+            mask = np.logical_or(modelOutput.mask,
+                                 modelOutput == self.maskValue)
             modelOutput = np.ma.masked_array(modelOutput, mask)
 
         # for log plots, make sure the data is all positive to avoid masking
@@ -373,8 +377,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             if normType == 'log':
                 epsilon = 1e-2*normArgs['vmin']
                 modelOutput = np.maximum(modelOutput, epsilon)
-                if refOutput is not None:
-                    refOutput = np.maximum(refOutput, epsilon)
+                if controlOutput is not None:
+                    controlOutput = np.maximum(controlOutput, epsilon)
 
         startYear = self.startYear
         endYear = self.endYear
@@ -387,7 +391,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             lonTarg,
             latTarg,
             modelOutput,
-            refOutput,
+            controlOutput,
             difference,
             sectionName,
             title=title,
@@ -396,7 +400,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             latmin=minimumLatitude,
             lon0=referenceLongitude,
             modelTitle=mainRunName,
-            refTitle=self.refTitleLabel,
+            controlTitle=self.controlTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel,
             vertical=vertical)

@@ -200,7 +200,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
-                      refFieldName, refTitleLabel, unitsLabel,
+                      controlFieldName, controlTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
                       configSectionName=None):
@@ -219,11 +219,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         mpasFieldName : str
             The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-        refFieldName : str
+        controlFieldName : str
             The name of the variable to use from the observations or reference
             file
 
-        refTitleLabel : str
+        controlTitleLabel : str
             the title of the observations or reference subplot
 
         unitsLabel : str
@@ -260,8 +260,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
         self.mpasFieldName = mpasFieldName
-        self.refFieldName = refFieldName
-        self.refTitleLabel = refTitleLabel
+        self.controlFieldName = controlFieldName
+        self.controlTitleLabel = controlTitleLabel
         self.diffTitleLabel = diffTitleLabel
         self.unitsLabel = unitsLabel
 
@@ -386,8 +386,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             refStartYear = self.refConfig.getint('climatology', 'startYear')
             refEndYear = self.refConfig.getint('climatology', 'endYear')
             if refStartYear != self.startYear or refEndYear != self.endYear:
-                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                    self.refTitleLabel, refStartYear, refEndYear)
+                self.controlTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
+                    self.controlTitleLabel, refStartYear, refEndYear)
 
         else:
             remappedRefClimatology = None
@@ -409,15 +409,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                     remappedModelClimatology[self.mpasFieldName].mean()
             else:
                 masked = remappedModelClimatology[self.mpasFieldName].where(
-                    remappedRefClimatology[self.refFieldName].notnull())
+                    remappedRefClimatology[self.controlFieldName].notnull())
                 remappedModelClimatology[self.mpasFieldName] = \
                     remappedModelClimatology[self.mpasFieldName] - \
                     masked.mean()
 
-                masked = remappedRefClimatology[self.refFieldName].where(
+                masked = remappedRefClimatology[self.controlFieldName].where(
                     remappedModelClimatology[self.mpasFieldName].notnull())
-                remappedRefClimatology[self.refFieldName] = \
-                    remappedRefClimatology[self.refFieldName] - \
+                remappedRefClimatology[self.controlFieldName] = \
+                    remappedRefClimatology[self.controlFieldName] - \
                     masked.mean()
 
         if self.comparisonGridName == 'latlon':
@@ -446,13 +446,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         lonTarg, latTarg = np.meshgrid(lon, lat)
 
         if remappedRefClimatology is None:
-            refOutput = None
+            controlOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
-                remappedRefClimatology[self.refFieldName].values)
+            controlOutput = nans_to_numpy_mask(
+                remappedRefClimatology[self.controlFieldName].values)
 
-            bias = modelOutput - refOutput
+            bias = modelOutput - controlOutput
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -463,13 +463,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                lonTarg,
                                latTarg,
                                modelOutput,
-                               refOutput,
+                               controlOutput,
                                bias,
                                configSectionName,
                                fileout=outFileName,
                                title=title,
                                modelTitle='{}'.format(mainRunName),
-                               refTitle=self.refTitleLabel,
+                               controlTitle=self.controlTitleLabel,
                                diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel)
 
@@ -509,13 +509,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             remappedModelClimatology[self.mpasFieldName].values)
 
         if remappedRefClimatology is None:
-            refOutput = None
+            controlOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
-                remappedRefClimatology[self.refFieldName].values)
+            controlOutput = nans_to_numpy_mask(
+                remappedRefClimatology[self.controlFieldName].values)
 
-            bias = modelOutput - refOutput
+            bias = modelOutput - controlOutput
 
         x = interp_extrap_corner(remappedModelClimatology['x'].values)
         y = interp_extrap_corner(remappedModelClimatology['y'].values)
@@ -532,13 +532,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             y,
             self.landMask,
             modelOutput,
-            refOutput,
+            controlOutput,
             bias,
             fileout=outFileName,
             colorMapSectionName=configSectionName,
             title=title,
             modelTitle='{}'.format(mainRunName),
-            refTitle=self.refTitleLabel,
+            controlTitle=self.controlTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel)
 

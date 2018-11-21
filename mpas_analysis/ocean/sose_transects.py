@@ -158,13 +158,13 @@ class SoseTransects(AnalysisTask):  # {{{
         plotObs = refConfig is None
         if plotObs:
 
-            refTitleLabel = 'State Estimate (SOSE)'
+            controlTitleLabel = 'State Estimate (SOSE)'
 
             diffTitleLabel = 'Model - State Estimate'
 
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
             diffTitleLabel = 'Main - Reference'
 
@@ -177,9 +177,9 @@ class SoseTransects(AnalysisTask):  # {{{
                 for season in seasons:
                     outFileLabel = 'SOSE_{}_'.format(fieldPrefix)
                     if plotObs:
-                        refFieldName = field['obsFieldName']
+                        controlFieldName = field['obsFieldName']
                     else:
-                        refFieldName = field['mpas']
+                        controlFieldName = field['mpas']
 
                     fieldNameInTytle = r'{} at {}$\degree$ Longitude'.format(
                             field['titleName'], lon)
@@ -194,8 +194,8 @@ class SoseTransects(AnalysisTask):  # {{{
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=fieldNameInTytle,
                             mpasFieldName=field['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
+                            controlFieldName=controlFieldName,
+                            controlTitleLabel=controlTitleLabel,
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=field['units'],
                             imageCaption='{} {}'.format(fieldNameInTytle,

@@ -105,15 +105,15 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
             iselValues=iselValues)
 
         if refConfig is None:
-            refTitleLabel = 'Observations (ICESat)'
+            controlTitleLabel = 'Observations (ICESat)'
             galleryName = 'Observations: ICESat'
             diffTitleLabel = 'Model - Observations'
-            refFieldName = 'seaIceThick'
+            controlFieldName = 'seaIceThick'
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
-            refFieldName = mpasFieldName
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
+            controlFieldName = mpasFieldName
             diffTitleLabel = 'Main - Reference'
 
             remapObservationsSubtask = None
@@ -129,7 +129,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                 remapObservationsSubtask = RemapObservedThickClimatology(
                         parentTask=self, seasons=[season],
                         fileName=obsFileName,
-                        outFilePrefix='{}{}_{}'.format(refFieldName,
+                        outFilePrefix='{}{}_{}'.format(controlFieldName,
                                                        hemisphere,
                                                        season),
                         comparisonGridNames=comparisonGridNames,
@@ -155,8 +155,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                         outFileLabel='icethick{}'.format(hemisphere),
                         fieldNameInTitle='Sea ice thickness',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'm',
                         imageDescription=imageDescription,

@@ -191,7 +191,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
             if refConfig is None:
 
-                refTitleLabel = 'State Estimate (SOSE)'
+                controlTitleLabel = 'State Estimate (SOSE)'
 
                 observationsDirectory = build_config_full_path(
                     config, 'oceanObservations', 'soseSubdirectory')
@@ -200,15 +200,15 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                     '{}/SOSE_2005-2010_monthly_{}_6000.0x' \
                     '6000.0km_10.0km_Antarctic_stereo.nc'.format(
                             observationsDirectory, field['obsFilePrefix'])
-                refFieldName = field['obsFieldName']
+                controlFieldName = field['obsFieldName']
                 outFileLabel = '{}SOSE'.format(fieldPrefix)
                 galleryName = 'State Estimate: SOSE'
                 diffTitleLabel = 'Model - State Estimate'
 
                 remapObsSubtask = RemapSoseClimatology(
                         parentTask=self, seasons=seasons, fileName=obsFileName,
-                        outFilePrefix='{}SOSE'.format(refFieldName),
-                        fieldName=refFieldName,
+                        outFilePrefix='{}SOSE'.format(controlFieldName),
+                        fieldName=controlFieldName,
                         botFieldName=field['obsBotFieldName'],
                         depths=fieldDepths,
                         comparisonGridNames=comparisonGridNames,
@@ -221,9 +221,9 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                 remapObsSubtask = None
                 refRunName = refConfig.get('runs', 'mainRunName')
                 galleryName = 'Ref: {}'.format(refRunName)
-                refTitleLabel = galleryName
+                controlTitleLabel = galleryName
 
-                refFieldName = field['mpas']
+                controlFieldName = field['mpas']
                 outFileLabel = fieldPrefix
                 diffTitleLabel = 'Main - Reference'
 
@@ -257,8 +257,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=field['titleName'],
                             mpasFieldName=field['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
+                            controlFieldName=controlFieldName,
+                            controlTitleLabel=controlTitleLabel,
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=field['units'],
                             imageCaption=field['titleName'],

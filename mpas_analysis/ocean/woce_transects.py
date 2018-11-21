@@ -121,13 +121,13 @@ class WoceTransects(AnalysisTask):  # {{{
         plotObs = refConfig is None
         if plotObs:
 
-            refTitleLabel = 'Observations (WOCE)'
+            controlTitleLabel = 'Observations (WOCE)'
 
             diffTitleLabel = 'Model - Observations'
 
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
             diffTitleLabel = 'Main - Reference'
 
@@ -139,9 +139,9 @@ class WoceTransects(AnalysisTask):  # {{{
                 for season in seasons:
                     outFileLabel = fieldNameDict[fieldName]
                     if plotObs:
-                        refFieldName = fields[fieldName]['obs']
+                        controlFieldName = fields[fieldName]['obs']
                     else:
-                        refFieldName = fields[fieldName]['mpas']
+                        controlFieldName = fields[fieldName]['mpas']
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
                     fieldNameInTytle = '{} from {}'.format(
@@ -158,8 +158,8 @@ class WoceTransects(AnalysisTask):  # {{{
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=fieldNameInTytle,
                             mpasFieldName=fields[fieldName]['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
+                            controlFieldName=controlFieldName,
+                            controlTitleLabel=controlTitleLabel,
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=fields[fieldName]['units'],
                             imageCaption='{} {}'.format(fieldNameInTytle,

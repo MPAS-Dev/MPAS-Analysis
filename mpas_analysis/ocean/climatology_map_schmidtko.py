@@ -121,12 +121,12 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames)
 
         if refConfig is None:
-            refTitleLabel = 'Observations: Schmidtko et al. (2014)'
+            controlTitleLabel = 'Observations: Schmidtko et al. (2014)'
             diffTitleLabel = 'Model - Observations'
-            groupSubtitle = refTitleLabel
+            groupSubtitle = controlTitleLabel
         else:
             refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
             diffTitleLabel = 'Main - Reference'
             groupSubtitle = None
 
@@ -134,13 +134,13 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             fieldPrefix = field['prefix']
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
             if refConfig is None:
-                refFieldName = field['obs']
+                controlFieldName = field['obs']
                 outFileLabel = '{}Schmidtko'.format(fieldPrefix)
 
                 remapObservationsSubtask = RemapSchmidtko(
                         parentTask=self, seasons=seasons, fileName=obsFileName,
                         outFilePrefix='{}Schmidtko'.format(fieldPrefix),
-                        fieldName=refFieldName,
+                        fieldName=controlFieldName,
                         comparisonGridNames=comparisonGridNames,
                         subtaskName='remapObservations{}'.format(
                                 upperFieldPrefix))
@@ -151,7 +151,7 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                 remapObservationsSubtask = None
                 refRunName = refConfig.get('runs', 'mainRunName')
 
-                refFieldName = field['mpas']
+                controlFieldName = field['mpas']
                 outFileLabel = '{}Bottom'.format(fieldPrefix)
                 diffTitleLabel = 'Main - Reference'
 
@@ -173,8 +173,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle=field['title'],
                         mpasFieldName=field['mpas'],
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=field['units'],
                         imageCaption=field['title'],

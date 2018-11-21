@@ -116,10 +116,10 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 subtaskName='remapMpasClimatology_{}'.format(fieldName))
 
             if refConfig is None:
-                refTitleLabel = 'Observations'
+                controlTitleLabel = 'Observations'
                 preindustrial = config.getboolean(sectionName, 'preindustrial')
                 if preindustrial and 'DIC' in fieldName:
-                    refTitleLabel += ' (Preindustrial)'
+                    controlTitleLabel += ' (Preindustrial)'
 
                 observationsDirectory = build_config_full_path(
                     config, 'oceanObservations',
@@ -140,7 +140,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
                 observationsLabel = config.get(fieldSectionName,
                                                'observationsLabel')
-                refFieldName = fieldName
+                controlFieldName = fieldName
                 outFileLabel = fieldName + observationsLabel
 
                 galleryLabel = config.get(fieldSectionName, 'galleryLabel')
@@ -149,7 +149,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
                 remapObservationsSubtask = RemapObservedBGCClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix=controlFieldName,
                     comparisonGridNames=comparisonGridNames,
                     subtaskName='remapObservations_{}'.format(fieldName))
                 self.add_subtask(remapObservationsSubtask)
@@ -166,9 +166,9 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 remapObservationsSubtask = None
                 refRunName = refConfig.get('runs', 'mainRunName')
                 galleryName = None
-                refTitleLabel = 'Ref: {}'.format(refRunName)
+                controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-                refFieldName = mpasFieldName
+                controlFieldName = mpasFieldName
                 outFileLabel = fieldName
                 diffTitleLabel = 'Main - Reference'
 
@@ -185,8 +185,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle=fieldName,
                         mpasFieldName=plotField,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         unitsLabel=units,
                         imageCaption='Mean ' + fieldName,
                         galleryGroup='Sea Surface Biogeochemistry',

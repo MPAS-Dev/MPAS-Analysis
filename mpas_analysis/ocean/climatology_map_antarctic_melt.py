@@ -99,7 +99,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = \
+            controlTitleLabel = \
                 'Observations (Rignot et al, 2013)'
 
             observationsDirectory = build_config_full_path(
@@ -108,13 +108,13 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             obsFileName = \
                 '{}/Rignot_2013_melt_rates_6000.0x6000.0km_10.0km_' \
                 'Antarctic_stereo.nc'.format(observationsDirectory)
-            refFieldName = 'meltRate'
+            controlFieldName = 'meltRate'
             outFileLabel = 'meltRignot'
             galleryName = 'Observations: Rignot et al. (2013)'
 
             remapObservationsSubtask = RemapObservedAntarcticMeltClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix=controlFieldName,
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
@@ -123,9 +123,9 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'melt'
             diffTitleLabel = 'Main - Reference'
 
@@ -142,8 +142,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='Melt Rate',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'm a$^{-1}$',
                         imageCaption='Antarctic Melt Rate',

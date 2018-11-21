@@ -95,7 +95,7 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
 
         if refConfig is None:
 
-            refTitleLabel = \
+            controlTitleLabel = \
                 'Observations (Aquarius, 2011-2014)'
 
             observationsDirectory = build_config_full_path(
@@ -105,13 +105,13 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
             obsFileName = \
                 "{}/Aquarius_V3_SSS_Monthly.nc".format(
                     observationsDirectory)
-            refFieldName = 'sss'
+            controlFieldName = 'sss'
             outFileLabel = 'sssAquarius'
             galleryName = 'Observations: Aquarius'
 
             remapObservationsSubtask = RemapObservedSSSClimatology(
                     parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
+                    outFilePrefix=controlFieldName,
                     comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
@@ -120,9 +120,9 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
             remapObservationsSubtask = None
             refRunName = refConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlTitleLabel = 'Ref: {}'.format(refRunName)
 
-            refFieldName = mpasFieldName
+            controlFieldName = mpasFieldName
             outFileLabel = 'sss'
             diffTitleLabel = 'Main - Reference'
 
@@ -139,8 +139,8 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
                         outFileLabel=outFileLabel,
                         fieldNameInTitle='SSS',
                         mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
+                        controlFieldName=controlFieldName,
+                        controlTitleLabel=controlTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=r'PSU',
                         imageCaption='Mean Sea Surface Salinity',
