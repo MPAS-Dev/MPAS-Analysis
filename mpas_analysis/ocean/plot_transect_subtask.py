@@ -23,7 +23,7 @@ import xarray as xr
 import numpy
 
 from mpas_analysis.shared.plot.plotting import \
-    plot_vertical_section, plot_vertical_section_comparison
+    plot_vertical_section_comparison
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -400,10 +400,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-
         xLabel = 'Distance [km]'
         yLabel = 'Depth [m]'
-
 
         # define the axis labels and the data to use for the upper
         # x axis or axes, if such additional axes have been requested
@@ -453,7 +451,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         else:
             raise ValueError('invalid option for upperXAxes')
 
-
         # get the parameters determining what type of plot to use,
         # what line styles and line colors to use, and whether and how
         # to label contours
@@ -469,19 +466,18 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                                 'comparisonContourLineColor')
 
         if compareAsContours:
-            labelContours = config.getboolean('transects',
-                                    'labelContoursOnContourComparisonPlots')
+            labelContours = config.getboolean(
+                    'transects', 'labelContoursOnContourComparisonPlots')
         else:
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
-        
+
         contourLabelPrecision = config.getint('transects',
                                               'contourLabelPrecision')
 
-
         # construct a three-panel comparison plot for the transect, or a
         # single-panel contour comparison plot if compareAsContours is True
-        
+
         plot_vertical_section_comparison(
             config,
             x,
@@ -571,16 +567,18 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         lon_jump = numpy.where(
             numpy.logical_or(lon_diff > 180, lon_diff < -180), True, False)
 
-        if numpy.all(lon_jump == False):  # transect does not cross
-                                          # periodic boundary
+        if numpy.all(numpy.logical_not(lon_jump)):
+            # transect does not cross periodic boundary
 
             lon_extent = numpy.max(lon) - numpy.min(lon)
 
-        else:  # transect crosses periodic boundary at least once, so min and
-               # max cannot be used to calculate the longitudinal extent
+        else:
+            # transect crosses periodic boundary at least once, so min and
+            # max cannot be used to calculate the longitudinal extent
 
-            # calculate the indices at which the transect crosses the right-hand
-            # periodic boundary and enters the leftmost region of the domain
+            # calculate the indices at which the transect crosses the
+            # right-hand periodic boundary and enters the leftmost region of
+            # the domain
             lon_r = numpy.sort(numpy.nonzero(lon_diff < -180)[0] + 1)
 
             # calculate the indices at which the transect crosses the left-hand
