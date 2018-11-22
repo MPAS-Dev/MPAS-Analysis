@@ -104,7 +104,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, transectName, fieldName,
                  remapMpasClimatologySubtask, plotObs=True,
-                 refConfig=None):
+                 controlConfig=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -132,8 +132,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         plotObs : bool, optional
             Whether to plot against observations.
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any), ignored if
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any), ignored if
             ``plotObs == True``
         '''
         # Authors
@@ -144,7 +144,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.transectName = transectName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.plotObs = plotObs
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         subtaskName = 'plot{}_{}_{}'.format(season,
                                             transectName.replace(' ', '_'),
                                             fieldName)
@@ -283,7 +283,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
-        or a reference run
+        or a control run
         """
         # Authors
         # -------
@@ -302,7 +302,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
 
-        # now the observations or reference run
+        # now the observations or control run
         if self.plotObs:
             verticalComparisonGridName = \
                 self.remapMpasClimatologySubtask.verticalComparisonGridName
@@ -319,20 +319,23 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 remappedRefClimatology = compute_climatology(
                         remappedRefClimatology, monthValues, maskVaries=True)
 
-        elif self.refConfig is not None:
+        elif self.controlConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
                 get_remapped_mpas_climatology_file_name(
-                    self.refConfig, season=season,
+                    self.controlConfig, season=season,
                     componentName=self.componentName,
                     climatologyName=climatologyName,
                     comparisonGridName=transectName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-            refStartYear = self.refConfig.getint('climatology', 'startYear')
-            refEndYear = self.refConfig.getint('climatology', 'endYear')
-            if refStartYear != self.startYear or refEndYear != self.endYear:
+            controlStartYear = self.controlConfig.getint('climatology',
+                                                         'startYear')
+            controlEndYear = self.controlConfig.getint('climatology',
+                                                       'endYear')
+            if controlStartYear != self.startYear or \
+                    controlEndYear != self.endYear:
                 self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                        self.refTitleLabel, refStartYear, refEndYear)
+                        self.refTitleLabel, controlStartYear, controlEndYear)
 
         else:
             remappedRefClimatology = None

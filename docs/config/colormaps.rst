@@ -75,7 +75,7 @@ Colormpas in Three Panel Plots
 ------------------------------
 
 Many MPAS-Analysis tasks include a panel for the main model run, another for
-observations or a reference run and a third panel for displaying a bias or the
+observations or a control run and a third panel for displaying a bias or the
 the model-reference difference.  In such cases, we support one colormap for the
 first two panels and another for the final panel.  Options for each of these
 colormaps are specified by appending either ``Result`` or ``Difference`` to

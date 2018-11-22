@@ -42,7 +42,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -55,8 +55,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -91,7 +91,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         self.add_subtask(computeMeltSubtask)
 
         for index, iceShelf in enumerate(iceShelvesToPlot):
-            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index, refConfig)
+            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index, controlConfig)
             plotMeltSubtask.run_after(computeMeltSubtask)
             self.add_subtask(plotMeltSubtask)
 
@@ -328,15 +328,15 @@ class PlotMeltSubtask(AnalysisTask):
     regionIndex : int
         The index into the dimension ``nRegions`` of the ice shelf to plot
 
-    refConfig : ``MpasAnalysisConfigParser``
-        The configuration options for the reference run (if any)
+    controlConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the control run (if any)
 
     """
     # Authors
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, parentTask, iceShelf, regionIndex, refConfig):
+    def __init__(self, parentTask, iceShelf, regionIndex, controlConfig):
         # {{{
         """
         Construct the analysis task.
@@ -353,8 +353,8 @@ class PlotMeltSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the ice shelf to plot
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -370,7 +370,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         self.iceShelf = iceShelf
         self.regionIndex = regionIndex
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         # }}}
 
@@ -419,12 +419,12 @@ class PlotMeltSubtask(AnalysisTask):
 
         totalMeltFlux, meltRates = self._load_ice_shelf_fluxes(config)
 
-        plotRef = self.refConfig is not None
-        if plotRef:
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+        plotControl = self.controlConfig is not None
+        if plotControl:
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             refTotalMeltFlux, refMeltRates = \
-                self._load_ice_shelf_fluxes(self.refConfig)
+                self._load_ice_shelf_fluxes(self.controlConfig)
 
         # Load observations from multiple files and put in dictionary based
         # on shelf keyname
@@ -515,11 +515,11 @@ class PlotMeltSubtask(AnalysisTask):
         lineColors = ['k']
         lineWidths = [2.5]
         legendText = [mainRunName]
-        if plotRef:
+        if plotControl:
             fields.append(refTotalMeltFlux.isel(nRegions=self.regionIndex))
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(refRunName)
+            legendText.append(controlRunName)
 
         timeseries_analysis_plot(config, fields, movingAverageMonths,
                                  title, xLabel, yLabel, figureName,
@@ -557,11 +557,11 @@ class PlotMeltSubtask(AnalysisTask):
         lineColors = ['k']
         lineWidths = [2.5]
         legendText = [mainRunName]
-        if plotRef:
+        if plotControl:
             fields.append(refMeltRates.isel(nRegions=self.regionIndex))
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(refRunName)
+            legendText.append(controlRunName)
 
         if config.has_option(self.taskName, 'firstYearXTicks'):
             firstYearXTicks = config.getint(self.taskName,

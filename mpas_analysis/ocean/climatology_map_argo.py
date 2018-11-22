@@ -45,7 +45,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -57,8 +57,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -109,7 +109,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
                             'Temperature'
@@ -136,13 +136,13 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
-            galleryName = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            galleryName = 'Control: {}'.format(controlRunName)
             refTitleLabel = galleryName
 
             refFieldName = mpasFieldName
             outFileLabel = 'temp'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -153,7 +153,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
+                        controlConfig=controlConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
@@ -187,7 +187,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
     # Xylar Asay-Davis, Luke Van Roekel
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -199,8 +199,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -250,7 +250,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = 'Roemmich-Gilson Argo Climatology: Salinity'
 
@@ -276,13 +276,13 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
             refFieldName = mpasFieldName
             outFileLabel = 'salin'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -293,7 +293,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
+                        controlConfig=controlConfig,
                         depth=depth)
 
                     subtask.set_plot_info(

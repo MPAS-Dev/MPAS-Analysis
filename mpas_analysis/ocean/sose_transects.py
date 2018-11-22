@@ -40,7 +40,7 @@ class SoseTransects(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
 
         # {{{
         '''
@@ -56,8 +56,8 @@ class SoseTransects(AnalysisTask):  # {{{
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -155,7 +155,7 @@ class SoseTransects(AnalysisTask):  # {{{
             verticalComparisonGridName=verticalComparisonGridName,
             verticalComparisonGrid=verticalComparisonGrid)
 
-        plotObs = refConfig is None
+        plotObs = controlConfig is None
         if plotObs:
 
             refTitleLabel = 'State Estimate (SOSE)'
@@ -163,10 +163,10 @@ class SoseTransects(AnalysisTask):  # {{{
             diffTitleLabel = 'Model - State Estimate'
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for field in fields:
             fieldPrefix = field['prefix']
@@ -188,7 +188,7 @@ class SoseTransects(AnalysisTask):  # {{{
                     subtask = PlotTransectSubtask(self, season, transectName,
                                                   fieldPrefix,
                                                   computeTransectsSubtask,
-                                                  plotObs, refConfig)
+                                                  plotObs, controlConfig)
 
                     subtask.set_plot_info(
                             outFileLabel=outFileLabel,

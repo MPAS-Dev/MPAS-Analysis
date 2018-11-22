@@ -38,14 +38,14 @@ class TimeSeriesSST(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    refConfig :  ``MpasAnalysisConfigParser``
-        Configuration options for a reference run (if any)
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
     """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
-    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -58,8 +58,8 @@ class TimeSeriesSST(AnalysisTask):
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -73,7 +73,7 @@ class TimeSeriesSST(AnalysisTask):
             tags=['timeSeries', 'sst', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -177,24 +177,24 @@ class TimeSeriesSST(AnalysisTask):
         timeEnd = date_to_days(year=yearEnd, month=12, day=31,
                                calendar=calendar)
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
             baseDirectory = build_config_full_path(
-                self.refConfig, 'output', 'timeSeriesSubdirectory')
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
-            refFileName = '{}/{}.nc'.format(
+            controlFileName = '{}/{}.nc'.format(
                     baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
 
-            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
-            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
-            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
-            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+            controlStartYear = self.controlConfig.getint('timeSeries', 'startYear')
+            controlEndYear = self.controlConfig.getint('timeSeries', 'endYear')
+            controlStartDate = '{:04d}-01-01_00:00:00'.format(controlStartYear)
+            controlEndDate = '{:04d}-12-31_23:59:59'.format(controlEndYear)
 
             dsRefSST = open_mpas_dataset(
-                    fileName=refFileName,
+                    fileName=controlFileName,
                     calendar=calendar,
                     variableList=self.variableList,
-                    startDate=refStartDate,
-                    endDate=refEndDate)
+                    startDate=controlStartDate,
+                    endDate=controlEndDate)
         else:
             dsRefSST = None
 
@@ -250,8 +250,8 @@ class TimeSeriesSST(AnalysisTask):
                 fields.append(refSST)
                 lineColors.append('r')
                 lineWidths.append(1.5)
-                refRunName = self.refConfig.get('runs', 'mainRunName')
-                legendText.append(refRunName)
+                controlRunName = self.controlConfig.get('runs', 'mainRunName')
+                legendText.append(controlRunName)
 
             if preprocessedReferenceRunName != 'None':
                 SST_v0 = dsPreprocessedTimeSlice.SST

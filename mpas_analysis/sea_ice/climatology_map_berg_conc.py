@@ -34,7 +34,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
     # Darin Comeau, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -49,8 +49,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -100,7 +100,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
             refTitleLabel = 'Observations (Altiberg)'
             galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
@@ -118,11 +118,11 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             self.add_subtask(remapObservationsSubtask)
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
             refFieldName = mpasFieldName
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
             remapObservationsSubtask = None
 
@@ -140,7 +140,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                 subtask = PlotClimatologyMapSubtask(
                         self, hemisphere, season, comparisonGridName,
                         remapClimatologySubtask, remapObservationsSubtask,
-                        refConfig)
+                        controlConfig)
 
                 subtask.set_plot_info(
                         outFileLabel='bergconc{}'.format(hemisphere),

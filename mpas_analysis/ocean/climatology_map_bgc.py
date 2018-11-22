@@ -33,7 +33,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
     Phillip J. Wolfram, Riley X. Brady, Xylar Asay-Davis
 
     """
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -45,8 +45,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
 
         Authors
         -------
@@ -115,7 +115,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 iselValues=iselValues,
                 subtaskName='remapMpasClimatology_{}'.format(fieldName))
 
-            if refConfig is None:
+            if controlConfig is None:
                 refTitleLabel = 'Observations'
                 preindustrial = config.getboolean(sectionName, 'preindustrial')
                 if preindustrial and 'DIC' in fieldName:
@@ -164,13 +164,13 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                     diffTitleLabel += ' (Compared to ANN)'
             else:
                 remapObservationsSubtask = None
-                refRunName = refConfig.get('runs', 'mainRunName')
+                controlRunName = controlConfig.get('runs', 'mainRunName')
                 galleryName = None
-                refTitleLabel = 'Ref: {}'.format(refRunName)
+                refTitleLabel = 'Control: {}'.format(controlRunName)
 
                 refFieldName = mpasFieldName
                 outFileLabel = fieldName
-                diffTitleLabel = 'Main - Reference'
+                diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
@@ -178,7 +178,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                     subtask = PlotClimatologyMapSubtask(
                             self, season, comparisonGridName,
                             remapClimatologySubtask, remapObservationsSubtask,
-                            refConfig, subtaskName = 'plot{}_{}_{}'.format(
+                            controlConfig, subtaskName = 'plot{}_{}_{}'.format(
                                 fieldName, season, comparisonGridName))
 
                     subtask.set_plot_info(

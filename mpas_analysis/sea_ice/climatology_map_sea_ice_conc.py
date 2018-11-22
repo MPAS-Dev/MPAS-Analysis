@@ -37,7 +37,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -52,8 +52,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -103,14 +103,14 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
             self._add_obs_tasks(seasons, comparisonGridNames, hemisphere,
                                 hemisphereLong, remapClimatologySubtask,
                                 mpasFieldName)
         else:
             self._add_ref_tasks(seasons, comparisonGridNames, hemisphere,
                                 hemisphereLong, remapClimatologySubtask,
-                                refConfig, mpasFieldName,
+                                controlConfig, mpasFieldName,
                                 fieldName, iselValues)
         # }}}
 
@@ -184,12 +184,12 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
 
     def _add_ref_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
-                       refConfig, mpasFieldName, fieldName,
+                       controlConfig, mpasFieldName, fieldName,
                        iselValues):  # {{{
 
-        refRunName = refConfig.get('runs', 'mainRunName')
+        controlRunName = controlConfig.get('runs', 'mainRunName')
         galleryName = None
-        refTitleLabel = 'Ref: {}'.format(refRunName)
+        refTitleLabel = 'Control: {}'.format(controlRunName)
 
         for season in seasons:
             for comparisonGridName in comparisonGridNames:
@@ -205,7 +205,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                 # grid
                 subtask = PlotClimatologyMapSubtask(
                     self, hemisphere, season, comparisonGridName,
-                    remapClimatologySubtask, refConfig=refConfig)
+                    remapClimatologySubtask, controlConfig=controlConfig)
 
                 subtask.set_plot_info(
                         outFileLabel='iceconc{}'.format(hemisphere),
@@ -213,7 +213,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                         mpasFieldName=mpasFieldName,
                         refFieldName=mpasFieldName,
                         refTitleLabel=refTitleLabel,
-                        diffTitleLabel='Main - Reference',
+                        diffTitleLabel='Main - Control',
                         unitsLabel=r'fraction',
                         imageDescription=imageDescription,
                         imageCaption=imageCaption,
