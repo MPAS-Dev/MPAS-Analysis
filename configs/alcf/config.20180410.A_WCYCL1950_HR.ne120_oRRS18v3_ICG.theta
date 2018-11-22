@@ -12,6 +12,13 @@ mainRunName = 20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta
 # reference run is desired.
 # referenceRunConfigFile = /path/to/config/file
 
+# config file for a main run on which the analysis was already run to
+# completion.  The relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid and time series have been extracted.
+# Leave this option commented out if the analysis for the main run should be
+# performed.
+# mainRunConfigFile = /path/to/config/file
+
 [execute]
 ## options related to executing parallel tasks
 
