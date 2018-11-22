@@ -127,14 +127,17 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
     for outIndex in range(outInterpSize):
         outInd = [slice(None)]*xOut.ndim
         outInd[outAxis] = outIndex
-        x = xOut[outInd]
+        outInd = tuple(outInd)
+        x = numpy.array(xOut[outInd])
         for inIndex in range(inInterpSize-1):
             ind0 = [slice(None)]*xIn.ndim
             ind0[inAxis] = inIndex
-            x0 = xIn[ind0]
+            ind0 = tuple(ind0)
+            x0 = numpy.array(xIn[ind0])
             ind1 = [slice(None)]*xIn.ndim
             ind1[inAxis] = inIndex+1
-            x1 = xIn[ind1]
+            ind1 = tuple(ind1)
+            x1 = numpy.array(xIn[ind1])
             dx = x1 - x0
             frac = (x - x0)/dx
             valid = numpy.isfinite(frac)
@@ -146,11 +149,11 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
             if numpy.count_nonzero(mask) == 0:
                 continue
 
-            localIndex = index0[outInd]
+            localIndex = numpy.array(index0[outInd])
             localIndex[mask] = inIndex
             index0[outInd] = localIndex
 
-            localWeight = weight0[outInd]
+            localWeight = numpy.array(weight0[outInd])
             localWeight[mask] = 1. - frac[mask]
             weight0[outInd] = localWeight
 
