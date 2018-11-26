@@ -1,16 +1,16 @@
 [runs]
-## options related to the run to be analyzed and reference runs to be
+## options related to the run to be analyzed and control runs to be
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = MPAS-SeaIce.QU60km_polar
 
-# config file for a reference run to which this run will be compared.  The
+# config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
 # file, so that the relevant MPAS climatologies already exist and have been
 # remapped to the comparison grid.  Leave this option commented out if no
-# reference run is desired.
-# referenceRunConfigFile = /path/to/config/file
+# control run is desired.
+# controlRunConfigFile = /path/to/config/file
 
 # config file for a main run on which the analysis was already run to
 # completion.  The relevant MPAS climatologies already exist and have been

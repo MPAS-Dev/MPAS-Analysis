@@ -49,7 +49,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -61,8 +61,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -78,7 +78,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         computeClimSubtask = ComputeMOCClimatologySubtask(
                 self, mpasClimatologyTask)
-        plotClimSubtask = PlotMOCClimatologySubtask(self, refConfig)
+        plotClimSubtask = PlotMOCClimatologySubtask(self, controlConfig)
         plotClimSubtask.run_after(computeClimSubtask)
 
         startYear = config.getint('timeSeries', 'startYear')
@@ -98,7 +98,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                     self, startYear=year, endYear=year)
             combineTimeSeriesSubtask.run_after(computeTimeSeriesSubtask)
 
-        plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, refConfig)
+        plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, controlConfig)
         plotTimeSeriesSubtask.run_after(combineTimeSeriesSubtask)
 
         # }}}
@@ -506,7 +506,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, refConfig):  # {{{
+    def __init__(self, parentTask, controlConfig):  # {{{
         '''
         Construct the analysis task.
 
@@ -515,8 +515,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -532,7 +532,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         parentTask.add_subtask(self)
 
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -596,13 +596,13 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         depth, lat, moc = self._load_moc(config)
 
-        if self.refConfig is None:
+        if self.controlConfig is None:
             refTitle = None
             diffTitle = None
         else:
-            refDepth, refLat, refMOC = self._load_moc(self.refConfig)
-            refTitle = self.refConfig.get('runs', 'mainRunName')
-            diffTitle = 'Main - Reference'
+            refDepth, refLat, refMOC = self._load_moc(self.controlConfig)
+            refTitle = self.controlConfig.get('runs', 'mainRunName')
+            diffTitle = 'Main - Control'
 
         # **** Plot MOC ****
         # Define plotting variables
@@ -632,7 +632,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             indLat = np.logical_and(x >= minLat, x <= maxLat)
             x = x[indLat]
             regionMOC = regionMOC[:, indLat]
-            if self.refConfig is None:
+            if self.controlConfig is None:
                 refRegionMOC = None
                 diff = None
             else:
@@ -1131,8 +1131,8 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -1189,7 +1189,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, refConfig):  # {{{
+    def __init__(self, parentTask, controlConfig):  # {{{
         '''
         Construct the analysis task.
 
@@ -1198,8 +1198,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -1215,7 +1215,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         parentTask.add_subtask(self)
 
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -1298,14 +1298,14 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         lineWidths = [2]
         legendText = [mainRunName]
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
 
-            dsRefMOC = self._load_moc(self.refConfig)
+            dsRefMOC = self._load_moc(self.controlConfig)
             fields.append(dsRefMOC.mocAtlantic26)
             lineColors.append('r')
             lineWidths.append(2)
-            refRunName = self.refConfig.get('runs', 'mainRunName')
-            legendText.append(refRunName)
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
+            legendText.append(controlRunName)
 
         timeseries_analysis_plot(config, fields,
                                  movingAveragePoints, title,

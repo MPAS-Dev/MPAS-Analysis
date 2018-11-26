@@ -419,7 +419,7 @@ def plot_polar_comparison(
         longitude and latitude arrays
 
     modelArray, refArray : float arrays
-        model and observational or reference run data sets
+        model and observational or control run data sets
 
     diffArray : float array
         difference between modelArray and refArray
@@ -440,7 +440,7 @@ def plot_polar_comparison(
         title of the model panel
 
     refTitle : str, optional
-        title of the observations or reference run panel
+        title of the observations or control run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -590,7 +590,7 @@ def plot_global_comparison(
         longitude and latitude arrays
 
     modelArray, refArray : float arrays
-        model and observational or reference run data sets
+        model and observational or control run data sets
 
     diffArray : float array
         difference between modelArray and refArray
@@ -608,7 +608,7 @@ def plot_global_comparison(
         title of the model panel
 
     refTitle : str, optional
-        title of the observations or reference run panel
+        title of the observations or control run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -744,10 +744,10 @@ def plot_polar_projection_comparison(
         1D x and y arrays defining the projection grid
 
     landMask : numpy ndarrays
-        model and observational or reference run data sets
+        model and observational or control run data sets
 
     modelArray, refArray : numpy ndarrays
-        model and observational or reference run data sets
+        model and observational or control run data sets
 
     diffArray : float array
         difference between modelArray and refArray
@@ -768,7 +768,7 @@ def plot_polar_projection_comparison(
         title of the model panel
 
     refTitle : str, optional
-        title of the observations or reference run panel
+        title of the observations or control run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel
@@ -964,7 +964,7 @@ def plot_vertical_section_comparison(
         depth array [m]
 
     modelArray, refArray : float arrays
-        model and observational or reference run data sets
+        model and observational or control run data sets
 
     diffArray : float array
         difference between modelArray and refArray
@@ -994,7 +994,7 @@ def plot_vertical_section_comparison(
         title of the model panel
 
     refTitle : str, optional
-        title of the observations or reference run panel
+        title of the observations or control run panel
 
     diffTitle : str, optional
         title of the difference (bias) panel

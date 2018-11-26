@@ -47,14 +47,14 @@ class IndexNino34(AnalysisTask):  # {{{
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    refConfig :  ``MpasAnalysisConfigParser``
-        Configuration options for a reference run (if any)
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
     '''
     # Authors
     # -------
     # Luke Van Roekel, Xylar Asay-Davis
 
-    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
         # {{{
         '''
         Construct the analysis task.
@@ -67,8 +67,8 @@ class IndexNino34(AnalysisTask):  # {{{
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -82,7 +82,7 @@ class IndexNino34(AnalysisTask):  # {{{
             tags=['timeSeries', 'index', 'nino', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -217,7 +217,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # Compute the observational spectra over the last 30 years for
         # comparison. Only saving the spectra
         subsetEndYear = 2016
-        if self.refConfig is None:
+        if self.controlConfig is None:
             subsetStartYear = 1976
         else:
             # make the subset the same length as the input data set
@@ -229,7 +229,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Subset = nino34Obs.sel(Time=slice(time_start, time_end))
         spectraSubset = self._compute_nino34_spectra(nino34Subset)
 
-        if self.refConfig is None:
+        if self.controlConfig is None:
             nino34s = [nino34Obs[2:-3], nino34Subset, nino34Main[2:-3]]
             titles = ['{} (Full Record)'.format(obsTitle),
                       '{} ({} - {})'.format(obsTitle, subsetStartYear,
@@ -238,7 +238,7 @@ class IndexNino34(AnalysisTask):  # {{{
             spectra = [spectraObs, spectraSubset, spectraMain]
         else:
             baseDirectory = build_config_full_path(
-                self.refConfig, 'output', 'timeSeriesSubdirectory')
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
             refFileName = '{}/{}.nc'.format(
                     baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
@@ -252,14 +252,14 @@ class IndexNino34(AnalysisTask):  # {{{
             nino34Ref = self._compute_nino34_index(regionSSTRef, calendar)
 
             nino34s = [nino34Subset, nino34Main[2:-3], nino34Ref[2:-3]]
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             spectraRef = self._compute_nino34_spectra(nino34Ref)
 
             titles = ['{} ({} - {})'.format(obsTitle, subsetStartYear,
                                             subsetEndYear),
                       mainRunName,
-                      'Ref: {}'.format(refRunName)]
+                      'Control: {}'.format(controlRunName)]
             spectra = [spectraSubset, spectraMain, spectraRef]
 
         # Convert frequencies to period in years

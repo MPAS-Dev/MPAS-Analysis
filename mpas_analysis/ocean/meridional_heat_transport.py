@@ -36,14 +36,14 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
-    refConfig :  ``MpasAnalysisConfigParser``
-        Configuration options for a reference run (if any)
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
     '''
     # Authors
     # -------
     # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -55,8 +55,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -72,7 +72,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
 
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         # }}}
 
@@ -292,26 +292,29 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             fieldArrays.extend([ncepGlobal, ecmwfGlobal])
             errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
 
-            refStartYear = self.refConfig.getint('climatology', 'startYear')
-            refEndYear = self.refConfig.getint('climatology', 'endYear')
-            refDirectory = build_config_full_path(
-                    self.refConfig, 'output', 'mpasClimatologySubdirectory')
+            controlStartYear = self.controlConfig.getint('climatology',
+                                                         'startYear')
+            controlEndYear = self.controlConfig.getint('climatology',
+                                                       'endYear')
+            controlDirectory = build_config_full_path(
+                    self.controlConfig, 'output',
+                    'mpasClimatologySubdirectory')
 
-            refFileName = \
+            controlFileName = \
                 '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(
-                    refDirectory, refStartYear, refEndYear)
+                    controlDirectory, controlStartYear, controlEndYear)
 
-            dsRef = xr.open_dataset(refFileName)
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+            dsControl = xr.open_dataset(controlFileName)
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(refRunName)
-            xArrays.append(dsRef.binBoundaryMerHeatTrans)
+            legendText.append(controlRunName)
+            xArrays.append(dsControl.binBoundaryMerHeatTrans)
             fieldArrays.append(
-                    dsRef.timeMonthly_avg_meridionalHeatTransportLat)
+                    dsControl.timeMonthly_avg_meridionalHeatTransportLat)
             errArrays.append(None)
 
         if len(legendText) == 1:

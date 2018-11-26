@@ -31,7 +31,7 @@ class WoceTransects(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
 
         # {{{
         '''
@@ -47,8 +47,8 @@ class WoceTransects(AnalysisTask):  # {{{
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -118,7 +118,7 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGridName=verticalComparisonGridName,
             verticalComparisonGrid=verticalComparisonGrid)
 
-        plotObs = refConfig is None
+        plotObs = controlConfig is None
         if plotObs:
 
             refTitleLabel = 'Observations (WOCE)'
@@ -126,10 +126,10 @@ class WoceTransects(AnalysisTask):  # {{{
             diffTitleLabel = 'Model - Observations'
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         fieldNameDict = {'temperature': 'temperatureTransect',
                          'salinity': 'salinityTransect'}
@@ -152,7 +152,7 @@ class WoceTransects(AnalysisTask):  # {{{
                     subtask = PlotTransectSubtask(self, season, transectName,
                                                   fieldName,
                                                   computeTransectsSubtask,
-                                                  plotObs, refConfig)
+                                                  plotObs, controlConfig)
 
                     subtask.set_plot_info(
                             outFileLabel=outFileLabel,

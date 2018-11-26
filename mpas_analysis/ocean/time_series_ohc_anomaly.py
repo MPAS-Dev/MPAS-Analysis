@@ -32,7 +32,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
-    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -45,8 +45,8 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -121,7 +121,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
                     groupSubtitle=None,
                     groupLink='timeseries',
                     galleryName=None,
-                    refConfig=refConfig)
+                    controlConfig=controlConfig)
 
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)

@@ -31,7 +31,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
 
         # {{{
         '''
@@ -47,8 +47,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -116,24 +116,24 @@ class GeojsonTransects(AnalysisTask):  # {{{
             verticalComparisonGrid=verticalComparisonGrid)
 
         plotObs = False
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = None
 
             diffTitleLabel = None
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for field in fields:
             fieldPrefix = field['prefix']
             for transectName in obsFileNames:
                 for season in seasons:
                     outFileLabel = fieldPrefix
-                    if refConfig is None:
+                    if controlConfig is None:
                         refFieldName = None
                     else:
                         refFieldName = field['mpas']
@@ -147,7 +147,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
                     subtask = PlotTransectSubtask(self, season, transectName,
                                                   fieldPrefix,
                                                   computeTransectsSubtask,
-                                                  plotObs, refConfig)
+                                                  plotObs, controlConfig)
 
                     subtask.set_plot_info(
                             outFileLabel=outFileLabel,

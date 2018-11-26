@@ -34,7 +34,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refYearClimatolgyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -50,8 +50,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -107,16 +107,16 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
 
             outFileLabel = 'deltaOHC_{}'.format(depthRangeString)
             remapObservationsSubtask = None
-            if refConfig is None:
+            if controlConfig is None:
                 refTitleLabel = None
                 refFieldName = None
                 diffTitleLabel = 'Model - Observations'
 
             else:
-                refRunName = refConfig.get('runs', 'mainRunName')
-                refTitleLabel = 'Ref: {}'.format(refRunName)
+                controlRunName = controlConfig.get('runs', 'mainRunName')
+                refTitleLabel = 'Control: {}'.format(controlRunName)
                 refFieldName = mpasFieldName
-                diffTitleLabel = 'Main - Reference'
+                diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
@@ -127,7 +127,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                     subtask = PlotClimatologyMapSubtask(
                             self, season, comparisonGridName,
                             remapClimatologySubtask, remapObservationsSubtask,
-                            refConfig, subtaskName=subtaskName)
+                            controlConfig, subtaskName=subtaskName)
 
                     subtask.set_plot_info(
                             outFileLabel=outFileLabel,

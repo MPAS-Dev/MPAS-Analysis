@@ -17,7 +17,7 @@
 
 
 [runs]
-## options related to the run to be analyzed and reference runs to be
+## options related to the run to be analyzed and control runs to be
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
@@ -30,12 +30,12 @@ mainRunName = runName
 # MPAS-Analysis)
 preprocessedReferenceRunName = None
 
-# config file for a reference run to which this run will be compared.  The
+# config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
 # file, so that the relevant MPAS climatologies already exist and have been
 # remapped to the comparison grid.  Leave this option commented out if no
-# reference run is desired.
-# referenceRunConfigFile = /path/to/config/file
+# control run is desired.
+# controlRunConfigFile = /path/to/config/file
 
 # config file for a main run on which the analysis was already run to
 # completion.  The relevant MPAS climatologies already exist and have been
@@ -686,7 +686,7 @@ contourLevelsDifference = np.arange(-5., 6., 2.)
 
 [climatologyMapSST]
 ## options related to plotting horizontally remapped climatologies of
-## sea surface temperature (SST) against reference model results and
+## sea surface temperature (SST) against control model results and
 ## observations
 
 # colormap for model/observations
@@ -726,7 +726,7 @@ obsEndYear = 1900
 
 [climatologyMapSSS]
 ## options related to plotting horizontally remapped climatologies of
-## sea surface salinity (SSS) against reference model results and observations
+## sea surface salinity (SSS) against control model results and observations
 
 # colormap for model/observations
 colormapNameResult = haline
@@ -756,7 +756,7 @@ comparisonGrids = ['latlon']
 
 [climatologyMapMLD]
 ## options related to plotting horizontally remapped climatologies of
-## mixed layer depth (MLD) against reference model results and observations
+## mixed layer depth (MLD) against control model results and observations
 
 # colormap for model/observations
 colormapNameResult = viridis
@@ -786,7 +786,7 @@ comparisonGrids = ['latlon']
 
 [climatologyMapSSH]
 ## options related to plotting horizontally remapped climatologies of
-## sea surface height (SSH) against reference model results and observations
+## sea surface height (SSH) against control model results and observations
 
 # colormap for model/observations
 colormapNameResult = Maximenko
@@ -826,7 +826,7 @@ comparisonGrids = ['latlon']
 
 [climatologyMapEKE]
 ## options related to plotting horizontally remapped climatologies of
-## eddy kinetic energy (EKE) against reference model results and observations
+## eddy kinetic energy (EKE) against control model results and observations
 
 # colormap for model/observations
 colormapNameResult = magma_r
@@ -860,7 +860,7 @@ comparisonGrids = ['latlon']
 
 [climatologyMapOHCAnomaly]
 ## options related to plotting horizontally remapped climatologies of
-## ocean heat content (OHC) against reference model results (if available)
+## ocean heat content (OHC) against control model results (if available)
 
 # colormap for model/observations
 colormapNameResult = BuOr
@@ -899,7 +899,7 @@ depthRanges = [(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -100
 
 [climatologyMapAntarcticMelt]
 ## options related to plotting horizontally regridded maps of Antarctic
-## sub-ice-shelf melt rates against reference model results and observations
+## sub-ice-shelf melt rates against control model results and observations
 
 # comparison grid(s)
 # only the Antarctic really makes sense but lat-lon could technically work.
@@ -962,7 +962,7 @@ movingAverageMonths = 1
 
 [climatologyMapSose]
 ## options related to plotting climatology maps of Antarctic fields at various
-## levels, including the sea floor against reference model results and SOSE
+## levels, including the sea floor against control model results and SOSE
 ## reanalysis data
 
 # comparison grid(s)
@@ -985,7 +985,7 @@ fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
 ## potential temperature at various levels, including the sea floor against
-## reference model results and SOSE reanalysis data
+## control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = RdYlBu_r
@@ -1013,7 +1013,7 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 [climatologyMapSoseSalinity]
 ## options related to plotting climatology maps of Antarctic
 ## salinity at various levels, including the sea floor against
-## reference model results and SOSE reanalysis data
+## control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = haline
@@ -1041,7 +1041,7 @@ normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 [climatologyMapSosePotentialDensity]
 ## options related to plotting climatology maps of Antarctic
 ## potential density at various levels, including the sea floor against
-## reference model results and SOSE reanalysis data
+## control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = Spectral_r
@@ -1068,7 +1068,7 @@ normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 
 [climatologyMapSoseMixedLayerDepth]
 ## options related to plotting climatology maps of Antarctic
-## mixed layer depth against reference model results and SOSE reanalysis data
+## mixed layer depth against control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = viridis
@@ -1095,7 +1095,7 @@ colorbarTicksDifference = [-200., -100., -50., -20., -10., 0., 10., 20., 50., 10
 
 [climatologyMapSoseZonalVelocity]
 ## options related to plotting climatology maps of Antarctic
-## zonal velocity against reference model results and SOSE reanalysis data
+## zonal velocity against control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = delta
@@ -1122,7 +1122,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 
 [climatologyMapSoseMeridionalVelocity]
 ## options related to plotting climatology maps of Antarctic
-## meridional against reference model results and SOSE reanalysis data
+## meridional against control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = delta
@@ -1149,7 +1149,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 
 [climatologyMapSoseVelocityMagnitude]
 ## options related to plotting climatology maps of Antarctic
-## meridional against reference model results and SOSE reanalysis data
+## meridional against control model results and SOSE reanalysis data
 
 # colormap for model/observations
 colormapNameResult = ice
@@ -1177,7 +1177,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 [climatologyMapArgoTemperature]
 ## options related to plotting climatology maps of Global
 ## potential temperature at various levels against
-## reference model results and Roemmich-Gilson Argo Climatology
+## control model results and Roemmich-Gilson Argo Climatology
 
 # comparison grid(s)
 comparisonGrids = ['latlon']
@@ -1216,7 +1216,7 @@ normArgsDifference = {'vmin': -2., 'vmax': 2.}
 [climatologyMapArgoSalinity]
 ## options related to plotting climatology maps of Global
 ## salinity at various levels against
-## reference model results and the Roemmich-Gilson Argo Climatology
+## control model results and the Roemmich-Gilson Argo Climatology
 
 # comparison grid(s)
 comparisonGrids = ['latlon']
@@ -2200,7 +2200,7 @@ galleryLabel = Chlorophyll
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
-## sea ice concentration against reference model results and observations
+## sea ice concentration against control model results and observations
 ## in the northern hemisphere (NH)
 
 # colormap for model/observations
@@ -2247,7 +2247,7 @@ concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_c
 
 [climatologyMapSeaIceConcSH]
 ## options related to plotting horizontally remapped climatologies of
-## sea ice concentration against reference model results and observations
+## sea ice concentration against control model results and observations
 ## in the southern hemisphere (SH)
 
 # colormap for model/observations
@@ -2294,7 +2294,7 @@ concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_c
 
 [climatologyMapSeaIceThickNH]
 ## options related to plotting horizontally remapped climatologies of
-## sea ice thickness against reference model results and observations
+## sea ice thickness against control model results and observations
 ## in the northern hemisphere (NH)
 
 # colormap for model/observations
@@ -2339,7 +2339,7 @@ thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
 
 [climatologyMapSeaIceThickSH]
 ## options related to plotting horizontally remapped climatologies of
-## sea ice thickness against reference model results and observations
+## sea ice thickness against control model results and observations
 ## in the southern hemisphere (SH)
 
 # colormap for model/observations
@@ -2383,7 +2383,7 @@ thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
 
 [climatologyMapIcebergConcSH]
 # options related to plotting horizontally remapped climatologies of
-# iceberg concentration against reference model results and observations
+# iceberg concentration against control model results and observations
 # in the southern hemisphere (SH)
 
 # colormap for model/observations

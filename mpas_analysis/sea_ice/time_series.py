@@ -44,8 +44,8 @@ class TimeSeriesSeaIce(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    refConfig :  ``MpasAnalysisConfigParser``
-        Configuration options for a reference run (if any)
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
 
     """
     # Authors
@@ -53,7 +53,7 @@ class TimeSeriesSeaIce(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -65,8 +65,8 @@ class TimeSeriesSeaIce(AnalysisTask):
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -80,7 +80,7 @@ class TimeSeriesSeaIce(AnalysisTask):
             tags=['timeSeries', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -289,13 +289,13 @@ class TimeSeriesSeaIce(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
 
             dsTimeSeriesRef = {}
             baseDirectory = build_config_full_path(
-                self.refConfig, 'output', 'timeSeriesSubdirectory')
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             for hemisphere in ['NH', 'SH']:
                 inFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
@@ -332,7 +332,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                 plotVars[key] = (norm[variableName] *
                                  dsTimeSeries[hemisphere][variableName])
 
-                if self.refConfig is not None:
+                if self.controlConfig is not None:
                     plotVarsRef[key] = norm[variableName] * \
                         dsTimeSeriesRef[hemisphere][variableName]
 
@@ -444,9 +444,9 @@ class TimeSeriesSeaIce(AnalysisTask):
                     lineColors.append('purple')
                     lineWidths.append(1.2)
 
-                if self.refConfig is not None:
+                if self.controlConfig is not None:
                     dsvalues.append(plotVarsRef[key])
-                    legendText.append(refRunName)
+                    legendText.append(controlRunName)
                     lineColors.append('r')
                     lineWidths.append(1.2)
 
