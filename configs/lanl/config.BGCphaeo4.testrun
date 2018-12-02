@@ -30,6 +30,17 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 parallelTaskCount = 6
 ncclimoParallelMode = bck
 
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics
+
 [input]
 ## options related to reading in the results to be analyzed
 
@@ -39,11 +50,6 @@ baseDirectory = /lustre/scratch3/turquoise/shanlinw/ACME/cases/BGCacme.phaeo4/ru
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-mappingDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics/mpas_analysis/maps/
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -115,12 +121,6 @@ endYear = 9999
 startYear = 1
 endYear = 9999
 
-[oceanObservations]
-## options related to ocean observations with which the results will be compared
-
-# directory where ocean observations are stored
-baseDirectory = /usr/projects/climate/SHARED_CLIMATE/diagnostics/observations/Ocean
-
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean control run with which the results
 ## will be compared (e.g. a POP, CESM or ACME v0 run)
@@ -128,25 +128,12 @@ baseDirectory = /usr/projects/climate/SHARED_CLIMATE/diagnostics/observations/Oc
 # directory where ocean reference simulation results are stored
 baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ocn/postprocessing
 
-[seaIceObservations]
-## options related to sea ice observations with which the results will be
-## compared
-
-# directory where sea ice observations are stored
-baseDirectory = /usr/projects/climate/SHARED_CLIMATE/diagnostics/observations/SeaIce
-
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice control run with which the results
 ## will be compared (e.g. a CICE, CESM or ACME v0 run)
 
 # directory where ocean reference simulation results are stored
 baseDirectory = /usr/projects/climate/SHARED_CLIMATE/ACMEv0_lowres/B1850C5_ne30_v0.4/ice/postprocessing
-
-[regions]
-## options related to ocean regions used in several analysis modules
-
-# Directory for region mask files
-regionMaskDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics/mpas_analysis/region_masks
 
 [climatologyMapBGC]
 # Variables to plot:
