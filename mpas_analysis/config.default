@@ -85,15 +85,6 @@ seaIceStreamsFileName = streams.seaice
 # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
 mpasMeshName = mesh
 
-# The system has a limit to how many files can be open at one time.  By
-# default, xarray attempts to open all files in a data set simultaneously.
-# A new option allows files to be automatically closed as a data set is being
-# read to prevent hitting this limit.  Here, you can set what fraction of the
-# system limit of open files an analysis task is allowed to use.  Note: In the
-# future when multiple tasks can run simultaneously, the system file limit will
-# first be divided among the tasks before applying this fraction.
-autocloseFileLimitFraction = 0.5
-
 # Large datasets can encounter a memory error.  Specification of a maximum
 # chunk size `maxChunkSize` can be helpful to prevent the memory error.  The
 # current maximum chunk size assumes approximately 64GB of ram and large files

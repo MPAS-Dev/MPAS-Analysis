@@ -48,12 +48,9 @@ class TestClimatology(TestCase):
         # Remove the directory after the test
         shutil.rmtree(self.test_dir)
 
-    def setup_config(self, autocloseFileLimitFraction=0.5,
-                     maxChunkSize=10000):
+    def setup_config(self, maxChunkSize=10000):
         config = MpasAnalysisConfigParser()
         config.add_section('input')
-        config.set('input', 'autocloseFileLimitFraction',
-                   str(autocloseFileLimitFraction))
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         config.set('input', 'mpasMeshName', 'QU240')
 
