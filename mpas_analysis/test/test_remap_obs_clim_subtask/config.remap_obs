@@ -1,3 +1,6 @@
+[diagnostics]
+baseDirectory = /dir/to/diagnostics
+
 [input]
 baseDirectory = /dir/for/model/output
 runSubdirectory = .
@@ -22,7 +25,7 @@ useNcremap = True
 renormalizationThreshold = 0.01
 
 [oceanObservations]
-baseDirectory = /dir/to/ocean/observations
+obsSubdirectory = .
 interpolationMethod = bilinear
 climatologySubdirectory = clim/obs
 remappedClimSubdirectory = clim/obs/remapped

@@ -19,7 +19,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 
@@ -105,8 +105,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
             refFieldName = 'icebergConc'
-            obsFileName = build_config_full_path(
-                    config, 'icebergObservations',
+            obsFileName = build_obs_path(
+                    config, 'iceberg',
                     'concentrationAltiberg{}'.format(hemisphere))
 
             remapObservationsSubtask = RemapAltibergConcClimatology(

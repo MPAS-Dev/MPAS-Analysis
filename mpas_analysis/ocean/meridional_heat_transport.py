@@ -19,7 +19,7 @@ import os
 from mpas_analysis.shared.plot.plotting import plot_vertical_section, plot_1D
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, build_obs_path
 from mpas_analysis.shared.io import write_netcdf, subset_variables
 
 from mpas_analysis.shared import AnalysisTask
@@ -109,8 +109,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                            'compareWithObservations')
         self.observationsFile = None
         if compareWithObs:
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'mhtSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'mhtSubdirectory')
             observationsFile = config.get(self.sectionName, 'observationData')
             observationsFile = '{}/{}'.format(observationsDirectory,
                                               observationsFile)

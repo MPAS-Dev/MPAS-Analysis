@@ -135,33 +135,6 @@ Mapping files (see :ref:`config_mapping_files` below) and region mask files
 `E3SM public data repository`_ for these meshes.  For assistance with other
 mesh resolutions, please contact the MPAS-Analysis developers.
 
-.. _config_mapping_files:
-
-Mapping Files
--------------
-
-Mapping files are used in many MPAS-Analysis tasks to remap from either the
-native MPAS mesh or an observations grid to a comparison grid (see
-:ref:`config_comparison_grids`).  By default, these mapping files are generated
-on the fly as they are needed.  This can be a time-consuming process,
-especially for high resolution meshes, so it is useful to store a cache of
-these mapping files for reuse.  Mapping files at three standard resolutions
-are avaliable on the `E3SM public data repository`_.  The mapping files for
-the two coarser resolution meshes will be downloaded automatically along with
-the publicly available observations. (See the :ref:`quick_start` for details
-on downloading this data.)  To specify the path to the cache of mapping files,
-add the config option::
-
-  mappingDirectory = /dir/for/mapping/files
-
-where ``/dir/for/mapping/files`` should point to the ``mpas_analysis/maps``
-subdirectory of the data downloaded from the public repo
-
-If you notice that MPAS-Analysis is generating mapping files on the fly each
-time you run, you may wish to copy them from the mapping files output
-directory (the subdirectory ``mapping/`` inside the output base directory) to
-your mapping files cache directory.
-
 Xarray and Dask
 ---------------
 

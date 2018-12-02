@@ -23,7 +23,8 @@ import matplotlib.pyplot as plt
 
 from mpas_analysis.shared.climatology import climatology
 from mpas_analysis.shared.constants import constants
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    build_obs_path
 
 from mpas_analysis.shared.timekeeping.utility import datetime_to_days, \
     string_to_days_since_date
@@ -158,8 +159,8 @@ class IndexNino34(AnalysisTask):  # {{{
 
         dataSource = config.get('indexNino34', 'observationData')
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', '{}Subdirectory'.format(fieldName))
+        observationsDirectory = build_obs_path(
+            config, 'ocean', '{}Subdirectory'.format(fieldName))
 
         # specify obsTitle based on data path
         # These are the only data sets supported

@@ -399,7 +399,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             depthIndex = -1
             for index, depthSlice in enumerate(
                     remappedRefClimatology.depthSlice.values):
-                if depthSlice.decode("utf-8") == str(depth):
+                try:
+                    depthSlice = depthSlice.decode("utf-8")
+                except AttributeError:
+                    pass
+                if depthSlice == str(depth):
                     depthIndex = index
             if depthIndex == -1:
                 raise KeyError('The climatology you are attempting to perform '

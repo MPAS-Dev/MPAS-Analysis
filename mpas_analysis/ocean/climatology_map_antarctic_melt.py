@@ -15,7 +15,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
@@ -102,8 +102,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             refTitleLabel = \
                 'Observations (Rignot et al, 2013)'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'meltSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'meltSubdirectory')
 
             obsFileName = \
                 '{}/Rignot_2013_melt_rates_6000.0x6000.0km_10.0km_' \

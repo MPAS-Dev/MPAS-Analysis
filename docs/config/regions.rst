@@ -18,9 +18,6 @@ within MPAS-Analysis using region mask files::
   plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
                 'Nino 4', 'Nino 3.4', 'Global Ocean']
 
-  # Directory for region mask files
-  regionMaskDirectory = /path/to/masks/
-
 Region Names
 ------------
 

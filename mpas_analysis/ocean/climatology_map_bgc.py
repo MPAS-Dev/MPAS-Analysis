@@ -12,7 +12,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -121,9 +121,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 if preindustrial and 'DIC' in fieldName:
                     refTitleLabel += ' (Preindustrial)'
 
-                observationsDirectory = build_config_full_path(
-                    config, 'oceanObservations',
-                    '{}Subdirectory'.format(fieldName))
+                observationsDirectory = build_obs_path(
+                    config, 'ocean', '{}Subdirectory'.format(fieldName))
 
                 # If user wants to compare to preindustrial data, make sure
                 # that we load in the right DIC field.
@@ -178,7 +177,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                     subtask = PlotClimatologyMapSubtask(
                             self, season, comparisonGridName,
                             remapClimatologySubtask, remapObservationsSubtask,
-                            controlConfig, subtaskName = 'plot{}_{}_{}'.format(
+                            controlConfig, subtaskName='plot{}_{}_{}'.format(
                                 fieldName, season, comparisonGridName))
 
                     subtask.set_plot_info(

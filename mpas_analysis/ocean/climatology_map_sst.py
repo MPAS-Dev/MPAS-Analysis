@@ -16,7 +16,7 @@ import datetime
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -106,9 +106,8 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                 'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(
                         period, climStartYear, climEndYear)
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
                 "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(

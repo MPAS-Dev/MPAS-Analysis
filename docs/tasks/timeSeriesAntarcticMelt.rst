@@ -20,7 +20,7 @@ The following configuration options are available for this task::
   ## options related to plotting time series of melt below Antarctic ice shelves
 
   # list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
-  # See "regionNames" in the ice shelf masks file in regionMaskDirectory for
+  # See "regionNames" in the ice shelf masks file in regionMaskSubdirectory for
   # details.
   iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
                       'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',

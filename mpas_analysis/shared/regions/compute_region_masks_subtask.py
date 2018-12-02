@@ -164,8 +164,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # first, see if we have cached a mask file name in the region masks
         # directory
         regionMaskDirectory = build_config_full_path(self.config,
-                                                     'regions',
-                                                     'regionMaskDirectory')
+                                                     'diagnostics',
+                                                     'regionMaskSubdirectory')
         self.maskFileName = '{}/{}_{}.nc'.format(regionMaskDirectory,
                                                  mpasMeshName,
                                                  self.outFileSuffix)

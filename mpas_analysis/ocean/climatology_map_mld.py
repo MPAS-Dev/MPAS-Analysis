@@ -16,7 +16,8 @@ import numpy as np
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -97,9 +98,8 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
 
         if controlConfig is None:
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = "{}/holtetalley_mld_climatology.nc".format(
                     observationsDirectory)

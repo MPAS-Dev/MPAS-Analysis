@@ -27,7 +27,8 @@ mainRunName = runName
 # preprocessed to compare against (or None to turn off comparison).  Reference
 # runs of this type would have preprocessed results because they were not
 # performed with MPAS components (so they cannot be easily ingested by
-# MPAS-Analysis)
+# MPAS-Analysis).  This run name is completely unrelated to either the "main"
+# or "control" runs performed with MPAS components referred to below.
 preprocessedReferenceRunName = None
 
 # config file for a control run to which this run will be compared.  The
@@ -55,6 +56,26 @@ parallelTaskCount = 1
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = serial
+
+
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /path/to/diagnostics
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory
+mappingSubdirectory = mpas_analysis/maps
+
+# Directory for region mask files
+regionMaskSubdirectory = mpas_analysis/region_masks
 
 
 [input]
@@ -95,11 +116,6 @@ file_cache_maxsize = 1200
 # current maximum chunk size assumes approximately 64GB of ram and large files
 # with a single time slice.
 maxChunkSize = 10000
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-# mappingDirectory = /dir/for/mapping/files
 
 
 [output]
@@ -222,9 +238,6 @@ regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
 plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
               'Nino 4', 'Nino 3.4', 'Global Ocean']
 
-# Directory for region mask files
-regionMaskDirectory = /path/to/masks/
-
 
 [plot]
 ## options related to plotting that are the defaults across all analysis
@@ -258,7 +271,7 @@ generate = True
 ## options related to ocean observations with which the results will be compared
 
 # directory where ocean observations are stored
-baseDirectory = /dir/to/ocean/observations
+obsSubdirectory = observations/Ocean
 sstSubdirectory = SST
 sssSubdirectory = SSS
 ekeSubdirectory = EKE
@@ -309,7 +322,7 @@ baseDirectory = /dir/to/ocean/reference
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /dir/to/seaice/observations
+obsSubdirectory = observations/SeaIce
 
 # interpolation order for observations. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -336,7 +349,7 @@ baseDirectory = /dir/to/seaice/reference
 ## compared
 
 # directory where sea ice observations are stored
-baseDirectory = /dir/to/iceberg/observations
+obsSubdirectory = observations/Icebergs
 concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
 
 [timeSeriesOHCAnomaly]
@@ -934,7 +947,7 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
 ## options related to plotting time series of melt below Antarctic ice shelves
 
 # list of ice shelves to plot or ['all'] for all 106 ice shelves and regions.
-# See "regionNames" in the ice shelf masks file in regionMaskDirectory for
+# See "regionNames" in the ice shelf masks file in regionMaskSubdirectory for
 # details.
 iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
                     'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',

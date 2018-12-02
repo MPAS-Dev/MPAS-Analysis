@@ -17,7 +17,7 @@ from mpas_analysis.ocean.compute_transects_subtask import \
 
 from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from collections import OrderedDict
 
@@ -77,8 +77,8 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = config.getExpression(
                     sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'woceSubdirectory')
+        observationsDirectory = build_obs_path(
+            config, 'ocean', 'woceSubdirectory')
 
         obsFileNames = OrderedDict()
         for transectName in ['WOCE_A21_Drake_Passage',

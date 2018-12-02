@@ -27,7 +27,7 @@ from mpas_analysis.ocean.compute_transects_with_vel_mag import \
 from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, build_obs_path
 from mpas_analysis.shared.io import write_netcdf
 
 
@@ -301,8 +301,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         longitudes.sort()
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'soseSubdirectory')
+        observationsDirectory = build_obs_path(
+            config, 'ocean', 'soseSubdirectory')
 
         outObsDirectory = build_config_full_path(
             config=config, section='output',

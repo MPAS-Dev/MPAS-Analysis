@@ -20,7 +20,7 @@ from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    check_path_exists, make_directories
+    check_path_exists, make_directories, build_obs_path
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
     days_to_datetime, datetime_to_days, get_simulation_start_time
@@ -210,20 +210,20 @@ class TimeSeriesSeaIce(AnalysisTask):
                  'iceThickness': '[m]'}
 
         obsFileNames = {
-            'iceArea': {'NH': build_config_full_path(
-                                  config=config, section='seaIceObservations',
+            'iceArea': {'NH': build_obs_path(
+                                  config, 'seaIce',
                                   relativePathOption='areaNH',
                                   relativePathSection=sectionName),
-                        'SH': build_config_full_path(
-                                  config=config, section='seaIceObservations',
+                        'SH': build_obs_path(
+                                  config, 'seaIce',
                                   relativePathOption='areaSH',
                                   relativePathSection=sectionName)},
-            'iceVolume': {'NH': build_config_full_path(
-                                   config=config, section='seaIceObservations',
+            'iceVolume': {'NH': build_obs_path(
+                                   config, 'seaIce',
                                    relativePathOption='volNH',
                                    relativePathSection=sectionName),
-                          'SH': build_config_full_path(
-                                   config=config, section='seaIceObservations',
+                          'SH': build_obs_path(
+                                   config, 'seaIce',
                                    relativePathOption='volSH',
                                    relativePathSection=sectionName)}}
 

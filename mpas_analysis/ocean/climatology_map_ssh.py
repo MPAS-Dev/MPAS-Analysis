@@ -15,7 +15,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -100,9 +100,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
             refTitleLabel = 'Observations (AVISO Dynamic ' \
                 'Topography, 1993-2010)'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
                 "{}/zos_AVISO_L4_199210-201012.nc".format(

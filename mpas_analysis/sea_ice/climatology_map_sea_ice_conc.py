@@ -22,7 +22,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 
@@ -128,8 +128,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                 observationTitleLabel = \
                     'Observations (SSM/I {})'.format(prefix)
 
-                obsFileName = build_config_full_path(
-                        config=config, section='seaIceObservations',
+                obsFileName = build_obs_path(
+                        config, 'seaIce',
                         relativePathOption='concentration{}{}_{}'.format(
                                 prefix, hemisphere, season),
                         relativePathSection=sectionName)
