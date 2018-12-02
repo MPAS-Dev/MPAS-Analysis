@@ -1,5 +1,6 @@
 [diagnostics]
 baseDirectory = /dir/to/diagnostics
+mappingSubdirectory = .
 
 [input]
 baseDirectory = /dir/for/model/output
