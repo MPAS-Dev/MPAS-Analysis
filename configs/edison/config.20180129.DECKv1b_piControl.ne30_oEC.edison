@@ -53,10 +53,10 @@ mappingDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/ma
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = run/mpas-o_in
+oceanNamelistFileName = run/mpaso_in
 oceanStreamsFileName = run/streams.ocean
-seaIceNamelistFileName = run/mpas-cice_in
-seaIceStreamsFileName = run/streams.cice
+seaIceNamelistFileName = run/mpassi_in
+seaIceStreamsFileName = run/streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,

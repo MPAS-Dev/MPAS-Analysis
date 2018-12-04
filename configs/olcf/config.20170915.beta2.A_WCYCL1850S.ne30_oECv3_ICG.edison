@@ -39,10 +39,10 @@ seaIceHistorySubdirectory = archive/ice/hist
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = run/mpas-o_in
+oceanNamelistFileName = run/mpaso_in
 oceanStreamsFileName = run/streams.ocean
-seaIceNamelistFileName = run/mpas-cice_in
-seaIceStreamsFileName = run/streams.cice
+seaIceNamelistFileName = run/mpassi_in
+seaIceStreamsFileName = run/streams.seaice
 
 # names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
 mpasMeshName = oEC60to30v3

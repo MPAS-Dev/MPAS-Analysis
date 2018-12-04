@@ -48,8 +48,8 @@ mappingDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics/mp
 # or an absolute path.
 oceanNamelistFileName = mpaso_in
 oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpascice_in
-seaIceStreamsFileName = streams.cice
+seaIceNamelistFileName = mpassi_in
+seaIceStreamsFileName = streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,

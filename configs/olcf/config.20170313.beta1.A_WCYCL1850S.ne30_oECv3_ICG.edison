@@ -35,10 +35,10 @@ mappingDirectory = /lustre/atlas/proj-shared/cli115/diagnostics/mpas_analysis/mp
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
+oceanNamelistFileName = mpaso_in
 oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
-seaIceStreamsFileName = streams.cice
+seaIceNamelistFileName = mpassi_in
+seaIceStreamsFileName = streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
