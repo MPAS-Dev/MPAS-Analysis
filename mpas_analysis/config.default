@@ -85,6 +85,11 @@ seaIceStreamsFileName = streams.seaice
 # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
 mpasMeshName = mesh
 
+# maximum number of open files to hold in xarray’s global least-recently-usage
+# cache. This should be smaller than your system’s per-process file descriptor
+# limit, e.g., ulimit -n on Linux
+file_cache_maxsize = 1200
+
 # Large datasets can encounter a memory error.  Specification of a maximum
 # chunk size `maxChunkSize` can be helpful to prevent the memory error.  The
 # current maximum chunk size assumes approximately 64GB of ram and large files
