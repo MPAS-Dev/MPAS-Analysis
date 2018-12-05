@@ -32,6 +32,7 @@ import os
 from collections import OrderedDict
 import progressbar
 import logging
+import xarray
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -746,6 +747,9 @@ def main():
     make_directories(logsDirectory)
 
     update_time_bounds_in_config(config)
+
+    xarray.set_options(file_cache_maxsize=config.getint('input',
+                                                        'file_cache_maxsize'))
 
     analyses = build_analysis_list(config, controlConfig)
     analyses = determine_analyses_to_generate(analyses)

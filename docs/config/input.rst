@@ -35,15 +35,6 @@ these data will be read in::
   # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
   mpasMeshName = mesh
 
-  # The system has a limit to how many files can be open at one time.  By
-  # default, xarray attempts to open all files in a data set simultaneously.
-  # A new option allows files to be automatically closed as a data set is being
-  # read to prevent hitting this limit.  Here, you can set what fraction of the
-  # system limit of open files an analysis task is allowed to use.  Note: In the
-  # future when multiple tasks can run simultaneously, the system file limit will
-  # first be divided among the tasks before applying this fraction.
-  autocloseFileLimitFraction = 0.5
-
   # Large datasets can encounter a memory error.  Specification of a maximum
   # chunk size `maxChunkSize` can be helpful to prevent the memory error.  The
   # current maximum chunk size assumes approximately 64GB of ram and large files
@@ -181,11 +172,7 @@ multi-file data sets using xarray in favor of concatinating these data sets
 together using NCO tools, there are some legacy options that users can modify
 if they experience errors related to dask::
 
-  autocloseFileLimitFraction = 0.5
   maxChunkSize = 10000
-
-If an error occurs relating to too many open files, you may wish to reduce
-``autocloseFileLimitFraction`` to a smaller fraction.
 
 If an out of memory error occurs, it may first be worth reducing the number
 of parallel tasks running (see :ref:`config_execute`) but if the error is
