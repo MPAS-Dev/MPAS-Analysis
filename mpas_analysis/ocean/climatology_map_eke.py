@@ -201,10 +201,10 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
         # calculate mpas eddy kinetic energy
         scaleFactor = 100 * 100  # m2/s2 to cm2/s2
         eke = 0.5 * scaleFactor * \
-            (climatology.timeMonthly_avg_velocityZonalSquared
-             - climatology.timeMonthly_avg_velocityZonal ** 2
-             + climatology.timeMonthly_avg_velocityMeridionalSquared
-             - climatology.timeMonthly_avg_velocityMeridional ** 2)
+            (climatology.timeMonthly_avg_velocityZonalSquared -
+             climatology.timeMonthly_avg_velocityZonal ** 2 + 
+             climatology.timeMonthly_avg_velocityMeridionalSquaread -
+             climatology.timeMonthly_avg_velocityMeridional ** 2)
 
         # drop unnecessary fields before re-mapping
         climatology.drop(['timeMonthly_avg_velocityZonal',
