@@ -748,8 +748,12 @@ def main():
 
     update_time_bounds_in_config(config)
 
-    xarray.set_options(file_cache_maxsize=config.getint('input',
-                                                        'file_cache_maxsize'))
+    file_cache_maxsize = config.getint('input', 'file_cache_maxsize')
+    try:
+        xarray.set_options(file_cache_maxsize=file_cache_maxsize)
+    except ValueError:
+        # xarray version doesn't support file_cache_maxsize yet...
+        pass
 
     analyses = build_analysis_list(config, controlConfig)
     analyses = determine_analyses_to_generate(analyses)
