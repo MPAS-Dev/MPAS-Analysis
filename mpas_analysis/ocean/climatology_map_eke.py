@@ -12,17 +12,13 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
-import datetime
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
-
-from mpas_analysis.ocean.remap_depth_slices_subtask import \
-    RemapDepthSlicesSubtask
 
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
@@ -109,9 +105,8 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
             refTitleLabel = \
                 'Observations (Surface EKE from Drifter Data)'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
                 "{}/drifter_variance.nc".format(
@@ -206,10 +201,10 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
         # calculate mpas eddy kinetic energy
         scaleFactor = 100 * 100  # m2/s2 to cm2/s2
         eke = 0.5 * scaleFactor * \
-            (climatology.timeMonthly_avg_velocityZonalSquared
-            - climatology.timeMonthly_avg_velocityZonal ** 2
-            + climatology.timeMonthly_avg_velocityMeridionalSquared
-            - climatology.timeMonthly_avg_velocityMeridional ** 2)
+            (climatology.timeMonthly_avg_velocityZonalSquared -
+             climatology.timeMonthly_avg_velocityZonal ** 2 + 
+             climatology.timeMonthly_avg_velocityMeridionalSquaread -
+             climatology.timeMonthly_avg_velocityMeridional ** 2)
 
         # drop unnecessary fields before re-mapping
         climatology.drop(['timeMonthly_avg_velocityZonal',

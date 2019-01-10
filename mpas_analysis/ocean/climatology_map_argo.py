@@ -26,7 +26,7 @@ from mpas_analysis.ocean.remap_depth_slices_subtask import \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
@@ -114,8 +114,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             refTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
                             'Temperature'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'argoSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'argoSubdirectory')
 
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(
@@ -254,8 +254,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
 
             refTitleLabel = 'Roemmich-Gilson Argo Climatology: Salinity'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'argoSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'argoSubdirectory')
 
             obsFileName = \
                 '{}/ArgoClimatology_TS.nc'.format(

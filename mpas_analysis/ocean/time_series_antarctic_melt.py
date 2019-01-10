@@ -25,7 +25,7 @@ from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, build_obs_path
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -70,8 +70,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             tags=['timeSeries', 'melt', 'landIceCavities'])
 
         regionMaskDirectory = build_config_full_path(config,
-                                                     'regions',
-                                                     'regionMaskDirectory')
+                                                     'diagnostics',
+                                                     'regionMaskSubdirectory')
         iceShelfMasksFile = '{}/iceShelves.geojson'.format(regionMaskDirectory)
 
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
@@ -91,7 +91,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         self.add_subtask(computeMeltSubtask)
 
         for index, iceShelf in enumerate(iceShelvesToPlot):
-            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index, controlConfig)
+            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index,
+                                              controlConfig)
             plotMeltSubtask.run_after(computeMeltSubtask)
             self.add_subtask(plotMeltSubtask)
 
@@ -428,9 +429,8 @@ class PlotMeltSubtask(AnalysisTask):
 
         # Load observations from multiple files and put in dictionary based
         # on shelf keyname
-        observationsDirectory = build_config_full_path(config,
-                                                       'oceanObservations',
-                                                       'meltSubdirectory')
+        observationsDirectory = build_obs_path(config, 'ocean',
+                                               'meltSubdirectory')
         obsFileNameDict = {'Rignot et al. (2013)':
                            'Rignot_2013_melt_rates.csv',
                            'Rignot et al. (2013) SS':

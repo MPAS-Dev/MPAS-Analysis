@@ -5,6 +5,10 @@ mainRunName = runName
 parallelTaskCount = 1
 ncclimoParallelMode = serial
 
+[diagnostics]
+baseDirectory = /dir/for/model/output
+mappingSubdirectory = .
+
 [input]
 baseDirectory = /dir/for/model/output
 runSubdirectory = .

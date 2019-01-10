@@ -378,7 +378,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         # Load basin region related variables and save them to dictionary
         mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
+        regionMaskDirectory = build_config_full_path(config, 'diagnostics',
+                                                     'regionMasksubDirectory')
 
         dictRegion = _build_region_mask_dict(regionNames, regionMaskDirectory,
                                              mpasMeshName, self.logger)
@@ -978,7 +979,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
+        regionMaskDirectory = build_config_full_path(config, 'diagnostics',
+                                                     'regionMasksubDirectory')
         dictRegion = _build_region_mask_dict(['Atlantic'], regionMaskDirectory,
                                              mpasMeshName, self.logger)
         dictRegion = dictRegion['Atlantic']

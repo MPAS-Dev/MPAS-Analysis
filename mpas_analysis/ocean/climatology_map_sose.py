@@ -28,7 +28,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 from mpas_analysis.ocean.remap_sose_climatology import RemapSoseClimatology
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 
 class ClimatologyMapSose(AnalysisTask):  # {{{
@@ -193,8 +193,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
                 refTitleLabel = 'State Estimate (SOSE)'
 
-                observationsDirectory = build_config_full_path(
-                    config, 'oceanObservations', 'soseSubdirectory')
+                observationsDirectory = build_obs_path(
+                    config, 'ocean', 'soseSubdirectory')
 
                 obsFileName = \
                     '{}/SOSE_2005-2010_monthly_{}_6000.0x' \

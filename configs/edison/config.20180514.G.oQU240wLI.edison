@@ -30,6 +30,17 @@ parallelTaskCount = 8
 # handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = bck
 
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /global/project/projectdirs/acme/diagnostics
+
 [input]
 ## options related to reading in the results to be analyzed
 
@@ -45,11 +56,6 @@ runSubdirectory = run
 oceanHistorySubdirectory = run
 # subdirectory for sea ice history files
 seaIceHistorySubdirectory = run
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-mappingDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/maps
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -125,25 +131,6 @@ endYear = 9999
 # For valid statistics, index times should include at least 30 years
 startYear = 1
 endYear = 9999
-
-[oceanObservations]
-## options related to ocean observations with which the results will be compared
-
-# directory where ocean observations are stored
-baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/Ocean/
-
-[seaIceObservations]
-## options related to sea ice observations with which the results will be
-## compared
-
-# directory where sea ice observations are stored
-baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/SeaIce
-
-[regions]
-## options related to ocean regions used in several analysis modules
-
-# Directory for region mask files
-regionMaskDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/region_masks
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning

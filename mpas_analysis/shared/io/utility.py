@@ -107,7 +107,7 @@ def build_config_full_path(config, section, relativePathOption,
                            relativePathSection=None,
                            defaultPath=None):  # {{{
     """
-    Returns a full path from a base directory and a relative path
+    Get a full path from a base directory and a relative path
 
     Parameters
     ----------
@@ -116,17 +116,23 @@ def build_config_full_path(config, section, relativePathOption,
 
     section : str
         the name of a section in `config`, which must have an option
-        `baseDirectory`
+        ``baseDirectory``
 
     relativePathOption : str
-        the name of an option in `section` of the relative path within
-        `baseDirectory` (or possibly an absolute path)
+        the name of an option in ``section`` of the relative path within
+        ``baseDirectory`` (or possibly an absolute path)
 
     relativePathSection : str, optional
-        the name of a section for `relativePathOption` if not `section`
+        the name of a section for ``relativePathOption`` if not ``section``
 
     defaultPath : str, optional
         the name of a path to return if the resulting path doesn't exist.
+
+    Returns
+    -------
+    fullPath : str
+        The full path to the given relative path within the given
+        ``baseDirectory``
     """
     # Authors
     # -------
@@ -144,6 +150,56 @@ def build_config_full_path(config, section, relativePathOption,
 
     if defaultPath is not None and not os.path.exists(fullPath):
         fullPath = defaultPath
+    return fullPath  # }}}
+
+
+def build_obs_path(config, component, relativePathOption,
+                   relativePathSection=None):  # {{{
+    """
+
+    Parameters
+    ----------
+    config : MpasAnalysisConfigParser object
+        configuration from which to read the path
+
+    component : {'ocean', 'seaIce', 'iceberg'}
+        the prefix on the ``*Observations`` section in ``config``, which must
+        have an option ``obsSubdirectory``
+
+    relativePathOption : str
+        the name of an option in `section` of the relative path within
+        ``obsSubdirectory`` (or possibly an absolute path)
+
+    relativePathSection : str, optional
+        the name of a section for ``relativePathOption`` if not
+        ``<component>Observations``
+
+    Returns
+    -------
+    fullPath : str
+        The full path to the given relative path within the observations
+        directory for the given component
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    obsSection = '{}Observations'.format(component)
+    if relativePathSection is None:
+        relativePathSection = obsSection
+
+    relativePath = config.get(relativePathSection, relativePathOption)
+    if os.path.isabs(relativePath):
+        fullPath = relativePath
+    else:
+        obsSubdirectory = config.get(obsSection, 'obsSubdirectory')
+        if os.path.isabs(obsSubdirectory):
+            fullPath = '{}/{}'.format(obsSubdirectory, relativePath)
+        else:
+            basePath = config.get('diagnostics', 'baseDirectory')
+            fullPath = '{}/{}/{}'.format(basePath, obsSubdirectory,
+                                         relativePath)
+
     return fullPath  # }}}
 
 

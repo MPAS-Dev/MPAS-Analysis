@@ -25,7 +25,7 @@ from mpas_analysis.ocean.remap_depth_slices_subtask import \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
@@ -102,8 +102,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'schmidtkoSubdirectory')
+        observationsDirectory = build_obs_path(
+            config, 'ocean', 'schmidtkoSubdirectory')
 
         obsFileName = '{}/Schmidtko_et_al_2014_bottom_PT_S_PD_' \
                       '6000.0x6000.0km_10.0km_Antarctic_stereo.nc' \
