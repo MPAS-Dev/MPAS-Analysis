@@ -198,7 +198,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
                 obsFileName = \
                     '{}/SOSE_2005-2010_monthly_{}_6000.0x' \
-                    '6000.0km_10.0km_Antarctic_stereo.nc'.format(
+                    '6000.0km_10.0km_Antarctic_stereo_20180710.nc'.format(
                             observationsDirectory, field['obsFilePrefix'])
                 refFieldName = field['obsFieldName']
                 outFileLabel = '{}SOSE'.format(fieldPrefix)

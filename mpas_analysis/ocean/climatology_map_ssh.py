@@ -104,7 +104,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/zos_AVISO_L4_199210-201012.nc".format(
+                "{}/zos_AVISO_L4_199210-201012_20180710.nc".format(
                     observationsDirectory)
             refFieldName = 'zos'
             outFileLabel = 'sshAVISO'

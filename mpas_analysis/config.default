@@ -358,7 +358,7 @@ baseDirectory = /dir/to/seaice/reference
 # are stored.  The user can supply an absolute path here to point to a path
 # that is not within [diagnostics]/baseDirectory.
 obsSubdirectory = observations/Icebergs
-concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
+concentrationAltibergSH = Altiberg/Altiberg_1991-2017_20180308.nc
 
 [timeSeriesOHCAnomaly]
 ## options related to plotting time series of ocean heat content (OHC)
@@ -528,7 +528,7 @@ observationData = HADIsst
 ## options related to plotting meridional heat transport (MHT)
 
 # Data source to read for comparison
-observationData = mht_TrenberthCaron.NoAtm.nc
+observationData = mht_TrenberthCaron.NoAtm_20180710.nc
 
 # colormap for model results
 colormapName = balance
@@ -2256,10 +2256,10 @@ observationPrefixes = ['NASATeam', 'Bootstrap']
 vertical = False
 
 # observations files
-concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5.nc
-concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5.nc
-concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5.nc
+concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5_20180710.nc
+concentrationNASATeamNH_JAS = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jas.interp0.5x0.5_20180710.nc
+concentrationBootstrapNH_JFM = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jfm.interp0.5x0.5_20180710.nc
+concentrationBootstrapNH_JAS = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_NH_jas.interp0.5x0.5_20180710.nc
 
 
 [climatologyMapSeaIceConcSH]
@@ -2303,10 +2303,10 @@ observationPrefixes = ['NASATeam', 'Bootstrap']
 vertical = False
 
 # observations files
-concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5.nc
-concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5.nc
-concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5.nc
-concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5.nc
+concentrationNASATeamSH_DJF = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_djf.interp0.5x0.5_20180710.nc
+concentrationNASATeamSH_JJA = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_SH_jja.interp0.5x0.5_20180710.nc
+concentrationBootstrapSH_DJF = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_djf.interp0.5x0.5_20180710.nc
+concentrationBootstrapSH_JJA = SSMI/Bootstrap_NSIDC0079/SSMI_Bootstrap_gridded_concentration_SH_jja.interp0.5x0.5_20180710.nc
 
 
 [climatologyMapSeaIceThickNH]
@@ -2350,8 +2350,8 @@ observationPrefixes = ['']
 vertical = False
 
 # observations files
-thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
-thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5_20180710.nc
+thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5_20180710.nc
 
 
 [climatologyMapSeaIceThickSH]
@@ -2395,8 +2395,8 @@ observationPrefixes = ['']
 vertical = False
 
 # observations files
-thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5.nc
-thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5.nc
+thicknessSH_ON = ICESat/ICESat_gridded_mean_thickness_SH_on.interp0.5x0.5_20180710.nc
+thicknessSH_FM = ICESat/ICESat_gridded_mean_thickness_SH_fm.interp0.5x0.5_20180710.nc
 
 [climatologyMapIcebergConcSH]
 # options related to plotting horizontally remapped climatologies of
@@ -2459,7 +2459,7 @@ polarPlot = False
 # yearStrideXTicks = 1
 
 # observations files
-areaNH = IceArea_timeseries/iceAreaNH_climo.nc
-areaSH = IceArea_timeseries/iceAreaSH_climo.nc
-volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+areaNH = IceArea_timeseries/iceAreaNH_climo_20180710.nc
+areaSH = IceArea_timeseries/iceAreaSH_climo_20180710.nc
+volNH = PIOMAS/PIOMASvolume_monthly_climo_20180710.nc
 volSH = none

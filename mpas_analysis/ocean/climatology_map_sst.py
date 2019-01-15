@@ -110,8 +110,8 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
-                    observationsDirectory)
+                "{}/MODEL.SST.HAD187001-198110.OI198111-201203_" \
+                "20180710.nc".format(observationsDirectory)
             refFieldName = 'sst'
             outFileLabel = 'sstHADOI'
             galleryName = 'Observations: Hadley-NOAA-OI'

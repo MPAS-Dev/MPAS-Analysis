@@ -118,7 +118,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                 config, 'ocean', 'argoSubdirectory')
 
             obsFileName = \
-                '{}/ArgoClimatology_TS.nc'.format(
+                '{}/ArgoClimatology_TS_20180710.nc'.format(
                         observationsDirectory)
             refFieldName = 'theta'
             outFileLabel = 'tempArgo'
@@ -258,7 +258,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                 config, 'ocean', 'argoSubdirectory')
 
             obsFileName = \
-                '{}/ArgoClimatology_TS.nc'.format(
+                '{}/ArgoClimatology_TS_20180710.nc'.format(
                         observationsDirectory)
             refFieldName = 'salinity'
             outFileLabel = 'salinArgo'
