@@ -3,7 +3,7 @@ channels:
 dependencies:
   - pytest
   - six
-  - numpy
+  - numpy<1.16.0
   - scipy
   - lxml
   - xarray
