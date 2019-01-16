@@ -589,7 +589,7 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
         '{}NamelistFileName'.format(componentName))
     try:
         namelist = NameList(namelistFileName)
-    except OSError:
+    except (OSError, IOError):
         # this component likely doesn't have output in this run
         return
 
@@ -599,7 +599,7 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
     try:
         historyStreams = StreamsFile(streamsFileName,
                                      streamsdir=historyDirectory)
-    except OSError:
+    except (OSError, IOError):
         # this component likely doesn't have output in this run
         return
 
