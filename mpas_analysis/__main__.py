@@ -210,7 +210,7 @@ def build_analysis_list(config, controlConfig):  # {{{
     return analyses  # }}}
 
 
-def determine_analyses_to_generate(analyses):  # {{{
+def determine_analyses_to_generate(analyses, verbose):  # {{{
     """
     Build a list of analysis tasks to run based on the 'generate' config
     option (or command-line flag) and prerequisites and subtasks of each
@@ -221,6 +221,10 @@ def determine_analyses_to_generate(analyses):  # {{{
     ----------
     analyses : list of ``AnalysisTask`` objects
         A list of all analysis tasks
+
+    verbose : bool
+        Whether to write out a full stack trace when exceptions occur during
+        ``setup_and_check()`` calls for each task
 
     Returns
     -------
@@ -235,12 +239,12 @@ def determine_analyses_to_generate(analyses):  # {{{
     # check which analysis we actually want to generate and only keep those
     for analysisTask in analyses:
         # update the dictionary with this task and perhaps its subtasks
-        add_task_and_subtasks(analysisTask, analysesToGenerate)
+        add_task_and_subtasks(analysisTask, analysesToGenerate, verbose)
 
     return analysesToGenerate  # }}}
 
 
-def add_task_and_subtasks(analysisTask, analysesToGenerate,
+def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                           callCheckGenerate=True):
     # {{{
     """
@@ -256,6 +260,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     analysesToGenerate : ``OrderedDict`` of ``AnalysisTask``
         The list of analysis tasks to be generated, which this call may
         update to include this task and its subtasks
+
+    verbose : bool
+        Whether to write out a full stack trace when exceptions occur during
+        ``setup_and_check()`` calls for each task
 
     callCheckGenerate : bool
         Whether the ``check_generate`` method should be call for this task to
@@ -293,14 +301,13 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
                 prereqs.extend(subtask.runAfterTasks)
 
     for prereq in prereqs:
-        add_task_and_subtasks(prereq, analysesToGenerate,
+        add_task_and_subtasks(prereq, analysesToGenerate, verbose,
                               callCheckGenerate=False)
         if prereq._setupStatus != 'success':
             # a prereq failed setup_and_check
-            print("ERROR: prerequisite task {} of analysis task {}"
-                  " failed during check,\n"
-                  "       so this task will not be run".format(
-                      prereq.printTaskName, taskTitle))
+            print("Warning: prerequisite of {} failed during check, "
+                  "so this task will not be run".format(
+                      taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -309,9 +316,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     try:
         analysisTask.setup_and_check()
     except (Exception, BaseException):
-        traceback.print_exc(file=sys.stdout)
-        print("ERROR: analysis task {} failed during check and "
-              "will not be run".format(taskTitle))
+        if verbose:
+            traceback.print_exc(file=sys.stdout)
+        print("Warning: {} failed during check and will not be run".format(
+            taskTitle))
         analysisTask._setupStatus = 'fail'
         return
 
@@ -319,14 +327,13 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     # analysis task has been set up in case subtasks depend on information
     # from the parent task
     for subtask in analysisTask.subtasks:
-        add_task_and_subtasks(subtask, analysesToGenerate,
+        add_task_and_subtasks(subtask, analysesToGenerate, verbose,
                               callCheckGenerate=False)
         if subtask._setupStatus != 'success':
             # a subtask failed setup_and_check
-            print("ERROR: subtask {} of analysis task {}"
-                  " failed during check,\n"
-                  "       so this task will not be run".format(
-                      subtask.subtaskName, taskTitle))
+            print("Warning: subtask of {} failed during check, "
+                  "so this task will not be run".format(
+                      taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -663,6 +670,9 @@ def main():
     parser.add_argument("--plot_colormaps", dest="plot_colormaps",
                         action='store_true',
                         help="Make a plot displaying all available colormaps")
+    parser.add_argument("--verbose", dest="verbose", action='store_true',
+                        help="Verbose error reporting during setup-and-check "
+                             "phase")
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
@@ -756,7 +766,7 @@ def main():
         pass
 
     analyses = build_analysis_list(config, controlConfig)
-    analyses = determine_analyses_to_generate(analyses)
+    analyses = determine_analyses_to_generate(analyses, args.verbose)
 
     if not args.setup_only and not args.html_only:
         run_analysis(config, analyses)
