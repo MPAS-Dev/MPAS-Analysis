@@ -53,8 +53,8 @@ The following configuration options are available for this task::
   vertical = False
 
   # observations files
-  thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5.nc
-  thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5.nc
+  thicknessNH_ON = ICESat/ICESat_gridded_mean_thickness_NH_on.interp0.5x0.5_20180710.nc
+  thicknessNH_FM = ICESat/ICESat_gridded_mean_thickness_NH_fm.interp0.5x0.5_20180710.nc
 
 The option ``minimumLatitude`` determines what the southernmost latitude (in
 degrees) included in the plot will be.  The option ``referenceLongitude``

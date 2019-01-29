@@ -101,7 +101,7 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
             observationsDirectory = build_obs_path(
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
 
-            obsFileName = "{}/holtetalley_mld_climatology.nc".format(
+            obsFileName = "{}/holtetalley_mld_climatology_20180710.nc".format(
                     observationsDirectory)
 
             refFieldName = 'mld'

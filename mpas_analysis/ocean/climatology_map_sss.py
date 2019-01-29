@@ -102,7 +102,7 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/Aquarius_V3_SSS_Monthly.nc".format(
+                "{}/Aquarius_V3_SSS_Monthly_20180710.nc".format(
                     observationsDirectory)
             refFieldName = 'sss'
             outFileLabel = 'sssAquarius'

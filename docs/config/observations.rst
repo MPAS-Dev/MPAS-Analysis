@@ -66,7 +66,7 @@ to point to the observations files and folders::
 
   # directory where sea ice observations are stored
   obsSubdirectory = observations/Icebergs
-  concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
+  concentrationAltibergSH = Altiberg/Altiberg_1991-2017_20180308.nc
 
 
 Files and Directories

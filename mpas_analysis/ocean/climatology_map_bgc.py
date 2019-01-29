@@ -77,6 +77,26 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
+        preindustrial = config.getboolean(sectionName, 'preindustrial')
+
+        obsFileDict = {
+            'Chl': 'Chl_SeaWIFS_20180702.nc',
+            'CO2_gas_flux': 'CO2_gas_flux_1.0x1.0degree_20180628.nc',
+            'SiO3': 'SiO3_1.0x1.0degree_20180628.nc',
+            'PO4': 'PO4_1.0x1.0degree_20180628.nc',
+            'ALK': 'ALK_1.0x1.0degree_20180629.nc',
+            'NO3': 'NO3_1.0x1.0degree_20180628.nc',
+            'pCO2surface': 'pCO2surface_1.0x1.0degree_20180629.nc',
+            'O2': 'O2_1.0x1.0degree_20180628.nc',
+            'pH_3D': 'pH_3D_1.0x1.0degree_20180629.nc'}
+
+        # If user wants to compare to preindustrial data, make sure
+        # that we load in the right DIC field.
+        if preindustrial:
+            obsFileDict['DIC'] = 'PI_DIC_1.0x1.0degree_20180629.nc'
+        else:
+            obsFileDict['DIC'] = 'DIC_1.0x1.0degree_20180629.nc'
+
         for fieldName in bgcVars:
 
             fieldSectionName = '{}_{}'.format(sectionName, fieldName)
@@ -117,25 +137,14 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
             if controlConfig is None:
                 refTitleLabel = 'Observations'
-                preindustrial = config.getboolean(sectionName, 'preindustrial')
                 if preindustrial and 'DIC' in fieldName:
                     refTitleLabel += ' (Preindustrial)'
 
                 observationsDirectory = build_obs_path(
                     config, 'ocean', '{}Subdirectory'.format(fieldName))
 
-                # If user wants to compare to preindustrial data, make sure
-                # that we load in the right DIC field.
-                if preindustrial and fieldName == 'DIC':
-                    obsFileName = "{}/PI_DIC_1.0x1.0degree.nc".format(
-                            observationsDirectory)
-                elif fieldName == 'Chl':
-                    obsFileName = \
-                        "{}/Chl_SeaWIFS.nc".format(observationsDirectory)
-                else:
-                    obsFileName = \
-                        "{}/{}_1.0x1.0degree.nc" .format(
-                            observationsDirectory, fieldName)
+                obsFileName ="{}/{}".format(observationsDirectory,
+                                            obsFileDict[fieldName])
 
                 observationsLabel = config.get(fieldSectionName,
                                                'observationsLabel')

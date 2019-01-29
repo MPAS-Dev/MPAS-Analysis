@@ -165,11 +165,11 @@ class IndexNino34(AnalysisTask):  # {{{
         # specify obsTitle based on data path
         # These are the only data sets supported
         if dataSource == 'HADIsst':
-            dataPath = "{}/HADIsst_nino34.nc".format(observationsDirectory)
+            dataPath = "{}/HADIsst_nino34_20180710.nc".format(observationsDirectory)
             obsTitle = 'HADSST'
             refDate = '1870-01-01'
         elif dataSource == 'ERS_SSTv4':
-            dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
+            dataPath = "{}/ERS_SSTv4_nino34_20180710.nc".format(observationsDirectory)
             obsTitle = 'ERS SSTv4'
             refDate = '1800-01-01'
         else:

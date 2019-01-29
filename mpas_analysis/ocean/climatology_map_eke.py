@@ -109,7 +109,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/drifter_variance.nc".format(
+                "{}/drifter_variance_20180804.nc".format(
                     observationsDirectory)
             refFieldName = 'eke'
             outFileLabel = 'ekeDRIFTER'
@@ -202,7 +202,7 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
         scaleFactor = 100 * 100  # m2/s2 to cm2/s2
         eke = 0.5 * scaleFactor * \
             (climatology.timeMonthly_avg_velocityZonalSquared -
-             climatology.timeMonthly_avg_velocityZonal ** 2 + 
+             climatology.timeMonthly_avg_velocityZonal ** 2 +
              climatology.timeMonthly_avg_velocityMeridionalSquaread -
              climatology.timeMonthly_avg_velocityMeridional ** 2)
 
