@@ -81,22 +81,35 @@ class WoceTransects(AnalysisTask):  # {{{
             config, 'ocean', 'woceSubdirectory')
 
         obsFileNames = OrderedDict()
-        for transectName in ['WOCE_A21_Drake_Passage',
-                             'WOCE_A23_South_Atlantic',
-                             'WOCE_A12_Prime_Meridian']:
 
-            fileName = '{}/{}.nc'.format(observationsDirectory, transectName)
+        obsFileNames['WOCE_A21_Drake_Passage'] = \
+            'WOCE_A21_Drake_Passage_20181126.nc'
+        obsFileNames['WOCE_A23_South_Atlantic'] = \
+            'WOCE_A23_South_Atlantic_20181126.nc'
+        obsFileNames['WOCE_A23_South_Atlantic'] = \
+            'WOCE_A23_South_Atlantic_20181126.nc'
+
+        for transectName in obsFileNames:
+            fileName = '{}/{}'.format(observationsDirectory,
+                                      obsFileNames[transectName])
             obsFileNames[transectName] = fileName
 
         fields = \
             {'temperature':
                 {'mpas': 'timeMonthly_avg_activeTracers_temperature',
                  'obs': 'potentialTemperature',
+                 'titleName': 'Potential Temperature',
                  'units': r'$\degree$C'},
              'salinity':
                 {'mpas': 'timeMonthly_avg_activeTracers_salinity',
                  'obs': 'salinity',
-                 'units': r'PSU'}}
+                 'titleName': 'Salinity',
+                 'units': r'PSU'},
+             'potentialDensity':
+                {'mpas': 'timeMonthly_avg_potentialDensity',
+                 'obs': 'potentialDensity',
+                 'titleName': 'Potential Density',
+                 'units': r'kg m$^{-3}$'}}
 
         transectCollectionName = 'WOCE_transects'
         if horizontalResolution != 'obs':
@@ -132,7 +145,8 @@ class WoceTransects(AnalysisTask):  # {{{
             diffTitleLabel = 'Main - Control'
 
         fieldNameDict = {'temperature': 'temperatureTransect',
-                         'salinity': 'salinityTransect'}
+                         'salinity': 'salinityTransect',
+                         'potentialDensity': 'potentialDensityTransect'}
 
         for fieldName in fields:
             for transectName in obsFileNames:
@@ -144,8 +158,9 @@ class WoceTransects(AnalysisTask):  # {{{
                         refFieldName = fields[fieldName]['mpas']
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
+                    titleName = fields[fieldName]['titleName']
                     fieldNameInTytle = '{} from {}'.format(
-                            fieldNameUpper,
+                            titleName,
                             transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
@@ -167,7 +182,7 @@ class WoceTransects(AnalysisTask):  # {{{
                             galleryGroup='WOCE Transects',
                             groupSubtitle=None,
                             groupLink='woce',
-                            galleryName=fieldNameUpper,
+                            galleryName=titleName,
                             configSectionName='woce{}Transects'.format(
                                     fieldNameUpper))
 
