@@ -178,6 +178,8 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTask,
                                            controlConfig))
 
+    analyses.append(ocean.OceanRegionalProfiles(config, controlConfig))
+
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
                                                componentName='seaIce')
@@ -564,7 +566,7 @@ def purge_output(config):
               'No purge necessary.'.format(outputDirectory))
     else:
         for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
-                             'timeSeries', 'html', 'mask']:
+                             'timeSeries', 'html', 'mask', 'profiles']:
             option = '{}Subdirectory'.format(subdirectory)
             directory = build_config_full_path(
                     config=config, section='output',
@@ -625,7 +627,8 @@ def symlink_main_run(config, defaultConfig):
     mainConfig = MpasAnalysisConfigParser()
     mainConfig.read(mainConfigFiles)
 
-    for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask']:
+    for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask',
+                         'profiles']:
         section = 'output'
         option = '{}Subdirectory'.format(subdirectory)
         link_dir(section=section, option=option)

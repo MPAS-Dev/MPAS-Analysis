@@ -133,6 +133,7 @@ logsSubdirectory = logs
 mpasClimatologySubdirectory = clim/mpas
 mappingSubdirectory = mapping
 timeSeriesSubdirectory = timeseries
+profilesSubdirectory = profiles
 maskSubdirectory = masks
 # provide an absolute path to put HTML in an alternative location (e.g. a web
 # portal)
@@ -2247,6 +2248,45 @@ units = mg m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = SeaWIFS
 galleryLabel = Chlorophyll
+
+
+[oceanRegionalProfiles]
+## options related to plotting vertical profiles of regional means (and
+## variability) of 3D MPAS fields
+
+# a list of dictionaries for each field to plot.  The dictionary includes
+# prefix (used for file names, task names and sections) as well as the mpas
+# name of the field, units for colorbars and a the name as it should appear
+# in figure titles and captions.
+fields =
+    [{'prefix': 'temperature',
+      'mpas': 'timeMonthly_avg_activeTracers_temperature',
+      'units': r'$\degree$C',
+      'titleName': 'Potential Temperature'},
+     {'prefix': 'salinity',
+      'mpas': 'timeMonthly_avg_activeTracers_salinity',
+      'units': r'PSU',
+      'titleName': 'Salinity'},
+     {'prefix': 'potentialDensity',
+      'mpas': 'timeMonthly_avg_potentialDensity',
+      'units': r'kg m$^{-3}$',
+      'titleName': 'Potential Density'}]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# The suffix on the regional mask file to be used to determine the regions to
+# plot.  A region mask file should be in the regionMaskDirectory and should
+# be named <mpasMeshName>_<regionMaskSuffix>.nc
+regionMaskSuffix = oceanBasins
+
+# a list of region names from the region masks file to plot
+regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
+               "Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",
+               "Global Ocean", "Global Ocean 65N to 65S",
+               "Global Ocean 15S to 15N"]
+
 
 [climatologyMapSeaIceConcNH]
 ## options related to plotting horizontally remapped climatologies of
