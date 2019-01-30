@@ -242,7 +242,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.logger.info('  Creating and writing masks dataset...')
         nRegions = len(regionNames)
         dsMasks = xr.Dataset()
-        dsMasks['masks'] = (('nRegions', 'nCells'),
+        dsMasks['regionCellMasks'] = (('nRegions', 'nCells'),
                             numpy.zeros((nRegions, nCells), dtype=bool))
         dsMasks['regionNames'] = (('nRegions'),
                                   numpy.zeros((nRegions),
