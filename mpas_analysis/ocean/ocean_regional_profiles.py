@@ -17,6 +17,7 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
@@ -27,6 +28,8 @@ from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
     get_feature_list
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
+from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
+from mpas_analysis.shared.html import write_image_xml
 
 
 class OceanRegionalProfiles(AnalysisTask):  # {{{
@@ -67,8 +70,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['profiles', 'climatology'])
 
-        startYear = config.getint('climatology', 'startYear')
-        endYear = config.getint('climatology', 'endYear')
+        self.startYear = config.getint('climatology', 'startYear')
+        self.endYear = config.getint('climatology', 'endYear')
 
         self.fields = config.getExpression('oceanRegionalProfiles', 'fields')
 
@@ -79,6 +82,15 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
         self.regionNames = config.getExpression('oceanRegionalProfiles',
                                                 'regionNames')
+
+        plotHovmoller = config.getboolean('oceanRegionalProfiles',
+                                          'plotHovmoller')
+
+        self.regionMaskSuffix = config.get('oceanRegionalProfiles',
+                                           'regionMaskSuffix')
+
+        hovmollerGalleryGroup = config.get('oceanRegionalProfiles',
+                                           'hovmollerGalleryGroup')
 
         regionMaskDirectory = build_config_full_path(config,
                                                      'diagnostics',
@@ -96,7 +108,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
         self.masksSubtask = masksSubtask
 
-        years = range(startYear, endYear+1)
+        years = range(self.startYear, self.endYear+1)
 
         # in the end, we'll combine all the time series into one, but we create
         # this task first so it's easier to tell it to run after all the
@@ -111,9 +123,46 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
             computeSubtask.run_after(masksSubtask)
             combineSubtask.run_after(computeSubtask)
 
-        # plotSubtask = PlotRegionalProfileTimeSeriesSubtask(
-        #         self, controlConfig)
-        # plotSubtask.run_after(combineSubtask)
+        if plotHovmoller:
+            for field in self.fields:
+                prefix = field['prefix']
+                for regionName in self.regionNames:
+                    subtaskName = 'plotHovmoller_{}_{}'.format(
+                            prefix, regionName.replace(' ', '_'))
+                    inFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
+                            self.regionMaskSuffix, self.regionMaskSuffix,
+                            self.startYear, self.endYear)
+                    titleName = field['titleName']
+                    caption = 'Time series of {} {} vs ' \
+                              'depth'.format(regionName.replace('_', ' '),
+                                             titleName)
+                    hovmollerSubtask = PlotHovmollerSubtask(
+                        parentTask=self,
+                        regionName=regionName,
+                        inFileName=inFileName,
+                        outFileLabel='{}_hovmoller'.format(prefix),
+                        fieldNameInTitle=titleName,
+                        mpasFieldName='{}_mean'.format(prefix),
+                        unitsLabel=field['units'],
+                        sectionName='{}OceanRegionalHovmoller'.format(prefix),
+                        thumbnailSuffix='',
+                        imageCaption=caption,
+                        galleryGroup=hovmollerGalleryGroup,
+                        groupSubtitle=None,
+                        groupLink='ocnreghovs',
+                        galleryName=titleName,
+                        subtaskName=subtaskName)
+                    hovmollerSubtask.run_after(combineSubtask)
+                    self.add_subtask(hovmollerSubtask)
+
+        for field in self.fields:
+            prefix = field['prefix']
+            for regionName in self.regionNames:
+                for season in self.seasons:
+                    plotSubtask = PlotRegionalProfileTimeSeriesSubtask(
+                            self, season, regionName, field, controlConfig)
+                    plotSubtask.run_after(combineSubtask)
+                    self.add_subtask(plotSubtask)
 
         # }}}
     # }}}
@@ -287,6 +336,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # select only those regions we want to plot
         dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
         cellMasks = dsRegionMask.regionCellMasks
+        regionNamesVar = dsRegionMask.regionNames
 
         totalArea = (cellMasks*areaCell*vertMask).sum('nCells')
 
@@ -331,11 +381,30 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # combine data sets into a single data set
         dsOut = xr.concat(datasets, 'Time')
 
+        dsOut.coords['regionNames'] = regionNamesVar
         dsOut['totalArea'] = totalArea
-        dsOut['year'] = (('Time'), years)
+        dsOut.coords['year'] = (('Time'), years)
         dsOut['year'].attrs['units'] = 'years'
-        dsOut['month'] = (('Time'), months)
+        dsOut.coords['month'] = (('Time'), months)
         dsOut['month'].attrs['units'] = 'months'
+
+        # Note: restart file, not a mesh file because we need refBottomDepth,
+        # not in a mesh file
+        try:
+            restartFile = self.runStreams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-O restart file found: need at least one '
+                          'restart file for plotting time series vs. depth')
+
+        with xr.open_dataset(restartFile) as dsRestart:
+            depths = dsRestart.refBottomDepth.values
+            z = np.zeros(depths.shape)
+            z[0] = -0.5*depths[0]
+            z[1:] = -0.5*(depths[0:-1] + depths[1:])
+
+        dsOut.coords['z'] = (('nVertLevels'), z)
+        dsOut['z'].attrs['units'] = 'meters'
+
         write_netcdf(dsOut, outputFileName)
         # }}}
     # }}}
@@ -415,6 +484,11 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
             write_netcdf(ds, outputFileName)
 
+        regionNames = ds['regionNames']
+        ds = ds.drop('regionNames')
+
+        profileMask = ds['totalArea'] > 0
+
         outputDirectory = build_config_full_path(self.config, 'output',
                                                  'profilesSubdirectory')
 
@@ -433,15 +507,330 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 for field in self.parentTask.fields:
                     prefix = field['prefix']
 
-                    mean = dsSeason['{}_mean'.format(prefix)]
-                    meanSquared = dsSeason['{}_meanSquared'.format(prefix)]
+                    mean = dsSeason['{}_mean'.format(prefix)].where(
+                        profileMask)
+                    meanSquared = \
+                        dsSeason['{}_meanSquared'.format(prefix)].where(
+                            profileMask)
                     stdName = '{}_std'.format(prefix)
 
-                    dsSeason[stdName] = np.sqrt(meanSquared - mean**2)
+                    dsSeason[stdName] = np.sqrt(meanSquared - mean**2).where(
+                            profileMask)
+                    dsSeason['{}_mean'.format(prefix)] = mean
 
+                dsSeason.coords['regionNames'] = regionNames
                 write_netcdf(dsSeason, outputFileName)
 
         # }}}
+    # }}}
+
+
+class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
+    '''
+    Plot a profile averaged over an ocean region and in time, along with
+    variability in both space and time.
+
+    Attributes
+    ----------
+    parentTask : ``AnalysisTask``
+        The parent task of which this is a subtask
+
+    season : str
+        The season being plotted
+
+    regionName : str
+        The region being plotted
+
+    field : dict
+        Information about the field (e.g. temperature) being plotted
+
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
+    '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, season, regionName, field, controlConfig):
+        # {{{
+        '''
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask : ``AnalysisTask``
+            The parent task of which this is a subtask
+
+        season : str
+            The season being plotted
+
+        regionName : str
+            The region being plotted
+
+        field : dict
+            Information about the field (e.g. temperature) being plotted
+
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        subtaskName = '{}_{}_{}'.format(field['prefix'],
+                                        regionName.replace(' ', '_'),
+                                        season)
+        # first, call the constructor from the base class (AnalysisTask)
+        super(PlotRegionalProfileTimeSeriesSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName=subtaskName)
+
+        self.parentTask = parentTask
+        self.controlConfig = controlConfig
+
+        self.season = season
+        self.regionName = regionName
+        self.field = field
+
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        '''
+        Perform steps to set up the analysis and check for errors in the setup.
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(PlotRegionalProfileTimeSeriesSubtask, self).setup_and_check()
+
+        self.xmlFileNames = []
+        self.filePrefixes = {}
+
+        self.filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
+                    self.field['prefix'], self.regionName.replace(' ', '_'),
+                    self.season, self.parentTask.startYear,
+                    self.parentTask.endYear)
+        self.xmlFileNames = ['{}/{}.xml'.format(self.plotsDirectory,
+                                                self.filePrefix)]
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Plot a depth profile with variability
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+
+        inDirectory = build_config_full_path(config, 'output',
+                                             'profilesSubdirectory')
+        timeSeriesName = self.parentTask.regionMaskSuffix
+        inFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
+                inDirectory, timeSeriesName, self.season,
+                self.parentTask.startYear, self.parentTask.endYear)
+
+        ds = xr.open_dataset(inFileName)
+        allRegionNames = [bytes.decode(name) for name in
+                          ds.regionNames.values]
+        regionIndex = allRegionNames.index(self.regionName)
+        ds = ds.isel(nRegions=regionIndex)
+        meanFieldName = '{}_mean'.format(self.field['prefix'])
+        stdFieldName = '{}_std'.format(self.field['prefix'])
+
+        mainRunName = config.get('runs', 'mainRunName')
+        profileGalleryGroup = config.get('oceanRegionalProfiles',
+                                         'profileGalleryGroup')
+
+        titleFieldName = self.field['titleName']
+        regionName = self.regionName.replace('_', ' ')
+
+        xLabel = '{} ({})'.format(titleFieldName, self.field['units'])
+        yLabel = 'depth (m)'
+        title = '{} {}, years {:04d}-{:04d}\n {}'.format(
+            regionName, self.season, self.parentTask.startYear,
+            self.parentTask.endYear, mainRunName)
+        fileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
+        lineColors = ['k']
+        lineWidths = [1.6]
+        legendText = [mainRunName]
+        zArrays = [ds.z.values]
+        fieldArrays = [ds[meanFieldName].values]
+        errArrays = [ds[stdFieldName].values]
+        if self.controlConfig is not None:
+
+            controlStartYear = self.controlConfig.getint('climatology',
+                                                         'startYear')
+            controlEndYear = self.controlConfig.getint('climatology',
+                                                       'endYear')
+            controlDirectory = build_config_full_path(
+                self.controlConfig, 'output',
+                'profilesSubdirectory')
+
+            controlFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
+                controlDirectory, timeSeriesName, self.season,
+                controlStartYear, controlEndYear)
+
+            dsControl = xr.open_dataset(controlFileName)
+            allRegionNames = [bytes.decode(name) for name in
+                              dsControl.regionNames.values]
+            regionIndex = allRegionNames.index(self.regionName)
+            dsControl = dsControl.isel(nRegions=regionIndex)
+
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
+
+            lineColors.append('r')
+            lineWidths.append(1.2)
+            legendText.append(controlRunName)
+            zArrays.append(dsControl.z.values)
+            fieldArrays.append(dsControl[meanFieldName].values)
+            errArrays.append(dsControl[stdFieldName].values)
+
+        if len(legendText) == 1:
+            # no need for a legend
+            legendText = [None]
+
+        self.plot(zArrays, fieldArrays, errArrays,
+                  lineColors=lineColors, lineWidths=lineWidths,
+                  legendText=legendText, title=title, xLabel=xLabel,
+                  yLabel=yLabel, fileName=fileName)
+
+        caption = '{} {} vs depth'.format(regionName, titleFieldName)
+        write_image_xml(
+            config=config,
+            filePrefix=self.filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup=profileGalleryGroup,
+            groupLink='ocnregprofs',
+            imageDescription=caption,
+            imageCaption=caption,
+            gallery=titleFieldName,
+            thumbnailDescription='{} {}'.format(regionName, self.season))
+        # }}}
+
+    def plot(self, zArrays, fieldArrays, errArrays, lineColors, lineWidths,
+             legendText, title, xLabel, yLabel, fileName, xLim=None, yLim=None,
+             figureSize=(10, 4), dpi=None):  # {{{
+
+        """
+        Plots a 1D line plot with error bars if available.
+
+        Parameters
+        ----------
+        zArrays : list of float arrays
+            x array (latitude, or any other x axis except time)
+
+        fieldArrays : list of float arrays
+            y array (any field as function of x)
+
+        errArrays : list of float arrays
+            error array (y errors)
+
+        lineColors, legendText : list of str
+            control line color and corresponding legend text.
+
+        lineWidths : list of float
+            control line width
+
+        title : str
+            title of plot
+
+        xLabel, yLabel : str
+            label of x- and y-axis
+
+        fileName : str
+            the file name to be written
+
+        xLim : float array, optional
+            x range of plot
+
+        yLim : float array, optional
+            y range of plot
+
+        figureSize : tuple of float, optional
+            size of the figure in inches
+
+        dpi : int, optional
+            the number of dots per inch of the figure, taken from section `
+            `plot`` option ``dpi`` in the config file by default
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+
+        # set up figure
+        if dpi is None:
+            dpi = config.getint('plot', 'dpi')
+        plt.figure(figsize=figureSize, dpi=dpi)
+
+        plotLegend = False
+        for dsIndex in range(len(zArrays)):
+            zArray = zArrays[dsIndex]
+            fieldArray = fieldArrays[dsIndex]
+            errArray = errArrays[dsIndex]
+            if zArray is None:
+                continue
+
+            if legendText is None:
+                label = None
+            else:
+                label = legendText[dsIndex]
+                plotLegend = True
+            if lineColors is None:
+                color = 'k'
+            else:
+                color = lineColors[dsIndex]
+            if lineWidths is None:
+                linewidth = 1.
+            else:
+                linewidth = lineWidths[dsIndex]
+
+            plt.plot(fieldArray, zArray, color=color, linewidth=linewidth,
+                     label=label)
+            if errArray is not None:
+                plt.fill_betweenx(zArray, fieldArray, fieldArray+errArray,
+                                  facecolor=color, alpha=0.2)
+                plt.fill_betweenx(zArray, fieldArray, fieldArray-errArray,
+                                  facecolor=color, alpha=0.2)
+        # plt.grid()
+        # plt.axvline(0.0, linestyle='-', color='k')
+        if plotLegend and len(zArrays) > 1:
+            plt.legend()
+
+        axis_font = {'size': config.get('plot', 'axisFontSize')}
+        title_font = {'size': config.get('plot', 'titleFontSize'),
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
+        if title is not None:
+            plt.title(title, **title_font)
+        if xLabel is not None:
+            plt.xlabel(xLabel, **axis_font)
+        if yLabel is not None:
+            plt.ylabel(yLabel, **axis_font)
+
+        if xLim:
+            plt.xlim(xLim)
+        if yLim:
+            plt.ylim(yLim)
+
+        if (fileName is not None):
+            plt.savefig(fileName, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+        plt.close()  # }}}
+
     # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

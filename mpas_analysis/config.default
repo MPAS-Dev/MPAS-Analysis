@@ -1656,7 +1656,7 @@ colormapNameResult = RdYlBu_r
 colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
-# A dictionary with keywords for the SemiLogNorm
+# A dictionary with keywords for the norm
 normArgsResult = {'vmin': -2., 'vmax': 30.}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(-2., 2., 9)
@@ -1670,7 +1670,7 @@ colormapNameDifference = balance
 colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
-# A dictionary with keywords for the SemiLogNorm
+# A dictionary with keywords for the norm
 normArgsDifference = {'vmin': -2., 'vmax': 2.}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-2., 2., 9)
@@ -1688,7 +1688,7 @@ colormapNameResult = haline
 colormapTypeResult = continuous
 # the type of norm used in the colormap
 normTypeResult = linear
-# A dictionary with keywords for the SemiLogNorm
+# A dictionary with keywords for the norm
 normArgsResult = {'vmin': 30, 'vmax': 39.0}
 # place the ticks automatically by default
 # colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
@@ -1702,7 +1702,7 @@ colormapNameDifference = balance
 colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
-# A dictionary with keywords for the SemiLogNorm
+# A dictionary with keywords for the norm
 normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 # place the ticks automatically by default
 # colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
@@ -2286,6 +2286,112 @@ regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
                "Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",
                "Global Ocean", "Global Ocean 65N to 65S",
                "Global Ocean 15S to 15N"]
+
+# Make Hovmoller plots of fields vs time and depth?
+plotHovmoller = False
+
+# web gallery options
+hovmollerGalleryGroup = Ocean Basin Time Series vs Depths
+
+# web gallery options
+profileGalleryGroup = Ocean Basin Profiles
+
+
+[temperatureOceanRegionalHovmoller]
+## options related to plotting time series of temperature vs. depth in ocean
+## regions
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 1
+
+# colormap
+colormapName = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapType = continuous
+# the type of norm used in the colormap
+normType = linear
+# A dictionary with keywords for the norm
+normArgs = {'vmin': -2., 'vmax': 30.}
+
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevels = 'none'
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+[salinityOceanRegionalHovmoller]
+## options related to plotting time series of salinity vs. depth in ocean
+## regions
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 1
+
+# colormap
+colormapName = haline
+# whether the colormap is indexed or continuous
+colormapType = continuous
+# the type of norm used in the colormap
+normType = linear
+# A dictionary with keywords for the norm
+normArgs = {'vmin': 30, 'vmax': 39.0}
+
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevels = 'none'
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+[potentialDensityOceanRegionalHovmoller]
+## options related to plotting time series of potential density vs. depth in
+## ocean regions
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 1
+
+# colormap
+colormapName = Spectral_r
+# whether the colormap is indexed or continuous
+colormapType = continuous
+# the type of norm used in the colormap
+normType = linear
+# A dictionary with keywords for the norm
+normArgs = {'vmin': 1026.5, 'vmax': 1028.}
+
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevels = 'none'
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
 
 
 [climatologyMapSeaIceConcNH]
