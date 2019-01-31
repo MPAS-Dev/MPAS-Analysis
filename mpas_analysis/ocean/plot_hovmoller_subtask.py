@@ -217,30 +217,30 @@ class PlotHovmollerSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
-        self.logger.info("\nPlotting {} trends vs. depth...".format(
+        self.logger.info("\nPlotting {} time series vs. depth...".format(
                 self.fieldNameInTitle))
 
         config = self.config
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        plotTitles = config.getExpression('regions', 'plotTitles')
-        allRegionNames = config.getExpression('regions', 'regions')
-        regionIndex = allRegionNames.index(self.regionName)
-        regionNameInTitle = plotTitles[regionIndex]
-
-        startDate = self.config.get('timeSeries', 'startDate')
-        endDate = self.config.get('timeSeries', 'endDate')
-
-        # Load data
         self.logger.info('  Load ocean data...')
-        ds = open_mpas_dataset(fileName=self.inFileName,
-                               calendar=self.calendar,
-                               variableList=[self.mpasFieldName],
-                               timeVariableNames=None,
-                               startDate=startDate,
-                               endDate=endDate)
-        ds = ds.isel(nOceanRegionsTmp=regionIndex)
+        ds = xr.open_dataset(self.inFileName)
+
+        if 'regionNames' in ds.coords:
+            allRegionNames = [bytes.decode(name) for name in
+                              ds.regionNames.values]
+            regionIndex = allRegionNames.index(self.regionName)
+            regionNameInTitle = self.regionName.replace('_', ' ')
+            regionDim = ds.regionNames.dims[0]
+        else:
+            plotTitles = config.getExpression('regions', 'plotTitles')
+            allRegionNames = config.getExpression('regions', 'regions')
+            regionIndex = allRegionNames.index(self.regionName)
+            regionNameInTitle = plotTitles[regionIndex]
+            regionDim = 'nOceanRegionsTmp'
+
+        ds = ds.isel(**{regionDim: regionIndex})
 
         # Note: restart file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
@@ -248,7 +248,7 @@ class PlotHovmollerSubtask(AnalysisTask):
             restartFile = self.runStreams.readpath('restart')[0]
         except ValueError:
             raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for OHC calculation')
+                          'restart file for plotting time series vs. depth')
 
         # Define/read in general variables
         self.logger.info('  Read in depth...')
@@ -275,7 +275,7 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         if config.has_option(self.sectionName, 'yearStrideXTicks'):
             yearStrideXTicks = config.getint(self.sectionName,
-                                            'yearStrideXTicks')
+                                             'yearStrideXTicks')
         else:
             yearStrideXTicks = None
 
@@ -293,10 +293,11 @@ class PlotHovmollerSubtask(AnalysisTask):
             componentName='Ocean',
             componentSubdirectory='ocean',
             galleryGroup=self.galleryGroup,
+            groupSubtitle=self.groupSubtitle,
             groupLink=self.groupLink,
-            galleryName=self.galleryName,
-            thumbnailDescription='{} {}'.format(self.regionName,
-                                                self.thumbnailSuffix),
+            gallery=self.galleryName,
+            thumbnailDescription='{} {}'.format(
+                    regionNameInTitle, self.thumbnailSuffix),
             imageDescription=self.imageCaption,
             imageCaption=self.imageCaption)
 

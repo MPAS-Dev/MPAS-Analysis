@@ -487,7 +487,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             componentSubdirectory='ocean',
             galleryGroup=self.galleryGroup,
             groupLink=self.groupLink,
-            galleryName=self.galleryName,
+            gallery=self.galleryName,
             thumbnailDescription='{} {}'.format(self.regionName,
                                                 self.thumbnailSuffix),
             imageDescription=self.imageCaption,
