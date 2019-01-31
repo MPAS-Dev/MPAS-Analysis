@@ -203,7 +203,7 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
         eke = 0.5 * scaleFactor * \
             (climatology.timeMonthly_avg_velocityZonalSquared -
              climatology.timeMonthly_avg_velocityZonal ** 2 +
-             climatology.timeMonthly_avg_velocityMeridionalSquaread -
+             climatology.timeMonthly_avg_velocityMeridionalSquared -
              climatology.timeMonthly_avg_velocityMeridional ** 2)
 
         # drop unnecessary fields before re-mapping
