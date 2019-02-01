@@ -632,6 +632,8 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         config = self.config
+        startYear = self.parentTask.startYear
+        endYear = self.parentTask.endYear
 
         inDirectory = build_config_full_path(config, 'output',
                                              'profilesSubdirectory')
@@ -657,22 +659,41 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         xLabel = '{} ({})'.format(titleFieldName, self.field['units'])
         yLabel = 'depth (m)'
-        title = '{} {}, years {:04d}-{:04d}\n {}'.format(
-            regionName, self.season, self.parentTask.startYear,
-            self.parentTask.endYear, mainRunName)
         fileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
         lineColors = ['k']
         lineWidths = [1.6]
-        legendText = [mainRunName]
         zArrays = [ds.z.values]
         fieldArrays = [ds[meanFieldName].values]
         errArrays = [ds[stdFieldName].values]
-        if self.controlConfig is not None:
-
+        if self.controlConfig is None:
+            title = '{} {}, years {:04d}-{:04d}\n{}'.format(
+                regionName, self.season, startYear, endYear, mainRunName)
+            legendText = [None]
+        else:
             controlStartYear = self.controlConfig.getint('climatology',
                                                          'startYear')
             controlEndYear = self.controlConfig.getint('climatology',
                                                        'endYear')
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
+
+            if controlStartYear == startYear and controlEndYear == endYear:
+                title = '{} {}, years {:04d}-{:04d}'.format(
+                    regionName, self.season, startYear, endYear)
+                legendText = [mainRunName, controlRunName]
+            elif mainRunName == controlRunName:
+                title = '{} {}\n{}'.format(
+                    regionName, self.season, mainRunName)
+                legendText = ['{:04d}-{:04d}'.format(startYear, endYear),
+                              '{:04d}-{:04d}'.format(controlStartYear,
+                                                     controlEndYear)]
+            else:
+                title = '{} {}'.format(regionName, self.season)
+                legendText = ['{} {:04d}-{:04d}'.format(mainRunName, startYear,
+                                                        endYear),
+                              '{} {:04d}-{:04d}'.format(controlRunName,
+                                                        controlStartYear,
+                                                        controlEndYear)]
+
             controlDirectory = build_config_full_path(
                 self.controlConfig, 'output',
                 'profilesSubdirectory')
@@ -687,18 +708,11 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             regionIndex = allRegionNames.index(self.regionName)
             dsControl = dsControl.isel(nRegions=regionIndex)
 
-            controlRunName = self.controlConfig.get('runs', 'mainRunName')
-
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(controlRunName)
             zArrays.append(dsControl.z.values)
             fieldArrays.append(dsControl[meanFieldName].values)
             errArrays.append(dsControl[stdFieldName].values)
-
-        if len(legendText) == 1:
-            # no need for a legend
-            legendText = [None]
 
         self.plot(zArrays, fieldArrays, errArrays,
                   lineColors=lineColors, lineWidths=lineWidths,
