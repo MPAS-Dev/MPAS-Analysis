@@ -714,10 +714,15 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             fieldArrays.append(dsControl[meanFieldName].values)
             errArrays.append(dsControl[stdFieldName].values)
 
+        depthRange = config.getExpression('oceanRegionalProfiles',
+                                          'depthRange')
+        if len(depthRange) == 0:
+            depthRange = None
+
         self.plot(zArrays, fieldArrays, errArrays,
                   lineColors=lineColors, lineWidths=lineWidths,
                   legendText=legendText, title=title, xLabel=xLabel,
-                  yLabel=yLabel, fileName=fileName)
+                  yLabel=yLabel, fileName=fileName, yLim=depthRange)
 
         caption = '{} {} vs depth'.format(regionName, titleFieldName)
         write_image_xml(

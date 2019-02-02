@@ -15,13 +15,12 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import numpy as np
 import os
 
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import plot_vertical_section
-
-from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 
@@ -254,13 +253,16 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.logger.info('  Read in depth...')
         with xr.open_dataset(restartFile) as dsRestart:
             # reference depth [m]
-            depth = dsRestart.refBottomDepth.values
+            depths = dsRestart.refBottomDepth.values
+            z = np.zeros(depths.shape)
+            z[0] = -0.5*depths[0]
+            z[1:] = -0.5*(depths[0:-1] + depths[1:])
 
         Time = ds.Time.values
         field = ds[self.mpasFieldName].values.transpose()
 
-        xLabel = 'Time [years]'
-        yLabel = 'Depth [m]'
+        xLabel = 'Time (years)'
+        yLabel = 'Depth (m)'
 
         title = '{}, {} \n {}'.format(self.fieldNameInTitle, regionNameInTitle,
                                       mainRunName)
@@ -279,13 +281,19 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        plot_vertical_section(config, Time, depth, field, self.sectionName,
+        if config.has_option(self.sectionName, 'yLim'):
+            yLim = config.getExpression(self.sectionName, 'yLim')
+        else:
+            yLim = None
+
+        plot_vertical_section(config, Time, z, field, self.sectionName,
                               suffix='', colorbarLabel=self.unitsLabel,
                               title=title, xlabel=xLabel, ylabel=yLabel,
                               fileout=figureName, lineWidth=1,
                               xArrayIsTime=True, calendar=self.calendar,
                               firstYearXTicks=firstYearXTicks,
-                              yearStrideXTicks=yearStrideXTicks)
+                              yearStrideXTicks=yearStrideXTicks,
+                              yLim=yLim, invertYAxis=False)
 
         write_image_xml(
             config=config,

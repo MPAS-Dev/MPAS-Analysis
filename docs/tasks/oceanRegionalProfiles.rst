@@ -43,6 +43,9 @@ The following configuration options are available for this task::
   # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
   seasons =  ['JFM', 'JAS', 'ANN']
 
+  # minimum and maximum depth of profile plots, or empty for the full depth range
+  depthRange = []
+
   # The suffix on the regional mask file to be used to determine the regions to
   # plot.  A region mask file should be in the regionMaskDirectory and should
   # be named <mpasMeshName>_<regionMaskSuffix>.nc
@@ -96,6 +99,10 @@ The following configuration options are available for this task::
 
   # yearStrideXTicks = 1
 
+  # limits on depth, the full range by default
+  # yLim = [-6000., 0.]
+
+
   [salinityOceanRegionalHovmoller]
   ## options related to plotting time series of salinity vs. depth in ocean
   ## regions
@@ -127,6 +134,10 @@ The following configuration options are available for this task::
   # commented out to determine the distance between ticks automatically.
 
   # yearStrideXTicks = 1
+
+  # limits on depth, the full range by default
+  # yLim = [-6000., 0.]
+
 
   [potentialDensityOceanRegionalHovmoller]
   ## options related to plotting time series of potential density vs. depth in
@@ -160,6 +171,9 @@ The following configuration options are available for this task::
 
   # yearStrideXTicks = 1
 
+  # limits on depth, the full range by default
+  # yLim = [-6000., 0.]
+
 The ``fields`` dictionary is used to specify a list of 3D MPAS fields to
 average and plot.  The key ``prefix`` is a convenient name appended to tasks
 and file names to describe the field.  ``mpas`` is the name of the field in
@@ -183,6 +197,11 @@ setting ``plotHovmoller = True``.  The sections
 Config options are availabe to specify the names of the gallery group for the
 profiles (``profileGalleryGroup``) and Hovmoller plots
 (``hovmollerGalleryGroup``) if the latter are plotted.
+
+A minimum and maximum depth for profiles can be specified with ``depthRange``.
+Similarly, each section for displaying Hovmoller plots of each field has a
+``yLim`` option that can specify the desired depth range.  In all cases, the
+default is the full range.
 
 For more details on the remaining config options, see
  * :ref:`config_regions`

@@ -2276,6 +2276,9 @@ fields =
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
 seasons =  ['JFM', 'JAS', 'ANN']
 
+# minimum and maximum depth of profile plots, or empty for the full depth range
+depthRange = []
+
 # The suffix on the regional mask file to be used to determine the regions to
 # plot.  A region mask file should be in the regionMaskDirectory and should
 # be named <mpasMeshName>_<regionMaskSuffix>.nc
@@ -2329,6 +2332,10 @@ contourLevels = 'none'
 
 # yearStrideXTicks = 1
 
+# limits on depth, the full range by default
+# yLim = [-6000., 0.]
+
+
 [salinityOceanRegionalHovmoller]
 ## options related to plotting time series of salinity vs. depth in ocean
 ## regions
@@ -2361,6 +2368,10 @@ contourLevels = 'none'
 
 # yearStrideXTicks = 1
 
+# limits on depth, the full range by default
+# yLim = [-6000., 0.]
+
+
 [potentialDensityOceanRegionalHovmoller]
 ## options related to plotting time series of potential density vs. depth in
 ## ocean regions
@@ -2392,6 +2403,9 @@ contourLevels = 'none'
 # commented out to determine the distance between ticks automatically.
 
 # yearStrideXTicks = 1
+
+# limits on depth, the full range by default
+# yLim = [-6000., 0.]
 
 
 [climatologyMapSeaIceConcNH]
