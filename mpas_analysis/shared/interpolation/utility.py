@@ -15,6 +15,7 @@ from __future__ import absolute_import, division, print_function, \
 import numpy
 import xarray
 
+
 def add_periodic_lon(ds, lonDim, degrees=True):
     '''
     Add a single grid point that is a periodic image to the end of the data set
@@ -25,7 +26,7 @@ def add_periodic_lon(ds, lonDim, degrees=True):
     if degrees:
         period = 360.
     else:
-        period = 2.*numpy.pi
+        period = 2. * numpy.pi
 
     if numpy.abs(lonRange - period) < 1e-10:
         # already periodic

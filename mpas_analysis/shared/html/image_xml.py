@@ -206,17 +206,17 @@ def _generate_thumbnails(imageFileName, directory):
         thumbnailHeight = 180
 
     # first, make a thumbnail with the same aspect ratio
-    factor = image.size[1]/float(thumbnailHeight)
-    size = [int(dim/factor + 0.5) for dim in image.size]
+    factor = image.size[1] / float(thumbnailHeight)
+    size = [int(dim / factor + 0.5) for dim in image.size]
     thumbnail = image.resize(size, Image.ANTIALIAS)
     thumbnail.save('{}/{}'.format(thumbnailDir, imageFileName))
 
     # second, make a thumbnail with a fixed size
-    widthFactor = image.size[0]/float(fixedWidth)
-    heightFactor = image.size[1]/float(fixedHeight)
+    widthFactor = image.size[0] / float(fixedWidth)
+    heightFactor = image.size[1] / float(fixedHeight)
 
     factor = min(widthFactor, heightFactor)
-    size = [int(dim/factor + 0.5) for dim in image.size]
+    size = [int(dim / factor + 0.5) for dim in image.size]
     thumbnail = image.resize(size, Image.ANTIALIAS)
 
     if widthFactor <= heightFactor:

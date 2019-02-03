@@ -219,7 +219,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                               self.inFileName)
 
         preprocessedReferenceRunName = config.get(
-                'runs', 'preprocessedReferenceRunName')
+            'runs', 'preprocessedReferenceRunName')
         if preprocessedReferenceRunName != 'None':
 
             assert(not os.path.isabs(self.inFileName))
@@ -233,7 +233,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 '{}/preprocessed/intermediate_{}'.format(baseDirectory,
                                                          self.inFileName)
             self.preprocessedFileName = '{}/preprocessed/{}'.format(
-                    baseDirectory, self.inFileName)
+                baseDirectory, self.inFileName)
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -248,7 +248,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                             self.regionName,
                                             mainRunName)
         self.xmlFileNames = ['{}/{}.xml'.format(
-                self.plotsDirectory, self.filePrefix)]
+            self.plotsDirectory, self.filePrefix)]
 
         return  # }}}
 
@@ -341,10 +341,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             legendText.append(legends[rangeIndex])
 
         preprocessedReferenceRunName = config.get(
-                'runs', 'preprocessedReferenceRunName')
+            'runs', 'preprocessedReferenceRunName')
         if preprocessedReferenceRunName != 'None':
             preprocessedInputDirectory = config.get(
-                    'oceanPreprocessedReference', 'baseDirectory')
+                'oceanPreprocessedReference', 'baseDirectory')
 
             self.logger.info('  Load in preprocessed reference data...')
             preprocessedFilePrefix = config.get(self.sectionName,
@@ -354,12 +354,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 preprocessedReferenceRunName)
 
             combine_time_series_with_ncrcat(
-                    inFilesPreprocessed, self.preprocessedIntermediateFileName,
-                    logger=self.logger)
+                inFilesPreprocessed, self.preprocessedIntermediateFileName,
+                logger=self.logger)
             dsPreprocessed = open_mpas_dataset(
-                    fileName=self.preprocessedIntermediateFileName,
-                    calendar=calendar,
-                    timeVariableNames='xtime')
+                fileName=self.preprocessedIntermediateFileName,
+                calendar=calendar,
+                timeVariableNames='xtime')
 
             yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
             yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -411,7 +411,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 else:
                     self.logger.warning('Warning: Preprocessed variable {} '
                                         'not found. Skipping.'.format(
-                                                variableName))
+                                            variableName))
                     timeSeries.extend(None)
 
                 lineColors.append(color)

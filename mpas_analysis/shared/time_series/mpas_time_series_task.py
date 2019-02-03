@@ -136,8 +136,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         for variable in variableList:
             if variable not in self.allVariables:
                 raise ValueError(
-                        '{} is not available in timeSeriesStatsMonthly '
-                        'output:\n{}'.format(variable, self.allVariables))
+                    '{} is not available in timeSeriesStatsMonthly '
+                    'output:\n{}'.format(variable, self.allVariables))
 
             if variable not in self.variableList:
                 self.variableList.append(variable)
@@ -178,8 +178,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         endDate = config.get(self.section, 'endDate')
         streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
-                streamName, startDate=startDate, endDate=endDate,
-                calendar=self.calendar)
+            streamName, startDate=startDate, endDate=endDate,
+            calendar=self.calendar)
 
         if len(self.inputFiles) == 0:
             raise IOError('No files were found in stream {} between {} and '
@@ -188,8 +188,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         self.runMessage = '\nComputing MPAS time series from first year ' \
                           'plus files:\n' \
                           '    {} through\n    {}'.format(
-                                  os.path.basename(self.inputFiles[0]),
-                                  os.path.basename(self.inputFiles[-1]))
+                              os.path.basename(self.inputFiles[0]),
+                              os.path.basename(self.inputFiles[-1]))
 
         # Make sure first year of data is included for computing anomalies
         if config.has_option('timeSeries', 'anomalyRefYear'):
@@ -201,9 +201,9 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
         firstYearInputFiles = self.historyStreams.readpath(
-                streamName, startDate=anomalyStartDate,
-                endDate=anomalyEndDate,
-                calendar=self.calendar)
+            streamName, startDate=anomalyStartDate,
+            endDate=anomalyEndDate,
+            calendar=self.calendar)
         for fileName in firstYearInputFiles:
             if fileName not in self.inputFiles:
                 self.inputFiles.append(fileName)
@@ -271,12 +271,12 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
                     fileNames = sorted(self.inputFiles)
                     inYears, inMonths = get_files_year_month(
-                            fileNames, self.historyStreams,
-                            'timeSeriesStatsMonthlyOutput')
+                        fileNames, self.historyStreams,
+                        'timeSeriesStatsMonthlyOutput')
 
                     inYears = numpy.array(inYears)
                     inMonths = numpy.array(inMonths)
-                    totalMonths = 12*inYears + inMonths
+                    totalMonths = 12 * inYears + inMonths
 
                     dates = [bytes.decode(name) for name in
                              ds.xtime_startMonthly.values]
@@ -284,7 +284,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
                     lastYear = int(lastDate[0:4])
                     lastMonth = int(lastDate[5:7])
-                    lastTotalMonths = 12*lastYear + lastMonth
+                    lastTotalMonths = 12 * lastYear + lastMonth
 
                     inputFiles = []
                     for index, inputFile in enumerate(fileNames):
@@ -299,7 +299,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     # so we need ot delete it.
                     self.logger.warning('Warning: deleting file {} because '
                                         'some variables were missing'.format(
-                                                self.outputFile))
+                                            self.outputFile))
                     os.remove(self.outputFile)
 
         variableList = self.variableList + ['xtime_startMonthly',

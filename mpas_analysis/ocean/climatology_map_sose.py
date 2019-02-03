@@ -123,9 +123,9 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSose, self).__init__(
-                config=config, taskName='climatologyMapSose',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='climatologyMapSose',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -145,7 +145,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid '
                              'list of comparison grids'.format(
-                                     sectionName))
+                                 sectionName))
 
         if not numpy.any([field['3D'] for field in fields]):
             depths = None
@@ -199,21 +199,21 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                 obsFileName = \
                     '{}/SOSE_2005-2010_monthly_{}_6000.0x' \
                     '6000.0km_10.0km_Antarctic_stereo_20180710.nc'.format(
-                            observationsDirectory, field['obsFilePrefix'])
+                        observationsDirectory, field['obsFilePrefix'])
                 refFieldName = field['obsFieldName']
                 outFileLabel = '{}SOSE'.format(fieldPrefix)
                 galleryName = 'State Estimate: SOSE'
                 diffTitleLabel = 'Model - State Estimate'
 
                 remapObsSubtask = RemapSoseClimatology(
-                        parentTask=self, seasons=seasons, fileName=obsFileName,
-                        outFilePrefix='{}SOSE'.format(refFieldName),
-                        fieldName=refFieldName,
-                        botFieldName=field['obsBotFieldName'],
-                        depths=fieldDepths,
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations{}'.format(
-                                upperFieldPrefix))
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix='{}SOSE'.format(refFieldName),
+                    fieldName=refFieldName,
+                    botFieldName=field['obsBotFieldName'],
+                    depths=fieldDepths,
+                    comparisonGridNames=comparisonGridNames,
+                    subtaskName='remapObservations{}'.format(
+                        upperFieldPrefix))
 
                 self.add_subtask(remapObsSubtask)
 

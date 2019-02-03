@@ -108,8 +108,8 @@ class TimeSeriesSST(AnalysisTask):
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
-                check_path_exists(config.get('oceanPreprocessedReference',
-                                             'baseDirectory'))
+            check_path_exists(config.get('oceanPreprocessedReference',
+                                         'baseDirectory'))
 
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
@@ -182,19 +182,20 @@ class TimeSeriesSST(AnalysisTask):
                 self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
             controlFileName = '{}/{}.nc'.format(
-                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+                baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
 
-            controlStartYear = self.controlConfig.getint('timeSeries', 'startYear')
+            controlStartYear = self.controlConfig.getint(
+                'timeSeries', 'startYear')
             controlEndYear = self.controlConfig.getint('timeSeries', 'endYear')
             controlStartDate = '{:04d}-01-01_00:00:00'.format(controlStartYear)
             controlEndDate = '{:04d}-12-31_23:59:59'.format(controlEndYear)
 
             dsRefSST = open_mpas_dataset(
-                    fileName=controlFileName,
-                    calendar=calendar,
-                    variableList=self.variableList,
-                    startDate=controlStartDate,
-                    endDate=controlEndDate)
+                fileName=controlFileName,
+                calendar=calendar,
+                variableList=self.variableList,
+                startDate=controlStartDate,
+                endDate=controlEndDate)
         else:
             dsRefSST = None
 
@@ -230,7 +231,7 @@ class TimeSeriesSST(AnalysisTask):
 
             title = '{} SST'.format(plotTitles[regionIndex])
             xLabel = 'Time [years]'
-            yLabel = '[$\degree$C]'
+            yLabel = r'[$\degree$C]'
 
             varName = self.variableList[0]
             SST = dsSST[varName].isel(nOceanRegions=regionIndex)
@@ -282,7 +283,7 @@ class TimeSeriesSST(AnalysisTask):
                                      yearStrideXTicks=yearStrideXTicks)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
-                    region)
+                region)
             write_image_xml(
                 config=config,
                 filePrefix=filePrefix,

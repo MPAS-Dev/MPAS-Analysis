@@ -53,7 +53,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              firstYearXTicks=None, yearStrideXTicks=None,
                              maxXTicks=20, obsMean=None, obsUncertainty=None,
                              obsLegend=None, legendLocation='lower left'):
-
     """
     Plots the list of time series data sets and stores the result in an image
     file.
@@ -156,7 +155,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         if maxPoints is not None and maxPoints[dsIndex] is not None:
             nTime = mean.sizes['Time']
             if maxPoints[dsIndex] < nTime:
-                stride = int(round(nTime/float(maxPoints[dsIndex])))
+                stride = int(round(nTime / float(maxPoints[dsIndex])))
                 mean = mean.isel(Time=slice(0, None, stride))
 
         if legendText is None:
@@ -193,7 +192,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         # end
         start = np.amin(minDays)
         end = np.amax(maxDays)
-        obsTimes = np.linspace(start, end, obsCount+2)[1:-1]
+        obsTimes = np.linspace(start, end, obsCount + 2)[1:-1]
         obsSymbols = ['o', '^', 's', 'D', '*']
         obsColors = ['b', 'g', 'c', 'm', 'r']
         for iObs in range(obsCount):
@@ -209,12 +208,12 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              capsize=0,
                              label=obsLegend[iObs])
                 # plot a box around the error bar to make it more visible
-                boxHalfWidth = 0.01*(end - start)
+                boxHalfWidth = 0.01 * (end - start)
                 boxHalfHeight = obsUncertainty[iObs]
                 boxX = obsTimes[iObs] + \
-                    boxHalfWidth*np.array([-1, 1, 1, -1, -1])
+                    boxHalfWidth * np.array([-1, 1, 1, -1, -1])
                 boxY = obsMean[iObs] + \
-                    boxHalfHeight*np.array([-1, -1, 1, 1, -1])
+                    boxHalfHeight * np.array([-1, -1, 1, 1, -1])
 
                 plt.plot(boxX, boxY, '{}-'.format(color), linewidth=3)
                 labelCount += 1
@@ -239,7 +238,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     # Add a y=0 line if y ranges between positive and negative values
     yaxLimits = ax.get_ylim()
-    if yaxLimits[0]*yaxLimits[1] < 0:
+    if yaxLimits[0] * yaxLimits[1] < 0:
         x = ax.get_xlim()
         plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2, zorder=1)
 
@@ -260,7 +259,6 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
                                    markers=None, lineWidths=None,
                                    legendText=None, titleFontSize=None,
                                    figsize=(15, 6), dpi=None):
-
     """
     Plots the list of time series data sets on a polar plot and stores
     the result in an image file.
@@ -342,7 +340,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         else:
             linewidth = lineWidths[dsIndex]
 
-        plt.polar((mean['Time']/365.0)*np.pi*2.0, mean, color=color,
+        plt.polar((mean['Time'] / 365.0) * np.pi * 2.0, mean, color=color,
                   linestyle=linestyle, marker=marker, linewidth=linewidth,
                   label=label)
 
@@ -357,10 +355,10 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     majorTickLocs[0] = 0.0
     minorTickLocs[0] = (constants.daysInMonth[0] * np.pi) / 365.0
     for month in range(1, 12):
-        majorTickLocs[month] = majorTickLocs[month-1] + \
-            ((constants.daysInMonth[month-1] * np.pi * 2.0) / 365.0)
-        minorTickLocs[month] = minorTickLocs[month-1] + \
-            (((constants.daysInMonth[month-1] +
+        majorTickLocs[month] = majorTickLocs[month - 1] + \
+            ((constants.daysInMonth[month - 1] * np.pi * 2.0) / 365.0)
+        minorTickLocs[month] = minorTickLocs[month - 1] + \
+            (((constants.daysInMonth[month - 1] +
                constants.daysInMonth[month]) * np.pi) / 365.0)
 
     ax.set_xticks(majorTickLocs)
@@ -405,7 +403,6 @@ def plot_polar_comparison(
         figsize=None,
         dpi=None,
         vertical=False):
-
     """
     Plots a data set around either the north or south pole.
 
@@ -576,7 +573,6 @@ def plot_global_comparison(
         dpi=None,
         lineWidth=1,
         lineColor='black'):
-
     """
     Plots a data set as a longitude/latitude map.
 
@@ -730,7 +726,6 @@ def plot_polar_projection_comparison(
         lineWidth=0.5,
         lineColor='black',
         vertical=False):
-
     """
     Plots a data set as a longitude/latitude map.
 
@@ -874,8 +869,8 @@ def plot_polar_projection_comparison(
     landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
 
     # locations of centers for contour plots
-    xCenter = 0.5*(x[1:] + x[0:-1])
-    yCenter = 0.5*(y[1:] + y[0:-1])
+    xCenter = 0.5 * (x[1:] + x[0:-1])
+    yCenter = 0.5 * (y[1:] + y[0:-1])
 
     ax = plt.subplot(subplots[0])
     plot_panel(ax, modelTitle, modelArray, **dictModelRef)
@@ -939,7 +934,6 @@ def plot_vertical_section_comparison(
         comparisonContourLineColor=None,
         labelContours=False,
         contourLabelPrecision=1):
-
     """
     Plots vertical section plots in a three-panel format, comparing model data
     (in modelArray) to some reference dataset (in refArray), which can be
@@ -1199,14 +1193,58 @@ def plot_vertical_section_comparison(
         originalFieldName = modelTitle
 
     plot_vertical_section(
+        config,
+        xArray,
+        depthArray,
+        modelArray,
+        colorMapSectionName,
+        suffix='Result',
+        colorbarLabel=cbarLabel,
+        title=title,
+        xlabel=xlabel,
+        ylabel=ylabel,
+        fileout=None,
+        titleFontSize=plotTitleFontSize,
+        titleY=titleY,
+        axisFontSize=axisFontSize,
+        xLim=xLim,
+        yLim=yLim,
+        lineWidth=lineWidth,
+        lineStyle=lineStyle,
+        lineColor=lineColor,
+        secondXAxisData=secondXAxisData,
+        secondXAxisLabel=secondXAxisLabel,
+        thirdXAxisData=thirdXAxisData,
+        thirdXAxisLabel=thirdXAxisLabel,
+        numUpperTicks=numUpperTicks,
+        upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+        invertYAxis=invertYAxis,
+        xArrayIsTime=xArrayIsTime,
+        N=None,
+        firstYearXTicks=firstYearXTicks,
+        yearStrideXTicks=yearStrideXTicks,
+        maxXTicks=maxXTicks, calendar=calendar,
+        backgroundColor=backgroundColor,
+        plotAsContours=compareAsContours,
+        contourComparisonFieldArray=contourComparisonFieldArray,
+        comparisonFieldName=comparisonFieldName,
+        originalFieldName=originalFieldName,
+        comparisonContourLineStyle=comparisonContourLineStyle,
+        comparisonContourLineColor=comparisonContourLineColor,
+        labelContours=labelContours,
+        contourLabelPrecision=contourLabelPrecision)
+
+    if not singlePanel:
+        plt.subplot(3, 1, 2)
+        plot_vertical_section(
             config,
             xArray,
             depthArray,
-            modelArray,
+            refArray,
             colorMapSectionName,
             suffix='Result',
             colorbarLabel=cbarLabel,
-            title=title,
+            title=refTitle,
             xlabel=xlabel,
             ylabel=ylabel,
             fileout=None,
@@ -1222,100 +1260,56 @@ def plot_vertical_section_comparison(
             secondXAxisLabel=secondXAxisLabel,
             thirdXAxisData=thirdXAxisData,
             thirdXAxisLabel=thirdXAxisLabel,
-            numUpperTicks=numUpperTicks,
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+            numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
             xArrayIsTime=xArrayIsTime,
             N=None,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
-            maxXTicks=maxXTicks, calendar=calendar,
+            maxXTicks=maxXTicks,
+            calendar=calendar,
             backgroundColor=backgroundColor,
-            plotAsContours=compareAsContours,
-            contourComparisonFieldArray=contourComparisonFieldArray,
-            comparisonFieldName=comparisonFieldName,
-            originalFieldName=originalFieldName,
-            comparisonContourLineStyle=comparisonContourLineStyle,
-            comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
 
-    if not singlePanel:
-        plt.subplot(3, 1, 2)
-        plot_vertical_section(
-                config,
-                xArray,
-                depthArray,
-                refArray,
-                colorMapSectionName,
-                suffix='Result',
-                colorbarLabel=cbarLabel,
-                title=refTitle,
-                xlabel=xlabel,
-                ylabel=ylabel,
-                fileout=None,
-                titleFontSize=plotTitleFontSize,
-                titleY=titleY,
-                axisFontSize=axisFontSize,
-                xLim=xLim,
-                yLim=yLim,
-                lineWidth=lineWidth,
-                lineStyle=lineStyle,
-                lineColor=lineColor,
-                secondXAxisData=secondXAxisData,
-                secondXAxisLabel=secondXAxisLabel,
-                thirdXAxisData=thirdXAxisData,
-                thirdXAxisLabel=thirdXAxisLabel,
-                upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
-                numUpperTicks=numUpperTicks,
-                invertYAxis=invertYAxis,
-                xArrayIsTime=xArrayIsTime,
-                N=None,
-                firstYearXTicks=firstYearXTicks,
-                yearStrideXTicks=yearStrideXTicks,
-                maxXTicks=maxXTicks,
-                calendar=calendar,
-                backgroundColor=backgroundColor,
-                labelContours=labelContours,
-                contourLabelPrecision=contourLabelPrecision)
-
         plt.subplot(3, 1, 3)
         plot_vertical_section(
-                config,
-                xArray,
-                depthArray,
-                diffArray,
-                colorMapSectionName,
-                suffix='Difference',
-                colorbarLabel=cbarLabel,
-                title=diffTitle,
-                xlabel=xlabel,
-                ylabel=ylabel,
-                fileout=None,
-                titleFontSize=plotTitleFontSize,
-                titleY=titleY,
-                axisFontSize=axisFontSize,
-                xLim=xLim,
-                yLim=yLim,
-                lineWidth=lineWidth,
-                lineStyle=lineStyle,
-                lineColor=lineColor,
-                secondXAxisData=secondXAxisData,
-                secondXAxisLabel=secondXAxisLabel,
-                thirdXAxisData=thirdXAxisData,
-                thirdXAxisLabel=thirdXAxisLabel,
-                upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
-                numUpperTicks=numUpperTicks,
-                invertYAxis=invertYAxis,
-                xArrayIsTime=xArrayIsTime,
-                N=None,
-                firstYearXTicks=firstYearXTicks,
-                yearStrideXTicks=yearStrideXTicks,
-                maxXTicks=maxXTicks,
-                calendar=calendar,
-                backgroundColor=backgroundColor,
-                labelContours=labelContours,
-                contourLabelPrecision=contourLabelPrecision)
+            config,
+            xArray,
+            depthArray,
+            diffArray,
+            colorMapSectionName,
+            suffix='Difference',
+            colorbarLabel=cbarLabel,
+            title=diffTitle,
+            xlabel=xlabel,
+            ylabel=ylabel,
+            fileout=None,
+            titleFontSize=plotTitleFontSize,
+            titleY=titleY,
+            axisFontSize=axisFontSize,
+            xLim=xLim,
+            yLim=yLim,
+            lineWidth=lineWidth,
+            lineStyle=lineStyle,
+            lineColor=lineColor,
+            secondXAxisData=secondXAxisData,
+            secondXAxisLabel=secondXAxisLabel,
+            thirdXAxisData=thirdXAxisData,
+            thirdXAxisLabel=thirdXAxisLabel,
+            upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
+            numUpperTicks=numUpperTicks,
+            invertYAxis=invertYAxis,
+            xArrayIsTime=xArrayIsTime,
+            N=None,
+            firstYearXTicks=firstYearXTicks,
+            yearStrideXTicks=yearStrideXTicks,
+            maxXTicks=maxXTicks,
+            calendar=calendar,
+            backgroundColor=backgroundColor,
+            labelContours=labelContours,
+            contourLabelPrecision=contourLabelPrecision)
 
     if singlePanel:
         if thirdXAxisData is not None and refArray is None:
@@ -1339,7 +1333,6 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             xLim=None,
             yLim=None,
             invertYAxis=False):  # {{{
-
     """
     Plots a 1D line plot with error bars if available.
 
@@ -1432,9 +1425,9 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
         plt.plot(xArray, fieldArray, color=color, linestyle=linestyle,
                  marker=marker, linewidth=linewidth, label=label)
         if errArray is not None:
-            plt.fill_between(xArray, fieldArray, fieldArray+errArray,
+            plt.fill_between(xArray, fieldArray, fieldArray + errArray,
                              facecolor=color, alpha=0.2)
-            plt.fill_between(xArray, fieldArray, fieldArray-errArray,
+            plt.fill_between(xArray, fieldArray, fieldArray - errArray,
                              facecolor=color, alpha=0.2)
     plt.grid()
     plt.axhline(0.0, linestyle='-', color='k')  # horizontal lines
@@ -1512,7 +1505,6 @@ def plot_vertical_section(
         comparisonContourLineColor=None,
         labelContours=False,
         contourLabelPrecision=1):  # {{{
-
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
@@ -1851,9 +1843,9 @@ def plot_vertical_section(
             mean = pd.Series.rolling(depthSlice.to_series(), N,
                                      center=True).mean()
             mean = xr.DataArray.from_series(mean)
-            mean = mean[int(N/2.0):-int(round(N/2.0)-1)]
+            mean = mean[int(N / 2.0):-int(round(N / 2.0) - 1)]
             movingAverageDepthSlices.append(mean)
-        xArray = xArray[int(N/2.0):-int(round(N/2.0)-1)]
+        xArray = xArray[int(N / 2.0):-int(round(N / 2.0) - 1)]
         fieldArray = xr.DataArray(movingAverageDepthSlices)
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
@@ -1864,8 +1856,8 @@ def plot_vertical_section(
             # interpFieldArray contains the values at centers of grid cells,
             # for pcolormesh plots (using bilinear interpolation)
             interpFieldArray = \
-                    0.5 * (0.5*(fieldArray[1:, 1:] + fieldArray[0:-1, 1:]) +
-                           0.5*(fieldArray[1:, 0:-1] + fieldArray[0:-1, 0:-1]))
+                0.5 * (0.5 * (fieldArray[1:, 1:] + fieldArray[0:-1, 1:]) +
+                       0.5 * (fieldArray[1:, 0:-1] + fieldArray[0:-1, 0:-1]))
 
             plotHandle = plt.pcolormesh(x, y, interpFieldArray,
                                         cmap=colormapDict['colormap'],
@@ -1989,8 +1981,8 @@ def plot_vertical_section(
         elif stride == 1:
             stride = 2
         ax2.set_xticks(x.flatten()[:num_x:stride])
-        formatString = "{{0:.{0:d}f}}$\degree$".format(
-            upperXAxisTickLabelPrecision)
+        formatString = "{{0:.{:d}f}}{}".format(
+            upperXAxisTickLabelPrecision, r'$\degree$')
         ax2.set_xticklabels([formatString.format(member)
                              for member in secondXAxisData[::stride]])
 
@@ -2015,7 +2007,6 @@ def plot_vertical_section(
 
 
 def setup_colormap(config, configSectionName, suffix=''):
-
     '''
     Set up a colormap from the registry
 
@@ -2070,7 +2061,7 @@ def setup_colormap(config, configSectionName, suffix=''):
     else:
         raise ValueError('config section {} option colormapType{} is not '
                          '"indexed" or "continuous"'.format(
-                                 configSectionName, suffix))
+                             configSectionName, suffix))
 
     option = 'contourLevels{}'.format(suffix)
     if config.has_option(configSectionName, option):
@@ -2131,19 +2122,19 @@ def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
     start = days_to_datetime(np.amin(minDays), calendar=calendar)
     end = days_to_datetime(np.amax(maxDays), calendar=calendar)
 
-    if yearStride is not None or end.year - start.year > maxXTicks/2:
+    if yearStride is not None or end.year - start.year > maxXTicks / 2:
         if yearStride is None:
             yearStride = 1
         else:
             maxXTicks = None
         major = [date_to_days(year=year, calendar=calendar)
-                 for year in np.arange(start.year, end.year+1, yearStride)]
+                 for year in np.arange(start.year, end.year + 1, yearStride)]
         formatterFun = partial(_date_tick, calendar=calendar,
                                includeMonth=False)
     else:
         # add ticks for months
         major = []
-        for year in range(start.year, end.year+1):
+        for year in range(start.year, end.year + 1):
             for month in range(1, 13):
                 major.append(date_to_days(year=year, month=month,
                                           calendar=calendar))
@@ -2159,7 +2150,6 @@ def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
 
 
 def _setup_colormap_and_norm(config, configSectionName, suffix=''):
-
     '''
     Set up a colormap from the registry
 
@@ -2212,8 +2202,8 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     try:
         ticks = config.getExpression(
-                configSectionName, 'colorbarTicks{}'.format(suffix),
-                usenumpyfunc=True)
+            configSectionName, 'colorbarTicks{}'.format(suffix),
+            usenumpyfunc=True)
     except(configparser.NoOptionError):
         ticks = None
 
@@ -2221,7 +2211,6 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
 
 def _setup_indexed_colormap(config, configSectionName, suffix=''):
-
     '''
     Set up a colormap from the registry
 
@@ -2263,8 +2252,8 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     try:
         levels = config.getExpression(
-                configSectionName, 'colorbarLevels{}'.format(suffix),
-                usenumpyfunc=True)
+            configSectionName, 'colorbarLevels{}'.format(suffix),
+            usenumpyfunc=True)
     except(configparser.NoOptionError):
         levels = None
 
@@ -2272,11 +2261,11 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
         # set under/over values based on the first/last indices in the colormap
         underColor = colormap(indices[0])
         overColor = colormap(indices[-1])
-        if len(levels)+1 == len(indices):
+        if len(levels) + 1 == len(indices):
             # we have 2 extra values for the under/over so make the colormap
             # without these values
             indices = indices[1:-1]
-        elif len(levels)-1 != len(indices):
+        elif len(levels) - 1 != len(indices):
             # indices list must be either one element shorter
             # or one element longer than colorbarLevels list
             raise ValueError('length mismatch between indices and '
@@ -2290,8 +2279,8 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     try:
         ticks = config.getExpression(
-                configSectionName, 'colorbarTicks{}'.format(suffix),
-                usenumpyfunc=True)
+            configSectionName, 'colorbarTicks{}'.format(suffix),
+            usenumpyfunc=True)
     except(configparser.NoOptionError):
         ticks = levels
 
@@ -2371,7 +2360,7 @@ def _register_custom_colormaps():
     for cIndex in range(3):
         colorList[:, cIndex] = np.interp(
             np.linspace(-1., 1., colorCount),
-            x, colorArray[:, cIndex+1])
+            x, colorArray[:, cIndex + 1])
 
     colorMap = cols.LinearSegmentedColormap.from_list(
         name, colorList, N=255)
@@ -2405,7 +2394,7 @@ def _register_custom_colormaps():
     for cIndex in range(3):
         colorList[:, cIndex] = np.interp(
             np.linspace(-1., 1., colorCount),
-            x, colorArray[:, cIndex+1])
+            x, colorArray[:, cIndex + 1])
 
     colorMap = cols.LinearSegmentedColormap.from_list(
         name, colorList, N=255)
@@ -2441,7 +2430,7 @@ def _register_custom_colormaps():
     for cIndex in range(3):
         colorList[:, cIndex] = np.interp(
             np.linspace(-1., 1., colorCount),
-            x, colorArray[:, cIndex+1])
+            x, colorArray[:, cIndex + 1])
 
     colorMap = cols.LinearSegmentedColormap.from_list(
         name, colorList, N=255)
@@ -2470,7 +2459,7 @@ def _register_custom_colormaps():
     # https://sciviscolor.org/home/colormaps/
 
     for mapName in ['3wave-yellow-grey-blue', '3Wbgy5',
-                    '4wave-grey-red-green-mgreen',  '5wave-yellow-brown-blue',
+                    '4wave-grey-red-green-mgreen', '5wave-yellow-brown-blue',
                     'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
                     'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
                     'green-7', 'green-8', 'orange-5', 'orange-6',
@@ -2499,7 +2488,7 @@ def _read_xml_colormap(xmlFile, mapName):
             colorDict['red'].append((x, color[0], color[0]))
             colorDict['green'].append((x, color[1], color[1]))
             colorDict['blue'].append((x, color[2], color[2]))
-        cmap = LinearSegmentedColormap(mapName,  colorDict, 256)
+        cmap = LinearSegmentedColormap(mapName, colorDict, 256)
 
         plt.register_cmap(mapName, cmap)
 
@@ -2514,14 +2503,14 @@ def _plot_color_gradients():
 
     nrows = len(cmap_list)
 
-    fig, axes = plt.subplots(figsize=(7.2, 0.25*nrows), nrows=nrows)
+    fig, axes = plt.subplots(figsize=(7.2, 0.25 * nrows), nrows=nrows)
     fig.subplots_adjust(top=0.99, bottom=0.01, left=0.35, right=0.99)
 
     for ax, name in zip(axes, cmap_list):
         ax.imshow(gradient, aspect='auto', cmap=plt.get_cmap(name))
         pos = list(ax.get_position().bounds)
         x_text = pos[0] - 0.01
-        y_text = pos[1] + pos[3]/2.
+        y_text = pos[1] + pos[3] / 2.
         fig.text(x_text, y_text, name, va='center', ha='right', fontsize=10)
 
     # Turn off *all* ticks & spines, not just the ones with colormaps.

@@ -148,7 +148,7 @@ class TestClimatology(TestCase):
         defaultMappingFileName = '{}/{}'.format(self.test_dir, fileBase)
         explicitMappingFileName = '{}/{}'.format(explicitMappingPath, fileBase)
 
-        for mappingFileName, setName in [(defaultMappingFileName,  False),
+        for mappingFileName, setName in [(defaultMappingFileName, False),
                                          (explicitMappingFileName, True)]:
 
             remapper = self.setup_mpas_remapper(config)
@@ -179,7 +179,7 @@ class TestClimatology(TestCase):
         defaultMappingFileName = '{}/{}'.format(self.test_dir, fileBase)
         explicitMappingFileName = '{}/{}'.format(explicitMappingPath, fileBase)
 
-        for mappingFileName, setName in [(defaultMappingFileName,  False),
+        for mappingFileName, setName in [(defaultMappingFileName, False),
                                          (explicitMappingFileName, True)]:
 
             remapper = self.setup_obs_remapper(config, fieldName)

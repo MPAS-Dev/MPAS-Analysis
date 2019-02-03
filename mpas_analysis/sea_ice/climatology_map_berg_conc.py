@@ -61,9 +61,9 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
         fieldName = 'IcebergConc'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapIcebergConc, self).__init__(
-                config=config, taskName=taskName,
-                componentName='seaIce',
-                tags=['icebergs', 'climatology', 'horizontalMap', fieldName])
+            config=config, taskName=taskName,
+            componentName='seaIce',
+            tags=['icebergs', 'climatology', 'horizontalMap', fieldName])
 
         mpasFieldName = 'timeMonthly_avg_bergAreaCell'
         iselValues = None
@@ -106,15 +106,15 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             diffTitleLabel = 'Model - Observations'
             refFieldName = 'icebergConc'
             obsFileName = build_obs_path(
-                    config, 'iceberg',
-                    'concentrationAltiberg{}'.format(hemisphere))
+                config, 'iceberg',
+                'concentrationAltiberg{}'.format(hemisphere))
 
             remapObservationsSubtask = RemapAltibergConcClimatology(
-                    parentTask=self, seasons=seasons,
-                    fileName=obsFileName,
-                    outFilePrefix='{}{}'.format(refFieldName,
-                                                hemisphere),
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons,
+                fileName=obsFileName,
+                outFilePrefix='{}{}'.format(refFieldName,
+                                            hemisphere),
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
 
         else:
@@ -135,28 +135,28 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                 imageCaption = imageDescription
                 galleryGroup = \
                     '{}-Hemisphere Iceberg Concentration'.format(
-                            hemisphereLong)
+                        hemisphereLong)
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
-                        self, hemisphere, season, comparisonGridName,
-                        remapClimatologySubtask, remapObservationsSubtask,
-                        controlConfig)
+                    self, hemisphere, season, comparisonGridName,
+                    remapClimatologySubtask, remapObservationsSubtask,
+                    controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='bergconc{}'.format(hemisphere),
-                        fieldNameInTitle='Iceberg concentration',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'fraction',
-                        imageDescription=imageDescription,
-                        imageCaption=imageCaption,
-                        galleryGroup=galleryGroup,
-                        groupSubtitle=None,
-                        groupLink='{}_conc'.format(hemisphere.lower()),
-                        galleryName=galleryName,
-                        maskValue=None)
+                    outFileLabel='bergconc{}'.format(hemisphere),
+                    fieldNameInTitle='Iceberg concentration',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'fraction',
+                    imageDescription=imageDescription,
+                    imageCaption=imageCaption,
+                    galleryGroup=galleryGroup,
+                    groupSubtitle=None,
+                    groupLink='{}_conc'.format(hemisphere.lower()),
+                    galleryName=galleryName,
+                    maskValue=None)
 
                 self.add_subtask(subtask)
 

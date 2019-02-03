@@ -16,7 +16,6 @@ from __future__ import absolute_import, division, print_function, \
 
 
 def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
-
     '''
     Compute the rolling mean of a data set
 

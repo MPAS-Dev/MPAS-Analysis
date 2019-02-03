@@ -83,10 +83,10 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
         # we need to remap because the grids don't match
 
         mappingBaseName = '{}_{}_to_{}_{}.nc'.format(
-                mappingFilePrefix,
-                sourceDescriptor.meshName,
-                comparisonDescriptor.meshName,
-                method)
+            mappingFilePrefix,
+            sourceDescriptor.meshName,
+            comparisonDescriptor.meshName,
+            method)
 
         mappingSubdirectory = build_config_full_path(config, 'diagnostics',
                                                      'mappingSubdirectory')
@@ -271,7 +271,7 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
                       'will be computed with\n'
                       'month durations ignoring leap years.')
 
-            daysInMonth = numpy.array([constants.daysInMonth[int(month)-1] for
+            daysInMonth = numpy.array([constants.daysInMonth[int(month) - 1] for
                                        month in ds.month.values], float)
             ds.coords['daysInMonth'] = ('Time', daysInMonth)
 
@@ -423,7 +423,7 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName):
     endMonth = monthValues[-1]
 
     suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
-            startYear, startMonth, endYear, endMonth)
+        startYear, startMonth, endYear, endMonth)
 
     if season in constants.abrevMonthNames:
         season = '{:02d}'.format(monthValues[0])
@@ -475,8 +475,8 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
     stageDirectory = '{}/masked'.format(climatologyBaseDirectory)
 
     directory = '{}/{}_{}'.format(
-            stageDirectory, climatologyName,
-            mpasMeshName)
+        stageDirectory, climatologyName,
+        mpasMeshName)
 
     make_directories(directory)
 
@@ -485,12 +485,12 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
     endMonth = monthValues[-1]
 
     suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
-            startYear, startMonth, endYear, endMonth)
+        startYear, startMonth, endYear, endMonth)
 
     if season in constants.abrevMonthNames:
         season = '{:02d}'.format(monthValues[0])
     fileName = '{}/{}_{}_{}.nc'.format(
-            directory, ncclimoModel, season, suffix)
+        directory, ncclimoModel, season, suffix)
 
     return fileName  # }}}
 
@@ -560,12 +560,12 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     endMonth = monthValues[-1]
 
     suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
-            startYear, startMonth, endYear, endMonth)
+        startYear, startMonth, endYear, endMonth)
 
     if season in constants.abrevMonthNames:
         season = '{:02d}'.format(monthValues[0])
     fileName = '{}/{}_{}_{}.nc'.format(
-            directory, ncclimoModel, season, suffix)
+        directory, ncclimoModel, season, suffix)
 
     return fileName  # }}}
 
@@ -663,13 +663,13 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
 
     cacheInfo = []
 
-    cacheIndices = -1*numpy.ones(ds.dims['Time'], int)
+    cacheIndices = -1 * numpy.ones(ds.dims['Time'], int)
     monthsInDs = ds.month.values
     yearsInDs = ds.year.values
 
     # figure out which files to load and which years go in each file
-    for firstYear in range(startYearClimo, endYearClimo+1, yearsPerCacheFile):
-        years = range(firstYear, firstYear+yearsPerCacheFile)
+    for firstYear in range(startYearClimo, endYearClimo + 1, yearsPerCacheFile):
+        years = range(firstYear, firstYear + yearsPerCacheFile)
 
         yearString, fileSuffix = _get_year_string(years[0], years[-1])
         outputFileClimo = '{}_{}.nc'.format(cachePrefix, fileSuffix)
@@ -687,7 +687,7 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
 
                 os.remove(outputFileClimo)
 
-            monthsIfDone = len(monthValues)*len(years)
+            monthsIfDone = len(monthValues) * len(years)
             if ((dsCached is not None) and
                     (dsCached.attrs['totalMonths'] == monthsIfDone)):
                 # also complete, so we can move on
@@ -736,7 +736,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
 
         monthCount = dsYear.dims['Time']
 
-        climatology = compute_climatology(dsYear,  monthValues, calendar,
+        climatology = compute_climatology(dsYear, monthValues, calendar,
                                           maskVaries=False)
 
         climatology.attrs['totalDays'] = totalDays
@@ -785,7 +785,8 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
             done = True
 
         elif climatology is not None:
-            monthsIfDone = (endYearClimo-startYearClimo+1)*len(monthValues)
+            monthsIfDone = (
+                endYearClimo - startYearClimo + 1) * len(monthValues)
             if climatology.attrs['totalMonths'] == monthsIfDone:
                 # also complete, so we can move on
                 done = True

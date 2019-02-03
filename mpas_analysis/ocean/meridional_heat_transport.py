@@ -137,8 +137,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         for prefix in prefixes:
             filePrefix = '{}_{}_years{:04d}-{:04d}'.format(
-                    prefix, mainRunName,
-                    self.startYear, self.endYear)
+                prefix, mainRunName,
+                self.startYear, self.endYear)
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
             self.filePrefixes[prefix] = filePrefix
@@ -200,9 +200,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             refLayerThickness = np.zeros(nVertLevels)
             refLayerThickness[0] = refBottomDepth[0]
             refLayerThickness[1:nVertLevels] = \
-                refBottomDepth[1:nVertLevels] - refBottomDepth[0:nVertLevels-1]
+                refBottomDepth[1:nVertLevels] - \
+                refBottomDepth[0:nVertLevels - 1]
 
-            refZMid = -refBottomDepth + 0.5*refLayerThickness
+            refZMid = -refBottomDepth + 0.5 * refLayerThickness
 
             binBoundaryMerHeatTrans = None
             # first try timeSeriesStatsMonthly for bin boundaries, then try
@@ -242,7 +243,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             self.logger.info('   Load data...')
 
             climatologyFileName = self.mpasClimatologyTask.get_file_name(
-                    season='ANN')
+                season='ANN')
 
             variableList = ['timeMonthly_avg_meridionalHeatTransportLat',
                             'timeMonthly_avg_meridionalHeatTransportLatZ']
@@ -266,7 +267,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         xLabel = 'latitude [deg]'
         yLabel = 'meridional heat transport [PW]'
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                 self.startYear, self.endYear, mainRunName)
+            self.startYear, self.endYear, mainRunName)
         filePrefix = self.filePrefixes['mht']
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         lineColors = ['k']
@@ -299,8 +300,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             controlEndYear = self.controlConfig.getint('climatology',
                                                        'endYear')
             controlDirectory = build_config_full_path(
-                    self.controlConfig, 'output',
-                    'mpasClimatologySubdirectory')
+                self.controlConfig, 'output',
+                'mpasClimatologySubdirectory')
 
             controlFileName = \
                 '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(
@@ -314,7 +315,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             legendText.append(controlRunName)
             xArrays.append(dsControl.binBoundaryMerHeatTrans)
             fieldArrays.append(
-                    dsControl.timeMonthly_avg_meridionalHeatTransportLat)
+                dsControl.timeMonthly_avg_meridionalHeatTransportLat)
             errArrays.append(None)
 
         if len(legendText) == 1:
@@ -336,7 +337,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                 annualClimatology.timeMonthly_avg_meridionalHeatTransportLatZ
             MHTLatZ = MHTLatZVar.values.T[:, :]
             for k in range(nVertLevels):
-                MHTLatZ[k, :] = MHTLatZ[k, :]/refLayerThickness[k]
+                MHTLatZ[k, :] = MHTLatZ[k, :] / refLayerThickness[k]
 
             x = binBoundaryMerHeatTrans
             y = refZMid
@@ -344,7 +345,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             xLabel = 'latitude [deg]'
             yLabel = 'depth [m]'
             title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
-                     self.startYear, self.endYear, mainRunName)
+                self.startYear, self.endYear, mainRunName)
             filePrefix = self.filePrefixes['mhtZ']
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             colorbarLabel = '[PW/m]'

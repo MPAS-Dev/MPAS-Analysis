@@ -58,9 +58,9 @@ class WoceTransects(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(WoceTransects, self).__init__(
-                config=config, taskName='woceTransects',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='woceTransects',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -75,7 +75,7 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = None
         else:
             verticalComparisonGrid = config.getExpression(
-                    sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'woceSubdirectory')
@@ -160,8 +160,8 @@ class WoceTransects(AnalysisTask):  # {{{
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
                     titleName = fields[fieldName]['titleName']
                     fieldNameInTytle = '{} from {}'.format(
-                            titleName,
-                            transectName.replace('_', ' '))
+                        titleName,
+                        transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
@@ -170,21 +170,21 @@ class WoceTransects(AnalysisTask):  # {{{
                                                   plotObs, controlConfig)
 
                     subtask.set_plot_info(
-                            outFileLabel=outFileLabel,
-                            fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=fields[fieldName]['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
-                            diffTitleLabel=diffTitleLabel,
-                            unitsLabel=fields[fieldName]['units'],
-                            imageCaption='{} {}'.format(fieldNameInTytle,
-                                                        season),
-                            galleryGroup='WOCE Transects',
-                            groupSubtitle=None,
-                            groupLink='woce',
-                            galleryName=titleName,
-                            configSectionName='woce{}Transects'.format(
-                                    fieldNameUpper))
+                        outFileLabel=outFileLabel,
+                        fieldNameInTitle=fieldNameInTytle,
+                        mpasFieldName=fields[fieldName]['mpas'],
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
+                        unitsLabel=fields[fieldName]['units'],
+                        imageCaption='{} {}'.format(fieldNameInTytle,
+                                                    season),
+                        galleryGroup='WOCE Transects',
+                        groupSubtitle=None,
+                        groupLink='woce',
+                        galleryName=titleName,
+                        configSectionName='woce{}Transects'.format(
+                            fieldNameUpper))
 
                     self.add_subtask(subtask)
         # }}}

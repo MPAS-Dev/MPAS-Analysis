@@ -164,15 +164,15 @@ class ComputeAnomalySubtask(AnalysisTask):
             anomalyEndDate = '{:04d}-12-31_23:59:59'.format(anomalyYear)
 
         ds = compute_moving_avg_anomaly_from_start(
-                timeSeriesFileName=self.inputFile,
-                variableList=self.variableList,
-                anomalyStartTime=anomalyRefDate,
-                anomalyEndTime=anomalyEndDate,
-                startDate=startDate,
-                endDate=endDate,
-                calendar=self.calendar,
-                movingAveragePoints=self.movingAveragePoints,
-                alter_dataset=self.alter_dataset)
+            timeSeriesFileName=self.inputFile,
+            variableList=self.variableList,
+            anomalyStartTime=anomalyRefDate,
+            anomalyEndTime=anomalyEndDate,
+            startDate=startDate,
+            endDate=endDate,
+            calendar=self.calendar,
+            movingAveragePoints=self.movingAveragePoints,
+            alter_dataset=self.alter_dataset)
 
         outFileName = self.outFileName
         if not os.path.isabs(outFileName):

@@ -24,8 +24,8 @@ obsDescriptor = LatLonGridDescriptor.read(fileName=inputFileName,
 comparisonLatRes = 4.
 comparisonLonRes = 4.
 
-nLat = int((constants.latmax-constants.latmin)/comparisonLatRes)+1
-nLon = int((constants.lonmax-constants.lonmin)/comparisonLonRes)+1
+nLat = int((constants.latmax - constants.latmin) / comparisonLatRes) + 1
+nLon = int((constants.lonmax - constants.lonmin) / comparisonLonRes) + 1
 lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
 lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 

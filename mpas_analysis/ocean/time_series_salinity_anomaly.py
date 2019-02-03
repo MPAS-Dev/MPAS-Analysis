@@ -62,31 +62,31 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
         timeSeriesFileName = 'regionAveragedSalinityAnomaly.nc'
 
         anomalyTask = ComputeAnomalySubtask(
-                parentTask=self,
-                mpasTimeSeriesTask=mpasTimeSeriesTask,
-                outFileName=timeSeriesFileName,
-                variableList=[mpasFieldName],
-                movingAveragePoints=movingAveragePoints)
+            parentTask=self,
+            mpasTimeSeriesTask=mpasTimeSeriesTask,
+            outFileName=timeSeriesFileName,
+            variableList=[mpasFieldName],
+            movingAveragePoints=movingAveragePoints)
         self.add_subtask(anomalyTask)
 
         for regionName in regionNames:
             caption = 'Trend of {} Salinity Anomaly vs depth'.format(
-                    regionName)
+                regionName)
             plotTask = PlotHovmollerSubtask(
-                    parentTask=self,
-                    regionName=regionName,
-                    inFileName=timeSeriesFileName,
-                    outFileLabel='SAnomalyZ',
-                    fieldNameInTitle='Salinity Anomaly',
-                    mpasFieldName=mpasFieldName,
-                    unitsLabel='[PSU]',
-                    sectionName=sectionName,
-                    thumbnailSuffix=u'ΔS',
-                    imageCaption=caption,
-                    galleryGroup='Trends vs Depth',
-                    groupSubtitle=None,
-                    groupLink='trendsvsdepth',
-                    galleryName=None)
+                parentTask=self,
+                regionName=regionName,
+                inFileName=timeSeriesFileName,
+                outFileLabel='SAnomalyZ',
+                fieldNameInTitle='Salinity Anomaly',
+                mpasFieldName=mpasFieldName,
+                unitsLabel='[PSU]',
+                sectionName=sectionName,
+                thumbnailSuffix=u'ΔS',
+                imageCaption=caption,
+                galleryGroup='Trends vs Depth',
+                groupSubtitle=None,
+                groupLink='trendsvsdepth',
+                galleryName=None)
 
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)

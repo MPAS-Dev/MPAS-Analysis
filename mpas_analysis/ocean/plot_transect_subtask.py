@@ -155,8 +155,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(PlotTransectSubtask, self).__init__(
-                config=config, taskName=taskName, subtaskName=subtaskName,
-                componentName='ocean', tags=tags)
+            config=config, taskName=taskName, subtaskName=subtaskName,
+            componentName='ocean', tags=tags)
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
@@ -298,7 +298,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # first read the model climatology
         remappedFileName = \
             self.remapMpasClimatologySubtask.get_remapped_file_name(
-                    season=season, comparisonGridName=transectName)
+                season=season, comparisonGridName=transectName)
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
 
@@ -317,7 +317,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             if 'Time' in remappedRefClimatology.dims:
                 monthValues = constants.monthDictionary[season]
                 remappedRefClimatology = compute_climatology(
-                        remappedRefClimatology, monthValues, maskVaries=True)
+                    remappedRefClimatology, monthValues, maskVaries=True)
 
         elif self.controlConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
@@ -335,7 +335,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             if controlStartYear != self.startYear or \
                     controlEndYear != self.endYear:
                 self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                        self.refTitleLabel, controlStartYear, controlEndYear)
+                    self.refTitleLabel, controlStartYear, controlEndYear)
 
         else:
             remappedRefClimatology = None
@@ -470,7 +470,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if compareAsContours:
             labelContours = config.getboolean(
-                    'transects', 'labelContoursOnContourComparisonPlots')
+                'transects', 'labelContoursOnContourComparisonPlots')
         else:
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
@@ -512,7 +512,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision
-            )
+        )
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
@@ -620,8 +620,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 # the longitudinal extent of the transect is 360
                 # degrees minus this value.
 
-            else:   # if max >= min, the transect has covered the
-                    # entire longitudinal range (360 degrees)
+            else:
+                # if max >= min, the transect has covered the
+                # entire longitudinal range (360 degrees)
 
                 lon_extent = 360.0
 

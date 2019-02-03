@@ -199,7 +199,7 @@ class AnalysisTask(Process):  # {{{
         self.plotsDirectory = build_config_full_path(self.config, 'output',
                                                      'plotsSubdirectory')
         namelistFileName = build_config_full_path(
-            self.config,  'input',
+            self.config, 'input',
             '{}NamelistFileName'.format(self.componentName))
         self.namelist = NameList(namelistFileName)
 
@@ -455,7 +455,7 @@ class AnalysisTask(Process):  # {{{
                       'are analyzing was run with an\n'
                       'older version of MPAS-O that did not support '
                       'this flag.  Assuming enabled.'.format(
-                              analysisOptionName))
+                          analysisOptionName))
 
         if not enabled and raiseException:
             raise RuntimeError('*** MPAS-Analysis relies on {} = .true.\n'
@@ -550,6 +550,7 @@ class StreamToLogger(object):  # {{{
 
     Fake file-like stream object that redirects writes to a logger instance.
     """
+
     def __init__(self, logger, log_level=logging.INFO):
         self.logger = logger
         self.log_level = log_level
@@ -585,7 +586,7 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
         defaultPath=runDirectory)
 
     namelistFileName = build_config_full_path(
-        config,  'input',
+        config, 'input',
         '{}NamelistFileName'.format(componentName))
     try:
         namelist = NameList(namelistFileName)
@@ -614,8 +615,8 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
     streamName = 'timeSeriesStatsMonthlyOutput'
     try:
         inputFiles = historyStreams.readpath(
-                streamName, startDate=startDate, endDate=endDate,
-                calendar=calendar)
+            streamName, startDate=startDate, endDate=endDate,
+            calendar=calendar)
     except ValueError:
         # this component likely doesn't have output in this run
         return
@@ -631,7 +632,7 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
     startYear = years[firstIndex]
 
     # search for the end of the last full year
-    lastIndex = len(years)-1
+    lastIndex = len(years) - 1
     while(lastIndex >= 0 and months[lastIndex] != 12):
         lastIndex -= 1
     endYear = years[lastIndex]
