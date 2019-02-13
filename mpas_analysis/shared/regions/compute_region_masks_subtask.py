@@ -17,6 +17,9 @@ import xarray as xr
 import numpy
 import shapely.geometry
 import json
+from multiprocessing import Pool
+import progressbar
+from functools import partial
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -27,7 +30,7 @@ from mpas_analysis.shared.io import write_netcdf
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
-def get_feature_list(config, geojsonFileName):
+def get_feature_list(geojsonFileName):
     '''
     Builds a list of features found in the geojson file
     '''
@@ -42,6 +45,115 @@ def get_feature_list(config, geojsonFileName):
             name = feature['properties']['name']
             featureList.append(name)
     return featureList
+
+
+def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
+                         featureList=None, logger=None, processCount=1,
+                         chunkSize=1000):
+    '''
+    Build a region mask file from the given mesh and geojson file defining
+    a set of regions.
+    '''
+    if os.path.exists(maskFileName):
+        return
+
+    if logger is not None:
+        logger.info('Creating masks file {}'.format(maskFileName))
+
+    if featureList is None:
+        # get a list of features for use by other tasks (e.g. to determine
+        # plot names)
+        featureList = get_feature_list(geojsonFileName)
+
+    with xr.open_dataset(meshFileName) as dsMesh:
+        dsMesh = mpas_xarray.subset_variables(dsMesh, ['lonCell', 'latCell'])
+        latCell = numpy.rad2deg(dsMesh.latCell.values)
+
+        # transform longitudes to [-180, 180)
+        lonCell = numpy.mod(numpy.rad2deg(dsMesh.lonCell.values) + 180.,
+                            360.) - 180.
+
+    # create shapely geometry for lonCell and latCell
+    cellPoints = [shapely.geometry.Point(x, y) for x, y in
+                  zip(lonCell, latCell)]
+
+    nCells = len(cellPoints)
+
+    masks = []
+    regionNames = []
+    nChar = 0
+    if logger is not None:
+        logger.info('  Computing masks from {}...'.format(geojsonFileName))
+    with open(geojsonFileName) as f:
+        featureData = json.load(f)
+
+    for feature in featureData['features']:
+        name = feature['properties']['name']
+        if name not in featureList:
+            continue
+
+        if logger is not None:
+            logger.info('      {}'.format(name))
+
+        shape = shapely.geometry.shape(feature['geometry'])
+        if processCount == 1:
+            mask = _contains(shape, cellPoints)
+        else:
+            nChunks = int(numpy.ceil(nCells/chunkSize))
+            chunks = []
+            indices = [0]
+            for iChunk in range(nChunks):
+                start = iChunk*chunkSize
+                end = min((iChunk+1)*chunkSize, nCells)
+                chunks.append(cellPoints[start:end])
+                indices.append(end)
+
+            partial_func = partial(_contains, shape)
+            pool = Pool(processCount)
+
+            widgets = ['  ', progressbar.Percentage(), ' ',
+                       progressbar.Bar(), ' ', progressbar.ETA()]
+            bar = progressbar.ProgressBar(widgets=widgets,
+                                          maxval=nChunks).start()
+
+            mask = numpy.zeros((nCells,), bool)
+            for iChunk, maskChunk in \
+                    enumerate(pool.imap(partial_func, chunks)):
+                mask[indices[iChunk]:indices[iChunk+1]] = maskChunk
+                bar.update(iChunk+1)
+            bar.finish()
+            pool.terminate()
+
+        nChar = max(nChar, len(name))
+
+        masks.append(mask)
+        regionNames.append(name)
+
+    # create a new data array for masks and another for mask names
+    if logger is not None:
+        logger.info('  Creating and writing masks dataset...')
+    nRegions = len(regionNames)
+    dsMasks = xr.Dataset()
+    dsMasks['regionCellMasks'] = (('nRegions', 'nCells'),
+                                  numpy.zeros((nRegions, nCells), dtype=bool))
+    dsMasks['regionNames'] = (('nRegions'),
+                              numpy.zeros((nRegions),
+                                          dtype='|S{}'.format(nChar)))
+    for index in range(nRegions):
+        regionName = regionNames[index]
+        mask = masks[index]
+        dsMasks['regionCellMasks'][index, :] = mask
+        dsMasks['regionNames'][index] = regionName
+
+    write_netcdf(dsMasks, maskFileName)
+
+    # }}}
+
+
+def _contains(shape, cellPoints):
+    mask = numpy.array([shape.contains(point) for point in cellPoints],
+                       dtype=bool)
+    return mask
 
 
 class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
@@ -156,8 +268,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         if self.featureList is None:
             # get a list of features for use by other tasks (e.g. to determine
             # plot names)
-            self.featureList = get_feature_list(self.config,
-                                                self.geojsonFileName)
+            self.featureList = get_feature_list(self.geojsonFileName)
 
         mpasMeshName = self.config.get('input', 'mpasMeshName')
 
@@ -170,9 +281,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
                                                  mpasMeshName,
                                                  self.outFileSuffix)
 
-        if os.path.exists(self.maskFileName):
-            self.maskExists = True
-        else:
+        if not os.path.exists(self.maskFileName):
             # no cached mask file, so let's see if there's already one in the
             # masks subfolder of the output directory
 
@@ -181,8 +290,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             self.maskFileName = '{}/{}_{}.nc'.format(maskSubdirectory,
                                                      mpasMeshName,
                                                      self.outFileSuffix)
-
-            self.maskExists = os.path.exists(self.maskFileName)
 
         # }}}
 
@@ -194,68 +301,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        if self.maskExists:
-            return
-
-        self.logger.info('Creating masks file {}'.format(self.maskFileName))
-
-        with xr.open_dataset(self.restartFileName) as dsRestart:
-            dsRestart = mpas_xarray.subset_variables(dsRestart,
-                                                     ['lonCell', 'latCell'])
-            latCell = numpy.rad2deg(dsRestart.latCell.values)
-
-            # transform longitudes to [-180, 180)
-            lonCell = numpy.mod(numpy.rad2deg(dsRestart.lonCell.values) + 180.,
-                                360.) - 180.
-
-        # create shapely geometry for lonCell and latCell
-        cellPoints = [shapely.geometry.Point(x, y) for x, y in
-                      zip(lonCell, latCell)]
-
-        nCells = len(cellPoints)
-
-        masks = []
-        regionNames = []
-        nChar = 0
-        self.logger.info('  Computing masks from {}...'.format(
-                self.geojsonFileName))
-        with open(self.geojsonFileName) as f:
-            featureData = json.load(f)
-
-        for feature in featureData['features']:
-            name = feature['properties']['name']
-            if name not in self.featureList:
-                continue
-
-            self.logger.info('      {}'.format(name))
-
-            shape = shapely.geometry.shape(feature['geometry'])
-            mask = numpy.array([shape.contains(point) for point
-                                in cellPoints], dtype=bool)
-
-            nChar = max(nChar, len(name))
-
-            masks.append(mask)
-            regionNames.append(name)
-
-        # create a new data array for masks and another for mask names
-        self.logger.info('  Creating and writing masks dataset...')
-        nRegions = len(regionNames)
-        dsMasks = xr.Dataset()
-        dsMasks['masks'] = (('nRegions', 'nCells'),
-                            numpy.zeros((nRegions, nCells), dtype=bool))
-        dsMasks['regionNames'] = (('nRegions'),
-                                  numpy.zeros((nRegions),
-                                              dtype='|S{}'.format(nChar)))
-        for index in range(nRegions):
-            regionName = regionNames[index]
-            mask = masks[index]
-            dsMasks['regionCellMasks'][index, :] = mask
-            dsMasks['regionNames'][index] = regionName
-
-        write_netcdf(dsMasks, self.maskFileName)
-
-        # }}}
+        compute_region_masks(self.geojsonFileName, self.restartFileName,
+                             self.maskFileName, self.featureList, self.logger)
 
     # }}}
 
