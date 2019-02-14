@@ -62,9 +62,9 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
         fieldName = 'mld'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapMLD, self).__init__(
-                config=config, taskName='climatologyMapMLD',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapMLD',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         sectionName = self.taskName
 
@@ -102,15 +102,15 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = "{}/holtetalley_mld_climatology_20180710.nc".format(
-                    observationsDirectory)
+                observationsDirectory)
 
             refFieldName = 'mld'
             outFileLabel = 'mldHolteTalleyARGO'
 
             remapObservationsSubtask = RemapObservedMLDClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             galleryName = 'Observations: Holte-Talley ARGO'
             refTitleLabel = \
@@ -137,18 +137,18 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
                                                     controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='MLD',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'm',
-                        imageCaption='Mean Mixed-Layer Depth',
-                        galleryGroup='Mixed-Layer Depth',
-                        groupSubtitle=None,
-                        groupLink='mld',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='MLD',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'm',
+                    imageCaption='Mean Mixed-Layer Depth',
+                    galleryGroup='Mixed-Layer Depth',
+                    groupSubtitle=None,
+                    groupLink='mld',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

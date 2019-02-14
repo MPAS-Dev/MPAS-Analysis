@@ -99,27 +99,27 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                                            self.regionMaskSuffix)
 
         masksSubtask = ComputeRegionMasksSubtask(
-                self, masksFile,
-                outFileSuffix=self.regionMaskSuffix,
-                featureList=self.regionNames)
+            self, masksFile,
+            outFileSuffix=self.regionMaskSuffix,
+            featureList=self.regionNames)
 
         if 'all' in self.regionNames:
             self.regionNames = get_feature_list(config, masksFile)
 
         self.masksSubtask = masksSubtask
 
-        years = range(self.startYear, self.endYear+1)
+        years = range(self.startYear, self.endYear + 1)
 
         # in the end, we'll combine all the time series into one, but we create
         # this task first so it's easier to tell it to run after all the
         # compute tasks
         combineSubtask = CombineRegionalProfileTimeSeriesSubtask(
-                self, startYears=years, endYears=years)
+            self, startYears=years, endYears=years)
 
         # run one subtask per year
         for year in years:
             computeSubtask = ComputeRegionalProfileTimeSeriesSubtask(
-                    self, startYear=year, endYear=year)
+                self, startYear=year, endYear=year)
             computeSubtask.run_after(masksSubtask)
             combineSubtask.run_after(computeSubtask)
 
@@ -128,10 +128,10 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                 prefix = field['prefix']
                 for regionName in self.regionNames:
                     subtaskName = 'plotHovmoller_{}_{}'.format(
-                            prefix, regionName.replace(' ', '_'))
+                        prefix, regionName.replace(' ', '_'))
                     inFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
-                            self.regionMaskSuffix, self.regionMaskSuffix,
-                            self.startYear, self.endYear)
+                        self.regionMaskSuffix, self.regionMaskSuffix,
+                        self.startYear, self.endYear)
                     titleName = field['titleName']
                     caption = 'Time series of {} {} vs ' \
                               'depth'.format(regionName.replace('_', ' '),
@@ -160,7 +160,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
             for regionName in self.regionNames:
                 for season in self.seasons:
                     plotSubtask = PlotRegionalProfileTimeSeriesSubtask(
-                            self, season, regionName, field, controlConfig)
+                        self, season, regionName, field, controlConfig)
                     plotSubtask.run_after(combineSubtask)
                     self.add_subtask(plotSubtask)
 
@@ -259,20 +259,20 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         timeSeriesName = self.parentTask.regionMaskSuffix
 
         outputDirectory = '{}/{}/'.format(
-                build_config_full_path(self.config, 'output',
-                                       'timeseriesSubdirectory'),
-                timeSeriesName)
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'),
+            timeSeriesName)
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
         outputFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
-                outputDirectory, timeSeriesName, self.startYear, self.endYear)
+            outputDirectory, timeSeriesName, self.startYear, self.endYear)
 
         inputFiles = sorted(self.historyStreams.readpath(
-                'timeSeriesStatsMonthlyOutput', startDate=startDate,
-                endDate=endDate, calendar=self.calendar))
+            'timeSeriesStatsMonthlyOutput', startDate=startDate,
+            endDate=endDate, calendar=self.calendar))
 
         years, months = get_files_year_month(inputFiles,
                                              self.historyStreams,
@@ -293,8 +293,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 for inIndex in range(dsIn.dims['Time']):
 
                     mask = np.logical_and(
-                            dsIn.year[inIndex].values == years,
-                            dsIn.month[inIndex].values == months)
+                        dsIn.year[inIndex].values == years,
+                        dsIn.month[inIndex].values == months)
                     if np.count_nonzero(mask) == 0:
                         outputValid = False
                         break
@@ -338,7 +338,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         cellMasks = dsRegionMask.regionCellMasks
         regionNamesVar = dsRegionMask.regionNames
 
-        totalArea = (cellMasks*areaCell*vertMask).sum('nCells')
+        totalArea = (cellMasks * areaCell * vertMask).sum('nCells')
 
         datasets = []
         for timeIndex, fileName in enumerate(inputFiles):
@@ -367,11 +367,11 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
                 meanName = '{}_mean'.format(prefix)
                 dsLocal[meanName] = \
-                    (cellMasks*areaCell*var).sum('nCells')/totalArea
+                    (cellMasks * areaCell * var).sum('nCells') / totalArea
 
                 meanSquaredName = '{}_meanSquared'.format(prefix)
                 dsLocal[meanSquaredName] = \
-                    (cellMasks*areaCell*var**2).sum('nCells')/totalArea
+                    (cellMasks * areaCell * var**2).sum('nCells') / totalArea
 
             # drop the original variables
             dsLocal = dsLocal.drop(variableList)
@@ -399,8 +399,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         with xr.open_dataset(restartFile) as dsRestart:
             depths = dsRestart.refBottomDepth.values
             z = np.zeros(depths.shape)
-            z[0] = -0.5*depths[0]
-            z[1:] = -0.5*(depths[0:-1] + depths[1:])
+            z[0] = -0.5 * depths[0]
+            z[1:] = -0.5 * (depths[0:-1] + depths[1:])
 
         dsOut.coords['z'] = (('nVertLevels'), z)
         dsOut['z'].attrs['units'] = 'meters'
@@ -459,13 +459,13 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         timeSeriesName = self.parentTask.regionMaskSuffix
 
         outputDirectory = '{}/{}/'.format(
-                build_config_full_path(self.config, 'output',
-                                       'timeseriesSubdirectory'),
-                timeSeriesName)
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'),
+            timeSeriesName)
 
         outputFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
-                outputDirectory, timeSeriesName, self.startYears[0],
-                self.endYears[-1])
+            outputDirectory, timeSeriesName, self.startYears[0],
+            self.endYears[-1])
 
         if os.path.exists(outputFileName):
             ds = xr.open_dataset(outputFileName, decode_times=False)
@@ -474,7 +474,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             inFileNames = []
             for startYear, endYear in zip(self.startYears, self.endYears):
                 inFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
-                        outputDirectory, timeSeriesName, startYear, endYear)
+                    outputDirectory, timeSeriesName, startYear, endYear)
                 inFileNames.append(inFileName)
 
             ds = xr.open_mfdataset(inFileNames, concat_dim='Time',
@@ -496,8 +496,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         for season in self.parentTask.seasons:
             outputFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
-                    outputDirectory, timeSeriesName, season,
-                    self.startYears[0], self.endYears[-1])
+                outputDirectory, timeSeriesName, season,
+                self.startYears[0], self.endYears[-1])
             if not os.path.exists(outputFileName):
                 monthValues = constants.monthDictionary[season]
                 dsSeason = compute_climatology(ds, monthValues,
@@ -515,7 +515,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                     stdName = '{}_std'.format(prefix)
 
                     dsSeason[stdName] = np.sqrt(meanSquared - mean**2).where(
-                            profileMask)
+                        profileMask)
                     dsSeason['{}_mean'.format(prefix)] = mean
 
                 dsSeason.coords['regionNames'] = regionNames
@@ -616,9 +616,9 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.filePrefixes = {}
 
         self.filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
-                    self.field['prefix'], self.regionName.replace(' ', '_'),
-                    self.season, self.parentTask.startYear,
-                    self.parentTask.endYear)
+            self.field['prefix'], self.regionName.replace(' ', '_'),
+            self.season, self.parentTask.startYear,
+            self.parentTask.endYear)
         self.xmlFileNames = ['{}/{}.xml'.format(self.plotsDirectory,
                                                 self.filePrefix)]
         # }}}
@@ -639,8 +639,8 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                              'profilesSubdirectory')
         timeSeriesName = self.parentTask.regionMaskSuffix
         inFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
-                inDirectory, timeSeriesName, self.season,
-                self.parentTask.startYear, self.parentTask.endYear)
+            inDirectory, timeSeriesName, self.season,
+            self.parentTask.startYear, self.parentTask.endYear)
 
         ds = xr.open_dataset(inFileName)
         allRegionNames = [bytes.decode(name) for name in
@@ -741,7 +741,6 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     def plot(self, zArrays, fieldArrays, errArrays, lineColors, lineWidths,
              legendText, title, xLabel, yLabel, fileName, xLim=None, yLim=None,
              figureSize=(10, 4), dpi=None):  # {{{
-
         """
         Plots a 1D line plot with error bars if available.
 
@@ -820,9 +819,9 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             plt.plot(fieldArray, zArray, color=color, linewidth=linewidth,
                      label=label)
             if errArray is not None:
-                plt.fill_betweenx(zArray, fieldArray, fieldArray+errArray,
+                plt.fill_betweenx(zArray, fieldArray, fieldArray + errArray,
                                   facecolor=color, alpha=0.2)
-                plt.fill_betweenx(zArray, fieldArray, fieldArray-errArray,
+                plt.fill_betweenx(zArray, fieldArray, fieldArray - errArray,
                                   facecolor=color, alpha=0.2)
         # plt.grid()
         # plt.axvline(0.0, linestyle='-', color='k')

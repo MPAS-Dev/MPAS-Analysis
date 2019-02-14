@@ -33,6 +33,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
     Phillip J. Wolfram, Riley X. Brady, Xylar Asay-Davis
 
     """
+
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
         """
         Construct the analysis task.
@@ -143,8 +144,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 observationsDirectory = build_obs_path(
                     config, 'ocean', '{}Subdirectory'.format(fieldName))
 
-                obsFileName ="{}/{}".format(observationsDirectory,
-                                            obsFileDict[fieldName])
+                obsFileName = "{}/{}".format(observationsDirectory,
+                                             obsFileDict[fieldName])
 
                 observationsLabel = config.get(fieldSectionName,
                                                'observationsLabel')
@@ -184,10 +185,10 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 for season in seasons:
                     # make a new subtask for this season and comparison grid
                     subtask = PlotClimatologyMapSubtask(
-                            self, season, comparisonGridName,
-                            remapClimatologySubtask, remapObservationsSubtask,
-                            controlConfig, subtaskName='plot{}_{}_{}'.format(
-                                fieldName, season, comparisonGridName))
+                        self, season, comparisonGridName,
+                        remapClimatologySubtask, remapObservationsSubtask,
+                        controlConfig, subtaskName='plot{}_{}_{}'.format(
+                            fieldName, season, comparisonGridName))
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,

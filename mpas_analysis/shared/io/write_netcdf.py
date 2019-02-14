@@ -36,7 +36,7 @@ def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
     # -------
     # Xylar Asay-Davis
 
-# 
+#
     encodingDict = {}
     variableNames = list(ds.data_vars.keys()) + list(ds.coords.keys())
     for variableName in variableNames:

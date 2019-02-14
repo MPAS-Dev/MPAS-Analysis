@@ -70,16 +70,16 @@ def text_to_netcdf(inDir, outDir):
     inPT = gsw.pt_from_CT(inSA, inCT)
     inPD = gsw.rho(inSA, inCT, 0.)
 
-    minLat = int(numpy.amin(inLat)*cellsPerLat)/cellsPerLat
-    maxLat = int(numpy.amax(inLat)*cellsPerLat)/cellsPerLat
-    deltaLat = 1./cellsPerLat
-    outLat = numpy.arange(minLat-deltaLat, maxLat+2*deltaLat, deltaLat)
+    minLat = int(numpy.amin(inLat) * cellsPerLat) / cellsPerLat
+    maxLat = int(numpy.amax(inLat) * cellsPerLat) / cellsPerLat
+    deltaLat = 1. / cellsPerLat
+    outLat = numpy.arange(minLat - deltaLat, maxLat + 2 * deltaLat, deltaLat)
 
-    deltaLon = 1./cellsPerLon
+    deltaLon = 1. / cellsPerLon
     outLon = numpy.arange(0., 360., deltaLon)
 
-    xIndices = numpy.array(cellsPerLon*inLon + 0.5, int)
-    yIndices = numpy.array(cellsPerLat*(inLat - outLat[0]) + 0.5, int)
+    xIndices = numpy.array(cellsPerLon * inLon + 0.5, int)
+    yIndices = numpy.array(cellsPerLat * (inLat - outLat[0]) + 0.5, int)
 
     Lon, Lat = numpy.meshgrid(outLon, outLat)
 
@@ -101,7 +101,7 @@ def text_to_netcdf(inDir, outDir):
     PT = numpy.ma.masked_all(Lon.shape)
     PT[yIndices, xIndices] = inPT
     ds['botTheta'] = (('lat', 'lon'), PT)
-    ds.botTheta.attrs['units'] = '$\degree$C'
+    ds.botTheta.attrs['units'] = r'$\degree$C'
     ds.botTheta.attrs['description'] = \
         'potential temperature at sea floor'
 
@@ -109,7 +109,7 @@ def text_to_netcdf(inDir, outDir):
     # neglect difference between std of PT and CT
     PT_std[yIndices, xIndices] = inCT_std
     ds['botThetaStd'] = (('lat', 'lon'), PT_std)
-    ds.botThetaStd.attrs['units'] = '$\degree$C'
+    ds.botThetaStd.attrs['units'] = r'$\degree$C'
     ds.botThetaStd.attrs['description'] = \
         'standard deviation in potential temperature at sea floor'
 
@@ -142,7 +142,7 @@ def remap(inDir, outDir):
 
     inGridName = 'SouthernOcean_0.25x0.125degree'
     inFileName = '{}/Schmidtko_et_al_2014_bottom_PT_S_PD_{}.nc'.format(
-            inDir, inGridName)
+        inDir, inGridName)
 
     config = MpasAnalysisConfigParser()
     config.read('mpas_analysis/config.default')
@@ -157,7 +157,7 @@ def remap(inDir, outDir):
     outGridName = outDescriptor.meshName
 
     outFileName = '{}/Schmidtko_et_al_2014_bottom_PT_S_PD_{}.nc'.format(
-            outDir, outGridName)
+        outDir, outGridName)
 
     mappingFileName = '{}/map_{}_to_{}.nc'.format(inDir, inGridName,
                                                   outGridName)

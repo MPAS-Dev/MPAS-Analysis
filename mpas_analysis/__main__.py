@@ -114,7 +114,7 @@ def build_analysis_list(config, controlConfig):  # {{{
                                         section='index')
 
     oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
-            config=config,  componentName='ocean')
+        config=config, componentName='ocean')
 
     analyses.append(oceanClimatolgyTask)
     analyses.append(oceanRefYearClimatolgyTask)
@@ -130,21 +130,21 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.ClimatologyMapEKE(config, oceanClimatolgyTask,
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
-            config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
-            controlConfig))
+        config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
+        controlConfig))
 
     analyses.append(ocean.ClimatologyMapSose(
-            config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTask, controlConfig))
     analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
                                             controlConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
-            config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTask, controlConfig))
     analyses.append(ocean.ClimatologyMapArgoSalinity(
-            config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTask, controlConfig))
 
     analyses.append(ocean.ClimatologyMapSchmidtko(
-            config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTask, controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
                                                       oceanClimatolgyTask,
@@ -188,17 +188,17 @@ def build_analysis_list(config, controlConfig):  # {{{
 
     analyses.append(seaIceClimatolgyTask)
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='NH', controlConfig=controlConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='NH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='NH', controlConfig=controlConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='NH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', controlConfig=controlConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='SH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', controlConfig=controlConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='SH', controlConfig=controlConfig))
     analyses.append(seaIceTimeSeriesTask)
 
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
@@ -206,8 +206,8 @@ def build_analysis_list(config, controlConfig):  # {{{
 
     # Iceberg Analyses
     analyses.append(sea_ice.ClimatologyMapIcebergConc(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', controlConfig=controlConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='SH', controlConfig=controlConfig))
 
     return analyses  # }}}
 
@@ -284,7 +284,7 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
             ValueError("task {} already added but this version was not set up "
                        "successfully. Typically, this indicates two tasks "
                        "with the same full name".format(
-                               analysisTask.fullTaskName))
+                           analysisTask.fullTaskName))
         return
 
     # for each anlaysis task, check if we want to generate this task
@@ -456,7 +456,7 @@ def run_analysis(config, analyses):  # {{{
                                                      AnalysisTask.FAIL]:
                 unfinishedCount += 1
 
-        progress.update(totalTaskCount-unfinishedCount)
+        progress.update(totalTaskCount - unfinishedCount)
 
         if unfinishedCount <= 0 and len(runningTasks.keys()) == 0:
             # we're done
@@ -467,7 +467,7 @@ def run_analysis(config, analyses):  # {{{
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
                     logger.info('Running {}'.format(
-                            analysisTask.printTaskName))
+                        analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
@@ -486,7 +486,7 @@ def run_analysis(config, analyses):  # {{{
 
             if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
                 logger.info("   Task {} has finished successfully.".format(
-                        taskTitle))
+                    taskTitle))
             elif analysisTask._runStatus.value == AnalysisTask.FAIL:
                 message = "ERROR in task {}.  See log file {} for " \
                           "details".format(taskTitle,
@@ -525,7 +525,7 @@ def run_analysis(config, analyses):  # {{{
         sys.exit(1)
     else:
         print('Log files for executed tasks can be found in {}'.format(
-                logsDirectory))
+            logsDirectory))
 
     # }}}
 
@@ -569,8 +569,8 @@ def purge_output(config):
                              'timeSeries', 'html', 'mask', 'profiles']:
             option = '{}Subdirectory'.format(subdirectory)
             directory = build_config_full_path(
-                    config=config, section='output',
-                    relativePathOption=option)
+                config=config, section='output',
+                relativePathOption=option)
             if os.path.exists(directory):
                 print('Deleting contents of {}'.format(directory))
                 if os.path.islink(directory):
@@ -583,9 +583,9 @@ def purge_output(config):
                 option = '{}Subdirectory'.format(subdirectory)
                 section = '{}Observations'.format(component)
                 directory = build_config_full_path(
-                        config=config, section='output',
-                        relativePathOption=option,
-                        relativePathSection=section)
+                    config=config, section='output',
+                    relativePathOption=option,
+                    relativePathSection=section)
                 if os.path.exists(directory):
                     print('Deleting contents of {}'.format(directory))
                     if os.path.islink(directory):
@@ -612,8 +612,8 @@ def symlink_main_run(config, defaultConfig):
             make_directories(destBase)
 
             sourceDirectory = build_config_full_path(
-                    config=mainConfig, section='output',
-                    relativePathOption=option, relativePathSection=section)
+                config=mainConfig, section='output',
+                relativePathOption=option, relativePathSection=section)
 
             os.symlink(sourceDirectory, destDirectory)
 
@@ -641,7 +641,6 @@ def symlink_main_run(config, defaultConfig):
 
 
 def main():
-
     """
     Entry point for the main script ``mpas_analysis``
     """
@@ -800,7 +799,7 @@ def download_analysis_data():
 
     urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
     analysisFileList = pkg_resources.resource_string(
-            'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
+        'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
 
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))

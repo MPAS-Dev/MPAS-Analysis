@@ -154,8 +154,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         for variable in variableList:
             if variable not in self.allVariables:
                 raise ValueError(
-                        '{} is not available in timeSeriesStatsMonthly '
-                        'output:\n{}'.format(variable, self.allVariables))
+                    '{} is not available in timeSeriesStatsMonthly '
+                    'output:\n{}'.format(variable, self.allVariables))
 
             if variable not in self.variableList:
                 self.variableList.append(variable)
@@ -202,8 +202,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # reading only those that are between the start and end dates
         streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
-                streamName, startDate=self.startDate, endDate=self.endDate,
-                calendar=self.calendar)
+            streamName, startDate=self.startDate, endDate=self.endDate,
+            calendar=self.calendar)
 
         if len(self.inputFiles) == 0:
             raise IOError('No files were found in stream {} between {} and '
@@ -231,8 +231,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         self.logger.info('\nComputing MPAS climatologies from files:\n'
                          '    {} through\n    {}'.format(
-                                 os.path.basename(self.inputFiles[0]),
-                                 os.path.basename(self.inputFiles[-1])))
+                             os.path.basename(self.inputFiles[0]),
+                             os.path.basename(self.inputFiles[-1])))
 
         seasonsToCheck = list(constants.abrevMonthNames)
         for season in self.seasons:
@@ -244,7 +244,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
             climatologyFileName = self.get_file_name(season)
             climatologyDirectory = get_unmasked_mpas_climatology_directory(
-                    self.config)
+                self.config)
 
             if not os.path.exists(climatologyFileName):
                 allExist = False
@@ -261,8 +261,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         if not allExist:
             self._compute_climatologies_with_ncclimo(
-                    inDirectory=self.symlinkDirectory,
-                    outDirectory=climatologyDirectory)
+                inDirectory=self.symlinkDirectory,
+                outDirectory=climatologyDirectory)
 
         # }}}
 
@@ -340,7 +340,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             config, 'output', 'mpasClimatologySubdirectory')
 
         symlinkDirectory = '{}/source_symlinks'.format(
-                climatologyBaseDirectory)
+            climatologyBaseDirectory)
 
         make_directories(symlinkDirectory)
 

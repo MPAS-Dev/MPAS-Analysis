@@ -64,10 +64,10 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         fieldName = 'seaIceThick'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSeaIceThick, self).__init__(
-                config=config, taskName=taskName,
-                componentName='seaIce',
-                tags=['climatology', 'horizontalMap', fieldName,
-                      'publicObs'])
+            config=config, taskName=taskName,
+            componentName='seaIce',
+            tags=['climatology', 'horizontalMap', fieldName,
+                  'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
         iselValues = None
@@ -121,19 +121,19 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         for season in seasons:
             if controlConfig is None:
                 obsFileName = build_obs_path(
-                        config, 'seaIce',
-                        relativePathOption='thickness{}_{}'.format(hemisphere,
-                                                                   season),
-                        relativePathSection=sectionName)
+                    config, 'seaIce',
+                    relativePathOption='thickness{}_{}'.format(hemisphere,
+                                                               season),
+                    relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedThickClimatology(
-                        parentTask=self, seasons=[season],
-                        fileName=obsFileName,
-                        outFilePrefix='{}{}_{}'.format(refFieldName,
-                                                       hemisphere,
-                                                       season),
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations{}'.format(season))
+                    parentTask=self, seasons=[season],
+                    fileName=obsFileName,
+                    outFilePrefix='{}{}_{}'.format(refFieldName,
+                                                   hemisphere,
+                                                   season),
+                    comparisonGridNames=comparisonGridNames,
+                    subtaskName='remapObservations{}'.format(season))
                 self.add_subtask(remapObservationsSubtask)
 
             for comparisonGridName in comparisonGridNames:
@@ -144,28 +144,28 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
                 imageCaption = imageDescription
                 galleryGroup = \
                     '{}-Hemisphere Sea-Ice Thickness'.format(
-                            hemisphereLong)
+                        hemisphereLong)
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
-                        self, hemisphere, season, comparisonGridName,
-                        remapClimatologySubtask, remapObservationsSubtask,
-                        controlConfig)
+                    self, hemisphere, season, comparisonGridName,
+                    remapClimatologySubtask, remapObservationsSubtask,
+                    controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='icethick{}'.format(hemisphere),
-                        fieldNameInTitle='Sea ice thickness',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'm',
-                        imageDescription=imageDescription,
-                        imageCaption=imageCaption,
-                        galleryGroup=galleryGroup,
-                        groupSubtitle=None,
-                        groupLink='{}_thick'.format(hemisphere.lower()),
-                        galleryName=galleryName,
-                        maskValue=0)
+                    outFileLabel='icethick{}'.format(hemisphere),
+                    fieldNameInTitle='Sea ice thickness',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'm',
+                    imageDescription=imageDescription,
+                    imageCaption=imageCaption,
+                    galleryGroup=galleryGroup,
+                    groupSubtitle=None,
+                    groupLink='{}_thick'.format(hemisphere.lower()),
+                    galleryName=galleryName,
+                    maskValue=0)
 
                 self.add_subtask(subtask)
 

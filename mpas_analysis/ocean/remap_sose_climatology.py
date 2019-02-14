@@ -91,8 +91,8 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
         super(RemapSoseClimatology, self).__init__(
-                parentTask, seasons, fileName, outFilePrefix,
-                comparisonGridNames, subtaskName)
+            parentTask, seasons, fileName, outFilePrefix,
+            comparisonGridNames, subtaskName)
         # }}}
 
     def get_observation_descriptor(self, fileName):  # {{{
@@ -154,12 +154,12 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
             for depth in self.depths:
                 if depth == 'top':
                     slices.append(field.sel(method='nearest', z=0.).drop(
-                            'z'))
+                        'z'))
                 elif depth == 'bot':
                     slices.append(dsObs[self.botFieldName])
                 else:
                     level = field.sel(method='nearest', z=depth).drop(
-                            'z')
+                        'z')
                     slices.append(level)
 
             depthNames = [str(depth) for depth in self.depths]

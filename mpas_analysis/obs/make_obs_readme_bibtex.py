@@ -28,7 +28,7 @@ import os
 
 
 def spurious_newline_whitespace(data):
-    whitespace = re.findall('\n\s*', data)
+    whitespace = re.findall(r'\n\s*', data)
     if len(whitespace) > 0:
         astr = min(whitespace)
         data = data.replace(astr, "\n")
@@ -69,13 +69,13 @@ def build_readmes(xmlFile, outDir):
         readme = open('{}/README.md'.format(path), 'w')
 
         readme.write('{}\n'.format(name))
-        readme.write('='*len(name))
+        readme.write('=' * len(name))
         readme.write('\n\n')
 
         for tag in titles:
             title = titles[tag]
             readme.write('{}\n'.format(title))
-            readme.write('{}\n'.format('-'*len(title)))
+            readme.write('{}\n'.format('-' * len(title)))
             text = cleanup(entry.findall(tag)[0].text.strip())
             readme.write('{}\n\n'.format(text))
         readme.close()
@@ -113,7 +113,7 @@ def build_bibtex(xmlFile, outDir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-o", "--outDir", dest="outDir",
                         help="Base output directory containing observations",
                         metavar="OBS_DIR", required=True)

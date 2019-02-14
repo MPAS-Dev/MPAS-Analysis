@@ -23,7 +23,6 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
                                           startDate, endDate, calendar,
                                           movingAveragePoints=12,
                                           alter_dataset=None):  # {{{
-
     '''
     Compute the rolling mean of the anomaly of a quantity from the beginning
     of the simulation (such that the rolling mean starts at zero by definition)

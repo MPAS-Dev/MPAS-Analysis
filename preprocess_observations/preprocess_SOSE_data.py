@@ -46,7 +46,7 @@ from mds import rdmds
 
 def get_bottom_indices(cellFraction):
     nx, ny, nz = cellFraction.shape
-    botIndices = -1*numpy.ones((nx, ny), int)
+    botIndices = -1 * numpy.ones((nx, ny), int)
     for zIndex in range(nz):
         mask = cellFraction[:, :, zIndex] > 0.
         botIndices[mask] = zIndex
@@ -57,7 +57,7 @@ def get_monthly_average_3d(filePrefix, cellFraction, botIndices):
     field, itrs, metadata = rdmds(filePrefix, rec=[0], returnmeta=True)
     nz, ny, nx = field.shape
     # print nx, ny, nz
-    yearCount = metadata['nrecords'][0]//12
+    yearCount = metadata['nrecords'][0] // 12
     dims = [12, nx, ny, nz]
 
     mask3D = cellFraction <= 0.
@@ -69,19 +69,19 @@ def get_monthly_average_3d(filePrefix, cellFraction, botIndices):
     for month in range(12):
         first = True
         for year in range(yearCount):
-            print('{:04d}-{:02d}'.format(year+2005, month+1))
-            recordIndex = year*12 + month
+            print('{:04d}-{:02d}'.format(year + 2005, month + 1))
+            recordIndex = year * 12 + month
             field = rdmds(filePrefix, rec=[recordIndex])
             field = field.transpose(2, 1, 0)
 
             field = numpy.ma.masked_array(field, mask=mask3D)
             if first:
-                monthlyClimatologies[month, :, :, :] = field/float(yearCount)
+                monthlyClimatologies[month, :, :, :] = field / float(yearCount)
                 first = False
             else:
                 monthlyClimatologies[month, :, :, :] = \
                     monthlyClimatologies[month, :, :, :] + \
-                    field/float(yearCount)
+                    field / float(yearCount)
         botMonthlyClimatologies[month, :, :] = \
             numpy.ma.masked_array(field[xIndices, yIndices, botIndices],
                                   mask=mask2D)
@@ -96,7 +96,7 @@ def get_monthly_average_2d(filePrefix, botIndices):
     field, itrs, metadata = rdmds(filePrefix, rec=[0], returnmeta=True)
     ny, nx = field.shape
     # print nx, ny, nz
-    yearCount = metadata['nrecords'][0]//12
+    yearCount = metadata['nrecords'][0] // 12
     dims = [12, nx, ny]
 
     mask2D = botIndices == -1
@@ -106,19 +106,19 @@ def get_monthly_average_2d(filePrefix, botIndices):
     for month in range(12):
         first = True
         for year in range(yearCount):
-            print('{:04d}-{:02d}'.format(year+2005, month+1))
-            recordIndex = year*12 + month
+            print('{:04d}-{:02d}'.format(year + 2005, month + 1))
+            recordIndex = year * 12 + month
             field = rdmds(filePrefix, rec=[recordIndex])
             field = field.transpose(1, 0)
 
             field = numpy.ma.masked_array(field, mask=mask2D)
             if first:
-                monthlyClimatologies[month, :, :] = field/float(yearCount)
+                monthlyClimatologies[month, :, :] = field / float(yearCount)
                 first = False
             else:
                 monthlyClimatologies[month, :, :] = \
                     monthlyClimatologies[month, :, :] + \
-                    field/float(yearCount)
+                    field / float(yearCount)
 
     monthlyClimatologies = monthlyClimatologies.transpose(0, 2, 1)
     return monthlyClimatologies
@@ -177,12 +177,12 @@ def sose_pt_to_nc(inPrefix, outFileName, lon, lat, z, cellFraction,
                      'data_vars': {'theta':
                                    {'dims': ('Time', 'lat', 'lon', 'z'),
                                     'data': field,
-                                    'attrs': {'units': '$\degree$C',
+                                    'attrs': {'units': r'$\degree$C',
                                               'description': description}},
                                    'botTheta':
                                    {'dims': ('Time', 'lat', 'lon'),
                                     'data': botField,
-                                    'attrs': {'units': '$\degree$C',
+                                    'attrs': {'units': r'$\degree$C',
                                               'description': botDescription}}}}
 
         dsT = xarray.Dataset.from_dict(dictonary)
@@ -667,12 +667,12 @@ def compute_vel_mag(prefix, inGridName, inDir):
                 with xarray.open_dataset(vFileName) as dsV:
                     dsVelMag = dsU.drop(['zonalVel', 'botZonalVel'])
                     dsVelMag['velMag'] = numpy.sqrt(
-                            dsU.zonalVel**2 + dsV.meridVel**2)
+                        dsU.zonalVel**2 + dsV.meridVel**2)
                     dsVelMag.velMag.attrs['units'] = 'm s$^{-1}$'
                     dsVelMag.velMag.attrs['description'] = description
 
                     dsVelMag['botVelMag'] = numpy.sqrt(
-                            dsU.botZonalVel**2 + dsV.botMeridVel**2)
+                        dsU.botZonalVel**2 + dsV.botMeridVel**2)
                     dsVelMag.botVelMag.attrs['units'] = 'm s$^{-1}$'
                     dsVelMag.botVelMag.attrs['description'] = botDescription
 

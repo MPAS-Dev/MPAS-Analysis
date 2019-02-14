@@ -24,7 +24,7 @@ if not isrelease:
             ["git", "describe", "--always", "--match", "v[0-9]*"],
             stdout=subprocess.PIPE)
         (version, stderr) = pipe.communicate()
-    except:
+    except BaseException:
         warnings.warn("WARNING: Couldn't get git revision, using generic "
                       "version string")
 

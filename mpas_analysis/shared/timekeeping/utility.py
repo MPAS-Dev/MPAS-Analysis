@@ -488,7 +488,7 @@ def _round_datetime(date):
                              hour=hour, minute=minute,
                              second=second)
 
-    add_seconds = int(1e-6*microsecond+0.5)
+    add_seconds = int(1e-6 * microsecond + 0.5)
 
     return date + datetime.timedelta(0, add_seconds)
 

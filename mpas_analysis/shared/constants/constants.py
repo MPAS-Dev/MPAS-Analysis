@@ -46,10 +46,10 @@ abrevMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
 m3ps_to_Sv = 1e-6
 
 # conversion factor from radians to degrees
-rad_to_deg = 180./np.pi
+rad_to_deg = 180. / np.pi
 
 # conversion factor from degrees to radians
-deg_to_rad = np.pi/180.
+deg_to_rad = np.pi / 180.
 
 # seconds in a year
 sec_per_year = 86400. * 365.

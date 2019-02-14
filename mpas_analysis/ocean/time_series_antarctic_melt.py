@@ -80,9 +80,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             iceShelvesToPlot = get_feature_list(config, iceShelfMasksFile)
 
         masksSubtask = ComputeRegionMasksSubtask(
-                self, iceShelfMasksFile,
-                outFileSuffix='iceShelfMasks',
-                featureList=iceShelvesToPlot)
+            self, iceShelfMasksFile,
+            outFileSuffix='iceShelfMasks',
+            featureList=iceShelvesToPlot)
 
         self.add_subtask(masksSubtask)
 
@@ -225,7 +225,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis, Stephen Price
 
-        self.logger.info("\Computing Antarctic melt rate time series...")
+        self.logger.info(r"\Computing Antarctic melt rate time series...")
 
         self.logger.info('  Load melt rate data...')
 
@@ -268,7 +268,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             mpasTimeSeriesTask.runStreams.readpath('restart')[0]
 
         dsRestart = xarray.open_dataset(restartFileName)
-        areaCell = dsRestart.landIceFraction.isel(Time=0)*dsRestart.areaCell
+        areaCell = dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
 
         regionMaskFileName = self.masksSubtask.maskFileName
 
@@ -290,12 +290,12 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         # convert from kg/s to kg/yr
         totalMeltFlux = constants.sec_per_year * \
-            (cellMasks*areaCell*freshwaterFlux).sum(dim='nCells')
+            (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
 
-        totalArea = (cellMasks*areaCell).sum(dim='nCells')
+        totalArea = (cellMasks * areaCell).sum(dim='nCells')
 
         # from kg/m^2/yr to m/yr
-        meltRates = (1./constants.rho_fw) * (totalMeltFlux/totalArea)
+        meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
 
         # convert from kg/yr to GT/yr
         totalMeltFlux /= constants.kg_per_GT
@@ -458,10 +458,10 @@ class PlotMeltSubtask(AnalysisTask):
                 # build dict of obs. keyed to filename description
                 # (which will be used for plotting)
                 obsDict[obsName] = {
-                        'meltFlux': meltFlux,
-                        'meltFluxUncertainty': meltFluxUncertainty,
-                        'meltRate': meltRate,
-                        'meltRateUncertainty': meltRateUncertainty}
+                    'meltFlux': meltFlux,
+                    'meltFluxUncertainty': meltFluxUncertainty,
+                    'meltRate': meltRate,
+                    'meltRateUncertainty': meltRateUncertainty}
                 break
 
         # If areas from obs file used need to be converted from sq km to sq m

@@ -83,8 +83,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSchmidtko, self).__init__(
-                config=config, taskName='climatologyMapSchmidtko',
-                componentName='ocean', tags=tags)
+            config=config, taskName='climatologyMapSchmidtko',
+            componentName='ocean', tags=tags)
 
         sectionName = self.taskName
 
@@ -138,12 +138,12 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                 outFileLabel = '{}Schmidtko'.format(fieldPrefix)
 
                 remapObservationsSubtask = RemapSchmidtko(
-                        parentTask=self, seasons=seasons, fileName=obsFileName,
-                        outFilePrefix='{}Schmidtko'.format(fieldPrefix),
-                        fieldName=refFieldName,
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations{}'.format(
-                                upperFieldPrefix))
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix='{}Schmidtko'.format(fieldPrefix),
+                    fieldName=refFieldName,
+                    comparisonGridNames=comparisonGridNames,
+                    subtaskName='remapObservations{}'.format(
+                        upperFieldPrefix))
 
                 self.add_subtask(remapObservationsSubtask)
 
@@ -239,8 +239,8 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
         super(RemapSchmidtko, self).__init__(
-                parentTask, seasons, fileName, outFilePrefix,
-                comparisonGridNames, subtaskName)
+            parentTask, seasons, fileName, outFilePrefix,
+            comparisonGridNames, subtaskName)
         # }}}
 
     def get_observation_descriptor(self, fileName):  # {{{

@@ -176,7 +176,7 @@ class MpasMeshDescriptor(MeshDescriptor):  # {{{
         for iVertex in range(maxVertices):
             cellIndices = numpy.arange(nCells)
             # repeat the last vertex wherever iVertex > nEdgesOnCell
-            localVertexIndices = numpy.minimum(nEdgesOnCell-1, iVertex)
+            localVertexIndices = numpy.minimum(nEdgesOnCell - 1, iVertex)
             vertexIndices = verticesOnCell[cellIndices, localVertexIndices] - 1
             grid_corner_lat[cellIndices, iVertex] = latVertex[vertexIndices]
             grid_corner_lon[cellIndices, iVertex] = lonVertex[vertexIndices]
@@ -269,7 +269,7 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
 
         if 'history' in ds.attrs:
             descriptor.history = '\n'.join([ds.attrs['history'],
-                                           ' '.join(sys.argv[:])])
+                                            ' '.join(sys.argv[:])])
         else:
             descriptor.history = sys.argv[:]
         return descriptor  # }}}
@@ -296,8 +296,8 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
 
         descriptor.latCorner = latCorner
         descriptor.lonCorner = lonCorner
-        descriptor.lon = 0.5*(lonCorner[0:-1] + lonCorner[1:])
-        descriptor.lat = 0.5*(latCorner[0:-1] + latCorner[1:])
+        descriptor.lon = 0.5 * (lonCorner[0:-1] + lonCorner[1:])
+        descriptor.lat = 0.5 * (latCorner[0:-1] + latCorner[1:])
         descriptor.units = units
         descriptor.history = sys.argv[:]
         descriptor._set_coords('lat', 'lon', 'lat', 'lon')
@@ -323,7 +323,7 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         nLat = len(self.lat)
         nLon = len(self.lon)
 
-        grid_size = nLat*nLon
+        grid_size = nLat * nLon
 
         _create_scrip(outFile, grid_size=grid_size, grid_corners=4,
                       grid_rank=2, units=self.units, meshName=self.meshName)
@@ -361,8 +361,8 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
         self.dimSize = [len(self.lat), len(self.lon)]
 
         # set the name of the grid
-        dLat = self.lat[1]-self.lat[0]
-        dLon = self.lon[1]-self.lon[0]
+        dLat = self.lat[1] - self.lat[0]
+        dLon = self.lon[1] - self.lon[0]
         lonRange = self.lonCorner[-1] - self.lonCorner[0]
         latRange = self.latCorner[-1] - self.latCorner[0]
         if 'degree' in self.units:
@@ -372,7 +372,7 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
             if numpy.abs(latRange - 180.) > 1e-10:
                 self.regional = True
         elif 'rad' in self.units:
-            if numpy.abs(lonRange - 2.*numpy.pi) > 1e-10:
+            if numpy.abs(lonRange - 2. * numpy.pi) > 1e-10:
                 self.regional = True
             if numpy.abs(latRange - numpy.pi) > 1e-10:
                 self.regional = True
@@ -462,7 +462,7 @@ class LatLon2DGridDescriptor(MeshDescriptor):  # {{{
 
         if 'history' in ds.attrs:
             descriptor.history = '\n'.join([ds.attrs['history'],
-                                           ' '.join(sys.argv[:])])
+                                            ' '.join(sys.argv[:])])
         else:
             descriptor.history = sys.argv[:]
         return descriptor  # }}}
@@ -486,7 +486,7 @@ class LatLon2DGridDescriptor(MeshDescriptor):  # {{{
 
         nLat, nLon = self.lat.shape
 
-        grid_size = nLat*nLon
+        grid_size = nLat * nLon
 
         _create_scrip(outFile, grid_size=grid_size, grid_corners=4,
                       grid_rank=2, units=self.units, meshName=self.meshName)
@@ -523,8 +523,8 @@ class LatLon2DGridDescriptor(MeshDescriptor):  # {{{
         self.dimSize = self.lat.shape
 
         # set the name of the grid
-        dLat = self.lat[1, 0]-self.lat[0, 0]
-        dLon = self.lon[0, 1]-self.lon[0, 0]
+        dLat = self.lat[1, 0] - self.lat[0, 0]
+        dLon = self.lon[0, 1] - self.lon[0, 0]
         if 'degree' in self.units:
             units = 'degree'
         elif 'rad' in self.units:
@@ -620,7 +620,7 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         # Update history attribute of netCDF file
         if 'history' in ds.attrs:
             descriptor.history = '\n'.join([ds.attrs['history'],
-                                           ' '.join(sys.argv[:])])
+                                            ' '.join(sys.argv[:])])
         else:
             descriptor.history = sys.argv[:]
         return descriptor  # }}}
@@ -680,7 +680,7 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         nx = len(self.x)
         ny = len(self.y)
 
-        grid_size = nx*ny
+        grid_size = nx * ny
 
         _create_scrip(outFile, grid_size=grid_size, grid_corners=4,
                       grid_rank=2, units='degrees', meshName=self.meshName)
@@ -874,28 +874,28 @@ class PointCollectionDescriptor(MeshDescriptor):  # {{{
 def interp_extrap_corner(inField):  # {{{
     '''Interpolate/extrapolate a 1D field from grid centers to grid corners'''
 
-    outField = numpy.zeros(len(inField)+1)
-    outField[1:-1] = 0.5*(inField[0:-1] + inField[1:])
+    outField = numpy.zeros(len(inField) + 1)
+    outField[1:-1] = 0.5 * (inField[0:-1] + inField[1:])
     # extrapolate the ends
-    outField[0] = 1.5*inField[0] - 0.5*inField[1]
-    outField[-1] = 1.5*inField[-1] - 0.5*inField[-2]
+    outField[0] = 1.5 * inField[0] - 0.5 * inField[1]
+    outField[-1] = 1.5 * inField[-1] - 0.5 * inField[-2]
     return outField  # }}}
 
 
 def interp_extrap_corners_2d(inField):  # {{{
     '''Interpolate/extrapolate a 1D field from grid centers to grid corners'''
 
-    temp = numpy.zeros((inField.shape[0], inField.shape[1]+1))
-    temp[:, 1:-1] = 0.5*(inField[:, 0:-1] + inField[:, 1:])
+    temp = numpy.zeros((inField.shape[0], inField.shape[1] + 1))
+    temp[:, 1:-1] = 0.5 * (inField[:, 0:-1] + inField[:, 1:])
     # extrapolate the ends
-    temp[:, 0] = 1.5*inField[:, 0] - 0.5*inField[:, 1]
-    temp[:, -1] = 1.5*inField[:, -1] - 0.5*inField[:, -2]
+    temp[:, 0] = 1.5 * inField[:, 0] - 0.5 * inField[:, 1]
+    temp[:, -1] = 1.5 * inField[:, -1] - 0.5 * inField[:, -2]
 
-    outField = numpy.zeros((inField.shape[0]+1, inField.shape[1]+1))
-    outField[1:-1, :] = 0.5*(temp[0:-1, :] + temp[1:, :])
+    outField = numpy.zeros((inField.shape[0] + 1, inField.shape[1] + 1))
+    outField[1:-1, :] = 0.5 * (temp[0:-1, :] + temp[1:, :])
     # extrapolate the ends
-    outField[0, :] = 1.5*temp[0, :] - 0.5*temp[1, :]
-    outField[-1, :] = 1.5*temp[-1, :] - 0.5*temp[-2, :]
+    outField[0, :] = 1.5 * temp[0, :] - 0.5 * temp[1, :]
+    outField[-1, :] = 1.5 * temp[-1, :] - 0.5 * temp[-2, :]
 
     return outField  # }}}
 
@@ -959,7 +959,7 @@ def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units,
 
 def _unwrap_corners(inField):
     '''Turn a 2D array of corners into an array of rectangular mesh elements'''
-    outField = numpy.zeros(((inField.shape[0]-1)*(inField.shape[1]-1), 4))
+    outField = numpy.zeros(((inField.shape[0] - 1) * (inField.shape[1] - 1), 4))
     # corners are counterclockwise
     outField[:, 0] = inField[0:-1, 0:-1].flat
     outField[:, 1] = inField[0:-1, 1:].flat

@@ -60,9 +60,9 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
         fieldName = 'ssh'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSSH, self).__init__(
-                config=config, taskName='climatologyMapSSH',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapSSH',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_pressureAdjustedSSH'
 
@@ -111,9 +111,9 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
             galleryName = 'Observations: AVISO'
 
             remapObservationsSubtask = RemapObservedSSHClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
@@ -138,18 +138,18 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                                                     removeMean=True)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='Zero-mean SSH',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'cm',
-                        imageCaption='Mean Sea Surface Height',
-                        galleryGroup='Sea Surface Height',
-                        groupSubtitle=None,
-                        groupLink='ssh',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='Zero-mean SSH',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'cm',
+                    imageCaption='Mean Sea Surface Height',
+                    galleryGroup='Sea Surface Height',
+                    groupSubtitle=None,
+                    groupLink='ssh',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

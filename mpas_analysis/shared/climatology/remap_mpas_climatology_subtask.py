@@ -247,10 +247,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             for season in self.seasons:
 
                 maskedClimatologyFileName = self.get_masked_file_name(
-                        season)
+                    season)
 
                 remappedFileName = self.get_remapped_file_name(
-                        season, comparisonGridName)
+                    season, comparisonGridName)
 
                 if not os.path.exists(remappedFileName):
                     self._remap(inFileName=maskedClimatologyFileName,
@@ -330,8 +330,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         fileName = get_remapped_mpas_climatology_file_name(
-                self.config, season, self.componentName, self.climatologyName,
-                comparisonGridName)
+            self.config, season, self.componentName, self.climatologyName,
+            comparisonGridName)
 
         return fileName  # }}}
 
@@ -464,14 +464,14 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
             if stage == 'masked':
                 directory = '{}/{}_{}'.format(
-                        stageDirectory, self.climatologyName,
-                        mpasMeshName)
+                    stageDirectory, self.climatologyName,
+                    mpasMeshName)
             elif stage == 'remapped':
                 directory = '{}/{}_{}_to_{}'.format(
-                        stageDirectory,
-                        self.climatologyName,
-                        mpasMeshName,
-                        comparisonFullMeshNames[comparisonGridName])
+                    stageDirectory,
+                    self.climatologyName,
+                    mpasMeshName,
+                    comparisonFullMeshNames[comparisonGridName])
 
             make_directories(directory)
 
@@ -480,14 +480,14 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             endMonth = monthValues[-1]
 
             suffix = '{:04d}{:02d}_{:04d}{:02d}_climo'.format(
-                    self.mpasClimatologyTask.startYear, startMonth,
-                    self.mpasClimatologyTask.endYear, endMonth)
+                self.mpasClimatologyTask.startYear, startMonth,
+                self.mpasClimatologyTask.endYear, endMonth)
 
             if season in constants.abrevMonthNames:
                 season = '{:02d}'.format(monthValues[0])
             fileName = '{}/{}_{}_{}.nc'.format(
-                    directory, self.mpasClimatologyTask.ncclimoModel, season,
-                    suffix)
+                directory, self.mpasClimatologyTask.ncclimoModel, season,
+                suffix)
 
             self._outputDirs[key] = directory
             self._outputFiles[key] = fileName
@@ -600,7 +600,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         # customize (if this function has been overridden)
         remappedClimatology = self.customize_remapped_climatology(
-                remappedClimatology, comparisonGridName, season)
+            remappedClimatology, comparisonGridName, season)
 
         write_netcdf(remappedClimatology, outFileName)  # }}}
 

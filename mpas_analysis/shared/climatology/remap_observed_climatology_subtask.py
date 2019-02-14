@@ -100,8 +100,8 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(RemapObservedClimatologySubtask, self).__init__(
-                config=config, taskName=taskName, subtaskName=subtaskName,
-                componentName=componentName, tags=tags)
+            config=config, taskName=taskName, subtaskName=subtaskName,
+            componentName=componentName, tags=tags)
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -151,18 +151,18 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
             for season in self.seasons:
 
                 remappedFileName = self.get_file_name(
-                        stage='remapped',
-                        season=season,
-                        comparisonGridName=comparisonGridName)
+                    stage='remapped',
+                    season=season,
+                    comparisonGridName=comparisonGridName)
 
                 if not os.path.exists(remappedFileName):
 
                     ds = xr.open_dataset(obsFileName)
 
                     climatologyFileName = self.get_file_name(
-                            stage='climatology',
-                            season=season,
-                            comparisonGridName=comparisonGridName)
+                        stage='climatology',
+                        season=season,
+                        comparisonGridName=comparisonGridName)
                     if 'month' in ds.variables.keys() and \
                             'year' in ds.variables.keys():
                         # this data set is not yet a climatology, so compute
@@ -336,16 +336,16 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         for comparisonGridName in self.comparisonGridNames:
 
             comparisonDescriptor = get_comparison_descriptor(
-                    config, comparisonGridName=comparisonGridName)
+                config, comparisonGridName=comparisonGridName)
 
             self.remappers[comparisonGridName] = get_remapper(
-                    config=config,
-                    sourceDescriptor=obsDescriptor,
-                    comparisonDescriptor=comparisonDescriptor,
-                    mappingFilePrefix='map_obs_{}'.format(outFilePrefix),
-                    method=config.get(sectionName,
-                                      'interpolationMethod'),
-                    logger=self.logger)
+                config=config,
+                sourceDescriptor=obsDescriptor,
+                comparisonDescriptor=comparisonDescriptor,
+                mappingFilePrefix='map_obs_{}'.format(outFilePrefix),
+                method=config.get(sectionName,
+                                  'interpolationMethod'),
+                logger=self.logger)
         # }}}
     # }}}
 

@@ -59,9 +59,9 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
         fieldName = 'sst'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSST, self).__init__(
-                config=config, taskName='climatologyMapSST',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapSST',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         iselValues = {'nVertLevels': 0}
@@ -104,7 +104,7 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
 
             refTitleLabel = \
                 'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(
-                        period, climStartYear, climEndYear)
+                    period, climStartYear, climEndYear)
 
             observationsDirectory = build_obs_path(
                 config, 'ocean', '{}Subdirectory'.format(fieldName))
@@ -117,9 +117,9 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
             galleryName = 'Observations: Hadley-NOAA-OI'
 
             remapObservationsSubtask = RemapObservedSSTClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
@@ -143,18 +143,18 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                                                     controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='SST',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^o$C',
-                        imageCaption='Mean Sea Surface Temperature',
-                        galleryGroup='Sea Surface Temperature',
-                        groupSubtitle=None,
-                        groupLink='sst',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='SST',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'$^o$C',
+                    imageCaption='Mean Sea Surface Temperature',
+                    galleryGroup='Sea Surface Temperature',
+                    groupSubtitle=None,
+                    groupLink='sst',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

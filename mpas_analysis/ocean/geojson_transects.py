@@ -58,9 +58,9 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(GeojsonTransects, self).__init__(
-                config=config, taskName='geojsonTransects',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='geojsonTransects',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -79,7 +79,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = None
         else:
             verticalComparisonGrid = config.getExpression(
-                    sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
         fields = config.getExpression(sectionName, 'fields')
 
@@ -101,8 +101,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
                                                       horizontalResolution)
 
         transectsObservations = GeojsonTransectsObservations(
-                config, obsFileNames,  horizontalResolution,
-                transectCollectionName)
+            config, obsFileNames, horizontalResolution,
+            transectCollectionName)
 
         computeTransectsSubtask = ComputeTransectsSubtask(
             mpasClimatologyTask=mpasClimatologyTask,
@@ -140,8 +140,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
                     fieldPrefixUpper = fieldPrefix[0].upper() + fieldPrefix[1:]
                     fieldNameInTytle = '{} from {}'.format(
-                            field['titleName'],
-                            transectName.replace('_', ' '))
+                        field['titleName'],
+                        transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
@@ -150,20 +150,20 @@ class GeojsonTransects(AnalysisTask):  # {{{
                                                   plotObs, controlConfig)
 
                     subtask.set_plot_info(
-                            outFileLabel=outFileLabel,
-                            fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=field['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
-                            diffTitleLabel=diffTitleLabel,
-                            unitsLabel=field['units'],
-                            imageCaption=fieldNameInTytle,
-                            galleryGroup='Geojson Transects',
-                            groupSubtitle=None,
-                            groupLink='geojson',
-                            galleryName=field['titleName'],
-                            configSectionName='geojson{}Transects'.format(
-                                    fieldPrefixUpper))
+                        outFileLabel=outFileLabel,
+                        fieldNameInTitle=fieldNameInTytle,
+                        mpasFieldName=field['mpas'],
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
+                        unitsLabel=field['units'],
+                        imageCaption=fieldNameInTytle,
+                        galleryGroup='Geojson Transects',
+                        groupSubtitle=None,
+                        groupLink='geojson',
+                        galleryName=field['titleName'],
+                        configSectionName='geojson{}Transects'.format(
+                            fieldPrefixUpper))
 
                     self.add_subtask(subtask)
         # }}}
@@ -184,7 +184,6 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
     # Authors
     # -------
     # Xylar Asay-Davis
-
 
     def build_observational_dataset(self, fileName, transectName):  # {{{
         '''

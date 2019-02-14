@@ -67,10 +67,10 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         fieldName = 'temperatureArgo'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoTemperature, self).__init__(
-                config=config, taskName='climatologyMapArgoTemperature',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', 'temperature',
-                      'publicObs'])
+            config=config, taskName='climatologyMapArgoTemperature',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', 'argo', 'temperature',
+                  'publicObs'])
 
         sectionName = self.taskName
 
@@ -119,18 +119,18 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
 
             obsFileName = \
                 '{}/ArgoClimatology_TS_20180710.nc'.format(
-                        observationsDirectory)
+                    observationsDirectory)
             refFieldName = 'theta'
             outFileLabel = 'tempArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}Argo'.format(refFieldName),
-                    fieldName=refFieldName,
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix='{}Argo'.format(refFieldName),
+                fieldName=refFieldName,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames)
 
             self.add_subtask(remapObservationsSubtask)
 
@@ -209,9 +209,9 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         fieldName = 'salinityArgo'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoSalinity, self).__init__(
-                config=config, taskName='climatologyMapArgoSalinity',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', 'salinity'])
+            config=config, taskName='climatologyMapArgoSalinity',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', 'argo', 'salinity'])
 
         sectionName = self.taskName
 
@@ -259,18 +259,18 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
 
             obsFileName = \
                 '{}/ArgoClimatology_TS_20180710.nc'.format(
-                        observationsDirectory)
+                    observationsDirectory)
             refFieldName = 'salinity'
             outFileLabel = 'salinArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}Argo'.format(refFieldName),
-                    fieldName=refFieldName,
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix='{}Argo'.format(refFieldName),
+                fieldName=refFieldName,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames)
 
             self.add_subtask(remapObservationsSubtask)
 
@@ -374,8 +374,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
         super(RemapArgoClimatology, self).__init__(
-                parentTask, seasons, fileName, outFilePrefix,
-                comparisonGridNames, subtaskName)
+            parentTask, seasons, fileName, outFilePrefix,
+            comparisonGridNames, subtaskName)
         # }}}
 
     def get_observation_descriptor(self, fileName):  # {{{
@@ -446,10 +446,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         for depth in self.depths:
             if depth == 'top':
                 slices.append(field.sel(method='nearest', depth=0.).drop(
-                        'depth'))
+                    'depth'))
             else:
                 slices.append(field.sel(method='nearest', depth=depth).drop(
-                        'depth'))
+                    'depth'))
 
         depthNames = [str(depth) for depth in self.depths]
         field = xr.concat(slices, dim='depthSlice')

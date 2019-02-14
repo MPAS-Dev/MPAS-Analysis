@@ -111,8 +111,8 @@ class MpasAnalysisConfigParser(ConfigParser):
         expressionString = self.get(section, option)
         if usenumpyfunc:
             assert '__' not in expressionString, \
-                    "'__' is not allowed in {} "\
-                    "for `usenumpyfunc=True`".format(expressionString)
+                "'__' is not allowed in {} "\
+                "for `usenumpyfunc=True`".format(expressionString)
             sanitizedstr = expressionString.replace('np.', '')\
                                            .replace('numpy.', '')\
                                            .replace('__', '')

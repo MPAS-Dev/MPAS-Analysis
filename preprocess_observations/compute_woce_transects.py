@@ -26,7 +26,7 @@ def process_transect(url, stations, outFileName, transectName, inDir, outDir):
         f.extractall('{}/stations/'.format(inDir))
 
     inFileList = sorted(glob.glob('{}/stations/{}_*.nc'.format(
-            inDir, transectName)))
+        inDir, transectName)))
 
     pressureValues = set()
     fileNames = {}
@@ -80,14 +80,14 @@ def process_transect(url, stations, outFileName, transectName, inDir, outDir):
     # average over casts
     validMask = nValues > 0
     pressure = numpy.ma.masked_array(
-            numpy.divide(pressure, nValues, where=validMask),
-            mask=(nValues == 0))
+        numpy.divide(pressure, nValues, where=validMask),
+        mask=(nValues == 0))
     temperature = numpy.ma.masked_array(
-            numpy.divide(temperature, nValues, where=validMask),
-            mask=(nValues == 0))
+        numpy.divide(temperature, nValues, where=validMask),
+        mask=(nValues == 0))
     salinity = numpy.ma.masked_array(
-            numpy.divide(salinity, nValues, where=validMask),
-            mask=(nValues == 0))
+        numpy.divide(salinity, nValues, where=validMask),
+        mask=(nValues == 0))
 
     Lat = numpy.tile(latitude.reshape(nStations, 1), (1, nDepths))
     Lon = numpy.tile(longitude.reshape(nStations, 1), (1, nDepths))
@@ -145,10 +145,10 @@ def process_transect(url, stations, outFileName, transectName, inDir, outDir):
                                                 'units': 'PSU'}})
 
     potDensity = xarray.DataArray.from_dict(
-            {'dims': ('nPoints', 'nz'),
-             'data': potDensity,
-             'attrs': {'long_name': 'potential denisty',
-                       'units': 'kg m^{-3}'}})
+        {'dims': ('nPoints', 'nz'),
+         'data': potDensity,
+         'attrs': {'long_name': 'potential denisty',
+                   'units': 'kg m^{-3}'}})
 
     dsTransect = xarray.Dataset({'lon': longitude,
                                  'lat': latitude,

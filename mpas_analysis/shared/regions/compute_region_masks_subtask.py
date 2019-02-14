@@ -99,12 +99,12 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
         if processCount == 1:
             mask = _contains(shape, cellPoints)
         else:
-            nChunks = int(numpy.ceil(nCells/chunkSize))
+            nChunks = int(numpy.ceil(nCells / chunkSize))
             chunks = []
             indices = [0]
             for iChunk in range(nChunks):
-                start = iChunk*chunkSize
-                end = min((iChunk+1)*chunkSize, nCells)
+                start = iChunk * chunkSize
+                end = min((iChunk + 1) * chunkSize, nCells)
                 chunks.append(cellPoints[start:end])
                 indices.append(end)
 
@@ -119,8 +119,8 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
             mask = numpy.zeros((nCells,), bool)
             for iChunk, maskChunk in \
                     enumerate(pool.imap(partial_func, chunks)):
-                mask[indices[iChunk]:indices[iChunk+1]] = maskChunk
-                bar.update(iChunk+1)
+                mask[indices[iChunk]:indices[iChunk + 1]] = maskChunk
+                bar.update(iChunk + 1)
             bar.finish()
             pool.terminate()
 

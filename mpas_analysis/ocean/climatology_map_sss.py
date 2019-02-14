@@ -59,9 +59,9 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
         fieldName = 'sss'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSSS, self).__init__(
-                config=config, taskName='climatologyMapSSS',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapSSS',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_salinity'
         iselValues = {'nVertLevels': 0}
@@ -109,9 +109,9 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
             galleryName = 'Observations: Aquarius'
 
             remapObservationsSubtask = RemapObservedSSSClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
@@ -135,18 +135,18 @@ class ClimatologyMapSSS(AnalysisTask):  # {{{
                                                     controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='SSS',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'PSU',
-                        imageCaption='Mean Sea Surface Salinity',
-                        galleryGroup='Sea Surface Salinity',
-                        groupSubtitle=None,
-                        groupLink='sss',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='SSS',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'PSU',
+                    imageCaption='Mean Sea Surface Salinity',
+                    galleryGroup='Sea Surface Salinity',
+                    groupSubtitle=None,
+                    groupLink='sss',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

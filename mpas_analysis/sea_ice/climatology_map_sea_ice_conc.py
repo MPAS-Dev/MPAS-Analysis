@@ -64,9 +64,9 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         fieldName = 'seaIceConc'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSeaIceConc, self).__init__(
-                config=config, taskName=taskName,
-                componentName='seaIce',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName=taskName,
+            componentName='seaIce',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_iceAreaCell'
         iselValues = None
@@ -129,19 +129,19 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                     'Observations (SSM/I {})'.format(prefix)
 
                 obsFileName = build_obs_path(
-                        config, 'seaIce',
-                        relativePathOption='concentration{}{}_{}'.format(
-                                prefix, hemisphere, season),
-                        relativePathSection=sectionName)
+                    config, 'seaIce',
+                    relativePathOption='concentration{}{}_{}'.format(
+                        prefix, hemisphere, season),
+                    relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedConcClimatology(
-                        parentTask=self, seasons=[season],
-                        fileName=obsFileName,
-                        outFilePrefix='{}{}{}_{}'.format(
-                                obsFieldName,  prefix, hemisphere, season),
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations_{}{}'.format(
-                                prefix,  season))
+                    parentTask=self, seasons=[season],
+                    fileName=obsFileName,
+                    outFilePrefix='{}{}{}_{}'.format(
+                        obsFieldName, prefix, hemisphere, season),
+                    comparisonGridNames=comparisonGridNames,
+                    subtaskName='remapObservations_{}{}'.format(
+                        prefix, season))
                 self.add_subtask(remapObservationsSubtask)
                 for comparisonGridName in comparisonGridNames:
 
@@ -153,7 +153,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                             imageDescription, prefix)
                     galleryGroup = \
                         '{}-Hemisphere Sea-Ice Concentration'.format(
-                                hemisphereLong)
+                            hemisphereLong)
                     # make a new subtask for this season and comparison
                     # grid
                     subtask = PlotClimatologyMapSubtask(
@@ -177,7 +177,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                         groupSubtitle=None,
                         groupLink='{}_conc'.format(hemisphere.lower()),
                         galleryName='Observations: SSM/I {}'.format(
-                                prefix))
+                            prefix))
 
                     self.add_subtask(subtask)
         # }}}
@@ -200,7 +200,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                 imageCaption = imageDescription
                 galleryGroup = \
                     '{}-Hemisphere Sea-Ice Concentration'.format(
-                            hemisphereLong)
+                        hemisphereLong)
                 # make a new subtask for this season and comparison
                 # grid
                 subtask = PlotClimatologyMapSubtask(
@@ -208,19 +208,19 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                     remapClimatologySubtask, controlConfig=controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='iceconc{}'.format(hemisphere),
-                        fieldNameInTitle='Sea ice concentration',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=mpasFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel='Main - Control',
-                        unitsLabel=r'fraction',
-                        imageDescription=imageDescription,
-                        imageCaption=imageCaption,
-                        galleryGroup=galleryGroup,
-                        groupSubtitle=None,
-                        groupLink='{}_conc'.format(hemisphere.lower()),
-                        galleryName=galleryName)
+                    outFileLabel='iceconc{}'.format(hemisphere),
+                    fieldNameInTitle='Sea ice concentration',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=mpasFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel='Main - Control',
+                    unitsLabel=r'fraction',
+                    imageDescription=imageDescription,
+                    imageCaption=imageCaption,
+                    galleryGroup=galleryGroup,
+                    groupSubtitle=None,
+                    groupLink='{}_conc'.format(hemisphere.lower()),
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

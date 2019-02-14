@@ -185,7 +185,7 @@ class MainPage(object):
             controlRunText = ''
         else:
             controlRunText = '<br> Control: {}'.format(
-                    self.controlConfig.get('runs', 'mainRunName'))
+                self.controlConfig.get('runs', 'mainRunName'))
 
         componentsText = ''
 
@@ -220,8 +220,8 @@ class MainPage(object):
 
         with open(outFileName, mode='w') as mainFile:
             mainFile.write(
-                    pageText.encode('ascii',
-                                    'xmlcharrefreplace').decode('ascii'))
+                pageText.encode('ascii',
+                                'xmlcharrefreplace').decode('ascii'))
 
         # copy the css and js files as well as general images
         fileName = \
@@ -321,8 +321,8 @@ class ComponentPage(object):
 
             # get template text
             fileName = pkg_resources.resource_filename(
-                    __name__,
-                    "templates/component_{}.html".format(templateName))
+                __name__,
+                "templates/component_{}.html".format(templateName))
 
             with open(fileName, 'r') as templateFile:
                 self.templates[templateName] = templateFile.read()
@@ -364,7 +364,7 @@ class ComponentPage(object):
                                                              'componentName',
                                                              xmlFileName)
         componentSubdirectory = ComponentPage._get_required_xml_text(
-                xmlRoot, 'componentSubdirectory', xmlFileName)
+            xmlRoot, 'componentSubdirectory', xmlFileName)
 
         imageFileName = ComponentPage._get_required_xml_text(xmlRoot,
                                                              'imageFileName',
@@ -431,7 +431,7 @@ class ComponentPage(object):
             controlRunText = ''
         else:
             controlRunText = '<br> Control: {}'.format(
-                    self.controlConfig.get('runs', 'mainRunName'))
+                self.controlConfig.get('runs', 'mainRunName'))
 
         quickLinkText = ''
         galleriesText = ''
@@ -454,8 +454,8 @@ class ComponentPage(object):
 
         with open(outFileName, mode='w') as componentFile:
             componentFile.write(
-                    pageText.encode('ascii',
-                                    'xmlcharrefreplace').decode('ascii'))
+                pageText.encode('ascii',
+                                'xmlcharrefreplace').decode('ascii'))
 
     def get_first_image(self):
         """

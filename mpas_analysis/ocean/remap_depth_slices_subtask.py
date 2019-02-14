@@ -134,7 +134,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # over the vertical is used to collapse the array in the vertical
         # dimension
         zBot = zMid.where(zMid.verticalIndex == self.maxLevelCell).sum(
-                dim='nVertLevels')
+            dim='nVertLevels')
 
         verticalIndices = np.zeros((len(self.depths), ds.dims['nCells']), int)
 
@@ -152,7 +152,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
                 mask[depthIndex, :] = self.maxLevelCell.values >= 0
             else:
 
-                verticalIndex = np.argmin(np.abs(zMid-depth), axis=1)
+                verticalIndex = np.argmin(np.abs(zMid - depth), axis=1)
 
                 verticalIndices[depthIndex, :] = verticalIndex.values
                 mask[depthIndex, :] = np.logical_and(depth <= zTop,
@@ -215,7 +215,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
             # mask only the values with the right vertical index
             da = climatology[variableName].where(
-                    climatology.verticalIndex == self.verticalIndices)
+                climatology.verticalIndex == self.verticalIndices)
 
             # Each vertical layer has at most one non-NaN value so the "sum"
             # over the vertical is used to collapse the array in the vertical

@@ -62,10 +62,10 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
         fieldName = 'meltRate'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapAntarcticMelt, self).__init__(
-                config=config, taskName='climatologyMapAntarcticMelt',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName,
-                      'landIceCavities'])
+            config=config, taskName='climatologyMapAntarcticMelt',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName,
+                  'landIceCavities'])
 
         sectionName = self.taskName
 
@@ -113,9 +113,9 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             galleryName = 'Observations: Rignot et al. (2013)'
 
             remapObservationsSubtask = RemapObservedAntarcticMeltClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
@@ -139,18 +139,18 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                                                     controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='Melt Rate',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'm a$^{-1}$',
-                        imageCaption='Antarctic Melt Rate',
-                        galleryGroup='Melt Rate',
-                        groupSubtitle=None,
-                        groupLink='antarctic_melt',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='Melt Rate',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'm a$^{-1}$',
+                    imageCaption='Antarctic Melt Rate',
+                    galleryGroup='Melt Rate',
+                    groupSubtitle=None,
+                    groupLink='antarctic_melt',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}
@@ -242,7 +242,7 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
 
         # scale the field to m/yr from kg/m^2/s and mask out non-land-ice areas
         climatology[fieldName] = \
-            constants.sec_per_year/constants.rho_fw * \
+            constants.sec_per_year / constants.rho_fw * \
             climatology[fieldName].where(self.landIceMask)
 
         return climatology  # }}}

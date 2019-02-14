@@ -177,7 +177,7 @@ class MyTask(AnalysisTask):  # {{{
         self.add_subtask(remapObservations)
 
         plotObservations = MyPlotObservationsSubtask(
-                remapObservations=remapObservations)
+            remapObservations=remapObservations)
         # This is the part that makes sure MyPlotObservationsSubtask runs after
         # MyRemapObservationsSubtask.  Note: you might do this inside of
         # MyPlotObservationsSubtask instead of here.
@@ -307,7 +307,7 @@ class MyTask(AnalysisTask):  # {{{
 
         for plotParameter in self.plotParameters:
             filePrefix = 'myPrefix_{}_{}_years{:04d}-{:04d}'.format(
-                    mainRunName, plotParameter, self.startYear, self.endYear)
+                mainRunName, plotParameter, self.startYear, self.endYear)
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
             self.filePrefixes[plotParameter] = filePrefix
@@ -407,11 +407,11 @@ class MySubtask(AnalysisTask):
         self.parentTask = parentTask
         self.season = season
         super(MySubtask, self).__init__(
-                config=parentTask.config,
-                taskName=parentTask.taskName,
-                subtaskName=season,
-                componentName=parentTask.component,
-                tags=parentTask.tags)
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            subtaskName=season,
+            componentName=parentTask.component,
+            tags=parentTask.tags)
 
     def setup_and_check(self):
         # do whatever setup is needed for the subtask.  You don't have

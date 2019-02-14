@@ -67,9 +67,9 @@ class SoseTransects(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(SoseTransects, self).__init__(
-                config=config, taskName='soseTransects',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='soseTransects',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -84,12 +84,10 @@ class SoseTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = None
         else:
             verticalComparisonGrid = config.getExpression(
-                    sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
-        longitudes = config.getExpression(sectionName, 'longitudes',
-                                          usenumpyfunc=True)
-
-        longitudes.sort()
+        longitudes = sorted(config.getExpression(sectionName, 'longitudes',
+                                                 usenumpyfunc=True))
 
         fields = \
             [{'prefix': 'temperature',
@@ -141,8 +139,8 @@ class SoseTransects(AnalysisTask):  # {{{
                                                       horizontalResolution)
 
         transectsObservations = SoseTransectsObservations(
-                config, horizontalResolution,
-                transectCollectionName, fields)
+            config, horizontalResolution,
+            transectCollectionName, fields)
 
         computeTransectsSubtask = ComputeTransectsWithVelMag(
             mpasClimatologyTask=mpasClimatologyTask,
@@ -182,7 +180,7 @@ class SoseTransects(AnalysisTask):  # {{{
                         refFieldName = field['mpas']
 
                     fieldNameInTytle = r'{} at {}$\degree$ Longitude'.format(
-                            field['titleName'], lon)
+                        field['titleName'], lon)
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
@@ -191,21 +189,21 @@ class SoseTransects(AnalysisTask):  # {{{
                                                   plotObs, controlConfig)
 
                     subtask.set_plot_info(
-                            outFileLabel=outFileLabel,
-                            fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=field['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
-                            diffTitleLabel=diffTitleLabel,
-                            unitsLabel=field['units'],
-                            imageCaption='{} {}'.format(fieldNameInTytle,
-                                                        season),
-                            galleryGroup='SOSE Transects',
-                            groupSubtitle=None,
-                            groupLink='sose_transects',
-                            galleryName=field['titleName'],
-                            configSectionName='sose{}Transects'.format(
-                                    fieldPrefixUpper))
+                        outFileLabel=outFileLabel,
+                        fieldNameInTitle=fieldNameInTytle,
+                        mpasFieldName=field['mpas'],
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
+                        unitsLabel=field['units'],
+                        imageCaption='{} {}'.format(fieldNameInTytle,
+                                                    season),
+                        galleryGroup='SOSE Transects',
+                        groupSubtitle=None,
+                        groupLink='sose_transects',
+                        galleryName=field['titleName'],
+                        configSectionName='sose{}Transects'.format(
+                            fieldPrefixUpper))
 
                     self.add_subtask(subtask)
         # }}}
@@ -296,10 +294,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         config = self.config
 
-        longitudes = config.getExpression('soseTransects', 'longitudes',
-                                          usenumpyfunc=True)
-
-        longitudes.sort()
+        longitudes = sorted(config.getExpression('soseTransects', 'longitudes',
+                                                 usenumpyfunc=True))
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'soseSubdirectory')
@@ -338,7 +334,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
             fileName = '{}/SOSE_2005-2010_monthly_{}_SouthernOcean' \
                        '_0.167x0.167degree_20180710.nc'.format(
-                               observationsDirectory, prefix)
+                           observationsDirectory, prefix)
 
             dsLocal = xr.open_dataset(fileName)
             dsLocal.load()
@@ -346,14 +342,14 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             if fieldName == 'zonalVel':
                 # need to average in longitude
                 nLon = dsLocal.sizes['lon']
-                lonIndicesP1 = numpy.mod(numpy.arange(nLon)+1, nLon)
-                dsLocal = 0.5*(dsLocal + dsLocal.isel(lon=lonIndicesP1))
+                lonIndicesP1 = numpy.mod(numpy.arange(nLon) + 1, nLon)
+                dsLocal = 0.5 * (dsLocal + dsLocal.isel(lon=lonIndicesP1))
 
             if fieldName == 'meridVel':
                 # need to average in latitude
                 nLat = dsLocal.sizes['lat']
-                latIndicesP1 = numpy.mod(numpy.arange(nLat)+1, nLat)
-                dsLocal = 0.5*(dsLocal + dsLocal.isel(lat=latIndicesP1))
+                latIndicesP1 = numpy.mod(numpy.arange(nLat) + 1, nLat)
+                dsLocal = 0.5 * (dsLocal + dsLocal.isel(lat=latIndicesP1))
 
             dsLocal = dsLocal.sel(lon=longitudes, method=str('nearest'))
 
@@ -376,7 +372,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
                           '2005-2010 average of the Southern Ocean State ' \
                           'Estimate (SOSE)'
             dsObs['velMag'] = numpy.sqrt(
-                    dsObs.zonalVel**2 + dsObs.meridVel**2)
+                dsObs.zonalVel**2 + dsObs.meridVel**2)
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
             dsObs.velMag.attrs['description'] = description
 
@@ -420,7 +416,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         dsObs = dsObs.rename({'lat': 'nPoints', 'z': 'nz'})
         dsObs['lat'] = dsObs.nPoints
         dsObs['z'] = dsObs.nz
-        dsObs['lon'] = ('nPoints', lon*numpy.ones(dsObs.sizes['nPoints']))
+        dsObs['lon'] = ('nPoints', lon * numpy.ones(dsObs.sizes['nPoints']))
         dsObs = dsObs.drop(['nPoints', 'nz'])
 
         return dsObs  # }}}

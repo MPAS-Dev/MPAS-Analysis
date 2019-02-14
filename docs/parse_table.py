@@ -137,13 +137,13 @@ def build_obs_pages_from_xml(xmlfile):
 
         rst.write('.. _{}:\n\n'.format(nameInDocs))
         rst.write('{}\n'.format(name))
-        rst.write('='*len(name))
+        rst.write('=' * len(name))
         rst.write('\n\n')
 
         for tag in titles:
             title = titles[tag]
             rst.write('{}\n'.format(title))
-            rst.write('{}\n'.format('-'*len(title)))
+            rst.write('{}\n'.format('-' * len(title)))
             text = entry.findall(tag)[0].text.strip()
             if tag == 'tasks':
                 text = add_task_links(text)
@@ -160,7 +160,7 @@ def build_obs_pages_from_xml(xmlfile):
                     # add a link to the bibtex file
                     subdirectory = entry.findall('subdirectory')[0].text.strip()
                     text = '{}\n\n[bibtex file]({}/{}/obs.bib)'.format(
-                            text, urlBase, subdirectory)
+                        text, urlBase, subdirectory)
 
             text, footer = cleanup(text, footer)
             rst.write('{}\n\n'.format(text))
@@ -172,7 +172,7 @@ def build_obs_pages_from_xml(xmlfile):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-x", "--xml_table", dest="xml_table",
                         help="Path to file containing "
                              "xml description of table",

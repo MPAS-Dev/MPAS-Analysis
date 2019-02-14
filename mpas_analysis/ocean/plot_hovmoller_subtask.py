@@ -204,7 +204,7 @@ class PlotHovmollerSubtask(AnalysisTask):
                                             self.regionName,
                                             mainRunName)
         self.xmlFileNames = ['{}/{}.xml'.format(
-                self.plotsDirectory, self.filePrefix)]
+            self.plotsDirectory, self.filePrefix)]
 
         return  # }}}
 
@@ -217,7 +217,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
         self.logger.info("\nPlotting {} time series vs. depth...".format(
-                self.fieldNameInTitle))
+            self.fieldNameInTitle))
 
         config = self.config
 
@@ -255,8 +255,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             # reference depth [m]
             depths = dsRestart.refBottomDepth.values
             z = np.zeros(depths.shape)
-            z[0] = -0.5*depths[0]
-            z[1:] = -0.5*(depths[0:-1] + depths[1:])
+            z[0] = -0.5 * depths[0]
+            z[1:] = -0.5 * (depths[0:-1] + depths[1:])
 
         Time = ds.Time.values
         field = ds[self.mpasFieldName].values.transpose()
@@ -305,7 +305,7 @@ class PlotHovmollerSubtask(AnalysisTask):
             groupLink=self.groupLink,
             gallery=self.galleryName,
             thumbnailDescription='{} {}'.format(
-                    regionNameInTitle, self.thumbnailSuffix),
+                regionNameInTitle, self.thumbnailSuffix),
             imageDescription=self.imageCaption,
             imageCaption=self.imageCaption)
 

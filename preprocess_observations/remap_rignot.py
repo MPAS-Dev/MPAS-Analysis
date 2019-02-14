@@ -31,8 +31,8 @@ config.read('config.default')
 
 ds = xarray.open_dataset(inFileName)
 ds = subset_variables(ds, ['melt_actual', 'xaxis', 'yaxis'])
-lx = numpy.abs(1e-3*(ds.xaxis.values[-1]-ds.xaxis.values[0]))
-ly = numpy.abs(1e-3*(ds.yaxis.values[-1]-ds.yaxis.values[0]))
+lx = numpy.abs(1e-3 * (ds.xaxis.values[-1] - ds.xaxis.values[0]))
+ly = numpy.abs(1e-3 * (ds.yaxis.values[-1] - ds.yaxis.values[0]))
 
 maskedMeltRate = numpy.ma.masked_array(ds.melt_actual,
                                        mask=(ds.melt_actual.values == 0.))
@@ -50,7 +50,7 @@ projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
 
 inDescriptor = ProjectionGridDescriptor(projection)
 
-inDescriptor.read(inFileName,  xVarName='xaxis', yVarName='yaxis',
+inDescriptor.read(inFileName, xVarName='xaxis', yVarName='yaxis',
                   meshName=inGridName)
 
 outDescriptor = get_Antarctic_stereographic_comparison_descriptor(config)
