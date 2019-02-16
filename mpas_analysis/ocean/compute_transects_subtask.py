@@ -143,7 +143,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         super(ComputeTransectsSubtask, self).__init__(
             mpasClimatologyTask, parentTask,
             climatologyName=climatologyName, variableList=variableList,
-            seasons=seasons, subtaskName=subtaskName)
+            seasons=seasons, subtaskName=subtaskName, useNcremap=False)
 
         self.obsDatasets = obsDatasets
         self.transectCollectionName = transectCollectionName
