@@ -328,12 +328,6 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     useNcremap = config.getboolean('climatology', 'useNcremap')
 
-    if (isinstance(remapper.sourceDescriptor, ProjectionGridDescriptor) or
-            isinstance(remapper.destinationDescriptor,
-                       ProjectionGridDescriptor)):
-        # ncremap doesn't support projection grids
-        useNcremap = False
-
     if remapper.mappingFileName is None:
         # no remapping is needed
         remappedClimatology = climatologyDataSet

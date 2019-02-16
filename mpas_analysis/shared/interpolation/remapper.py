@@ -267,17 +267,9 @@ class Remapper(object):
             # a remapped file already exists, so nothing to do
             return
 
-        if isinstance(self.sourceDescriptor, (ProjectionGridDescriptor,
-                                              PointCollectionDescriptor)):
-            raise TypeError('Source grid is a projection grid, not supported '
-                            'by ncremap.\n'
-                            'Consider using Remapper.remap')
-        if isinstance(self.destinationDescriptor,
-                      (ProjectionGridDescriptor,
-                       PointCollectionDescriptor)):
-            raise TypeError('Destination grid is a projection grid, not '
-                            'supported by ncremap.\n'
-                            'Consider using Remapper.remap')
+        if isinstance(self.sourceDescriptor, (PointCollectionDescriptor)):
+            raise TypeError('Source grid is a point collection, which is not'
+                            'supported.')
 
         if find_executable('ncremap') is None:
             raise OSError('ncremap not found. Make sure the latest nco '
@@ -302,6 +294,25 @@ class Remapper(object):
                 self.sourceDescriptor.latVarName),
                 '--rgr lon_nm={}'.format(
                 self.sourceDescriptor.lonVarName)])
+        elif isinstance(self.sourceDescriptor, ProjectionGridDescriptor):
+            regridArgs.extend(['--rgr lat_nm={}'.format(
+                self.sourceDescriptor.yVarName),
+                '--rgr lon_nm={}'.format(
+                self.sourceDescriptor.xVarName)])
+
+        if isinstance(self.destinationDescriptor, LatLonGridDescriptor):
+            regridArgs.extend(['--rgr lat_nm_out={}'.format(
+                self.destinationDescriptor.latVarName),
+                '--rgr lon_nm_out={}'.format(
+                self.destinationDescriptor.lonVarName)])
+        elif isinstance(self.destinationDescriptor, ProjectionGridDescriptor):
+            regridArgs.extend(['--rgr lat_dmn_nm={}'.format(
+                self.destinationDescriptor.xVarName),
+                '--rgr lon_dmn_nm={}'.format(
+                self.destinationDescriptor.yVarName),
+                '--rgr lat_nm_out=lat', '--rgr lon_nm_out=lon'])
+        if isinstance(self.destinationDescriptor, PointCollectionDescriptor):
+            regridArgs.extend(['--rgr lat_nm_out=lat', '--rgr lon_nm_out=lon'])
 
         if len(regridArgs) > 0:
             args.extend(['-R', ' '.join(regridArgs)])
