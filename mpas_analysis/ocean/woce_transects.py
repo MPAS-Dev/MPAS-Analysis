@@ -86,8 +86,8 @@ class WoceTransects(AnalysisTask):  # {{{
             'WOCE_A21_Drake_Passage_20181126.nc'
         obsFileNames['WOCE_A23_South_Atlantic'] = \
             'WOCE_A23_South_Atlantic_20181126.nc'
-        obsFileNames['WOCE_A23_South_Atlantic'] = \
-            'WOCE_A23_South_Atlantic_20181126.nc'
+        obsFileNames['WOCE_A12_Prime_Meridian'] = \
+            'WOCE_A12_Prime_Meridian_20181126.nc'
 
         for transectName in obsFileNames:
             fileName = '{}/{}'.format(observationsDirectory,
