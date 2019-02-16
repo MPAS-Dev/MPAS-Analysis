@@ -34,7 +34,7 @@ environment with the following packages:
  * bottleneck
  * basemap < 1.2.0 | > 1.2.0
  * lxml
- * nco >= 4.7.0
+ * nco >= 4.7.9
  * pyproj
  * pillow
  * cmocean
