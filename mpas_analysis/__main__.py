@@ -32,6 +32,7 @@ import os
 from collections import OrderedDict
 import progressbar
 import logging
+import xarray
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -78,7 +79,7 @@ def update_time_bounds_in_config(config):  # {{{
     # }}}
 
 
-def build_analysis_list(config, refConfig):  # {{{
+def build_analysis_list(config, controlConfig):  # {{{
     """
     Build a list of analysis tasks. New tasks should be added here, following
     the approach used for existing analysis tasks.
@@ -88,9 +89,9 @@ def build_analysis_list(config, refConfig):  # {{{
     config : ``MpasAnalysisConfigParser`` object
         contains config options
 
-    refConfig : ``MpasAnalysisConfigParser`` object
-        contains config options for a reference run, or ``None`` if no config
-        file for a reference run was specified
+    controlConfig : ``MpasAnalysisConfigParser`` object
+        contains config options for a control run, or ``None`` if no config
+        file for a control run was specified
 
     Returns
     -------
@@ -113,44 +114,44 @@ def build_analysis_list(config, refConfig):  # {{{
                                         section='index')
 
     oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
-            config=config,  componentName='ocean')
+        config=config, componentName='ocean')
 
     analyses.append(oceanClimatolgyTask)
     analyses.append(oceanRefYearClimatolgyTask)
 
     analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask,
-                                            refConfig))
+                                            controlConfig))
     analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask,
-                                            refConfig))
+                                            controlConfig))
     analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask,
-                                            refConfig))
+                                            controlConfig))
     analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
-                                            refConfig))
+                                            controlConfig))
     analyses.append(ocean.ClimatologyMapEKE(config, oceanClimatolgyTask,
-                                            refConfig))
+                                            controlConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
-            config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
-            refConfig))
+        config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
+        controlConfig))
 
     analyses.append(ocean.ClimatologyMapSose(
-            config, oceanClimatolgyTask, refConfig))
+        config, oceanClimatolgyTask, controlConfig))
     analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
-                                            refConfig))
+                                            controlConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
-            config, oceanClimatolgyTask, refConfig))
+        config, oceanClimatolgyTask, controlConfig))
     analyses.append(ocean.ClimatologyMapArgoSalinity(
-            config, oceanClimatolgyTask, refConfig))
+        config, oceanClimatolgyTask, controlConfig))
 
     analyses.append(ocean.ClimatologyMapSchmidtko(
-            config, oceanClimatolgyTask, refConfig))
+        config, oceanClimatolgyTask, controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
                                                       oceanClimatolgyTask,
-                                                      refConfig))
+                                                      controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
-                                                  refConfig))
+                                                  controlConfig))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
@@ -158,24 +159,26 @@ def build_analysis_list(config, refConfig):  # {{{
                                                     oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesOHCAnomaly(config,
                                                oceanTimeSeriesTask,
-                                               refConfig))
+                                               controlConfig))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
-                                        refConfig))
+                                        controlConfig))
     analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
-                                                  refConfig))
+                                                  controlConfig))
 
     analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask,
-                                            refConfig))
-    analyses.append(ocean.IndexNino34(config, oceanIndexTask, refConfig))
+                                            controlConfig))
+    analyses.append(ocean.IndexNino34(config, oceanIndexTask, controlConfig))
 
     analyses.append(ocean.WoceTransects(config, oceanClimatolgyTask,
-                                        refConfig))
+                                        controlConfig))
 
     analyses.append(ocean.SoseTransects(config, oceanClimatolgyTask,
-                                        refConfig))
+                                        controlConfig))
 
     analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTask,
-                                           refConfig))
+                                           controlConfig))
+
+    analyses.append(ocean.OceanRegionalProfiles(config, controlConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
@@ -185,31 +188,31 @@ def build_analysis_list(config, refConfig):  # {{{
 
     analyses.append(seaIceClimatolgyTask)
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='NH', refConfig=refConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='NH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='NH', refConfig=refConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='NH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', refConfig=refConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='SH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', refConfig=refConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='SH', controlConfig=controlConfig))
     analyses.append(seaIceTimeSeriesTask)
 
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
-                                             refConfig))
+                                             controlConfig))
 
     # Iceberg Analyses
     analyses.append(sea_ice.ClimatologyMapIcebergConc(
-            config=config, mpasClimatologyTask=seaIceClimatolgyTask,
-            hemisphere='SH', refConfig=refConfig))
+        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        hemisphere='SH', controlConfig=controlConfig))
 
     return analyses  # }}}
 
 
-def determine_analyses_to_generate(analyses):  # {{{
+def determine_analyses_to_generate(analyses, verbose):  # {{{
     """
     Build a list of analysis tasks to run based on the 'generate' config
     option (or command-line flag) and prerequisites and subtasks of each
@@ -220,6 +223,10 @@ def determine_analyses_to_generate(analyses):  # {{{
     ----------
     analyses : list of ``AnalysisTask`` objects
         A list of all analysis tasks
+
+    verbose : bool
+        Whether to write out a full stack trace when exceptions occur during
+        ``setup_and_check()`` calls for each task
 
     Returns
     -------
@@ -234,12 +241,12 @@ def determine_analyses_to_generate(analyses):  # {{{
     # check which analysis we actually want to generate and only keep those
     for analysisTask in analyses:
         # update the dictionary with this task and perhaps its subtasks
-        add_task_and_subtasks(analysisTask, analysesToGenerate)
+        add_task_and_subtasks(analysisTask, analysesToGenerate, verbose)
 
     return analysesToGenerate  # }}}
 
 
-def add_task_and_subtasks(analysisTask, analysesToGenerate,
+def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                           callCheckGenerate=True):
     # {{{
     """
@@ -255,6 +262,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     analysesToGenerate : ``OrderedDict`` of ``AnalysisTask``
         The list of analysis tasks to be generated, which this call may
         update to include this task and its subtasks
+
+    verbose : bool
+        Whether to write out a full stack trace when exceptions occur during
+        ``setup_and_check()`` calls for each task
 
     callCheckGenerate : bool
         Whether the ``check_generate`` method should be call for this task to
@@ -273,7 +284,7 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
             ValueError("task {} already added but this version was not set up "
                        "successfully. Typically, this indicates two tasks "
                        "with the same full name".format(
-                               analysisTask.fullTaskName))
+                           analysisTask.fullTaskName))
         return
 
     # for each anlaysis task, check if we want to generate this task
@@ -292,14 +303,13 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
                 prereqs.extend(subtask.runAfterTasks)
 
     for prereq in prereqs:
-        add_task_and_subtasks(prereq, analysesToGenerate,
+        add_task_and_subtasks(prereq, analysesToGenerate, verbose,
                               callCheckGenerate=False)
         if prereq._setupStatus != 'success':
             # a prereq failed setup_and_check
-            print("ERROR: prerequisite task {} of analysis task {}"
-                  " failed during check,\n"
-                  "       so this task will not be run".format(
-                      prereq.printTaskName, taskTitle))
+            print("Warning: prerequisite of {} failed during check, "
+                  "so this task will not be run".format(
+                      taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -308,9 +318,10 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     try:
         analysisTask.setup_and_check()
     except (Exception, BaseException):
-        traceback.print_exc(file=sys.stdout)
-        print("ERROR: analysis task {} failed during check and "
-              "will not be run".format(taskTitle))
+        if verbose:
+            traceback.print_exc(file=sys.stdout)
+        print("Warning: {} failed during check and will not be run".format(
+            taskTitle))
         analysisTask._setupStatus = 'fail'
         return
 
@@ -318,14 +329,13 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate,
     # analysis task has been set up in case subtasks depend on information
     # from the parent task
     for subtask in analysisTask.subtasks:
-        add_task_and_subtasks(subtask, analysesToGenerate,
+        add_task_and_subtasks(subtask, analysesToGenerate, verbose,
                               callCheckGenerate=False)
         if subtask._setupStatus != 'success':
             # a subtask failed setup_and_check
-            print("ERROR: subtask {} of analysis task {}"
-                  " failed during check,\n"
-                  "       so this task will not be run".format(
-                      subtask.subtaskName, taskTitle))
+            print("Warning: subtask of {} failed during check, "
+                  "so this task will not be run".format(
+                      taskTitle))
             analysisTask._setupStatus = 'fail'
             return
 
@@ -446,7 +456,7 @@ def run_analysis(config, analyses):  # {{{
                                                      AnalysisTask.FAIL]:
                 unfinishedCount += 1
 
-        progress.update(totalTaskCount-unfinishedCount)
+        progress.update(totalTaskCount - unfinishedCount)
 
         if unfinishedCount <= 0 and len(runningTasks.keys()) == 0:
             # we're done
@@ -457,7 +467,7 @@ def run_analysis(config, analyses):  # {{{
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
                     logger.info('Running {}'.format(
-                            analysisTask.printTaskName))
+                        analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
@@ -476,7 +486,7 @@ def run_analysis(config, analyses):  # {{{
 
             if analysisTask._runStatus.value == AnalysisTask.SUCCESS:
                 logger.info("   Task {} has finished successfully.".format(
-                        taskTitle))
+                    taskTitle))
             elif analysisTask._runStatus.value == AnalysisTask.FAIL:
                 message = "ERROR in task {}.  See log file {} for " \
                           "details".format(taskTitle,
@@ -515,7 +525,7 @@ def run_analysis(config, analyses):  # {{{
         sys.exit(1)
     else:
         print('Log files for executed tasks can be found in {}'.format(
-                logsDirectory))
+            logsDirectory))
 
     # }}}
 
@@ -556,30 +566,81 @@ def purge_output(config):
               'No purge necessary.'.format(outputDirectory))
     else:
         for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
-                             'timeSeries', 'html', 'mask']:
+                             'timeSeries', 'html', 'mask', 'profiles']:
             option = '{}Subdirectory'.format(subdirectory)
             directory = build_config_full_path(
-                    config=config, section='output',
-                    relativePathOption=option)
+                config=config, section='output',
+                relativePathOption=option)
             if os.path.exists(directory):
                 print('Deleting contents of {}'.format(directory))
-                shutil.rmtree(directory)
+                if os.path.islink(directory):
+                    os.unlink(directory)
+                else:
+                    shutil.rmtree(directory)
 
         for component in ['ocean', 'seaIce']:
             for subdirectory in ['climatology', 'remappedClim']:
                 option = '{}Subdirectory'.format(subdirectory)
                 section = '{}Observations'.format(component)
                 directory = build_config_full_path(
-                        config=config, section='output',
-                        relativePathOption=option,
-                        relativePathSection=section)
+                    config=config, section='output',
+                    relativePathOption=option,
+                    relativePathSection=section)
                 if os.path.exists(directory):
                     print('Deleting contents of {}'.format(directory))
-                    shutil.rmtree(directory)
+                    if os.path.islink(directory):
+                        os.unlink(directory)
+                    else:
+                        shutil.rmtree(directory)
+
+
+def symlink_main_run(config, defaultConfig):
+    '''
+    Create symlinks to the climatology and time-series directories for the
+    main run that has aleady been computed so we don't have to recompute
+    the analysis.
+    '''
+
+    def link_dir(section, option):
+        destDirectory = build_config_full_path(config=config, section='output',
+                                               relativePathOption=option,
+                                               relativePathSection=section)
+        if not os.path.exists(destDirectory):
+
+            destBase, _ = os.path.split(destDirectory)
+
+            make_directories(destBase)
+
+            sourceDirectory = build_config_full_path(
+                config=mainConfig, section='output',
+                relativePathOption=option, relativePathSection=section)
+
+            os.symlink(sourceDirectory, destDirectory)
+
+    mainConfigFile = config.get('runs', 'mainRunConfigFile')
+    if not os.path.exists(mainConfigFile):
+        raise OSError('A main config file {} was specified but the '
+                      'file does not exist'.format(mainConfigFile))
+    mainConfigFiles = [mainConfigFile]
+    if defaultConfig is not None:
+        mainConfigFiles = [defaultConfig] + mainConfigFiles
+    mainConfig = MpasAnalysisConfigParser()
+    mainConfig.read(mainConfigFiles)
+
+    for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask',
+                         'profiles']:
+        section = 'output'
+        option = '{}Subdirectory'.format(subdirectory)
+        link_dir(section=section, option=option)
+
+    for component in ['ocean', 'seaIce']:
+        for subdirectory in ['climatology', 'remappedClim']:
+            section = '{}Observations'.format(component)
+            option = '{}Subdirectory'.format(subdirectory)
+            link_dir(section=section, option=option)
 
 
 def main():
-
     """
     Entry point for the main script ``mpas_analysis``
     """
@@ -611,9 +672,12 @@ def main():
     parser.add_argument("--plot_colormaps", dest="plot_colormaps",
                         action='store_true',
                         help="Make a plot displaying all available colormaps")
+    parser.add_argument("--verbose", dest="verbose", action='store_true',
+                        help="Verbose error reporting during setup-and-check "
+                             "phase")
     args = parser.parse_args()
 
-    if len(sys.argv) == 1: 
+    if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(0)
 
@@ -638,7 +702,7 @@ def main():
     config.read(configFiles)
 
     if args.list:
-        analyses = build_analysis_list(config, refConfig=None)
+        analyses = build_analysis_list(config, controlConfig=None)
         for analysisTask in analyses:
             print('task: {}'.format(analysisTask.taskName))
             print('    component: {}'.format(analysisTask.componentName)),
@@ -650,40 +714,45 @@ def main():
         _plot_color_gradients()
         sys.exit(0)
 
-    if config.has_option('runs', 'referenceRunConfigFile'):
-        refConfigFile = config.get('runs', 'referenceRunConfigFile')
-        if not os.path.exists(refConfigFile):
-            raise OSError('A reference config file {} was specified but the '
-                          'file does not exist'.format(refConfigFile))
-        refConfigFiles = [refConfigFile]
+    if config.has_option('runs', 'controlRunConfigFile'):
+        controlConfigFile = config.get('runs', 'controlRunConfigFile')
+        if not os.path.exists(controlConfigFile):
+            raise OSError('A control config file {} was specified but the '
+                          'file does not exist'.format(controlConfigFile))
+        controlConfigFiles = [controlConfigFile]
         if defaultConfig is not None:
-            refConfigFiles = [defaultConfig] + refConfigFiles
-        refConfig = MpasAnalysisConfigParser()
-        refConfig.read(refConfigFiles)
+            controlConfigFiles = [defaultConfig] + controlConfigFiles
+        controlConfig = MpasAnalysisConfigParser()
+        controlConfig.read(controlConfigFiles)
 
         # replace the log directory so log files get written to this run's
-        # log directory, not the reference run's
+        # log directory, not the control run's
         logsDirectory = build_config_full_path(config, 'output',
                                                'logsSubdirectory')
 
-        refConfig.set('output', 'logsSubdirectory', logsDirectory)
+        controlConfig.set('output', 'logsSubdirectory', logsDirectory)
 
-        print('Comparing to reference run {} rather than observations. \n'
+        print('Comparing to control run {} rather than observations. \n'
               'Make sure that MPAS-Analysis has been run previously with the '
-              'ref config file.'.format(refConfig.get('runs', 'mainRunName')))
+              'control config file.'.format(controlConfig.get('runs',
+                                                              'mainRunName')))
     else:
-        refConfig = None
+        controlConfig = None
 
     if args.purge:
         purge_output(config)
 
+    if config.has_option('runs', 'mainRunConfigFile'):
+        symlink_main_run(config, defaultConfig)
+
     if args.generate:
         update_generate(config, args.generate)
 
-    if refConfig is not None:
+    if controlConfig is not None:
         # we want to use the "generate" option from the current run, not
-        # the reference config file
-        refConfig.set('output', 'generate', config.get('output', 'generate'))
+        # the control config file
+        controlConfig.set('output', 'generate', config.get('output',
+                                                           'generate'))
 
     logsDirectory = build_config_full_path(config, 'output',
                                            'logsSubdirectory')
@@ -691,14 +760,21 @@ def main():
 
     update_time_bounds_in_config(config)
 
-    analyses = build_analysis_list(config, refConfig)
-    analyses = determine_analyses_to_generate(analyses)
+    file_cache_maxsize = config.getint('input', 'file_cache_maxsize')
+    try:
+        xarray.set_options(file_cache_maxsize=file_cache_maxsize)
+    except ValueError:
+        # xarray version doesn't support file_cache_maxsize yet...
+        pass
+
+    analyses = build_analysis_list(config, controlConfig)
+    analyses = determine_analyses_to_generate(analyses, args.verbose)
 
     if not args.setup_only and not args.html_only:
         run_analysis(config, analyses)
 
     if not args.setup_only:
-        generate_html(config, analyses, refConfig)
+        generate_html(config, analyses, controlConfig)
 
 
 def download_analysis_data():
@@ -723,7 +799,7 @@ def download_analysis_data():
 
     urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
     analysisFileList = pkg_resources.resource_string(
-            'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
+        'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
 
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))

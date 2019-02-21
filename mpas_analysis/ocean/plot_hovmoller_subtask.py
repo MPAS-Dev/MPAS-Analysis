@@ -15,13 +15,12 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import numpy as np
 import os
 
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot.plotting import plot_vertical_section
-
-from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 
@@ -205,7 +204,7 @@ class PlotHovmollerSubtask(AnalysisTask):
                                             self.regionName,
                                             mainRunName)
         self.xmlFileNames = ['{}/{}.xml'.format(
-                self.plotsDirectory, self.filePrefix)]
+            self.plotsDirectory, self.filePrefix)]
 
         return  # }}}
 
@@ -217,30 +216,30 @@ class PlotHovmollerSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
-        self.logger.info("\nPlotting {} trends vs. depth...".format(
-                self.fieldNameInTitle))
+        self.logger.info("\nPlotting {} time series vs. depth...".format(
+            self.fieldNameInTitle))
 
         config = self.config
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        plotTitles = config.getExpression('regions', 'plotTitles')
-        allRegionNames = config.getExpression('regions', 'regions')
-        regionIndex = allRegionNames.index(self.regionName)
-        regionNameInTitle = plotTitles[regionIndex]
-
-        startDate = self.config.get('timeSeries', 'startDate')
-        endDate = self.config.get('timeSeries', 'endDate')
-
-        # Load data
         self.logger.info('  Load ocean data...')
-        ds = open_mpas_dataset(fileName=self.inFileName,
-                               calendar=self.calendar,
-                               variableList=[self.mpasFieldName],
-                               timeVariableNames=None,
-                               startDate=startDate,
-                               endDate=endDate)
-        ds = ds.isel(nOceanRegionsTmp=regionIndex)
+        ds = xr.open_dataset(self.inFileName)
+
+        if 'regionNames' in ds.coords:
+            allRegionNames = [bytes.decode(name) for name in
+                              ds.regionNames.values]
+            regionIndex = allRegionNames.index(self.regionName)
+            regionNameInTitle = self.regionName.replace('_', ' ')
+            regionDim = ds.regionNames.dims[0]
+        else:
+            plotTitles = config.getExpression('regions', 'plotTitles')
+            allRegionNames = config.getExpression('regions', 'regions')
+            regionIndex = allRegionNames.index(self.regionName)
+            regionNameInTitle = plotTitles[regionIndex]
+            regionDim = 'nOceanRegionsTmp'
+
+        ds = ds.isel(**{regionDim: regionIndex})
 
         # Note: restart file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
@@ -248,19 +247,22 @@ class PlotHovmollerSubtask(AnalysisTask):
             restartFile = self.runStreams.readpath('restart')[0]
         except ValueError:
             raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for OHC calculation')
+                          'restart file for plotting time series vs. depth')
 
         # Define/read in general variables
         self.logger.info('  Read in depth...')
         with xr.open_dataset(restartFile) as dsRestart:
             # reference depth [m]
-            depth = dsRestart.refBottomDepth.values
+            depths = dsRestart.refBottomDepth.values
+            z = np.zeros(depths.shape)
+            z[0] = -0.5 * depths[0]
+            z[1:] = -0.5 * (depths[0:-1] + depths[1:])
 
         Time = ds.Time.values
         field = ds[self.mpasFieldName].values.transpose()
 
-        xLabel = 'Time [years]'
-        yLabel = 'Depth [m]'
+        xLabel = 'Time (years)'
+        yLabel = 'Depth (m)'
 
         title = '{}, {} \n {}'.format(self.fieldNameInTitle, regionNameInTitle,
                                       mainRunName)
@@ -275,17 +277,23 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         if config.has_option(self.sectionName, 'yearStrideXTicks'):
             yearStrideXTicks = config.getint(self.sectionName,
-                                            'yearStrideXTicks')
+                                             'yearStrideXTicks')
         else:
             yearStrideXTicks = None
 
-        plot_vertical_section(config, Time, depth, field, self.sectionName,
+        if config.has_option(self.sectionName, 'yLim'):
+            yLim = config.getExpression(self.sectionName, 'yLim')
+        else:
+            yLim = None
+
+        plot_vertical_section(config, Time, z, field, self.sectionName,
                               suffix='', colorbarLabel=self.unitsLabel,
                               title=title, xlabel=xLabel, ylabel=yLabel,
                               fileout=figureName, lineWidth=1,
                               xArrayIsTime=True, calendar=self.calendar,
                               firstYearXTicks=firstYearXTicks,
-                              yearStrideXTicks=yearStrideXTicks)
+                              yearStrideXTicks=yearStrideXTicks,
+                              yLim=yLim, invertYAxis=False)
 
         write_image_xml(
             config=config,
@@ -293,10 +301,11 @@ class PlotHovmollerSubtask(AnalysisTask):
             componentName='Ocean',
             componentSubdirectory='ocean',
             galleryGroup=self.galleryGroup,
+            groupSubtitle=self.groupSubtitle,
             groupLink=self.groupLink,
-            galleryName=self.galleryName,
-            thumbnailDescription='{} {}'.format(self.regionName,
-                                                self.thumbnailSuffix),
+            gallery=self.galleryName,
+            thumbnailDescription='{} {}'.format(
+                regionNameInTitle, self.thumbnailSuffix),
             imageDescription=self.imageCaption,
             imageCaption=self.imageCaption)
 

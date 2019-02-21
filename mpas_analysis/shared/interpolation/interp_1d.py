@@ -38,7 +38,7 @@ def interp_1d(ds, inInterpDim, inInterpCoord, outInterpDim,
     # Xylar Asay-Davis
 
     indices, weight0 = _compute_weights_and_indices(
-            ds, inInterpDim, inInterpCoord, outInterpDim, outInterpCoord)
+        ds, inInterpDim, inInterpCoord, outInterpDim, outInterpCoord)
 
     # conert coords to normal data variables
     coords = list(ds.coords)
@@ -84,9 +84,9 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
 
     allOutDims.append(outInterpDim)
 
-    allOutDims.extend(outDims[outAxis+1:])
+    allOutDims.extend(outDims[outAxis + 1:])
 
-    for axis in range(inAxis+1, len(inDims)):
+    for axis in range(inAxis + 1, len(inDims)):
         dim = inDims[axis]
         if dim not in allOutDims:
             allOutDims.append(dim)
@@ -122,35 +122,38 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
     index0 = indices[inInterpDim]
     index0[:] = -1
 
-    weight0 = numpy.nan*numpy.ones(outSizes)
+    weight0 = numpy.nan * numpy.ones(outSizes)
 
     for outIndex in range(outInterpSize):
-        outInd = [slice(None)]*xOut.ndim
+        outInd = [slice(None)] * xOut.ndim
         outInd[outAxis] = outIndex
-        x = xOut[outInd]
-        for inIndex in range(inInterpSize-1):
-            ind0 = [slice(None)]*xIn.ndim
+        outInd = tuple(outInd)
+        x = numpy.array(xOut[outInd])
+        for inIndex in range(inInterpSize - 1):
+            ind0 = [slice(None)] * xIn.ndim
             ind0[inAxis] = inIndex
-            x0 = xIn[ind0]
-            ind1 = [slice(None)]*xIn.ndim
-            ind1[inAxis] = inIndex+1
-            x1 = xIn[ind1]
+            ind0 = tuple(ind0)
+            x0 = numpy.array(xIn[ind0])
+            ind1 = [slice(None)] * xIn.ndim
+            ind1[inAxis] = inIndex + 1
+            ind1 = tuple(ind1)
+            x1 = numpy.array(xIn[ind1])
             dx = x1 - x0
-            frac = (x - x0)/dx
+            frac = (x - x0) / dx
             valid = numpy.isfinite(frac)
             mask = numpy.zeros(valid.shape, bool)
             mask[valid] = numpy.logical_and(frac[valid] >= 0.,
                                             frac[valid] < 1.)
-            if inIndex == inInterpSize-2:
+            if inIndex == inInterpSize - 2:
                 mask = numpy.logical_or(mask, x == x1)
             if numpy.count_nonzero(mask) == 0:
                 continue
 
-            localIndex = index0[outInd]
+            localIndex = numpy.array(index0[outInd])
             localIndex[mask] = inIndex
             index0[outInd] = localIndex
 
-            localWeight = weight0[outInd]
+            localWeight = numpy.array(weight0[outInd])
             localWeight[mask] = 1. - frac[mask]
             weight0[outInd] = localWeight
 
@@ -162,7 +165,6 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
 
 
 def _interp_1d_array(da, indices, weight0, inInterpDim):  # {{{
-
     """
     iterpolate a data array in 1D with the given indices and weights
     """
@@ -175,13 +177,13 @@ def _interp_1d_array(da, indices, weight0, inInterpDim):  # {{{
         if dim in indices.keys():
             indices0[dim] = indices[dim]
             if dim == inInterpDim:
-                indices1[dim] = indices[dim]+1
+                indices1[dim] = indices[dim] + 1
             else:
                 indices1[dim] = indices[dim]
 
     da0 = da.isel(**indices0)
     da1 = da.isel(**indices1)
-    da = weight0*da0 + (1. - weight0)*da1
+    da = weight0 * da0 + (1. - weight0) * da1
     return da  # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

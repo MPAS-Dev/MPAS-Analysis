@@ -25,7 +25,7 @@ from mpas_analysis.ocean.remap_depth_slices_subtask import \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
@@ -42,7 +42,7 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -54,8 +54,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -83,8 +83,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSchmidtko, self).__init__(
-                config=config, taskName='climatologyMapSchmidtko',
-                componentName='ocean', tags=tags)
+            config=config, taskName='climatologyMapSchmidtko',
+            componentName='ocean', tags=tags)
 
         sectionName = self.taskName
 
@@ -102,8 +102,8 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'schmidtkoSubdirectory')
+        observationsDirectory = build_obs_path(
+            config, 'ocean', 'schmidtkoSubdirectory')
 
         obsFileName = '{}/Schmidtko_et_al_2014_bottom_PT_S_PD_' \
                       '6000.0x6000.0km_10.0km_Antarctic_stereo.nc' \
@@ -120,40 +120,38 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
             depths=['bot'],
             comparisonGridNames=comparisonGridNames)
 
-        if refConfig is None:
+        if controlConfig is None:
             refTitleLabel = 'Observations: Schmidtko et al. (2014)'
             diffTitleLabel = 'Model - Observations'
             groupSubtitle = refTitleLabel
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
-            diffTitleLabel = 'Main - Reference'
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = 'Control: {}'.format(controlRunName)
+            diffTitleLabel = 'Main - Control'
             groupSubtitle = None
 
         for field in fields:
             fieldPrefix = field['prefix']
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
-            if refConfig is None:
+            if controlConfig is None:
                 refFieldName = field['obs']
                 outFileLabel = '{}Schmidtko'.format(fieldPrefix)
 
                 remapObservationsSubtask = RemapSchmidtko(
-                        parentTask=self, seasons=seasons, fileName=obsFileName,
-                        outFilePrefix='{}Schmidtko'.format(fieldPrefix),
-                        fieldName=refFieldName,
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations{}'.format(
-                                upperFieldPrefix))
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix='{}Schmidtko'.format(fieldPrefix),
+                    fieldName=refFieldName,
+                    comparisonGridNames=comparisonGridNames,
+                    subtaskName='remapObservations{}'.format(
+                        upperFieldPrefix))
 
                 self.add_subtask(remapObservationsSubtask)
 
             else:
                 remapObservationsSubtask = None
-                refRunName = refConfig.get('runs', 'mainRunName')
-
                 refFieldName = field['mpas']
                 outFileLabel = '{}Bottom'.format(fieldPrefix)
-                diffTitleLabel = 'Main - Reference'
+                diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
@@ -163,7 +161,7 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
+                        controlConfig=controlConfig,
                         depth='bot',
                         subtaskName='plot{}_{}_{}'.format(upperFieldPrefix,
                                                           season,
@@ -241,8 +239,8 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
         super(RemapSchmidtko, self).__init__(
-                parentTask, seasons, fileName, outFilePrefix,
-                comparisonGridNames, subtaskName)
+            parentTask, seasons, fileName, outFilePrefix,
+            comparisonGridNames, subtaskName)
         # }}}
 
     def get_observation_descriptor(self, fileName):  # {{{

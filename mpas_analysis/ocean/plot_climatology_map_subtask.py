@@ -116,7 +116,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
-                 refConfig=None, depth=None, removeMean=False,
+                 controlConfig=None, depth=None, removeMean=False,
                  subtaskName=None):  # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -142,8 +142,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the observational climatology that this
             subtask will plot
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
 
         depth : {float, 'top', 'bot'}, optional
             Depth the data is being plotted, 'top' for the sea surface
@@ -170,7 +170,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.comparisonGridName = comparisonGridName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.remapObsClimatologySubtask = remapObsClimatologySubtask
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         self.removeMean = removeMean
 
         if depth is None:
@@ -337,7 +337,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
-        or a reference run
+        or a control run
         """
         # Authors
         # -------
@@ -367,40 +367,52 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             remappedModelClimatology = remappedModelClimatology.sel(
                 depthSlice=str(depth), drop=True)
 
-        # now the observations or reference run
+        # now the observations or control run
         if self.remapObsClimatologySubtask is not None:
             remappedFileName = self.remapObsClimatologySubtask.get_file_name(
                 stage='remapped', season=season,
                 comparisonGridName=comparisonGridName)
 
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-        elif self.refConfig is not None:
+        elif self.controlConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
                 get_remapped_mpas_climatology_file_name(
-                    self.refConfig, season=season,
+                    self.controlConfig, season=season,
                     componentName=self.componentName,
                     climatologyName=climatologyName,
                     comparisonGridName=comparisonGridName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-            refStartYear = self.refConfig.getint('climatology', 'startYear')
-            refEndYear = self.refConfig.getint('climatology', 'endYear')
-            if refStartYear != self.startYear or refEndYear != self.endYear:
+            controlStartYear = self.controlConfig.getint('climatology',
+                                                         'startYear')
+            controlEndYear = self.controlConfig.getint('climatology',
+                                                       'endYear')
+            if controlStartYear != self.startYear or \
+                    controlEndYear != self.endYear:
                 self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                    self.refTitleLabel, refStartYear, refEndYear)
+                    self.refTitleLabel, controlStartYear, controlEndYear)
 
         else:
             remappedRefClimatology = None
 
         if remappedRefClimatology is not None and depth is not None:
-            if str(depth) not in remappedRefClimatology.depthSlice.values:
+            depthIndex = -1
+            for index, depthSlice in enumerate(
+                    remappedRefClimatology.depthSlice.values):
+                try:
+                    depthSlice = depthSlice.decode("utf-8")
+                except AttributeError:
+                    pass
+                if depthSlice == str(depth):
+                    depthIndex = index
+            if depthIndex == -1:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created\n'
+                               'depth slices of was originally created'
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
-            remappedRefClimatology = remappedRefClimatology.sel(
-                depthSlice=str(depth), drop=True)
+            remappedRefClimatology = remappedRefClimatology.isel(
+                depthSlice=depthIndex, drop=True)
 
         if self.removeMean:
             if remappedRefClimatology is None:

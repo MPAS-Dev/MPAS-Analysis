@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 # Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)
 # and the University Corporation for Atmospheric Research (UCAR).
 #
@@ -22,20 +22,14 @@ import numpy as np
 import xarray as xr
 import os
 import argparse
-import glob
 import tarfile
 
 from mpas_analysis.shared.io.download import download_files
-from mpas_analysis.shared.interpolation import Remapper
-from mpas_analysis.shared.grid import LatLonGridDescriptor
-from mpas_analysis.shared.climatology.comparison_descriptors \
-    import get_comparison_descriptor
-from mpas_analysis.configuration \
-    import MpasAnalysisConfigParser
+
 
 def process_SeaWIFS(inDir, outDir):
     """
-    Load in all monthly climatology and process for MPAS-Analysis. 
+    Load in all monthly climatology and process for MPAS-Analysis.
     """
     # Authors
     # -------
@@ -66,26 +60,27 @@ def process_GLODAP(inDir, outDir):
     # Unzip otherwise
     else:
         print('Unzipping GLODAP data...')
-        tar = tarfile.open(inDir + '/GLODAPv2.2016b_MappedClimatologies.tar.gz')
+        tar = tarfile.open(inDir +
+                           '/GLODAPv2.2016b_MappedClimatologies.tar.gz')
         tar.extractall(inDir)
         tar.close()
-    
+
     # Loop through files and delete if they aren't DIC, Alk
     print('Deleting unneeded observations...')
     keep_vars = ['TCO2', 'TAlk', 'pHtsinsitutp']
     for filename in os.listdir(inDir + '/GLODAPv2.2016b_MappedClimatologies'):
         if not any(s in filename for s in keep_vars):
-            os.remove(inDir + '/GLODAPv2.2016b_MappedClimatologies/' + 
+            os.remove(inDir + '/GLODAPv2.2016b_MappedClimatologies/' +
                       filename)
-    
+
     # Edit to align with MPAS-Analysis standards
     updated_name = {'TCO2': 'DIC', 'TAlk': 'ALK', 'PI_TCO2': 'PI_DIC',
                     'pHtsinsitutp': 'pH_3D'}
     for v in ['TCO2', 'TAlk', 'PI_TCO2', 'pHtsinsitutp']:
-        if not os.path.isfile(outDir + '/' + updated_name[v] + 
+        if not os.path.isfile(outDir + '/' + updated_name[v] +
                               '_1.0x1.0degree.nc'):
             print("Processing and saving " + v + "...")
-            filename = (inDir + '/GLODAPv2.2016b_MappedClimatologies/' + 
+            filename = (inDir + '/GLODAPv2.2016b_MappedClimatologies/' +
                         'GLODAPv2.2016b.' + v + '.nc')
             ds = xr.open_dataset(filename)
             ds = ds[v].isel(depth_surface=0)
@@ -93,7 +88,7 @@ def process_GLODAP(inDir, outDir):
             # Repeat the annual data into 12 months to fake the system
             temp_vals = np.repeat(temp_vals[np.newaxis, :, :], 12, axis=0)
             ds = xr.DataArray(temp_vals, dims=['Time', 'lat', 'lon'],
-                             coords=[range(0, 12), ds.lat, ds.lon])
+                              coords=[range(0, 12), ds.lat, ds.lon])
             ds.coords['month'] = ('Time', range(1, 13))
             ds.coords['year'] = ('Time', np.ones(12))
             ds.name = updated_name[v]
@@ -113,12 +108,13 @@ def process_landschuetzer(inDir, outDir):
     for v in ['fgco2', 'spco2']:
         if not os.path.isfile(outDir + '/' + updated_name[v] +
                               '_1.0x1.0degree.nc'):
-            print("Processing and saving " + updated_name[v] + "...") 
-            ds = xr.open_dataset(inDir + '/spco2_1982-2015_MPI_SOM-FFN_v2016.nc',
-                             drop_variables='date')
+            print("Processing and saving " + updated_name[v] + "...")
+            ds = xr.open_dataset(
+                inDir + '/spco2_1982-2015_MPI_SOM-FFN_v2016.nc',
+                drop_variables='date')
             ds = ds[v + '_smoothed']
             ds = ds.rename({'time': 'Time'})
-            ds.name = updated_name[v] 
+            ds.name = updated_name[v]
             ds.coords['month'] = ds['Time.month']
             ds.coords['year'] = ds['Time.year']
             outFile = (updated_name[v] + '_1.0x1.0degree.nc')
@@ -160,7 +156,7 @@ if __name__ == '__main__':
         os.makedirs(args.inDir)
     except OSError:
         pass
-   
+
     if '~' in args.inDir:
         raise ValueError("""
             Please avoid using '~' for your input directory.
@@ -188,7 +184,7 @@ if __name__ == '__main__':
     urlBase = ('https://www.nodc.noaa.gov/archive/arc0107/0162565/2.2/data/' +
                '0-data/mapped/')
     download_files(['GLODAPv2.2016b_MappedClimatologies.tar.gz'],
-                    urlBase=urlBase, outDir=args.inDir)
+                   urlBase=urlBase, outDir=args.inDir)
     process_GLODAP(args.inDir, args.outDir)
 
     # + + + Landschuetzer Carbon Flux + + +
@@ -216,4 +212,3 @@ if __name__ == '__main__':
         if not os.path.isfile(args.outDir + '/' + v +
                               '_1.0x1.0degree.nc'):
             process_woa(v, ref_char[v], args.inDir, args.outDir)
-     

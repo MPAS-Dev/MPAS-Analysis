@@ -28,6 +28,7 @@ Analysis Tasks
    tasks/woceTransects
    tasks/soseTransects
    tasks/geojsonTransects
+   tasks/oceanRegionalProfiles
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH

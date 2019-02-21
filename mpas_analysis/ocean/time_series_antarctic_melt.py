@@ -25,7 +25,7 @@ from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, build_obs_path
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -42,7 +42,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -55,8 +55,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -70,8 +70,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             tags=['timeSeries', 'melt', 'landIceCavities'])
 
         regionMaskDirectory = build_config_full_path(config,
-                                                     'regions',
-                                                     'regionMaskDirectory')
+                                                     'diagnostics',
+                                                     'regionMaskSubdirectory')
         iceShelfMasksFile = '{}/iceShelves.geojson'.format(regionMaskDirectory)
 
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
@@ -80,9 +80,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             iceShelvesToPlot = get_feature_list(config, iceShelfMasksFile)
 
         masksSubtask = ComputeRegionMasksSubtask(
-                self, iceShelfMasksFile,
-                outFileSuffix='iceShelfMasks',
-                featureList=iceShelvesToPlot)
+            self, iceShelfMasksFile,
+            outFileSuffix='iceShelfMasks',
+            featureList=iceShelvesToPlot)
 
         self.add_subtask(masksSubtask)
 
@@ -91,7 +91,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         self.add_subtask(computeMeltSubtask)
 
         for index, iceShelf in enumerate(iceShelvesToPlot):
-            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index, refConfig)
+            plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index,
+                                              controlConfig)
             plotMeltSubtask.run_after(computeMeltSubtask)
             self.add_subtask(plotMeltSubtask)
 
@@ -224,7 +225,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis, Stephen Price
 
-        self.logger.info("\Computing Antarctic melt rate time series...")
+        self.logger.info(r"\Computing Antarctic melt rate time series...")
 
         self.logger.info('  Load melt rate data...')
 
@@ -267,7 +268,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             mpasTimeSeriesTask.runStreams.readpath('restart')[0]
 
         dsRestart = xarray.open_dataset(restartFileName)
-        areaCell = dsRestart.landIceFraction.isel(Time=0)*dsRestart.areaCell
+        areaCell = dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
 
         regionMaskFileName = self.masksSubtask.maskFileName
 
@@ -289,12 +290,12 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         # convert from kg/s to kg/yr
         totalMeltFlux = constants.sec_per_year * \
-            (cellMasks*areaCell*freshwaterFlux).sum(dim='nCells')
+            (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
 
-        totalArea = (cellMasks*areaCell).sum(dim='nCells')
+        totalArea = (cellMasks * areaCell).sum(dim='nCells')
 
         # from kg/m^2/yr to m/yr
-        meltRates = (1./constants.rho_fw) * (totalMeltFlux/totalArea)
+        meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
 
         # convert from kg/yr to GT/yr
         totalMeltFlux /= constants.kg_per_GT
@@ -328,15 +329,15 @@ class PlotMeltSubtask(AnalysisTask):
     regionIndex : int
         The index into the dimension ``nRegions`` of the ice shelf to plot
 
-    refConfig : ``MpasAnalysisConfigParser``
-        The configuration options for the reference run (if any)
+    controlConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the control run (if any)
 
     """
     # Authors
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, parentTask, iceShelf, regionIndex, refConfig):
+    def __init__(self, parentTask, iceShelf, regionIndex, controlConfig):
         # {{{
         """
         Construct the analysis task.
@@ -353,8 +354,8 @@ class PlotMeltSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the ice shelf to plot
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -370,7 +371,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         self.iceShelf = iceShelf
         self.regionIndex = regionIndex
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         # }}}
 
@@ -419,18 +420,17 @@ class PlotMeltSubtask(AnalysisTask):
 
         totalMeltFlux, meltRates = self._load_ice_shelf_fluxes(config)
 
-        plotRef = self.refConfig is not None
-        if plotRef:
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+        plotControl = self.controlConfig is not None
+        if plotControl:
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             refTotalMeltFlux, refMeltRates = \
-                self._load_ice_shelf_fluxes(self.refConfig)
+                self._load_ice_shelf_fluxes(self.controlConfig)
 
         # Load observations from multiple files and put in dictionary based
         # on shelf keyname
-        observationsDirectory = build_config_full_path(config,
-                                                       'oceanObservations',
-                                                       'meltSubdirectory')
+        observationsDirectory = build_obs_path(config, 'ocean',
+                                               'meltSubdirectory')
         obsFileNameDict = {'Rignot et al. (2013)':
                            'Rignot_2013_melt_rates.csv',
                            'Rignot et al. (2013) SS':
@@ -458,10 +458,10 @@ class PlotMeltSubtask(AnalysisTask):
                 # build dict of obs. keyed to filename description
                 # (which will be used for plotting)
                 obsDict[obsName] = {
-                        'meltFlux': meltFlux,
-                        'meltFluxUncertainty': meltFluxUncertainty,
-                        'meltRate': meltRate,
-                        'meltRateUncertainty': meltRateUncertainty}
+                    'meltFlux': meltFlux,
+                    'meltFluxUncertainty': meltFluxUncertainty,
+                    'meltRate': meltRate,
+                    'meltRateUncertainty': meltRateUncertainty}
                 break
 
         # If areas from obs file used need to be converted from sq km to sq m
@@ -515,11 +515,11 @@ class PlotMeltSubtask(AnalysisTask):
         lineColors = ['k']
         lineWidths = [2.5]
         legendText = [mainRunName]
-        if plotRef:
+        if plotControl:
             fields.append(refTotalMeltFlux.isel(nRegions=self.regionIndex))
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(refRunName)
+            legendText.append(controlRunName)
 
         timeseries_analysis_plot(config, fields, movingAverageMonths,
                                  title, xLabel, yLabel, figureName,
@@ -557,11 +557,11 @@ class PlotMeltSubtask(AnalysisTask):
         lineColors = ['k']
         lineWidths = [2.5]
         legendText = [mainRunName]
-        if plotRef:
+        if plotControl:
             fields.append(refMeltRates.isel(nRegions=self.regionIndex))
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(refRunName)
+            legendText.append(controlRunName)
 
         if config.has_option(self.taskName, 'firstYearXTicks'):
             firstYearXTicks = config.getint(self.taskName,

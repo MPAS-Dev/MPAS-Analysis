@@ -31,7 +31,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
 
         # {{{
         '''
@@ -47,8 +47,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -58,9 +58,9 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(GeojsonTransects, self).__init__(
-                config=config, taskName='geojsonTransects',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='geojsonTransects',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -79,7 +79,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = None
         else:
             verticalComparisonGrid = config.getExpression(
-                    sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
         fields = config.getExpression(sectionName, 'fields')
 
@@ -101,8 +101,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
                                                       horizontalResolution)
 
         transectsObservations = GeojsonTransectsObservations(
-                config, obsFileNames,  horizontalResolution,
-                transectCollectionName)
+            config, obsFileNames, horizontalResolution,
+            transectCollectionName)
 
         computeTransectsSubtask = ComputeTransectsSubtask(
             mpasClimatologyTask=mpasClimatologyTask,
@@ -116,54 +116,54 @@ class GeojsonTransects(AnalysisTask):  # {{{
             verticalComparisonGrid=verticalComparisonGrid)
 
         plotObs = False
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = None
 
             diffTitleLabel = None
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for field in fields:
             fieldPrefix = field['prefix']
             for transectName in obsFileNames:
                 for season in seasons:
                     outFileLabel = fieldPrefix
-                    if refConfig is None:
+                    if controlConfig is None:
                         refFieldName = None
                     else:
                         refFieldName = field['mpas']
 
                     fieldPrefixUpper = fieldPrefix[0].upper() + fieldPrefix[1:]
                     fieldNameInTytle = '{} from {}'.format(
-                            field['titleName'],
-                            transectName.replace('_', ' '))
+                        field['titleName'],
+                        transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
                                                   fieldPrefix,
                                                   computeTransectsSubtask,
-                                                  plotObs, refConfig)
+                                                  plotObs, controlConfig)
 
                     subtask.set_plot_info(
-                            outFileLabel=outFileLabel,
-                            fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=field['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
-                            diffTitleLabel=diffTitleLabel,
-                            unitsLabel=field['units'],
-                            imageCaption=fieldNameInTytle,
-                            galleryGroup='Geojson Transects',
-                            groupSubtitle=None,
-                            groupLink='geojson',
-                            galleryName=field['titleName'],
-                            configSectionName='geojson{}Transects'.format(
-                                    fieldPrefixUpper))
+                        outFileLabel=outFileLabel,
+                        fieldNameInTitle=fieldNameInTytle,
+                        mpasFieldName=field['mpas'],
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
+                        unitsLabel=field['units'],
+                        imageCaption=fieldNameInTytle,
+                        galleryGroup='Geojson Transects',
+                        groupSubtitle=None,
+                        groupLink='geojson',
+                        galleryName=field['titleName'],
+                        configSectionName='geojson{}Transects'.format(
+                            fieldPrefixUpper))
 
                     self.add_subtask(subtask)
         # }}}
@@ -184,7 +184,6 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
     # Authors
     # -------
     # Xylar Asay-Davis
-
 
     def build_observational_dataset(self, fileName, transectName):  # {{{
         '''

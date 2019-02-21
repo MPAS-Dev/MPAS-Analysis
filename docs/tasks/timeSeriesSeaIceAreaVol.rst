@@ -41,9 +41,9 @@ The following configuration options are available for this task::
   # yearStrideXTicks = 1
 
   # observations files
-  areaNH = IceArea_timeseries/iceAreaNH_climo.nc
-  areaSH = IceArea_timeseries/iceAreaSH_climo.nc
-  volNH = PIOMAS/PIOMASvolume_monthly_climo.nc
+  areaNH = IceArea_timeseries/iceAreaNH_climo_20180710.nc
+  areaSH = IceArea_timeseries/iceAreaSH_climo_20180710.nc
+  volNH = PIOMAS/PIOMASvolume_monthly_climo_20180710.nc
   volSH = none
 
 ``compareWithObservations`` can be set to ``False`` to disable comparison with

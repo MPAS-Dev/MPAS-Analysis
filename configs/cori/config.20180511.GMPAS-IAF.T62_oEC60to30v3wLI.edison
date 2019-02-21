@@ -3,53 +3,73 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = B_low_res_ice_shelves_1696_JWolfe_layout_Edison
+mainRunName = 20180511.GMPAS-IAF.T62_oEC60to30v3wLI.edison
 
-# config file for a reference run to which this run will be compared.  The
+# config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
 # file, so that the relevant MPAS climatologies already exist and have been
 # remapped to the comparison grid.  Leave this option commented out if no
-# reference run is desired.
-# referenceRunConfigFile = /path/to/config/file
+# control run is desired.
+# controlRunConfigFile = /path/to/config/file
+
+# config file for a main run on which the analysis was already run to
+# completion.  The relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid and time series have been extracted.
+# Leave this option commented out if the analysis for the main run should be
+# performed.
+# mainRunConfigFile = /path/to/config/file
 
 [execute]
 ## options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
-parallelTaskCount = 1
+parallelTaskCount = 6
 
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
-ncclimoParallelMode = serial
+ncclimoParallelMode = bck
+
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /global/project/projectdirs/acme/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /global/cscratch1/sd/fyke/ACME_simulations/B_low_res_ice_shelves_1696_JWolfe_layout_Edison/run
+baseDirectory = /global/cscratch1/sd/dcomeau/acme_scratch/edison/20180511.GMPAS-IAF.T62_oEC60to30v3wLI.edison
 
-# names of ocean and sea ice meshes (e.g. EC60to30, QU240, RRS30to10, etc.)
+# subdirectory containing restart files
+runSubdirectory = run
+# subdirectory for ocean history files
+oceanHistorySubdirectory = run
+# subdirectory for sea ice history files
+seaIceHistorySubdirectory = run
+
+# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3wLI
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-mappingDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/maps
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
-oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
-seaIceStreamsFileName = streams.cice
+oceanNamelistFileName = run/mpaso_in
+oceanStreamsFileName = run/streams.ocean
+seaIceNamelistFileName = run/mpassi_in
+seaIceStreamsFileName = run/streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /dir/to/analysis/output
+baseDirectory = /path/to/output/dir
 
 # provide an absolute path to put HTML in an alternative location (e.g. a web
 # portal)
@@ -57,7 +77,7 @@ baseDirectory = /dir/to/analysis/output
 htmlSubdirectory = html
 
 # a list of analyses to generate.  Valid names can be seen by running:
-#   mpas_analysis --list
+#   ./run_mpas_analysis --list
 # This command also lists tags for each analysis.
 # Shortcuts exist to generate (or not generate) several types of analysis.
 # These include:
@@ -73,22 +93,24 @@ htmlSubdirectory = html
 #   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
 #                                   tasks from the given compoonent or with
 #                                   the given tag.  Do
-#                                      mpas_analysis --list
+#                                      ./run_mpas_analysis --list
 #                                   to list all task names and their tags
 # an equivalent syntax can be used on the command line to override this
 # option:
-#    mpas_analysis config.analysis --generate \
+#    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs']
+# All tasks with tag "landIceCavities" are disabled because this run did not
+# include land-ice cavities.
+generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs', 'no_index']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 91
+startYear = 21
 # the last year over which to average climatalogies
-endYear = 100
+endYear = 30
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -98,7 +120,7 @@ endYear = 100
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 10
+endYear = 30
 
 [index]
 ## options related to producing nino index.
@@ -108,35 +130,4 @@ endYear = 10
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 9999
-
-[oceanObservations]
-## options related to ocean observations with which the results will be compared
-
-# directory where ocean observations are stored
-baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/Ocean/
-
-[seaIceObservations]
-## options related to sea ice observations with which the results will be
-## compared
-
-# directory where sea ice observations are stored
-baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/SeaIce
-
-[regions]
-## options related to ocean regions used in several analysis modules
-
-# Directory for region mask files
-regionMaskDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/region_masks
-
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
-
-# Use postprocessing script to compute the MOC? You want this to be True
-# for low-resolution simulations that use GM to parameterize eddies, because
-# the online MOC analysis member currently does not include the bolus velocity
-# in its calculation, whereas the postprocessing script does.
-# NOTE: this is a temporary option that will be removed once the online
-# MOC takes into account the bolus velocity when GM is on.
-usePostprocessingScript = True
+endYear = 30

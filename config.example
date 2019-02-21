@@ -27,7 +27,7 @@
 
 
 [runs]
-## options related to the run to be analyzed and reference runs to be
+## options related to the run to be analyzed and control runs to be
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
@@ -40,12 +40,20 @@ mainRunName = runName
 # MPAS-Analysis)
 preprocessedReferenceRunName = None
 
-# config file for a reference run to which this run will be compared.  The
+# config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
 # file, so that the relevant MPAS climatologies already exist and have been
 # remapped to the comparison grid.  Leave this option commented out if no
-# reference run is desired.
-# referenceRunConfigFile = /path/to/config/file
+# control run is desired.
+# controlRunConfigFile = /path/to/config/file
+
+# config file for a main run on which the analysis was already run to
+# completion.  The relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid and time series have been extracted.
+# Leave this option commented out if the analysis for the main run should be
+# performed.
+# mainRunConfigFile = /path/to/config/file
+
 
 [execute]
 ## options related to executing parallel tasks
@@ -57,6 +65,29 @@ parallelTaskCount = 1
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = serial
+
+
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /path/to/diagnostics
+
+# Directory for mapping files (if they have been generated already). If mapping
+# files needed by the analysis are not found here, they will be generated and
+# placed in the output mappingSubdirectory.  The user can supply an absolute
+# path here to point to a path that is not within the baseDirectory above.
+mappingSubdirectory = mpas_analysis/maps
+
+# Directory for region mask files. The user can supply an absolute path here to
+# point to a path that is not within the baseDirectory above.
+regionMaskSubdirectory = mpas_analysis/region_masks
+
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -85,11 +116,6 @@ seaIceStreamsFileName = streams.seaice
 
 # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
 mpasMeshName = mesh
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-# mappingDirectory = /dir/for/mapping/files
 
 
 [output]
@@ -168,10 +194,13 @@ startYear = 1
 endYear = 9999
 
 [oceanObservations]
-## options related to ocean observations with which the results will be compared
+## options related to ocean observations with which the results will be
+## compared
 
-# directory where ocean observations are stored
-baseDirectory = /dir/to/ocean/observations
+# subdirectory within [diagnostics]/baseDirectory where ocean observations are
+# stored.  The user can supply an absolute path here to point to a path that is
+# not within [diagnostics]/baseDirectory.
+obsSubdirectory = observations/Ocean
 
 [oceanPreprocessedReference]
 ## options related to preprocessed ocean reference run with which the results
@@ -184,8 +213,10 @@ baseDirectory = /dir/to/ocean/reference
 ## options related to sea ice observations with which the results will be
 ## compared
 
-# directory where sea ice observations are stored
-baseDirectory = /dir/to/seaice/observations
+# subdirectory within [diagnostics]/baseDirectory where sea ice observations
+# are stored.  The user can supply an absolute path here to point to a path
+# that is not within [diagnostics]/baseDirectory.
+obsSubdirectory = observations/SeaIce
 
 [seaIcePreprocessedReference]
 ## options related to preprocessed sea ice reference run with which the results
@@ -194,8 +225,11 @@ baseDirectory = /dir/to/seaice/observations
 # directory where ocean reference simulation results are stored
 baseDirectory = /dir/to/seaice/reference
 
-[regions]
-## options related to ocean regions used in several analysis modules
+[icebergObservations]
+## options related to iceberg observations with which the results will be
+## compared
 
-# Directory for region mask files
-regionMaskDirectory = /path/to/masks/
+# subdirectory within [diagnostics]/baseDirectory where iceberg observations
+# are stored.  The user can supply an absolute path here to point to a path
+# that is not within [diagnostics]/baseDirectory.
+obsSubdirectory = observations/Icebergs

@@ -107,8 +107,8 @@ def _get_lat_lon_comparison_descriptor(config):  # {{{
                                              'comparisonLatResolution',
                                              constants.dLongitude)
 
-    nLat = int((constants.latmax-constants.latmin)/comparisonLatRes)+1
-    nLon = int((constants.lonmax-constants.lonmin)/comparisonLonRes)+1
+    nLat = int((constants.latmax - constants.latmin) / comparisonLatRes) + 1
+    nLon = int((constants.lonmax - constants.lonmin) / comparisonLonRes) + 1
     lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
     lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 
@@ -145,8 +145,8 @@ def _get_antarctic_stereographic_comparison_descriptor(config):  # {{{
 
     projection = get_antarctic_stereographic_projection()
 
-    xMax = 0.5*comparisonStereoWidth*1e3
-    nx = int(comparisonStereoWidth/comparisonStereoResolution)+1
+    xMax = 0.5 * comparisonStereoWidth * 1e3
+    nx = int(comparisonStereoWidth / comparisonStereoResolution) + 1
     x = numpy.linspace(-xMax, xMax, nx)
 
     meshName = '{}x{}km_{}km_Antarctic_stereo'.format(

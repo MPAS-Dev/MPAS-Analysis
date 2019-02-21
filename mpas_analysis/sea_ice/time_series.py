@@ -20,7 +20,7 @@ from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    check_path_exists, make_directories
+    check_path_exists, make_directories, build_obs_path
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
     days_to_datetime, datetime_to_days, get_simulation_start_time
@@ -44,8 +44,8 @@ class TimeSeriesSeaIce(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    refConfig :  ``MpasAnalysisConfigParser``
-        Configuration options for a reference run (if any)
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
 
     """
     # Authors
@@ -53,7 +53,7 @@ class TimeSeriesSeaIce(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -65,8 +65,8 @@ class TimeSeriesSeaIce(AnalysisTask):
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -80,7 +80,7 @@ class TimeSeriesSeaIce(AnalysisTask):
             tags=['timeSeries', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -118,8 +118,8 @@ class TimeSeriesSeaIce(AnalysisTask):
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         if config.get('runs', 'preprocessedReferenceRunName') != 'None':
-                check_path_exists(config.get('seaIcePreprocessedReference',
-                                             'baseDirectory'))
+            check_path_exists(config.get('seaIcePreprocessedReference',
+                                         'baseDirectory'))
 
         # get a list of timeSeriesStatsMonthly output files from the streams
         # file, reading only those that are between the start and end dates
@@ -166,9 +166,9 @@ class TimeSeriesSeaIce(AnalysisTask):
                                             variableName)
 
                 self.xmlFileNames.append('{}/{}.xml'.format(
-                        self.plotsDirectory, filePrefix))
+                    self.plotsDirectory, filePrefix))
                 polarXMLFileNames.append('{}/{}_polar.xml'.format(
-                        self.plotsDirectory, filePrefix))
+                    self.plotsDirectory, filePrefix))
         else:
 
             for hemisphere in ['NH', 'SH']:
@@ -178,9 +178,9 @@ class TimeSeriesSeaIce(AnalysisTask):
                                                   mainRunName)
 
                     self.xmlFileNames.append('{}/{}.xml'.format(
-                            self.plotsDirectory, filePrefix))
+                        self.plotsDirectory, filePrefix))
                     polarXMLFileNames.append('{}/{}_polar.xml'.format(
-                            self.plotsDirectory, filePrefix))
+                        self.plotsDirectory, filePrefix))
 
         if polarPlot:
             self.xmlFileNames.extend(polarXMLFileNames)
@@ -210,22 +210,22 @@ class TimeSeriesSeaIce(AnalysisTask):
                  'iceThickness': '[m]'}
 
         obsFileNames = {
-            'iceArea': {'NH': build_config_full_path(
-                                  config=config, section='seaIceObservations',
-                                  relativePathOption='areaNH',
-                                  relativePathSection=sectionName),
-                        'SH': build_config_full_path(
-                                  config=config, section='seaIceObservations',
-                                  relativePathOption='areaSH',
-                                  relativePathSection=sectionName)},
-            'iceVolume': {'NH': build_config_full_path(
-                                   config=config, section='seaIceObservations',
-                                   relativePathOption='volNH',
-                                   relativePathSection=sectionName),
-                          'SH': build_config_full_path(
-                                   config=config, section='seaIceObservations',
-                                   relativePathOption='volSH',
-                                   relativePathSection=sectionName)}}
+            'iceArea': {'NH': build_obs_path(
+                config, 'seaIce',
+                relativePathOption='areaNH',
+                relativePathSection=sectionName),
+                'SH': build_obs_path(
+                config, 'seaIce',
+                relativePathOption='areaSH',
+                relativePathSection=sectionName)},
+            'iceVolume': {'NH': build_obs_path(
+                config, 'seaIce',
+                relativePathOption='volNH',
+                relativePathSection=sectionName),
+                'SH': build_obs_path(
+                config, 'seaIce',
+                relativePathOption='volSH',
+                relativePathSection=sectionName)}}
 
         # Some plotting rules
         titleFontSize = config.get('timeSeriesSeaIceAreaVol', 'titleFontSize')
@@ -289,13 +289,13 @@ class TimeSeriesSeaIce(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
 
             dsTimeSeriesRef = {}
             baseDirectory = build_config_full_path(
-                self.refConfig, 'output', 'timeSeriesSubdirectory')
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             for hemisphere in ['NH', 'SH']:
                 inFileName = '{}/seaIceAreaVol{}.nc'.format(baseDirectory,
@@ -332,7 +332,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                 plotVars[key] = (norm[variableName] *
                                  dsTimeSeries[hemisphere][variableName])
 
-                if self.refConfig is not None:
+                if self.controlConfig is not None:
                     plotVarsRef[key] = norm[variableName] * \
                         dsTimeSeriesRef[hemisphere][variableName]
 
@@ -444,9 +444,9 @@ class TimeSeriesSeaIce(AnalysisTask):
                     lineColors.append('purple')
                     lineWidths.append(1.2)
 
-                if self.refConfig is not None:
+                if self.controlConfig is not None:
                     dsvalues.append(plotVarsRef[key])
-                    legendText.append(refRunName)
+                    legendText.append(controlRunName)
                     lineColors.append('r')
                     lineWidths.append(1.2)
 
@@ -480,9 +480,9 @@ class TimeSeriesSeaIce(AnalysisTask):
                                               hemisphere,
                                               mainRunName)
                 thumbnailDescription = '{} {}'.format(
-                        hemisphere, plotTitles[variableName])
+                    hemisphere, plotTitles[variableName])
                 caption = 'Running mean of {}'.format(
-                        thumbnailDescription)
+                    thumbnailDescription)
                 write_image_xml(
                     config,
                     filePrefix,
@@ -561,24 +561,24 @@ class TimeSeriesSeaIce(AnalysisTask):
                   MpasRelativeDelta(repSecondTime, repStartTime))
 
         startIndex = 0
-        while(dsStartTime > repStartTime + (startIndex+1)*period):
+        while(dsStartTime > repStartTime + (startIndex + 1) * period):
             startIndex += 1
 
         endIndex = 0
-        while(dsEndTime > repEndTime + endIndex*period):
+        while(dsEndTime > repEndTime + endIndex * period):
             endIndex += 1
 
         dsShift = dsToReplicate.copy()
 
         times = days_to_datetime(dsShift.Time, calendar=calendar)
         dsShift.coords['Time'] = ('Time',
-                                  datetime_to_days(times + startIndex*period,
+                                  datetime_to_days(times + startIndex * period,
                                                    calendar=calendar))
         # replicate cycle:
         for cycleIndex in range(startIndex, endIndex):
             dsNew = dsToReplicate.copy()
             dsNew.coords['Time'] = \
-                ('Time', datetime_to_days(times + (cycleIndex+1)*period,
+                ('Time', datetime_to_days(times + (cycleIndex + 1) * period,
                                           calendar=calendar))
             dsShift = xr.concat([dsShift, dsNew], dim='Time')
 
@@ -627,10 +627,10 @@ class TimeSeriesSeaIce(AnalysisTask):
             else:
                 mask = dsMesh.latCell < 0
 
-            dsAreaSum = (ds.where(mask)*dsMesh.areaCell).sum('nCells')
+            dsAreaSum = (ds.where(mask) * dsMesh.areaCell).sum('nCells')
             dsAreaSum = dsAreaSum.rename(
-                    {'timeMonthly_avg_iceAreaCell': 'iceArea',
-                     'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
+                {'timeMonthly_avg_iceAreaCell': 'iceArea',
+                 'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
             dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
                                          dsMesh.areaCell.sum('nCells'))
 

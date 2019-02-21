@@ -23,7 +23,7 @@ import xarray as xr
 import numpy
 
 from mpas_analysis.shared.plot.plotting import \
-    plot_vertical_section, plot_vertical_section_comparison
+    plot_vertical_section_comparison
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -104,7 +104,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, transectName, fieldName,
                  remapMpasClimatologySubtask, plotObs=True,
-                 refConfig=None):
+                 controlConfig=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -132,8 +132,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         plotObs : bool, optional
             Whether to plot against observations.
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any), ignored if
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any), ignored if
             ``plotObs == True``
         '''
         # Authors
@@ -144,7 +144,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.transectName = transectName
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.plotObs = plotObs
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         subtaskName = 'plot{}_{}_{}'.format(season,
                                             transectName.replace(' ', '_'),
                                             fieldName)
@@ -155,8 +155,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(PlotTransectSubtask, self).__init__(
-                config=config, taskName=taskName, subtaskName=subtaskName,
-                componentName='ocean', tags=tags)
+            config=config, taskName=taskName, subtaskName=subtaskName,
+            componentName='ocean', tags=tags)
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
@@ -283,7 +283,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     def run_task(self):  # {{{
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
-        or a reference run
+        or a control run
         """
         # Authors
         # -------
@@ -298,11 +298,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # first read the model climatology
         remappedFileName = \
             self.remapMpasClimatologySubtask.get_remapped_file_name(
-                    season=season, comparisonGridName=transectName)
+                season=season, comparisonGridName=transectName)
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
 
-        # now the observations or reference run
+        # now the observations or control run
         if self.plotObs:
             verticalComparisonGridName = \
                 self.remapMpasClimatologySubtask.verticalComparisonGridName
@@ -317,22 +317,25 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             if 'Time' in remappedRefClimatology.dims:
                 monthValues = constants.monthDictionary[season]
                 remappedRefClimatology = compute_climatology(
-                        remappedRefClimatology, monthValues, maskVaries=True)
+                    remappedRefClimatology, monthValues, maskVaries=True)
 
-        elif self.refConfig is not None:
+        elif self.controlConfig is not None:
             climatologyName = self.remapMpasClimatologySubtask.climatologyName
             remappedFileName = \
                 get_remapped_mpas_climatology_file_name(
-                    self.refConfig, season=season,
+                    self.controlConfig, season=season,
                     componentName=self.componentName,
                     climatologyName=climatologyName,
                     comparisonGridName=transectName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
-            refStartYear = self.refConfig.getint('climatology', 'startYear')
-            refEndYear = self.refConfig.getint('climatology', 'endYear')
-            if refStartYear != self.startYear or refEndYear != self.endYear:
+            controlStartYear = self.controlConfig.getint('climatology',
+                                                         'startYear')
+            controlEndYear = self.controlConfig.getint('climatology',
+                                                       'endYear')
+            if controlStartYear != self.startYear or \
+                    controlEndYear != self.endYear:
                 self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                        self.refTitleLabel, refStartYear, refEndYear)
+                    self.refTitleLabel, controlStartYear, controlEndYear)
 
         else:
             remappedRefClimatology = None
@@ -400,10 +403,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-
         xLabel = 'Distance [km]'
         yLabel = 'Depth [m]'
-
 
         # define the axis labels and the data to use for the upper
         # x axis or axes, if such additional axes have been requested
@@ -453,7 +454,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         else:
             raise ValueError('invalid option for upperXAxes')
 
-
         # get the parameters determining what type of plot to use,
         # what line styles and line colors to use, and whether and how
         # to label contours
@@ -469,19 +469,18 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                                                 'comparisonContourLineColor')
 
         if compareAsContours:
-            labelContours = config.getboolean('transects',
-                                    'labelContoursOnContourComparisonPlots')
+            labelContours = config.getboolean(
+                'transects', 'labelContoursOnContourComparisonPlots')
         else:
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
-        
+
         contourLabelPrecision = config.getint('transects',
                                               'contourLabelPrecision')
 
-
         # construct a three-panel comparison plot for the transect, or a
         # single-panel contour comparison plot if compareAsContours is True
-        
+
         plot_vertical_section_comparison(
             config,
             x,
@@ -513,7 +512,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision
-            )
+        )
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
@@ -571,16 +570,18 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         lon_jump = numpy.where(
             numpy.logical_or(lon_diff > 180, lon_diff < -180), True, False)
 
-        if numpy.all(lon_jump == False):  # transect does not cross
-                                          # periodic boundary
+        if numpy.all(numpy.logical_not(lon_jump)):
+            # transect does not cross periodic boundary
 
             lon_extent = numpy.max(lon) - numpy.min(lon)
 
-        else:  # transect crosses periodic boundary at least once, so min and
-               # max cannot be used to calculate the longitudinal extent
+        else:
+            # transect crosses periodic boundary at least once, so min and
+            # max cannot be used to calculate the longitudinal extent
 
-            # calculate the indices at which the transect crosses the right-hand
-            # periodic boundary and enters the leftmost region of the domain
+            # calculate the indices at which the transect crosses the
+            # right-hand periodic boundary and enters the leftmost region of
+            # the domain
             lon_r = numpy.sort(numpy.nonzero(lon_diff < -180)[0] + 1)
 
             # calculate the indices at which the transect crosses the left-hand
@@ -619,8 +620,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 # the longitudinal extent of the transect is 360
                 # degrees minus this value.
 
-            else:   # if max >= min, the transect has covered the
-                    # entire longitudinal range (360 degrees)
+            else:
+                # if max >= min, the transect has covered the
+                # entire longitudinal range (360 degrees)
 
                 lon_extent = 360.0
 

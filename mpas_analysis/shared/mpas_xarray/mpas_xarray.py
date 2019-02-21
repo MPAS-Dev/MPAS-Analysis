@@ -18,7 +18,7 @@ import xarray
 from functools import partial
 
 from mpas_analysis.shared.timekeeping.utility import \
-    string_to_days_since_date,  string_to_datetime, days_to_datetime, \
+    string_to_days_since_date, string_to_datetime, days_to_datetime, \
     datetime_to_days
 
 """
@@ -170,10 +170,10 @@ def subset_variables(ds, variableList):  # {{{
 
     if len(ds.data_vars.keys()) == 0:
         raise ValueError(
-                'Empty dataset is returned.\n'
-                'Variables {}\n'
-                'are not found within the dataset '
-                'variables: {}.'.format(variableList, allvars))
+            'Empty dataset is returned.\n'
+            'Variables {}\n'
+            'are not found within the dataset '
+            'variables: {}.'.format(variableList, allvars))
 
     return ds  # }}}
 
@@ -464,7 +464,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
 
         dsOut.coords[outTimeVariableName] = (outTimeVariableName,
                                              [starts[i] +
-                                                 (ends[i] - starts[i])/2
+                                                 (ends[i] - starts[i]) / 2
                                                  for i in range(len(starts))])
 
     else:
@@ -480,7 +480,8 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         if timeVar.dtype == '|S64':
             # this is an array of date strings like 'xtime'
             # convert to string
-            timeStrings = [''.join(str(xtime.astype('U'))).strip() for xtime in timeVar.values]
+            timeStrings = [''.join(str(xtime.astype('U'))).strip()
+                           for xtime in timeVar.values]
             days = string_to_days_since_date(dateString=timeStrings,
                                              referenceDate=referenceDate,
                                              calendar=calendar)
@@ -567,8 +568,8 @@ def process_chunking(ds, chunking):  # {{{
 
     else:
         raise ValueError(
-                'Chunking parameter choice is not understood '
-                'for {} of type {}\n'.format(chunking, type(chunking)))
+            'Chunking parameter choice is not understood '
+            'for {} of type {}\n'.format(chunking, type(chunking)))
 
     return ds  # }}}
 

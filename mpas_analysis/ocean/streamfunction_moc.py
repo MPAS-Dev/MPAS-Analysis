@@ -49,7 +49,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -61,8 +61,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -77,28 +77,28 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
                   'publicObs'])
 
         computeClimSubtask = ComputeMOCClimatologySubtask(
-                self, mpasClimatologyTask)
-        plotClimSubtask = PlotMOCClimatologySubtask(self, refConfig)
+            self, mpasClimatologyTask)
+        plotClimSubtask = PlotMOCClimatologySubtask(self, controlConfig)
         plotClimSubtask.run_after(computeClimSubtask)
 
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
 
-        years = range(startYear, endYear+1)
+        years = range(startYear, endYear + 1)
 
         # in the end, we'll combine all the time series into one, but we create
         # this task first so it's easier to tell it to run after all the
         # compute tasks
         combineTimeSeriesSubtask = CombineMOCTimeSeriesSubtask(
-                self, startYears=years, endYears=years)
+            self, startYears=years, endYears=years)
 
         # run one subtask per year
         for year in years:
             computeTimeSeriesSubtask = ComputeMOCTimeSeriesSubtask(
-                    self, startYear=year, endYear=year)
+                self, startYear=year, endYear=year)
             combineTimeSeriesSubtask.run_after(computeTimeSeriesSubtask)
 
-        plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, refConfig)
+        plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, controlConfig)
         plotTimeSeriesSubtask.run_after(combineTimeSeriesSubtask)
 
         # }}}
@@ -185,7 +185,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         self.sectionName = 'streamfunctionMOC'
 
         self.usePostprocessing = config.getExpression(
-                self.sectionName, 'usePostprocessingScript')
+            self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
             variableList = \
@@ -199,8 +199,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
             self.includeBolus = self.namelist.getbool('config_use_standardgm')
             if self.includeBolus:
                 variableList.extend(
-                        ['timeMonthly_avg_normalGMBolusVelocity',
-                         'timeMonthly_avg_vertGMBolusVelocityTop'])
+                    ['timeMonthly_avg_normalGMBolusVelocity',
+                     'timeMonthly_avg_vertGMBolusVelocityTop'])
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
@@ -228,7 +228,6 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         # }}}
 
     def _compute_moc_climo_analysismember(self):  # {{{
-
         '''compute mean MOC streamfunction from analysis member'''
 
         config = self.config
@@ -239,8 +238,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         make_directories(outputDirectory)
 
         outputFileName = '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
-                           outputDirectory, self.startYear,
-                           self.endYear)
+            outputDirectory, self.startYear,
+            self.endYear)
 
         if os.path.exists(outputFileName):
             return
@@ -262,9 +261,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         refLayerThickness = np.zeros(nVertLevels)
         refLayerThickness[0] = refBottomDepth[0]
         refLayerThickness[1:nVertLevels] = \
-            refBottomDepth[1:nVertLevels] - refBottomDepth[0:nVertLevels-1]
+            refBottomDepth[1:nVertLevels] - refBottomDepth[0:nVertLevels - 1]
 
-        refZMid = refBottomDepth - 0.5*refLayerThickness
+        refZMid = refBottomDepth - 0.5 * refLayerThickness
 
         binBoundaryMocStreamfunction = None
         # first try timeSeriesStatsMonthly for bin boundaries, then try
@@ -355,7 +354,6 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         # }}}
 
     def _compute_moc_climo_postprocess(self):  # {{{
-
         '''compute mean MOC streamfunction as a post-process'''
 
         config = self.config
@@ -365,8 +363,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         make_directories(outputDirectory)
 
         outputFileName = '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
-                           outputDirectory, self.startYear,
-                           self.endYear)
+            outputDirectory, self.startYear,
+            self.endYear)
 
         if os.path.exists(outputFileName):
             return
@@ -378,7 +376,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         # Load basin region related variables and save them to dictionary
         mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
+        regionMaskDirectory = build_config_full_path(config, 'diagnostics',
+                                                     'regionMasksubDirectory')
 
         dictRegion = _build_region_mask_dict(regionNames, regionMaskDirectory,
                                              mpasMeshName, self.logger)
@@ -386,7 +385,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         # Add Global regionCellMask=1 everywhere to make the algorithm
         # for the global moc similar to that of the regional moc
         dictRegion['Global'] = {
-                'cellMask': np.ones(np.size(latCell))}
+            'cellMask': np.ones(np.size(latCell))}
         regionNames.append('Global')
 
         # Compute and plot annual climatology of MOC streamfunction
@@ -455,7 +454,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
                 indRegion = dictRegion[region]['indices']
                 latBins = latCell[indRegion]
                 latBins = np.arange(np.amin(latBins),
-                                    np.amax(latBins)+latBinSize,
+                                    np.amax(latBins) + latBinSize,
                                     latBinSize)
             mocTop = _compute_moc(latBins, nVertLevels, latCell,
                                   regionCellMask, transportZ, velArea)
@@ -506,7 +505,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, refConfig):  # {{{
+    def __init__(self, parentTask, controlConfig):  # {{{
         '''
         Construct the analysis task.
 
@@ -515,8 +514,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -532,7 +531,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         parentTask.add_subtask(self)
 
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -572,8 +571,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         for region in self.regionNames:
             filePrefix = 'moc{}_{}_years{:04d}-{:04d}'.format(
-                    region, mainRunName,
-                    self.startYear, self.endYear)
+                region, mainRunName,
+                self.startYear, self.endYear)
 
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
@@ -596,19 +595,19 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         depth, lat, moc = self._load_moc(config)
 
-        if self.refConfig is None:
+        if self.controlConfig is None:
             refTitle = None
             diffTitle = None
         else:
-            refDepth, refLat, refMOC = self._load_moc(self.refConfig)
-            refTitle = self.refConfig.get('runs', 'mainRunName')
-            diffTitle = 'Main - Reference'
+            refDepth, refLat, refMOC = self._load_moc(self.controlConfig)
+            refTitle = self.controlConfig.get('runs', 'mainRunName')
+            diffTitle = 'Main - Control'
 
         # **** Plot MOC ****
         # Define plotting variables
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePointsClimatological = config.getint(
-                self.sectionName, 'movingAveragePointsClimatological')
+            self.sectionName, 'movingAveragePointsClimatological')
         colorbarLabel = '[Sv]'
         xLabel = 'latitude [deg]'
         yLabel = 'depth [m]'
@@ -616,8 +615,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         for region in self.regionNames:
             self.logger.info('   Plot climatological {} MOC...'.format(region))
             title = '{} MOC (ANN, years {:04d}-{:04d})'.format(
-                     region, self.startYear,
-                     self.endYear)
+                region, self.startYear,
+                self.endYear)
             filePrefix = self.filePrefixes[region]
             figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
@@ -632,7 +631,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             indLat = np.logical_and(x >= minLat, x <= maxLat)
             x = x[indLat]
             regionMOC = regionMOC[:, indLat]
-            if self.refConfig is None:
+            if self.controlConfig is None:
                 refRegionMOC = None
                 diff = None
             else:
@@ -643,28 +642,28 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 temp = np.zeros((refNz, nx))
                 for zIndex in range(refNz):
                     temp[zIndex, :] = np.interp(
-                            x, refLat[region], refMOC[region][zIndex, :],
-                            left=np.nan, right=np.nan)
+                        x, refLat[region], refMOC[region][zIndex, :],
+                        left=np.nan, right=np.nan)
                 refRegionMOC = np.zeros((nz, nx))
                 for xIndex in range(nx):
                     refRegionMOC[:, xIndex] = np.interp(
-                            depth, refDepth, temp[:, xIndex],
-                            left=np.nan, right=np.nan)
+                        depth, refDepth, temp[:, xIndex],
+                        left=np.nan, right=np.nan)
 
                 diff = regionMOC - refRegionMOC
 
             plot_vertical_section_comparison(
-                    config, x, z, regionMOC, refRegionMOC, diff,
-                    fileout=figureName,
-                    colorMapSectionName='streamfunctionMOC{}'.format(region),
-                    cbarLabel=colorbarLabel,
-                    title=title,
-                    modelTitle=mainRunName,
-                    refTitle=refTitle,
-                    diffTitle=diffTitle,
-                    xlabel=xLabel,
-                    ylabel=yLabel,
-                    N=movingAveragePointsClimatological)
+                config, x, z, regionMOC, refRegionMOC, diff,
+                fileout=figureName,
+                colorMapSectionName='streamfunctionMOC{}'.format(region),
+                cbarLabel=colorbarLabel,
+                title=title,
+                modelTitle=mainRunName,
+                refTitle=refTitle,
+                diffTitle=diffTitle,
+                xlabel=xLabel,
+                ylabel=yLabel,
+                N=movingAveragePointsClimatological)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
             write_image_xml(
@@ -679,7 +678,6 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 imageCaption=caption)  # }}}
 
     def _load_moc(self, config):  # {{{
-
         '''compute mean MOC streamfunction from analysis member'''
 
         startYear = config.getint('climatology', 'startYear')
@@ -691,8 +689,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         make_directories(outputDirectory)
 
         inputFileName = '{}/mocStreamfunction_years{:04d}-{:04d}.nc'.format(
-                           outputDirectory, startYear,
-                           endYear)
+            outputDirectory, startYear,
+            endYear)
 
         # Read from file
         ncFile = netCDF4.Dataset(inputFileName, mode='r')
@@ -737,7 +735,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             componentName=parentTask.componentName,
             tags=parentTask.tags,
             subtaskName='computeMOCTimeSeries_{:04d}-{:04d}'.format(
-                    startYear, endYear))
+                startYear, endYear))
 
         parentTask.add_subtask(self)
         self.startYear = startYear
@@ -773,7 +771,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.sectionName = 'streamfunctionMOC'
 
         self.usePostprocessing = config.getExpression(
-                self.sectionName, 'usePostprocessingScript')
+            self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
             self.variableList = \
@@ -787,8 +785,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             self.includeBolus = self.namelist.getbool('config_use_standardgm')
             if self.includeBolus:
                 self.variableList.extend(
-                        ['timeMonthly_avg_normalGMBolusVelocity',
-                         'timeMonthly_avg_vertGMBolusVelocityTop'])
+                    ['timeMonthly_avg_normalGMBolusVelocity',
+                     'timeMonthly_avg_vertGMBolusVelocityTop'])
         # }}}
 
     def run_task(self):  # {{{
@@ -814,7 +812,6 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def _compute_moc_time_series_analysismember(self):  # {{{
-
         '''compute MOC time series from analysis member'''
 
         # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
@@ -823,15 +820,15 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.logger.info('   Load data...')
 
         outputDirectory = '{}/moc/'.format(
-                build_config_full_path(self.config, 'output',
-                                       'timeseriesSubdirectory'))
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'))
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
         outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
-                outputDirectory, self.startYear, self.endYear)
+            outputDirectory, self.startYear, self.endYear)
 
         streamName = 'timeSeriesStatsMonthlyOutput'
 
@@ -863,8 +860,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         indlat26 = np.where(np.abs(dLat) == np.amin(np.abs(dLat)))
 
         inputFiles = sorted(self.historyStreams.readpath(
-                streamName, startDate=self.startDate,
-                endDate=self.endDate, calendar=self.calendar))
+            streamName, startDate=self.startDate,
+            endDate=self.endDate, calendar=self.calendar))
 
         years, months = get_files_year_month(inputFiles,
                                              self.historyStreams,
@@ -890,8 +887,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                 for inIndex in range(dsMOCIn.dims['Time']):
 
                     mask = np.logical_and(
-                            dsMOCIn.year[inIndex].values == years,
-                            dsMOCIn.month[inIndex].values == months)
+                        dsMOCIn.year[inIndex].values == years,
+                        dsMOCIn.month[inIndex].values == months)
 
                     outIndex = np.where(mask)[0][0]
 
@@ -953,7 +950,6 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def _compute_moc_time_series_postprocess(self):  # {{{
-
         '''compute MOC time series as a post-process'''
 
         config = self.config
@@ -964,21 +960,22 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.logger.info('   Load data...')
 
         outputDirectory = '{}/moc/'.format(
-                build_config_full_path(self.config, 'output',
-                                       'timeseriesSubdirectory'))
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'))
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
         outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
-                outputDirectory, self.startYear, self.endYear)
+            outputDirectory, self.startYear, self.endYear)
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = config.get('regions', 'regionMaskDirectory')
+        regionMaskDirectory = build_config_full_path(config, 'diagnostics',
+                                                     'regionMasksubDirectory')
         dictRegion = _build_region_mask_dict(['Atlantic'], regionMaskDirectory,
                                              mpasMeshName, self.logger)
         dictRegion = dictRegion['Atlantic']
@@ -988,7 +985,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         indRegion = dictRegion['indices']
         latBins = latCell[indRegion]
         latBins = np.arange(np.amin(latBins),
-                            np.amax(latBins)+latBinSize,
+                            np.amax(latBins) + latBinSize,
                             latBinSize)
         latAtlantic = latBins
         dLat = latAtlantic - 26.5
@@ -1001,8 +998,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         streamName = 'timeSeriesStatsMonthlyOutput'
         inputFiles = sorted(self.historyStreams.readpath(
-                streamName, startDate=self.startDate,
-                endDate=self.endDate, calendar=self.calendar))
+            streamName, startDate=self.startDate,
+            endDate=self.endDate, calendar=self.calendar))
 
         years, months = get_files_year_month(inputFiles,
                                              self.historyStreams,
@@ -1028,8 +1025,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                 for inIndex in range(dsMOCIn.dims['Time']):
 
                     mask = np.logical_and(
-                            dsMOCIn.year[inIndex].values == years,
-                            dsMOCIn.month[inIndex].values == months)
+                        dsMOCIn.year[inIndex].values == years,
+                        dsMOCIn.month[inIndex].values == months)
 
                     outIndex = np.where(mask)[0][0]
 
@@ -1131,8 +1128,8 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -1159,8 +1156,8 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
         outputDirectory = '{}/moc/'.format(
-                build_config_full_path(self.config, 'output',
-                                       'timeseriesSubdirectory'))
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'))
         try:
             os.makedirs(outputDirectory)
         except OSError:
@@ -1169,14 +1166,14 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         outputFileNames = []
         for startYear, endYear in zip(self.startYears, self.endYears):
             outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
-                    outputDirectory, startYear, endYear)
+                outputDirectory, startYear, endYear)
             outputFileNames.append(outputFileName)
 
         ds = xr.open_mfdataset(outputFileNames, concat_dim='Time',
                                decode_times=False)
 
         outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
-                outputDirectory, self.startYears[0], self.endYears[-1])
+            outputDirectory, self.startYears[0], self.endYears[-1])
         write_netcdf(ds, outputFileName)  # }}}
     # }}}
 
@@ -1189,7 +1186,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, refConfig):  # {{{
+    def __init__(self, parentTask, controlConfig):  # {{{
         '''
         Construct the analysis task.
 
@@ -1198,8 +1195,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -1215,7 +1212,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         parentTask.add_subtask(self)
 
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -1276,7 +1273,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.logger.info('   Plot time series of max Atlantic MOC at 26.5N...')
         xLabel = 'Time [years]'
         yLabel = '[Sv]'
-        title = 'Max Atlantic MOC at $26.5\degree$N\n {}'.format(mainRunName)
+        title = r'Max Atlantic MOC at $26.5\degree$N\n {}'.format(mainRunName)
         filePrefix = self.filePrefix
 
         figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -1298,14 +1295,14 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         lineWidths = [2]
         legendText = [mainRunName]
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
 
-            dsRefMOC = self._load_moc(self.refConfig)
+            dsRefMOC = self._load_moc(self.controlConfig)
             fields.append(dsRefMOC.mocAtlantic26)
             lineColors.append('r')
             lineWidths.append(2)
-            refRunName = self.refConfig.get('runs', 'mainRunName')
-            legendText.append(refRunName)
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
+            legendText.append(controlRunName)
 
         timeseries_analysis_plot(config, fields,
                                  movingAveragePoints, title,
@@ -1332,7 +1329,6 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def _load_moc(self, config):  # {{{
-
         '''compute mean MOC streamfunction from analysis member'''
 
         outputDirectory = build_config_full_path(config, 'output',
@@ -1342,7 +1338,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         endYear = config.getint('timeSeries', 'endYear')
 
         inputFileName = '{}/moc/mocTimeSeries_{:04d}-{:04d}.nc'.format(
-                outputDirectory, startYear, endYear)
+            outputDirectory, startYear, endYear)
 
         dsMOCTimeSeries = xr.open_dataset(inputFileName, decode_times=False)
         return dsMOCTimeSeries  # }}}
@@ -1364,13 +1360,13 @@ def _load_mesh(runStreams):  # {{{
     latCell = np.rad2deg(ncFile.variables['latCell'][:])
     ncFile.close()
     nVertLevels = len(refBottomDepth)
-    refTopDepth = np.zeros(nVertLevels+1)
-    refTopDepth[1:nVertLevels+1] = refBottomDepth[0:nVertLevels]
+    refTopDepth = np.zeros(nVertLevels + 1)
+    refTopDepth[1:nVertLevels + 1] = refBottomDepth[0:nVertLevels]
     refLayerThickness = np.zeros(nVertLevels)
     refLayerThickness[0] = refBottomDepth[0]
     refLayerThickness[1:nVertLevels] = \
         (refBottomDepth[1:nVertLevels] -
-         refBottomDepth[0:nVertLevels-1])
+         refBottomDepth[0:nVertLevels - 1])
 
     return dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
         refTopDepth, refLayerThickness
@@ -1417,7 +1413,6 @@ def _build_region_mask_dict(regionNames, regionMaskDirectory, mpasMeshName,
 def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
                        transectEdgeMaskSigns, nz, dvEdge,
                        refLayerThickness, horizontalVel):  # {{{
-
     '''compute mass transport across southern transect of ocean basin'''
 
     transportZEdge = np.zeros([nz, maxEdgesInTransect])
@@ -1436,16 +1431,15 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
 
 def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
                  velArea):  # {{{
-
     '''compute meridionally integrated MOC streamfunction'''
 
-    mocTop = np.zeros([np.size(latBins), nz+1])
-    mocTop[0, range(1, nz+1)] = transportZ.cumsum()
+    mocTop = np.zeros([np.size(latBins), nz + 1])
+    mocTop[0, range(1, nz + 1)] = transportZ.cumsum()
     for iLat in range(1, np.size(latBins)):
         indlat = np.logical_and(np.logical_and(
-                     regionCellMask == 1, latCell >= latBins[iLat-1]),
-                     latCell < latBins[iLat])
-        mocTop[iLat, :] = mocTop[iLat-1, :] + \
+            regionCellMask == 1, latCell >= latBins[iLat - 1]),
+            latCell < latBins[iLat])
+        mocTop[iLat, :] = mocTop[iLat - 1, :] + \
             velArea[indlat, :].sum(axis=0)
     # convert m^3/s to Sverdrup
     mocTop = mocTop * m3ps_to_Sv

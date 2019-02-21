@@ -455,7 +455,7 @@ class StreamsFile:
             # there is no date in the template, so we can't exclude any files
             # based on date
             return fileList
-        dateEndOffset = len(template) - (template.rfind('$')+2)
+        dateEndOffset = len(template) - (template.rfind('$') + 2)
 
         outFileList = []
         for fileName in fileList:

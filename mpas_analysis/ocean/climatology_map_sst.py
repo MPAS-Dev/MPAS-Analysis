@@ -16,7 +16,7 @@ import datetime
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -37,7 +37,7 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -49,8 +49,8 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -59,9 +59,9 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
         fieldName = 'sst'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSST, self).__init__(
-                config=config, taskName='climatologyMapSST',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapSST',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_activeTracers_temperature'
         iselValues = {'nVertLevels': 0}
@@ -96,7 +96,7 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
             if climStartYear < 1925:
                 period = 'pre-industrial'
             else:
@@ -104,35 +104,34 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
 
             refTitleLabel = \
                 'Observations (Hadley/OI, {} {:04d}-{:04d})'.format(
-                        period, climStartYear, climEndYear)
+                    period, climStartYear, climEndYear)
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/MODEL.SST.HAD187001-198110.OI198111-201203.nc".format(
-                    observationsDirectory)
+                "{}/MODEL.SST.HAD187001-198110.OI198111-201203_" \
+                "20180710.nc".format(observationsDirectory)
             refFieldName = 'sst'
             outFileLabel = 'sstHADOI'
             galleryName = 'Observations: Hadley-NOAA-OI'
 
             remapObservationsSubtask = RemapObservedSSTClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
             refFieldName = mpasFieldName
             outFileLabel = 'sst'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -141,21 +140,21 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    refConfig)
+                                                    controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='SST',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'$^o$C',
-                        imageCaption='Mean Sea Surface Temperature',
-                        galleryGroup='Sea Surface Temperature',
-                        groupSubtitle=None,
-                        groupLink='sst',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='SST',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'$^o$C',
+                    imageCaption='Mean Sea Surface Temperature',
+                    galleryGroup='Sea Surface Temperature',
+                    groupSubtitle=None,
+                    groupLink='sst',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}

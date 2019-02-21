@@ -48,12 +48,14 @@ class TestClimatology(TestCase):
         # Remove the directory after the test
         shutil.rmtree(self.test_dir)
 
-    def setup_config(self, autocloseFileLimitFraction=0.5,
-                     maxChunkSize=10000):
+    def setup_config(self, maxChunkSize=10000):
         config = MpasAnalysisConfigParser()
+
+        config.add_section('diagnostics')
+        config.set('diagnostics', 'baseDirectory', self.test_dir)
+        config.set('diagnostics', 'mappingSubdirectory', 'maps')
+
         config.add_section('input')
-        config.set('input', 'autocloseFileLimitFraction',
-                   str(autocloseFileLimitFraction))
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         config.set('input', 'mpasMeshName', 'QU240')
 
@@ -146,10 +148,8 @@ class TestClimatology(TestCase):
         defaultMappingFileName = '{}/{}'.format(self.test_dir, fileBase)
         explicitMappingFileName = '{}/{}'.format(explicitMappingPath, fileBase)
 
-        for mappingFileName, setName in [(defaultMappingFileName,  False),
+        for mappingFileName, setName in [(defaultMappingFileName, False),
                                          (explicitMappingFileName, True)]:
-            if setName:
-                config.set('input', 'mappingDirectory', explicitMappingPath)
 
             remapper = self.setup_mpas_remapper(config)
 
@@ -179,11 +179,8 @@ class TestClimatology(TestCase):
         defaultMappingFileName = '{}/{}'.format(self.test_dir, fileBase)
         explicitMappingFileName = '{}/{}'.format(explicitMappingPath, fileBase)
 
-        for mappingFileName, setName in [(defaultMappingFileName,  False),
+        for mappingFileName, setName in [(defaultMappingFileName, False),
                                          (explicitMappingFileName, True)]:
-
-            if setName:
-                config.set('input', 'mappingDirectory', explicitMappingPath)
 
             remapper = self.setup_obs_remapper(config, fieldName)
 

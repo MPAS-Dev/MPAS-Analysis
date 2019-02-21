@@ -23,7 +23,8 @@ import matplotlib.pyplot as plt
 
 from mpas_analysis.shared.climatology import climatology
 from mpas_analysis.shared.constants import constants
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    build_obs_path
 
 from mpas_analysis.shared.timekeeping.utility import datetime_to_days, \
     string_to_days_since_date
@@ -47,14 +48,14 @@ class IndexNino34(AnalysisTask):  # {{{
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    refConfig :  ``MpasAnalysisConfigParser``
-        Configuration options for a reference run (if any)
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
     '''
     # Authors
     # -------
     # Luke Van Roekel, Xylar Asay-Davis
 
-    def __init__(self, config, mpasTimeSeriesTask, refConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
         # {{{
         '''
         Construct the analysis task.
@@ -67,8 +68,8 @@ class IndexNino34(AnalysisTask):  # {{{
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -82,7 +83,7 @@ class IndexNino34(AnalysisTask):  # {{{
             tags=['timeSeries', 'index', 'nino', 'publicObs'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         self.run_after(mpasTimeSeriesTask)
 
@@ -116,7 +117,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         if regionToPlot not in ['nino3.4', 'nino3', 'nino4']:
             raise ValueError('Unexpectes El Nino Index region {}'.format(
-                    regionToPlot))
+                regionToPlot))
         ninoIndexNumber = regionToPlot[4:]
 
         self.xmlFileNames = []
@@ -158,17 +159,19 @@ class IndexNino34(AnalysisTask):  # {{{
 
         dataSource = config.get('indexNino34', 'observationData')
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', '{}Subdirectory'.format(fieldName))
+        observationsDirectory = build_obs_path(
+            config, 'ocean', '{}Subdirectory'.format(fieldName))
 
         # specify obsTitle based on data path
         # These are the only data sets supported
         if dataSource == 'HADIsst':
-            dataPath = "{}/HADIsst_nino34.nc".format(observationsDirectory)
+            dataPath = "{}/HADIsst_nino34_20180710.nc".format(
+                observationsDirectory)
             obsTitle = 'HADSST'
             refDate = '1870-01-01'
         elif dataSource == 'ERS_SSTv4':
-            dataPath = "{}/ERS_SSTv4_nino34.nc".format(observationsDirectory)
+            dataPath = "{}/ERS_SSTv4_nino34_20180710.nc".format(
+                observationsDirectory)
             obsTitle = 'ERS SSTv4'
             refDate = '1800-01-01'
         else:
@@ -199,7 +202,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Obs = dsObs.sst
 
         self.logger.info('  Compute El Nino {} Index...'.format(
-                ninoIndexNumber))
+            ninoIndexNumber))
         varName = self.variableList[0]
         regionSST = ds[varName].isel(nOceanRegions=regionIndex)
         nino34Main = self._compute_nino34_index(regionSST, calendar)
@@ -208,7 +211,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # nino34Obs = compute_nino34_index(dsObs.sst, calendar)
 
         self.logger.info(' Computing El Nino {} power spectra...'.format(
-                ninoIndexNumber))
+            ninoIndexNumber))
         spectraMain = self._compute_nino34_spectra(nino34Main)
 
         # Compute the observational spectra over the whole record
@@ -217,7 +220,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # Compute the observational spectra over the last 30 years for
         # comparison. Only saving the spectra
         subsetEndYear = 2016
-        if self.refConfig is None:
+        if self.controlConfig is None:
             subsetStartYear = 1976
         else:
             # make the subset the same length as the input data set
@@ -229,7 +232,7 @@ class IndexNino34(AnalysisTask):  # {{{
         nino34Subset = nino34Obs.sel(Time=slice(time_start, time_end))
         spectraSubset = self._compute_nino34_spectra(nino34Subset)
 
-        if self.refConfig is None:
+        if self.controlConfig is None:
             nino34s = [nino34Obs[2:-3], nino34Subset, nino34Main[2:-3]]
             titles = ['{} (Full Record)'.format(obsTitle),
                       '{} ({} - {})'.format(obsTitle, subsetStartYear,
@@ -238,45 +241,45 @@ class IndexNino34(AnalysisTask):  # {{{
             spectra = [spectraObs, spectraSubset, spectraMain]
         else:
             baseDirectory = build_config_full_path(
-                self.refConfig, 'output', 'timeSeriesSubdirectory')
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
             refFileName = '{}/{}.nc'.format(
-                    baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
+                baseDirectory, self.mpasTimeSeriesTask.fullTaskName)
 
             dsRef = open_mpas_dataset(
-                    fileName=refFileName,
-                    calendar=calendar,
-                    variableList=self.variableList)
+                fileName=refFileName,
+                calendar=calendar,
+                variableList=self.variableList)
 
             regionSSTRef = dsRef[varName].isel(nOceanRegions=regionIndex)
             nino34Ref = self._compute_nino34_index(regionSSTRef, calendar)
 
             nino34s = [nino34Subset, nino34Main[2:-3], nino34Ref[2:-3]]
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
             spectraRef = self._compute_nino34_spectra(nino34Ref)
 
             titles = ['{} ({} - {})'.format(obsTitle, subsetStartYear,
                                             subsetEndYear),
                       mainRunName,
-                      'Ref: {}'.format(refRunName)]
+                      'Control: {}'.format(controlRunName)]
             spectra = [spectraSubset, spectraMain, spectraRef]
 
         # Convert frequencies to period in years
         for s in spectra:
             s['period'] = \
-                1.0 / (constants.eps + s['f']*constants.sec_per_year)
+                1.0 / (constants.eps + s['f'] * constants.sec_per_year)
 
         self.logger.info(' Plot El Nino {} index and spectra...'.format(
-                ninoIndexNumber))
+            ninoIndexNumber))
 
         outFileName = '{}/nino{}_{}.png'.format(self.plotsDirectory,
                                                 ninoIndexNumber, mainRunName)
         self._nino34_timeseries_plot(
-                nino34s=nino34s,
-                title=u'El Niño {} Index'.format(ninoIndexNumber),
-                panelTitles=titles,
-                outFileName=outFileName)
+            nino34s=nino34s,
+            title=u'El Niño {} Index'.format(ninoIndexNumber),
+            panelTitles=titles,
+            outFileName=outFileName)
 
         self._write_xml(filePrefix='nino{}_{}'.format(ninoIndexNumber,
                                                       mainRunName),
@@ -287,10 +290,10 @@ class IndexNino34(AnalysisTask):  # {{{
                                                         ninoIndexNumber,
                                                         mainRunName)
         self._nino34_spectra_plot(
-                spectra=spectra,
-                title=u'El Niño {} power spectrum'.format(ninoIndexNumber),
-                panelTitles=titles,
-                outFileName=outFileName)
+            spectra=spectra,
+            title=u'El Niño {} power spectrum'.format(ninoIndexNumber),
+            panelTitles=titles,
+            outFileName=outFileName)
 
         self._write_xml(filePrefix='nino{}_spectra_{}'.format(ninoIndexNumber,
                                                               mainRunName),
@@ -394,7 +397,7 @@ class IndexNino34(AnalysisTask):  # {{{
                                     1.0 / constants.sec_per_month)
 
         # computes power spectra, smoothed with a weighted running mean
-        nwts = max(1, int(7*len(ninoIndex) / 1200))
+        nwts = max(1, int(7 * len(ninoIndex) / 1200))
         # verify window length is odd, if not, add 1
         if nwts % 2 == 0:
             nwts += 1
@@ -412,12 +415,12 @@ class IndexNino34(AnalysisTask):  # {{{
         # Uses Chi squared test
 
         r = self._autocorr(ninoIndex)[0, 1]
-        r2 = 2.*r
+        r2 = 2. * r
         rsq = r**2
 
         # In the temp2 variable, f is converted to give wavenumber, i.e.
         # 0,1,2,...,N/2
-        temp2 = r2*np.cos(2.*np.pi*f*constants.sec_per_month)
+        temp2 = r2 * np.cos(2. * np.pi * f * constants.sec_per_month)
         mkov = 1. / (1. + rsq - temp2)
 
         sum1 = np.sum(mkov)
@@ -425,13 +428,15 @@ class IndexNino34(AnalysisTask):  # {{{
         scale = sum2 / sum1
 
         df = 2. / (constants.tapcoef * sum(wgts**2))
-        xLow = stats.chi2.interval(0.95, df)[1]/df
-        xHigh = stats.chi2.interval(0.99, df)[1]/df
+        xLow = stats.chi2.interval(0.95, df)[1] / df
+        xHigh = stats.chi2.interval(0.99, df)[1] / df
 
         # return Spectra, 99% confidence level, 95% confidence level,
         #        and Red-noise fit
-        spectra = {'f': f, 'spectrum': pxxSmooth, 'conf99': mkov*scale*xHigh,
-                   'conf95': mkov*scale*xLow, 'redNoise': mkov*scale}
+        spectra = {'f': f, 'spectrum': pxxSmooth,
+                   'conf99': mkov * scale * xHigh,
+                   'conf95': mkov * scale * xLow,
+                   'redNoise': mkov * scale}
         return spectra
         # }}}
 
@@ -453,7 +458,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # -------
         # Luke Van Roekel
 
-        return np.corrcoef(np.array([x[0:len(x)-t], x[t:len(x)]]))  # }}}
+        return np.corrcoef(np.array([x[0:len(x) - t], x[t:len(x)]]))  # }}}
 
     def _running_mean(self, inputData, wgts):  # {{{
         """
@@ -477,8 +482,8 @@ class IndexNino34(AnalysisTask):  # {{{
         nt = len(inputData)
         sp = (len(wgts) - 1) // 2
         runningMean = inputData.copy()
-        for k in range(sp, nt-(sp+1)):
-            runningMean[k] = sum(wgts*inputData[k-sp:k+sp+1].values)
+        for k in range(sp, nt - (sp + 1)):
+            runningMean[k] = sum(wgts * inputData[k - sp:k + sp + 1].values)
 
         return runningMean  # }}}
 
@@ -563,7 +568,7 @@ class IndexNino34(AnalysisTask):  # {{{
                                                  xmax=periodMax))
 
         for plotIndex in range(3):
-            plt.subplot(3, 1, plotIndex+1)
+            plt.subplot(3, 1, plotIndex + 1)
 
             period = spectra[plotIndex]['period']
             for curveIndex in range(4):
@@ -573,7 +578,7 @@ class IndexNino34(AnalysisTask):  # {{{
             plt.xlim(10, 1)
 
             plt.legend(loc='upper right')
-            plt.ylim(0, 0.9*maxYval)
+            plt.ylim(0, 0.9 * maxYval)
 
             if panelTitles[plotIndex] is not None:
                 plt.title(panelTitles[plotIndex], **title_font)
@@ -592,7 +597,7 @@ class IndexNino34(AnalysisTask):  # {{{
         # }}}
 
     def _nino34_timeseries_plot(self, nino34s, title, panelTitles, outFileName,
-                                xlabel='Time (years)', ylabel='($\degree$C)',
+                                xlabel='Time (years)', ylabel=r'($\degree$C)',
                                 titleFontSize=None, figsize=(9, 21), dpi=None,
                                 maxXTicks=20, lineWidth=2):
         # {{{
@@ -651,7 +656,7 @@ class IndexNino34(AnalysisTask):  # {{{
             fig.suptitle(title, y=0.92, **title_font)
 
         for plotIndex in range(3):
-            plt.subplot(3, 1, plotIndex+1)
+            plt.subplot(3, 1, plotIndex + 1)
             index = nino34s[plotIndex].values
             time = nino34s[plotIndex].Time.values
             self._plot_nino_timeseries(index, time, xlabel, ylabel,
@@ -708,9 +713,9 @@ class IndexNino34(AnalysisTask):  # {{{
 
         y2 = np.zeros(nt)
 
-        plt.plot(time, 0.4*np.ones(nt), '--k',
+        plt.plot(time, 0.4 * np.ones(nt), '--k',
                  linewidth=lineWidth)
-        plt.plot(time, -0.4*np.ones(nt), '--k',
+        plt.plot(time, -0.4 * np.ones(nt), '--k',
                  linewidth=lineWidth)
         plt.fill_between(time, y1, y2, where=y1 > y2,
                          facecolor='red', interpolate=True, linewidth=0)

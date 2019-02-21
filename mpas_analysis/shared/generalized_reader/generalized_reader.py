@@ -145,36 +145,13 @@ def open_multifile_dataset(fileNames, calendar, config,
     kwargs = {'decode_times': False,
               'concat_dim': 'Time'}
 
-    autocloseFileLimitFraction = config.getfloat('input',
-                                                 'autocloseFileLimitFraction')
-
     # get the number of files that can be open at the same time.  We want the
     # "soft" limit because we'll get a crash if we exceed it.
     softLimit = resource.getrlimit(resource.RLIMIT_NOFILE)[0]
 
-    # use autoclose if we will use more than autocloseFileLimitFraction (50%
-    # by default) of the soft limit of open files
-    autoclose = len(fileNames) > softLimit*autocloseFileLimitFraction
-
-    try:
-        ds = xarray.open_mfdataset(fileNames,
-                                   preprocess=preprocess_partial,
-                                   autoclose=autoclose, **kwargs)
-    except TypeError as e:
-        if 'autoclose' in str(e):
-            if autoclose:
-                # This indicates that xarray version doesn't support autoclose
-                print('Warning: open_multifile_dataset is trying to use '
-                      'autoclose=True but\n'
-                      'it appears your xarray version doesn\'t support this '
-                      'argument. Will\n'
-                      'try again without autoclose argument.')
-
-            ds = xarray.open_mfdataset(fileNames,
-                                       preprocess=preprocess_partial,
-                                       **kwargs)
-        else:
-            raise e
+    ds = xarray.open_mfdataset(fileNames,
+                               preprocess=preprocess_partial,
+                               **kwargs)
 
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
@@ -200,9 +177,6 @@ def open_multifile_dataset(fileNames, calendar, config,
         chunking = config.getint('input', 'maxChunkSize')
 
     ds = mpas_xarray.process_chunking(ds, chunking)
-
-    # private record of autoclose use
-    ds.attrs['_autoclose'] = int(autoclose)
 
     return ds  # }}}
 

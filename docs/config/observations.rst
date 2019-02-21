@@ -1,17 +1,17 @@
 .. _config_observations:
 
-Ocean and Sea Ice Observations
-==============================
+Ocean, Sea Ice and Iceberg Observations
+=======================================
 
-The ``[oceanObservations]`` and ``[seaIceObservations]`` sections of a
-configuration file contain options used to point to the observations files and
-folders::
+The ``[oceanObservations]``, ``[seaIceObservations]`` and
+``[icebergObservations]`` sections of a configuration file contain options used
+to point to the observations files and folders::
 
   [oceanObservations]
   ## options related to ocean observations with which the results will be compared
 
   # directory where ocean observations are stored
-  baseDirectory = /dir/to/ocean/observations
+  obsSubdirectory = observations/Ocean
   sstSubdirectory = SST
   sssSubdirectory = SSS
   mldSubdirectory = MLD
@@ -43,7 +43,7 @@ folders::
   ## compared
 
   # directory where sea ice observations are stored
-  baseDirectory = /dir/to/seaice/observations
+  obsSubdirectory = observations/SeaIce
 
   # interpolation order for observations. Likely values are
   #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
@@ -58,17 +58,27 @@ folders::
   climatologySubdirectory = clim/obs
   remappedClimSubdirectory = clim/obs/remapped
 
+  ...
+
+  [icebergObservations]
+  ## options related to iceberg observations with which the results will be
+  ## compared
+
+  # directory where sea ice observations are stored
+  obsSubdirectory = observations/Icebergs
+  concentrationAltibergSH = Altiberg/Altiberg_1991-2017_20180308.nc
+
+
 Files and Directories
 ---------------------
 
-The input directories are specified through a base directory and either
-subdirectories or file names for each set of observations.  You will always
-need to set ``baseDirectory`` for both ocean and sea ice observation to
-a directory ending in ``observations/Ocean`` and ``observations/SeaIce``,
-respectively.  The rest of these paths is determined by where you downloaded
-the observationsal data from the `E3SM public data repository`_ (see the
-:ref:`quick_start` for details).  Typically, the subdirectories and individual
-files will not need to be changed except for debugging purposes.
+The input directories are specified through a "base" subdirectory
+``obsSubdirectory`` and either subdirectories or file names for each set of
+observations.  ``obsSubdirectory`` is relative to ``baseDirectory`` in the
+``diagnostics`` section, while all file paths and other subdirectories are
+relative to ``obsSubdirectory``.  You will typically not need to change any
+of these paths, since they are structured in a standard way following the
+ `E3SM public data repository`_ (see the :ref:`quick_start` for more details).
 
 The directories for storing cached datasets before and afer remapping
 (specified in ``climatologySubdirectory`` and ``remappedClimSubdirectory``)

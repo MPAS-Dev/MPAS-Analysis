@@ -1,5 +1,5 @@
 ### make single file from yearly Altiberg merged files
-### downloaded from 
+### downloaded from
 ### ftp://ftp.ifremer.fr/ifremer/cersat/projects/altiberg/v2/data/merged/grid/geographic/
 
 # make time record dimension
@@ -59,4 +59,4 @@ prod_latlon_merged_2014_timerec.nc \
 prod_latlon_merged_2015_timerec.nc \
 prod_latlon_merged_2016_timerec.nc \
 prod_latlon_merged_2017_timerec.nc \
--o Altiberg_1991-2017.nc
+-o Altiberg_1991-2017_20180308.nc

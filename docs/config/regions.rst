@@ -18,9 +18,6 @@ within MPAS-Analysis using region mask files::
   plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
                 'Nino 4', 'Nino 3.4', 'Global Ocean']
 
-  # Directory for region mask files
-  regionMaskDirectory = /path/to/masks/
-
 Region Names
 ------------
 
@@ -38,12 +35,19 @@ web page.
 Region Mask Files
 -----------------
 
-Currently, two analysis tasks (``streamfunctionMOC`` and
-``timeSeriesAntarcticMelt``) use masks that define regions in an MPAS mesh
-as part of their analysis.  ``regionMaskDirectory`` specifies the path to
-these mask files.  Region masks for common MPAS Ocean and Seaice grids are
-supplied as part of the data from the `E3SM public data repository`_ (see
-the :ref:`quick_start`).  The path should typically end with
-``mpas_analysis/maps``.
+Currently, three analysis tasks (``streamfunctionMOC``,
+``timeSeriesAntarcticMelt`` and ``oceanRegionalProfiles``) use masks that
+define regions in an MPAS mesh as part of their analysis.  The option
+``regionMaskSubdirectory`` specifies the path to these mask files, typically
+``diagnostics/mpas_analysis/region_masks``.  Region  masks for common MPAS
+Ocean and Seaice grids are supplied as part of the data from the
+`E3SM public data repository`_ (see the :ref:`quick_start`).
+
+If ice shelf or ocean basin masks for a given grid don't already exist in the
+cached mask location, they will be generated automatically from the associated
+geojson files (``iceShelves.geojson`` or ``oceanBasins.geojson``), a process
+that can be very time consuming.  To generate them in advance (possibly using
+threading to speed up the process), see the example utility script
+``utility/make_region_mask.py``
 
 .. _`E3SM public data repository`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/

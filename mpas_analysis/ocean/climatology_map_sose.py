@@ -28,7 +28,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 from mpas_analysis.ocean.remap_sose_climatology import RemapSoseClimatology
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 
 class ClimatologyMapSose(AnalysisTask):  # {{{
@@ -41,7 +41,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -53,8 +53,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -123,9 +123,9 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSose, self).__init__(
-                config=config, taskName='climatologyMapSose',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='climatologyMapSose',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -145,7 +145,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid '
                              'list of comparison grids'.format(
-                                     sectionName))
+                                 sectionName))
 
         if not numpy.any([field['3D'] for field in fields]):
             depths = None
@@ -189,43 +189,43 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
             else:
                 fieldDepths = None
 
-            if refConfig is None:
+            if controlConfig is None:
 
                 refTitleLabel = 'State Estimate (SOSE)'
 
-                observationsDirectory = build_config_full_path(
-                    config, 'oceanObservations', 'soseSubdirectory')
+                observationsDirectory = build_obs_path(
+                    config, 'ocean', 'soseSubdirectory')
 
                 obsFileName = \
                     '{}/SOSE_2005-2010_monthly_{}_6000.0x' \
-                    '6000.0km_10.0km_Antarctic_stereo.nc'.format(
-                            observationsDirectory, field['obsFilePrefix'])
+                    '6000.0km_10.0km_Antarctic_stereo_20180710.nc'.format(
+                        observationsDirectory, field['obsFilePrefix'])
                 refFieldName = field['obsFieldName']
                 outFileLabel = '{}SOSE'.format(fieldPrefix)
                 galleryName = 'State Estimate: SOSE'
                 diffTitleLabel = 'Model - State Estimate'
 
                 remapObsSubtask = RemapSoseClimatology(
-                        parentTask=self, seasons=seasons, fileName=obsFileName,
-                        outFilePrefix='{}SOSE'.format(refFieldName),
-                        fieldName=refFieldName,
-                        botFieldName=field['obsBotFieldName'],
-                        depths=fieldDepths,
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservations{}'.format(
-                                upperFieldPrefix))
+                    parentTask=self, seasons=seasons, fileName=obsFileName,
+                    outFilePrefix='{}SOSE'.format(refFieldName),
+                    fieldName=refFieldName,
+                    botFieldName=field['obsBotFieldName'],
+                    depths=fieldDepths,
+                    comparisonGridNames=comparisonGridNames,
+                    subtaskName='remapObservations{}'.format(
+                        upperFieldPrefix))
 
                 self.add_subtask(remapObsSubtask)
 
             else:
                 remapObsSubtask = None
-                refRunName = refConfig.get('runs', 'mainRunName')
-                galleryName = 'Ref: {}'.format(refRunName)
+                controlRunName = controlConfig.get('runs', 'mainRunName')
+                galleryName = 'Control: {}'.format(controlRunName)
                 refTitleLabel = galleryName
 
                 refFieldName = field['mpas']
                 outFileLabel = fieldPrefix
-                diffTitleLabel = 'Main - Reference'
+                diffTitleLabel = 'Main - Control'
 
             if field['3D']:
                 fieldDepths = depths
@@ -249,7 +249,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                             comparisonGridName=comparisonGridName,
                             remapMpasClimatologySubtask=remapMpasSubtask,
                             remapObsClimatologySubtask=remapObsSubtask,
-                            refConfig=refConfig,
+                            controlConfig=controlConfig,
                             depth=depth,
                             subtaskName=subtaskName)
 

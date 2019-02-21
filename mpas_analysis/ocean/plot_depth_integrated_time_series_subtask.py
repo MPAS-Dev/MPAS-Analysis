@@ -85,8 +85,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
-    refConfig : ``MpasAnalysisConfigParser``
-        The configuration options for the reference run (if any)
+    controlConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the control run (if any)
     """
     # Authors
     # -------
@@ -95,7 +95,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, yAxisLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
-                 groupLink, galleryName, subtaskName=None, refConfig=None):
+                 groupLink, galleryName, subtaskName=None, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -151,8 +151,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         subtaskName :  str, optional
             The name of the subtask (``plotTimeSeries<RegionName>`` by default)
 
-        refConfig : ``MpasAnalysisConfigParser``, optional
-            The configuration options for the reference run (if any)
+        controlConfig : ``MpasAnalysisConfigParser``, optional
+            The configuration options for the control run (if any)
         """
         # Authors
         # -------
@@ -178,7 +178,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.yAxisLabel = yAxisLabel
         self.sectionName = sectionName
 
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         # xml/html related variables
         self.thumbnailSuffix = thumbnailSuffix
@@ -207,19 +207,19 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         config = self.config
 
-        if self.refConfig is not None:
-            # we need to know what file to read from the reference run so
+        if self.controlConfig is not None:
+            # we need to know what file to read from the control run so
             # an absolute path won't work
             assert(not os.path.isabs(self.inFileName))
 
             baseDirectory = build_config_full_path(
-                self.refConfig, 'output', 'timeSeriesSubdirectory')
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
             self.refFileName = '{}/{}'.format(baseDirectory,
                                               self.inFileName)
 
         preprocessedReferenceRunName = config.get(
-                'runs', 'preprocessedReferenceRunName')
+            'runs', 'preprocessedReferenceRunName')
         if preprocessedReferenceRunName != 'None':
 
             assert(not os.path.isabs(self.inFileName))
@@ -233,7 +233,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 '{}/preprocessed/intermediate_{}'.format(baseDirectory,
                                                          self.inFileName)
             self.preprocessedFileName = '{}/preprocessed/{}'.format(
-                    baseDirectory, self.inFileName)
+                baseDirectory, self.inFileName)
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -248,7 +248,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                             self.regionName,
                                             mainRunName)
         self.xmlFileNames = ['{}/{}.xml'.format(
-                self.plotsDirectory, self.filePrefix)]
+            self.plotsDirectory, self.filePrefix)]
 
         return  # }}}
 
@@ -341,10 +341,10 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             legendText.append(legends[rangeIndex])
 
         preprocessedReferenceRunName = config.get(
-                'runs', 'preprocessedReferenceRunName')
+            'runs', 'preprocessedReferenceRunName')
         if preprocessedReferenceRunName != 'None':
             preprocessedInputDirectory = config.get(
-                    'oceanPreprocessedReference', 'baseDirectory')
+                'oceanPreprocessedReference', 'baseDirectory')
 
             self.logger.info('  Load in preprocessed reference data...')
             preprocessedFilePrefix = config.get(self.sectionName,
@@ -354,12 +354,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 preprocessedReferenceRunName)
 
             combine_time_series_with_ncrcat(
-                    inFilesPreprocessed, self.preprocessedIntermediateFileName,
-                    logger=self.logger)
+                inFilesPreprocessed, self.preprocessedIntermediateFileName,
+                logger=self.logger)
             dsPreprocessed = open_mpas_dataset(
-                    fileName=self.preprocessedIntermediateFileName,
-                    calendar=calendar,
-                    timeVariableNames='xtime')
+                fileName=self.preprocessedIntermediateFileName,
+                calendar=calendar,
+                timeVariableNames='xtime')
 
             yearStart = days_to_datetime(ds.Time.min(), calendar=calendar).year
             yearEnd = days_to_datetime(ds.Time.max(), calendar=calendar).year
@@ -411,7 +411,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 else:
                     self.logger.warning('Warning: Preprocessed variable {} '
                                         'not found. Skipping.'.format(
-                                                variableName))
+                                            variableName))
                     timeSeries.extend(None)
 
                 lineColors.append(color)
@@ -421,24 +421,26 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                 maxPoints.append(points[rangeIndex])
                 legendText.append(None)
 
-        if self.refConfig is not None:
+        if self.controlConfig is not None:
 
-            refRunName = self.refConfig.get('runs', 'mainRunName')
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
-            title = '{} \n {} (red)'.format(title, refRunName)
+            title = '{} \n {} (red)'.format(title, controlRunName)
 
-            self.logger.info('  Load ocean data from reference run...')
-            refStartYear = self.refConfig.getint('timeSeries', 'startYear')
-            refEndYear = self.refConfig.getint('timeSeries', 'endYear')
-            refStartDate = '{:04d}-01-01_00:00:00'.format(refStartYear)
-            refEndDate = '{:04d}-12-31_23:59:59'.format(refEndYear)
+            self.logger.info('  Load ocean data from control run...')
+            controlStartYear = self.controlConfig.getint('timeSeries',
+                                                         'startYear')
+            controlEndYear = self.controlConfig.getint('timeSeries',
+                                                       'endYear')
+            controlStartDate = '{:04d}-01-01_00:00:00'.format(controlStartYear)
+            controlEndDate = '{:04d}-12-31_23:59:59'.format(controlEndYear)
             dsRef = open_mpas_dataset(fileName=self.refFileName,
                                       calendar=calendar,
                                       variableList=[self.mpasFieldName,
                                                     'depth'],
                                       timeVariableNames=None,
-                                      startDate=refStartDate,
-                                      endDate=refEndDate)
+                                      startDate=controlStartDate,
+                                      endDate=controlEndDate)
             dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
 
             color = 'r'
@@ -485,7 +487,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             componentSubdirectory='ocean',
             galleryGroup=self.galleryGroup,
             groupLink=self.groupLink,
-            galleryName=self.galleryName,
+            gallery=self.galleryName,
             thumbnailDescription='{} {}'.format(self.regionName,
                                                 self.thumbnailSuffix),
             imageDescription=self.imageCaption,

@@ -1,16 +1,45 @@
 [runs]
-## options related to the run to be analyzed and reference runs to be
+## options related to the run to be analyzed and control runs to be
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = 20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
 
-# config file for a reference run to which this run will be compared.  The
+# config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
 # file, so that the relevant MPAS climatologies already exist and have been
 # remapped to the comparison grid.  Leave this option commented out if no
-# reference run is desired.
-# referenceRunConfigFile = /path/to/config/file
+# control run is desired.
+# controlRunConfigFile = /path/to/config/file
+
+# config file for a main run on which the analysis was already run to
+# completion.  The relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid and time series have been extracted.
+# Leave this option commented out if the analysis for the main run should be
+# performed.
+# mainRunConfigFile = /path/to/config/file
+
+[execute]
+## options related to executing parallel tasks
+
+# the number of parallel tasks (1 means tasks run in serial, the default)
+parallelTaskCount = 6
+
+# the parallelism mode in ncclimo ("serial" or "bck")
+# Set this to "bck" (background parallelism) if running on a machine that can
+# handle 12 simultaneous processes, one for each monthly climatology.
+ncclimoParallelMode = bck
+
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /lustre/atlas/proj-shared/cli115/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -20,11 +49,6 @@ baseDirectory = /lustre/atlas1/cli115/proj-shared/milena/ACME/simulations/201703
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-mappingDirectory = /lustre/atlas/proj-shared/cli115/diagnostics/mpas_analysis/mpas
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -99,25 +123,6 @@ endYear = 20
 # For valid statistics, index times should include at least 30 years
 startYear = 1
 endYear = 9999
-
-[oceanObservations]
-## options related to ocean observations with which the results will be compared
-
-# directory where ocean observations are stored
-baseDirectory = /lustre/atlas/proj-shared/cli115/diagnostics/observations/Ocean
-
-[seaIceObservations]
-## options related to sea ice observations with which the results will be
-## compared
-
-# directory where sea ice observations are stored
-baseDirectory = /lustre/atlas/proj-shared/cli115/diagnostics/observations/SeaIce
-
-[regions]
-## options related to ocean regions used in several analysis modules
-
-# Directory for region mask files
-regionMaskDirectory = /lustre/atlas/proj-shared/cli115/diagnostics/mpas_analysis/region_masks/
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning

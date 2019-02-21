@@ -120,19 +120,19 @@ class TestTimekeeping(TestCase):
             date1 = string_to_datetime('1996-01-15')
             delta = string_to_relative_delta('0005-00-00',
                                              calendar=calendar)
-            date2 = date1-delta
+            date2 = date1 - delta
             self.assertEqual(date2, string_to_datetime('1991-01-15'))
 
             date1 = string_to_datetime('1996-01-15')
             delta = string_to_relative_delta('0000-02-00',
                                              calendar=calendar)
-            date2 = date1-delta
+            date2 = date1 - delta
             self.assertEqual(date2, string_to_datetime('1995-11-15'))
 
             date1 = string_to_datetime('1996-01-15')
             delta = string_to_relative_delta('0000-00-20',
                                              calendar=calendar)
-            date2 = date1-delta
+            date2 = date1 - delta
             self.assertEqual(date2, string_to_datetime('1995-12-26'))
 
     def test_MpasRelativeDeltaOps(self):
@@ -173,8 +173,8 @@ class TestTimekeeping(TestCase):
 
         for calendar in ['gregorian', 'gregorian_noleap']:
 
-            delta1 = string_to_relative_delta('0000-01-00',  calendar=calendar)
-            delta2 = string_to_relative_delta('0000-00-01',  calendar=calendar)
+            delta1 = string_to_relative_delta('0000-01-00', calendar=calendar)
+            delta2 = string_to_relative_delta('0000-00-01', calendar=calendar)
             deltaSum = string_to_relative_delta('0000-01-01',
                                                 calendar=calendar)
             # test MpasRelativeDelta + MpasRelativeDelta
@@ -185,7 +185,7 @@ class TestTimekeeping(TestCase):
             # test MpasRelativeDelta(date1, date2)
             date1 = string_to_datetime('0002-02-02')
             date2 = string_to_datetime('0001-01-01')
-            delta = string_to_relative_delta('0001-01-01',  calendar=calendar)
+            delta = string_to_relative_delta('0001-01-01', calendar=calendar)
             self.assertEqual(MpasRelativeDelta(dt1=date1, dt2=date2,
                                                calendar=calendar),
                              delta)
@@ -193,15 +193,15 @@ class TestTimekeeping(TestCase):
             # test MpasRelativeDelta + datetime.datetime (an odd order but
             # it's allowed...)
             date1 = string_to_datetime('0001-01-01')
-            delta = string_to_relative_delta('0001-01-01',  calendar=calendar)
+            delta = string_to_relative_delta('0001-01-01', calendar=calendar)
             date2 = string_to_datetime('0002-02-02')
             self.assertEqual(delta + date1, date2)
 
             # test multiplication/division by scalars
-            delta1 = string_to_relative_delta('0001-01-01',  calendar=calendar)
-            delta2 = string_to_relative_delta('0002-02-02',  calendar=calendar)
-            self.assertEqual(2*delta1, delta2)
-            self.assertEqual(delta2/2, delta1)
+            delta1 = string_to_relative_delta('0001-01-01', calendar=calendar)
+            delta2 = string_to_relative_delta('0002-02-02', calendar=calendar)
+            self.assertEqual(2 * delta1, delta2)
+            self.assertEqual(delta2 / 2, delta1)
 
         # make sure there's an error when we try to add MpasRelativeDeltas
         # with different calendars

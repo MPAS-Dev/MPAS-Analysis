@@ -16,6 +16,7 @@ options that are most commonly modified.
 
    config/runs
    config/execute
+   config/diagnostics
    config/input
    config/output
    config/climatology

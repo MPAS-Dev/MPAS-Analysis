@@ -55,7 +55,7 @@ The following configuration options are available for this task::
   vertical = False
 
   # observations files
-  concentrationAltibergSH = Altiberg/Altiberg_1991-2017.nc
+  concentrationAltibergSH = Altiberg/Altiberg_1991-2017_20180308.nc
 
 The option ``minimumLatitude`` determines what the northernmost latitude (in
 degrees) included in the plot will be.  The option ``referenceLongitude``

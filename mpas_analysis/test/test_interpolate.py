@@ -83,9 +83,9 @@ class TestInterp(TestCase):
         # a square 61x61 cell map with 100 km resolution and
         xMax = 3000e3
         res = 100e3
-        nx = 2*int(xMax/res)+1
+        nx = 2 * int(xMax / res) + 1
         x = numpy.linspace(-xMax, xMax, nx)
-        meshName = '{}km_Antarctic_stereo'.format(int(res*1e-3))
+        meshName = '{}km_Antarctic_stereo'.format(int(res * 1e-3))
         descriptor = ProjectionGridDescriptor.create(projection, x, x,
                                                      meshName)
         return descriptor

@@ -80,12 +80,12 @@ class Remapper(object):
             raise TypeError("sourceDescriptor of type "
                             "PointCollectionDescriptor is not supported.")
         if not isinstance(sourceDescriptor,
-                          (MpasMeshDescriptor,  LatLonGridDescriptor,
+                          (MpasMeshDescriptor, LatLonGridDescriptor,
                            ProjectionGridDescriptor)):
             raise TypeError("sourceDescriptor is not of a recognized type.")
 
         if not isinstance(destinationDescriptor,
-                          (MpasMeshDescriptor,  LatLonGridDescriptor,
+                          (MpasMeshDescriptor, LatLonGridDescriptor,
                            ProjectionGridDescriptor,
                            PointCollectionDescriptor)):
             raise TypeError(
@@ -299,9 +299,9 @@ class Remapper(object):
 
         if isinstance(self.sourceDescriptor, LatLonGridDescriptor):
             regridArgs.extend(['--rgr lat_nm={}'.format(
-                                   self.sourceDescriptor.latVarName),
-                               '--rgr lon_nm={}'.format(
-                                   self.sourceDescriptor.lonVarName)])
+                self.sourceDescriptor.latVarName),
+                '--rgr lon_nm={}'.format(
+                self.sourceDescriptor.lonVarName)])
 
         if len(regridArgs) > 0:
             args.extend(['-R', ' '.join(regridArgs)])
@@ -483,8 +483,8 @@ class Remapper(object):
 
         self.frac_b = dsMapping['frac_b'].values
 
-        col = dsMapping['col'].values-1
-        row = dsMapping['row'].values-1
+        col = dsMapping['col'].values - 1
+        row = dsMapping['row'].values - 1
         S = dsMapping['S'].values
         self.matrix = csr_matrix((S, (row, col)), shape=(n_b, n_a))
 
@@ -600,7 +600,7 @@ class Remapper(object):
                   renormalizationThreshold is not None)
         if masked:
             inMask = numpy.array(numpy.logical_not(inField.mask), float)
-            outField = self.matrix.dot(inMask*inField)
+            outField = self.matrix.dot(inMask * inField)
             outMask = self.matrix.dot(inMask)
             mask = outMask > renormalizationThreshold
         else:

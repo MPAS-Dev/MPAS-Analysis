@@ -5,12 +5,19 @@
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = 20180514.G.oQU240wLI.edison
 
-# config file for a reference run to which this run will be compared.  The
+# config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
 # file, so that the relevant MPAS climatologies already exist and have been
 # remapped to the comparison grid.  Leave this option commented out if no
-# reference run is desired.
-# referenceRunConfigFile = /path/to/config/file
+# control run is desired.
+# controlRunConfigFile = /path/to/config/file
+
+# config file for a main run on which the analysis was already run to
+# completion.  The relevant MPAS climatologies already exist and have been
+# remapped to the comparison grid and time series have been extracted.
+# Leave this option commented out if the analysis for the main run should be
+# performed.
+# mainRunConfigFile = /path/to/config/file
 
 [execute]
 ## options related to executing parallel tasks
@@ -22,6 +29,17 @@ parallelTaskCount = 8
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = bck
+
+[diagnostics]
+## config options related to observations, mapping files and region files used
+## by MPAS-Analysis in diagnostics computations.
+
+# The base path to the diagnostics directory.  Typically, this will be a shared
+# directory on each E3SM supported machine (see the example config files for
+# its location).  For other machines, this would be the directory pointed to
+# when running "download_analysis_data.py" to get the public observations,
+# mapping files and region files.
+baseDirectory = /global/project/projectdirs/acme/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -38,11 +56,6 @@ runSubdirectory = run
 oceanHistorySubdirectory = run
 # subdirectory for sea ice history files
 seaIceHistorySubdirectory = run
-
-# Directory for mapping files (if they have been generated already). If mapping
-# files needed by the analysis are not found here, they will be generated and
-# placed in the output mappingSubdirectory
-mappingDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/maps
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
@@ -88,7 +101,7 @@ htmlSubdirectory = html
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs']
+generate = ['all_woce']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
@@ -99,53 +112,21 @@ startYear = 4
 # the last year over which to average climatalogies
 endYear = 8
 
-[timeSeries]
-## options related to producing time series plots, often to compare against
-## observations and previous runs
+[transects]
+upperXAxisTickLabelPrecision = 1
+compareAsContoursOnSinglePlot = True
+labelContoursOnContourComparisonPlots = True
+contourLabelPrecision = 1
 
-# start and end years for timeseries analysis. Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
-startYear = 1
-endYear = 9999
+[woceTransects]
+verticalComparisonGridName = uniform_10_to_1000m_at_10m
+verticalComparisonGrid = numpy.linspace(-10, -1000, 10)
 
-[index]
-## options related to producing nino index.
+[woceTemperatureTransects]
+contourLevelsResult = np.arange(1.0, 18.0, 2.0)
 
-# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
-# For valid statistics, index times should include at least 30 years
-startYear = 1
-endYear = 9999
+[woceSalinityTransects]
+contourLevelsResult = np.arange(33.3, 36.0, 0.3)
 
-[oceanObservations]
-## options related to ocean observations with which the results will be compared
-
-# directory where ocean observations are stored
-baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/Ocean/
-
-[seaIceObservations]
-## options related to sea ice observations with which the results will be
-## compared
-
-# directory where sea ice observations are stored
-baseDirectory = /global/project/projectdirs/acme/diagnostics/observations/SeaIce
-
-[regions]
-## options related to ocean regions used in several analysis modules
-
-# Directory for region mask files
-regionMaskDirectory = /global/project/projectdirs/acme/diagnostics/mpas_analysis/region_masks
-
-[streamfunctionMOC]
-## options related to plotting the streamfunction of the meridional overturning
-## circulation (MOC)
-
-# Use postprocessing script to compute the MOC? You want this to be True
-# for low-resolution simulations that use GM to parameterize eddies, because
-# the online MOC analysis member currently does not include the bolus velocity
-# in its calculation, whereas the postprocessing script does.
-# NOTE: this is a temporary option that will be removed once the online
-# MOC takes into account the bolus velocity when GM is on.
-usePostprocessingScript = True
+[wocePotentialDensityTransects]
+contourLevelsResult = []

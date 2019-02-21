@@ -17,7 +17,7 @@ from mpas_analysis.ocean.compute_transects_subtask import \
 
 from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from collections import OrderedDict
 
@@ -31,7 +31,7 @@ class WoceTransects(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, refConfig=None):
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
 
         # {{{
         '''
@@ -47,8 +47,8 @@ class WoceTransects(AnalysisTask):  # {{{
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         '''
         # Authors
         # -------
@@ -58,9 +58,9 @@ class WoceTransects(AnalysisTask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super(WoceTransects, self).__init__(
-                config=config, taskName='woceTransects',
-                componentName='ocean',
-                tags=tags)
+            config=config, taskName='woceTransects',
+            componentName='ocean',
+            tags=tags)
 
         sectionName = self.taskName
 
@@ -75,28 +75,41 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = None
         else:
             verticalComparisonGrid = config.getExpression(
-                    sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
-        observationsDirectory = build_config_full_path(
-            config, 'oceanObservations', 'woceSubdirectory')
+        observationsDirectory = build_obs_path(
+            config, 'ocean', 'woceSubdirectory')
 
         obsFileNames = OrderedDict()
-        for transectName in ['WOCE_A21_Drake_Passage',
-                             'WOCE_A23_South_Atlantic',
-                             'WOCE_A12_Prime_Meridian']:
 
-            fileName = '{}/{}.nc'.format(observationsDirectory, transectName)
+        obsFileNames['WOCE_A21_Drake_Passage'] = \
+            'WOCE_A21_Drake_Passage_20181126.nc'
+        obsFileNames['WOCE_A23_South_Atlantic'] = \
+            'WOCE_A23_South_Atlantic_20181126.nc'
+        obsFileNames['WOCE_A12_Prime_Meridian'] = \
+            'WOCE_A12_Prime_Meridian_20181126.nc'
+
+        for transectName in obsFileNames:
+            fileName = '{}/{}'.format(observationsDirectory,
+                                      obsFileNames[transectName])
             obsFileNames[transectName] = fileName
 
         fields = \
             {'temperature':
                 {'mpas': 'timeMonthly_avg_activeTracers_temperature',
                  'obs': 'potentialTemperature',
+                 'titleName': 'Potential Temperature',
                  'units': r'$\degree$C'},
              'salinity':
                 {'mpas': 'timeMonthly_avg_activeTracers_salinity',
                  'obs': 'salinity',
-                 'units': r'PSU'}}
+                 'titleName': 'Salinity',
+                 'units': r'PSU'},
+             'potentialDensity':
+                {'mpas': 'timeMonthly_avg_potentialDensity',
+                 'obs': 'potentialDensity',
+                 'titleName': 'Potential Density',
+                 'units': r'kg m$^{-3}$'}}
 
         transectCollectionName = 'WOCE_transects'
         if horizontalResolution != 'obs':
@@ -118,7 +131,7 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGridName=verticalComparisonGridName,
             verticalComparisonGrid=verticalComparisonGrid)
 
-        plotObs = refConfig is None
+        plotObs = controlConfig is None
         if plotObs:
 
             refTitleLabel = 'Observations (WOCE)'
@@ -126,13 +139,14 @@ class WoceTransects(AnalysisTask):  # {{{
             diffTitleLabel = 'Model - Observations'
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         fieldNameDict = {'temperature': 'temperatureTransect',
-                         'salinity': 'salinityTransect'}
+                         'salinity': 'salinityTransect',
+                         'potentialDensity': 'potentialDensityTransect'}
 
         for fieldName in fields:
             for transectName in obsFileNames:
@@ -144,32 +158,33 @@ class WoceTransects(AnalysisTask):  # {{{
                         refFieldName = fields[fieldName]['mpas']
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
+                    titleName = fields[fieldName]['titleName']
                     fieldNameInTytle = '{} from {}'.format(
-                            fieldNameUpper,
-                            transectName.replace('_', ' '))
+                        titleName,
+                        transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
                                                   fieldName,
                                                   computeTransectsSubtask,
-                                                  plotObs, refConfig)
+                                                  plotObs, controlConfig)
 
                     subtask.set_plot_info(
-                            outFileLabel=outFileLabel,
-                            fieldNameInTitle=fieldNameInTytle,
-                            mpasFieldName=fields[fieldName]['mpas'],
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
-                            diffTitleLabel=diffTitleLabel,
-                            unitsLabel=fields[fieldName]['units'],
-                            imageCaption='{} {}'.format(fieldNameInTytle,
-                                                        season),
-                            galleryGroup='WOCE Transects',
-                            groupSubtitle=None,
-                            groupLink='woce',
-                            galleryName=fieldNameUpper,
-                            configSectionName='woce{}Transects'.format(
-                                    fieldNameUpper))
+                        outFileLabel=outFileLabel,
+                        fieldNameInTitle=fieldNameInTytle,
+                        mpasFieldName=fields[fieldName]['mpas'],
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
+                        unitsLabel=fields[fieldName]['units'],
+                        imageCaption='{} {}'.format(fieldNameInTytle,
+                                                    season),
+                        galleryGroup='WOCE Transects',
+                        groupSubtitle=None,
+                        groupLink='woce',
+                        galleryName=titleName,
+                        configSectionName='woce{}Transects'.format(
+                            fieldNameUpper))
 
                     self.add_subtask(subtask)
         # }}}

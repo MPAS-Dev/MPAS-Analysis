@@ -20,7 +20,7 @@ The following configuration options are available for this task::
   ## options related to plotting meridional heat transport (MHT)
 
   # Data source to read for comparison
-  observationData = mht_TrenberthCaron.NoAtm.nc
+  observationData = mht_TrenberthCaron.NoAtm_20180710.nc
 
   # colormap for model results
   colormapName = balance

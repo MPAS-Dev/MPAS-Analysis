@@ -12,17 +12,13 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
-import datetime
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
-
-from mpas_analysis.ocean.remap_depth_slices_subtask import \
-    RemapDepthSlicesSubtask
 
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
@@ -40,7 +36,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
     # Kevin Rosa
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -52,8 +48,8 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -104,17 +100,16 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
             iselValues=iselValues)
 
         # to compare to observations:
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = \
                 'Observations (Surface EKE from Drifter Data)'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/drifter_variance.nc".format(
+                "{}/drifter_variance_20180804.nc".format(
                     observationsDirectory)
             refFieldName = 'eke'
             outFileLabel = 'ekeDRIFTER'
@@ -130,13 +125,13 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         # compare with previous run:
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
             refFieldName = mpasFieldName
             outFileLabel = 'eke'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -145,7 +140,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    refConfig)
+                                                    controlConfig)
 
                 subtask.set_plot_info(
                     outFileLabel=outFileLabel,
@@ -206,10 +201,10 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
         # calculate mpas eddy kinetic energy
         scaleFactor = 100 * 100  # m2/s2 to cm2/s2
         eke = 0.5 * scaleFactor * \
-            (climatology.timeMonthly_avg_velocityZonalSquared
-            - climatology.timeMonthly_avg_velocityZonal ** 2
-            + climatology.timeMonthly_avg_velocityMeridionalSquared
-            - climatology.timeMonthly_avg_velocityMeridional ** 2)
+            (climatology.timeMonthly_avg_velocityZonalSquared -
+             climatology.timeMonthly_avg_velocityZonal ** 2 +
+             climatology.timeMonthly_avg_velocityMeridionalSquared -
+             climatology.timeMonthly_avg_velocityMeridional ** 2)
 
         # drop unnecessary fields before re-mapping
         climatology.drop(['timeMonthly_avg_velocityZonal',

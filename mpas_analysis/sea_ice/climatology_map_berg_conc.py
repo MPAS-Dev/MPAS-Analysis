@@ -19,7 +19,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 
@@ -34,7 +34,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
     # Darin Comeau, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -49,8 +49,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -61,9 +61,9 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
         fieldName = 'IcebergConc'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapIcebergConc, self).__init__(
-                config=config, taskName=taskName,
-                componentName='seaIce',
-                tags=['icebergs', 'climatology', 'horizontalMap', fieldName])
+            config=config, taskName=taskName,
+            componentName='seaIce',
+            tags=['icebergs', 'climatology', 'horizontalMap', fieldName])
 
         mpasFieldName = 'timeMonthly_avg_bergAreaCell'
         iselValues = None
@@ -100,29 +100,29 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
             refTitleLabel = 'Observations (Altiberg)'
             galleryName = 'Observations: Altiberg'
             diffTitleLabel = 'Model - Observations'
             refFieldName = 'icebergConc'
-            obsFileName = build_config_full_path(
-                    config, 'icebergObservations',
-                    'concentrationAltiberg{}'.format(hemisphere))
+            obsFileName = build_obs_path(
+                config, 'iceberg',
+                'concentrationAltiberg{}'.format(hemisphere))
 
             remapObservationsSubtask = RemapAltibergConcClimatology(
-                    parentTask=self, seasons=seasons,
-                    fileName=obsFileName,
-                    outFilePrefix='{}{}'.format(refFieldName,
-                                                hemisphere),
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons,
+                fileName=obsFileName,
+                outFilePrefix='{}{}'.format(refFieldName,
+                                            hemisphere),
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
 
         else:
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
             refFieldName = mpasFieldName
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
             remapObservationsSubtask = None
 
@@ -135,28 +135,28 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
                 imageCaption = imageDescription
                 galleryGroup = \
                     '{}-Hemisphere Iceberg Concentration'.format(
-                            hemisphereLong)
+                        hemisphereLong)
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
-                        self, hemisphere, season, comparisonGridName,
-                        remapClimatologySubtask, remapObservationsSubtask,
-                        refConfig)
+                    self, hemisphere, season, comparisonGridName,
+                    remapClimatologySubtask, remapObservationsSubtask,
+                    controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel='bergconc{}'.format(hemisphere),
-                        fieldNameInTitle='Iceberg concentration',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'fraction',
-                        imageDescription=imageDescription,
-                        imageCaption=imageCaption,
-                        galleryGroup=galleryGroup,
-                        groupSubtitle=None,
-                        groupLink='{}_conc'.format(hemisphere.lower()),
-                        galleryName=galleryName,
-                        maskValue=None)
+                    outFileLabel='bergconc{}'.format(hemisphere),
+                    fieldNameInTitle='Iceberg concentration',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'fraction',
+                    imageDescription=imageDescription,
+                    imageCaption=imageCaption,
+                    galleryGroup=galleryGroup,
+                    groupSubtitle=None,
+                    groupLink='{}_conc'.format(hemisphere.lower()),
+                    galleryName=galleryName,
+                    maskValue=None)
 
                 self.add_subtask(subtask)
 

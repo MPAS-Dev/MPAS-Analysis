@@ -34,7 +34,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refYearClimatolgyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -50,8 +50,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -60,9 +60,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         fieldName = 'deltaOHC'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapOHCAnomaly, self).__init__(
-                config=config, taskName='climatologyMapOHCAnomaly',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapOHCAnomaly',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         sectionName = self.taskName
 
@@ -107,43 +107,43 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
 
             outFileLabel = 'deltaOHC_{}'.format(depthRangeString)
             remapObservationsSubtask = None
-            if refConfig is None:
+            if controlConfig is None:
                 refTitleLabel = None
                 refFieldName = None
                 diffTitleLabel = 'Model - Observations'
 
             else:
-                refRunName = refConfig.get('runs', 'mainRunName')
-                refTitleLabel = 'Ref: {}'.format(refRunName)
+                controlRunName = controlConfig.get('runs', 'mainRunName')
+                refTitleLabel = 'Control: {}'.format(controlRunName)
                 refFieldName = mpasFieldName
-                diffTitleLabel = 'Main - Reference'
+                diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
                     # make a new subtask for this season and comparison grid
                     subtaskName = 'plot{}_{}_{}'.format(
-                            season, comparisonGridName, depthRangeString)
+                        season, comparisonGridName, depthRangeString)
 
                     subtask = PlotClimatologyMapSubtask(
-                            self, season, comparisonGridName,
-                            remapClimatologySubtask, remapObservationsSubtask,
-                            refConfig, subtaskName=subtaskName)
+                        self, season, comparisonGridName,
+                        remapClimatologySubtask, remapObservationsSubtask,
+                        controlConfig, subtaskName=subtaskName)
 
                     subtask.set_plot_info(
-                            outFileLabel=outFileLabel,
-                            fieldNameInTitle=r'$\Delta$OHC over {}'.format(
-                                    depthRangeString),
-                            mpasFieldName=mpasFieldName,
-                            refFieldName=refFieldName,
-                            refTitleLabel=refTitleLabel,
-                            diffTitleLabel=diffTitleLabel,
-                            unitsLabel=r'GJ m$^{-2}$',
-                            imageCaption='Anomaly in Ocean Heat Content over '
-                                         '{}'.format(depthRangeString),
-                            galleryGroup='OHC Anomaly',
-                            groupSubtitle=None,
-                            groupLink='ohc_anom',
-                            galleryName=None)
+                        outFileLabel=outFileLabel,
+                        fieldNameInTitle=r'$\Delta$OHC over {}'.format(
+                            depthRangeString),
+                        mpasFieldName=mpasFieldName,
+                        refFieldName=refFieldName,
+                        refTitleLabel=refTitleLabel,
+                        diffTitleLabel=diffTitleLabel,
+                        unitsLabel=r'GJ m$^{-2}$',
+                        imageCaption='Anomaly in Ocean Heat Content over '
+                        '{}'.format(depthRangeString),
+                        galleryGroup='OHC Anomaly',
+                        groupSubtitle=None,
+                        groupLink='ohc_anom',
+                        galleryName=None)
 
                     self.add_subtask(subtask)
         # }}}
@@ -211,13 +211,13 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         # Xylar Asay-Davis
 
         subtaskName = 'remapMpasClimatology_{:g}-{:g}m'.format(
-                numpy.abs(minDepth), numpy.abs(maxDepth))
+            numpy.abs(minDepth), numpy.abs(maxDepth))
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
         super(RemapMpasOHCClimatology, self).__init__(
-                 mpasClimatologyTask, parentTask, climatologyName,
-                 variableList, seasons, comparisonGridNames,
-                 subtaskName=subtaskName)
+            mpasClimatologyTask, parentTask, climatologyName,
+            variableList, seasons, comparisonGridNames,
+            subtaskName=subtaskName)
 
         self.refYearClimatolgyTask = refYearClimatolgyTask
         self.run_after(refYearClimatolgyTask)
@@ -283,7 +283,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         climatology.deltaOHC.attrs['units'] = 'GJ m$^{-2}$'
         climatology.deltaOHC.attrs['description'] = \
             'Anomaly from year {} in ocean heat content'.format(
-                    self.refYearClimatolgyTask.startYear)
+            self.refYearClimatolgyTask.startYear)
 
         climatology = climatology.drop(self.variableList)
 
@@ -310,7 +310,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
                             dsRestart.layerThickness)
 
         vertIndex = xarray.DataArray.from_dict(
-                {'dims': ('nVertLevels',), 'data': numpy.arange(nVertLevels)})
+            {'dims': ('nVertLevels',), 'data': numpy.arange(nVertLevels)})
 
         temperature = climatology['timeMonthly_avg_activeTracers_temperature']
         layerThickness = climatology['timeMonthly_avg_layerThickness']
@@ -322,7 +322,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
             temperature = temperature.where(mask)
             layerThickness = layerThickness.where(mask)
 
-        ohc = unitsScalefactor*rho*cp * layerThickness * temperature
+        ohc = unitsScalefactor * rho * cp * layerThickness * temperature
         ohc = ohc.sum(dim='nVertLevels')
         return ohc  # }}}
 

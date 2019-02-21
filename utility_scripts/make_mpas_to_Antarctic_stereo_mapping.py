@@ -29,7 +29,8 @@ from mpas_analysis.configuration import MpasAnalysisConfigParser
 inGridName = 'oQU240'
 
 # replace with the path to the desired mesh or restart file
-inGridFileName = '/media/xylar/extra_data/analysis/edison/G-QU240-master-intel/run/mpaso.rst.0001-01-06_00000.nc'
+inGridFileName = '/media/xylar/extra_data/analysis/edison/' \
+                 'G-QU240-master-intel/run/mpaso.rst.0001-01-06_00000.nc'
 
 config = MpasAnalysisConfigParser()
 config.read('mpas_analysis/config.default')

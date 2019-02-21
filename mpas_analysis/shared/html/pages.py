@@ -21,7 +21,7 @@ from collections import OrderedDict
 from mpas_analysis.shared.io.utility import build_config_full_path
 
 
-def generate_html(config, analyses, refConfig=None):  # {{{
+def generate_html(config, analyses, controlConfig=None):  # {{{
     """
     Generates webpages for diplaying the plots from each analysis task
 
@@ -36,8 +36,8 @@ def generate_html(config, analyses, refConfig=None):  # {{{
         the list of files to include on the webpage for the associated
         component.
 
-    refConfig : ``MpasAnalysisConfigParser``, optional
-        Config options for a reference run
+    controlConfig : ``MpasAnalysisConfigParser``, optional
+        Config options for a control run
 
     """
     # Authors
@@ -50,7 +50,7 @@ def generate_html(config, analyses, refConfig=None):  # {{{
 
     print("Generating webpage for viewing results...")
 
-    page = MainPage(config, refConfig)
+    page = MainPage(config, controlConfig)
 
     components = OrderedDict()
 
@@ -60,7 +60,7 @@ def generate_html(config, analyses, refConfig=None):  # {{{
         for fileName in analysisTask.xmlFileNames:
             try:
                 ComponentPage.add_image(fileName, config, components,
-                                        refConfig)
+                                        controlConfig)
             except IOError:
                 print('  missing file {}'.format(fileName))
                 missingCount += 1
@@ -94,8 +94,8 @@ class MainPage(object):
     config : ``MpasAnalysisConfigParser``
         Config options
 
-    refConfig : ``MpasAnalysisConfigParser``
-        Config options for a reference run
+    controlConfig : ``MpasAnalysisConfigParser``
+        Config options for a control run
 
     pageTemplate, componentTemplate : str
         The contents of templates used to construct the page
@@ -108,7 +108,7 @@ class MainPage(object):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, refConfig=None):
+    def __init__(self, config, controlConfig=None):
         """
         Create a MainPage object, reading in the templates
 
@@ -117,15 +117,15 @@ class MainPage(object):
         config : ``MpasAnalysisConfigParser``
             Config options
 
-        refConfig : ``MpasAnalysisConfigParser``, optional
-            Config options for a reference run
+        controlConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a control run
         """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         self.config = config
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
 
         # get template text
         fileName = \
@@ -181,11 +181,11 @@ class MainPage(object):
 
         runName = self.config.get('runs', 'mainRunName')
 
-        if self.refConfig is None:
-            refRunText = ''
+        if self.controlConfig is None:
+            controlRunText = ''
         else:
-            refRunText = '<br> Ref: {}'.format(
-                    self.refConfig.get('runs', 'mainRunName'))
+            controlRunText = '<br> Control: {}'.format(
+                self.controlConfig.get('runs', 'mainRunName'))
 
         componentsText = ''
 
@@ -202,7 +202,7 @@ class MainPage(object):
                 _replace_tempate_text(self.componentTemplate, replacements)
 
         replacements = {'@runName': runName,
-                        '@refRunText': refRunText,
+                        '@controlRunText': controlRunText,
                         '@components': componentsText}
 
         pageText = _replace_tempate_text(self.pageTemplate, replacements)
@@ -220,8 +220,8 @@ class MainPage(object):
 
         with open(outFileName, mode='w') as mainFile:
             mainFile.write(
-                    pageText.encode('ascii',
-                                    'xmlcharrefreplace').decode('ascii'))
+                pageText.encode('ascii',
+                                'xmlcharrefreplace').decode('ascii'))
 
         # copy the css and js files as well as general images
         fileName = \
@@ -259,8 +259,8 @@ class ComponentPage(object):
     config : ``MpasAnalysisConfigParser``
         Config options
 
-    refConfig : ``MpasAnalysisConfigParser``
-        Config options for a reference run
+    controlConfig : ``MpasAnalysisConfigParser``
+        Config options for a control run
 
     name : str
         The name of the component as it should appear in the list of
@@ -281,7 +281,7 @@ class ComponentPage(object):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, name, subdirectory, refConfig=None):
+    def __init__(self, config, name, subdirectory, controlConfig=None):
         """
         Create a ComponentPage object, reading in the templates
 
@@ -298,15 +298,15 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
-        refConfig : ``MpasAnalysisConfigParser``, optional
-            Config options for a reference run
+        controlConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a control run
         """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         self.config = config
-        self.refConfig = refConfig
+        self.controlConfig = controlConfig
         self.name = name
         self.subdirectory = subdirectory
 
@@ -321,8 +321,8 @@ class ComponentPage(object):
 
             # get template text
             fileName = pkg_resources.resource_filename(
-                    __name__,
-                    "templates/component_{}.html".format(templateName))
+                __name__,
+                "templates/component_{}.html".format(templateName))
 
             with open(fileName, 'r') as templateFile:
                 self.templates[templateName] = templateFile.read()
@@ -331,7 +331,7 @@ class ComponentPage(object):
         self.groups = OrderedDict()
 
     @staticmethod
-    def add_image(xmlFileName, config, components, refConfig=None):
+    def add_image(xmlFileName, config, components, controlConfig=None):
         """
         Add the image to the appropriate component.  Note: this is a static
         method because we do not know which component to add the image to
@@ -351,8 +351,8 @@ class ComponentPage(object):
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
 
-        refConfig : ``MpasAnalysisConfigParser``, optional
-            Config options for a reference run
+        controlConfig : ``MpasAnalysisConfigParser``, optional
+            Config options for a control run
         """
         # Authors
         # -------
@@ -364,7 +364,7 @@ class ComponentPage(object):
                                                              'componentName',
                                                              xmlFileName)
         componentSubdirectory = ComponentPage._get_required_xml_text(
-                xmlRoot, 'componentSubdirectory', xmlFileName)
+            xmlRoot, 'componentSubdirectory', xmlFileName)
 
         imageFileName = ComponentPage._get_required_xml_text(xmlRoot,
                                                              'imageFileName',
@@ -379,7 +379,7 @@ class ComponentPage(object):
         if componentName not in components:
             components[componentName] = ComponentPage(config, componentName,
                                                       componentSubdirectory,
-                                                      refConfig)
+                                                      controlConfig)
 
         component = components[componentName]
 
@@ -427,11 +427,11 @@ class ComponentPage(object):
 
         runName = self.config.get('runs', 'mainRunName')
 
-        if self.refConfig is None:
-            refRunText = ''
+        if self.controlConfig is None:
+            controlRunText = ''
         else:
-            refRunText = '<br> Ref: {}'.format(
-                    self.refConfig.get('runs', 'mainRunName'))
+            controlRunText = '<br> Control: {}'.format(
+                self.controlConfig.get('runs', 'mainRunName'))
 
         quickLinkText = ''
         galleriesText = ''
@@ -443,7 +443,7 @@ class ComponentPage(object):
                 self._generate_group_text(groupName, groupDict)
 
         replacements = {'@runName': runName,
-                        '@refRunText': refRunText,
+                        '@controlRunText': controlRunText,
                         '@componentName': self.name,
                         '@quickLinks': quickLinkText,
                         '@galleries': galleriesText}
@@ -454,8 +454,8 @@ class ComponentPage(object):
 
         with open(outFileName, mode='w') as componentFile:
             componentFile.write(
-                    pageText.encode('ascii',
-                                    'xmlcharrefreplace').decode('ascii'))
+                pageText.encode('ascii',
+                                'xmlcharrefreplace').decode('ascii'))
 
     def get_first_image(self):
         """

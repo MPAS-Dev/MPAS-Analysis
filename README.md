@@ -19,7 +19,7 @@ used those components.
 MPAS-Analysis is available as an anaconda package via the `e3sm` channel:
 
 ``` bash
-conda install -c conda-forge -c e3sm mpas_analysis
+conda create -n mpas_analysis -c conda-forge -c e3sm mpas_analysis
 ```
 
 To use the latest version for developers, you will need to set up a conda
@@ -27,12 +27,12 @@ environment with the following packages:
 
  * numpy
  * scipy
- * matplotlib
+ * matplotlib >= 3.2.0
  * netCDF4
  * xarray >= 0.10.0
  * dask
  * bottleneck
- * basemap
+ * basemap < 1.2.0 | > 1.2.0
  * lxml
  * nco >= 4.7.0
  * pyproj
@@ -45,9 +45,9 @@ environment with the following packages:
 
 These can be installed via the conda command:
 ``` bash
-conda install -c conda-forge numpy scipy matplotlib netCDF4 xarray dask \
-    bottleneck basemap lxml nco pyproj pillow cmocean progressbar2 requests \
-    setuptools shapely
+conda create -n mpas_analysis -c conda-forge numpy scipy matplotlib netCDF4 \
+    xarray dask bottleneck "basemap<1.2.0|>1.2.0" lxml nco pyproj pillow \
+    cmocean progressbar2 requests setuptools shapely
 ```
 
 Then, get the code from:
@@ -60,16 +60,16 @@ If you installed the `mpas_analysis` package, download the data that is
 necessary to MPAS-Analysis by running:
 
 ``` bash
-download_analysis_data -o /path/to/output/directory
+download_analysis_data -o /path/to/mpas_analysis/diagnostics
 ```
 
 If you are using the git repository, run:
 
 ``` bash
-./download_analysis_data.py -o /path/to/output/directory
+./download_analysis_data.py -o /path/to/mpas_analysis/diagnostics
 ```
 
-where `/path/to/output/directory` is the main folder that will contain
+where `/path/to/mpas_analysis/diagnostics` is the main folder that will contain
 two subdirectories:
 
 * `mpas_analysis`, which includes mapping and region mask files for
@@ -77,6 +77,10 @@ two subdirectories:
 * `observations`, which includes the pre-processed observations listed in the
   [Observations table](http://mpas-analysis.readthedocs.io/en/latest/observations.html)
   and used to evaluate the model results
+
+Once you have downloaded the analysis data, you will point to its location
+(your equivalent of `path/to/mpas_analysis/diagnostics` above) in the config
+option `baseDirectory` in the `[diagnostics]` section.
 
 ## List Analysis
 

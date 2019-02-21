@@ -26,7 +26,7 @@ from mpas_analysis.ocean.remap_depth_slices_subtask import \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
@@ -45,7 +45,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -57,8 +57,8 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -67,10 +67,10 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         fieldName = 'temperatureArgo'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoTemperature, self).__init__(
-                config=config, taskName='climatologyMapArgoTemperature',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', 'temperature',
-                      'publicObs'])
+            config=config, taskName='climatologyMapArgoTemperature',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', 'argo', 'temperature',
+                  'publicObs'])
 
         sectionName = self.taskName
 
@@ -109,40 +109,40 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = 'Roemmich-Gilson Argo Climatology: Potential ' \
                             'Temperature'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'argoSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'argoSubdirectory')
 
             obsFileName = \
-                '{}/ArgoClimatology_TS.nc'.format(
-                        observationsDirectory)
+                '{}/ArgoClimatology_TS_20180710.nc'.format(
+                    observationsDirectory)
             refFieldName = 'theta'
             outFileLabel = 'tempArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}Argo'.format(refFieldName),
-                    fieldName=refFieldName,
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix='{}Argo'.format(refFieldName),
+                fieldName=refFieldName,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames)
 
             self.add_subtask(remapObservationsSubtask)
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
-            galleryName = 'Ref: {}'.format(refRunName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            galleryName = 'Control: {}'.format(controlRunName)
             refTitleLabel = galleryName
 
             refFieldName = mpasFieldName
             outFileLabel = 'temp'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -153,7 +153,7 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
+                        controlConfig=controlConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
@@ -187,7 +187,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
     # Xylar Asay-Davis, Luke Van Roekel
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -199,8 +199,8 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -209,9 +209,9 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         fieldName = 'salinityArgo'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapArgoSalinity, self).__init__(
-                config=config, taskName='climatologyMapArgoSalinity',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', 'argo', 'salinity'])
+            config=config, taskName='climatologyMapArgoSalinity',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', 'argo', 'salinity'])
 
         sectionName = self.taskName
 
@@ -250,39 +250,39 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
             comparisonGridNames=comparisonGridNames,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = 'Roemmich-Gilson Argo Climatology: Salinity'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'argoSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'argoSubdirectory')
 
             obsFileName = \
-                '{}/ArgoClimatology_TS.nc'.format(
-                        observationsDirectory)
+                '{}/ArgoClimatology_TS_20180710.nc'.format(
+                    observationsDirectory)
             refFieldName = 'salinity'
             outFileLabel = 'salinArgo'
             galleryName = 'Roemmich-Gilson Climatology: Argo'
             diffTitleLabel = 'Model - Argo'
 
             remapObservationsSubtask = RemapArgoClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix='{}Argo'.format(refFieldName),
-                    fieldName=refFieldName,
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix='{}Argo'.format(refFieldName),
+                fieldName=refFieldName,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames)
 
             self.add_subtask(remapObservationsSubtask)
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
             refFieldName = mpasFieldName
             outFileLabel = 'salin'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -293,7 +293,7 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        refConfig=refConfig,
+                        controlConfig=controlConfig,
                         depth=depth)
 
                     subtask.set_plot_info(
@@ -374,8 +374,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         # call the constructor from the base class
         # (RemapObservedClimatologySubtask)
         super(RemapArgoClimatology, self).__init__(
-                parentTask, seasons, fileName, outFilePrefix,
-                comparisonGridNames, subtaskName)
+            parentTask, seasons, fileName, outFilePrefix,
+            comparisonGridNames, subtaskName)
         # }}}
 
     def get_observation_descriptor(self, fileName):  # {{{
@@ -446,10 +446,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         for depth in self.depths:
             if depth == 'top':
                 slices.append(field.sel(method='nearest', depth=0.).drop(
-                        'depth'))
+                    'depth'))
             else:
                 slices.append(field.sel(method='nearest', depth=depth).drop(
-                        'depth'))
+                    'depth'))
 
         depthNames = [str(depth) for depth in self.depths]
         field = xr.concat(slices, dim='depthSlice')

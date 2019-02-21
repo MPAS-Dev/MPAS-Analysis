@@ -67,7 +67,7 @@ class MpasRelativeDelta(relativedelta):
                                   seconds=self.seconds + other.seconds,
                                   calendar=self.calendar)
 
-        year = other.year+self.years
+        year = other.year + self.years
 
         month = other.month
         if self.months != 0:
@@ -91,10 +91,10 @@ class MpasRelativeDelta(relativedelta):
 
         days = self.days
         if self.calendar == 'gregorian_noleap' and isleap(year):
-            if month == 2 and day+days >= 29:
+            if month == 2 and day + days >= 29:
                 # skip forward over the leap day
                 days += 1
-            elif month == 3 and day+days <= 0:
+            elif month == 3 and day + days <= 0:
                 # skip backward over the leap day
                 days -= 1
 

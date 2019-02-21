@@ -15,7 +15,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -38,7 +38,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -50,8 +50,8 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -60,9 +60,9 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
         fieldName = 'ssh'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSSH, self).__init__(
-                config=config, taskName='climatologyMapSSH',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            config=config, taskName='climatologyMapSSH',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
 
         mpasFieldName = 'timeMonthly_avg_pressureAdjustedSSH'
 
@@ -95,38 +95,37 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = 'Observations (AVISO Dynamic ' \
                 'Topography, 1993-2010)'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations',
-                '{}Subdirectory'.format(fieldName))
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format(fieldName))
 
             obsFileName = \
-                "{}/zos_AVISO_L4_199210-201012.nc".format(
+                "{}/zos_AVISO_L4_199210-201012_20180710.nc".format(
                     observationsDirectory)
             refFieldName = 'zos'
             outFileLabel = 'sshAVISO'
             galleryName = 'Observations: AVISO'
 
             remapObservationsSubtask = RemapObservedSSHClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
             refFieldName = mpasFieldName
             outFileLabel = 'ssh'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -135,21 +134,22 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    refConfig, removeMean=True)
+                                                    controlConfig,
+                                                    removeMean=True)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='Zero-mean SSH',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'cm',
-                        imageCaption='Mean Sea Surface Height',
-                        galleryGroup='Sea Surface Height',
-                        groupSubtitle=None,
-                        groupLink='ssh',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='Zero-mean SSH',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'cm',
+                    imageCaption='Mean Sea Surface Height',
+                    galleryGroup='Sea Surface Height',
+                    groupSubtitle=None,
+                    groupLink='ssh',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}
@@ -252,6 +252,7 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs = dsObs.rename({'time': 'Time'})
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
+        dsObs = dsObs.drop(['Time', 'time_bnds'])
 
         # scale the field to cm from m
         dsObs['zos'] = constants.cm_per_m * dsObs['zos']

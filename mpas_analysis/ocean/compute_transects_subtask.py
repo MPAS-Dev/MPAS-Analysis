@@ -186,16 +186,16 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             transectNumber.extend(localIndices)
 
         self.transectNumber = xr.DataArray.from_dict(
-                {'dims': ('nPoints'),
-                 'data': transectNumber})
+            {'dims': ('nPoints'),
+             'data': transectNumber})
 
         self.x = xr.DataArray.from_dict(
-                {'dims': ('nPoints'),
-                 'data': x})
+            {'dims': ('nPoints'),
+             'data': x})
 
         self.collectionDescriptor = PointCollectionDescriptor(
-                lats, lons, collectionName=self.transectCollectionName,
-                units='degrees', outDimension='nPoints')
+            lats, lons, collectionName=self.transectCollectionName,
+            units='degrees', outDimension='nPoints')
 
         self.add_comparison_grid_descriptor(self.transectCollectionName,
                                             self.collectionDescriptor)
@@ -247,7 +247,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         for season in self.seasons:
 
             remappedFileName = self.get_remapped_file_name(
-                    season, comparisonGridName=self.transectCollectionName)
+                season, comparisonGridName=self.transectCollectionName)
 
             with xr.open_dataset(remappedFileName) as ds:
                 transectNames = list(obsDatasets.keys())
@@ -255,9 +255,9 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                     self.logger.info('  {}'.format(transectName))
                     dsObs = obsDatasets[transectName]
                     outFileName = self.get_remapped_file_name(
-                            season, comparisonGridName=transectName)
+                        season, comparisonGridName=transectName)
                     outObsFileName = self.obsDatasets.get_out_file_name(
-                            transectName, self.verticalComparisonGridName)
+                        transectName, self.verticalComparisonGridName)
                     self._vertical_interp(ds, transectIndex, dsObs,
                                           outFileName, outObsFileName)
                 ds.close()
@@ -289,8 +289,8 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         # Xylar Asay-Davis
 
         zIndex = xr.DataArray.from_dict(
-                {'dims': ('nVertLevels',),
-                 'data': numpy.arange(climatology.sizes['nVertLevels'])})
+            {'dims': ('nVertLevels',),
+             'data': numpy.arange(climatology.sizes['nVertLevels'])})
 
         cellMask = zIndex < self.maxLevelCell
 
@@ -383,14 +383,14 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             ds['z'] = z
             # remap each variable
             ds = interp_1d(ds, inInterpDim='nVertLevels', inInterpCoord='zMid',
-                           outInterpDim='nzOut',  outInterpCoord='z')
+                           outInterpDim='nzOut', outInterpCoord='z')
             ds = ds.rename({'nzOut': 'nz'})
 
         if self.verticalComparisonGridName != 'obs' and 'nz' in dsObs.dims:
             dsObs['zOut'] = z
             # remap each variable
             dsObs = interp_1d(dsObs, inInterpDim='nz', inInterpCoord='z',
-                              outInterpDim='nzOut',  outInterpCoord='zOut')
+                              outInterpDim='nzOut', outInterpCoord='zOut')
             dsObs = dsObs.rename({'nzOut': 'nz'})
             write_netcdf(dsObs, outObsFileName)
 
@@ -487,7 +487,7 @@ class TransectsObservations(object):  # {{{
                 dsObs.load()
             else:
                 dsObs = self.build_observational_dataset(
-                        self.obsFileNames[name], name)
+                    self.obsFileNames[name], name)
 
                 dsObs.load()
                 # make sure lat and lon are coordinates
@@ -612,16 +612,16 @@ class TransectsObservations(object):  # {{{
         dxIn = self._haversine(lon[0:-1], lat[0:-1], lon[1:], lat[1:])
 
         nSegments = numpy.maximum(
-                (dxIn/self.horizontalResolution + 0.5).astype(int), 1)
+            (dxIn / self.horizontalResolution + 0.5).astype(int), 1)
 
         xIn = numpy.zeros(lat.shape)
         xIn[1:] = numpy.cumsum(dxIn)
 
         outIndex = []
-        for index in range(len(xIn)-1):
+        for index in range(len(xIn) - 1):
             n = nSegments[index]
-            outIndex.extend(index + numpy.arange(0, n)/n)
-        outIndex.append(len(xIn)-1)
+            outIndex.extend(index + numpy.arange(0, n) / n)
+        outIndex.append(len(xIn) - 1)
 
         xOut = numpy.interp(outIndex, numpy.arange(len(xIn)), xIn)
 
@@ -651,8 +651,8 @@ class TransectsObservations(object):  # {{{
         # haversine formula
         dlon = lon2 - lon1
         dlat = lat2 - lat1
-        a = numpy.sin(dlat/2.)**2 + numpy.cos(lat1) * numpy.cos(lat2) * \
-            numpy.sin(dlon/2.)**2
+        a = numpy.sin(dlat / 2.)**2 + numpy.cos(lat1) * numpy.cos(lat2) * \
+            numpy.sin(dlon / 2.)**2
         c = 2 * numpy.arcsin(numpy.sqrt(a))
         r = 6371  # Radius of earth in kilometers. Use 3956 for miles
         return c * r  # }}}

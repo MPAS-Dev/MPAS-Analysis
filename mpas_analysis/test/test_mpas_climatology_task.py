@@ -61,16 +61,16 @@ class TestMpasClimatologyTask(TestCase):
 
     def setup_subtask(self, mpasClimatologyTask):
         parentTask = AnalysisTask(
-                config=mpasClimatologyTask.config, taskName='fake',
-                componentName=mpasClimatologyTask.componentName,
-                tags=['climatology'])
+            config=mpasClimatologyTask.config, taskName='fake',
+            componentName=mpasClimatologyTask.componentName,
+            tags=['climatology'])
         climatologyName = 'ssh'
         variableList = ['timeMonthly_avg_ssh']
         seasons = [mpasClimatologyTask.seasons[0]]
 
         remapSubtask = RemapMpasClimatologySubtask(
-                mpasClimatologyTask, parentTask, climatologyName,
-                variableList, seasons, comparisonGridNames=['latlon'])
+            mpasClimatologyTask, parentTask, climatologyName,
+            variableList, seasons, comparisonGridNames=['latlon'])
 
         remapSubtask.setup_and_check()
         return remapSubtask
@@ -186,7 +186,7 @@ class TestMpasClimatologyTask(TestCase):
             assert(os.path.exists(fileName))
 
             fileName = remapSubtask.get_remapped_file_name(
-                    season=season, comparisonGridName='latlon')
+                season=season, comparisonGridName='latlon')
             assert(os.path.exists(fileName))
 
     def test_subtask_get_file_name(self):
@@ -199,6 +199,6 @@ class TestMpasClimatologyTask(TestCase):
                'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))
 
         fileName = remapSubtask.get_remapped_file_name(
-                season='JFM', comparisonGridName='latlon')
+            season='JFM', comparisonGridName='latlon')
         assert(fileName == '{}/clim/mpas/remapped/ssh_oQU240_to_0.5x0.5degree/'
                'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))

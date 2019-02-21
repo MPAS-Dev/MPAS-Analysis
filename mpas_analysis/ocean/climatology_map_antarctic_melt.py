@@ -15,7 +15,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
@@ -40,7 +40,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 refConfig=None):  # {{{
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -52,8 +52,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        refConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a reference run (if any)
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -62,10 +62,10 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
         fieldName = 'meltRate'
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapAntarcticMelt, self).__init__(
-                config=config, taskName='climatologyMapAntarcticMelt',
-                componentName='ocean',
-                tags=['climatology', 'horizontalMap', fieldName,
-                      'landIceCavities'])
+            config=config, taskName='climatologyMapAntarcticMelt',
+            componentName='ocean',
+            tags=['climatology', 'horizontalMap', fieldName,
+                  'landIceCavities'])
 
         sectionName = self.taskName
 
@@ -97,13 +97,13 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             seasons=seasons,
             iselValues=iselValues)
 
-        if refConfig is None:
+        if controlConfig is None:
 
             refTitleLabel = \
                 'Observations (Rignot et al, 2013)'
 
-            observationsDirectory = build_config_full_path(
-                config, 'oceanObservations', 'meltSubdirectory')
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'meltSubdirectory')
 
             obsFileName = \
                 '{}/Rignot_2013_melt_rates_6000.0x6000.0km_10.0km_' \
@@ -113,21 +113,21 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             galleryName = 'Observations: Rignot et al. (2013)'
 
             remapObservationsSubtask = RemapObservedAntarcticMeltClimatology(
-                    parentTask=self, seasons=seasons, fileName=obsFileName,
-                    outFilePrefix=refFieldName,
-                    comparisonGridNames=comparisonGridNames)
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix=refFieldName,
+                comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
 
         else:
             remapObservationsSubtask = None
-            refRunName = refConfig.get('runs', 'mainRunName')
+            controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Ref: {}'.format(refRunName)
+            refTitleLabel = 'Control: {}'.format(controlRunName)
 
             refFieldName = mpasFieldName
             outFileLabel = 'melt'
-            diffTitleLabel = 'Main - Reference'
+            diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
@@ -136,21 +136,21 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                                                     comparisonGridName,
                                                     remapClimatologySubtask,
                                                     remapObservationsSubtask,
-                                                    refConfig)
+                                                    controlConfig)
 
                 subtask.set_plot_info(
-                        outFileLabel=outFileLabel,
-                        fieldNameInTitle='Melt Rate',
-                        mpasFieldName=mpasFieldName,
-                        refFieldName=refFieldName,
-                        refTitleLabel=refTitleLabel,
-                        diffTitleLabel=diffTitleLabel,
-                        unitsLabel=r'm a$^{-1}$',
-                        imageCaption='Antarctic Melt Rate',
-                        galleryGroup='Melt Rate',
-                        groupSubtitle=None,
-                        groupLink='antarctic_melt',
-                        galleryName=galleryName)
+                    outFileLabel=outFileLabel,
+                    fieldNameInTitle='Melt Rate',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'm a$^{-1}$',
+                    imageCaption='Antarctic Melt Rate',
+                    galleryGroup='Melt Rate',
+                    groupSubtitle=None,
+                    groupLink='antarctic_melt',
+                    galleryName=galleryName)
 
                 self.add_subtask(subtask)
         # }}}
@@ -242,7 +242,7 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
 
         # scale the field to m/yr from kg/m^2/s and mask out non-land-ice areas
         climatology[fieldName] = \
-            constants.sec_per_year/constants.rho_fw * \
+            constants.sec_per_year / constants.rho_fw * \
             climatology[fieldName].where(self.landIceMask)
 
         return climatology  # }}}

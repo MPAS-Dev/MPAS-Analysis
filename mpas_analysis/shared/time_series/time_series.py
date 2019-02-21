@@ -202,9 +202,9 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
     endYear = yearsInDataSet[-1]
 
     firstProcessed = True
-    for firstYear in range(startYear, endYear+1, yearsPerCacheUpdate):
-        years = range(firstYear, numpy.minimum(endYear+1,
-                                               firstYear+yearsPerCacheUpdate))
+    for firstYear in range(startYear, endYear + 1, yearsPerCacheUpdate):
+        years = range(firstYear, numpy.minimum(endYear + 1,
+                                               firstYear + yearsPerCacheUpdate))
 
         mask = numpy.zeros(len(yearsInDataSet), bool)
         for year in years:
