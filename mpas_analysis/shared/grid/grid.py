@@ -734,6 +734,8 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         '''
         Set up a coords dict with x, y, lat and lon
         '''
+        self.xVarName = xVarName
+        self.yVarName = yVarName
         (X, Y) = numpy.meshgrid(self.x, self.y)
         (Lat, Lon) = self.project_to_lat_lon(X, Y)
 

@@ -580,8 +580,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         renormalizationThreshold = self.config.getfloat(
             'climatology', 'renormalizationThreshold')
 
-        # ncremap doesn't support grids other than lat/lon
-        if self.useNcremap and comparisonGridName == 'latlon':
+        if self.useNcremap:
             remapper.remap_file(inFileName=inFileName,
                                 outFileName=outFileName,
                                 overwrite=True,
