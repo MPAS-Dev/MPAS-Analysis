@@ -9,8 +9,7 @@ source:
 
 build:
     number: 0
-    script: $PYTHON setup.py install --single-version-externally-managed
-            --record=record.txt
+    script: "{{ PYTHON }} -m pip install . --no-deps -vv"
     noarch: python
     entry_points:
         - mpas_analysis = mpas_analysis.__main__:main
@@ -24,8 +23,8 @@ test:
         - pytest --pyargs mpas_analysis
 
 requirements:
-    build:
-        - python
+    host:
+        - python {{python}}
         - setuptools
     run:
         - python
