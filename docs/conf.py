@@ -17,6 +17,7 @@ import sys
 import m2r
 from glob import glob
 import mpas_analysis
+print(os.environ)
 from mpas_analysis.__main__ import add_task_and_subtasks
 from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
 from docs.parse_quick_start import build_quick_start
