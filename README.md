@@ -262,7 +262,9 @@ to be generated and is set up properly.
 
 To generate the `sphinx` documentation, run:
 ```bash
-conda install sphinx sphinx_rtd_theme numpydoc m2r tabulate
+conda env create -f docs/environment.yml
+conda activate mpas-analysis-docs
+python setup.py install
 cd docs
 make html
 ```
