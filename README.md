@@ -262,7 +262,7 @@ to be generated and is set up properly.
 
 To generate the `sphinx` documentation, run:
 ```bash
-conda env create -f docs/envirnoment.yml
+conda env create -f docs/environment.yml
 conda activate mpas-analysis-docs
 python setup.py install
 cd docs
