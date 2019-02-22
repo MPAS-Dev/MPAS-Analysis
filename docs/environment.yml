@@ -2,7 +2,7 @@ name: mpas-analysis-docs
 channels:
   - conda-forge
 dependencies:
-  - python=3.6
+  - python=3.7
   - pytest
   - numpy
   - scipy
@@ -24,3 +24,4 @@ dependencies:
   - numpydoc
   - tabulate >= 0.8.2
   - m2r
+  - shapely
