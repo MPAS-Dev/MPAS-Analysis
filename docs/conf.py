@@ -16,7 +16,6 @@ import os
 import sys
 import m2r
 from glob import glob
-sys.path.insert(0, os.path.abspath('..'))
 import mpas_analysis
 from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
 from docs.parse_quick_start import build_quick_start
