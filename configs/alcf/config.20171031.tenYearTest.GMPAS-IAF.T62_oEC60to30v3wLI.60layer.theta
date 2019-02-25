@@ -39,7 +39,7 @@ ncclimoParallelMode = bck
 # its location).  For other machines, this would be the directory pointed to
 # when running "download_analysis_data.py" to get the public observations,
 # mapping files and region files.
-baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed

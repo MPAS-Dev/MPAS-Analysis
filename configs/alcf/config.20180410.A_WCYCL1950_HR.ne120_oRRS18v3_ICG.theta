@@ -39,13 +39,13 @@ ncclimoParallelMode = serial
 # its location).  For other machines, this would be the directory pointed to
 # when running "download_analysis_data.py" to get the public observations,
 # mapping files and region files.
-baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/azamatm/E3SM_simulations/20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta/run
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/azamatm/E3SM_simulations/20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oRRS18to6v3
