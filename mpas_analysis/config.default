@@ -1447,6 +1447,13 @@ seasons =  ['ANN']
 #horizontalResolution = obs
 horizontalResolution = 5
 
+# Horizontal bounds of the plot (in km), or an empty list for automatic bounds
+# The bounds are a 2-element list of the minimum and maximum distance along the
+# transect
+horizontalBounds = {'WOCE_A21_Drake_Passage': [],
+                    'WOCE_A23_South_Atlantic': [],
+                    'WOCE_A12_Prime_Meridian': []}
+
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or
 # any other name if the vertical grid is defined by 'verticalComparisonGrid'
