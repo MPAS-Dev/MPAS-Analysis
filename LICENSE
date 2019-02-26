@@ -1,20 +1,22 @@
 This software is open source software available under the BSD-3 license.
 
-Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
-Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved.
-Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights reserved.
+Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
 
-Copyright 2018. Los Alamos National Security, LLC. This software was produced
-under U.S. Government contract DE-AC52-06NA25396 for Los Alamos National
-Laboratory (LANL), which is operated by Los Alamos National Security, LLC for
-the U.S. Department of Energy. The U.S. Government has rights to use,
-reproduce, and distribute this software.  NEITHER THE GOVERNMENT NOR LOS ALAMOS
-NATIONAL SECURITY, LLC MAKES ANY WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY
-LIABILITY FOR THE USE OF THIS SOFTWARE.  If software is modified to produce
-derivative works, such modified software should be clearly marked, so as not to
-confuse it with the version available from LANL.
 
-Copyright (c) 2018 Lawrence Livermore National Security, LLC. This work was
+Copyright (c) 2019 Triad National Security, LLC. This program was produced
+under U.S. Government contract 89233218CNA000001 for Los Alamos National
+Laboratory (LANL), which is operated by Triad National Security, LLC for the
+U.S. Department of Energy/National Nuclear Security Administration. All rights
+in the program are reserved by Triad National Security, LLC, and the U.S.
+Department of Energy/National Nuclear Security Administration. The Government
+is granted for itself and others acting on its behalf a nonexclusive, paid-up,
+irrevocable worldwide license in this material to reproduce, prepare derivative
+works, distribute copies to the public, perform publicly and display publicly,
+and to permit others to do so.
+
+Copyright (c) 2019 Lawrence Livermore National Security, LLC. This work was
 produced under the auspices of the U.S. Department of Energy by Lawrence
 Livermore National Laboratory under Contract DE-AC52-07NA27344. This work was
 prepared as an account of work sponsored by an agency of the United States
@@ -32,7 +34,7 @@ reflect those of the United States Government or Lawrence Livermore National
 Security, LLC, and shall not be used for advertising or product endorsement
 purposes.
 
-Copyright 2018 UT-Battelle. LLC. This technology acquired under license from
+Copyright 2019 UT-Battelle. LLC. This technology acquired under license from
 UT-Battelle, LLC, the management and operating contractor of the Oak Ridge
 National Laboratory acting on behalf of the U.S. Department of Energy under
 Contract No. DE-AC05-00OR22725. The United States Government and UT-Battelle,
