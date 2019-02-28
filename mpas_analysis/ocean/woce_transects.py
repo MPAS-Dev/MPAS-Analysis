@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
-# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -76,6 +76,9 @@ class WoceTransects(AnalysisTask):  # {{{
         else:
             verticalComparisonGrid = config.getExpression(
                 sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+
+        horizontalBounds = config.getExpression(
+            sectionName, 'horizontalBounds')
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'woceSubdirectory')
@@ -164,10 +167,10 @@ class WoceTransects(AnalysisTask):  # {{{
                         transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
-                    subtask = PlotTransectSubtask(self, season, transectName,
-                                                  fieldName,
-                                                  computeTransectsSubtask,
-                                                  plotObs, controlConfig)
+                    subtask = PlotTransectSubtask(
+                        self, season, transectName, fieldName,
+                        computeTransectsSubtask, plotObs, controlConfig,
+                        horizontalBounds[transectName])
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,

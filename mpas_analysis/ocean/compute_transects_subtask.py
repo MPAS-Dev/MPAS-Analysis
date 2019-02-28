@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
-# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -143,7 +143,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         super(ComputeTransectsSubtask, self).__init__(
             mpasClimatologyTask, parentTask,
             climatologyName=climatologyName, variableList=variableList,
-            seasons=seasons, subtaskName=subtaskName)
+            seasons=seasons, subtaskName=subtaskName, useNcremap=False)
 
         self.obsDatasets = obsDatasets
         self.transectCollectionName = transectCollectionName

@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
-# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -57,6 +57,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     plotObs : bool, optional
         Whether to plot against observations.
 
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any), ignored if
+        ``plotObs == True``
+
+    horizontalBounds : [float, float]
+        The distance in km of the left- and right-hand edges of the plot,
+        chosen automatically by default or if the list is empty
+
     outFileLabel : str
         The prefix on each plot and associated XML file
 
@@ -104,7 +112,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, season, transectName, fieldName,
                  remapMpasClimatologySubtask, plotObs=True,
-                 controlConfig=None):
+                 controlConfig=None, horizontalBounds=None):
         # {{{
         '''
         Construct one analysis subtask for each plot (i.e. each season and
@@ -135,6 +143,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any), ignored if
             ``plotObs == True``
+
+        horizontalBounds : [float, float], optional
+            The distance in km of the left- and right-hand edges of the plot,
+            chosen automatically by default or if the list is empty
         '''
         # Authors
         # -------
@@ -145,6 +157,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
         self.plotObs = plotObs
         self.controlConfig = controlConfig
+        if horizontalBounds is not None and len(horizontalBounds) == 2:
+            self.horizontalBounds = horizontalBounds
+        else:
+            self.horizontalBounds = None
         subtaskName = 'plot{}_{}_{}'.format(season,
                                             transectName.replace(' ', '_'),
                                             fieldName)
@@ -505,14 +521,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             invertYAxis=False,
             backgroundColor='#918167',
+            xLim=self.horizontalBounds,
             compareAsContours=compareAsContours,
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
             comparisonContourLineStyle=comparisonContourLineStyle,
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
-            contourLabelPrecision=contourLabelPrecision
-        )
+            contourLabelPrecision=contourLabelPrecision)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

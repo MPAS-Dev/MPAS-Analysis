@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
-# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,7 +15,7 @@ import warnings
 
 isrelease = True
 
-version = '1.2'
+version = '1.2.1'
 
 if not isrelease:
     import subprocess
@@ -50,14 +50,14 @@ setup(name='mpas_analysis',
           'Topic :: Scientific/Engineering',
       ],
       packages=find_packages(),
-      package_data={'mpas_analysis': ['config.default'],
+      package_data={'mpas_analysis': ['config.default',
+                                      'obs/analysis_input_files',
+                                      'obs/observational_datasets.xml'],
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
                     'mpas_analysis.shared.plot':
                         ['ColourMapSuite3/*/*.xml',
-                         'SciVisColorColormaps/*.xml'],
-                    'mpas_analysis.obs': ['analysis_input_files',
-                                          'observational_datasets.xml']},
+                         'SciVisColorColormaps/*.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'bottleneck', 'basemap', 'lxml',
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',

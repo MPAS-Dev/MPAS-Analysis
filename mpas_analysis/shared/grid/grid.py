@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2018 Los Alamos National Security, LLC. All rights reserved.
-# Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -734,6 +734,8 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         '''
         Set up a coords dict with x, y, lat and lon
         '''
+        self.xVarName = xVarName
+        self.yVarName = yVarName
         (X, Y) = numpy.meshgrid(self.x, self.y)
         (Lat, Lon) = self.project_to_lat_lon(X, Y)
 

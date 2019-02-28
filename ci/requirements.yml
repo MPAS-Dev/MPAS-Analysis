@@ -6,13 +6,13 @@ dependencies:
   - numpy<1.16.0
   - scipy
   - lxml
-  - xarray
+  - xarray>=0.10.0
   - matplotlib
   - dask
   - netcdf4
   - hdf5
   - hdf4
-  - nco
+  - nco>=4.7.9
   - pyproj
   - pillow
   - cmocean
