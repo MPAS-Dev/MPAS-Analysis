@@ -77,6 +77,9 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = config.getExpression(
                 sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
+        horizontalBounds = config.getExpression(
+            sectionName, 'horizontalBounds')
+
         observationsDirectory = build_obs_path(
             config, 'ocean', 'woceSubdirectory')
 
@@ -164,10 +167,10 @@ class WoceTransects(AnalysisTask):  # {{{
                         transectName.replace('_', ' '))
 
                     # make a new subtask for this season and comparison grid
-                    subtask = PlotTransectSubtask(self, season, transectName,
-                                                  fieldName,
-                                                  computeTransectsSubtask,
-                                                  plotObs, controlConfig)
+                    subtask = PlotTransectSubtask(
+                        self, season, transectName, fieldName,
+                        computeTransectsSubtask, plotObs, controlConfig,
+                        horizontalBounds[transectName])
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
