@@ -2,12 +2,24 @@
 [![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=develop)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
 [![Documentation Status](http://readthedocs.org/projects/mpas-analysis/badge/?version=develop)](http://mpas-analysis.readthedocs.io/en/develop/?badge=develop)
 
-
 Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
 used those components.
 
 ![sea surface temperature](docs/_static/sst_example.png)
+
+## conda-forge
+
+### Current build status
+
+All platforms:
+[![noarch](https://img.shields.io/circleci/project/github/conda-forge/mpas-analysis-feedstock/master.svg?label=noarch)](https://circleci.com/gh/conda-forge/mpas-analysis-feedstock)
+
+### Current release info
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-mpas--analysis-green.svg)](https://anaconda.org/conda-forge/mpas-analysis) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/mpas-analysis.svg)](https://anaconda.org/conda-forge/mpas-analysis) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/mpas-analysis.svg)](https://anaconda.org/conda-forge/mpas-analysis) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/mpas-analysis.svg)](https://anaconda.org/conda-forge/mpas-analysis) |
 
 ## Documentation
 
