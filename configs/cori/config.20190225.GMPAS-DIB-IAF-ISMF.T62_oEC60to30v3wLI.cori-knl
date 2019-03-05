@@ -100,8 +100,9 @@ htmlSubdirectory = html
 # option:
 #    ./run_mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-# All tasks with tag "landIceCavities" are disabled because this run did not
-# include land-ice cavities.
+# All tasks with tag "BGC", "icebergs", "index", and "eke" are disabled because this run
+# did not include BGC or icebergs, the EKE analysis member was off and the El Nino analysis
+# is not meaningful (SSTs are prescribed).
 generate = ['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke']
 
 [climatology]
