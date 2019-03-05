@@ -1169,11 +1169,16 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                 outputDirectory, startYear, endYear)
             outputFileNames.append(outputFileName)
 
+        outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
+            outputDirectory, self.startYears[0], self.endYears[-1])
+
+        if outputFileName in outputFileNames:
+            # don't try to write to read from and write to the same file
+            return
+
         ds = xr.open_mfdataset(outputFileNames, concat_dim='Time',
                                decode_times=False)
 
-        outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
-            outputDirectory, self.startYears[0], self.endYears[-1])
         write_netcdf(ds, outputFileName)  # }}}
     # }}}
 
