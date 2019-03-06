@@ -27,7 +27,10 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     build_obs_path
 
 from mpas_analysis.shared.timekeeping.utility import datetime_to_days, \
-    string_to_days_since_date
+    string_to_days_since_date, string_to_datetime
+
+from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
+    MpasRelativeDelta
 
 from mpas_analysis.shared.io import open_mpas_dataset
 
@@ -103,6 +106,19 @@ class IndexNino34(AnalysisTask):  # {{{
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar
         super(IndexNino34, self).setup_and_check()
+
+        startDate = self.config.get('index', 'startDate')
+        endDate = self.config.get('index', 'endDate')
+
+        delta = MpasRelativeDelta(string_to_datetime(endDate),
+                                  string_to_datetime(startDate),
+                                  calendar=self.calendar)
+
+        months = delta.months + 12*delta.years
+
+        if months <= 12:
+            raise ValueError('Cannot meaninfully analyze El Nino climate '
+                             'index because the time series is too short.')
 
         self.variableList = \
             ['timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']

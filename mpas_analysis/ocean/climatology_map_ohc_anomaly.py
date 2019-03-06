@@ -28,6 +28,15 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
     """
     An analysis task for comparison of the anomaly from a reference year
     (typically the start of the simulation) of ocean heat content (OHC)
+
+    Attributes
+    ----------
+    mpasClimatologyTask : ``MpasClimatologyTask``
+        The task that produced the climatology to be remapped and plotted
+
+    refYearClimatolgyTask : ``RefYearMpasClimatologyTask``
+        The task that produced the climatology from the first year to be
+        remapped and then subtracted from the main climatology
     """
     # Authors
     # -------
@@ -89,6 +98,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                                            'depthRanges',
                                            usenumpyfunc=True)
 
+        self.mpasClimatologyTask = mpasClimatologyTask
+        self.refYearClimatolgyTask = refYearClimatolgyTask
+
         for minDepth, maxDepth in depthRanges:
             depthRangeString = '{:g}-{:g}m'.format(numpy.abs(minDepth),
                                                    numpy.abs(maxDepth))
@@ -146,6 +158,36 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                         galleryName=None)
 
                     self.add_subtask(subtask)
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        '''
+        Checks whether analysis is being performed only on the reference year,
+        in which case the analysis will not be meaningful.
+
+        Raises
+        ------
+        ValueError: if attempting to analyze only the reference year
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call setup_and_check from the base class (AnalysisTask),
+        # which will perform some common setup, including storing:
+        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
+        #     self.namelist, self.runStreams, self.historyStreams,
+        #     self.calendar
+        super(ClimatologyMapOHCAnomaly, self).setup_and_check()
+
+        startYear, endYear = self.mpasClimatologyTask.get_start_and_end()
+        refStartYear, refEndYear = \
+            self.refYearClimatolgyTask.get_start_and_end()
+
+        if (startYear == refStartYear) and (endYear == refEndYear):
+            raise ValueError('OHC Anomaly is not meaningful and will not work '
+                             'when climatology and ref year are the same.')
+
         # }}}
     # }}}
 

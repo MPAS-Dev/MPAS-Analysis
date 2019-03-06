@@ -237,11 +237,27 @@ def determine_analyses_to_generate(analyses, verbose):  # {{{
     # -------
     # Xylar Asay-Davis
 
+    totalFailures = 0
+
+    print('')
+
     analysesToGenerate = OrderedDict()
     # check which analysis we actually want to generate and only keep those
     for analysisTask in analyses:
         # update the dictionary with this task and perhaps its subtasks
-        add_task_and_subtasks(analysisTask, analysesToGenerate, verbose)
+        failureCount = add_task_and_subtasks(analysisTask, analysesToGenerate,
+                                             verbose)
+
+        totalFailures += failureCount
+
+    if totalFailures > 0:
+        print('\n{} tasks and subtasks failed during setup.'.format(
+            totalFailures))
+        if not verbose:
+            print('To find out why these tasks are failing, use the --verbose '
+                  'flag')
+
+    print('')
 
     return analysesToGenerate  # }}}
 
@@ -277,6 +293,8 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
     # -------
     # Xylar Asay-Davis
 
+    totalFailures = 0
+
     key = (analysisTask.taskName, analysisTask.subtaskName)
     if key in analysesToGenerate.keys():
         # The task was already added
@@ -285,14 +303,14 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                        "successfully. Typically, this indicates two tasks "
                        "with the same full name".format(
                            analysisTask.fullTaskName))
-        return
+        return totalFailures
 
     # for each anlaysis task, check if we want to generate this task
     # and if the analysis task has a valid configuration
     taskTitle = analysisTask.printTaskName
     if callCheckGenerate and not analysisTask.check_generate():
         # we don't need to add this task -- it wasn't requested
-        return
+        return totalFailures
 
     # first, we should try to add the prerequisites of this task and its
     # subtasks (if they aren't also subtasks for this task)
@@ -303,15 +321,18 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                 prereqs.extend(subtask.runAfterTasks)
 
     for prereq in prereqs:
-        add_task_and_subtasks(prereq, analysesToGenerate, verbose,
-                              callCheckGenerate=False)
+        failureCount = add_task_and_subtasks(prereq, analysesToGenerate,
+                                             verbose, callCheckGenerate=False)
+        totalFailures += failureCount
         if prereq._setupStatus != 'success':
+            assert(failureCount > 0)
             # a prereq failed setup_and_check
             print("Warning: prerequisite of {} failed during check, "
                   "so this task will not be run".format(
                       taskTitle))
             analysisTask._setupStatus = 'fail'
-            return
+            totalFailures += 1
+            return totalFailures
 
     # make sure all prereqs have been set up successfully before trying to
     # set up this task -- this task's setup may depend on setup in the prereqs
@@ -323,24 +344,30 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
         print("Warning: {} failed during check and will not be run".format(
             taskTitle))
         analysisTask._setupStatus = 'fail'
-        return
+        totalFailures += 1
+        return totalFailures
 
     # next, we should try to add the subtasks.  This is done after the current
     # analysis task has been set up in case subtasks depend on information
     # from the parent task
     for subtask in analysisTask.subtasks:
-        add_task_and_subtasks(subtask, analysesToGenerate, verbose,
-                              callCheckGenerate=False)
+        failureCount = add_task_and_subtasks(subtask, analysesToGenerate,
+                                             verbose, callCheckGenerate=False)
+        totalFailures += failureCount
         if subtask._setupStatus != 'success':
+            assert(failureCount > 0)
             # a subtask failed setup_and_check
             print("Warning: subtask of {} failed during check, "
                   "so this task will not be run".format(
                       taskTitle))
             analysisTask._setupStatus = 'fail'
-            return
+            totalFailures += 1
+            return totalFailures
 
     analysesToGenerate[key] = analysisTask
     analysisTask._setupStatus = 'success'
+    assert(totalFailures == 0)
+    return totalFailures
     # }}}
 
 
