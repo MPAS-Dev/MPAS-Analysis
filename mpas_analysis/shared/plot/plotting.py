@@ -38,6 +38,7 @@ import xml.etree.ElementTree as ET
 from six.moves import configparser
 import cmocean
 import pkg_resources
+from six import string_types
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime, \
     date_to_days
@@ -1952,12 +1953,12 @@ def plot_vertical_section(
         plt.ylabel(ylabel, **axis_font)
 
     if invertYAxis:
-        plt.gca().invert_yaxis()
+        ax.invert_yaxis()
 
     if xLim:
-        plt.xlim(xLim)
+        ax.set_xlim(xLim)
     if yLim:
-        plt.ylim(yLim)
+        ax.set_ylim(yLim)
 
     if xArrayIsTime:
         if firstYearXTicks is None:
@@ -1974,28 +1975,27 @@ def plot_vertical_section(
         ax2 = ax.twiny()
         ax2.set_facecolor(backgroundColor)
         ax2.set_xlabel(secondXAxisLabel, **axis_font)
-        ax2.set_xlim(ax.get_xlim())
-        stride = int(round(float(num_x) / (float(numUpperTicks) - 1.0))) - 1
-        if stride <= 0:
-            stride = 1
-        elif stride == 1:
-            stride = 2
-        ax2.set_xticks(x.flatten()[:num_x:stride])
+        xlimits = ax.get_xlim()
+        ax2.set_xlim(xlimits)
+        xticks = np.linspace(xlimits[0], xlimits[1], numUpperTicks)
+        tickValues = np.interp(xticks, x.flatten()[:num_x], secondXAxisData)
+        ax2.set_xticks(xticks)
         formatString = "{{0:.{:d}f}}{}".format(
             upperXAxisTickLabelPrecision, r'$\degree$')
         ax2.set_xticklabels([formatString.format(member)
-                             for member in secondXAxisData[::stride]])
+                             for member in tickValues])
 
-    # add a third x-axis scale, if it was requested
-    if thirdXAxisData is not None:
-        ax3 = ax.twiny()
-        ax3.set_facecolor(backgroundColor)
-        ax3.set_xlabel(thirdXAxisLabel, **axis_font)
-        ax3.set_xlim(ax.get_xlim())
-        ax3.set_xticks(x.flatten()[:num_x:stride])
-        ax3.set_xticklabels([formatString.format(member)
-                             for member in thirdXAxisData[::stride]])
-        ax3.spines['top'].set_position(('outward', 36))
+        # add a third x-axis scale, if it was requested
+        if thirdXAxisData is not None:
+            ax3 = ax.twiny()
+            ax3.set_facecolor(backgroundColor)
+            ax3.set_xlabel(thirdXAxisLabel, **axis_font)
+            ax3.set_xlim(xlimits)
+            ax3.set_xticks(xticks)
+            tickValues = np.interp(xticks, x.flatten()[:num_x], thirdXAxisData)
+            ax3.set_xticklabels([formatString.format(member)
+                                 for member in tickValues])
+            ax3.spines['top'].set_position(('outward', 36))
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -2068,7 +2068,7 @@ def setup_colormap(config, configSectionName, suffix=''):
         contours = config.getExpression(configSectionName,
                                         option,
                                         usenumpyfunc=True)
-        if contours == 'none':
+        if isinstance(contours, string_types) and contours == 'none':
             contours = None
     else:
         contours = None
