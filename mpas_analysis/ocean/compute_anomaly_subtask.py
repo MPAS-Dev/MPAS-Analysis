@@ -20,7 +20,11 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.io import write_netcdf
 
-from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
+from mpas_analysis.shared.timekeeping.utility import \
+    get_simulation_start_time, string_to_datetime
+
+from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
+    MpasRelativeDelta
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 
@@ -133,6 +137,19 @@ class ComputeAnomalySubtask(AnalysisTask):
         #     self.namelist, self.runStreams, self.historyStreams,
         #     self.calendar
         super(ComputeAnomalySubtask, self).setup_and_check()
+
+        startDate = self.config.get('timeSeries', 'startDate')
+        endDate = self.config.get('timeSeries', 'endDate')
+
+        delta = MpasRelativeDelta(string_to_datetime(endDate),
+                                  string_to_datetime(startDate),
+                                  calendar=self.calendar)
+
+        months = delta.months + 12*delta.years
+
+        if months <= self.movingAveragePoints:
+            raise ValueError('Cannot meaninfully perform a rolling mean '
+                             'because the time series is too short.')
 
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
