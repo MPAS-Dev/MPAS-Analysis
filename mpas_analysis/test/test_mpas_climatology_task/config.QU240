@@ -30,5 +30,6 @@ endYear = 2
 comparisonLatResolution = 0.5
 comparisonLonResolution = 0.5
 mpasInterpolationMethod = bilinear
+useNcclimo = True
 useNcremap = True
 renormalizationThreshold = 0.01
