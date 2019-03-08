@@ -193,6 +193,9 @@ comparisonAntarcticStereoResolution = 10.
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 mpasInterpolationMethod = bilinear
 
+# should climatologies be performed with ncclimo or with xarray/dask
+useNcclimo = True
+
 # should remapping be performed with ncremap or with the Remapper class
 # directly in MPAS-Analysis
 useNcremap = True
