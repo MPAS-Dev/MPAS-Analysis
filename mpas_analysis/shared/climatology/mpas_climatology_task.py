@@ -101,7 +101,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             taskName = 'mpasClimatology{}'.format(suffix)
 
         self.allVariables = None
-        self.useNcclimo = self.config.getboolean('climatology', 'useNcclimo')
+        self.useNcclimo = config.getboolean('climatology', 'useNcclimo')
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologyTask, self).__init__(
@@ -109,6 +109,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             taskName=taskName,
             componentName=componentName,
             tags=tags)
+
+        if self.useNcclimo and \
+                (config.get('execute', 'ncclimoParallelMode') == 'bck'):
+            self.subprocessCount = 12
 
         # }}}
 
