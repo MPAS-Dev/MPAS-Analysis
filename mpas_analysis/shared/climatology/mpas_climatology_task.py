@@ -16,6 +16,7 @@ import xarray
 import os
 import subprocess
 from distutils.spawn import find_executable
+import dask
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -26,7 +27,11 @@ from mpas_analysis.shared.climatology.climatology import \
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
 
+from mpas_analysis.shared.io import write_netcdf
+
 from mpas_analysis.shared.constants import constants
+
+from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -113,6 +118,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         if self.useNcclimo and \
                 (config.get('execute', 'ncclimoParallelMode') == 'bck'):
             self.subprocessCount = 12
+
+        parallelTaskCount = config.getint('execute', 'parallelTaskCount')
+        if not self.useNcclimo:
+            self.subprocessCount = parallelTaskCount
 
         # }}}
 
@@ -484,7 +493,63 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # Authors
         # -------
         # Xylar Asay-Davis
-        pass
+
+        fileNames = sorted(self.inputFiles)
+        years, months = get_files_year_month(fileNames,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
+
+        chunkSize = self.config.getint('input', 'maxChunkSize')
+
+        with xarray.open_mfdataset(self.inputFiles, concat_dim='Time',
+                                   chunks={'nCells': chunkSize},
+                                   decode_cf=False, decode_times=False) as ds:
+
+            ds.coords['year'] = ('Time', years)
+            ds.coords['month'] = ('Time', months)
+            with dask.config.set(scheduler='threads'):
+                for month in range(1, 13):
+                    monthName = constants.abrevMonthNames[month-1]
+                    climatologyFileName = self.get_file_name(monthName)
+                    self.logger.info('computing climatology {}'.format(
+                        os.path.basename(climatologyFileName)))
+                    variableList = []
+                    for season in self.variableList:
+                        monthValues = constants.monthDictionary[season]
+                        if month in monthValues:
+                            variableList.extend(self.variableList[season])
+                    # just the unique variables
+                    variableList = sorted(list(set(variableList)))
+
+                    if len(variableList) == 0:
+                        continue
+
+                    dsMonth = subset_variables(ds, variableList)
+                    dsMonth = dsMonth.where(dsMonth.month == month, drop=True)
+                    dsMonth = dsMonth.mean(dim='Time')
+                    dsMonth.compute(num_workers=self.subprocessCount)
+                    write_netcdf(dsMonth, climatologyFileName)
+
+        for season in self.variableList:
+            outFileName = self.get_file_name(season=season)
+            self.logger.info('computing climatology {}'.format(
+                os.path.basename(outFileName)))
+            fileNames = []
+            weights = []
+            for month in constants.monthDictionary[season]:
+                monthName = constants.abrevMonthNames[month-1]
+                fileNames.append(self.get_file_name(season=monthName))
+                weights.append(constants.daysInMonth[month-1])
+            with xarray.open_mfdataset(fileNames, concat_dim='weight',
+                                       chunks={'nCells': chunkSize},
+                                       decode_cf=False, decode_times=False) \
+                    as ds:
+                ds = subset_variables(ds, self.variableList[season])
+                ds.coords['weight'] = ('weight', weights)
+                ds = ((ds.weight*ds).sum(dim='weight') /
+                      ds.weight.sum(dim='weight'))
+                ds.compute(num_workers=self.subprocessCount)
+                write_netcdf(ds, outFileName)
 
         # }}}
     # }}}
