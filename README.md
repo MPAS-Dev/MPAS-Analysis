@@ -44,7 +44,7 @@ environment with the following packages:
  * xarray >= 0.10.0
  * dask
  * bottleneck
- * basemap < 1.2.0 | > 1.2.0
+ * basemap
  * lxml
  * nco >= 4.7.9
  * pyproj
@@ -54,12 +54,13 @@ environment with the following packages:
  * requests
  * setuptools
  * shapely
+ * proj4 < 6.0.0
 
 These can be installed via the conda command:
 ``` bash
 conda create -n mpas_analysis -c conda-forge numpy scipy matplotlib netCDF4 \
-    xarray dask bottleneck "basemap<1.2.0|>1.2.0" lxml nco pyproj pillow \
-    cmocean progressbar2 requests setuptools shapely
+    xarray dask bottleneck basemap lxml nco pyproj pillow \
+    cmocean progressbar2 requests setuptools shapely proj4 < 6.0.0
 ```
 
 Then, get the code from:
