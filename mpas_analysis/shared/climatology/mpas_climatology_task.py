@@ -110,8 +110,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             componentName=componentName,
             tags=tags)
 
-        if self.useNcclimo and \
-                (config.get('execute', 'ncclimoParallelMode') == 'bck'):
+        ncclimoParallelMode = config.get('execute', 'ncclimoParallelMode')
+        if self.useNcclimo and ncclimoParallelMode in ['bck', 'mpi']:
             self.subprocessCount = 12
 
         # }}}
