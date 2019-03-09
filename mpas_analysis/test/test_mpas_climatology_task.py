@@ -66,7 +66,7 @@ class TestMpasClimatologyTask(TestCase):
             tags=['climatology'])
         climatologyName = 'ssh'
         variableList = ['timeMonthly_avg_ssh']
-        seasons = [mpasClimatologyTask.seasons[0]]
+        seasons = list(mpasClimatologyTask.variableList.keys())
 
         remapSubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask, parentTask, climatologyName,
@@ -87,8 +87,9 @@ class TestMpasClimatologyTask(TestCase):
         mpasClimatologyTask = self.setup_task()
         variableList, seasons = self.add_variables(mpasClimatologyTask)
 
-        assert(variableList == mpasClimatologyTask.variableList)
-        assert(seasons == mpasClimatologyTask.seasons)
+        assert(sorted(seasons) ==
+               sorted(list(mpasClimatologyTask.variableList.keys())))
+        assert(variableList == mpasClimatologyTask.variableList[seasons[0]])
 
         # add a variable and season already in the list
         mpasClimatologyTask.add_variables(variableList=[variableList[0]],
@@ -96,8 +97,9 @@ class TestMpasClimatologyTask(TestCase):
 
         # make sure the lists still match (extra redundant varible and season
         # weren't added)
-        assert(variableList == mpasClimatologyTask.variableList)
-        assert(seasons == mpasClimatologyTask.seasons)
+        assert(sorted(seasons) ==
+               sorted(list(mpasClimatologyTask.variableList.keys())))
+        assert(variableList == mpasClimatologyTask.variableList[seasons[-1]])
 
     def test_get_file_name(self):
         mpasClimatologyTask = self.setup_task()
@@ -119,7 +121,7 @@ class TestMpasClimatologyTask(TestCase):
 
         mpasClimatologyTask.run(writeLogFile=False)
 
-        for season in mpasClimatologyTask.seasons:
+        for season in mpasClimatologyTask.variableList:
             fileName = mpasClimatologyTask.get_file_name(season=season)
             assert(os.path.exists(fileName))
 

@@ -461,6 +461,8 @@ def run_analysis(config, analyses):  # {{{
     progress = progressbar.ProgressBar(widgets=widgets,
                                        maxval=totalTaskCount).start()
 
+    runningProcessCount = 0
+
     # run each analysis task
     while True:
         # we still have tasks to run
@@ -485,7 +487,7 @@ def run_analysis(config, analyses):  # {{{
 
         progress.update(totalTaskCount - unfinishedCount)
 
-        if unfinishedCount <= 0 and len(runningTasks.keys()) == 0:
+        if unfinishedCount <= 0 and runningProcessCount == 0:
             # we're done
             break
 
@@ -493,12 +495,22 @@ def run_analysis(config, analyses):  # {{{
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
+                    newProcessCount = runningProcessCount + \
+                        analysisTask.subprocessCount
+                    if newProcessCount > parallelTaskCount and \
+                            runningProcessCount > 0:
+                        # this task should run next but we need to wait for
+                        # more processes to finish
+                        break
+
                     logger.info('Running {}'.format(
                         analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
-                    if len(runningTasks.keys()) >= parallelTaskCount:
+                    runningProcessCount = newProcessCount
+                    if runningProcessCount >= parallelTaskCount:
+                        # don't try to run any more tasks
                         break
                 else:
                     analysisTask.run(writeLogFile=False)
@@ -508,6 +520,7 @@ def run_analysis(config, analyses):  # {{{
             analysisTask = wait_for_task(runningTasks)
             key = (analysisTask.taskName, analysisTask.subtaskName)
             runningTasks.pop(key)
+            runningProcessCount -= analysisTask.subprocessCount
 
             taskTitle = analysisTask.printTaskName
 

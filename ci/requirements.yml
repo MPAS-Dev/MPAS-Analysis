@@ -19,3 +19,4 @@ dependencies:
   - progressbar2
   - requests
   - shapely
+  - proj4 < 6.0.0

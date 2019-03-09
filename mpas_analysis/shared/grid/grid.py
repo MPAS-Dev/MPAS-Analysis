@@ -726,7 +726,7 @@ class ProjectionGridDescriptor(MeshDescriptor):  # {{{
         # Xylar Asay-Davis
 
         Lon, Lat = pyproj.transform(self.projection, self.latLonProjection,
-                                    X, Y, radians=False)
+                                    X, Y)
 
         return (Lat, Lon)  # }}}
 
