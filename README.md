@@ -31,7 +31,7 @@ All platforms:
 MPAS-Analysis is available as an anaconda package via the `conda-forge` channel:
 
 ``` bash
-conda config --add channels conda-forge 
+conda config --add channels conda-forge
 conda create -n mpas-analysis mpas-analysis
 conda activate mpas-analysis
 ```
@@ -56,14 +56,13 @@ environment with the following packages:
  * requests
  * setuptools
  * shapely
- * proj4 < 6.0.0
 
 These can be installed via the conda command:
 ``` bash
-conda config --add channels conda-forge 
-conda create -n mpas-analysis -c conda-forge numpy scipy matplotlib netCDF4 \
+conda config --add channels conda-forge
+conda create -n mpas-analysis numpy scipy matplotlib netCDF4 \
     xarray dask bottleneck basemap lxml nco pyproj pillow \
-    cmocean progressbar2 requests setuptools shapely proj4 < 6.0.0
+    cmocean progressbar2 requests setuptools shapely
 conda activate mpas-analysis
 ```
 
