@@ -25,4 +25,3 @@ dependencies:
   - tabulate >= 0.8.2
   - m2r
   - shapely
-  - proj4 < 6.0.0
