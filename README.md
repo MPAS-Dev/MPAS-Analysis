@@ -28,10 +28,12 @@ All platforms:
 
 ## Installation
 
-MPAS-Analysis is available as an anaconda package via the `e3sm` channel:
+MPAS-Analysis is available as an anaconda package via the `conda-forge` channel:
 
 ``` bash
-conda create -n mpas_analysis -c conda-forge -c e3sm mpas_analysis
+conda config --add channels conda-forge 
+conda create -n mpas-analysis mpas-analysis
+conda activate mpas-analysis
 ```
 
 To use the latest version for developers, you will need to set up a conda
@@ -58,9 +60,11 @@ environment with the following packages:
 
 These can be installed via the conda command:
 ``` bash
-conda create -n mpas_analysis -c conda-forge numpy scipy matplotlib netCDF4 \
+conda config --add channels conda-forge 
+conda create -n mpas-analysis -c conda-forge numpy scipy matplotlib netCDF4 \
     xarray dask bottleneck basemap lxml nco pyproj pillow \
     cmocean progressbar2 requests setuptools shapely proj4 < 6.0.0
+conda activate mpas-analysis
 ```
 
 Then, get the code from:
@@ -69,7 +73,7 @@ Then, get the code from:
 
 ## Download analysis input data
 
-If you installed the `mpas_analysis` package, download the data that is
+If you installed the `mpas-analysis` package, download the data that is
 necessary to MPAS-Analysis by running:
 
 ``` bash
@@ -97,7 +101,7 @@ option `baseDirectory` in the `[diagnostics]` section.
 
 ## List Analysis
 
-If you installed the `mpas_analysis` package, list the available analysis tasks
+If you installed the `mpas-analysis` package, list the available analysis tasks
 by running:
 
 ``` bash
@@ -123,7 +127,7 @@ for more details.
      options from `mpas_analysis/config.default` (in a git repo) or directly
      from GitHub:
      [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_anlysis/config.default).
-  3. If you installed the `mpas_analysis` package, run:
+  3. If you installed the `mpas-analysis` package, run:
      `mpas_analysis config.myrun`.  If using a git checkout, run:
      `python -m mpas_analysis config.myrun`.  This will read the configuraiton
      first from `mpas_analysis/config.default` and then replace that
@@ -185,7 +189,7 @@ Note: for older runs, mpas-seaice files will be named:
 ## Purge Old Analysis
 
 To purge old analysis (delete the whole output directory) before running run
-the analysis, add the `--purge` flag.  If you installed `mpas_analysis` as
+the analysis, add the `--purge` flag.  If you installed `mpas-analysis` as
 a package, run:
 
 ``` bash
@@ -224,7 +228,7 @@ If you are running from a git repo:
      from `configs/<machine_name>` to the root directory (or another directory
      if preferred). The default cript, `configs/job_script.default.bash`, is
      appropriate for a laptop or desktop computer with multiple cores.
-  2. If using the `mpas_analysis` conda package, download the job script and/or
+  2. If using the `mpas-analysis` conda package, download the job script and/or
      sample config file from the
      [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
   2. Modify the number of parallel tasks, the run name, the output directory
