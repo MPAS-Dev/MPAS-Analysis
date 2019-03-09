@@ -337,6 +337,12 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
                            observationsDirectory, prefix)
 
             dsLocal = xr.open_dataset(fileName)
+
+            lat = dsLocal.lat.values
+            mask = numpy.logical_and(lat >= minLat, lat <= maxLat)
+            indices = numpy.argwhere(mask)
+            dsLocal = dsLocal.isel(lat=slice(indices[0][0],
+                                             indices[-1][0]))
             dsLocal.load()
 
             if fieldName == 'zonalVel':
@@ -353,11 +359,6 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
             dsLocal = dsLocal.sel(lon=longitudes, method=str('nearest'))
 
-            lat = dsLocal.lat.values
-            mask = numpy.logical_and(lat >= minLat, lat <= maxLat)
-            indices = numpy.argwhere(mask)
-            dsLocal = dsLocal.isel(lat=slice(indices[0][0], indices[-1][0]))
-
             if dsObs is None:
                 dsObs = dsLocal
             else:
@@ -368,9 +369,10 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         if 'zonalVel' in dsObs and 'meridVel' in dsObs:
             # compute the velocity magnitude
-            description = 'Monthly velocity magnitude climatologies from ' \
-                          '2005-2010 average of the Southern Ocean State ' \
-                          'Estimate (SOSE)'
+            print('  velMag')
+            description = 'Monthly velocity magnitude climatologies ' \
+                          'from 2005-2010 average of the Southern Ocean ' \
+                          'State Estimate (SOSE)'
             dsObs['velMag'] = numpy.sqrt(
                 dsObs.zonalVel**2 + dsObs.meridVel**2)
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
