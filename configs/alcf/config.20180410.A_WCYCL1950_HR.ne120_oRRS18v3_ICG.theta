@@ -71,7 +71,7 @@ seaIceStreamsFileName = streams.cice
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /projects/OceanClimate_2/sprice/analysis/oRRS18to6v3.theta.TEST
+baseDirectory = /projects/OceanClimate_2/yourUsername/path/here
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list
