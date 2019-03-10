@@ -494,6 +494,11 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
+        def _preprocess(ds):
+            # drop unused variables during preprocessing because only the
+            # variables we want are guaranteed to be in all the files
+            return subset_variables(ds, self.variableList[season])
+
         fileNames = sorted(self.inputFiles)
         years, months = get_files_year_month(fileNames,
                                              self.historyStreams,
@@ -540,11 +545,11 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 monthName = constants.abrevMonthNames[month-1]
                 fileNames.append(self.get_file_name(season=monthName))
                 weights.append(constants.daysInMonth[month-1])
+
             with xarray.open_mfdataset(fileNames, concat_dim='weight',
                                        chunks={'nCells': chunkSize},
-                                       decode_cf=False, decode_times=False) \
-                    as ds:
-                ds = subset_variables(ds, self.variableList[season])
+                                       decode_cf=False, decode_times=False,
+                                       preprocess=_preprocess) as ds:
                 ds.coords['weight'] = ('weight', weights)
                 ds = ((ds.weight*ds).sum(dim='weight') /
                       ds.weight.sum(dim='weight'))
