@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20171031.tenYearTest.GMPAS-IAF.T62_oEC60to30v3wLI.60layer.theta
+mainRunName = 20190301.GMPAS-DIB-IAF-ISMF.T62_oRRS30to10v3wLI.theta
 
 # config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
@@ -23,7 +23,7 @@ mainRunName = 20171031.tenYearTest.GMPAS-IAF.T62_oEC60to30v3wLI.60layer.theta
 ## options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
-parallelTaskCount = 4
+parallelTaskCount = 8
 
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
@@ -45,24 +45,24 @@ baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/diagnostics
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lus/theta-fs0/projects/OceanClimate_2/mpeterse/20171031.tenYearTest.GMPAS-IAF.T62_oEC60to30v3wLI.60layer.theta/run
+baseDirectory = /lus/theta-fs0/projects/OceanClimate_2/outputForExampleThetaAnalysisConfigs/20190301.GMPAS-DIB-IAF-ISMF.T62_oRRS30to10v3wLI.theta/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oEC60to30v3wLI
+mpasMeshName = oRRS30to10v3wLI
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
+oceanNamelistFileName = mpaso_in
 oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
-seaIceStreamsFileName = streams.cice
+seaIceNamelistFileName = mpassi_in
+seaIceStreamsFileName = streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
 
-# directory where analysis should be written
-baseDirectory = /dir/to/analysis/output
+# directory where analysis should be written (**** MAKE SURE TO UPDATE WITH YOUR PREFERRED PATH ***)
+baseDirectory = /projects/OceanClimate_2/yourUsername/path/here
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list
@@ -94,9 +94,9 @@ generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs']
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 5
+startYear = 1
 # the last year over which to average climatalogies
-endYear = 10
+endYear = 2
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -106,7 +106,7 @@ endYear = 10
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 9999
+endYear = 2
 
 [index]
 ## options related to producing nino index.
@@ -116,7 +116,7 @@ endYear = 9999
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 9999
+endYear = 2
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
