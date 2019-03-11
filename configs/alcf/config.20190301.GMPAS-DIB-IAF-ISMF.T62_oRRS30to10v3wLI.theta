@@ -93,6 +93,9 @@ generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs']
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
+# should climatologies be performed with ncclimo or with xarray/dask
+useNcclimo = False
+
 # the first year over which to average climatalogies
 startYear = 1
 # the last year over which to average climatalogies

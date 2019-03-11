@@ -51,13 +51,13 @@ baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/azamatm/E3SM_simulations
 mpasMeshName = oRRS18to6v3
 
 # names of namelist and streams files, either a path relative to baseDirectory
-# or an absolute path. 
+# or an absolute path.
 
 # NOTE: these are the NEW / correct file names, commented out here because this sample config points to a run using an older version of the code.
-# Specifically, the run this points to uses hash = c133017ece33ad10715d98685137ddbffe7b0cb8 
+# Specifically, the run this points to uses hash = c133017ece33ad10715d98685137ddbffe7b0cb8
 # (github branch `theta/hr-prod/initial` https://github.com/E3SM-Project/E3SM/tree/theta/hr-prod/initial)
-# When pointing to a run conducted with the most recent branch of the code, the first 4 lines here should be made active and the latter 4 deleted 
-#oceanNamelistFileName = mpaso_in	
+# When pointing to a run conducted with the most recent branch of the code, the first 4 lines here should be made active and the latter 4 deleted
+#oceanNamelistFileName = mpaso_in
 #oceanStreamsFileName = streams.ocean
 #seaIceNamelistFileName = mpassi_in
 #seaIceStreamsFileName = streams.seaice
@@ -101,6 +101,9 @@ generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs', 'no_timeSeriesAntarcticMel
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
+
+# should climatologies be performed with ncclimo or with xarray/dask
+useNcclimo = False
 
 # the first year over which to average climatalogies
 startYear = 25
