@@ -52,9 +52,11 @@ preprocessedReferenceRunName = None
 # the number of parallel tasks (1 means tasks run in serial, the default)
 parallelTaskCount = 1
 
-# the parallelism mode in ncclimo ("serial" or "bck")
+# the parallelism mode in ncclimo ("serial", "bck" or "mpi")
 # Set this to "bck" (background parallelism) if running on a machine that can
 # handle 12 simultaneous processes, one for each monthly climatology.
+# Set to "mpi" to run one MPI task on each node and however many threads per
+# node to reach 12 total threads.
 ncclimoParallelMode = serial
 
 

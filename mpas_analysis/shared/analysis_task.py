@@ -164,7 +164,7 @@ class AnalysisTask(Process):  # {{{
         self._logFileName = None
 
         # the number of subprocesses run by this process, typically 1 but
-        # could be 12 for ncclimo in bck mode
+        # could be 12 for ncclimo in bck or mpi mode
         self.subprocessCount = 1
         # }}}
 
