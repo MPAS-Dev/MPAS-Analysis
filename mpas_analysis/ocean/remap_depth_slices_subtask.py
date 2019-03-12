@@ -94,7 +94,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # (RemapMpasClimatologySubtask)
         super(RemapDepthSlicesSubtask, self).__init__(
             mpasClimatologyTask, parentTask, climatologyName, variableList,
-            seasons, comparisonGridNames, iselValues, useNcremap=False)
+            seasons, comparisonGridNames, iselValues)
 
     def run_task(self):  # {{{
         """
@@ -224,6 +224,8 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
                 da.sum(dim='nVertLevels').where(self.verticalIndexMask)
 
         climatology = climatology.drop('verticalIndex')
+
+        climatology = climatology.transpose('depthSlice', 'nCells')
 
         return climatology  # }}}
 

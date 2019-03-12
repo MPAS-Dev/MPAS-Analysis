@@ -143,7 +143,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         super(ComputeTransectsSubtask, self).__init__(
             mpasClimatologyTask, parentTask,
             climatologyName=climatologyName, variableList=variableList,
-            seasons=seasons, subtaskName=subtaskName, useNcremap=False)
+            seasons=seasons, subtaskName=subtaskName)
 
         self.obsDatasets = obsDatasets
         self.transectCollectionName = transectCollectionName
@@ -300,6 +300,8 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         climatology['zMid'] = self.zMid
 
+        climatology = climatology.transpose('nVertLevels', 'nCells')
+
         return climatology  # }}}
 
     def customize_remapped_climatology(self, climatology, comparisonGridNames,
@@ -331,6 +333,14 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         climatology['transectNumber'] = self.transectNumber
 
         climatology['x'] = self.x
+
+        if 'nCells' in climatology.dims:
+            climatology = climatology.rename({'nCells': 'nPoints'})
+
+        dims = ['nPoints', 'nVertLevels']
+        if 'nv' in climatology.dims:
+            dims.append('nv')
+        climatology = climatology.transpose(*dims)
 
         return climatology  # }}}
 
