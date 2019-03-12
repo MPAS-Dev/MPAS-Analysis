@@ -520,12 +520,15 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             climatology = xr.open_dataset(climatologyFileName)
             climatology = mpas_xarray.subset_variables(climatology,
                                                        self.variableList)
-            iselValues = {'Time': 0}
+            iselValues = {}
+            if 'Time' in climatology.dims:
+                iselValues['Time'] = 0
             if self.iselValues is not None:
                 iselValues.update(self.iselValues)
             # select only Time=0 and possibly only the desired vertical
             # slice
-            climatology = climatology.isel(**iselValues)
+            if len(iselValues.keys()) > 0:
+                climatology = climatology.isel(**iselValues)
 
             # add valid mask as a variable, useful for remapping later
             climatology['validMask'] = \

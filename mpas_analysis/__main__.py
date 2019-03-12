@@ -33,6 +33,7 @@ from collections import OrderedDict
 import progressbar
 import logging
 import xarray
+import time
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -807,11 +808,22 @@ def main():
         # xarray version doesn't support file_cache_maxsize yet...
         pass
 
+    startTime = time.time()
+
     analyses = build_analysis_list(config, controlConfig)
     analyses = determine_analyses_to_generate(analyses, args.verbose)
 
+    setupDuration = time.time() - startTime
+
     if not args.setup_only and not args.html_only:
         run_analysis(config, analyses)
+        runDuration = time.time() - startTime
+        m, s = divmod(setupDuration, 60)
+        h, m = divmod(int(m), 60)
+        print('Total setup time: {}:{:02d}:{:05.2f}'.format(h, m, s))
+        m, s = divmod(runDuration, 60)
+        h, m = divmod(int(m), 60)
+        print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
         generate_html(config, analyses, controlConfig)

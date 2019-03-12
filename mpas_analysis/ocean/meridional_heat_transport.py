@@ -251,7 +251,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             annualClimatology = xr.open_dataset(climatologyFileName)
             annualClimatology = subset_variables(annualClimatology,
                                                  variableList)
-            annualClimatology = annualClimatology.isel(Time=0)
+            if 'Time' in annualClimatology.dims:
+                annualClimatology = annualClimatology.isel(Time=0)
 
             annualClimatology.coords['refZMid'] = (('nVertLevels',), refZMid)
             annualClimatology.coords['binBoundaryMerHeatTrans'] = \

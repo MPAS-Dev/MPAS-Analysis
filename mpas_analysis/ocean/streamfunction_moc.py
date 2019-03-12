@@ -296,7 +296,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         climatologyFileName = self.mpasClimatologyTask.get_file_name(
             season='ANN')
         annualClimatology = xr.open_dataset(climatologyFileName)
-        annualClimatology = annualClimatology.isel(Time=0)
+        if 'Time' in annualClimatology.dims:
+            annualClimatology = annualClimatology.isel(Time=0)
 
         # rename some variables for convenience
         annualClimatology = annualClimatology.rename(
@@ -397,7 +398,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         climatologyFileName = self.mpasClimatologyTask.get_file_name(
             season='ANN')
         annualClimatology = xr.open_dataset(climatologyFileName)
-        annualClimatology = annualClimatology.isel(Time=0)
+        if 'Time' in annualClimatology.dims:
+            annualClimatology = annualClimatology.isel(Time=0)
 
         if self.includeBolus:
             annualClimatology['avgNormalVelocity'] = \

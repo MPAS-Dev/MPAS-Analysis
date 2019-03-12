@@ -23,10 +23,10 @@ run_config_file="config.20190301.GMPAS-DIB-IAF-ISMF.T62_oRRS30to10v3wLI.theta"
 # NOTE: the following section will OVERWRITE values specified within the config file named above
 
 # one parallel task per node by default
-parallel_task_count=8
+parallel_task_count=12
 
 # ncclimo can run with 1 (serial) or 12 (bck) threads
-ncclimo_mode=bck      
+ncclimo_mode=bck
 
 if [ ! -f $run_config_file ]; then
     echo "File $run_config_file not found!"
