@@ -41,7 +41,7 @@ environment with the following packages:
 
  * numpy
  * scipy
- * matplotlib >= 3.2.0
+ * matplotlib >= 3.0.2
  * netCDF4
  * xarray >= 0.10.0
  * dask
