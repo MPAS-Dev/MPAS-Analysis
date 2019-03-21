@@ -22,6 +22,9 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
     os.environ['PROJ_LIB'] = '{}/{}/share/proj'.format(
             os.environ['CONDA_ENVS_PATH'], os.environ['CONDA_DEFAULT_ENV'])
+else:
+    os.environ['PROJ_LIB'] = '{}/share/proj'.format(os.environ['CONDA_PREFIX'])
+print(os.environ)
 from mpas_analysis.__main__ import add_task_and_subtasks
 from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
 from docs.parse_quick_start import build_quick_start

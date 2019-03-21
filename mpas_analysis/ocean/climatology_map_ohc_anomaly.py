@@ -318,7 +318,8 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         ohc = self._compute_ohc(climatology)
         refFileName = self.refYearClimatolgyTask.get_file_name(season)
         refYearClimo = xarray.open_dataset(refFileName)
-        refYearClimo = refYearClimo.isel(Time=0)
+        if 'Time' in refYearClimo.dims:
+            refYearClimo = refYearClimo.isel(Time=0)
         refOHC = self._compute_ohc(refYearClimo)
 
         climatology['deltaOHC'] = ohc - refOHC

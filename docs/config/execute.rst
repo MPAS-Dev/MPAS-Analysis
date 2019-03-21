@@ -12,9 +12,11 @@ control how tasks are executed within an MPAS-Analysis run::
   # the number of parallel tasks (1 means tasks run in serial, the default)
   parallelTaskCount = 1
 
-  # the parallelism mode in ncclimo ("serial" or "bck")
+  # the parallelism mode in ncclimo ("serial", "bck" or "mpi")
   # Set this to "bck" (background parallelism) if running on a machine that can
   # handle 12 simultaneous processes, one for each monthly climatology.
+  # Set to "mpi" to run one MPI task on each node and however many threads per
+  # node to reach 12 total threads.
   ncclimoParallelMode = serial
 
 Parallel Tasks
@@ -42,17 +44,22 @@ Parallelism in NCO
 ------------------
 
 The ``ncclimo`` command from the `NetCDF Operators (NCO) package`_ is used
-internally in MPAS-Analysis. This command supports two options for parallelism,
-that are compatible with MPAS-Analysis: ``serial`` or ``bck``.  If set to
-``serial``, the default, any MPAS-Analysis tasks that use ``ncclimo`` will
-compute climatologies one month and then one season at a time.  If ``bck`` mode
-is used, 12 threads are spawned, one for each month, and then separate threads
+internally in MPAS-Analysis. This command supports three options for
+parallelism: ``serial``, ``bck`` or ``mpi``.  If set to ``serial``, the
+default, any MPAS-Analysis tasks that use ``ncclimo`` will compute
+climatologies one month and then one season at a time.  If ``bck`` mode is
+used, 12 threads are spawned, one for each month, and then separate threads
 are used to compute each season.  Given that computing climatologies takes up
 a significant portion of the runtime in MPAS-Analysis, the speed-up of nearly
-a factor of 12 in these computations can be quite noticeable.
+a factor of 12 in these computations can be quite noticeable.  For very big
+data sets, it may be necessary to run ``ncclimo`` on multiple nodes to prevent
+running out of memory.  Spawn a job with between 2 and 12 nodes, and set
+``ncclimoParallelMode = mpi`` to run the 12 ``ncclimo`` threads on multiple
+nodes.
 
 Again, when running MPAS-Analysis on login nodes of supercomputing facilities,
 it is important to be aware of the policies regarding using shared resources,
 and ``bck`` may only be appropriate when running jobs on the compute nodes.
+``mpi`` mode may not work at all on login nodes.
 
 .. _`NetCDF Operators (NCO) package`: http://nco.sourceforge.net/nco.html

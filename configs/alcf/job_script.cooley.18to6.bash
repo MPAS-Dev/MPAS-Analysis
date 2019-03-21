@@ -1,7 +1,7 @@
 #!/bin/bash
-#COBALT -t 6:00:00
+#COBALT -t 3:00:00
 #COBALT -n 1
-#COBALT -A ClimateEnergy_2
+#COBALT -A OceanClimate_2
 # This software is open source software available under the BSD-3 license.
 #
 # Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
@@ -18,9 +18,13 @@ export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
-run_config_file="config.run_name_here"
+run_config_file="config.20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta"
+
+# NOTE: the following section will OVERWRITE values specified within the config file named above
+
 # one parallel task per node by default
-parallel_task_count=1
+parallel_task_count=8
+
 # ncclimo can run with 1 (serial) or 12 (bck) threads
 ncclimo_mode=serial
 
@@ -36,7 +40,7 @@ job_config_file=config.output.$COBALT_JOBID
 # write out the config file specific to this job
 cat <<EOF > $job_config_file
 [execute]
-## options related to executing parallel tasks
+# options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
 parallelTaskCount = $parallel_task_count
@@ -52,3 +56,4 @@ EOF
 # "python -m"
 
 python -m mpas_analysis $run_config_file $job_config_file
+

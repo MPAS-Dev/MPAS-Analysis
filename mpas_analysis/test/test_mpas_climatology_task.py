@@ -31,6 +31,7 @@ from mpas_analysis.shared.analysis_task import \
     update_time_bounds_from_file_names
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
+from mpas_analysis.shared.constants import constants
 
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -66,7 +67,7 @@ class TestMpasClimatologyTask(TestCase):
             tags=['climatology'])
         climatologyName = 'ssh'
         variableList = ['timeMonthly_avg_ssh']
-        seasons = [mpasClimatologyTask.seasons[0]]
+        seasons = list(mpasClimatologyTask.variableList.keys())
 
         remapSubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask, parentTask, climatologyName,
@@ -83,21 +84,33 @@ class TestMpasClimatologyTask(TestCase):
 
         return variableList, seasons
 
+    def verify_variables_for_season(self, mpasClimatologyTask, variableList,
+                                    season):
+        assert(season in mpasClimatologyTask.variableList.keys())
+        monthValues = constants.monthDictionary[season]
+        monthNames = [constants.abrevMonthNames[month-1] for month in
+                      monthValues]
+        assert(variableList == mpasClimatologyTask.variableList[season])
+        for monthName in monthNames:
+            assert(monthName in mpasClimatologyTask.variableList.keys())
+            assert(variableList ==
+                   mpasClimatologyTask.variableList[monthName])
+
     def test_add_variables(self):
         mpasClimatologyTask = self.setup_task()
         variableList, seasons = self.add_variables(mpasClimatologyTask)
 
-        assert(variableList == mpasClimatologyTask.variableList)
-        assert(seasons == mpasClimatologyTask.seasons)
+        for season in seasons:
+            self.verify_variables_for_season(mpasClimatologyTask, variableList,
+                                             season)
 
         # add a variable and season already in the list
         mpasClimatologyTask.add_variables(variableList=[variableList[0]],
                                           seasons=[seasons[-1]])
 
-        # make sure the lists still match (extra redundant varible and season
-        # weren't added)
-        assert(variableList == mpasClimatologyTask.variableList)
-        assert(seasons == mpasClimatologyTask.seasons)
+        for season in seasons:
+            self.verify_variables_for_season(mpasClimatologyTask, variableList,
+                                             season)
 
     def test_get_file_name(self):
         mpasClimatologyTask = self.setup_task()
@@ -119,7 +132,7 @@ class TestMpasClimatologyTask(TestCase):
 
         mpasClimatologyTask.run(writeLogFile=False)
 
-        for season in mpasClimatologyTask.seasons:
+        for season in mpasClimatologyTask.variableList:
             fileName = mpasClimatologyTask.get_file_name(season=season)
             assert(os.path.exists(fileName))
 

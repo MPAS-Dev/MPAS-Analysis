@@ -33,6 +33,7 @@ from collections import OrderedDict
 import progressbar
 import logging
 import xarray
+import time
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -461,6 +462,8 @@ def run_analysis(config, analyses):  # {{{
     progress = progressbar.ProgressBar(widgets=widgets,
                                        maxval=totalTaskCount).start()
 
+    runningProcessCount = 0
+
     # run each analysis task
     while True:
         # we still have tasks to run
@@ -485,7 +488,7 @@ def run_analysis(config, analyses):  # {{{
 
         progress.update(totalTaskCount - unfinishedCount)
 
-        if unfinishedCount <= 0 and len(runningTasks.keys()) == 0:
+        if unfinishedCount <= 0 and runningProcessCount == 0:
             # we're done
             break
 
@@ -493,12 +496,22 @@ def run_analysis(config, analyses):  # {{{
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
+                    newProcessCount = runningProcessCount + \
+                        analysisTask.subprocessCount
+                    if newProcessCount > parallelTaskCount and \
+                            runningProcessCount > 0:
+                        # this task should run next but we need to wait for
+                        # more processes to finish
+                        break
+
                     logger.info('Running {}'.format(
                         analysisTask.printTaskName))
                     analysisTask._runStatus.value = AnalysisTask.RUNNING
                     analysisTask.start()
                     runningTasks[key] = analysisTask
-                    if len(runningTasks.keys()) >= parallelTaskCount:
+                    runningProcessCount = newProcessCount
+                    if runningProcessCount >= parallelTaskCount:
+                        # don't try to run any more tasks
                         break
                 else:
                     analysisTask.run(writeLogFile=False)
@@ -508,6 +521,7 @@ def run_analysis(config, analyses):  # {{{
             analysisTask = wait_for_task(runningTasks)
             key = (analysisTask.taskName, analysisTask.subtaskName)
             runningTasks.pop(key)
+            runningProcessCount -= analysisTask.subprocessCount
 
             taskTitle = analysisTask.printTaskName
 
@@ -794,11 +808,22 @@ def main():
         # xarray version doesn't support file_cache_maxsize yet...
         pass
 
+    startTime = time.time()
+
     analyses = build_analysis_list(config, controlConfig)
     analyses = determine_analyses_to_generate(analyses, args.verbose)
 
+    setupDuration = time.time() - startTime
+
     if not args.setup_only and not args.html_only:
         run_analysis(config, analyses)
+        runDuration = time.time() - startTime
+        m, s = divmod(setupDuration, 60)
+        h, m = divmod(int(m), 60)
+        print('Total setup time: {}:{:02d}:{:05.2f}'.format(h, m, s))
+        m, s = divmod(runDuration, 60)
+        h, m = divmod(int(m), 60)
+        print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
         generate_html(config, analyses, controlConfig)

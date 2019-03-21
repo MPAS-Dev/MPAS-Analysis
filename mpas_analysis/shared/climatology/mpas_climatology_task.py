@@ -16,6 +16,7 @@ import xarray
 import os
 import subprocess
 from distutils.spawn import find_executable
+import dask
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -26,7 +27,11 @@ from mpas_analysis.shared.climatology.climatology import \
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
 
+from mpas_analysis.shared.io import write_netcdf
+
 from mpas_analysis.shared.constants import constants
+
+from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -37,18 +42,14 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     Attributes
     ----------
 
-    variableList : list of str
-        A list of variable names in ``timeSeriesStatsMonthly`` to be
-        included in the climatologies
+    variableList : dict of lists
+        A dictionary with seasons as keys and a list of variable names in
+        ``timeSeriesStatsMonthly`` to be included in the climatologies for each
+        season in the values.
 
     allVariables : list of str
         A list of all available variable names in ``timeSeriesStatsMonthly``
         used to raise an exception when an unavailable variable is requested
-
-    seasons : list of str
-        A list of seasons (keys in ``shared.constants.monthDictionary``)
-        over which the climatology should be computed or ``[]`` if only
-        monthly climatologies are needed.
 
     inputFiles : list of str
         A list of input files used to compute the climatologies.
@@ -61,6 +62,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The start and end years of the climatology
+
+    seasonSubtasks : dict
+        If using xarray to compute climatologies, a dictionary of subtasks, one
+        for each possible season
     '''
     # Authors
     # -------
@@ -87,8 +92,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        self.variableList = []
-        self.seasons = []
+        self.variableList = {}
 
         tags = ['climatology']
 
@@ -106,6 +110,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             taskName = 'mpasClimatology{}'.format(suffix)
 
         self.allVariables = None
+        self.useNcclimo = config.getboolean('climatology', 'useNcclimo')
 
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologyTask, self).__init__(
@@ -114,6 +119,38 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             componentName=componentName,
             tags=tags)
 
+        ncclimoParallelMode = config.get('execute', 'ncclimoParallelMode')
+        if self.useNcclimo and ncclimoParallelMode in ['bck', 'mpi']:
+            self.subprocessCount = 12
+
+        self.seasonSubtasks = {}
+
+        parallelTaskCount = config.getint('execute', 'parallelTaskCount')
+        if not self.useNcclimo:
+            self.subprocessCount = 1
+
+            # setup one subtask for each possible season that could be added
+            for season in constants.monthDictionary:
+                if season in constants.abrevMonthNames:
+                    subprocessCount = max(parallelTaskCount // 12, 1)
+                else:
+                    # something to experiment with
+                    subprocessCount = 2
+                self.seasonSubtasks[season] = MpasClimatologySeasonSubtask(
+                    self, season, subprocessCount=subprocessCount)
+                self.add_subtask(self.seasonSubtasks[season])
+
+            # make sure each season runs after the months that make up that
+            # season
+            for season in constants.monthDictionary:
+                if season in constants.abrevMonthNames:
+                    continue
+                monthValues = constants.monthDictionary[season]
+                monthNames = [constants.abrevMonthNames[month-1] for month in
+                              monthValues]
+                for monthName in monthNames:
+                    self.seasonSubtasks[season].run_after(
+                            self.seasonSubtasks[monthName])
         # }}}
 
     def add_variables(self, variableList, seasons=None):  # {{{
@@ -151,19 +188,29 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                              'or add_variables() is being called in the wrong '
                              'place.')
 
+        if seasons is None:
+            seasons = list(constants.abrevMonthNames)
+
         for variable in variableList:
             if variable not in self.allVariables:
                 raise ValueError(
                     '{} is not available in timeSeriesStatsMonthly '
                     'output:\n{}'.format(variable, self.allVariables))
 
-            if variable not in self.variableList:
-                self.variableList.append(variable)
-
-        if seasons is not None:
             for season in seasons:
-                if season not in self.seasons:
-                    self.seasons.append(season)
+                if season not in self.variableList:
+                    self.variableList[season] = []
+                if variable not in self.variableList[season]:
+                    self.variableList[season].append(variable)
+
+        # add variables to individual months as well, since those will
+        # be computed first
+        for season in seasons:
+            if season not in constants.abrevMonthNames:
+                monthValues = constants.monthDictionary[season]
+                monthNames = [constants.abrevMonthNames[month-1] for month in
+                              monthValues]
+                self.add_variables(variableList, seasons=monthNames)
 
         # }}}
 
@@ -225,8 +272,12 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        if len(self.variableList) == 0:
+        if len(self.variableList.keys()) == 0:
             # nothing to do
+            return
+
+        if not self.useNcclimo:
+            # subtasks will take care of it, so nothing to do
             return
 
         self.logger.info('\nComputing MPAS climatologies from files:\n'
@@ -235,7 +286,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                              os.path.basename(self.inputFiles[-1])))
 
         seasonsToCheck = list(constants.abrevMonthNames)
-        for season in self.seasons:
+
+        for season in self.variableList:
             if season not in seasonsToCheck:
                 seasonsToCheck.append(season)
 
@@ -251,13 +303,15 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 break
 
         if allExist:
-            # make sure all the necessary variables are also present
-            ds = xarray.open_dataset(self.get_file_name(seasonsToCheck[0]))
-
-            for variableName in self.variableList:
-                if variableName not in ds.variables:
-                    allExist = False
-                    break
+            for season in seasonsToCheck:
+                if season not in self.variableList:
+                    continue
+                # make sure all the necessary variables are also present
+                with xarray.open_dataset(self.get_file_name(season)) as ds:
+                    for variableName in self.variableList[season]:
+                        if variableName not in ds.variables:
+                            allExist = False
+                            break
 
         if not allExist:
             self._compute_climatologies_with_ncclimo(
@@ -384,11 +438,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         ------
         OSError
             If ``ncclimo`` is not in the system path.
-
-        Author
-        ------
-        Xylar Asay-Davis
         '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
 
         if find_executable('ncclimo') is None:
             raise OSError('ncclimo not found. Make sure the latest nco '
@@ -399,8 +452,15 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         parallelMode = self.config.get('execute', 'ncclimoParallelMode')
 
-        seasons = [season for season in self.seasons
+        seasons = [season for season in self.variableList
                    if season not in constants.abrevMonthNames]
+
+        variableList = []
+        for season in self.variableList:
+            variableList.extend(self.variableList[season])
+
+        # include each variable only once
+        variableList = sorted(list(set(variableList)))
 
         if len(seasons) == 0:
             seasons = ['none']
@@ -411,7 +471,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 '-a', 'sdd',
                 '-m', self.ncclimoModel,
                 '-p', parallelMode,
-                '-v', ','.join(self.variableList),
+                '-v', ','.join(variableList),
                 '--seasons={}'.format(','.join(seasons)),
                 '-s', '{:04d}'.format(self.startYear),
                 '-e', '{:04d}'.format(self.endYear),
@@ -452,5 +512,191 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # }}}
     # }}}
 
+
+class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
+    '''
+    An analysis subtasks for computing climatologies from output from the
+    ``timeSeriesStatsMonthly`` analysis member for a single month or season.
+
+    Attributes
+    ----------
+
+    season : str
+        The season of the climatology
+
+    parentTask : ``MpasClimatologyTask``
+        The task that this subtask belongs to.
+    '''
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, season, subtaskName=None,
+                 subprocessCount=1):  # {{{
+        '''
+        Construct the analysis task and adds it as a subtask of the
+        ``parentTask``.
+
+        Parameters
+        ----------
+        parentTask : ``MpasClimatologyTask``
+            The task that this subtask belongs to.
+
+        season : str
+            A keys in ``shared.constants.monthDictionary``
+
+        subtaskName : str, optional
+            the name of the subtask, defaults to season
+
+        subprocessCount : int, optional
+            The number of subprocesses (dask threads) this task is allowed to
+            use
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        self.season = season
+
+        if subtaskName is None:
+            subtaskName = season
+
+        self.subprocessCount = subprocessCount
+        self.parentTask = parentTask
+
+        # call the constructor from the base class (AnalysisTask)
+        super(MpasClimatologySeasonSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName=subtaskName)
+
+        # }}}
+
+    def run_task(self):  # {{{
+        '''
+        Compute the requested climatologies
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        season = self.season
+        parentTask = self.parentTask
+        if season not in parentTask.variableList:
+            # nothing to do
+            return
+
+        variableList = parentTask.variableList[season]
+
+        if len(variableList) == 0:
+            # nothing to do
+            return
+
+        self.logger.info('\nComputing MPAS climatology from files:\n'
+                         '    {} through\n    {}'.format(
+                             os.path.basename(parentTask.inputFiles[0]),
+                             os.path.basename(parentTask.inputFiles[-1])))
+
+        climatologyFileName = parentTask.get_file_name(season)
+        climatologyDirectory = get_unmasked_mpas_climatology_directory(
+            self.config)
+
+        allExist = False
+        if os.path.exists(climatologyFileName):
+            allExist = True
+            # make sure all the necessary variables are also present
+            with xarray.open_dataset(climatologyFileName) as ds:
+                for variableName in variableList:
+                    if variableName not in ds.variables:
+                        allExist = False
+                        break
+
+        if not allExist:
+            with dask.config.set(scheduler='threads'):
+                self._compute_climatologies_with_xarray(
+                    inDirectory=parentTask.symlinkDirectory,
+                    outDirectory=climatologyDirectory)
+
+        # }}}
+
+    def _compute_climatologies_with_xarray(self, inDirectory, outDirectory):
+        # {{{
+        '''
+        Uses xarray to compute seasonal and/or annual climatologies.
+
+        Parameters
+        ----------
+        inDirectory : str
+            The run directory containing timeSeriesStatsMonthly output
+
+        outDirectory : str
+            The output directory where climatologies will be written
+        '''
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        def _preprocess(ds):
+            # drop unused variables during preprocessing because only the
+            # variables we want are guaranteed to be in all the files
+            return subset_variables(ds, variableList)
+
+        season = self.season
+        parentTask = self.parentTask
+        variableList = parentTask.variableList[season]
+
+        chunkSize = self.config.getint('input', 'maxChunkSize')
+
+        if season in constants.abrevMonthNames:
+            # this is an individual month, so create a climatology from
+            # timeSeriesStatsMonthlyOutput
+
+            fileNames = sorted(parentTask.inputFiles)
+            years, months = get_files_year_month(
+                fileNames,  self.historyStreams,
+                'timeSeriesStatsMonthlyOutput')
+
+            with xarray.open_mfdataset(parentTask.inputFiles,
+                                       concat_dim='Time',
+                                       chunks={'nCells': chunkSize},
+                                       decode_cf=False, decode_times=False,
+                                       preprocess=_preprocess) as ds:
+
+                ds.coords['year'] = ('Time', years)
+                ds.coords['month'] = ('Time', months)
+                month = constants.abrevMonthNames.index(season) + 1
+                climatologyFileName = parentTask.get_file_name(season)
+                self.logger.info('computing climatology {}'.format(
+                    os.path.basename(climatologyFileName)))
+
+                ds = ds.where(ds.month == month, drop=True)
+                ds = ds.mean(dim='Time')
+                ds.compute(num_workers=self.subprocessCount)
+                write_netcdf(ds, climatologyFileName)
+        else:
+            outFileName = parentTask.get_file_name(season=season)
+            self.logger.info('computing climatology {}'.format(
+                os.path.basename(outFileName)))
+            fileNames = []
+            weights = []
+            for month in constants.monthDictionary[season]:
+                monthName = constants.abrevMonthNames[month-1]
+                fileNames.append(parentTask.get_file_name(season=monthName))
+                weights.append(constants.daysInMonth[month-1])
+
+            with xarray.open_mfdataset(fileNames, concat_dim='weight',
+                                       chunks={'nCells': chunkSize},
+                                       decode_cf=False, decode_times=False,
+                                       preprocess=_preprocess) as ds:
+                ds.coords['weight'] = ('weight', weights)
+                ds = ((ds.weight*ds).sum(dim='weight') /
+                      ds.weight.sum(dim='weight'))
+                ds.compute(num_workers=self.subprocessCount)
+                write_netcdf(ds, outFileName)
+
+        # }}}
+    # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

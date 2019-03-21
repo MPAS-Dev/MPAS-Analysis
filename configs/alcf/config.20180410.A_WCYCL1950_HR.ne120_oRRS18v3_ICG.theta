@@ -23,7 +23,7 @@ mainRunName = 20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta
 ## options related to executing parallel tasks
 
 # the number of parallel tasks (1 means tasks run in serial, the default)
-parallelTaskCount = 1
+parallelTaskCount = 4
 
 # the parallelism mode in ncclimo ("serial" or "bck")
 # Set this to "bck" (background parallelism) if running on a machine that can
@@ -39,19 +39,28 @@ ncclimoParallelMode = serial
 # its location).  For other machines, this would be the directory pointed to
 # when running "download_analysis_data.py" to get the public observations,
 # mapping files and region files.
-baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/diagnostics
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_2/azamatm/E3SM_simulations/20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta/run
+baseDirectory = /lus/theta-fs0/projects/ClimateEnergy_3/azamatm/E3SM_simulations/20180410.A_WCYCL1950_HR.ne120_oRRS18v3_ICG.theta/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oRRS18to6v3
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
+
+# NOTE: these are the NEW / correct file names, commented out here because this sample config points to a run using an older version of the code.
+# Specifically, the run this points to uses hash = c133017ece33ad10715d98685137ddbffe7b0cb8
+# (github branch `theta/hr-prod/initial` https://github.com/E3SM-Project/E3SM/tree/theta/hr-prod/initial)
+# When pointing to a run conducted with the most recent branch of the code, the first 4 lines here should be made active and the latter 4 deleted
+#oceanNamelistFileName = mpaso_in
+#oceanStreamsFileName = streams.ocean
+#seaIceNamelistFileName = mpassi_in
+#seaIceStreamsFileName = streams.seaice
 oceanNamelistFileName = mpas-o_in
 oceanStreamsFileName = streams.ocean
 seaIceNamelistFileName = mpas-cice_in
@@ -62,7 +71,7 @@ seaIceStreamsFileName = streams.cice
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /dir/to/analysis/output
+baseDirectory = /projects/OceanClimate_2/yourUsername/path/here
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list
@@ -87,16 +96,19 @@ baseDirectory = /dir/to/analysis/output
 # option:
 #    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_landIceCavities', , 'no_eke', 'no_BGC', 'no_icebergs']
+generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs', 'no_timeSeriesAntarcticMelt', 'no_climatologyMapAntarcticMelt']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
+# should climatologies be performed with ncclimo or with xarray/dask
+useNcclimo = False
+
 # the first year over which to average climatalogies
-startYear = 10
+startYear = 25
 # the last year over which to average climatalogies
-endYear = 10
+endYear = 27
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -105,8 +117,8 @@ endYear = 10
 # start and end years for timeseries analysis. Using out-of-bounds values
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
-startYear = 8
-endYear = 10
+startYear = 25
+endYear = 27
 
 [index]
 ## options related to producing nino index.
@@ -115,5 +127,17 @@ endYear = 10
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
-startYear = 1
-endYear = 9999
+startYear = 25
+endYear = 27
+
+[streamfunctionMOC]
+## options related to plotting the streamfunction of the meridional overturning
+## circulation (MOC)
+
+# Use postprocessing script to compute the MOC? You want this to be True
+# for low-resolution simulations that use GM to parameterize eddies, because
+# the online MOC analysis member currently does not include the bolus velocity
+# in its calculation, whereas the postprocessing script does.
+# NOTE: this is a temporary option that will be removed once the online
+# MOC takes into account the bolus velocity when GM is on.
+usePostprocessingScript = True
