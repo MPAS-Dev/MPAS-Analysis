@@ -204,10 +204,10 @@ def _generate_thumbnails(imageFileName, directory):
 
     if imageSize[0] < imageSize[1]:
         orientation = 'vert'
-        thumbnailHeight = 480
+        thumbnailHeight = 320
     else:
         orientation = 'horiz'
-        thumbnailHeight = 180
+        thumbnailHeight = 120
 
     # first, make a thumbnail with the same aspect ratio
     factor = image.size[1] / float(thumbnailHeight)
