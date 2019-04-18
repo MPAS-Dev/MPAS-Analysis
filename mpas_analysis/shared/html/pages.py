@@ -420,7 +420,8 @@ class ComponentPage(object):
         images[imageFileName] = OrderedDict()
         image = images[imageFileName]
         for tag in ['thumbnailDescription', 'imageDescription',
-                    'imageCaption', 'imageSize', 'orientation']:
+                    'imageCaption', 'imageSize', 'thumbnailWidth',
+                    'thumbnailHeight', 'orientation']:
             node = xmlRoot.find(tag)
             if node is None or node.text is None:
                 image[tag] = ''
@@ -501,7 +502,8 @@ class ComponentPage(object):
         """fill in the template for a given image with the desired content"""
         replacements = {'@imageFileName': imageFileName}
         for tag in ['imageSize', 'imageDescription', 'imageCaption',
-                    'thumbnailDescription', 'orientation']:
+                    'thumbnailDescription', 'orientation', 'thumbnailWidth',
+                    'thumbnailHeight']:
             replacements['@{}'.format(tag)] = imageDict[tag]
 
         imageText = _replace_tempate_text(self.templates['image'],

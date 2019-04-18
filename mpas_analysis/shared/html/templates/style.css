@@ -124,7 +124,6 @@ div.desc-small {
 }
 
 img.horiz {
-    width: auto;
     height: 120px;
 }
 
@@ -134,7 +133,6 @@ div.horiz {
 }
 
 img.vert {
-    width: auto;
     height: 320px;
 }
 
