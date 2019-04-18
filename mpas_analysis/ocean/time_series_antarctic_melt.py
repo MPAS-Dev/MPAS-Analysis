@@ -262,7 +262,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             os.remove(outFileName)
 
         # work on data from simulations
-        freshwaterFlux = dsIn.timeMonthly_avg_landIceFreshwaterFlux
+        freshwaterFlux = dsIn.timeMonthly_avg_landIceFreshwaterFlux.chunk(
+            {'Time': 12})
 
         restartFileName = \
             mpasTimeSeriesTask.runStreams.readpath('restart')[0]
@@ -286,16 +287,18 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         # select only those regions we want to plot
         dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-        cellMasks = dsRegionMask.regionCellMasks
+        cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
         # convert from kg/s to kg/yr
         totalMeltFlux = constants.sec_per_year * \
             (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
+        totalMeltFlux.compute()
 
         totalArea = (cellMasks * areaCell).sum(dim='nCells')
 
         # from kg/m^2/yr to m/yr
         meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
+        meltRates.compute()
 
         # convert from kg/yr to GT/yr
         totalMeltFlux /= constants.kg_per_GT
