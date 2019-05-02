@@ -33,6 +33,8 @@ from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.html import write_image_xml
+from mpas_analysis.shared.climatology.climatology import \
+    get_climatology_op_directory
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{
@@ -232,8 +234,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         config = self.config
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 
@@ -358,8 +359,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         '''compute mean MOC streamfunction as a post-process'''
 
         config = self.config
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 
@@ -685,8 +685,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 

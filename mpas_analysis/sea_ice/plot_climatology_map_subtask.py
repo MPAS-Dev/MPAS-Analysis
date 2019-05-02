@@ -336,7 +336,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                     self.controlConfig, season=season,
                     componentName=self.componentName,
                     climatologyName=climatologyName,
-                    comparisonGridName=comparisonGridName)
+                    comparisonGridName=comparisonGridName,
+                    op=self.remapMpasClimatologySubtask.op)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
             controlStartYear = self.controlConfig.getint('climatology',
                                                          'startYear')
