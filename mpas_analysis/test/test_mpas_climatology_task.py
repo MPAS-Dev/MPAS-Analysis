@@ -117,7 +117,7 @@ class TestMpasClimatologyTask(TestCase):
         variableList, seasons = self.add_variables(mpasClimatologyTask)
 
         fileName = mpasClimatologyTask.get_file_name(season='JFM')
-        assert(fileName == '{}/clim/mpas/unmasked_oQU240/'
+        assert(fileName == '{}/clim/mpas/avg/unmasked_oQU240/'
                'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))
 
     def test_run_analysis(self):
@@ -208,10 +208,11 @@ class TestMpasClimatologyTask(TestCase):
         remapSubtask = self.setup_subtask(mpasClimatologyTask)
 
         fileName = remapSubtask.get_masked_file_name(season='JFM')
-        assert(fileName == '{}/clim/mpas/masked/ssh_oQU240/'
+        assert(fileName == '{}/clim/mpas/avg/masked/ssh_oQU240/'
                'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))
 
         fileName = remapSubtask.get_remapped_file_name(
             season='JFM', comparisonGridName='latlon')
-        assert(fileName == '{}/clim/mpas/remapped/ssh_oQU240_to_0.5x0.5degree/'
-               'mpaso_JFM_000201_000203_climo.nc'.format(str(self.test_dir)))
+        assert(fileName == '{}/clim/mpas/avg/remapped/'
+               'ssh_oQU240_to_0.5x0.5degree/mpaso_JFM_000201_000203_climo.nc'
+               ''.format(str(self.test_dir)))
