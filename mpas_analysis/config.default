@@ -786,9 +786,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -828,9 +828,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = viridis
@@ -849,9 +849,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -870,9 +870,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -892,9 +892,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = viridis
@@ -913,9 +913,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -934,9 +934,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -956,9 +956,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = viridis
@@ -977,9 +977,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -998,9 +998,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
