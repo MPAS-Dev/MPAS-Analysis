@@ -60,17 +60,17 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
                         title='Density MLD',
                         mpasVariableSuffix='dThreshMLD',
                         filePrefix='d_mld',
-                        sectionName='climatologyMapDensityMLDMinMax')
+                        sectionPrefix='climatologyMapDensityMLD')
         self._add_tasks(config, mpasClimatologyTasks, controlConfig,
                         title='Temperature MLD',
                         mpasVariableSuffix='tThreshMLD',
                         filePrefix='t_mld',
-                        sectionName='climatologyMapTemperatureMLDMinMax')
+                        sectionPrefix='climatologyMapTemperatureMLD')
         self._add_tasks(config, mpasClimatologyTasks, controlConfig,
                         title='Boundary-Layer Depth',
                         mpasVariableSuffix='boundaryLayerDepth',
                         filePrefix='bld',
-                        sectionName='climatologyMapBLDMinMax')
+                        sectionPrefix='climatologyMapBLD')
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -102,25 +102,25 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
         # }}}
 
     def _add_tasks(self, config, mpasClimatologyTasks, controlConfig,
-                   title, mpasVariableSuffix, filePrefix, sectionName):
+                   title, mpasVariableSuffix, filePrefix, sectionPrefix):
         '''
         Add tasks for a given variable
         '''
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getExpression(self.taskName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
-                             'of seasons'.format(sectionName))
+                             'of seasons'.format(self.taskName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getExpression(self.taskName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
-                             'of comparison grids'.format(sectionName))
+                             'of comparison grids'.format(self.taskName))
 
         remapClimatologySubtasks = {}
         mpasFieldNames = {}
@@ -147,6 +147,7 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
             diffTitleLabel = 'Max - Min {}'.format(title)
             galleryName = title
             outFileLabel = '{}_min_max'.format(filePrefix)
+            sectionName = '{}MinMax'.format(sectionPrefix)
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
@@ -195,6 +196,7 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
                             upperOp, filePrefix, season, comparisonGridName)
                         fieldNameInTitle = '{} {}'.format(upperOp, title)
                         outFileLabel = '{}_{}'.format(filePrefix, op)
+                        sectionName = '{}{}'.format(sectionPrefix, upperOp)
 
                         # make a new subtask for this season and comparison
                         # grid
