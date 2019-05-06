@@ -119,7 +119,7 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        return self.nml[key]
+        return self.nml[key.lower()]
 
     # provide accessor for dictionary notation (returns string)
     def __getitem__(self, key):
@@ -140,7 +140,7 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        return self.nml[key]
+        return self.nml[key.lower()]
 
     # provide accessors for get, getint, getfloat, getbool with appropriate
     # casting for comparable behavior with config files #{{{
@@ -162,7 +162,7 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        return self.nml[key]
+        return self.nml[key.lower()]
 
     def getint(self, key):
         """
@@ -182,7 +182,7 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        return int(self.nml[key])
+        return int(self.nml[key.lower()])
 
     def getfloat(self, key):
         """
@@ -202,7 +202,7 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        return float(self.nml[key])
+        return float(self.nml[key.lower()])
 
     def getbool(self, key):
         """
@@ -222,7 +222,7 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        if 'True' in self.nml[key] or 'true' in self.nml[key]:
+        if 'True' in self.nml[key.lower()] or 'true' in self.nml[key.lower()]:
             return True
         else:
             return False

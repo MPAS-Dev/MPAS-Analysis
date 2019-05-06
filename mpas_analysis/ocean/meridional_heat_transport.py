@@ -24,7 +24,8 @@ from mpas_analysis.shared.io import write_netcdf, subset_variables
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
-
+from mpas_analysis.shared.climatology.climatology import \
+    get_climatology_op_directory
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
     '''
@@ -168,8 +169,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         movingAveragePoints = config.getint('meridionalHeatTransport',
                                             'movingAveragePoints')
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 
@@ -300,9 +300,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                                          'startYear')
             controlEndYear = self.controlConfig.getint('climatology',
                                                        'endYear')
-            controlDirectory = build_config_full_path(
-                self.controlConfig, 'output',
-                'mpasClimatologySubdirectory')
+            controlDirectory = get_climatology_op_directory(self.controlConfig)
 
             controlFileName = \
                 '{}/meridionalHeatTransport_years{:04d}-{:04d}.nc'.format(

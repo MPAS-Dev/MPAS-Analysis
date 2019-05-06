@@ -22,10 +22,11 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.climatology.climatology import \
     get_unmasked_mpas_climatology_directory, \
-    get_unmasked_mpas_climatology_file_name
+    get_unmasked_mpas_climatology_file_name, \
+    get_climatology_op_directory
 
-from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, get_files_year_month
+from mpas_analysis.shared.io.utility import make_directories, \
+    get_files_year_month
 
 from mpas_analysis.shared.io import write_netcdf
 
@@ -37,19 +38,19 @@ from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 class MpasClimatologyTask(AnalysisTask):  # {{{
     '''
     An analysis tasks for computing climatologies from output from the
-    ``timeSeriesStatsMonthly`` analysis member.
+    ``timeSeriesStatsMonthly*`` analysis members.
 
     Attributes
     ----------
 
     variableList : dict of lists
         A dictionary with seasons as keys and a list of variable names in
-        ``timeSeriesStatsMonthly`` to be included in the climatologies for each
-        season in the values.
+        the stream to be included in the climatologies for each season in the
+        values.
 
     allVariables : list of str
-        A list of all available variable names in ``timeSeriesStatsMonthly``
-        used to raise an exception when an unavailable variable is requested
+        A list of all available variable names in the stream used to raise an
+        exception when an unavailable variable is requested
 
     inputFiles : list of str
         A list of input files used to compute the climatologies.
@@ -66,12 +67,22 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     seasonSubtasks : dict
         If using xarray to compute climatologies, a dictionary of subtasks, one
         for each possible season
+
+    op : {'avg', 'min', 'max'}
+         operator for monthly stats
+
+    streamName : str
+        The name of the stream to read from, one of
+        ``timeSeriesStatsMonthlyOutput``,
+        ``timeSeriesStatsMonthlyMinOutput``,
+        ``timeSeriesStatsMonthlyMaxOutput``
     '''
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, componentName, taskName=None):  # {{{
+    def __init__(self, config, componentName, taskName=None,
+                 op='avg'):  # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -85,6 +96,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             The name of the component (same as the folder where the task
             resides)
 
+        op : {'avg', 'min', 'max'}, optioinal
+             operator for monthly stats
+
         taskName : str, optional
             the name of the task, defaults to mpasClimatology<ComponentName>
         '''
@@ -93,6 +107,16 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         self.variableList = {}
+
+        self.op = op
+        if op == 'avg':
+            self.streamName = 'timeSeriesStatsMonthlyOutput'
+        elif op == 'min':
+            self.streamName = 'timeSeriesStatsMonthlyMinOutput'
+        elif op == 'max':
+            self.streamName = 'timeSeriesStatsMonthlyMaxOutput'
+        else:
+            raise ValueError('Unexpected monthly stats operator {}'.format(op))
 
         tags = ['climatology']
 
@@ -106,7 +130,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                              'about getting it added'.format(componentName))
 
         if taskName is None:
-            suffix = componentName[0].upper() + componentName[1:]
+            suffix = componentName[0].upper() + componentName[1:] + \
+                op[0].upper() + op[1:]
             taskName = 'mpasClimatology{}'.format(suffix)
 
         self.allVariables = None
@@ -161,8 +186,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         Parameters
         ----------
         variableList : list of str
-            A list of variable names in ``timeSeriesStatsMonthly`` to be
-            included in the climatologies
+            A list of variable names in the stream to be included in the
+            climatologies
 
         seasons : list of str, optional
             A list of seasons (keys in ``shared.constants.monthDictionary``)
@@ -174,8 +199,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         ValueError
             if this funciton is called before this task has been set up (so
             the list of available variables has not yet been set) or if one
-            or more of the requested variables is not available in the
-            ``timeSeriesStatsMonthly`` output.
+            or more of the requested variables is not available in the stream.
         '''
         # Authors
         # -------
@@ -194,8 +218,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         for variable in variableList:
             if variable not in self.allVariables:
                 raise ValueError(
-                    '{} is not available in timeSeriesStatsMonthly '
-                    'output:\n{}'.format(variable, self.allVariables))
+                    '{} is not available in {} output:\n{}'.format(
+                        variable, self.streamName, self.allVariables))
 
             for season in seasons:
                 if season not in self.variableList:
@@ -236,9 +260,18 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         #     self.calendar
         super(MpasClimatologyTask, self).setup_and_check()
 
-        self.check_analysis_enabled(
-            analysisOptionName='config_am_timeseriesstatsmonthly_enable',
-            raiseException=True)
+        if self.op == 'avg':
+            self.check_analysis_enabled(
+                analysisOptionName='config_am_timeseriesstatsmonthly_enable',
+                raiseException=True)
+        elif self.op == 'min':
+            self.check_analysis_enabled(
+                analysisOptionName='config_AM_timeSeriesStatsMonthlyMin_enable',
+                raiseException=True)
+        elif self.op == 'max':
+            self.check_analysis_enabled(
+                analysisOptionName='config_AM_timeSeriesStatsMonthlyMax_enable',
+                raiseException=True)
 
         self.startYear, self.endYear = self.get_start_and_end()
 
@@ -247,14 +280,13 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         # get a list of timeSeriesSta output files from the streams file,
         # reading only those that are between the start and end dates
-        streamName = 'timeSeriesStatsMonthlyOutput'
         self.inputFiles = self.historyStreams.readpath(
-            streamName, startDate=self.startDate, endDate=self.endDate,
+            self.streamName, startDate=self.startDate, endDate=self.endDate,
             calendar=self.calendar)
 
         if len(self.inputFiles) == 0:
             raise IOError('No files were found in stream {} between {} and '
-                          '{}.'.format(streamName, self.startDate,
+                          '{}.'.format(self.streamName, self.startDate,
                                        self.endDate))
 
         self.symlinkDirectory = self._create_symlinks()
@@ -296,7 +328,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
             climatologyFileName = self.get_file_name(season)
             climatologyDirectory = get_unmasked_mpas_climatology_directory(
-                self.config)
+                self.config, self.op)
 
             if not os.path.exists(climatologyFileName):
                 allExist = False
@@ -364,7 +396,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         return get_unmasked_mpas_climatology_file_name(self.config, season,
-                                                       self.componentName)
+                                                       self.componentName,
+                                                       self.op)
 
         # }}}
 
@@ -388,13 +421,12 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         fileNames = sorted(self.inputFiles)
         years, months = get_files_year_month(fileNames,
                                              self.historyStreams,
-                                             'timeSeriesStatsMonthlyOutput')
+                                             self.streamName)
 
-        climatologyBaseDirectory = build_config_full_path(
-            config, 'output', 'mpasClimatologySubdirectory')
+        climatologyOpDirectory = get_climatology_op_directory(config, self.op)
 
         symlinkDirectory = '{}/source_symlinks'.format(
-            climatologyBaseDirectory)
+            climatologyOpDirectory)
 
         make_directories(symlinkDirectory)
 
