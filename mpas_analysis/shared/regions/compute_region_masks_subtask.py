@@ -49,7 +49,7 @@ def get_feature_list(geojsonFileName):
 
 def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
                          featureList=None, logger=None, processCount=1,
-                         chunkSize=1000):
+                         chunkSize=1000, showProgress=True):
     '''
     Build a region mask file from the given mesh and geojson file defining
     a set of regions.
@@ -113,17 +113,20 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
             partial_func = partial(_contains, shape)
             pool = Pool(processCount)
 
-            widgets = ['  ', progressbar.Percentage(), ' ',
-                       progressbar.Bar(), ' ', progressbar.ETA()]
-            bar = progressbar.ProgressBar(widgets=widgets,
-                                          maxval=nChunks).start()
+            if showProgress:
+                widgets = ['  ', progressbar.Percentage(), ' ',
+                           progressbar.Bar(), ' ', progressbar.ETA()]
+                bar = progressbar.ProgressBar(widgets=widgets,
+                                              maxval=nChunks).start()
 
             mask = numpy.zeros((nCells,), bool)
             for iChunk, maskChunk in \
                     enumerate(pool.imap(partial_func, chunks)):
                 mask[indices[iChunk]:indices[iChunk + 1]] = maskChunk
-                bar.update(iChunk + 1)
-            bar.finish()
+                if showProgress:
+                    bar.update(iChunk + 1)
+            if showProgress:
+                bar.finish()
             pool.terminate()
 
         nChar = max(nChar, len(name))
@@ -248,6 +251,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.featureList = featureList
         self.subprocessCount = subprocessCount
 
+        # because this uses a Pool, it cannot be launched as a separate process
+        self.runDirectly = True
+
         parentTask.add_subtask(self)
 
         # }}}
@@ -323,7 +329,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
         compute_region_masks(self.geojsonFileName, self.restartFileName,
                              self.maskFileName, self.featureList, self.logger,
-                             self.subprocessCount)
+                             self.subprocessCount, showProgress=False)
 
     # }}}
 

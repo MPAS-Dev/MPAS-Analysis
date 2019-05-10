@@ -166,6 +166,10 @@ class AnalysisTask(Process):  # {{{
         # the number of subprocesses run by this process, typically 1 but
         # could be 12 for ncclimo in bck or mpi mode
         self.subprocessCount = 1
+
+        # run the task directly as opposed to launching it as a new process
+        # even in parallel because it has subprocesses such as Pools
+        self.runDirectly = False
         # }}}
 
     def setup_and_check(self):  # {{{

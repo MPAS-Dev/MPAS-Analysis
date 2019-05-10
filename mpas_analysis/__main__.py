@@ -522,24 +522,29 @@ def run_analysis(config, analyses):  # {{{
                         # more processes to finish
                         break
 
-                    logger.info('Running {}'.format(
-                        analysisTask.printTaskName))
-                    analysisTask._runStatus.value = AnalysisTask.RUNNING
-                    analysisTask.start()
-                    runningTasks[key] = analysisTask
-                    runningProcessCount = newProcessCount
-                    if runningProcessCount >= parallelTaskCount:
-                        # don't try to run any more tasks
+                    if analysisTask.runDirectly:
+                        analysisTask.run(writeLogFile=True)
                         break
+                    else:
+                        logger.info('Running {}'.format(
+                            analysisTask.printTaskName))
+                        analysisTask._runStatus.value = AnalysisTask.RUNNING
+                        analysisTask.start()
+                        runningTasks[key] = analysisTask
+                        runningProcessCount = newProcessCount
+                        if runningProcessCount >= parallelTaskCount:
+                            # don't try to run any more tasks
+                            break
                 else:
                     analysisTask.run(writeLogFile=False)
 
         if isParallel:
-            # wait for a task to finish
-            analysisTask = wait_for_task(runningTasks)
-            key = (analysisTask.taskName, analysisTask.subtaskName)
-            runningTasks.pop(key)
-            runningProcessCount -= analysisTask.subprocessCount
+            if runningProcessCount > 0:
+                # wait for a task to finish
+                analysisTask = wait_for_task(runningTasks)
+                key = (analysisTask.taskName, analysisTask.subtaskName)
+                runningTasks.pop(key)
+                runningProcessCount -= analysisTask.subprocessCount
 
             taskTitle = analysisTask.printTaskName
 
