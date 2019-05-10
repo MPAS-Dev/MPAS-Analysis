@@ -256,6 +256,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                           'channel.')
 
         inputFiles = self.inputFiles
+        append = False
         if os.path.exists(self.outputFile):
             # make sure all the necessary variables are also present
             with xr.open_dataset(self.outputFile) as ds:
@@ -268,6 +269,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                 if updateSubset:
                     # add only input files wiht times that aren't already in
                     # the output file
+
+                    append = True
 
                     fileNames = sorted(self.inputFiles)
                     inYears, inMonths = get_files_year_month(
@@ -305,8 +308,11 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         variableList = self.variableList + ['xtime_startMonthly',
                                             'xtime_endMonthly']
 
-        args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl',
+        args = ['ncrcat', '-4', '--no_tmp_fl',
                 '-v', ','.join(variableList)]
+
+        if append:
+            args.append('--record_append')
 
         printCommand = '{} {} ... {} {}'.format(' '.join(args), inputFiles[0],
                                                 inputFiles[-1],
