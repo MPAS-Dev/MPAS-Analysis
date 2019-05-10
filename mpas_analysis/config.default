@@ -1188,6 +1188,41 @@ movingAverageMonths = 1
 # yearStrideXTicks = 1
 
 
+[timeSeriesOceanRegions]
+## options related to plotting time series of groups of ocean regions
+
+# the names of region groups to plot, each with its own section below
+regionGroups = ['Antarctic Regions']
+
+
+[timeSeriesAntarcticRegions]
+## options related to plotting time series of Antarctic regions
+
+# A geojson file containing Antarctic ocean regions.  Each region must have
+# 'zmin' and 'zmax' properites in addition to the usual properies for a region
+# in geometric_features
+regionMask = 'antarcticRegions.geojson'
+
+# list of regions to plot or ['all'] for all regions in the masks file.
+# See "regionNames" in the antarcticRegions masks file in
+# regionMaskSubdirectory for details.
+regionNames = ['all']
+
+# a list of variables to plot
+variables = [{'name': 'temperature',
+              'title': 'Temperature',
+              'units': '$^\circ$C',
+              'mpas': 'timeMonthly_avg_activeTracers_temperature'},
+             {'name': 'salinity',
+              'title': 'Salinity',
+              'units': 'PSU',
+              'mpas': 'timeMonthly_avg_activeTracers_salinity'},
+             {'name': 'potentialDensity',
+              'title': 'Potential Density',
+              'units': 'kg m$^{-3}$',
+              'mpas': 'timeMonthly_avg_potentialDensity'}]
+
+
 [climatologyMapSose]
 ## options related to plotting climatology maps of Antarctic fields at various
 ## levels, including the sea floor against control model results and SOSE

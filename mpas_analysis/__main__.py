@@ -168,6 +168,9 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
                                                   controlConfig))
 
+    analyses.append(ocean.TimeSeriesOceanRegions(config, oceanTimeSeriesTask,
+                                                 controlConfig))
+
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesSalinityAnomaly(config,
