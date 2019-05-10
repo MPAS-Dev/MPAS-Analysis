@@ -73,6 +73,10 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
         regionGroups = config.getExpression(self.taskName, 'regionGroups')
 
+        parallelTaskCount = config.getWithDefault('execute',
+                                                  'parallelTaskCount',
+                                                  default=1)
+
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
@@ -90,7 +94,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             masksSubtask = ComputeRegionMasksSubtask(
                 self, regionMaskFile, outFileSuffix=fileSuffix,
-                featureList=regionNames)
+                featureList=regionNames, subprocessCount=parallelTaskCount)
 
             self.add_subtask(masksSubtask)
 

@@ -98,10 +98,13 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         masksFile = '{}/{}.geojson'.format(regionMaskDirectory,
                                            self.regionMaskSuffix)
 
+        parallelTaskCount = config.getWithDefault('execute',
+                                                  'parallelTaskCount',
+                                                  default=1)
+
         masksSubtask = ComputeRegionMasksSubtask(
-            self, masksFile,
-            outFileSuffix=self.regionMaskSuffix,
-            featureList=self.regionNames)
+            self, masksFile, outFileSuffix=self.regionMaskSuffix,
+            featureList=self.regionNames, subprocessCount=parallelTaskCount)
 
         if 'all' in self.regionNames:
             self.regionNames = get_feature_list(config, masksFile)

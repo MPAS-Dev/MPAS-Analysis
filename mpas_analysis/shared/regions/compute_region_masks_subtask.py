@@ -140,7 +140,6 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
                 else:
                     properties[propertyName] = [propertyVal]
 
-
     # create a new data array for masks and another for mask names
     if logger is not None:
         logger.info('  Creating and writing masks dataset...')
@@ -201,7 +200,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, geojsonFileName, outFileSuffix,
-                 featureList=None, subtaskName='computeRegionMasks'):
+                 featureList=None, subtaskName='computeRegionMasks',
+                 subprocessCount=1):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -227,6 +227,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         subtaskName : str, optional
             The name of the subtask
 
+        subprocessCount : int, optional
+            The nunumber of processes that can be used to make the mask
+
         '''
         # Authors
         # -------
@@ -243,6 +246,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.geojsonFileName = geojsonFileName
         self.outFileSuffix = outFileSuffix
         self.featureList = featureList
+        self.subprocessCount = subprocessCount
 
         parentTask.add_subtask(self)
 
@@ -318,7 +322,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         compute_region_masks(self.geojsonFileName, self.restartFileName,
-                             self.maskFileName, self.featureList, self.logger)
+                             self.maskFileName, self.featureList, self.logger,
+                             self.subprocessCount)
 
     # }}}
 

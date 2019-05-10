@@ -79,10 +79,13 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         if 'all' in iceShelvesToPlot:
             iceShelvesToPlot = get_feature_list(iceShelfMasksFile)
 
+        parallelTaskCount = config.getWithDefault('execute',
+                                                  'parallelTaskCount',
+                                                  default=1)
+
         masksSubtask = ComputeRegionMasksSubtask(
-            self, iceShelfMasksFile,
-            outFileSuffix='iceShelfMasks',
-            featureList=iceShelvesToPlot)
+            self, iceShelfMasksFile, outFileSuffix='iceShelfMasks',
+            featureList=iceShelvesToPlot, subprocessCount=parallelTaskCount)
 
         self.add_subtask(masksSubtask)
 
