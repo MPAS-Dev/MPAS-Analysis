@@ -87,6 +87,8 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
     with open(geojsonFileName) as f:
         featureData = json.load(f)
 
+    properties = {}
+
     for feature in featureData['features']:
         name = feature['properties']['name']
         if name not in featureList:
@@ -129,6 +131,16 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
         masks.append(mask)
         regionNames.append(name)
 
+        for propertyName in feature['properties']:
+            if propertyName not in ['name', 'author', 'tags', 'component',
+                                    'object']:
+                propertyVal = feature['properties'][propertyName]
+                if propertyName in properties:
+                    properties[propertyName].append(propertyVal)
+                else:
+                    properties[propertyName] = [propertyVal]
+
+
     # create a new data array for masks and another for mask names
     if logger is not None:
         logger.info('  Creating and writing masks dataset...')
@@ -139,11 +151,15 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
     dsMasks['regionNames'] = (('nRegions'),
                               numpy.zeros((nRegions),
                                           dtype='|S{}'.format(nChar)))
+
     for index in range(nRegions):
         regionName = regionNames[index]
         mask = masks[index]
         dsMasks['regionCellMasks'][index, :] = mask
         dsMasks['regionNames'][index] = regionName
+
+    for propertyName in properties:
+        dsMasks[propertyName] = (('nRegions'), properties[propertyName])
 
     write_netcdf(dsMasks, maskFileName)
 
