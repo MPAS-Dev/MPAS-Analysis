@@ -77,7 +77,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
         if 'all' in iceShelvesToPlot:
-            iceShelvesToPlot = get_feature_list(config, iceShelfMasksFile)
+            iceShelvesToPlot = get_feature_list(iceShelfMasksFile)
 
         masksSubtask = ComputeRegionMasksSubtask(
             self, iceShelfMasksFile,
