@@ -168,8 +168,7 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
                                                   controlConfig))
 
-    analyses.append(ocean.TimeSeriesOceanRegions(config, oceanTimeSeriesTask,
-                                                 controlConfig))
+    analyses.append(ocean.TimeSeriesOceanRegions(config, controlConfig))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
@@ -511,6 +510,7 @@ def run_analysis(config, analyses):  # {{{
             break
 
         # launch new tasks
+        runDirectly = False
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
@@ -524,6 +524,7 @@ def run_analysis(config, analyses):  # {{{
 
                     if analysisTask.runDirectly:
                         analysisTask.run(writeLogFile=True)
+                        runDirectly = True
                         break
                     else:
                         logger.info('Running {}'.format(
@@ -537,9 +538,12 @@ def run_analysis(config, analyses):  # {{{
                             break
                 else:
                     analysisTask.run(writeLogFile=False)
+                    break
 
         if isParallel:
-            if runningProcessCount > 0:
+
+            if not runDirectly:
+                assert(runningProcessCount > 0)
                 # wait for a task to finish
                 analysisTask = wait_for_task(runningTasks)
                 key = (analysisTask.taskName, analysisTask.subtaskName)

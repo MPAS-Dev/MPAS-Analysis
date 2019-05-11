@@ -181,7 +181,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     parentTask : ``OceanRegionalProfiles``
         The main task of which this is a subtask
 
-    startyear, endYear : int
+    startYear, endYear : int
         The beginning and end of the time series to compute
     '''
     # Authors
@@ -197,7 +197,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``OceanRegionalProfiles``
             The main task of which this is a subtask
 
-        startyear, endYear : int
+        startYear, endYear : int
             The beginning and end of the time series to compute
         '''
         # Authors
@@ -247,8 +247,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
     def run_task(self):  # {{{
         '''
-        Process MOC analysis member data if available, or compute MOC at
-        post-processing if not.
+        Compute time series of regional profiles
         '''
         # Authors
         # -------
@@ -427,10 +426,10 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask : ``StreamfunctionMOC``
+        parentTask : ``OceanRegionalProfiles``
             The main task of which this is a subtask
 
-        startyear, endYear : list of int
+        startYear, endYear : list of int
             The beginning and end of each time series to combine
         '''
         # Authors
