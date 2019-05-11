@@ -18,6 +18,7 @@ Analysis Tasks
    tasks/climatologyMapAntarcticMelt
 
    tasks/timeSeriesAntarcticMelt
+   tasks/timeSeriesOceanRegions
    tasks/timeSeriesTemperatureAnomaly
    tasks/timeSeriesSalinityAnomaly
    tasks/timeSeriesOHCAnomaly

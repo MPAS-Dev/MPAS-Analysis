@@ -71,6 +71,7 @@ Ocean tasks
    TimeSeriesSalinityAnomaly
    TimeSeriesSST
    TimeSeriesAntarcticMelt
+   TimeSeriesOceanRegions
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 
