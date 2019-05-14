@@ -49,7 +49,7 @@ def get_feature_list(geojsonFileName):
 
 def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
                          featureList=None, logger=None, processCount=1,
-                         chunkSize=1000):
+                         chunkSize=1000, showProgress=True):
     '''
     Build a region mask file from the given mesh and geojson file defining
     a set of regions.
@@ -87,6 +87,8 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
     with open(geojsonFileName) as f:
         featureData = json.load(f)
 
+    properties = {}
+
     for feature in featureData['features']:
         name = feature['properties']['name']
         if name not in featureList:
@@ -111,23 +113,35 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
             partial_func = partial(_contains, shape)
             pool = Pool(processCount)
 
-            widgets = ['  ', progressbar.Percentage(), ' ',
-                       progressbar.Bar(), ' ', progressbar.ETA()]
-            bar = progressbar.ProgressBar(widgets=widgets,
-                                          maxval=nChunks).start()
+            if showProgress:
+                widgets = ['  ', progressbar.Percentage(), ' ',
+                           progressbar.Bar(), ' ', progressbar.ETA()]
+                bar = progressbar.ProgressBar(widgets=widgets,
+                                              maxval=nChunks).start()
 
             mask = numpy.zeros((nCells,), bool)
             for iChunk, maskChunk in \
                     enumerate(pool.imap(partial_func, chunks)):
                 mask[indices[iChunk]:indices[iChunk + 1]] = maskChunk
-                bar.update(iChunk + 1)
-            bar.finish()
+                if showProgress:
+                    bar.update(iChunk + 1)
+            if showProgress:
+                bar.finish()
             pool.terminate()
 
         nChar = max(nChar, len(name))
 
         masks.append(mask)
         regionNames.append(name)
+
+        for propertyName in feature['properties']:
+            if propertyName not in ['name', 'author', 'tags', 'component',
+                                    'object']:
+                propertyVal = feature['properties'][propertyName]
+                if propertyName in properties:
+                    properties[propertyName].append(propertyVal)
+                else:
+                    properties[propertyName] = [propertyVal]
 
     # create a new data array for masks and another for mask names
     if logger is not None:
@@ -139,11 +153,15 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
     dsMasks['regionNames'] = (('nRegions'),
                               numpy.zeros((nRegions),
                                           dtype='|S{}'.format(nChar)))
+
     for index in range(nRegions):
         regionName = regionNames[index]
         mask = masks[index]
         dsMasks['regionCellMasks'][index, :] = mask
         dsMasks['regionNames'][index] = regionName
+
+    for propertyName in properties:
+        dsMasks[propertyName] = (('nRegions'), properties[propertyName])
 
     write_netcdf(dsMasks, maskFileName)
 
@@ -185,7 +203,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, geojsonFileName, outFileSuffix,
-                 featureList=None, subtaskName='computeRegionMasks'):
+                 featureList=None, subtaskName='computeRegionMasks',
+                 subprocessCount=1):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -211,6 +230,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         subtaskName : str, optional
             The name of the subtask
 
+        subprocessCount : int, optional
+            The nunumber of processes that can be used to make the mask
+
         '''
         # Authors
         # -------
@@ -227,6 +249,10 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.geojsonFileName = geojsonFileName
         self.outFileSuffix = outFileSuffix
         self.featureList = featureList
+        self.subprocessCount = subprocessCount
+
+        # because this uses a Pool, it cannot be launched as a separate process
+        self.runDirectly = True
 
         parentTask.add_subtask(self)
 
@@ -302,7 +328,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         compute_region_masks(self.geojsonFileName, self.restartFileName,
-                             self.maskFileName, self.featureList, self.logger)
+                             self.maskFileName, self.featureList, self.logger,
+                             self.subprocessCount, showProgress=False)
 
     # }}}
 

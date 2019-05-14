@@ -168,6 +168,8 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
                                                   controlConfig))
 
+    analyses.append(ocean.TimeSeriesOceanRegions(config, controlConfig))
+
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
     analyses.append(ocean.TimeSeriesSalinityAnomaly(config,
@@ -508,6 +510,7 @@ def run_analysis(config, analyses):  # {{{
             break
 
         # launch new tasks
+        runDirectly = False
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
@@ -519,24 +522,33 @@ def run_analysis(config, analyses):  # {{{
                         # more processes to finish
                         break
 
-                    logger.info('Running {}'.format(
-                        analysisTask.printTaskName))
-                    analysisTask._runStatus.value = AnalysisTask.RUNNING
-                    analysisTask.start()
-                    runningTasks[key] = analysisTask
-                    runningProcessCount = newProcessCount
-                    if runningProcessCount >= parallelTaskCount:
-                        # don't try to run any more tasks
+                    if analysisTask.runDirectly:
+                        analysisTask.run(writeLogFile=True)
+                        runDirectly = True
                         break
+                    else:
+                        logger.info('Running {}'.format(
+                            analysisTask.printTaskName))
+                        analysisTask._runStatus.value = AnalysisTask.RUNNING
+                        analysisTask.start()
+                        runningTasks[key] = analysisTask
+                        runningProcessCount = newProcessCount
+                        if runningProcessCount >= parallelTaskCount:
+                            # don't try to run any more tasks
+                            break
                 else:
                     analysisTask.run(writeLogFile=False)
+                    break
 
         if isParallel:
-            # wait for a task to finish
-            analysisTask = wait_for_task(runningTasks)
-            key = (analysisTask.taskName, analysisTask.subtaskName)
-            runningTasks.pop(key)
-            runningProcessCount -= analysisTask.subprocessCount
+
+            if not runDirectly:
+                assert(runningProcessCount > 0)
+                # wait for a task to finish
+                analysisTask = wait_for_task(runningTasks)
+                key = (analysisTask.taskName, analysisTask.subtaskName)
+                runningTasks.pop(key)
+                runningProcessCount -= analysisTask.subprocessCount
 
             taskTitle = analysisTask.printTaskName
 
