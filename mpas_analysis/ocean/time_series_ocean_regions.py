@@ -14,6 +14,9 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import xarray
 import numpy
+import dask
+import multiprocessing
+from multiprocessing.pool import ThreadPool
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -204,6 +207,14 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         self.masksSubtask = masksSubtask
         self.regionGroup = regionGroup
         self.regionNames = regionNames
+
+        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
+        self.subprocessCount = min(parallelTaskCount,
+                                   self.config.getint(self.taskName,
+                                                      'subprocessCount'))
+        self.daskThreads = min(
+            multiprocessing.cpu_count(),
+            self.config.getint(self.taskName, 'daskThreads'))
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -322,113 +333,111 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
         chunk = {'Time': timeChunk, 'nCells': cellsChunk}
 
-        # combine data sets into a single data set
-        dsIn = xarray.concat(datasets, 'Time').chunk(chunk)
-
-        chunk = {'nCells': cellsChunk}
-        dsRestart = xarray.open_dataset(restartFileName)
-        dsRestart = dsRestart.isel(Time=0).chunk(chunk)
-        dsIn['areaCell'] = dsRestart.areaCell
-        if 'landIceMask' in dsRestart:
-            # only the region outside of ice-shelf cavities
-            dsIn['openOceanMask'] = dsRestart.landIceMask == 0
-
-        dsIn['zMid'] = compute_zmid(dsRestart.bottomDepth,
-                                    dsRestart.maxLevelCell,
-                                    dsRestart.layerThickness)
-
-        regionMaskFileName = self.masksSubtask.maskFileName
-
-        dsRegionMask = xarray.open_dataset(regionMaskFileName)
-
-        maskRegionNames = [bytes.decode(name) for name in
-                           dsRegionMask.regionNames.values]
-
-        datasets = []
-        regionIndices = []
-        for regionName in self.regionNames:
-
-            self.logger.info('    region: {}'.format(regionName))
-            regionIndex = maskRegionNames.index(regionName)
-            regionIndices.append(regionIndex)
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
+            # combine data sets into a single data set
+            dsIn = xarray.concat(datasets, 'Time').chunk(chunk)
 
             chunk = {'nCells': cellsChunk}
-            dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
+            dsRestart = xarray.open_dataset(restartFileName)
+            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
+            dsIn['areaCell'] = dsRestart.areaCell
+            if 'landIceMask' in dsRestart:
+                # only the region outside of ice-shelf cavities
+                dsIn['openOceanMask'] = dsRestart.landIceMask == 0
 
-            cellMask = dsMask.regionCellMasks == 1
-            if 'openOceanMask' in dsIn:
-                cellMask = numpy.logical_and(cellMask, dsIn.openOceanMask)
-            dsRegion = dsIn.where(cellMask, drop=True)
+            dsIn['zMid'] = compute_zmid(dsRestart.bottomDepth,
+                                        dsRestart.maxLevelCell,
+                                        dsRestart.layerThickness)
 
-            totalArea = dsRegion['areaCell'].sum()
-            self.logger.info('      totalArea: {} mil. km^2'.format(
-                1e-12*totalArea.values))
+            regionMaskFileName = self.masksSubtask.maskFileName
 
-            self.logger.info("Don't worry about the following dask warnings.")
-            depthMask = numpy.logical_and(dsRegion.zMid >= dsMask.zmin,
-                                          dsRegion.zMid <= dsMask.zmax)
-            depthMask.compute()
-            self.logger.info("Dask warnings should be done.")
-            dsRegion['depthMask'] = depthMask
+            dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
-            layerThickness = dsRegion.timeMonthly_avg_layerThickness
-            dsRegion['volCell'] = (dsRegion.areaCell*layerThickness).where(
-                depthMask)
-            totalVol = dsRegion.volCell.sum(dim='nVertLevels').sum(
-                dim='nCells')
-            totalVol.compute()
-            self.logger.info('      totalVol (mil. km^3): {}'.format(
-                1e-15*totalVol.values))
+            maskRegionNames = [bytes.decode(name) for name in
+                               dsRegionMask.regionNames.values]
 
-            dsRegion = dsRegion.transpose('Time', 'nCells', 'nVertLevels')
+            datasets = []
+            regionIndices = []
+            for regionName in self.regionNames:
 
-            dsOut = xarray.Dataset()
-            dsOut['totalVol'] = totalVol
-            dsOut.totalVol.attrs['units'] = 'm^3'
-            dsOut['totalArea'] = totalArea
-            dsOut.totalArea.attrs['units'] = 'm^2'
+                self.logger.info('    region: {}'.format(regionName))
+                regionIndex = maskRegionNames.index(regionName)
+                regionIndices.append(regionIndex)
 
-            for var in variables:
-                outName = var['name']
-                self.logger.info('      {}'.format(outName))
-                mpasVarName = var['mpas']
-                timeSeries = dsRegion[mpasVarName]
-                units = timeSeries.units
-                description = timeSeries.long_name
+                chunk = {'nCells': cellsChunk}
+                dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
 
-                if 'nVertLevels' in timeSeries.dims:
-                    timeSeries = \
-                        (dsRegion.volCell*timeSeries.where(depthMask)).sum(
-                            dim='nVertLevels').sum(dim='nCells') / totalVol
-                else:
-                    timeSeries = \
-                        (dsRegion.areaCell*timeSeries.where(cellMask)).sum(
-                            dim='nCells') / totalArea
+                cellMask = dsMask.regionCellMasks == 1
+                if 'openOceanMask' in dsIn:
+                    cellMask = numpy.logical_and(cellMask, dsIn.openOceanMask)
+                dsRegion = dsIn.where(cellMask, drop=True)
 
-                timeSeries.compute()
+                totalArea = dsRegion['areaCell'].sum()
+                self.logger.info('      totalArea: {} mil. km^2'.format(
+                    1e-12*totalArea.values))
 
-                dsOut[outName] = timeSeries
-                dsOut[outName].attrs['units'] = units
-                dsOut[outName].attrs['description'] = description
+                self.logger.info("Don't worry about the following dask "
+                                 "warnings.")
+                depthMask = numpy.logical_and(dsRegion.zMid >= dsMask.zmin,
+                                              dsRegion.zMid <= dsMask.zmax)
+                depthMask.compute()
+                self.logger.info("Dask warnings should be done.")
+                dsRegion['depthMask'] = depthMask
 
-            datasets.append(dsOut)
+                layerThickness = dsRegion.timeMonthly_avg_layerThickness
+                dsRegion['volCell'] = (dsRegion.areaCell*layerThickness).where(
+                    depthMask)
+                totalVol = dsRegion.volCell.sum(dim='nVertLevels').sum(
+                    dim='nCells')
+                totalVol.compute()
+                self.logger.info('      totalVol (mil. km^3): {}'.format(
+                    1e-15*totalVol.values))
 
-            # prefix = regionName[0].lower() + regionName[1:].replace(' ', '')
-            # regionFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
-            #     outputDirectory, prefix, self.startYear, self.endYear)
-            # write_netcdf(dsRegion, regionFileName)
+                dsRegion = dsRegion.transpose('Time', 'nCells', 'nVertLevels')
 
-        # combine data sets into a single data set
-        dsOut = xarray.concat(datasets, 'nRegions')
+                dsOut = xarray.Dataset()
+                dsOut['totalVol'] = totalVol
+                dsOut.totalVol.attrs['units'] = 'm^3'
+                dsOut['totalArea'] = totalArea
+                dsOut.totalArea.attrs['units'] = 'm^2'
 
-        dsOut.coords['regionNames'] = dsRegionMask.regionNames.isel(
-            nRegions=regionIndices)
-        dsOut.coords['year'] = (('Time'), years)
-        dsOut['year'].attrs['units'] = 'years'
-        dsOut.coords['month'] = (('Time'), months)
-        dsOut['month'].attrs['units'] = 'months'
+                for var in variables:
+                    outName = var['name']
+                    self.logger.info('      {}'.format(outName))
+                    mpasVarName = var['mpas']
+                    timeSeries = dsRegion[mpasVarName]
+                    units = timeSeries.units
+                    description = timeSeries.long_name
 
-        write_netcdf(dsOut, outFileName)
+                    if 'nVertLevels' in timeSeries.dims:
+                        timeSeries = \
+                            (dsRegion.volCell*timeSeries.where(depthMask)).sum(
+                                dim='nVertLevels').sum(dim='nCells') / totalVol
+                    else:
+                        timeSeries = \
+                            (dsRegion.areaCell*timeSeries.where(cellMask)).sum(
+                                dim='nCells') / totalArea
+
+                    timeSeries.compute()
+
+                    dsOut[outName] = timeSeries
+                    dsOut[outName].attrs['units'] = units
+                    dsOut[outName].attrs['description'] = description
+
+                datasets.append(dsOut)
+
+            # combine data sets into a single data set
+            dsOut = xarray.concat(datasets, 'nRegions')
+
+            dsOut.coords['regionNames'] = dsRegionMask.regionNames.isel(
+                nRegions=regionIndices)
+            dsOut.coords['year'] = (('Time'), years)
+            dsOut['year'].attrs['units'] = 'years'
+            dsOut.coords['month'] = (('Time'), months)
+            dsOut['month'].attrs['units'] = 'months'
+
+            write_netcdf(dsOut, outFileName)
         # }}}
     # }}}
 

@@ -15,6 +15,9 @@ import os
 import xarray
 import numpy
 import csv
+import dask
+import multiprocessing
+from multiprocessing.pool import ThreadPool
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -163,6 +166,13 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         self.iceShelvesToPlot = iceShelvesToPlot
 
+        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
+        self.subprocessCount = min(parallelTaskCount,
+                                   self.config.getint(self.taskName,
+                                                      'subprocessCount'))
+        self.daskThreads = min(
+            multiprocessing.cpu_count(),
+            self.config.getint(self.taskName, 'daskThreads'))
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -264,59 +274,62 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
                                 'it.'.format(outFileName))
             os.remove(outFileName)
 
-        # work on data from simulations
-        freshwaterFlux = dsIn.timeMonthly_avg_landIceFreshwaterFlux.chunk(
-            {'Time': 12})
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
+            # work on data from simulations
+            freshwaterFlux = dsIn.timeMonthly_avg_landIceFreshwaterFlux.chunk(
+                {'Time': 12})
 
-        restartFileName = \
-            mpasTimeSeriesTask.runStreams.readpath('restart')[0]
+            restartFileName = \
+                mpasTimeSeriesTask.runStreams.readpath('restart')[0]
 
-        dsRestart = xarray.open_dataset(restartFileName)
-        areaCell = dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
+            dsRestart = xarray.open_dataset(restartFileName)
+            areaCell = \
+                dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
 
-        regionMaskFileName = self.masksSubtask.maskFileName
+            regionMaskFileName = self.masksSubtask.maskFileName
 
-        dsRegionMask = xarray.open_dataset(regionMaskFileName)
+            dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
-        # figure out the indices of the regions to plot
-        regionNames = [bytes.decode(name) for name in
-                       dsRegionMask.regionNames.values]
-        regionIndices = []
-        for iceShelf in self.iceShelvesToPlot:
-            for index, regionName in enumerate(regionNames):
-                if iceShelf == regionName:
-                    regionIndices.append(index)
-                    break
+            # figure out the indices of the regions to plot
+            regionNames = [bytes.decode(name) for name in
+                           dsRegionMask.regionNames.values]
+            regionIndices = []
+            for iceShelf in self.iceShelvesToPlot:
+                for index, regionName in enumerate(regionNames):
+                    if iceShelf == regionName:
+                        regionIndices.append(index)
+                        break
 
-        # select only those regions we want to plot
-        dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-        cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
+            # select only those regions we want to plot
+            dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+            cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
-        # convert from kg/s to kg/yr
-        totalMeltFlux = constants.sec_per_year * \
-            (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
-        totalMeltFlux.compute()
+            # convert from kg/s to kg/yr
+            totalMeltFlux = constants.sec_per_year * \
+                (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
+            totalMeltFlux.compute()
 
-        totalArea = (cellMasks * areaCell).sum(dim='nCells')
+            totalArea = (cellMasks * areaCell).sum(dim='nCells')
 
-        # from kg/m^2/yr to m/yr
-        meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
-        meltRates.compute()
+            # from kg/m^2/yr to m/yr
+            meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
+            meltRates.compute()
 
-        # convert from kg/yr to GT/yr
-        totalMeltFlux /= constants.kg_per_GT
+            # convert from kg/yr to GT/yr
+            totalMeltFlux /= constants.kg_per_GT
 
-        dsOut = xarray.Dataset()
-        dsOut['totalMeltFlux'] = totalMeltFlux
-        dsOut.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
-        dsOut.totalMeltFlux.attrs['description'] = \
-            'Total melt flux summed over each ice shelf or region'
-        dsOut['meltRates'] = meltRates
-        dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
-        dsOut.meltRates.attrs['description'] = \
-            'Melt rate averaged over each ice shelf or region'
+            dsOut = xarray.Dataset()
+            dsOut['totalMeltFlux'] = totalMeltFlux
+            dsOut.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+            dsOut.totalMeltFlux.attrs['description'] = \
+                'Total melt flux summed over each ice shelf or region'
+            dsOut['meltRates'] = meltRates
+            dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
+            dsOut.meltRates.attrs['description'] = \
+                'Melt rate averaged over each ice shelf or region'
 
-        write_netcdf(dsOut, outFileName)
+            write_netcdf(dsOut, outFileName)
 
         # }}}
 
