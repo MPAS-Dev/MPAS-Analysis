@@ -317,6 +317,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
                                                      mpasMeshName,
                                                      self.outFileSuffix)
 
+        if os.path.exists(self.maskFileName):
+            # nothing to do so don't block a bunch of other processes
+            self.subprocessCount = 1
         # }}}
 
     def run_task(self):  # {{{
@@ -326,6 +329,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # Authors
         # -------
         # Xylar Asay-Davis
+
+        if os.path.exists(self.maskFileName):
+            return
 
         compute_region_masks(self.geojsonFileName, self.restartFileName,
                              self.maskFileName, self.featureList, self.logger,
