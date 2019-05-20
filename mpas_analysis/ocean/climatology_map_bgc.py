@@ -187,7 +187,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                     subtask = PlotClimatologyMapSubtask(
                         self, season, comparisonGridName,
                         remapClimatologySubtask, remapObservationsSubtask,
-                        controlConfig, subtaskName='plot{}_{}_{}'.format(
+                        controlConfig=controlConfig,
+                        subtaskName='plot{}_{}_{}'.format(
                             fieldName, season, comparisonGridName))
 
                     subtask.set_plot_info(
