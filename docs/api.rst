@@ -56,6 +56,7 @@ Ocean tasks
    ClimatologyMapSST
    ClimatologyMapSSS
    ClimatologyMapMLD
+   ClimatologyMapMLDMinMax
    ClimatologyMapSSH
    ClimatologyMapEKE
    ClimatologyMapOHCAnomaly

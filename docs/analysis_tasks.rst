@@ -5,6 +5,7 @@ Analysis Tasks
    :maxdepth: 1
 
    tasks/climatologyMapMLD
+   tasks/climatologyMapMLDMinMax
    tasks/climatologyMapSST
    tasks/climatologyMapSSS
    tasks/climatologyMapSSH
