@@ -96,7 +96,9 @@ baseDirectory = /projects/OceanClimate_2/yourUsername/path/here
 # option:
 #    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs', 'no_timeSeriesAntarcticMelt', 'no_climatologyMapAntarcticMelt']
+generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs',
+            'no_timeSeriesAntarcticMelt', 'no_climatologyMapAntarcticMelt',
+            'no_min', 'no_max']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

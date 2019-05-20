@@ -85,7 +85,7 @@ baseDirectory = /path/to/analysis/output
 generate = ['only_ocean', 'no_landIceCavities', 'no_mld', 'no_BGC',
             'no_meridionalHeatTransport', 'no_timeSeriesTemperatureAnomaly',
             'no_timeSeriesSalinityAnomaly', 'no_timeSeriesOHCAnomaly',
-            'no_timeSeriesSST', 'no_indexNino34']
+            'no_timeSeriesSST', 'no_indexNino34', 'no_min', 'no_max']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

@@ -103,7 +103,8 @@ htmlSubdirectory = html
 # All tasks with tag "BGC", "icebergs", "index", and "eke" are disabled because this run
 # did not include BGC or icebergs, the EKE analysis member was off and the El Nino analysis
 # is not meaningful (SSTs are prescribed).
-generate = ['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke']
+generate = ['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', 'no_min',
+            'no_max']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

@@ -54,7 +54,8 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
         super(ClimatologyMapMLDMinMax, self).__init__(
             config=config, taskName='climatologyMapMLDMinMax',
             componentName='ocean',
-            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs',
+                  'min', 'max'])
 
         self._add_tasks(config, mpasClimatologyTasks, controlConfig,
                         title='Density MLD',
