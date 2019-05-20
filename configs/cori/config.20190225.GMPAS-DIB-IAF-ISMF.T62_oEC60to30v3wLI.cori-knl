@@ -50,9 +50,9 @@ baseDirectory = /global/cscratch1/sd/dcomeau/acme_scratch/cori-knl/20190225.GMPA
 # subdirectory containing restart files
 runSubdirectory = run
 # subdirectory for ocean history files
-oceanHistorySubdirectory = run
+oceanHistorySubdirectory = /global/cscratch1/sd/dcomeau/acme_scratch/cori-knl/20190225.GMPAS-DIB-IAF-ISMF.T62_oEC60to30v3wLI.cori-knl/archive/ocn/hist
 # subdirectory for sea ice history files
-seaIceHistorySubdirectory = run
+seaIceHistorySubdirectory = /global/cscratch1/sd/dcomeau/acme_scratch/cori-knl/20190225.GMPAS-DIB-IAF-ISMF.T62_oEC60to30v3wLI.cori-knl/archive/ice/hist
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3wLI
