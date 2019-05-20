@@ -671,7 +671,8 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             inFileName = '{}/{}/{}_{:04d}-{:04d}.nc'.format(
                 baseDirectory, timeSeriesName, timeSeriesName, startYear,
                 endYear)
-            dsRef = xarray.open_dataset()
+            dsRef = xarray.open_dataset(inFileName).isel(
+                nRegions=self.regionIndex)
 
         mainRunName = config.get('runs', 'mainRunName')
         movingAverageMonths = 1
