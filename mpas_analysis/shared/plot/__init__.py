@@ -10,3 +10,5 @@ from mpas_analysis.shared.plot.vertical_section import \
 from mpas_analysis.shared.plot.oned import plot_1D
 
 from mpas_analysis.shared.plot.save import savefig
+
+from mpas_analysis.shared.plot.inset import add_inset

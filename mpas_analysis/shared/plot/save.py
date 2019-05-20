@@ -15,7 +15,7 @@ from __future__ import absolute_import, division, print_function, \
 import matplotlib.pyplot as plt
 
 
-def savefig(filename):
+def savefig(filename, tight=True):
     """
     Waves the current plot to a file, then closes it.
 
@@ -28,7 +28,11 @@ def savefig(filename):
     # -------
     # Xylar Asay-Davis
 
-    plt.savefig(filename, dpi='figure', bbox_inches='tight', pad_inches=0.1)
+    if tight:
+        plt.savefig(filename, dpi='figure', bbox_inches='tight',
+                    pad_inches=0.1)
+    else:
+        plt.savefig(filename, dpi='figure', pad_inches=0.1)
 
     plt.close()
 
