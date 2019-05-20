@@ -93,7 +93,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                                             regionMaskFile)
             regionNames = config.getExpression(sectionName, 'regionNames')
 
-            if 'all' in regionNames:
+            if 'all' in regionNames and os.path.exists(regionMaskFile):
                 regionNames = get_feature_list(regionMaskFile)
 
             masksSubtask = ComputeRegionMasksSubtask(
