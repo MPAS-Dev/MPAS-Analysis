@@ -34,7 +34,7 @@ from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
 
 from mpas_analysis.shared.io import open_mpas_dataset
 
-from mpas_analysis.shared.plot.plotting import plot_xtick_format
+from mpas_analysis.shared.plot.ticks import plot_xtick_format
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml

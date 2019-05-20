@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function, \
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot import timeseries_analysis_plot
 
 from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
 from mpas_analysis.shared.io import open_mpas_dataset

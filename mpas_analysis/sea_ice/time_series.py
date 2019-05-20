@@ -16,7 +16,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot, \
+from mpas_analysis.shared.plot import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \

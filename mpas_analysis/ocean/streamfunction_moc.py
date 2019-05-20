@@ -20,8 +20,8 @@ import netCDF4
 import os
 
 from mpas_analysis.shared.constants.constants import m3ps_to_Sv
-from mpas_analysis.shared.plot.plotting import \
-    plot_vertical_section_comparison, timeseries_analysis_plot
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
+    timeseries_analysis_plot
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month

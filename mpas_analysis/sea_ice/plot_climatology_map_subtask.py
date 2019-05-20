@@ -19,7 +19,7 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import plot_polar_comparison
+from mpas_analysis.shared.plot import plot_polar_comparison
 
 from mpas_analysis.shared.html import write_image_xml
 

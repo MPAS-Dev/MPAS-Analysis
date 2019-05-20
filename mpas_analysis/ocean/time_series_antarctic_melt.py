@@ -23,7 +23,7 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot import timeseries_analysis_plot
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
