@@ -20,7 +20,7 @@ import os
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import plot_vertical_section
+from mpas_analysis.shared.plot import plot_vertical_section
 
 from mpas_analysis.shared.io.utility import build_config_full_path
 

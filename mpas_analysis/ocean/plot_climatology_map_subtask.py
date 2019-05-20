@@ -24,7 +24,7 @@ import numpy as np
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import plot_global_comparison, \
+from mpas_analysis.shared.plot import plot_global_comparison, \
     plot_polar_projection_comparison
 
 from mpas_analysis.shared.html import write_image_xml

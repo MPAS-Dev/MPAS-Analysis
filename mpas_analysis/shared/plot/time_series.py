@@ -1,0 +1,370 @@
+# This software is open source software available under the BSD-3 license.
+#
+# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# reserved.
+# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+#
+# Additional copyright and license information can be found in the LICENSE file
+# distributed with this code, or at
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+"""
+Functions for plotting time series (and comparing with reference data sets)
+"""
+# Authors
+# -------
+# Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
+import matplotlib.pyplot as plt
+import xarray as xr
+import pandas as pd
+import numpy as np
+
+from mpas_analysis.shared.timekeeping.utility import date_to_days
+
+from mpas_analysis.shared.constants import constants
+
+from mpas_analysis.shared.plot.ticks import plot_xtick_format
+
+
+def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
+                             fileout, calendar, lineColors=None,
+                             lineStyles=None, markers=None, lineWidths=None,
+                             legendText=None, maxPoints=None,
+                             titleFontSize=None, figsize=(15, 6), dpi=None,
+                             firstYearXTicks=None, yearStrideXTicks=None,
+                             maxXTicks=20, obsMean=None, obsUncertainty=None,
+                             obsLegend=None, legendLocation='lower left'):
+    """
+    Plots the list of time series data sets and stores the result in an image
+    file.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    dsvalues : list of xarray DataSets
+        the data set(s) to be plotted
+
+    N : int
+        the numer of time points over which to perform a moving average
+
+    title : str
+        the title of the plot
+
+    xlabel, ylabel : str
+        axis labels
+
+    fileout : str
+        the file name to be written
+
+    calendar : str
+        the calendar to use for formatting the time axis
+
+    lineColors, lineStyles, markers, legendText : list of str, optional
+        control line color, style, marker, and corresponding legend
+        text.  Default is black, solid line with no marker, and no legend.
+
+    lineWidths : list of float, optional
+        control line width.  Default is 1.0.
+
+    maxPoints : list of {None, int}, optional
+        the approximate maximum number of time points to use in a time series.
+        This can be helpful for reducing the number of symbols plotted if
+        plotting with markers.  Otherwise the markers become indistinguishable
+        from each other.
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
+
+    firstYearXTicks : int, optional
+        The year of the first tick on the x axis.  By default, the first time
+        entry is the first tick.
+
+    yearStrideXTicks : int, optional
+        The number of years between x ticks. By default, the stride is chosen
+        automatically to have ``maxXTicks`` tick marks or fewer.
+
+    maxXTicks : int, optional
+        the maximum number of tick marks that will be allowed along the x axis.
+        This may need to be adjusted depending on the figure size and aspect
+        ratio.
+
+    obsMean, obsUncertainty : list of float, optional
+        Mean values and uncertainties for observations to be plotted as error
+        bars. The two lists must have the same number of elements.
+
+    obsLegend : list of str, optional
+        The label in the legend for each element in ``obsMean`` (and
+        ``obsUncertainty``)
+
+    legendLocation : str, optional
+        The location of the legend (see ``pyplot.legend()`` for details)
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis, Milena Veneziani, Stephen Price
+
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    plt.figure(figsize=figsize, dpi=dpi)
+
+    minDays = []
+    maxDays = []
+    labelCount = 0
+    for dsIndex in range(len(dsvalues)):
+        dsvalue = dsvalues[dsIndex]
+        if dsvalue is None:
+            continue
+        if N == 1 or N is None:
+            mean = dsvalue
+        else:
+            mean = pd.Series.rolling(dsvalue.to_pandas(), N,
+                                     center=True).mean()
+            mean = xr.DataArray.from_series(mean)
+        minDays.append(mean.Time.min())
+        maxDays.append(mean.Time.max())
+
+        if maxPoints is not None and maxPoints[dsIndex] is not None:
+            nTime = mean.sizes['Time']
+            if maxPoints[dsIndex] < nTime:
+                stride = int(round(nTime / float(maxPoints[dsIndex])))
+                mean = mean.isel(Time=slice(0, None, stride))
+
+        if legendText is None:
+            label = None
+        else:
+            label = legendText[dsIndex]
+            labelCount += 1
+        if lineColors is None:
+            color = 'k'
+        else:
+            color = lineColors[dsIndex]
+        if lineStyles is None:
+            linestyle = '-'
+        else:
+            linestyle = lineStyles[dsIndex]
+        if markers is None:
+            marker = None
+        else:
+            marker = markers[dsIndex]
+        if lineWidths is None:
+            linewidth = 1.
+        else:
+            linewidth = lineWidths[dsIndex]
+
+        plt.plot(mean['Time'].values, mean.values, color=color,
+                 linestyle=linestyle, marker=marker, linewidth=linewidth,
+                 label=label)
+
+    if obsMean is not None:
+        obsCount = len(obsMean)
+        assert(len(obsUncertainty) == obsCount)
+
+        # space the observations along the time line, leaving gaps at either
+        # end
+        start = np.amin(minDays)
+        end = np.amax(maxDays)
+        obsTimes = np.linspace(start, end, obsCount + 2)[1:-1]
+        obsSymbols = ['o', '^', 's', 'D', '*']
+        obsColors = ['b', 'g', 'c', 'm', 'r']
+        for iObs in range(obsCount):
+            if obsMean[iObs] is not None:
+                symbol = obsSymbols[np.mod(iObs, len(obsSymbols))]
+                color = obsColors[np.mod(iObs, len(obsColors))]
+                fmt = '{}{}'.format(color, symbol)
+                plt.errorbar(obsTimes[iObs],
+                             obsMean[iObs],
+                             yerr=obsUncertainty[iObs],
+                             fmt=fmt,
+                             ecolor=color,
+                             capsize=0,
+                             label=obsLegend[iObs])
+                # plot a box around the error bar to make it more visible
+                boxHalfWidth = 0.01 * (end - start)
+                boxHalfHeight = obsUncertainty[iObs]
+                boxX = obsTimes[iObs] + \
+                    boxHalfWidth * np.array([-1, 1, 1, -1, -1])
+                boxY = obsMean[iObs] + \
+                    boxHalfHeight * np.array([-1, -1, 1, 1, -1])
+
+                plt.plot(boxX, boxY, '{}-'.format(color), linewidth=3)
+                labelCount += 1
+
+    if labelCount > 1:
+        plt.legend(loc=legendLocation)
+
+    ax = plt.gca()
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+    axis_font = {'size': config.get('plot', 'axisFontSize')}
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+
+    if firstYearXTicks is not None:
+        minDays = date_to_days(year=firstYearXTicks, calendar=calendar)
+
+    plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
+                      yearStride=yearStrideXTicks)
+
+    # Add a y=0 line if y ranges between positive and negative values
+    yaxLimits = ax.get_ylim()
+    if yaxLimits[0] * yaxLimits[1] < 0:
+        x = ax.get_xlim()
+        plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2, zorder=1)
+
+    if title is not None:
+        plt.title(title, **title_font)
+    if xlabel is not None:
+        plt.xlabel(xlabel, **axis_font)
+    if ylabel is not None:
+        plt.ylabel(ylabel, **axis_font)
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    plt.close()
+
+
+def timeseries_analysis_plot_polar(config, dsvalues, N, title,
+                                   fileout, lineColors=None, lineStyles=None,
+                                   markers=None, lineWidths=None,
+                                   legendText=None, titleFontSize=None,
+                                   figsize=(15, 6), dpi=None):
+    """
+    Plots the list of time series data sets on a polar plot and stores
+    the result in an image file.
+
+    Parameters
+    ----------
+    config : instance of ConfigParser
+        the configuration, containing a [plot] section with options that
+        control plotting
+
+    dsvalues : list of xarray DataSets
+        the data set(s) to be plotted
+
+    N : int
+        the numer of time points over which to perform a moving average
+
+    title : str
+        the title of the plot
+
+    fileout : str
+        the file name to be written
+
+    lineColors, lineStyles, markers, legendText : list of str, optional
+        control line color, style, marker, and corresponding legend
+        text.  Default is black, solid line with no marker, and no legend.
+
+    lineWidths : list of float, optional
+        control line width.  Default is 1.0.
+
+    titleFontSize : int, optional
+        the size of the title font
+
+    figsize : tuple of float, optional
+        the size of the figure in inches
+
+    dpi : int, optional
+        the number of dots per inch of the figure, taken from section ``plot``
+        option ``dpi`` in the config file by default
+    """
+    # Authors
+    # -------
+    # Adrian K. Turner, Xylar Asay-Davis
+
+    if dpi is None:
+        dpi = config.getint('plot', 'dpi')
+    plt.figure(figsize=figsize, dpi=dpi)
+
+    minDays = []
+    maxDays = []
+    labelCount = 0
+    for dsIndex in range(len(dsvalues)):
+        dsvalue = dsvalues[dsIndex]
+        if dsvalue is None:
+            continue
+        mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
+        mean = xr.DataArray.from_series(mean)
+        minDays.append(mean.Time.min())
+        maxDays.append(mean.Time.max())
+
+        if legendText is None:
+            label = None
+        else:
+            label = legendText[dsIndex]
+            labelCount += 1
+        if lineColors is None:
+            color = 'k'
+        else:
+            color = lineColors[dsIndex]
+        if lineStyles is None:
+            linestyle = '-'
+        else:
+            linestyle = lineStyles[dsIndex]
+        if markers is None:
+            marker = None
+        else:
+            marker = markers[dsIndex]
+        if lineWidths is None:
+            linewidth = 1.
+        else:
+            linewidth = lineWidths[dsIndex]
+
+        plt.polar((mean['Time'] / 365.0) * np.pi * 2.0, mean, color=color,
+                  linestyle=linestyle, marker=marker, linewidth=linewidth,
+                  label=label)
+
+    if labelCount > 1:
+        plt.legend(loc='lower left')
+
+    ax = plt.gca()
+
+    # set azimuthal axis formatting
+    majorTickLocs = np.zeros(12)
+    minorTickLocs = np.zeros(12)
+    majorTickLocs[0] = 0.0
+    minorTickLocs[0] = (constants.daysInMonth[0] * np.pi) / 365.0
+    for month in range(1, 12):
+        majorTickLocs[month] = majorTickLocs[month - 1] + \
+            ((constants.daysInMonth[month - 1] * np.pi * 2.0) / 365.0)
+        minorTickLocs[month] = minorTickLocs[month - 1] + \
+            (((constants.daysInMonth[month - 1] +
+               constants.daysInMonth[month]) * np.pi) / 365.0)
+
+    ax.set_xticks(majorTickLocs)
+    ax.set_xticklabels([])
+
+    ax.set_xticks(minorTickLocs, minor=True)
+    ax.set_xticklabels(constants.abrevMonthNames, minor=True)
+
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+
+    title_font = {'size': titleFontSize,
+                  'color': config.get('plot', 'titleFontColor'),
+                  'weight': config.get('plot', 'titleFontWeight')}
+    if title is not None:
+        plt.title(title, **title_font)
+
+    if fileout is not None:
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+
+    plt.close()
+
+
+# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

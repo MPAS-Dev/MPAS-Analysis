@@ -22,8 +22,7 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 
-from mpas_analysis.shared.plot.plotting import \
-    plot_vertical_section_comparison
+from mpas_analysis.shared.plot import plot_vertical_section_comparison
 
 from mpas_analysis.shared import AnalysisTask
 

@@ -16,7 +16,7 @@ import xarray as xr
 import numpy as np
 import os
 
-from mpas_analysis.shared.plot.plotting import plot_vertical_section, plot_1D
+from mpas_analysis.shared.plot import plot_vertical_section, plot_1D
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, build_obs_path
