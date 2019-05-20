@@ -17,10 +17,14 @@ import numpy
 import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
+import matplotlib.pyplot as plt
+
+from geometric_features import FeatureCollection, read_feature_collection
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
+from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
+    add_inset
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -641,6 +645,23 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         config = self.config
         calendar = self.calendar
 
+        regionMaskDirectory = build_config_full_path(config,
+                                                     'diagnostics',
+                                                     'regionMaskSubdirectory')
+
+        regionMaskFile = config.getExpression(self.sectionName, 'regionMask')
+
+        regionMaskFile = '{}/{}'.format(regionMaskDirectory,
+                                        regionMaskFile)
+
+        fcAll = read_feature_collection(regionMaskFile)
+
+        fc = FeatureCollection()
+        for feature in fcAll.features:
+            if feature['properties']['name'] == self.regionName:
+                fc.add_feature(feature)
+                break
+
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 
@@ -703,14 +724,20 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 lineWidths.append(1.2)
                 legendText.append(controlRunName)
 
-            timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                     title, xLabel, yLabel,
-                                     calendar=calendar,
-                                     lineColors=lineColors,
-                                     lineWidths=lineWidths,
-                                     legendText=legendText)
+            fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
+                                           title, xLabel, yLabel,
+                                           calendar=calendar,
+                                           lineColors=lineColors,
+                                           lineWidths=lineWidths,
+                                           legendText=legendText)
 
-            savefig(outFileName)
+            # do this before the inset because otherwise it moves the inset
+            # and cartopy doesn't play too well with tight_layout anyway
+            plt.tight_layout()
+
+            add_inset(fig, fc, width=2.0, height=2.0)
+
+            savefig(outFileName, tight=False)
 
             caption = 'Regional mean of {}'.format(title)
             write_image_xml(
