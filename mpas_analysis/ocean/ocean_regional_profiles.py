@@ -30,6 +30,7 @@ from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 from mpas_analysis.shared.html import write_image_xml
+from mpas_analysis.shared.plot import savefig
 
 
 class OceanRegionalProfiles(AnalysisTask):  # {{{
@@ -723,7 +724,9 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.plot(zArrays, fieldArrays, errArrays,
                   lineColors=lineColors, lineWidths=lineWidths,
                   legendText=legendText, title=title, xLabel=xLabel,
-                  yLabel=yLabel, fileName=fileName, yLim=depthRange)
+                  yLabel=yLabel, yLim=depthRange)
+
+        savefig(fileName)
 
         caption = '{} {} vs depth'.format(regionName, titleFieldName)
         write_image_xml(
@@ -740,7 +743,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def plot(self, zArrays, fieldArrays, errArrays, lineColors, lineWidths,
-             legendText, title, xLabel, yLabel, fileName, xLim=None, yLim=None,
+             legendText, title, xLabel, yLabel, xLim=None, yLim=None,
              figureSize=(10, 4), dpi=None):  # {{{
         """
         Plots a 1D line plot with error bars if available.
@@ -767,9 +770,6 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         xLabel, yLabel : str
             label of x- and y-axis
-
-        fileName : str
-            the file name to be written
 
         xLim : float array, optional
             x range of plot
@@ -824,8 +824,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                   facecolor=color, alpha=0.2)
                 plt.fill_betweenx(zArray, fieldArray, fieldArray - errArray,
                                   facecolor=color, alpha=0.2)
-        # plt.grid()
-        # plt.axvline(0.0, linestyle='-', color='k')
+
         if plotLegend and len(zArrays) > 1:
             plt.legend()
 
@@ -844,11 +843,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             plt.xlim(xLim)
         if yLim:
             plt.ylim(yLim)
-
-        if (fileName is not None):
-            plt.savefig(fileName, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-        plt.close()  # }}}
+        # }}}
 
     # }}}
 

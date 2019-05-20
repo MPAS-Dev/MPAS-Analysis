@@ -31,7 +31,7 @@ from mpas_analysis.shared.plot.ticks import plot_xtick_format
 
 
 def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
-                             fileout, calendar, lineColors=None,
+                             calendar, lineColors=None,
                              lineStyles=None, markers=None, lineWidths=None,
                              legendText=None, maxPoints=None,
                              titleFontSize=None, figsize=(15, 6), dpi=None,
@@ -39,8 +39,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
                              maxXTicks=20, obsMean=None, obsUncertainty=None,
                              obsLegend=None, legendLocation='lower left'):
     """
-    Plots the list of time series data sets and stores the result in an image
-    file.
+    Plots the list of time series data sets.
 
     Parameters
     ----------
@@ -59,9 +58,6 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     xlabel, ylabel : str
         axis labels
-
-    fileout : str
-        the file name to be written
 
     calendar : str
         the calendar to use for formatting the time axis
@@ -112,6 +108,11 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     legendLocation : str, optional
         The location of the legend (see ``pyplot.legend()`` for details)
+
+    Returns
+    -------
+    fig : ``matplotlib.figure.Figure``
+        The resulting figure
     """
     # Authors
     # -------
@@ -119,7 +120,7 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
-    plt.figure(figsize=figsize, dpi=dpi)
+    fig = plt.figure(figsize=figsize, dpi=dpi)
 
     minDays = []
     maxDays = []
@@ -233,20 +234,17 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         plt.xlabel(xlabel, **axis_font)
     if ylabel is not None:
         plt.ylabel(ylabel, **axis_font)
-    if fileout is not None:
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    plt.close()
+    return fig
 
 
 def timeseries_analysis_plot_polar(config, dsvalues, N, title,
-                                   fileout, lineColors=None, lineStyles=None,
+                                   lineColors=None, lineStyles=None,
                                    markers=None, lineWidths=None,
                                    legendText=None, titleFontSize=None,
                                    figsize=(15, 6), dpi=None):
     """
-    Plots the list of time series data sets on a polar plot and stores
-    the result in an image file.
+    Plots the list of time series data sets on a polar plot.
 
     Parameters
     ----------
@@ -262,9 +260,6 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
 
     title : str
         the title of the plot
-
-    fileout : str
-        the file name to be written
 
     lineColors, lineStyles, markers, legendText : list of str, optional
         control line color, style, marker, and corresponding legend
@@ -282,6 +277,11 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     dpi : int, optional
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
+
+    Returns
+    -------
+    fig : ``matplotlib.figure.Figure``
+        The resulting figure
     """
     # Authors
     # -------
@@ -289,7 +289,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
-    plt.figure(figsize=figsize, dpi=dpi)
+    fig = plt.figure(figsize=figsize, dpi=dpi)
 
     minDays = []
     maxDays = []
@@ -361,10 +361,6 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     if title is not None:
         plt.title(title, **title_font)
 
-    if fileout is not None:
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-    plt.close()
-
+    return fig
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -37,7 +37,6 @@ def plot_vertical_section_comparison(
         modelArray,
         refArray,
         diffArray,
-        fileout,
         colorMapSectionName,
         cbarLabel=None,
         xlabel=None,
@@ -104,9 +103,6 @@ def plot_vertical_section_comparison(
 
     diffArray : float array
         difference between modelArray and refArray
-
-    fileout : str
-        the file name to be written
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -345,7 +341,7 @@ def plot_vertical_section_comparison(
         title=title,
         xlabel=xlabel,
         ylabel=ylabel,
-        fileout=None,
+        figsize=None,
         titleFontSize=plotTitleFontSize,
         titleY=titleY,
         axisFontSize=axisFontSize,
@@ -389,7 +385,7 @@ def plot_vertical_section_comparison(
             title=refTitle,
             xlabel=xlabel,
             ylabel=ylabel,
-            fileout=None,
+            figsize=None,
             titleFontSize=plotTitleFontSize,
             titleY=titleY,
             axisFontSize=axisFontSize,
@@ -427,7 +423,7 @@ def plot_vertical_section_comparison(
             title=diffTitle,
             xlabel=xlabel,
             ylabel=ylabel,
-            fileout=None,
+            figsize=None,
             titleFontSize=plotTitleFontSize,
             titleY=titleY,
             axisFontSize=axisFontSize,
@@ -461,11 +457,6 @@ def plot_vertical_section_comparison(
     else:
         plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-    plt.close()
-
 
 def plot_vertical_section(
         config,
@@ -478,7 +469,6 @@ def plot_vertical_section(
         title=None,
         xlabel=None,
         ylabel=None,
-        fileout=None,
         figsize=(10, 4),
         dpi=None,
         titleFontSize=None,
@@ -559,11 +549,9 @@ def plot_vertical_section(
     xlabel, ylabel : str, optional
         label of x- and y-axis
 
-    fileout : str, optional
-        the file name to be written
-
     figsize : tuple of float, optional
-        size of the figure in inches
+        size of the figure in inches, or None if the current figure should
+        be used (e.g. if this is a subplot)
 
     dpi : int, optional
         the number of dots per inch of the figure, taken from section ``plot``
@@ -836,7 +824,7 @@ def plot_vertical_section(
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
-    if fileout is not None:
+    if figsize is not None:
         plt.figure(figsize=figsize, dpi=dpi)
 
     # compute moving averages with respect to the x dimension
@@ -1002,13 +990,7 @@ def plot_vertical_section(
                                  for member in tickValues])
             ax3.spines['top'].set_position(('outward', 36))
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-    if fileout is not None:
-        plt.close()
-
-    return  # }}}
+    # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

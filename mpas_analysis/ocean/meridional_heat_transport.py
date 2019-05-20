@@ -16,16 +16,16 @@ import xarray as xr
 import numpy as np
 import os
 
-from mpas_analysis.shared.plot import plot_vertical_section, plot_1D
+from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
 
-from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, build_obs_path
+from mpas_analysis.shared.io.utility import make_directories, build_obs_path
 from mpas_analysis.shared.io import write_netcdf, subset_variables
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.climatology.climatology import \
     get_climatology_op_directory
+
 
 class MeridionalHeatTransport(AnalysisTask):  # {{{
     '''
@@ -346,14 +346,16 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
                 self.startYear, self.endYear, mainRunName)
             filePrefix = self.filePrefixes['mhtZ']
-            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+            outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             colorbarLabel = '[PW/m]'
             plot_vertical_section(config, x, y, z, self.sectionName,
                                   suffix='', colorbarLabel=colorbarLabel,
                                   title=title, xlabel=xLabel, ylabel=yLabel,
-                                  fileout=figureName, xLim=xLimGlobal,
+                                  xLim=xLimGlobal,
                                   yLim=depthLimGlobal, invertYAxis=False,
                                   N=movingAveragePoints)
+
+            savefig(outFileName)
 
             self._write_xml(filePrefix)
 

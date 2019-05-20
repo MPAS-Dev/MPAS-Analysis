@@ -20,7 +20,7 @@ from multiprocessing.pool import ThreadPool
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
-from mpas_analysis.shared.plot import timeseries_analysis_plot
+from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -704,11 +704,13 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 legendText.append(controlRunName)
 
             timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                     title, xLabel, yLabel, outFileName,
+                                     title, xLabel, yLabel,
                                      calendar=calendar,
                                      lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText)
+
+            savefig(outFileName)
 
             caption = 'Regional mean of {}'.format(title)
             write_image_xml(

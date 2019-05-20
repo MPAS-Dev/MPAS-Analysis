@@ -23,7 +23,7 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.shared.plot import timeseries_analysis_plot
+from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -528,7 +528,7 @@ class PlotMeltSubtask(AnalysisTask):
         timeSeries = totalMeltFlux.isel(nRegions=self.regionIndex)
 
         filePrefix = 'melt_flux_{}'.format(self.iceShelf.replace(' ', '_'))
-        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [timeSeries]
         lineColors = ['k']
@@ -541,7 +541,7 @@ class PlotMeltSubtask(AnalysisTask):
             legendText.append(controlRunName)
 
         timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                 title, xLabel, yLabel, figureName,
+                                 title, xLabel, yLabel,
                                  calendar=calendar,
                                  lineColors=lineColors,
                                  lineWidths=lineWidths,
@@ -549,6 +549,8 @@ class PlotMeltSubtask(AnalysisTask):
                                  obsMean=obsMeltFlux,
                                  obsUncertainty=obsMeltFluxUnc,
                                  obsLegend=list(obsDict.keys()))
+
+        savefig(outFileName)
 
         caption = 'Running Mean of Total Melt Flux  under Ice ' \
                   'Shelves in the {} Region'.format(title)
@@ -570,7 +572,7 @@ class PlotMeltSubtask(AnalysisTask):
         timeSeries = meltRates.isel(nRegions=self.regionIndex)
 
         filePrefix = 'melt_rate_{}'.format(self.iceShelf.replace(' ', '_'))
-        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [timeSeries]
         lineColors = ['k']
@@ -595,7 +597,7 @@ class PlotMeltSubtask(AnalysisTask):
             yearStrideXTicks = None
 
         timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                 title, xLabel, yLabel, figureName,
+                                 title, xLabel, yLabel,
                                  calendar=calendar,
                                  lineColors=lineColors,
                                  lineWidths=lineWidths,
@@ -605,6 +607,8 @@ class PlotMeltSubtask(AnalysisTask):
                                  obsLegend=list(obsDict.keys()),
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
+
+        savefig(outFileName)
 
         caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                   'Shelves in the {} Region'.format(title)

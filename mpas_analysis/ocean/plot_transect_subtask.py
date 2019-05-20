@@ -22,7 +22,7 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 
-from mpas_analysis.shared.plot import plot_vertical_section_comparison
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, savefig
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -503,7 +503,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             modelOutput,
             refOutput,
             bias,
-            outFileName,
             configSectionName,
             cbarLabel=self.unitsLabel,
             xlabel=xLabel,
@@ -528,6 +527,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
+
+        savefig(outFileName)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

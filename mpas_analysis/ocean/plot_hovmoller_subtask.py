@@ -20,7 +20,7 @@ import os
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot import plot_vertical_section
+from mpas_analysis.shared.plot import plot_vertical_section, savefig
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     decode_strings
@@ -268,7 +268,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         title = '{}, {} \n {}'.format(self.fieldNameInTitle, regionNameInTitle,
                                       mainRunName)
 
-        figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
         if config.has_option(self.sectionName, 'firstYearXTicks'):
             firstYearXTicks = config.getint(self.sectionName,
@@ -290,11 +290,13 @@ class PlotHovmollerSubtask(AnalysisTask):
         plot_vertical_section(config, Time, z, field, self.sectionName,
                               suffix='', colorbarLabel=self.unitsLabel,
                               title=title, xlabel=xLabel, ylabel=yLabel,
-                              fileout=figureName, lineWidth=1,
+                              lineWidth=1,
                               xArrayIsTime=True, calendar=self.calendar,
                               firstYearXTicks=firstYearXTicks,
                               yearStrideXTicks=yearStrideXTicks,
                               yLim=yLim, invertYAxis=False)
+
+        savefig(outFileName)
 
         write_image_xml(
             config=config,
