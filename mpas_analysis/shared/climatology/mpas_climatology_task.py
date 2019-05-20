@@ -118,7 +118,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         else:
             raise ValueError('Unexpected monthly stats operator {}'.format(op))
 
-        tags = ['climatology']
+        tags = ['climatology', op]
 
         if componentName == 'ocean':
             self.ncclimoModel = 'mpaso'

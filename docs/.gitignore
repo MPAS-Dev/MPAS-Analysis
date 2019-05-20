@@ -3,3 +3,15 @@ generated
 quick_start.md
 all_obs.rst
 obs
+design_docs/analysis_task_template.rst
+design_docs/config_file_reorganization.rst
+design_docs/eddykineticenergy.rst
+design_docs/generalize_calendar.rst
+design_docs/generalized_horizontal_interpolation.rst
+design_docs/parallel_tasks.rst
+design_docs/prerequisite_tasks.rst
+design_docs/remapper.rst
+design_docs/template.rst
+design_docs/timekeeping_reorg.rst
+design_docs/variable_mapping_reorg.rst
+quick_start.rst
