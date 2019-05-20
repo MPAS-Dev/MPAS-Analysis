@@ -675,15 +675,17 @@ def symlink_main_run(config, defaultConfig):
                                                relativePathSection=section)
         if not os.path.exists(destDirectory):
 
-            destBase, _ = os.path.split(destDirectory)
-
-            make_directories(destBase)
-
             sourceDirectory = build_config_full_path(
                 config=mainConfig, section='output',
                 relativePathOption=option, relativePathSection=section)
 
-            os.symlink(sourceDirectory, destDirectory)
+            if os.path.exists(sourceDirectory):
+
+                destBase, _ = os.path.split(destDirectory)
+
+                make_directories(destBase)
+
+                os.symlink(sourceDirectory, destDirectory)
 
     mainConfigFile = config.get('runs', 'mainRunConfigFile')
     if not os.path.exists(mainConfigFile):
