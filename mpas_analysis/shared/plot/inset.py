@@ -29,7 +29,8 @@ from geometric_features.plot import subdivide_geom
 
 
 def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
-              height=1.0, lowerleft=None, maxlength=1.):
+              height=1.0, lowerleft=None, xbuffer=None, ybuffer=None,
+              maxlength=1.):
     '''
     Plots an inset map showing the location of a transect or polygon.  Shapes
     are plotted on a polar grid if they are entirely poleward of +/-50 deg.
@@ -51,12 +52,16 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
         The number of degrees latitude to use as a buffer equatorward of the
         shape(s) in polar plots
 
-    width, height: float or str, optional
+    width, height: float, optional
         width and height in inches of the inset
 
     lowerleft: pair of floats, optional
         the location of the lower left corner of the axis in inches, default
         puts the inset in the upper right corner of ``fig``.
+
+    xbuffer, ybuffer: float, optional
+        right and top buffers from the top-right corner (in inches) if
+        lowerleft is ``None``.
 
     maxlength: float or ``None``, optional
         Any segments longer than maxlength will be subdivided in the plot to
@@ -74,12 +79,18 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
     minLon, minLat, maxLon, maxLat = _get_bounds(fc)
 
     figsize = fig.get_size_inches()
-    width = width/figsize[0]
-    height = height/figsize[1]
+    width /= figsize[0]
+    height /= figsize[1]
     if lowerleft is None:
-        x_buffer = 0.1*width
-        y_buffer = x_buffer*figsize[0]/figsize[1]
-        lowerleft = [1.0 - width - x_buffer, 1.0 - height - y_buffer]
+        if xbuffer is None:
+            xbuffer = 0.1*width
+        else:
+            xbuffer /= figsize[0]
+        if ybuffer is None:
+            ybuffer = xbuffer*figsize[0]/figsize[1]
+        else:
+            ybuffer /= figsize[1]
+        lowerleft = [1.0 - width - xbuffer, 1.0 - height - ybuffer]
     else:
         lowerleft = [lowerleft[0]/figsize[0], lowerleft[1]/figsize[1]]
     bounds = [lowerleft[0], lowerleft[1], width, height]
@@ -146,6 +157,14 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
             inset.add_geometries((shape,), crs=ccrs.PlateCarree(),
                                  edgecolor='k', facecolor='none', alpha=1.,
                                  linewidth=1.)
+            # put a red point at the beginning and a blue point at the end
+            # of the transect to help show the orientation
+            begin = shape.coords[0]
+            end = shape.coords[-1]
+            inset.plot(begin[0], begin[1], color='r', marker='o',
+                       markersize=3., transform=ccrs.PlateCarree())
+            inset.plot(end[0], end[1], color='g', marker='o',
+                       markersize=3., transform=ccrs.PlateCarree())
 
     return inset
 

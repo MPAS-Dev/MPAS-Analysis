@@ -298,7 +298,9 @@ def plot_vertical_section_comparison(
                       'color': config.get('plot', 'threePanelTitleFontColor'),
                       'weight': config.get('plot',
                                            'threePanelTitleFontWeight')}
-        fig.suptitle(title, y=0.95, **title_font)
+        suptitle = fig.suptitle(title, y=0.99, **title_font)
+    else:
+        suptitle = None
 
     if plotTitleFontSize is None:
         plotTitleFontSize = config.get('plot', 'threePanelPlotTitleFontSize')
@@ -330,7 +332,9 @@ def plot_vertical_section_comparison(
         comparisonFieldName = refTitle
         originalFieldName = modelTitle
 
-    plot_vertical_section(
+    axes = []
+
+    _, ax = plot_vertical_section(
         config,
         xArray,
         depthArray,
@@ -372,9 +376,11 @@ def plot_vertical_section_comparison(
         labelContours=labelContours,
         contourLabelPrecision=contourLabelPrecision)
 
+    axes.append(ax)
+
     if not singlePanel:
         plt.subplot(3, 1, 2)
-        plot_vertical_section(
+        _, ax = plot_vertical_section(
             config,
             xArray,
             depthArray,
@@ -411,8 +417,10 @@ def plot_vertical_section_comparison(
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
 
+        axes.append(ax)
+
         plt.subplot(3, 1, 3)
-        plot_vertical_section(
+        _, ax = plot_vertical_section(
             config,
             xArray,
             depthArray,
@@ -449,13 +457,17 @@ def plot_vertical_section_comparison(
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
 
+        axes.append(ax)
+
     if singlePanel:
         if thirdXAxisData is not None and refArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
     else:
-        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.01, 0.0, 1.0, 0.93])
+
+    return fig, axes, suptitle
 
 
 def plot_vertical_section(
@@ -825,7 +837,9 @@ def plot_vertical_section(
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
     if figsize is not None:
-        plt.figure(figsize=figsize, dpi=dpi)
+        fig = plt.figure(figsize=figsize, dpi=dpi)
+    else:
+        fig = plt.gcf()
 
     # compute moving averages with respect to the x dimension
     if N is not None and N != 1:
@@ -990,7 +1004,7 @@ def plot_vertical_section(
                                  for member in tickValues])
             ax3.spines['top'].set_position(('outward', 36))
 
-    # }}}
+    return fig, ax  # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

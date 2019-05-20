@@ -85,11 +85,11 @@ class WoceTransects(AnalysisTask):  # {{{
 
         obsFileNames = OrderedDict()
 
-        obsFileNames['WOCE_A21_Drake_Passage'] = \
+        obsFileNames['WOCE_A21'] = \
             'WOCE_A21_Drake_Passage_20181126.nc'
-        obsFileNames['WOCE_A23_South_Atlantic'] = \
+        obsFileNames['WOCE_A23'] = \
             'WOCE_A23_South_Atlantic_20181126.nc'
-        obsFileNames['WOCE_A12_Prime_Meridian'] = \
+        obsFileNames['WOCE_A12'] = \
             'WOCE_A12_Prime_Meridian_20181126.nc'
 
         for transectName in obsFileNames:
