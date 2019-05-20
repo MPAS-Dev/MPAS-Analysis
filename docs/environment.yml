@@ -19,6 +19,8 @@ dependencies:
   - pyproj
   - pillow
   - cmocean
+  - cartopy
+  - geometric_features
   - sphinx
   - sphinx_rtd_theme
   - numpydoc

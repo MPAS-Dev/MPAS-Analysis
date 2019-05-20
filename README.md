@@ -56,13 +56,16 @@ environment with the following packages:
  * requests
  * setuptools
  * shapely
+ * cartopy
+ * geometric\_features
 
 These can be installed via the conda command:
 ``` bash
 conda config --add channels conda-forge
 conda create -n mpas-analysis numpy scipy matplotlib netCDF4 \
     xarray dask bottleneck basemap lxml nco=4.7.9 pyproj pillow \
-    cmocean progressbar2 requests setuptools shapely
+    cmocean progressbar2 requests setuptools shapely cartopy \
+    geometric_features
 conda activate mpas-analysis
 ```
 
