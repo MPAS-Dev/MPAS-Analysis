@@ -13,7 +13,6 @@
 # serve to show the default.
 
 import os
-import sys
 import m2r
 from glob import glob
 import mpas_analysis
@@ -24,10 +23,9 @@ if on_rtd:
             os.environ['CONDA_ENVS_PATH'], os.environ['CONDA_DEFAULT_ENV'])
 else:
     os.environ['PROJ_LIB'] = '{}/share/proj'.format(os.environ['CONDA_PREFIX'])
-print(os.environ)
-from mpas_analysis.__main__ import add_task_and_subtasks
-from docs.parse_table import build_rst_table_from_xml, build_obs_pages_from_xml
-from docs.parse_quick_start import build_quick_start
+from mpas_analysis.docs.parse_table import build_rst_table_from_xml, \
+    build_obs_pages_from_xml
+from mpas_analysis.docs.parse_quick_start import build_quick_start
 
 # -- General configuration ------------------------------------------------
 

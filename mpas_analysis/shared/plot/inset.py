@@ -52,18 +52,18 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
         The number of degrees latitude to use as a buffer equatorward of the
         shape(s) in polar plots
 
-    width, height: float, optional
+    width, height : float, optional
         width and height in inches of the inset
 
-    lowerleft: pair of floats, optional
+    lowerleft : pair of floats, optional
         the location of the lower left corner of the axis in inches, default
         puts the inset in the upper right corner of ``fig``.
 
-    xbuffer, ybuffer: float, optional
+    xbuffer, ybuffer : float, optional
         right and top buffers from the top-right corner (in inches) if
         lowerleft is ``None``.
 
-    maxlength: float or ``None``, optional
+    maxlength : float or ``None``, optional
         Any segments longer than maxlength will be subdivided in the plot to
         ensure curvature.  If ``None``, no subdivision is performed.
 
