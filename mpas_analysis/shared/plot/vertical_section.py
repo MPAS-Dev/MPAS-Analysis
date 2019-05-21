@@ -260,6 +260,17 @@ def plot_vertical_section_comparison(
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
 
+
+    Returns
+    -------
+    fig : ``matplotlib.figure.Figure``
+        The figure that was plotted
+
+    axes : list of ``matplotlib.axes.Axes``
+        The subplots
+
+    suptitle : ``matplotlib.text.Text``
+        The super-title
     """
     # Authors
     # -------
@@ -707,6 +718,13 @@ def plot_vertical_section(
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
 
+    Returns
+    -------
+    fig : ``matplotlib.figure.Figure``
+        The figure that was plotted
+
+    ax : ``matplotlib.axes.Axes``
+        The subplot
     """
     # Authors
     # -------

@@ -18,12 +18,16 @@ import csv
 import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
+import matplotlib.pyplot as plt
+
+from geometric_features import FeatureCollection, read_feature_collection
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
+from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
+    add_inset
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -75,7 +79,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         regionMaskDirectory = build_config_full_path(config,
                                                      'diagnostics',
                                                      'regionMaskSubdirectory')
-        iceShelfMasksFile = '{}/iceShelves.geojson'.format(regionMaskDirectory)
+        self.iceShelfMasksFile = '{}/iceShelves.geojson'.format(
+            regionMaskDirectory)
 
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
@@ -87,7 +92,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
                                                   default=1)
 
         masksSubtask = ComputeRegionMasksSubtask(
-            self, iceShelfMasksFile, outFileSuffix='iceShelfMasks',
+            self, self.iceShelfMasksFile, outFileSuffix='iceShelfMasks',
             featureList=iceShelvesToPlot, subprocessCount=parallelTaskCount)
 
         self.add_subtask(masksSubtask)
@@ -388,6 +393,7 @@ class PlotMeltSubtask(AnalysisTask):
             tags=parentTask.tags,
             subtaskName='plotMeltRates_{}'.format(iceShelf.replace(' ', '_')))
 
+        self.iceShelfMasksFile = parentTask.iceShelfMasksFile
         self.iceShelf = iceShelf
         self.regionIndex = regionIndex
         self.controlConfig = controlConfig
@@ -436,6 +442,16 @@ class PlotMeltSubtask(AnalysisTask):
 
         config = self.config
         calendar = self.calendar
+
+        iceShelfMasksFile = self.iceShelfMasksFile
+
+        fcAll = read_feature_collection(iceShelfMasksFile)
+
+        fc = FeatureCollection()
+        for feature in fcAll.features:
+            if feature['properties']['name'] == self.iceShelf:
+                fc.add_feature(feature)
+                break
 
         totalMeltFlux, meltRates = self._load_ice_shelf_fluxes(config)
 
@@ -540,15 +556,21 @@ class PlotMeltSubtask(AnalysisTask):
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 
-        timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                 title, xLabel, yLabel,
-                                 calendar=calendar,
-                                 lineColors=lineColors,
-                                 lineWidths=lineWidths,
-                                 legendText=legendText,
-                                 obsMean=obsMeltFlux,
-                                 obsUncertainty=obsMeltFluxUnc,
-                                 obsLegend=list(obsDict.keys()))
+        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
+                                       title, xLabel, yLabel,
+                                       calendar=calendar,
+                                       lineColors=lineColors,
+                                       lineWidths=lineWidths,
+                                       legendText=legendText,
+                                       obsMean=obsMeltFlux,
+                                       obsUncertainty=obsMeltFluxUnc,
+                                       obsLegend=list(obsDict.keys()))
+
+        # do this before the inset because otherwise it moves the inset
+        # and cartopy doesn't play too well with tight_layout anyway
+        plt.tight_layout()
+
+        add_inset(fig, fc, width=2.0, height=2.0)
 
         savefig(outFileName)
 
@@ -596,17 +618,23 @@ class PlotMeltSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                 title, xLabel, yLabel,
-                                 calendar=calendar,
-                                 lineColors=lineColors,
-                                 lineWidths=lineWidths,
-                                 legendText=legendText,
-                                 obsMean=obsMeltRate,
-                                 obsUncertainty=obsMeltRateUnc,
-                                 obsLegend=list(obsDict.keys()),
-                                 firstYearXTicks=firstYearXTicks,
-                                 yearStrideXTicks=yearStrideXTicks)
+        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
+                                       title, xLabel, yLabel,
+                                       calendar=calendar,
+                                       lineColors=lineColors,
+                                       lineWidths=lineWidths,
+                                       legendText=legendText,
+                                       obsMean=obsMeltRate,
+                                       obsUncertainty=obsMeltRateUnc,
+                                       obsLegend=list(obsDict.keys()),
+                                       firstYearXTicks=firstYearXTicks,
+                                       yearStrideXTicks=yearStrideXTicks)
+
+        # do this before the inset because otherwise it moves the inset
+        # and cartopy doesn't play too well with tight_layout anyway
+        plt.tight_layout()
+
+        add_inset(fig, fc, width=2.0, height=2.0)
 
         savefig(outFileName)
 
