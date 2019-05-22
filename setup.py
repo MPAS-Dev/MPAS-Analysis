@@ -59,7 +59,7 @@ setup(name='mpas_analysis',
                         ['ColourMapSuite3/*/*.xml',
                          'SciVisColorColormaps/*.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
-                        'dask', 'bottleneck', 'lxml',
+                        'dask', 'lxml',
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',
                         'requests', 'shapely'],
       entry_points={'console_scripts':
