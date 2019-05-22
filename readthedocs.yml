@@ -24,7 +24,7 @@ python:
    system_packages: true
 
 conda:
-    file: docs/environment.yml
+    environment: docs/environment.yml
 
 build:
    image: latest
