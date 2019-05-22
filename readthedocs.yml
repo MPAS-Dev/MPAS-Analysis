@@ -20,7 +20,6 @@ python:
    install:
       - method: pip
         path: .
-      - method: setuptools
    system_packages: true
 
 conda:
