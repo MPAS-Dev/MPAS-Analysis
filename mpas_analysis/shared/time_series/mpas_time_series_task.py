@@ -21,7 +21,7 @@ import numpy
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, get_files_year_month
+    make_directories, get_files_year_month, decode_strings
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
@@ -281,8 +281,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     inMonths = numpy.array(inMonths)
                     totalMonths = 12 * inYears + inMonths
 
-                    dates = [bytes.decode(name) for name in
-                             ds.xtime_startMonthly.values]
+                    dates = decode_strings(ds.xtime_startMonthly)
+
                     lastDate = dates[-1]
 
                     lastYear = int(lastDate[0:4])

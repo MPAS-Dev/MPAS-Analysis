@@ -28,7 +28,7 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, build_obs_path
+    make_directories, build_obs_path, decode_strings
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -80,7 +80,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
         if 'all' in iceShelvesToPlot:
-            iceShelvesToPlot = get_feature_list(iceShelfMasksFile)
+            iceShelvesToPlot = get_feature_list(self.iceShelfMasksFile)
 
         parallelTaskCount = config.getWithDefault('execute',
                                                   'parallelTaskCount',
@@ -292,8 +292,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
             # figure out the indices of the regions to plot
-            regionNames = [bytes.decode(name) for name in
-                           dsRegionMask.regionNames.values]
+            regionNames = decode_strings(dsRegionMask.regionNames)
+
             regionIndices = []
             for iceShelf in self.iceShelvesToPlot:
                 for index, regionName in enumerate(regionNames):

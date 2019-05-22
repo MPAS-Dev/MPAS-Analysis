@@ -22,7 +22,8 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import plot_vertical_section
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    decode_strings
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -227,8 +228,8 @@ class PlotHovmollerSubtask(AnalysisTask):
         ds = xr.open_dataset(self.inFileName)
 
         if 'regionNames' in ds.coords:
-            allRegionNames = [bytes.decode(name) for name in
-                              ds.regionNames.values]
+
+            allRegionNames = decode_strings(ds.regionNames)
             regionIndex = allRegionNames.index(self.regionName)
             regionNameInTitle = self.regionName.replace('_', ' ')
             regionDim = ds.regionNames.dims[0]
