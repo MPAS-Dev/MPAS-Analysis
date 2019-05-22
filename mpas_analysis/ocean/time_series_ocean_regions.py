@@ -25,7 +25,7 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month
+    get_files_year_month, decode_strings
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -354,8 +354,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
             dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
-            maskRegionNames = [bytes.decode(name) for name in
-                               dsRegionMask.regionNames.values]
+            maskRegionNames = decode_strings(dsRegionMask.regionNames)
 
             datasets = []
             regionIndices = []

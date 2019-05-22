@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, make_directories
+    get_files_year_month, make_directories, decode_strings
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
@@ -326,8 +326,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         dsRegionMask = xr.open_dataset(regionMaskFileName)
 
         # figure out the indices of the regions to plot
-        regionNames = [bytes.decode(name) for name in
-                       dsRegionMask.regionNames.values]
+        regionNames = decode_strings(dsRegionMask.regionNames)
+
         regionIndices = []
         for regionToPlot in self.parentTask.regionNames:
             for index, regionName in enumerate(regionNames):
@@ -645,8 +645,8 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             self.parentTask.startYear, self.parentTask.endYear)
 
         ds = xr.open_dataset(inFileName)
-        allRegionNames = [bytes.decode(name) for name in
-                          ds.regionNames.values]
+        allRegionNames = decode_strings(ds.regionNames)
+
         regionIndex = allRegionNames.index(self.regionName)
         ds = ds.isel(nRegions=regionIndex)
         meanFieldName = '{}_mean'.format(self.field['prefix'])
@@ -705,8 +705,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 controlStartYear, controlEndYear)
 
             dsControl = xr.open_dataset(controlFileName)
-            allRegionNames = [bytes.decode(name) for name in
-                              dsControl.regionNames.values]
+            allRegionNames = decode_strings(dsControl.regionNames)
             regionIndex = allRegionNames.index(self.regionName)
             dsControl = dsControl.isel(nRegions=regionIndex)
 
