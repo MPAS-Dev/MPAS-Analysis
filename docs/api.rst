@@ -282,6 +282,7 @@ Plotting
    plot_vertical_section
    colormap.setup_colormap
    ticks.plot_xtick_format
+   add_inset
 
 
 Regions

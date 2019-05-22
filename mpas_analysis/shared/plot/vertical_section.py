@@ -37,7 +37,6 @@ def plot_vertical_section_comparison(
         modelArray,
         refArray,
         diffArray,
-        fileout,
         colorMapSectionName,
         cbarLabel=None,
         xlabel=None,
@@ -104,9 +103,6 @@ def plot_vertical_section_comparison(
 
     diffArray : float array
         difference between modelArray and refArray
-
-    fileout : str
-        the file name to be written
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -264,6 +260,17 @@ def plot_vertical_section_comparison(
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
 
+
+    Returns
+    -------
+    fig : ``matplotlib.figure.Figure``
+        The figure that was plotted
+
+    axes : list of ``matplotlib.axes.Axes``
+        The subplots
+
+    suptitle : ``matplotlib.text.Text``
+        The super-title
     """
     # Authors
     # -------
@@ -302,7 +309,9 @@ def plot_vertical_section_comparison(
                       'color': config.get('plot', 'threePanelTitleFontColor'),
                       'weight': config.get('plot',
                                            'threePanelTitleFontWeight')}
-        fig.suptitle(title, y=0.95, **title_font)
+        suptitle = fig.suptitle(title, y=0.99, **title_font)
+    else:
+        suptitle = None
 
     if plotTitleFontSize is None:
         plotTitleFontSize = config.get('plot', 'threePanelPlotTitleFontSize')
@@ -334,7 +343,9 @@ def plot_vertical_section_comparison(
         comparisonFieldName = refTitle
         originalFieldName = modelTitle
 
-    plot_vertical_section(
+    axes = []
+
+    _, ax = plot_vertical_section(
         config,
         xArray,
         depthArray,
@@ -345,7 +356,7 @@ def plot_vertical_section_comparison(
         title=title,
         xlabel=xlabel,
         ylabel=ylabel,
-        fileout=None,
+        figsize=None,
         titleFontSize=plotTitleFontSize,
         titleY=titleY,
         axisFontSize=axisFontSize,
@@ -376,9 +387,11 @@ def plot_vertical_section_comparison(
         labelContours=labelContours,
         contourLabelPrecision=contourLabelPrecision)
 
+    axes.append(ax)
+
     if not singlePanel:
         plt.subplot(3, 1, 2)
-        plot_vertical_section(
+        _, ax = plot_vertical_section(
             config,
             xArray,
             depthArray,
@@ -389,7 +402,7 @@ def plot_vertical_section_comparison(
             title=refTitle,
             xlabel=xlabel,
             ylabel=ylabel,
-            fileout=None,
+            figsize=None,
             titleFontSize=plotTitleFontSize,
             titleY=titleY,
             axisFontSize=axisFontSize,
@@ -415,8 +428,10 @@ def plot_vertical_section_comparison(
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
 
+        axes.append(ax)
+
         plt.subplot(3, 1, 3)
-        plot_vertical_section(
+        _, ax = plot_vertical_section(
             config,
             xArray,
             depthArray,
@@ -427,7 +442,7 @@ def plot_vertical_section_comparison(
             title=diffTitle,
             xlabel=xlabel,
             ylabel=ylabel,
-            fileout=None,
+            figsize=None,
             titleFontSize=plotTitleFontSize,
             titleY=titleY,
             axisFontSize=axisFontSize,
@@ -453,18 +468,17 @@ def plot_vertical_section_comparison(
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
 
+        axes.append(ax)
+
     if singlePanel:
         if thirdXAxisData is not None and refArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
     else:
-        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.88])
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.01, 0.0, 1.0, 0.93])
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-    plt.close()
+    return fig, axes, suptitle
 
 
 def plot_vertical_section(
@@ -478,7 +492,6 @@ def plot_vertical_section(
         title=None,
         xlabel=None,
         ylabel=None,
-        fileout=None,
         figsize=(10, 4),
         dpi=None,
         titleFontSize=None,
@@ -559,11 +572,9 @@ def plot_vertical_section(
     xlabel, ylabel : str, optional
         label of x- and y-axis
 
-    fileout : str, optional
-        the file name to be written
-
     figsize : tuple of float, optional
-        size of the figure in inches
+        size of the figure in inches, or None if the current figure should
+        be used (e.g. if this is a subplot)
 
     dpi : int, optional
         the number of dots per inch of the figure, taken from section ``plot``
@@ -707,6 +718,13 @@ def plot_vertical_section(
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
 
+    Returns
+    -------
+    fig : ``matplotlib.figure.Figure``
+        The figure that was plotted
+
+    ax : ``matplotlib.axes.Axes``
+        The subplot
     """
     # Authors
     # -------
@@ -836,8 +854,10 @@ def plot_vertical_section(
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
-    if fileout is not None:
-        plt.figure(figsize=figsize, dpi=dpi)
+    if figsize is not None:
+        fig = plt.figure(figsize=figsize, dpi=dpi)
+    else:
+        fig = plt.gcf()
 
     # compute moving averages with respect to the x dimension
     if N is not None and N != 1:
@@ -1002,13 +1022,7 @@ def plot_vertical_section(
                                  for member in tickValues])
             ax3.spines['top'].set_position(('outward', 36))
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-    if fileout is not None:
-        plt.close()
-
-    return  # }}}
+    return fig, ax  # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

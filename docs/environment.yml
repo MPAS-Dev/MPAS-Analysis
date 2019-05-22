@@ -19,9 +19,13 @@ dependencies:
   - pyproj
   - pillow
   - cmocean
+  - shapely
+  - cartopy
+  - geometric_features
   - sphinx
+  - mock
   - sphinx_rtd_theme
   - numpydoc
   - tabulate >= 0.8.2
   - m2r
-  - shapely
+  - pip

@@ -19,6 +19,8 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+from geometric_features import FeatureCollection, read_feature_collection
+
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings
@@ -30,6 +32,7 @@ from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 from mpas_analysis.shared.html import write_image_xml
+from mpas_analysis.shared.plot import savefig, add_inset
 
 
 class OceanRegionalProfiles(AnalysisTask):  # {{{
@@ -637,6 +640,23 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startYear = self.parentTask.startYear
         endYear = self.parentTask.endYear
 
+        regionMaskDirectory = build_config_full_path(config,
+                                                     'diagnostics',
+                                                     'regionMaskSubdirectory')
+
+        regionMaskSuffix = config.get('oceanRegionalProfiles',
+                                      'regionMaskSuffix')
+        regionMaskFile = '{}/{}.geojson'.format(regionMaskDirectory,
+                                                regionMaskSuffix)
+
+        fcAll = read_feature_collection(regionMaskFile)
+
+        fc = FeatureCollection()
+        for feature in fcAll.features:
+            if feature['properties']['name'] == self.regionName:
+                fc.add_feature(feature)
+                break
+
         inDirectory = build_config_full_path(config, 'output',
                                              'profilesSubdirectory')
         timeSeriesName = self.parentTask.regionMaskSuffix
@@ -661,7 +681,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         xLabel = '{} ({})'.format(titleFieldName, self.field['units'])
         yLabel = 'depth (m)'
-        fileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
         lineColors = ['k']
         lineWidths = [1.6]
         zArrays = [ds.z.values]
@@ -689,7 +709,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                               '{:04d}-{:04d}'.format(controlStartYear,
                                                      controlEndYear)]
             else:
-                title = '{} {}'.format(regionName, self.season)
+                title = '{} {}   '.format(regionName, self.season)
                 legendText = ['{} {:04d}-{:04d}'.format(mainRunName, startYear,
                                                         endYear),
                               '{} {:04d}-{:04d}'.format(controlRunName,
@@ -720,10 +740,18 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         if len(depthRange) == 0:
             depthRange = None
 
-        self.plot(zArrays, fieldArrays, errArrays,
-                  lineColors=lineColors, lineWidths=lineWidths,
-                  legendText=legendText, title=title, xLabel=xLabel,
-                  yLabel=yLabel, fileName=fileName, yLim=depthRange)
+        fig = self.plot(zArrays, fieldArrays, errArrays,
+                        lineColors=lineColors, lineWidths=lineWidths,
+                        legendText=legendText, title=title, xLabel=xLabel,
+                        yLabel=yLabel, yLim=depthRange)
+
+        # do this before the inset because otherwise it moves the inset
+        # and cartopy doesn't play too well with tight_layout anyway
+        plt.tight_layout()
+
+        add_inset(fig, fc, width=1.0, height=1.0)
+
+        savefig(outFileName, tight=False)
 
         caption = '{} {} vs depth'.format(regionName, titleFieldName)
         write_image_xml(
@@ -740,7 +768,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def plot(self, zArrays, fieldArrays, errArrays, lineColors, lineWidths,
-             legendText, title, xLabel, yLabel, fileName, xLim=None, yLim=None,
+             legendText, title, xLabel, yLabel, xLim=None, yLim=None,
              figureSize=(10, 4), dpi=None):  # {{{
         """
         Plots a 1D line plot with error bars if available.
@@ -768,9 +796,6 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         xLabel, yLabel : str
             label of x- and y-axis
 
-        fileName : str
-            the file name to be written
-
         xLim : float array, optional
             x range of plot
 
@@ -793,7 +818,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # set up figure
         if dpi is None:
             dpi = config.getint('plot', 'dpi')
-        plt.figure(figsize=figureSize, dpi=dpi)
+        fig = plt.figure(figsize=figureSize, dpi=dpi)
 
         plotLegend = False
         for dsIndex in range(len(zArrays)):
@@ -824,8 +849,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                   facecolor=color, alpha=0.2)
                 plt.fill_betweenx(zArray, fieldArray, fieldArray - errArray,
                                   facecolor=color, alpha=0.2)
-        # plt.grid()
-        # plt.axvline(0.0, linestyle='-', color='k')
+
         if plotLegend and len(zArrays) > 1:
             plt.legend()
 
@@ -844,11 +868,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             plt.xlim(xLim)
         if yLim:
             plt.ylim(yLim)
-
-        if (fileName is not None):
-            plt.savefig(fileName, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-        plt.close()  # }}}
+        return fig  # }}}
 
     # }}}
 

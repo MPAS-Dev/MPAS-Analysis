@@ -179,7 +179,7 @@ class SoseTransects(AnalysisTask):  # {{{
                     else:
                         refFieldName = field['mpas']
 
-                    fieldNameInTytle = r'{} at {}$\degree$ Longitude'.format(
+                    fieldNameInTytle = r'{} at {}$\degree$ Lon.'.format(
                         field['titleName'], lon)
 
                     # make a new subtask for this season and comparison grid
