@@ -463,6 +463,14 @@ def remap(ds, outDescriptor, mappingFileName, inDir, outFileName):
         print('  transposing back...')
         ds = ds.chunk({'Time': 4})
         ds = ds.transpose('Time', 'x', 'y', 'z', 'nvertices')
+    ds.attrs['meshName'] = outDescriptor.meshName
+
+    for coord in ['x', 'y']:
+        ds.coords[coord] = xarray.DataArray.from_dict(
+            outDescriptor.coords[coord])
+
+    ds = ds.set_coords(names=['month', 'year'])
+
     write_netcdf(ds, outFileName)
     ds.close()
 
