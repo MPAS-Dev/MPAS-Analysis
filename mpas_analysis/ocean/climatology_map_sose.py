@@ -129,6 +129,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
+        fileSuffix = config.get(sectionName, 'fileSuffix')
+
         fieldList = config.getExpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
@@ -196,10 +198,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                 observationsDirectory = build_obs_path(
                     config, 'ocean', 'soseSubdirectory')
 
-                obsFileName = \
-                    '{}/SOSE_2005-2010_monthly_{}_6000.0x' \
-                    '6000.0km_10.0km_Antarctic_stereo_20180710.nc'.format(
-                        observationsDirectory, field['obsFilePrefix'])
+                obsFileName = '{}/SOSE_2005-2010_monthly_{}_{}.nc'.format(
+                    observationsDirectory, field['obsFilePrefix'], fileSuffix)
                 refFieldName = field['obsFieldName']
                 outFileLabel = '{}SOSE'.format(fieldPrefix)
                 galleryName = 'State Estimate: SOSE'
