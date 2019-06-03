@@ -24,7 +24,6 @@ from __future__ import absolute_import, division, print_function, \
 
 import numpy
 import xarray
-import sys
 from scipy.io import loadmat
 import os
 import argparse
@@ -434,6 +433,56 @@ def sose_v_to_nc(inPrefix, outFileName, lon, lat, z, cellFraction, botIndices):
     return dsV
 
 
+def remap(ds, outDescriptor, mappingFileName, inDir, outFileName):
+
+    tempFileName1 = '{}/temp_transpose.nc'.format(inDir)
+    tempFileName2 = '{}/temp_remap.nc'.format(inDir)
+    if 'z' in ds:
+        print('  transposing and fixing periodicity...')
+        ds = ds.chunk({'Time': 4})
+        ds = ds.transpose('Time', 'z', 'lat', 'lon')
+    ds = add_periodic_lon(ds)
+    write_netcdf(ds, tempFileName1)
+    ds.close()
+
+    inDescriptor = LatLonGridDescriptor.read(tempFileName1,
+                                             latVarName='lat',
+                                             lonVarName='lon')
+
+    remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
+
+    remapper.build_mapping_file(method='bilinear')
+
+    remapper.remap_file(inFileName=tempFileName1,
+                        outFileName=tempFileName2,
+                        overwrite=True,
+                        renormalize=0.01)
+
+    ds = xarray.open_dataset(tempFileName2)
+    if 'z' in ds:
+        print('  transposing back...')
+        ds = ds.chunk({'Time': 4})
+        ds = ds.transpose('Time', 'x', 'y', 'z', 'nvertices')
+    write_netcdf(ds, outFileName)
+    ds.close()
+
+
+def add_periodic_lon(ds):
+
+    nLon = ds.sizes['lon']
+    lonIndices = xarray.DataArray(numpy.append(numpy.arange(nLon), [0]),
+                                  dims=('newLon',))
+
+    ds = ds.isel({'lon': lonIndices})
+    lon = ds.lon.values
+    attrs = ds.lon.attrs
+    lon[-1] = lon[0] + 360.
+    ds['lon'] = lon
+    ds.lon.attrs = attrs
+    ds = ds.rename({'newLon': 'lon'})
+    return ds
+
+
 def remap_pt_s(prefix, inGridName, inGridFileName, inDir, inTPrefix,
                inSPrefix, inGammaNPrefix, outDescriptor, outGridName):
     cacheTFileName = '{}_pot_temp_{}.nc'.format(prefix, inGridName)
@@ -452,11 +501,6 @@ def remap_pt_s(prefix, inGridName, inGridFileName, inDir, inTPrefix,
     with sose_pt_to_nc('{}/{}'.format(inDir, inTPrefix),
                        cacheTFileName, lon, lat, z, cellFraction, botIndices) \
             as dsT:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheTFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
 
         outTFileName = '{}_pot_temp_{}.nc'.format(prefix, outGridName)
         outSFileName = '{}_salinity_{}.nc'.format(prefix, outGridName)
@@ -465,46 +509,28 @@ def remap_pt_s(prefix, inGridName, inGridFileName, inDir, inTPrefix,
         mappingFileName = '{}/map_C_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outTFileName):
-            dsT = dsT.reset_coords(names='zBot')
             print('Remapping potential temperature...')
-            with remapper.remap(dsT, renormalizationThreshold=0.01) \
-                    as remappedT:
-                print('Done.')
-                remappedT.attrs['history'] = ' '.join(sys.argv)
-                remappedT = remappedT.set_coords(names='zBot')
-                write_netcdf(remappedT, outTFileName)
+            remap(dsT, outDescriptor, mappingFileName, inDir, outTFileName)
+            print('Done.')
 
     with sose_s_to_nc('{}/{}'.format(inDir, inSPrefix),
                       cacheSFileName, lon, lat, z, cellFraction, botIndices) \
             as dsS:
         if not os.path.exists(outSFileName):
-            dsS = dsS.reset_coords(names='zBot')
             print('Remapping salinity...')
-            with remapper.remap(dsS, renormalizationThreshold=0.01) \
-                    as remappedS:
-                print('Done.')
-                remappedS.attrs['history'] = ' '.join(sys.argv)
-                remappedS = remappedS.set_coords(names='zBot')
-                write_netcdf(remappedS, outSFileName)
+            remap(dsS, outDescriptor, mappingFileName, inDir, outSFileName)
+            print('Done.')
 
     with sose_gammaN_to_nc('{}/{}'.format(inDir, inGammaNPrefix),
                            cacheGammaNFileName, lon, lat, z, cellFraction,
                            botIndices) \
             as dsGammaN:
         if not os.path.exists(outGammaNFileName):
-            dsGammaN = dsGammaN.reset_coords(names='zBot')
             print('Remapping neutral density...')
-            with remapper.remap(dsGammaN, renormalizationThreshold=0.01) \
-                    as remappedGammaN:
-                print('Done.')
-                remappedGammaN.attrs['history'] = ' '.join(sys.argv)
-                remappedGammaN = remappedGammaN.set_coords(names='zBot')
-                write_netcdf(remappedGammaN, outGammaNFileName)
+            remap(dsGammaN, outDescriptor, mappingFileName, inDir,
+                  outGammaNFileName)
+            print('Done.')
 
 
 def remap_mld(prefix, inGridName, inGridFileName, inDir, inMLDPrefix,
@@ -521,28 +547,16 @@ def remap_mld(prefix, inGridName, inGridFileName, inDir, inMLDPrefix,
 
     with sose_mld_to_nc('{}/{}'.format(inDir, inMLDPrefix),
                         cacheMLDFileName, lon, lat, botIndices) as dsMLD:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheMLDFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
 
         outMLDFileName = '{}_mld_{}.nc'.format(prefix, outGridName)
 
         mappingFileName = '{}/map_C_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outMLDFileName):
             print('Remapping mixed layer depth...')
-            with remapper.remap(dsMLD, renormalizationThreshold=0.01) \
-                    as remappedMLD:
-                print('Done.')
-                remappedMLD.attrs['history'] = ' '.join(sys.argv)
-                write_netcdf(remappedMLD, outMLDFileName)
+            remap(dsMLD, outDescriptor, mappingFileName, inDir, outMLDFileName)
+            print('Done.')
 
 
 def remap_u(prefix, inGridName, inGridFileName, inDir, inUPrefix,
@@ -561,28 +575,16 @@ def remap_u(prefix, inGridName, inGridFileName, inDir, inUPrefix,
     with sose_u_to_nc('{}/{}'.format(inDir, inUPrefix),
                       cacheUFileName, lon, lat, z, cellFraction, botIndices) \
             as dsU:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheUFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
 
         outUFileName = '{}_zonal_vel_{}.nc'.format(prefix, outGridName)
 
         mappingFileName = '{}/map_U_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outUFileName):
             print('Remapping zonal velocity...')
-            with remapper.remap(dsU, renormalizationThreshold=0.01) \
-                    as remappedU:
-                print('Done.')
-                remappedU.attrs['history'] = ' '.join(sys.argv)
-                write_netcdf(remappedU, outUFileName)
+            remap(dsU, outDescriptor, mappingFileName, inDir, outUFileName)
+            print('Done.')
 
 
 def remap_v(prefix, inGridName, inGridFileName, inDir, inVPrefix,
@@ -601,28 +603,16 @@ def remap_v(prefix, inGridName, inGridFileName, inDir, inVPrefix,
     with sose_v_to_nc('{}/{}'.format(inDir, inVPrefix),
                       cacheVFileName, lon, lat, z, cellFraction, botIndices) \
             as dsV:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheVFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
 
         outVFileName = '{}_merid_vel_{}.nc'.format(prefix, outGridName)
 
         mappingFileName = '{}/map_V_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outVFileName):
             print('Remapping meridional velocity...')
-            with remapper.remap(dsV, renormalizationThreshold=0.01) \
-                    as remappedV:
-                print('Done.')
-                remappedV.attrs['history'] = ' '.join(sys.argv)
-                write_netcdf(remappedV, outVFileName)
+            remap(dsV, outDescriptor, mappingFileName, inDir, outVFileName)
+            print('Done.')
 
 
 def compute_vel_mag(prefix, inGridName, inDir, outGridName):
