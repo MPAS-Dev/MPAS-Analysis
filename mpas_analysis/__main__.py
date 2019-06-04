@@ -889,7 +889,7 @@ def download_analysis_data():
 
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
-    download_files(analysisFileList, urlBase, args.outDir)
+    download_files(analysisFileList, urlBase, args.outDir, verify=True)
 
 
 def download_natural_earth_110m():
