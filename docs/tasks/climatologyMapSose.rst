@@ -223,14 +223,22 @@ The user can select only to plot a subset of the supported fields by adding
 only the desired field names to ``fieldList``.  The default value shows the
 list of all available fields.
 
+
+SOSE data for the full Southern Ocean
+-------------------------------------
+
 The default SOSE data is on a 6,000 x 6,000 km grid focused on the Antarctic
 continental shelf. An alternative data set is available on a 10,000 x 10,000 km
-grid.  These data can be downloaded directly from the `data repository`_ (but
-are not included when you run ``download_analysis_data`` because of the large
-size of this data: ~27 GB).  Store the data stored in the ``diagnostics``
-folder (see :ref:`config_diagnostics`) under
-``diagnostics/observations/Ocean/SOSE``.  Then, climatologies can be plotted
-with these data by setting::
+grid.  These data can be downloaded directly from the `data repository`_  or
+by calling::
+
+  download_analysis_data -o /output/path/for/diagnostics -d sose_10000km
+
+where the output path is the ``baseDirectory`` given in the ``diagnostics``
+section of the config file (see :ref:`config_diagnostics`). The data set is not
+included in the default download because of its large size (~27 GB).
+
+Climatologies can be plotted with these data by setting::
 
     fileSuffix = 10000.0x10000.0km_10.0km_Antarctic_stereo_20190603
 

@@ -63,7 +63,7 @@ def download_files(fileList, urlBase, outDir):
             response = requests.get(url, stream=True)
             totalSize = response.headers.get('content-length')
         except requests.exceptions.RequestException:
-            print('  {} could not be reached!'.format(fileName))
+            print('  {} could not be reached!'.format(url))
             continue
 
         try:
