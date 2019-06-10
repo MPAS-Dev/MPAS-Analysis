@@ -34,6 +34,7 @@ import progressbar
 import logging
 import xarray
 import time
+import cartopy.io.shapereader as shpreader
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -885,6 +886,14 @@ def download_analysis_data():
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
     download_files(analysisFileList, urlBase, args.outDir)
+
+
+def download_natural_earth_110m():
+    for name in ['ocean', 'coastline', 'land']:
+        shpfilename = shpreader.natural_earth(resolution='110m',
+                                              category='physical',
+                                              name=name)
+        reader = shpreader.Reader(shpfilename)
 
 
 if __name__ == "__main__":
