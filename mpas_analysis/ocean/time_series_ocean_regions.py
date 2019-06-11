@@ -255,6 +255,8 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
+        config = self.config
+
         self.logger.info("\nCompute time series of regional means...")
 
         startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
@@ -267,8 +269,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         sectionName = 'timeSeries{}'.format(sectionSuffix)
 
         outputDirectory = '{}/{}/'.format(
-            build_config_full_path(self.config, 'output',
-                                   'timeseriesSubdirectory'),
+            build_config_full_path(config, 'output', 'timeseriesSubdirectory'),
             timeSeriesName)
         try:
             os.makedirs(outputDirectory)
@@ -286,7 +287,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variables = self.config.getExpression(sectionName, 'variables')
+        variables = config.getExpression(sectionName, 'variables')
 
         variableList = [var['mpas'] for var in variables] + \
             ['timeMonthly_avg_layerThickness']
@@ -337,6 +338,16 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
         chunk = {'Time': timeChunk, 'nCells': cellsChunk}
 
+        if config.has_option(sectionName, 'zmin'):
+            config_zmin = config.getfloat(sectionName, 'zmin')
+        else:
+            config_zmin = None
+
+        if config.has_option(sectionName, 'zmax'):
+            config_zmax = config.getfloat(sectionName, 'zmax')
+        else:
+            config_zmax = None
+
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
             # combine data sets into a single data set
@@ -382,8 +393,18 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
                 self.logger.info("Don't worry about the following dask "
                                  "warnings.")
-                depthMask = numpy.logical_and(dsRegion.zMid >= dsMask.zmin,
-                                              dsRegion.zMid <= dsMask.zmax)
+                if config_zmin is None:
+                    zmin = dsMask.zmin
+                else:
+                    zmin = config_zmin
+
+                if config_zmax is None:
+                    zmax = dsMask.zmax
+                else:
+                    zmax = config_zmax
+
+                depthMask = numpy.logical_and(dsRegion.zMid >= zmin,
+                                              dsRegion.zMid <= zmax)
                 depthMask.compute()
                 self.logger.info("Dask warnings should be done.")
                 dsRegion['depthMask'] = depthMask
@@ -404,6 +425,8 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                 dsOut.totalVol.attrs['units'] = 'm^3'
                 dsOut['totalArea'] = totalArea
                 dsOut.totalArea.attrs['units'] = 'm^2'
+                dsOut['zbounds'] = ('nbounds', [zmin, zmax])
+                dsOut.zbounds.attrs['units'] = 'm'
 
                 for var in variables:
                     outName = var['name']
@@ -517,6 +540,10 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
             ds = xarray.open_mfdataset(inFileNames, concat_dim='Time',
                                        decode_times=False)
+
+            # a few variables have become time dependent and shouldn't be
+            for var in ['totalArea', 'zbounds']:
+                ds[var] = ds[var].isel(Time=0, drop=True)
 
             write_netcdf(ds, outFileName)
         # }}}
@@ -665,8 +692,6 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 
-        inFileName = '{}/{}.nc'.format(baseDirectory, self.prefix)
-
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
         regionGroup = self.regionGroup
@@ -678,8 +703,11 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         dsIn = xarray.open_dataset(inFileName).isel(nRegions=self.regionIndex)
 
+        zbounds = dsIn.zbounds.values
+
         controlConfig = self.controlConfig
         plotControl = controlConfig is not None
+        print(plotControl)
         if plotControl:
             controlRunName = controlConfig.get('runs', 'mainRunName')
             baseDirectory = build_config_full_path(
@@ -694,6 +722,8 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             dsRef = xarray.open_dataset(inFileName).isel(
                 nRegions=self.regionIndex)
 
+            zboundsRef = dsRef.zbounds.values
+
         mainRunName = config.get('runs', 'mainRunName')
         movingAverageMonths = 1
 
@@ -704,7 +734,8 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         for var in self.variables:
             varName = var['name']
-            title = '{} in {}'.format(var['title'],  self.regionName)
+            title = 'Volume-Mean {} in {}'.format(var['title'],
+                                                  self.regionName)
             mainArray = dsIn[varName]
             if plotControl:
                 refArray = dsRef[varName]
@@ -723,6 +754,15 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 lineColors.append('r')
                 lineWidths.append(1.2)
                 legendText.append(controlRunName)
+
+            if not plotControl or numpy.all(zbounds == zboundsRef):
+                title = '{} ({} < z < {} m)'.format(title, zbounds[0],
+                                                    zbounds[1])
+            else:
+                legendText[0] = '{} ({} < z < {} m)'.format(
+                    legendText[0], zbounds[0], zbounds[1])
+                legendText[1] = '{} ({} < z < {} m)'.format(
+                    legendText[1], zboundsRef[0], zboundsRef[1])
 
             fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
                                            title, xLabel, yLabel,

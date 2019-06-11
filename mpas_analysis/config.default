@@ -1244,6 +1244,12 @@ variables = [{'name': 'temperature',
               'units': 'kg m$^{-3}$',
               'mpas': 'timeMonthly_avg_potentialDensity'}]
 
+# The minimum and maximum depth over which fields are averaged, default is
+# to take these values from the geojson feature's zmin and zmax properties.
+# Add these to a custom config file to override the defaults.
+# zmin = -1000
+# zmax = -400
+
 
 [climatologyMapSose]
 ## options related to plotting climatology maps of Antarctic fields at various

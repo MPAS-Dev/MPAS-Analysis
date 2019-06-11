@@ -101,6 +101,23 @@ Once you have downloaded the analysis data, you will point to its location
 (your equivalent of `path/to/mpas_analysis/diagnostics` above) in the config
 option `baseDirectory` in the `[diagnostics]` section.
 
+## Download Natural Earth data for cartopy
+
+The cartopy package (used for creating inset maps) requires shapes of the land,
+ocean and coastline from [Natural Earth](https://www.naturalearthdata.com).
+Typically, these data are downloaded automatically by cartopy.  However, for
+systems with compute nodes that cannot reach the internet, you will need to
+download the data manually into your conda environment from a login node before
+launching any MPAS-Analysis jobs:
+
+```
+download_natural_earth_110m
+```
+(or if using the git repo: `./download_natural_earth_110m.py`).
+
+If the data have already been downloaded, you will see nothing.  Otherwise, you
+should see a warning that the data are being downloaded.
+
 ## List Analysis
 
 If you installed the `mpas-analysis` package, list the available analysis tasks
