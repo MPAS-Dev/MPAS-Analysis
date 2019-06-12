@@ -399,6 +399,15 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # we can do about that.
         lon_pm180 = numpy.mod(lon + 180., 360.) - 180.
 
+        if self.horizontalBounds is not None:
+            mask = numpy.logical_and(
+                remappedModelClimatology.x.values >= self.horizontalBounds[0],
+                remappedModelClimatology.x.values <= self.horizontalBounds[1])
+            inset_lon = lon_pm180[mask]
+            inset_lat = lat[mask]
+        else:
+            inset_lon = lon_pm180
+            inset_lat = lat
         fc = FeatureCollection()
         fc.add_feature(
             {"type": "Feature",
@@ -409,7 +418,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                             "tags": ''},
              "geometry": {
                  "type": "LineString",
-                 "coordinates": list(map(list, zip(lon_pm180, lat)))}})
+                 "coordinates": list(map(list, zip(inset_lon, inset_lat)))}})
 
         # z is masked out with NaNs in some locations (where there is land) but
         # this makes pcolormesh unhappy so we'll zero out those locations

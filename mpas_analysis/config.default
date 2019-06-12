@@ -1722,7 +1722,7 @@ horizontalResolution = 5
 
 # Horizontal bounds of the plot (in km), or an empty list for automatic bounds
 # The bounds are a 2-element list of the minimum and maximum distance along the
-# transect
+# transect.  Note: A21=Drake Passage; A23=South Atlantic; A12=Prime Meridian
 horizontalBounds = {'WOCE_A21': [],
                     'WOCE_A23': [],
                     'WOCE_A12': []}
