@@ -48,7 +48,7 @@ environment with the following packages:
  * bottleneck
  * basemap
  * lxml
- * nco = 4.7.9
+ * nco >= 4.8.1
  * pyproj
  * pillow
  * cmocean
@@ -63,7 +63,7 @@ These can be installed via the conda command:
 ``` bash
 conda config --add channels conda-forge
 conda create -n mpas-analysis numpy scipy matplotlib netCDF4 \
-    xarray dask bottleneck basemap lxml nco=4.7.9 pyproj pillow \
+    xarray dask bottleneck basemap lxml nco>=4.8.1 pyproj pillow \
     cmocean progressbar2 requests setuptools shapely cartopy \
     geometric_features
 conda activate mpas-analysis
