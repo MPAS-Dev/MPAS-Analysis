@@ -12,7 +12,7 @@ dependencies:
   - netcdf4
   - hdf5
   - hdf4
-  - nco=4.7.9
+  - nco>=4.8.1
   - pyproj
   - pillow
   - cmocean
