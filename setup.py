@@ -62,7 +62,7 @@ setup(name='mpas_analysis',
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'lxml',
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',
-                        'requests', 'shapely'],
+                        'requests', 'shapely', 'cartopy', 'geometric_features'],
       entry_points={'console_scripts':
                     ['mpas_analysis = mpas_analysis.__main__:main',
                      'download_analysis_data = '
