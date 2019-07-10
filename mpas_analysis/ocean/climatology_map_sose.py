@@ -130,6 +130,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         sectionName = self.taskName
 
         fileSuffix = config.get(sectionName, 'fileSuffix')
+        if fileSuffix.endswith('.nc'):
+            fileSuffix = fileSuffix.strip('.nc')
 
         fieldList = config.getExpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
