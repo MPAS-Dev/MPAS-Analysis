@@ -118,6 +118,23 @@ download_natural_earth_110m
 If the data have already been downloaded, you will see nothing.  Otherwise, you
 should see a warning that the data are being downloaded.
 
+**Note**: If you are having issues downloading the shape files (e.g., a time out error or forbidden error), follow these steps:
+
+1. Run the following in python on your local machine (i.e., one that has no trouble downloading these files):
+```python
+import cartopy.io.shapereader as shpreader
+for name in ['ocean', 'coastline', 'land']:
+    shpfilename = shpreader.natural_earth(resolution='110m',
+                                          category='physical',
+                                          name=name)
+    reader = shpreader.Reader(shpfilename)
+```
+2. On your local machine, run `python -c "import cartopy; print(cartopy.config['data_dir'])"`. This will print out the directory in which the natural earth shapefiles are being placed locally.
+3. Copy these files onto the remote machine you are working on. Include folders `shapefiles/natural_earth/physical/*` where `*` is the set of shapefiles that were downloaded.
+4. On your remote machine, run `python -c "import cartopy; print(cartopy.config['data_dir'])"`. Copy the `shapefiles` folder and all contents over to this location.
+5. `cartopy` should now be able to find these files for `MPAS-Analysis`.`
+
+
 ## List Analysis
 
 If you installed the `mpas-analysis` package, list the available analysis tasks
