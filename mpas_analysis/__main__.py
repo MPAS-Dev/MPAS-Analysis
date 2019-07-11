@@ -872,6 +872,9 @@ def download_analysis_data():
     parser.add_argument("-o", "--outDir", dest="outDir", required=True,
                         help="Directory where MPAS-Analysis input data will"
                              "be downloaded")
+    parser.add_argument("-d", "--dataset", dest="dataset", default='analysis',
+                        help="Directory where MPAS-Analysis input data will"
+                             "be downloaded")
     args = parser.parse_args()
 
     try:
@@ -881,11 +884,12 @@ def download_analysis_data():
 
     urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
     analysisFileList = pkg_resources.resource_string(
-        'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
+        'mpas_analysis',
+        'obs/{}_input_files'.format(args.dataset)).decode('utf-8')
 
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
-    download_files(analysisFileList, urlBase, args.outDir)
+    download_files(analysisFileList, urlBase, args.outDir, verify=True)
 
 
 def download_natural_earth_110m():

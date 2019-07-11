@@ -1273,6 +1273,10 @@ depths = ['top', -200, -400, -600, -800, 'bot']
 fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
              'zonalVelocity', 'meridionalVelocity', 'velocityMagnitude']
 
+# set the suffix for files, e.g. if you want to use a different comparison
+# grid from the default
+fileSuffix = 6000.0x6000.0km_10.0km_Antarctic_stereo_20180710
+
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
 ## potential temperature at various levels, including the sea floor against

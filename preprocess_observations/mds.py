@@ -51,7 +51,7 @@ def strip_comments(text):
 
 _string_pattern = re.compile(r"'(.*)'$")
 
-def parse1(s): 
+def parse1(s):
     """ convert one item to appropriate type """
     m = _string_pattern.match(s)
     if m:
@@ -123,7 +123,7 @@ def parsemeta(metafile):
 
         if opening == '[':
             # [] can contain any type of values, separated by commas
-            val = [ parse1(s) for s in re.split(r',? *',line) ]
+            val = [ parse1(s.strip()) for s in line.split(',')]
         else:
             # {} can only contain single quote-delimited strings separated by space
             val = [ s.rstrip() for s in re.split(r"'  *'", line.strip("'")) ]
@@ -495,7 +495,7 @@ def wrmds(fbase, arr, itr=None, dataprec='float32', ndims=None, nrecords=None,
                      will be folded into 1 record dimension
     nrecords      :: number of records; will fold as many leading dimensions as
                      necessary (has to match shape!)
-    times         :: times to write into meta file.  Either a single float or a list 
+    times         :: times to write into meta file.  Either a single float or a list
                      of two for a time interval
     fields        :: list of fields
     simulation    :: string describing the simulation
