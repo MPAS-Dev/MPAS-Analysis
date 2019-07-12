@@ -271,8 +271,9 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
                       'will be computed with\n'
                       'month durations ignoring leap years.')
 
-            daysInMonth = numpy.array([constants.daysInMonth[int(month) - 1] for
-                                       month in ds.month.values], float)
+            daysInMonth = numpy.array(
+                [constants.daysInMonth[int(month) - 1] for
+                 month in ds.month.values], float)
             ds.coords['daysInMonth'] = ('Time', daysInMonth)
 
     return ds  # }}}
@@ -351,7 +352,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
     return remappedClimatology  # }}}
 
 
-def get_unmasked_mpas_climatology_directory(config):  # {{{
+def get_unmasked_mpas_climatology_directory(config, op='avg'):  # {{{
     """
     Get the directory for an unmasked MPAS climatology produced by ncclimo,
     making the directory if it doesn't already exist
@@ -360,24 +361,27 @@ def get_unmasked_mpas_climatology_directory(config):  # {{{
     ----------
     config :  ``MpasAnalysisConfigParser``
         configuration options
+
+    op : {'avg', 'min', 'max'}
+         operator for monthly stats
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    climatologyBaseDirectory = build_config_full_path(
-        config, 'output', 'mpasClimatologySubdirectory')
+    climatologyOpDirectory = get_climatology_op_directory(config, op)
 
     mpasMeshName = config.get('input', 'mpasMeshName')
 
-    directory = '{}/unmasked_{}'.format(climatologyBaseDirectory,
+    directory = '{}/unmasked_{}'.format(climatologyOpDirectory,
                                         mpasMeshName)
 
     make_directories(directory)
     return directory  # }}}
 
 
-def get_unmasked_mpas_climatology_file_name(config, season, componentName):
+def get_unmasked_mpas_climatology_file_name(config, season, componentName,
+                                            op='avg'):
     # {{{
     """
     Get the file name for an unmasked MPAS climatology produced by ncclimo
@@ -392,6 +396,9 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName):
 
     componentName : {'ocean', 'seaIce'}
         The MPAS component for which the climatology is being computed
+
+    op : {'avg', 'min', 'max'}
+         operator for monthly stats
     """
     # Authors
     # -------
@@ -409,7 +416,7 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName):
                          'Check with Charlie Zender and Xylar Asay-Davis\n'
                          'about getting it added'.format(componentName))
 
-    directory = get_unmasked_mpas_climatology_directory(config)
+    directory = get_unmasked_mpas_climatology_directory(config, op)
 
     make_directories(directory)
     monthValues = sorted(constants.monthDictionary[season])
@@ -427,7 +434,7 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName):
 
 
 def get_masked_mpas_climatology_file_name(config, season, componentName,
-                                          climatologyName):  # {{{
+                                          climatologyName, op='avg'):  # {{{
     """
     Get the file name for a masked MPAS climatology
 
@@ -445,6 +452,9 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
     climatologyName : str
         The name of the climatology (typically the name of a field to mask
         and later remap)
+
+    op : {'avg', 'min', 'max'}
+         operator for monthly stats
     """
     # Authors
     # -------
@@ -463,10 +473,9 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
                          'Check with Charlie Zender and Xylar Asay-Davis\n'
                          'about getting it added'.format(componentName))
 
-    climatologyBaseDirectory = build_config_full_path(
-        config, 'output', 'mpasClimatologySubdirectory')
+    climatologyOpDirectory = get_climatology_op_directory(config, op)
 
-    stageDirectory = '{}/masked'.format(climatologyBaseDirectory)
+    stageDirectory = '{}/masked'.format(climatologyOpDirectory)
 
     directory = '{}/{}_{}'.format(
         stageDirectory, climatologyName,
@@ -491,7 +500,8 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
 
 def get_remapped_mpas_climatology_file_name(config, season, componentName,
                                             climatologyName,
-                                            comparisonGridName):  # {{{
+                                            comparisonGridName,
+                                            op='avg'):  # {{{
     """
     Get the file name for a masked MPAS climatology
 
@@ -514,6 +524,9 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
         The name of the comparison grid to use for remapping.  If it is one
         of the default comparison grid names ``{'latlon', 'antarctic'}``, the
         full grid name is looked up via get_comparison_descriptor
+
+    op : {'avg', 'min', 'max'}
+         operator for monthly stats
     """
     # Authors
     # -------
@@ -532,8 +545,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
                          'Check with Charlie Zender and Xylar Asay-Davis\n'
                          'about getting it added'.format(componentName))
 
-    climatologyBaseDirectory = build_config_full_path(
-        config, 'output', 'mpasClimatologySubdirectory')
+    climatologyOpDirectory = get_climatology_op_directory(config, op)
 
     if comparisonGridName in ['latlon', 'antarctic']:
         comparisonDescriptor = get_comparison_descriptor(config,
@@ -542,7 +554,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     else:
         comparisonFullMeshName = comparisonGridName
 
-    stageDirectory = '{}/remapped'.format(climatologyBaseDirectory)
+    stageDirectory = '{}/remapped'.format(climatologyOpDirectory)
 
     directory = '{}/{}_{}_to_{}'.format(stageDirectory, climatologyName,
                                         mpasMeshName, comparisonFullMeshName)
@@ -562,6 +574,17 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
         directory, ncclimoModel, season, suffix)
 
     return fileName  # }}}
+
+
+def get_climatology_op_directory(config, op='avg'):
+    '''
+    Get the output directory for MPAS climatologies from output with the given
+    monthly operator: avg, min or max
+    '''
+    climatologyBaseDirectory = build_config_full_path(
+        config, 'output', 'mpasClimatologySubdirectory')
+
+    return '{}/{}'.format(climatologyBaseDirectory, op)
 
 
 def _compute_masked_mean(ds, maskVaries):  # {{{
@@ -662,7 +685,8 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     yearsInDs = ds.year.values
 
     # figure out which files to load and which years go in each file
-    for firstYear in range(startYearClimo, endYearClimo + 1, yearsPerCacheFile):
+    for firstYear in range(startYearClimo, endYearClimo + 1,
+                           yearsPerCacheFile):
         years = range(firstYear, firstYear + yearsPerCacheFile)
 
         yearString, fileSuffix = _get_year_string(years[0], years[-1])

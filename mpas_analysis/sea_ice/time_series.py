@@ -16,8 +16,8 @@ import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot, \
-    timeseries_analysis_plot_polar
+from mpas_analysis.shared.plot import timeseries_analysis_plot, \
+    timeseries_analysis_plot_polar, savefig
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     check_path_exists, make_directories, build_obs_path
@@ -467,7 +467,6 @@ class TimeSeriesSeaIce(AnalysisTask):
                                          movingAveragePoints,
                                          title[key], xLabel,
                                          units[variableName],
-                                         figureNameStd[key],
                                          calendar=calendar,
                                          lineColors=lineColors,
                                          lineWidths=lineWidths,
@@ -475,6 +474,8 @@ class TimeSeriesSeaIce(AnalysisTask):
                                          titleFontSize=titleFontSize,
                                          firstYearXTicks=firstYearXTicks,
                                          yearStrideXTicks=yearStrideXTicks)
+
+                savefig(figureNameStd[key])
 
                 filePrefix = '{}{}_{}'.format(variableName,
                                               hemisphere,
@@ -500,11 +501,12 @@ class TimeSeriesSeaIce(AnalysisTask):
                         dsvalues,
                         movingAveragePoints,
                         title[key],
-                        figureNamePolar[key],
                         lineColors=lineColors,
                         lineWidths=lineWidths,
                         legendText=legendText,
                         titleFontSize=titleFontSize)
+
+                    savefig(figureNamePolar[key])
 
                     filePrefix = '{}{}_{}_polar'.format(variableName,
                                                         hemisphere,

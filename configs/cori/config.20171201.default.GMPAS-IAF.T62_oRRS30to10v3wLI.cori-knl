@@ -88,7 +88,7 @@ htmlSubdirectory = html
 # option:
 #    mpas_analysis config.analysis --generate \
 #         all,no_ocean,all_timeSeries
-generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs']
+generate = ['all', 'no_eke', 'no_BGC', 'no_icebergs', 'no_min', 'no_max']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against

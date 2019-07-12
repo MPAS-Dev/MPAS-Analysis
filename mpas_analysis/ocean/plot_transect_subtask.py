@@ -22,8 +22,11 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 
-from mpas_analysis.shared.plot.plotting import \
-    plot_vertical_section_comparison
+from geometric_features import FeatureCollection
+import matplotlib.pyplot as plt
+
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
+    savefig, add_inset
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -392,6 +395,31 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.lat = lat
         self.lon = lon
 
+        # This will do strange things at the antemeridian but there's little
+        # we can do about that.
+        lon_pm180 = numpy.mod(lon + 180., 360.) - 180.
+
+        if self.horizontalBounds is not None:
+            mask = numpy.logical_and(
+                remappedModelClimatology.x.values >= self.horizontalBounds[0],
+                remappedModelClimatology.x.values <= self.horizontalBounds[1])
+            inset_lon = lon_pm180[mask]
+            inset_lat = lat[mask]
+        else:
+            inset_lon = lon_pm180
+            inset_lat = lat
+        fc = FeatureCollection()
+        fc.add_feature(
+            {"type": "Feature",
+             "properties": {"name": self.transectName,
+                            "author": 'Xylar Asay-Davis',
+                            "object": 'transect',
+                            "component": 'ocean',
+                            "tags": ''},
+             "geometry": {
+                 "type": "LineString",
+                 "coordinates": list(map(list, zip(inset_lon, inset_lat)))}})
+
         # z is masked out with NaNs in some locations (where there is land) but
         # this makes pcolormesh unhappy so we'll zero out those locations
         z[numpy.isnan(z)] = 0.
@@ -497,14 +525,13 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # construct a three-panel comparison plot for the transect, or a
         # single-panel contour comparison plot if compareAsContours is True
 
-        plot_vertical_section_comparison(
+        fig, axes, suptitle = plot_vertical_section_comparison(
             config,
             x,
             z,
             modelOutput,
             refOutput,
             bias,
-            outFileName,
             configSectionName,
             cbarLabel=self.unitsLabel,
             xlabel=xLabel,
@@ -529,6 +556,22 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision)
+
+        # shift the super-title a little to the left to make room for the inset
+        pos = suptitle.get_position()
+        suptitle.set_position((pos[0] - 0.05, pos[1]))
+
+        # make a red start axis and green end axis to correspond to the dots
+        # in the inset
+        for ax in axes:
+            ax.spines['left'].set_color('red')
+            ax.spines['right'].set_color('green')
+            ax.spines['left'].set_linewidth(4)
+            ax.spines['right'].set_linewidth(4)
+
+        add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
+
+        savefig(outFileName, tight=False)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

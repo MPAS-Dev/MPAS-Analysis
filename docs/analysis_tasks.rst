@@ -5,6 +5,7 @@ Analysis Tasks
    :maxdepth: 1
 
    tasks/climatologyMapMLD
+   tasks/climatologyMapMLDMinMax
    tasks/climatologyMapSST
    tasks/climatologyMapSSS
    tasks/climatologyMapSSH
@@ -18,6 +19,7 @@ Analysis Tasks
    tasks/climatologyMapAntarcticMelt
 
    tasks/timeSeriesAntarcticMelt
+   tasks/timeSeriesOceanRegions
    tasks/timeSeriesTemperatureAnomaly
    tasks/timeSeriesSalinityAnomaly
    tasks/timeSeriesOHCAnomaly

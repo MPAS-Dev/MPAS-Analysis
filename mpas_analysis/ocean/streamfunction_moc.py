@@ -20,8 +20,8 @@ import netCDF4
 import os
 
 from mpas_analysis.shared.constants.constants import m3ps_to_Sv
-from mpas_analysis.shared.plot.plotting import \
-    plot_vertical_section_comparison, timeseries_analysis_plot
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
+    timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
@@ -33,6 +33,8 @@ from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.html import write_image_xml
+from mpas_analysis.shared.climatology.climatology import \
+    get_climatology_op_directory
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{
@@ -232,8 +234,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         config = self.config
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 
@@ -358,8 +359,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         '''compute mean MOC streamfunction as a post-process'''
 
         config = self.config
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 
@@ -620,7 +620,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 region, self.startYear,
                 self.endYear)
             filePrefix = self.filePrefixes[region]
-            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+            outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             x = lat[region]
             z = depth
@@ -656,7 +656,6 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
             plot_vertical_section_comparison(
                 config, x, z, regionMOC, refRegionMOC, diff,
-                fileout=figureName,
                 colorMapSectionName='streamfunctionMOC{}'.format(region),
                 cbarLabel=colorbarLabel,
                 title=title,
@@ -666,6 +665,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 xlabel=xLabel,
                 ylabel=yLabel,
                 N=movingAveragePointsClimatological)
+
+            savefig(outFileName)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
             write_image_xml(
@@ -685,8 +686,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
 
-        outputDirectory = build_config_full_path(config, 'output',
-                                                 'mpasClimatologySubdirectory')
+        outputDirectory = get_climatology_op_directory(config)
 
         make_directories(outputDirectory)
 
@@ -1283,7 +1283,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         title = r'Max Atlantic MOC at $26.5\degree$N\n {}'.format(mainRunName)
         filePrefix = self.filePrefix
 
-        figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         if config.has_option(self.taskName, 'firstYearXTicks'):
             firstYearXTicks = config.getint(self.taskName,
@@ -1313,12 +1313,14 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         timeseries_analysis_plot(config, fields,
                                  movingAveragePoints, title,
-                                 xLabel, yLabel, figureName,
+                                 xLabel, yLabel,
                                  calendar=self.calendar, lineColors=lineColors,
                                  lineWidths=lineWidths,
                                  legendText=legendText,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
+
+        savefig(outFileName)
 
         caption = u'Time Series of maximum Meridional Overturning ' \
                   u'Circulation at 26.5°N'

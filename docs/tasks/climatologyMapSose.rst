@@ -40,6 +40,10 @@ The following configuration options are available for this task::
     fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
                  'zonalVelocity', 'meridionalVelocity', 'velocityMagnitude']
 
+    # set the suffix for files, e.g. if you want to use a different comparison
+    # grid from the default
+    fileSuffix = 6000.0x6000.0km_10.0km_Antarctic_stereo_20180710
+
     [climatologyMapSoseTemperature]
     ## options related to plotting climatology maps of Antarctic
     ## potential temperature at various levels, including the sea floor against
@@ -219,6 +223,25 @@ The user can select only to plot a subset of the supported fields by adding
 only the desired field names to ``fieldList``.  The default value shows the
 list of all available fields.
 
+
+SOSE data for the full Southern Ocean
+-------------------------------------
+
+The default SOSE data is on a 6,000 x 6,000 km grid focused on the Antarctic
+continental shelf. An alternative data set is available on a 10,000 x 10,000 km
+grid.  These data can be downloaded directly from the `data repository`_  or
+by calling::
+
+  download_analysis_data -o /output/path/for/diagnostics -d sose_10000km
+
+where the output path is the ``baseDirectory`` given in the ``diagnostics``
+section of the config file (see :ref:`config_diagnostics`). The data set is not
+included in the default download because of its large size (~27 GB).
+
+Climatologies can be plotted with these data by setting::
+
+    fileSuffix = 10000.0x10000.0km_10.0km_Antarctic_stereo_20190603
+
 For more details, see:
  * :ref:`config_colormaps`
  * :ref:`config_seasons`
@@ -238,3 +261,4 @@ Example Result
    :align: center
 
 .. _`Southern Ocean State Estimate (SOSE)`: http://sose.ucsd.edu/sose_stateestimation_data_05to10.html
+.. _`data repository`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/SOSE/

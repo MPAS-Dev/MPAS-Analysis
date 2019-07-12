@@ -56,6 +56,7 @@ Ocean tasks
    ClimatologyMapSST
    ClimatologyMapSSS
    ClimatologyMapMLD
+   ClimatologyMapMLDMinMax
    ClimatologyMapSSH
    ClimatologyMapEKE
    ClimatologyMapOHCAnomaly
@@ -71,6 +72,7 @@ Ocean tasks
    TimeSeriesSalinityAnomaly
    TimeSeriesSST
    TimeSeriesAntarcticMelt
+   TimeSeriesOceanRegions
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 
@@ -272,14 +274,15 @@ Plotting
 .. autosummary::
    :toctree: generated/
 
-   plotting.timeseries_analysis_plot
-   plotting.timeseries_analysis_plot_polar
-   plotting.plot_polar_comparison
-   plotting.plot_global_comparison
-   plotting.plot_1D
-   plotting.plot_vertical_section
-   plotting.setup_colormap
-   plotting.plot_xtick_format
+   timeseries_analysis_plot
+   timeseries_analysis_plot_polar
+   plot_polar_comparison
+   plot_global_comparison
+   plot_1D
+   plot_vertical_section
+   colormap.setup_colormap
+   ticks.plot_xtick_format
+   add_inset
 
 
 Regions

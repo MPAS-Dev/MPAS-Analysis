@@ -786,9 +786,9 @@ colormapNameResult = viridis
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
 # colormap levels/values for contour boundaries
-colorbarLevelsResult = [0, 20, 40, 60, 80, 100, 150, 200, 400, 800]
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
 
 # colormap for differences
 colormapNameDifference = balance
@@ -805,6 +805,211 @@ seasons =  ['JFM', 'JAS', 'ANN']
 
 # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
 comparisonGrids = ['latlon']
+
+
+[climatologyMapMLDMinMax]
+## options related to plotting horizontally remapped climatologies of
+## monthly min/max mixed layer depth (MLD), optionally against control model
+## results
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['JFM', 'JAS', 'ANN']
+
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon']
+
+
+[climatologyMapDensityMLDMinMax]
+## color mpas for density-threshold MLD min/max plots in the same figure
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = viridis
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [0, 1, 5, 10, 20, 30, 50, 80, 110, 150]
+
+[climatologyMapDensityMLDMin]
+## color mpas for density MLD min plots in separate figures for main vs. control
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
+
+[climatologyMapDensityMLDMax]
+## color mpas for density MLD max plots in separate figures for main vs. control
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
+
+
+[climatologyMapTemperatureMLDMinMax]
+## color mpas for temperature-threshold MLD min/max plots in the same figure
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = viridis
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [0, 1, 5, 10, 20, 30, 50, 80, 110, 150]
+
+[climatologyMapTemperatureMLDMin]
+## color mpas for temperature MLD min plots in separate figures for main vs. control
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
+
+[climatologyMapTemperatureMLDMax]
+## color mpas for temperature MLD max plots in separate figures for main vs. control
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
+
+
+[climatologyMapBLDMinMax]
+## color mpas for boundary-layer depth min/max plots in the same figure
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = viridis
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [0, 1, 5, 10, 20, 30, 50, 80, 110, 150]
+
+[climatologyMapBLDMin]
+## color mpas for BLD min plots in separate figures for main vs. control
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
+
+[climatologyMapBLDMax]
+## color mpas for BLD max plots in separate figures for main vs. control
+
+# colormap for model/observations
+colormapNameResult = viridis
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# color indices into colormapName for filled contours
+colormapIndicesResult = [0, 20, 50, 80, 120, 140, 170, 200, 230, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsResult = [10., 30., 50., 75., 100., 150., 200., 400., 800.]
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-150, -80, -30, -10, -1, 0, 1, 10, 30, 80, 150]
 
 
 [climatologyMapSSH]
@@ -982,6 +1187,69 @@ movingAverageMonths = 1
 
 # yearStrideXTicks = 1
 
+# the number of threads dask is allowed to spawn for each process computing
+# a year of these time series
+# Decrease this number if timeSeriesAntarcticMelt subtasks are running
+# out of available threads
+daskThreads = 4
+
+# the number of subprocesses that each task gets counted as occupying
+# Increase this number if timeSeriesAntarcticMelt subtasks are running
+# out of memory, and fewer tasks will be allowed to run at once
+subprocessCount = 1
+
+
+[timeSeriesOceanRegions]
+## options related to plotting time series of groups of ocean regions
+
+# the names of region groups to plot, each with its own section below
+regionGroups = ['Antarctic Regions']
+
+# the number of threads dask is allowed to spawn for each process computing
+# a year of these time series
+# Decrease this number if timeSeriesAntarcticMelt subtasks are running
+# out of available threads
+daskThreads = 12
+
+# the number of subprocesses that each task gets counted as occupying
+# Increase this number if timeSeriesAntarcticMelt subtasks are running
+# out of memory, and fewer tasks will be allowed to run at once
+subprocessCount = 3
+
+
+[timeSeriesAntarcticRegions]
+## options related to plotting time series of Antarctic regions
+
+# A geojson file containing Antarctic ocean regions.  Each region must have
+# 'zmin' and 'zmax' properites in addition to the usual properies for a region
+# in geometric_features
+regionMask = 'antarcticRegions.geojson'
+
+# list of regions to plot or ['all'] for all regions in the masks file.
+# See "regionNames" in the antarcticRegions masks file in
+# regionMaskSubdirectory for details.
+regionNames = ['all']
+
+# a list of variables to plot
+variables = [{'name': 'temperature',
+              'title': 'Temperature',
+              'units': '$^\circ$C',
+              'mpas': 'timeMonthly_avg_activeTracers_temperature'},
+             {'name': 'salinity',
+              'title': 'Salinity',
+              'units': 'PSU',
+              'mpas': 'timeMonthly_avg_activeTracers_salinity'},
+             {'name': 'potentialDensity',
+              'title': 'Potential Density',
+              'units': 'kg m$^{-3}$',
+              'mpas': 'timeMonthly_avg_potentialDensity'}]
+
+# The minimum and maximum depth over which fields are averaged, default is
+# to take these values from the geojson feature's zmin and zmax properties.
+# Add these to a custom config file to override the defaults.
+# zmin = -1000
+# zmax = -400
+
 
 [climatologyMapSose]
 ## options related to plotting climatology maps of Antarctic fields at various
@@ -1004,6 +1272,10 @@ depths = ['top', -200, -400, -600, -800, 'bot']
 # below
 fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
              'zonalVelocity', 'meridionalVelocity', 'velocityMagnitude']
+
+# set the suffix for files, e.g. if you want to use a different comparison
+# grid from the default
+fileSuffix = 6000.0x6000.0km_10.0km_Antarctic_stereo_20180710
 
 [climatologyMapSoseTemperature]
 ## options related to plotting climatology maps of Antarctic
@@ -1454,10 +1726,10 @@ horizontalResolution = 5
 
 # Horizontal bounds of the plot (in km), or an empty list for automatic bounds
 # The bounds are a 2-element list of the minimum and maximum distance along the
-# transect
-horizontalBounds = {'WOCE_A21_Drake_Passage': [],
-                    'WOCE_A23_South_Atlantic': [],
-                    'WOCE_A12_Prime_Meridian': []}
+# transect.  Note: A21=Drake Passage; A23=South Atlantic; A12=Prime Meridian
+horizontalBounds = {'WOCE_A21': [],
+                    'WOCE_A23': [],
+                    'WOCE_A12': []}
 
 # The name of the vertical comparison grid.  Valid values are 'mpas' for the
 # MPAS vertical grid, 'obs' to use the locations of observations or

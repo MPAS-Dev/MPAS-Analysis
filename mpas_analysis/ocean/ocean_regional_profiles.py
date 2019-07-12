@@ -19,9 +19,11 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+from geometric_features import FeatureCollection, read_feature_collection
+
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, make_directories
+    get_files_year_month, make_directories, decode_strings
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
@@ -30,6 +32,7 @@ from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 from mpas_analysis.shared.html import write_image_xml
+from mpas_analysis.shared.plot import savefig, add_inset
 
 
 class OceanRegionalProfiles(AnalysisTask):  # {{{
@@ -98,10 +101,13 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         masksFile = '{}/{}.geojson'.format(regionMaskDirectory,
                                            self.regionMaskSuffix)
 
+        parallelTaskCount = config.getWithDefault('execute',
+                                                  'parallelTaskCount',
+                                                  default=1)
+
         masksSubtask = ComputeRegionMasksSubtask(
-            self, masksFile,
-            outFileSuffix=self.regionMaskSuffix,
-            featureList=self.regionNames)
+            self, masksFile, outFileSuffix=self.regionMaskSuffix,
+            featureList=self.regionNames, subprocessCount=parallelTaskCount)
 
         if 'all' in self.regionNames:
             self.regionNames = get_feature_list(config, masksFile)
@@ -178,7 +184,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     parentTask : ``OceanRegionalProfiles``
         The main task of which this is a subtask
 
-    startyear, endYear : int
+    startYear, endYear : int
         The beginning and end of the time series to compute
     '''
     # Authors
@@ -194,7 +200,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``OceanRegionalProfiles``
             The main task of which this is a subtask
 
-        startyear, endYear : int
+        startYear, endYear : int
             The beginning and end of the time series to compute
         '''
         # Authors
@@ -244,8 +250,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
     def run_task(self):  # {{{
         '''
-        Process MOC analysis member data if available, or compute MOC at
-        post-processing if not.
+        Compute time series of regional profiles
         '''
         # Authors
         # -------
@@ -324,8 +329,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         dsRegionMask = xr.open_dataset(regionMaskFileName)
 
         # figure out the indices of the regions to plot
-        regionNames = [bytes.decode(name) for name in
-                       dsRegionMask.regionNames.values]
+        regionNames = decode_strings(dsRegionMask.regionNames)
+
         regionIndices = []
         for regionToPlot in self.parentTask.regionNames:
             for index, regionName in enumerate(regionNames):
@@ -424,10 +429,10 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask : ``StreamfunctionMOC``
+        parentTask : ``OceanRegionalProfiles``
             The main task of which this is a subtask
 
-        startyear, endYear : list of int
+        startYear, endYear : list of int
             The beginning and end of each time series to combine
         '''
         # Authors
@@ -635,6 +640,23 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startYear = self.parentTask.startYear
         endYear = self.parentTask.endYear
 
+        regionMaskDirectory = build_config_full_path(config,
+                                                     'diagnostics',
+                                                     'regionMaskSubdirectory')
+
+        regionMaskSuffix = config.get('oceanRegionalProfiles',
+                                      'regionMaskSuffix')
+        regionMaskFile = '{}/{}.geojson'.format(regionMaskDirectory,
+                                                regionMaskSuffix)
+
+        fcAll = read_feature_collection(regionMaskFile)
+
+        fc = FeatureCollection()
+        for feature in fcAll.features:
+            if feature['properties']['name'] == self.regionName:
+                fc.add_feature(feature)
+                break
+
         inDirectory = build_config_full_path(config, 'output',
                                              'profilesSubdirectory')
         timeSeriesName = self.parentTask.regionMaskSuffix
@@ -643,8 +665,8 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             self.parentTask.startYear, self.parentTask.endYear)
 
         ds = xr.open_dataset(inFileName)
-        allRegionNames = [bytes.decode(name) for name in
-                          ds.regionNames.values]
+        allRegionNames = decode_strings(ds.regionNames)
+
         regionIndex = allRegionNames.index(self.regionName)
         ds = ds.isel(nRegions=regionIndex)
         meanFieldName = '{}_mean'.format(self.field['prefix'])
@@ -659,7 +681,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         xLabel = '{} ({})'.format(titleFieldName, self.field['units'])
         yLabel = 'depth (m)'
-        fileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
         lineColors = ['k']
         lineWidths = [1.6]
         zArrays = [ds.z.values]
@@ -687,7 +709,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                               '{:04d}-{:04d}'.format(controlStartYear,
                                                      controlEndYear)]
             else:
-                title = '{} {}'.format(regionName, self.season)
+                title = '{} {}   '.format(regionName, self.season)
                 legendText = ['{} {:04d}-{:04d}'.format(mainRunName, startYear,
                                                         endYear),
                               '{} {:04d}-{:04d}'.format(controlRunName,
@@ -703,8 +725,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 controlStartYear, controlEndYear)
 
             dsControl = xr.open_dataset(controlFileName)
-            allRegionNames = [bytes.decode(name) for name in
-                              dsControl.regionNames.values]
+            allRegionNames = decode_strings(dsControl.regionNames)
             regionIndex = allRegionNames.index(self.regionName)
             dsControl = dsControl.isel(nRegions=regionIndex)
 
@@ -719,10 +740,18 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         if len(depthRange) == 0:
             depthRange = None
 
-        self.plot(zArrays, fieldArrays, errArrays,
-                  lineColors=lineColors, lineWidths=lineWidths,
-                  legendText=legendText, title=title, xLabel=xLabel,
-                  yLabel=yLabel, fileName=fileName, yLim=depthRange)
+        fig = self.plot(zArrays, fieldArrays, errArrays,
+                        lineColors=lineColors, lineWidths=lineWidths,
+                        legendText=legendText, title=title, xLabel=xLabel,
+                        yLabel=yLabel, yLim=depthRange)
+
+        # do this before the inset because otherwise it moves the inset
+        # and cartopy doesn't play too well with tight_layout anyway
+        plt.tight_layout()
+
+        add_inset(fig, fc, width=1.0, height=1.0)
+
+        savefig(outFileName, tight=False)
 
         caption = '{} {} vs depth'.format(regionName, titleFieldName)
         write_image_xml(
@@ -739,7 +768,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def plot(self, zArrays, fieldArrays, errArrays, lineColors, lineWidths,
-             legendText, title, xLabel, yLabel, fileName, xLim=None, yLim=None,
+             legendText, title, xLabel, yLabel, xLim=None, yLim=None,
              figureSize=(10, 4), dpi=None):  # {{{
         """
         Plots a 1D line plot with error bars if available.
@@ -767,9 +796,6 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         xLabel, yLabel : str
             label of x- and y-axis
 
-        fileName : str
-            the file name to be written
-
         xLim : float array, optional
             x range of plot
 
@@ -792,7 +818,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # set up figure
         if dpi is None:
             dpi = config.getint('plot', 'dpi')
-        plt.figure(figsize=figureSize, dpi=dpi)
+        fig = plt.figure(figsize=figureSize, dpi=dpi)
 
         plotLegend = False
         for dsIndex in range(len(zArrays)):
@@ -823,8 +849,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                   facecolor=color, alpha=0.2)
                 plt.fill_betweenx(zArray, fieldArray, fieldArray - errArray,
                                   facecolor=color, alpha=0.2)
-        # plt.grid()
-        # plt.axvline(0.0, linestyle='-', color='k')
+
         if plotLegend and len(zArrays) > 1:
             plt.legend()
 
@@ -843,11 +868,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             plt.xlim(xLim)
         if yLim:
             plt.ylim(yLim)
-
-        if (fileName is not None):
-            plt.savefig(fileName, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
-
-        plt.close()  # }}}
+        return fig  # }}}
 
     # }}}
 

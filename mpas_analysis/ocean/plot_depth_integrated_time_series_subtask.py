@@ -19,7 +19,7 @@ import xarray
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -316,7 +316,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                               regionNameInTitle,
                                               mainRunName)
 
-        figureName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
         timeSeries = []
         lineColors = []
@@ -473,12 +473,14 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
                                  title=title, xlabel=xLabel, ylabel=yLabel,
-                                 fileout=figureName, calendar=calendar,
+                                 calendar=calendar,
                                  lineColors=lineColors, lineStyles=lineStyles,
                                  markers=lineMarkers, lineWidths=lineWidths,
                                  maxPoints=maxPoints, legendText=legendText,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
+
+        savefig(outFileName)
 
         write_image_xml(
             config=config,

@@ -34,6 +34,7 @@ import progressbar
 import logging
 import xarray
 import time
+import cartopy.io.shapereader as shpreader
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -48,7 +49,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.analysis_task import \
     update_time_bounds_from_file_names
 
-from mpas_analysis.shared.plot.plotting import _register_custom_colormaps, \
+from mpas_analysis.shared.plot.colormap import _register_custom_colormaps, \
     _plot_color_gradients
 
 from mpas_analysis import ocean
@@ -106,8 +107,11 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses = []
 
     # Ocean Analyses
-    oceanClimatolgyTask = MpasClimatologyTask(config=config,
-                                              componentName='ocean')
+    oceanClimatolgyTasks = {}
+    for op in ['avg', 'min', 'max']:
+        oceanClimatolgyTasks[op] = MpasClimatologyTask(config=config,
+                                                       componentName='ocean',
+                                                       op=op)
     oceanTimeSeriesTask = MpasTimeSeriesTask(config=config,
                                              componentName='ocean')
     oceanIndexTask = MpasTimeSeriesTask(config=config,
@@ -117,42 +121,55 @@ def build_analysis_list(config, controlConfig):  # {{{
     oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
         config=config, componentName='ocean')
 
-    analyses.append(oceanClimatolgyTask)
+    for op in oceanClimatolgyTasks:
+        analyses.append(oceanClimatolgyTasks[op])
     analyses.append(oceanRefYearClimatolgyTask)
 
-    analyses.append(ocean.ClimatologyMapMLD(config, oceanClimatolgyTask,
+    analyses.append(ocean.ClimatologyMapMLD(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
-    analyses.append(ocean.ClimatologyMapSST(config, oceanClimatolgyTask,
+
+    analyses.append(ocean.ClimatologyMapMLDMinMax(config,
+                                                  oceanClimatolgyTasks,
+                                                  controlConfig))
+
+    analyses.append(ocean.ClimatologyMapSST(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
-    analyses.append(ocean.ClimatologyMapSSS(config, oceanClimatolgyTask,
+    analyses.append(ocean.ClimatologyMapSSS(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
-    analyses.append(ocean.ClimatologyMapSSH(config, oceanClimatolgyTask,
+    analyses.append(ocean.ClimatologyMapSSH(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
-    analyses.append(ocean.ClimatologyMapEKE(config, oceanClimatolgyTask,
+    analyses.append(ocean.ClimatologyMapEKE(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
-        config, oceanClimatolgyTask, oceanRefYearClimatolgyTask,
+        config, oceanClimatolgyTasks['avg'], oceanRefYearClimatolgyTask,
         controlConfig))
 
     analyses.append(ocean.ClimatologyMapSose(
-        config, oceanClimatolgyTask, controlConfig))
-    analyses.append(ocean.ClimatologyMapBGC(config, oceanClimatolgyTask,
+        config, oceanClimatolgyTasks['avg'], controlConfig))
+    analyses.append(ocean.ClimatologyMapBGC(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
-        config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTasks['avg'], controlConfig))
     analyses.append(ocean.ClimatologyMapArgoSalinity(
-        config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapSchmidtko(
-        config, oceanClimatolgyTask, controlConfig))
+        config, oceanClimatolgyTasks['avg'], controlConfig))
 
-    analyses.append(ocean.ClimatologyMapAntarcticMelt(config,
-                                                      oceanClimatolgyTask,
-                                                      controlConfig))
+    analyses.append(ocean.ClimatologyMapAntarcticMelt(
+        config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
                                                   controlConfig))
+
+    analyses.append(ocean.TimeSeriesOceanRegions(config, controlConfig))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
@@ -163,20 +180,21 @@ def build_analysis_list(config, controlConfig):  # {{{
                                                controlConfig))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
                                         controlConfig))
-    analyses.append(ocean.MeridionalHeatTransport(config, oceanClimatolgyTask,
-                                                  controlConfig))
+    analyses.append(ocean.MeridionalHeatTransport(
+        config, oceanClimatolgyTasks['avg'], controlConfig))
 
-    analyses.append(ocean.StreamfunctionMOC(config, oceanClimatolgyTask,
+    analyses.append(ocean.StreamfunctionMOC(config,
+                                            oceanClimatolgyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, controlConfig))
 
-    analyses.append(ocean.WoceTransects(config, oceanClimatolgyTask,
+    analyses.append(ocean.WoceTransects(config, oceanClimatolgyTasks['avg'],
                                         controlConfig))
 
-    analyses.append(ocean.SoseTransects(config, oceanClimatolgyTask,
+    analyses.append(ocean.SoseTransects(config, oceanClimatolgyTasks['avg'],
                                         controlConfig))
 
-    analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTask,
+    analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTasks['avg'],
                                            controlConfig))
 
     analyses.append(ocean.OceanRegionalProfiles(config, controlConfig))
@@ -493,6 +511,7 @@ def run_analysis(config, analyses):  # {{{
             break
 
         # launch new tasks
+        runDirectly = False
         for key, analysisTask in analyses.items():
             if analysisTask._runStatus.value == AnalysisTask.READY:
                 if isParallel:
@@ -504,24 +523,33 @@ def run_analysis(config, analyses):  # {{{
                         # more processes to finish
                         break
 
-                    logger.info('Running {}'.format(
-                        analysisTask.printTaskName))
-                    analysisTask._runStatus.value = AnalysisTask.RUNNING
-                    analysisTask.start()
-                    runningTasks[key] = analysisTask
-                    runningProcessCount = newProcessCount
-                    if runningProcessCount >= parallelTaskCount:
-                        # don't try to run any more tasks
+                    if analysisTask.runDirectly:
+                        analysisTask.run(writeLogFile=True)
+                        runDirectly = True
                         break
+                    else:
+                        logger.info('Running {}'.format(
+                            analysisTask.printTaskName))
+                        analysisTask._runStatus.value = AnalysisTask.RUNNING
+                        analysisTask.start()
+                        runningTasks[key] = analysisTask
+                        runningProcessCount = newProcessCount
+                        if runningProcessCount >= parallelTaskCount:
+                            # don't try to run any more tasks
+                            break
                 else:
                     analysisTask.run(writeLogFile=False)
+                    break
 
         if isParallel:
-            # wait for a task to finish
-            analysisTask = wait_for_task(runningTasks)
-            key = (analysisTask.taskName, analysisTask.subtaskName)
-            runningTasks.pop(key)
-            runningProcessCount -= analysisTask.subprocessCount
+
+            if not runDirectly:
+                assert(runningProcessCount > 0)
+                # wait for a task to finish
+                analysisTask = wait_for_task(runningTasks)
+                key = (analysisTask.taskName, analysisTask.subtaskName)
+                runningTasks.pop(key)
+                runningProcessCount -= analysisTask.subprocessCount
 
             taskTitle = analysisTask.printTaskName
 
@@ -648,15 +676,17 @@ def symlink_main_run(config, defaultConfig):
                                                relativePathSection=section)
         if not os.path.exists(destDirectory):
 
-            destBase, _ = os.path.split(destDirectory)
-
-            make_directories(destBase)
-
             sourceDirectory = build_config_full_path(
                 config=mainConfig, section='output',
                 relativePathOption=option, relativePathSection=section)
 
-            os.symlink(sourceDirectory, destDirectory)
+            if os.path.exists(sourceDirectory):
+
+                destBase, _ = os.path.split(destDirectory)
+
+                make_directories(destBase)
+
+                os.symlink(sourceDirectory, destDirectory)
 
     mainConfigFile = config.get('runs', 'mainRunConfigFile')
     if not os.path.exists(mainConfigFile):
@@ -842,6 +872,9 @@ def download_analysis_data():
     parser.add_argument("-o", "--outDir", dest="outDir", required=True,
                         help="Directory where MPAS-Analysis input data will"
                              "be downloaded")
+    parser.add_argument("-d", "--dataset", dest="dataset", default='analysis',
+                        help="Directory where MPAS-Analysis input data will"
+                             "be downloaded")
     args = parser.parse_args()
 
     try:
@@ -851,11 +884,20 @@ def download_analysis_data():
 
     urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
     analysisFileList = pkg_resources.resource_string(
-        'mpas_analysis', 'obs/analysis_input_files').decode('utf-8')
+        'mpas_analysis',
+        'obs/{}_input_files'.format(args.dataset)).decode('utf-8')
 
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
-    download_files(analysisFileList, urlBase, args.outDir)
+    download_files(analysisFileList, urlBase, args.outDir, verify=True)
+
+
+def download_natural_earth_110m():
+    for name in ['ocean', 'coastline', 'land']:
+        shpfilename = shpreader.natural_earth(resolution='110m',
+                                              category='physical',
+                                              name=name)
+        reader = shpreader.Reader(shpfilename)
 
 
 if __name__ == "__main__":

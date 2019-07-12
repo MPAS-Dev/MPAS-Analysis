@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function, \
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot.plotting import timeseries_analysis_plot
+from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
 from mpas_analysis.shared.io import open_mpas_dataset
@@ -238,7 +238,7 @@ class TimeSeriesSST(AnalysisTask):
 
             filePrefix = self.filePrefixes[region]
 
-            figureName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+            outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             lineColors = ['k']
             lineWidths = [3]
@@ -274,13 +274,15 @@ class TimeSeriesSST(AnalysisTask):
                 yearStrideXTicks = None
 
             timeseries_analysis_plot(config, fields, movingAveragePoints,
-                                     title, xLabel, yLabel, figureName,
+                                     title, xLabel, yLabel,
                                      calendar=calendar,
                                      lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,
                                      firstYearXTicks=firstYearXTicks,
                                      yearStrideXTicks=yearStrideXTicks)
+
+            savefig(outFileName)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                 region)

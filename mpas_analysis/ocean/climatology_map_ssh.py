@@ -130,12 +130,10 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # make a new subtask for this season and comparison grid
-                subtask = PlotClimatologyMapSubtask(self, season,
-                                                    comparisonGridName,
-                                                    remapClimatologySubtask,
-                                                    remapObservationsSubtask,
-                                                    controlConfig,
-                                                    removeMean=True)
+                subtask = PlotClimatologyMapSubtask(
+                    self, season, comparisonGridName, remapClimatologySubtask,
+                    remapObservationsSubtask, controlConfig=controlConfig,
+                    removeMean=True)
 
                 subtask.set_plot_info(
                     outFileLabel=outFileLabel,

@@ -139,7 +139,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                     subtask = PlotClimatologyMapSubtask(
                         self, season, comparisonGridName,
                         remapClimatologySubtask, remapObservationsSubtask,
-                        controlConfig, subtaskName=subtaskName)
+                        controlConfig=controlConfig, subtaskName=subtaskName)
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,

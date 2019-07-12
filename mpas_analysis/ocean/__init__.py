@@ -1,5 +1,7 @@
 from mpas_analysis.ocean.climatology_map_sst import ClimatologyMapSST
 from mpas_analysis.ocean.climatology_map_mld import ClimatologyMapMLD
+from mpas_analysis.ocean.climatology_map_mld_min_max import \
+    ClimatologyMapMLDMinMax
 from mpas_analysis.ocean.climatology_map_sss import ClimatologyMapSSS
 from mpas_analysis.ocean.climatology_map_ssh import ClimatologyMapSSH
 from mpas_analysis.ocean.climatology_map_eke import ClimatologyMapEKE
@@ -30,6 +32,9 @@ from mpas_analysis.ocean.meridional_heat_transport import \
     MeridionalHeatTransport
 from mpas_analysis.ocean.time_series_antarctic_melt import \
     TimeSeriesAntarcticMelt
+
+from mpas_analysis.ocean.time_series_ocean_regions import \
+    TimeSeriesOceanRegions
 
 from mpas_analysis.ocean.woce_transects import WoceTransects
 from mpas_analysis.ocean.sose_transects import SoseTransects

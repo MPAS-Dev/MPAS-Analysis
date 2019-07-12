@@ -22,6 +22,7 @@ import os
 import random
 import string
 from datetime import datetime
+import numpy
 
 
 def paths(*args):  # {{{
@@ -258,5 +259,33 @@ def get_files_year_month(fileNames, streamsFile, streamName):  # {{{
     months = [dt.month for dt in dts]
 
     return years, months  # }}}
+
+
+def decode_strings(da):
+    """
+    Decode to unicode strings an array that might either be char or string type
+    in the NetCDF file.
+
+    Parameters
+    ----------
+    da : ``xarray.DataArray``
+        the data array of strings to decode
+
+    Returns
+    -------
+    strings : list
+        The data array as a list of unicode strings
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    if da.dtype.type is numpy.string_:
+        strings = [bytes.decode(name) for name in da.values]
+    else:
+        strings = [name for name in da.values]
+
+    return strings
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -16,8 +16,7 @@ import numpy as np
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_config_full_path, \
-    build_obs_path
+from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -130,11 +129,9 @@ class ClimatologyMapMLD(AnalysisTask):  # {{{
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # make a new subtask for this season and comparison grid
-                subtask = PlotClimatologyMapSubtask(self, season,
-                                                    comparisonGridName,
-                                                    remapClimatologySubtask,
-                                                    remapObservationsSubtask,
-                                                    controlConfig)
+                subtask = PlotClimatologyMapSubtask(
+                    self, season, comparisonGridName, remapClimatologySubtask,
+                    remapObservationsSubtask, controlConfig=controlConfig)
 
                 subtask.set_plot_info(
                     outFileLabel=outFileLabel,

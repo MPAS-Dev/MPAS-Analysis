@@ -26,7 +26,8 @@ from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology.climatology import get_remapper, \
     get_masked_mpas_climatology_file_name, \
-    get_remapped_mpas_climatology_file_name
+    get_remapped_mpas_climatology_file_name, \
+    get_climatology_op_directory
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
 
@@ -73,6 +74,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         Whether to use ncremap to do the remapping (the other option being
         an internal python code that handles more grid types and extra
         dimensions)
+
+    op : {'avg', 'min', 'max'}
+         operator for monthly stats
+
     '''
     # Authors
     # -------
@@ -157,6 +162,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         self.iselValues = iselValues
         self.climatologyName = climatologyName
         self.mpasClimatologyTask = mpasClimatologyTask
+        self.op = mpasClimatologyTask.op
 
         self.run_after(mpasClimatologyTask)
 
@@ -302,7 +308,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         fileName = get_masked_mpas_climatology_file_name(self.config,
                                                          season,
                                                          self.componentName,
-                                                         self.climatologyName)
+                                                         self.climatologyName,
+                                                         self.op)
 
         return fileName  # }}}
 
@@ -331,7 +338,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
         fileName = get_remapped_mpas_climatology_file_name(
             self.config, season, self.componentName, self.climatologyName,
-            comparisonGridName)
+            comparisonGridName, self.op)
 
         return fileName  # }}}
 
@@ -431,8 +438,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         config = self.config
-        climatologyBaseDirectory = build_config_full_path(
-            config, 'output', 'mpasClimatologySubdirectory')
+        climatologyBaseDirectory = get_climatology_op_directory(config,
+                                                                self.op)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
 

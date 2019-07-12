@@ -24,7 +24,6 @@ from __future__ import absolute_import, division, print_function, \
 
 import numpy
 import xarray
-import sys
 from scipy.io import loadmat
 import os
 import argparse
@@ -434,14 +433,69 @@ def sose_v_to_nc(inPrefix, outFileName, lon, lat, z, cellFraction, botIndices):
     return dsV
 
 
+def remap(ds, outDescriptor, mappingFileName, inDir, outFileName):
+
+    tempFileName1 = '{}/temp_transpose.nc'.format(inDir)
+    tempFileName2 = '{}/temp_remap.nc'.format(inDir)
+    if 'z' in ds:
+        print('  transposing and fixing periodicity...')
+        ds = ds.chunk({'Time': 4})
+        ds = ds.transpose('Time', 'z', 'lat', 'lon')
+    ds = add_periodic_lon(ds)
+    write_netcdf(ds, tempFileName1)
+    ds.close()
+
+    inDescriptor = LatLonGridDescriptor.read(tempFileName1,
+                                             latVarName='lat',
+                                             lonVarName='lon')
+
+    remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
+
+    remapper.build_mapping_file(method='bilinear')
+
+    remapper.remap_file(inFileName=tempFileName1,
+                        outFileName=tempFileName2,
+                        overwrite=True,
+                        renormalize=0.01)
+
+    ds = xarray.open_dataset(tempFileName2)
+    if 'z' in ds:
+        print('  transposing back...')
+        ds = ds.chunk({'Time': 4})
+        ds = ds.transpose('Time', 'x', 'y', 'z', 'nvertices')
+    ds.attrs['meshName'] = outDescriptor.meshName
+
+    for coord in ['x', 'y']:
+        ds.coords[coord] = xarray.DataArray.from_dict(
+            outDescriptor.coords[coord])
+
+    ds = ds.set_coords(names=['month', 'year'])
+
+    write_netcdf(ds, outFileName)
+    ds.close()
+
+
+def add_periodic_lon(ds):
+
+    nLon = ds.sizes['lon']
+    lonIndices = xarray.DataArray(numpy.append(numpy.arange(nLon), [0]),
+                                  dims=('newLon',))
+
+    ds = ds.isel({'lon': lonIndices})
+    lon = ds.lon.values
+    attrs = ds.lon.attrs
+    lon[-1] = lon[0] + 360.
+    ds['lon'] = lon
+    ds.lon.attrs = attrs
+    ds = ds.rename({'newLon': 'lon'})
+    return ds
+
+
 def remap_pt_s(prefix, inGridName, inGridFileName, inDir, inTPrefix,
-               inSPrefix, inGammaNPrefix):
+               inSPrefix, inGammaNPrefix, outDescriptor, outGridName):
     cacheTFileName = '{}_pot_temp_{}.nc'.format(prefix, inGridName)
     cacheSFileName = '{}_salinity_{}.nc'.format(prefix, inGridName)
     cacheGammaNFileName = '{}_neut_den_{}.nc'.format(prefix, inGridName)
-
-    config = MpasAnalysisConfigParser()
-    config.read('mpas_analysis/config.default')
 
     matGrid = loadmat(inGridFileName)
     # lat/lon is a tensor grid so we can use 1-D arrays
@@ -455,14 +509,6 @@ def remap_pt_s(prefix, inGridName, inGridFileName, inDir, inTPrefix,
     with sose_pt_to_nc('{}/{}'.format(inDir, inTPrefix),
                        cacheTFileName, lon, lat, z, cellFraction, botIndices) \
             as dsT:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheTFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
-
-        outDescriptor = get_comparison_descriptor(config, 'antarctic')
-        outGridName = outDescriptor.meshName
 
         outTFileName = '{}_pot_temp_{}.nc'.format(prefix, outGridName)
         outSFileName = '{}_salinity_{}.nc'.format(prefix, outGridName)
@@ -471,53 +517,33 @@ def remap_pt_s(prefix, inGridName, inGridFileName, inDir, inTPrefix,
         mappingFileName = '{}/map_C_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outTFileName):
-            dsT.reset_coords(names='zBot', inplace=True)
             print('Remapping potential temperature...')
-            with remapper.remap(dsT, renormalizationThreshold=0.01) \
-                    as remappedT:
-                print('Done.')
-                remappedT.attrs['history'] = ' '.join(sys.argv)
-                remappedT.set_coords(names='zBot', inplace=True)
-                write_netcdf(remappedT, outTFileName)
+            remap(dsT, outDescriptor, mappingFileName, inDir, outTFileName)
+            print('Done.')
 
     with sose_s_to_nc('{}/{}'.format(inDir, inSPrefix),
                       cacheSFileName, lon, lat, z, cellFraction, botIndices) \
             as dsS:
         if not os.path.exists(outSFileName):
-            dsS.reset_coords(names='zBot', inplace=True)
             print('Remapping salinity...')
-            with remapper.remap(dsS, renormalizationThreshold=0.01) \
-                    as remappedS:
-                print('Done.')
-                remappedS.attrs['history'] = ' '.join(sys.argv)
-                remappedS.set_coords(names='zBot', inplace=True)
-                write_netcdf(remappedS, outSFileName)
+            remap(dsS, outDescriptor, mappingFileName, inDir, outSFileName)
+            print('Done.')
 
     with sose_gammaN_to_nc('{}/{}'.format(inDir, inGammaNPrefix),
                            cacheGammaNFileName, lon, lat, z, cellFraction,
                            botIndices) \
             as dsGammaN:
         if not os.path.exists(outGammaNFileName):
-            dsGammaN.reset_coords(names='zBot', inplace=True)
             print('Remapping neutral density...')
-            with remapper.remap(dsGammaN, renormalizationThreshold=0.01) \
-                    as remappedGammaN:
-                print('Done.')
-                remappedGammaN.attrs['history'] = ' '.join(sys.argv)
-                remappedGammaN.set_coords(names='zBot', inplace=True)
-                write_netcdf(remappedGammaN, outGammaNFileName)
+            remap(dsGammaN, outDescriptor, mappingFileName, inDir,
+                  outGammaNFileName)
+            print('Done.')
 
 
-def remap_mld(prefix, inGridName, inGridFileName, inDir, inMLDPrefix):
+def remap_mld(prefix, inGridName, inGridFileName, inDir, inMLDPrefix,
+              outDescriptor, outGridName):
     cacheMLDFileName = '{}_mld_{}.nc'.format(prefix, inGridName)
-
-    config = MpasAnalysisConfigParser()
-    config.read('mpas_analysis/config.default')
 
     matGrid = loadmat(inGridFileName)
     # lat/lon is a tensor grid so we can use 1-D arrays
@@ -529,38 +555,21 @@ def remap_mld(prefix, inGridName, inGridFileName, inDir, inMLDPrefix):
 
     with sose_mld_to_nc('{}/{}'.format(inDir, inMLDPrefix),
                         cacheMLDFileName, lon, lat, botIndices) as dsMLD:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheMLDFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
-
-        outDescriptor = get_comparison_descriptor(config, 'antarctic')
-        outGridName = outDescriptor.meshName
 
         outMLDFileName = '{}_mld_{}.nc'.format(prefix, outGridName)
 
         mappingFileName = '{}/map_C_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outMLDFileName):
             print('Remapping mixed layer depth...')
-            with remapper.remap(dsMLD, renormalizationThreshold=0.01) \
-                    as remappedMLD:
-                print('Done.')
-                remappedMLD.attrs['history'] = ' '.join(sys.argv)
-                write_netcdf(remappedMLD, outMLDFileName)
+            remap(dsMLD, outDescriptor, mappingFileName, inDir, outMLDFileName)
+            print('Done.')
 
 
-def remap_u(prefix, inGridName, inGridFileName, inDir, inUPrefix):
+def remap_u(prefix, inGridName, inGridFileName, inDir, inUPrefix,
+            outDescriptor, outGridName):
     cacheUFileName = '{}_zonal_vel_{}.nc'.format(prefix, inGridName)
-
-    config = MpasAnalysisConfigParser()
-    config.read('mpas_analysis/config.default')
 
     matGrid = loadmat(inGridFileName)
     # lat/lon is a tensor grid so we can use 1-D arrays
@@ -574,38 +583,21 @@ def remap_u(prefix, inGridName, inGridFileName, inDir, inUPrefix):
     with sose_u_to_nc('{}/{}'.format(inDir, inUPrefix),
                       cacheUFileName, lon, lat, z, cellFraction, botIndices) \
             as dsU:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheUFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
-
-        outDescriptor = get_comparison_descriptor(config, 'antarctic')
-        outGridName = outDescriptor.meshName
 
         outUFileName = '{}_zonal_vel_{}.nc'.format(prefix, outGridName)
 
         mappingFileName = '{}/map_U_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outUFileName):
             print('Remapping zonal velocity...')
-            with remapper.remap(dsU, renormalizationThreshold=0.01) \
-                    as remappedU:
-                print('Done.')
-                remappedU.attrs['history'] = ' '.join(sys.argv)
-                write_netcdf(remappedU, outUFileName)
+            remap(dsU, outDescriptor, mappingFileName, inDir, outUFileName)
+            print('Done.')
 
 
-def remap_v(prefix, inGridName, inGridFileName, inDir, inVPrefix):
+def remap_v(prefix, inGridName, inGridFileName, inDir, inVPrefix,
+            outDescriptor, outGridName):
     cacheVFileName = '{}_merid_vel_{}.nc'.format(prefix, inGridName)
-
-    config = MpasAnalysisConfigParser()
-    config.read('mpas_analysis/config.default')
 
     matGrid = loadmat(inGridFileName)
     # lat/lon is a tensor grid so we can use 1-D arrays
@@ -619,39 +611,19 @@ def remap_v(prefix, inGridName, inGridFileName, inDir, inVPrefix):
     with sose_v_to_nc('{}/{}'.format(inDir, inVPrefix),
                       cacheVFileName, lon, lat, z, cellFraction, botIndices) \
             as dsV:
-        inDescriptor = LatLonGridDescriptor()
-
-        inDescriptor = LatLonGridDescriptor.read(cacheVFileName,
-                                                 latVarName='lat',
-                                                 lonVarName='lon')
-
-        outDescriptor = get_comparison_descriptor(config, 'antarctic')
-        outGridName = outDescriptor.meshName
 
         outVFileName = '{}_merid_vel_{}.nc'.format(prefix, outGridName)
 
         mappingFileName = '{}/map_V_{}_to_{}.nc'.format(inDir, inGridName,
                                                         outGridName)
 
-        remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-        remapper.build_mapping_file(method='bilinear')
-
         if not os.path.exists(outVFileName):
             print('Remapping meridional velocity...')
-            with remapper.remap(dsV, renormalizationThreshold=0.01) \
-                    as remappedV:
-                print('Done.')
-                remappedV.attrs['history'] = ' '.join(sys.argv)
-                write_netcdf(remappedV, outVFileName)
+            remap(dsV, outDescriptor, mappingFileName, inDir, outVFileName)
+            print('Done.')
 
 
-def compute_vel_mag(prefix, inGridName, inDir):
-    config = MpasAnalysisConfigParser()
-    config.read('mpas_analysis/config.default')
-
-    outDescriptor = get_comparison_descriptor(config, 'antarctic')
-    outGridName = outDescriptor.meshName
+def compute_vel_mag(prefix, inGridName, inDir, outGridName):
     description = 'Monthly velocity magnitude climatologies from ' \
                   '2005-2010 average of the Southern Ocean State ' \
                   'Estimate (SOSE)'
@@ -679,12 +651,7 @@ def compute_vel_mag(prefix, inGridName, inDir):
                     write_netcdf(dsVelMag, outFileName)
 
 
-def compute_pot_density(prefix, inGridName, inDir):
-    config = MpasAnalysisConfigParser()
-    config.read('mpas_analysis/config.default')
-
-    outDescriptor = get_comparison_descriptor(config, 'antarctic')
-    outGridName = outDescriptor.meshName
+def compute_pot_density(prefix, inGridName, inDir, outGridName):
     description = 'Monthly potential density climatologies from ' \
                   '2005-2010 average of the Southern Ocean State ' \
                   'Estimate (SOSE)'
@@ -727,8 +694,7 @@ def compute_pot_density(prefix, inGridName, inDir):
                     write_netcdf(dsPotDensity, outFileName)
 
 
-if __name__ == "__main__":
-
+def main():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("-i", "--inDir", dest="inDir", required=True,
@@ -739,7 +705,9 @@ if __name__ == "__main__":
                              "are stored")
     args = parser.parse_args()
 
-    inGridName = 'SouthernOcean_0.167x0.167degree'
+    date = '20190603'
+
+    inGridName = 'SouthernOcean_0.167x0.167degree_{}'.format(date)
 
     inTPrefix = 'THETA_mnthlyBar.0000000100'
     inSPrefix = 'SALT_mnthlyBar.0000000100'
@@ -748,6 +716,17 @@ if __name__ == "__main__":
     inVPrefix = 'VVEL_mnthlyBar.0000000100'
     inGammaNPrefix = 'GAMMA_mnthlyBar.0000000100'
 
+    # size in km of the polar stereographic grid
+    antarcticStereoWidth = 10000
+
+    config = MpasAnalysisConfigParser()
+    config.read('mpas_analysis/config.default')
+    config.set('climatology', 'comparisonAntarcticStereoWidth',
+               '{}'.format(antarcticStereoWidth))
+
+    outDescriptor = get_comparison_descriptor(config, 'antarctic')
+    outGridName = '{}_{}'.format(outDescriptor.meshName, date)
+
     inPrefixes = [inTPrefix, inSPrefix, inMLDPrefix, inUPrefix, inVPrefix,
                   inGammaNPrefix]
 
@@ -755,6 +734,11 @@ if __name__ == "__main__":
 
     try:
         os.makedirs(args.inDir)
+    except OSError:
+        pass
+
+    try:
+        os.makedirs(args.outDir)
     except OSError:
         pass
 
@@ -775,13 +759,20 @@ if __name__ == "__main__":
     prefix = '{}/SOSE_2005-2010_monthly'.format(args.outDir)
 
     remap_pt_s(prefix, inGridName, inGridFileName, args.inDir, inTPrefix,
-               inSPrefix, inGammaNPrefix)
+               inSPrefix, inGammaNPrefix, outDescriptor, outGridName)
 
-    remap_mld(prefix, inGridName, inGridFileName, args.inDir, inMLDPrefix)
+    remap_mld(prefix, inGridName, inGridFileName, args.inDir, inMLDPrefix,
+              outDescriptor, outGridName)
 
-    remap_u(prefix, inGridName, inGridFileName, args.inDir, inUPrefix)
-    remap_v(prefix, inGridName, inGridFileName, args.inDir, inVPrefix)
+    remap_u(prefix, inGridName, inGridFileName, args.inDir, inUPrefix,
+            outDescriptor, outGridName)
+    remap_v(prefix, inGridName, inGridFileName, args.inDir, inVPrefix,
+            outDescriptor, outGridName)
 
-    compute_vel_mag(prefix, inGridName, args.inDir)
+    compute_vel_mag(prefix, inGridName, args.inDir, outGridName)
 
-    compute_pot_density(prefix, inGridName, args.inDir)
+    compute_pot_density(prefix, inGridName, args.inDir, outGridName)
+
+
+if __name__ == "__main__":
+    main()

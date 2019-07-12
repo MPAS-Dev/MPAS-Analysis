@@ -17,7 +17,10 @@ from os import makedirs
 from shutil import copyfile
 from lxml import etree
 from collections import OrderedDict
+import subprocess
+import os
 
+import mpas_analysis
 from mpas_analysis.shared.io.utility import build_config_full_path
 
 
@@ -201,9 +204,17 @@ class MainPage(object):
             componentsText = componentsText + \
                 _replace_tempate_text(self.componentTemplate, replacements)
 
+        githash = _get_git_hash()
+        if githash is None:
+            githash = ''
+        else:
+            githash = 'Git Hash: {}'.format(githash)
+
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
-                        '@components': componentsText}
+                        '@components': componentsText,
+                        '@version': mpas_analysis.__version__,
+                        '@gitHash': githash}
 
         pageText = _replace_tempate_text(self.pageTemplate, replacements)
 
@@ -409,7 +420,8 @@ class ComponentPage(object):
         images[imageFileName] = OrderedDict()
         image = images[imageFileName]
         for tag in ['thumbnailDescription', 'imageDescription',
-                    'imageCaption', 'imageSize', 'orientation']:
+                    'imageCaption', 'imageSize', 'thumbnailWidth',
+                    'thumbnailHeight', 'orientation']:
             node = xmlRoot.find(tag)
             if node is None or node.text is None:
                 image[tag] = ''
@@ -490,7 +502,8 @@ class ComponentPage(object):
         """fill in the template for a given image with the desired content"""
         replacements = {'@imageFileName': imageFileName}
         for tag in ['imageSize', 'imageDescription', 'imageCaption',
-                    'thumbnailDescription', 'orientation']:
+                    'thumbnailDescription', 'orientation', 'thumbnailWidth',
+                    'thumbnailHeight']:
             replacements['@{}'.format(tag)] = imageDict[tag]
 
         imageText = _replace_tempate_text(self.templates['image'],
@@ -579,3 +592,21 @@ def _replace_tempate_text(template, replacements):
     for src, target in replacements.items():
         output = output.replace(src, target)
     return output
+
+
+def _get_git_hash():
+    """
+    get the hashtag of the git commit (if any) that MPAS-Analysis is being run
+    from
+    """
+    with open(os.devnull, 'w') as devnull:
+        try:
+            githash = subprocess.check_output(['git', 'log',
+                                               '--pretty=format:"%h"',
+                                               '-n', '1'],
+                                              stderr=devnull)
+        except subprocess.CalledProcessError:
+            return None
+
+    githash = githash.decode('utf-8').strip('\n').replace('"', '')
+    return githash

@@ -132,11 +132,15 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
         shutil.copyfile('{}/{}'.format(plotsDirectory, imageFileName),
                         '{}/{}'.format(componentDirectory, imageFileName))
 
-        imageSize, orientation = _generate_thumbnails(imageFileName,
-                                                      componentDirectory)
+        imageSize, thumbnailSize, orientation = _generate_thumbnails(
+            imageFileName, componentDirectory)
 
-        etree.SubElement(root, "imageSize").text = \
-            '{}x{}'.format(imageSize[0], imageSize[1])
+        etree.SubElement(root, "imageSize").text = '{}x{}'.format(imageSize[0],
+                                                                  imageSize[1])
+        etree.SubElement(root, "thumbnailWidth").text = '{}'.format(
+            thumbnailSize[0])
+        etree.SubElement(root, "thumbnailHeight").text = '{}'.format(
+            thumbnailSize[1])
         etree.SubElement(root, "orientation").text = orientation
 
     _provenance_command(root, history)
@@ -200,15 +204,15 @@ def _generate_thumbnails(imageFileName, directory):
 
     if imageSize[0] < imageSize[1]:
         orientation = 'vert'
-        thumbnailHeight = 480
+        thumbnailHeight = 320
     else:
         orientation = 'horiz'
-        thumbnailHeight = 180
+        thumbnailHeight = 120
 
     # first, make a thumbnail with the same aspect ratio
     factor = image.size[1] / float(thumbnailHeight)
-    size = [int(dim / factor + 0.5) for dim in image.size]
-    thumbnail = image.resize(size, Image.ANTIALIAS)
+    thumbnailSize = [int(dim / factor + 0.5) for dim in image.size]
+    thumbnail = image.resize(thumbnailSize, Image.ANTIALIAS)
     thumbnail.save('{}/{}'.format(thumbnailDir, imageFileName))
 
     # second, make a thumbnail with a fixed size
@@ -232,7 +236,7 @@ def _generate_thumbnails(imageFileName, directory):
 
     thumbnail.save('{}/fixed_{}'.format(thumbnailDir, imageFileName))
 
-    return imageSize, orientation
+    return imageSize, thumbnailSize, orientation
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

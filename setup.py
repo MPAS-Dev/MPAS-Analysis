@@ -15,7 +15,7 @@ import warnings
 
 isrelease = True
 
-version = '1.2.1'
+version = '1.2.4'
 
 if not isrelease:
     import subprocess
@@ -52,6 +52,7 @@ setup(name='mpas_analysis',
       packages=find_packages(),
       package_data={'mpas_analysis': ['config.default',
                                       'obs/analysis_input_files',
+                                      'obs/sose_10000km_input_files',
                                       'obs/observational_datasets.xml'],
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
@@ -59,10 +60,12 @@ setup(name='mpas_analysis',
                         ['ColourMapSuite3/*/*.xml',
                          'SciVisColorColormaps/*.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
-                        'dask', 'bottleneck', 'basemap', 'lxml',
+                        'dask', 'lxml',
                         'pyproj', 'pillow', 'cmocean', 'progressbar2',
-                        'requests', 'shapely'],
+                        'requests', 'shapely', 'cartopy', 'geometric_features'],
       entry_points={'console_scripts':
                     ['mpas_analysis = mpas_analysis.__main__:main',
                      'download_analysis_data = '
-                     'mpas_analysis.__main__:download_analysis_data']})
+                     'mpas_analysis.__main__:download_analysis_data',
+                     'download_nautral_earth_110m = '
+                     'mpas_analysis.__main__:download_nautral_earth_110m']})

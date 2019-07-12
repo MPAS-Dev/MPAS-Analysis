@@ -39,7 +39,7 @@ def sizeof_fmt(num, suffix='B'):
     return "%.1f%s%s" % (num, 'Yi', suffix)
 
 
-def download_files(fileList, urlBase, outDir):
+def download_files(fileList, urlBase, outDir, verify=True):
     '''
     Download a list of files from a URL to a directory
     '''
@@ -47,6 +47,10 @@ def download_files(fileList, urlBase, outDir):
     # -------
     # Milena Veneziani
     # Xylar Asay-Davis
+
+    session = requests.Session()
+    if not verify:
+        session.verify = False
 
     for fileName in fileList:
         outFileName = '{}/{}'.format(outDir, fileName)
@@ -60,10 +64,10 @@ def download_files(fileList, urlBase, outDir):
 
         url = '{}/{}'.format(urlBase, fileName)
         try:
-            response = requests.get(url, stream=True)
+            response = session.get(url, stream=True)
             totalSize = response.headers.get('content-length')
         except requests.exceptions.RequestException:
-            print('  {} could not be reached!'.format(fileName))
+            print('  {} could not be reached!'.format(url))
             continue
 
         try:

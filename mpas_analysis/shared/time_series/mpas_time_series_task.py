@@ -21,7 +21,7 @@ import numpy
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, get_files_year_month
+    make_directories, get_files_year_month, decode_strings
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
@@ -256,6 +256,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                           'channel.')
 
         inputFiles = self.inputFiles
+        append = False
         if os.path.exists(self.outputFile):
             # make sure all the necessary variables are also present
             with xr.open_dataset(self.outputFile) as ds:
@@ -269,6 +270,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     # add only input files wiht times that aren't already in
                     # the output file
 
+                    append = True
+
                     fileNames = sorted(self.inputFiles)
                     inYears, inMonths = get_files_year_month(
                         fileNames, self.historyStreams,
@@ -278,8 +281,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     inMonths = numpy.array(inMonths)
                     totalMonths = 12 * inYears + inMonths
 
-                    dates = [bytes.decode(name) for name in
-                             ds.xtime_startMonthly.values]
+                    dates = decode_strings(ds.xtime_startMonthly)
+
                     lastDate = dates[-1]
 
                     lastYear = int(lastDate[0:4])
@@ -305,8 +308,11 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         variableList = self.variableList + ['xtime_startMonthly',
                                             'xtime_endMonthly']
 
-        args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl',
+        args = ['ncrcat', '-4', '--no_tmp_fl',
                 '-v', ','.join(variableList)]
+
+        if append:
+            args.append('--record_append')
 
         printCommand = '{} {} ... {} {}'.format(' '.join(args), inputFiles[0],
                                                 inputFiles[-1],

@@ -14,10 +14,13 @@ from __future__ import absolute_import, division, print_function, \
 import netCDF4
 import numpy
 
+import six
+
 
 def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
     '''
-    Write an xarray data set to a NetCDF file using finite fill values
+    Write an xarray data set to a NetCDF file using finite fill values and
+    unicode strings
 
     Parameters
     ----------
@@ -36,16 +39,21 @@ def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
     # -------
     # Xylar Asay-Davis
 
-#
     encodingDict = {}
     variableNames = list(ds.data_vars.keys()) + list(ds.coords.keys())
     for variableName in variableNames:
         dtype = ds[variableName].dtype
+
+        # add fill values for types that have them
         for fillType in fillValues:
             if dtype == numpy.dtype(fillType):
                 encodingDict[variableName] = \
                     {'_FillValue': fillValues[fillType]}
                 break
+
+        # make strings write as unicode instead
+        if dtype.type is numpy.string_:
+            encodingDict[variableName] = {'dtype': six.text_type}
 
     ds.to_netcdf(fileName, encoding=encodingDict)
 
