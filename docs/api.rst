@@ -7,7 +7,7 @@ more details and examples, refer to the relevant chapters in the main part of
 the documentation.
 
 Top-level script: mpas_analysis
-===================================
+===============================
 
 .. currentmodule:: mpas_analysis.__main__
 
@@ -21,8 +21,17 @@ Top-level script: mpas_analysis
    update_generate
    run_analysis
    wait_for_task
-   download_analysis_data
+ 
+Downloading data
+================
 
+.. currentmodule:: mpas_analysis.download_data
+
+.. autosummary::
+   :toctree: generated/
+
+   download_analysis_data
+   download_natural_earth_110m
 
 Analysis tasks
 ==============
