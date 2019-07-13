@@ -30,7 +30,7 @@ All platforms:
 
 MPAS-Analysis is available as an anaconda package via the `conda-forge` channel:
 
-``` bash
+```
 conda config --add channels conda-forge
 conda create -n mpas-analysis mpas-analysis
 conda activate mpas-analysis
@@ -60,11 +60,11 @@ environment with the following packages:
  * geometric\_features
 
 These can be installed via the conda command:
-``` bash
+```
 conda config --add channels conda-forge
-conda create -n mpas-analysis numpy scipy matplotlib netCDF4 \
-    xarray dask bottleneck basemap lxml nco>=4.8.1 pyproj pillow \
-    cmocean progressbar2 requests setuptools shapely cartopy \
+conda create -n mpas-analysis python=3.7 numpy scipy "matplotlib>=3.0.2" \
+    netCDF4 "xarray>=0.10.0" dask bottleneck basemap lxml "nco>=4.8.1" pyproj \
+    pillow cmocean progressbar2 requests setuptools shapely cartopy \
     geometric_features
 conda activate mpas-analysis
 ```
@@ -78,13 +78,13 @@ Then, get the code from:
 If you installed the `mpas-analysis` package, download the data that is
 necessary to MPAS-Analysis by running:
 
-``` bash
+```
 download_analysis_data -o /path/to/mpas_analysis/diagnostics
 ```
 
 If you are using the git repository, run:
 
-``` bash
+```
 ./download_analysis_data.py -o /path/to/mpas_analysis/diagnostics
 ```
 
@@ -121,13 +121,13 @@ should see a warning that the data are being downloaded.
 **Note**: If you are having issues downloading the shape files (e.g., a time out error or forbidden error), follow these steps:
 
 1. Run the following in python on your local machine (i.e., one that has no trouble downloading these files):
-```python
+```
 import cartopy.io.shapereader as shpreader
 for name in ['ocean', 'coastline', 'land']:
     shpfilename = shpreader.natural_earth(resolution='110m',
                                           category='physical',
                                           name=name)
-    reader = shpreader.Reader(shpfilename)
+    shpreader.Reader(shpfilename)
 ```
 2. On your local machine, run `python -c "import cartopy; print(cartopy.config['data_dir'])"`. This will print out the directory in which the natural earth shapefiles are being placed locally.
 3. Copy these files onto the remote machine you are working on. Include folders `shapefiles/natural_earth/physical/*` where `*` is the set of shapefiles that were downloaded.
@@ -140,12 +140,12 @@ for name in ['ocean', 'coastline', 'land']:
 If you installed the `mpas-analysis` package, list the available analysis tasks
 by running:
 
-``` bash
+```
 mpas_analysis --list
 ```
 
 If using a git repository, run:
-``` bash
+```
 python -m mpas_analysis --list
 ```
 
@@ -228,13 +228,13 @@ To purge old analysis (delete the whole output directory) before running run
 the analysis, add the `--purge` flag.  If you installed `mpas-analysis` as
 a package, run:
 
-``` bash
+```
 mpas_analysis --purge <config.file>
 ```
 
 If you are running in the repo, use:
 
-``` bash
+```
 python -m mpas_analysis --purge <config.file>
 ```
 
@@ -300,7 +300,7 @@ within the `mpas_analysis/shared` directory.
    `build_analysis_list`, see below.
 
 A new analysis task can be added with:
-```python
+```
    analyses.append(<component>.MyTask(config, myArg='argValue'))
 ```
 This will add a new object of the `MyTask` class to a list of analysis tasks
@@ -314,7 +314,7 @@ to be generated and is set up properly.
 ## Generating Documentation
 
 To generate the `sphinx` documentation, run:
-```bash
+```
 conda env create -f docs/environment.yml
 conda activate mpas-analysis-docs
 python setup.py install

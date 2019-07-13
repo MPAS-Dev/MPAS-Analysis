@@ -66,6 +66,6 @@ setup(name='mpas_analysis',
       entry_points={'console_scripts':
                     ['mpas_analysis = mpas_analysis.__main__:main',
                      'download_analysis_data = '
-                     'mpas_analysis.__main__:download_analysis_data',
+                     'mpas_analysis.download_data:download_analysis_data',
                      'download_nautral_earth_110m = '
-                     'mpas_analysis.__main__:download_nautral_earth_110m']})
+                     'mpas_analysis.download_data:download_nautral_earth_110m']})
