@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 
-from mpas_analysis.__main__ import download_analysis_data
+from mpas_analysis.download_data import download_analysis_data
 
 
 if __name__ == "__main__":
