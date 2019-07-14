@@ -29,7 +29,7 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, decode_strings
+    get_files_year_month, decode_strings, get_region_mask
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -75,10 +75,6 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
 
-        regionMaskDirectory = build_config_full_path(config,
-                                                     'diagnostics',
-                                                     'regionMaskSubdirectory')
-
         regionGroups = config.getExpression(self.taskName, 'regionGroups')
 
         parallelTaskCount = config.getWithDefault('execute',
@@ -93,16 +89,18 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             regionMaskFile = config.getExpression(sectionName, 'regionMask')
 
-            regionMaskFile = '{}/{}'.format(regionMaskDirectory,
-                                            regionMaskFile)
+            regionMaskFile = get_region_mask(config, regionMaskFile)
+
             regionNames = config.getExpression(sectionName, 'regionNames')
 
             if 'all' in regionNames and os.path.exists(regionMaskFile):
                 regionNames = get_feature_list(regionMaskFile)
 
+            subtaskName = 'compute{}Masks'.format(sectionSuffix)
             masksSubtask = ComputeRegionMasksSubtask(
                 self, regionMaskFile, outFileSuffix=fileSuffix,
-                featureList=regionNames, subprocessCount=parallelTaskCount)
+                featureList=regionNames, subtaskName=subtaskName,
+                subprocessCount=parallelTaskCount,)
 
             self.add_subtask(masksSubtask)
 
@@ -193,8 +191,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        suffix = regionGroup[0].upper() + \
-            regionGroup[1:].replace(' ', '')
+        suffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
 
         # first, call the constructor from the base class (AnalysisTask)
         super(ComputeRegionTimeSeriesSubtask, self).__init__(
@@ -497,13 +494,16 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
+        taskSuffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
+        subtaskName = 'combine{}TimeSeries'.format(taskSuffix)
+
         # first, call the constructor from the base class (AnalysisTask)
         super(CombineRegionalProfileTimeSeriesSubtask, self).__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='combineRegionalProfileTimeSeries')
+            subtaskName=subtaskName)
 
         self.startYears = startYears
         self.endYears = endYears
@@ -672,14 +672,9 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         config = self.config
         calendar = self.calendar
 
-        regionMaskDirectory = build_config_full_path(config,
-                                                     'diagnostics',
-                                                     'regionMaskSubdirectory')
-
         regionMaskFile = config.getExpression(self.sectionName, 'regionMask')
 
-        regionMaskFile = '{}/{}'.format(regionMaskDirectory,
-                                        regionMaskFile)
+        regionMaskFile = get_region_mask(config, regionMaskFile)
 
         fcAll = read_feature_collection(regionMaskFile)
 

@@ -24,7 +24,7 @@ from functools import partial
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, get_region_mask
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
@@ -300,12 +300,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
         # first, see if we have cached a mask file name in the region masks
         # directory
-        regionMaskDirectory = build_config_full_path(self.config,
-                                                     'diagnostics',
-                                                     'regionMaskSubdirectory')
-        self.maskFileName = '{}/{}_{}.nc'.format(regionMaskDirectory,
-                                                 mpasMeshName,
-                                                 self.outFileSuffix)
+
+        self.maskFileName = get_region_mask(
+            self.config, '{}_{}.nc'.format(mpasMeshName, self.outFileSuffix))
 
         if not os.path.exists(self.maskFileName):
             # no cached mask file, so let's see if there's already one in the
