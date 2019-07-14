@@ -853,7 +853,7 @@ def main():
         print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
-        generate_html(config, analyses, controlConfig)
+        generate_html(config, analyses, controlConfig, args.configFiles)
 
 
 if __name__ == "__main__":
