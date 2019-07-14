@@ -381,7 +381,8 @@ class LatLonGridDescriptor(MeshDescriptor):  # {{{
             raise ValueError('Could not figure out units {}'.format(
                 self.units))
         if self.meshName is None:
-            self.meshName = '{}x{}{}'.format(abs(dLat), abs(dLon), units)
+            self.meshName = '{}x{}{}'.format(_round_res(abs(dLat)),
+                                             _round_res(abs(dLon)), units)
 
         # }}}
     # }}}
@@ -533,7 +534,8 @@ class LatLon2DGridDescriptor(MeshDescriptor):  # {{{
             raise ValueError('Could not figure out units {}'.format(
                 self.units))
         if self.meshName is None:
-            self.meshName = '{}x{}{}'.format(abs(dLat), abs(dLon), units)
+            self.meshName = '{}x{}{}'.format(_round_res(abs(dLat)),
+                                             _round_res(abs(dLon)), units)
 
         # }}}
     # }}}
@@ -961,7 +963,8 @@ def _create_scrip(outFile, grid_size, grid_corners, grid_rank, units,
 
 def _unwrap_corners(inField):
     '''Turn a 2D array of corners into an array of rectangular mesh elements'''
-    outField = numpy.zeros(((inField.shape[0] - 1) * (inField.shape[1] - 1), 4))
+    outField = numpy.zeros(((inField.shape[0] - 1) * (inField.shape[1] - 1),
+                            4))
     # corners are counterclockwise
     outField[:, 0] = inField[0:-1, 0:-1].flat
     outField[:, 1] = inField[0:-1, 1:].flat
@@ -969,5 +972,11 @@ def _unwrap_corners(inField):
     outField[:, 3] = inField[1:, 0:-1].flat
 
     return outField
+
+
+def _round_res(res):
+    '''Round the resoltuion to a reasonable number for grid names'''
+    rounded = numpy.round(res*1000.)/1000.
+    return '{}'.format(rounded)
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python
