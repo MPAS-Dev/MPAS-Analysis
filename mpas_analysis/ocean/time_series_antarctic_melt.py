@@ -74,7 +74,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             config=config,
             taskName='timeSeriesAntarcticMelt',
             componentName='ocean',
-            tags=['timeSeries', 'melt', 'landIceCavities'])
+            tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
         regionMaskDirectory = build_config_full_path(config,
                                                      'diagnostics',

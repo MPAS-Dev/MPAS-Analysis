@@ -62,12 +62,18 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
         taskName = 'climatologyMapSeaIceThick{}'.format(hemisphere)
 
         fieldName = 'seaIceThick'
+
+        tags = ['climatology', 'horizontalMap', fieldName, 'publicObs']
+        if hemisphere == 'NH':
+            tags = tags + ['arctic']
+        else:
+            tags = tags + ['antarctic']
+
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSeaIceThick, self).__init__(
             config=config, taskName=taskName,
             componentName='seaIce',
-            tags=['climatology', 'horizontalMap', fieldName,
-                  'publicObs'])
+            tags=tags)
 
         mpasFieldName = 'timeMonthly_avg_iceVolumeCell'
         iselValues = None

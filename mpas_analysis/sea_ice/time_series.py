@@ -77,7 +77,7 @@ class TimeSeriesSeaIce(AnalysisTask):
             config=config,
             taskName='timeSeriesSeaIceAreaVol',
             componentName='seaIce',
-            tags=['timeSeries', 'publicObs'])
+            tags=['timeSeries', 'publicObs', 'arctic', 'antarctic'])
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
         self.controlConfig = controlConfig
