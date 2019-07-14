@@ -18,12 +18,19 @@ interpolate MPAS data and observations to common reference grids::
   # mapping files and region files.
   baseDirectory = /path/to/diagnostics
 
+  # A second directory where custom diagonstics data such as mapping files and
+  # regions masks for unsupported grids can be found.  The structure of
+  # subdirectories in this directory must be the same as baseDirectory
+  customDirectory = none
+
   # Directory for mapping files (if they have been generated already). If mapping
   # files needed by the analysis are not found here, they will be generated and
-  # placed in the output mappingSubdirectory
+  # placed in the output mappingSubdirectory.  The user can supply an absolute
+  # path here to point to a path that is not within the baseDirectory above.
   mappingSubdirectory = mpas_analysis/maps
 
-  # Directory for region mask files
+  # Directory for region mask files. The user can supply an absolute path here to
+  # point to a path that is not within the baseDirectory above.
   regionMaskSubdirectory = mpas_analysis/region_masks
 
 Diagnostics Directories
@@ -34,6 +41,10 @@ The ``baseDirectory`` is the location where files were downloaded with the
 this data has already been downloaded to a shared location (see example config
 files in the subdirectories of the ``configs`` directory in the MPAS-Analysis
 repository).
+
+The ``customDirectory``, if it is not ``none`` is another directory where
+observations, mapping files and region masks may be stored.  This is useful for
+runs on non-standard grids or for testing out new observations.
 
 The remaining options point to the subdirectories for mapping files (see
 below) and region masks (see :ref:`config_colormaps`), respectively.

@@ -88,11 +88,25 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
             comparisonDescriptor.meshName,
             method)
 
-        mappingSubdirectory = build_config_full_path(config, 'diagnostics',
-                                                     'mappingSubdirectory')
+        tryCustom = config.get('diagnostics', 'customDirectory') != 'none'
+        if tryCustom:
+            # first see if mapping files are in the custom directory
+            mappingSubdirectory = build_config_full_path(
+                config, 'diagnostics', 'mappingSubdirectory',
+                baseDirectoryOption='customDirectory')
 
-        mappingFileName = '{}/{}'.format(mappingSubdirectory,
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
                                          mappingBaseName)
+        if not tryCustom or not os.path.exists(mappingFileName):
+            # second see if mapping files are in the base directory
+
+            mappingSubdirectory = build_config_full_path(
+                config, 'diagnostics', 'mappingSubdirectory',
+                baseDirectoryOption='baseDirectory')
+
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
+                                             mappingBaseName)
+
         if not os.path.exists(mappingFileName):
             # we don't have a mapping file yet, so get ready to create one
             # in the output subfolder if needed
