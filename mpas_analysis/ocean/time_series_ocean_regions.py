@@ -70,7 +70,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
             config=config,
             taskName='timeSeriesOceanRegions',
             componentName='ocean',
-            tags=['timeSeries', 'regions'])
+            tags=['timeSeries', 'regions', 'antarctic'])
 
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')

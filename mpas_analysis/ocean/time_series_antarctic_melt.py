@@ -74,7 +74,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             config=config,
             taskName='timeSeriesAntarcticMelt',
             componentName='ocean',
-            tags=['timeSeries', 'melt', 'landIceCavities'])
+            tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
         self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
 
