@@ -51,7 +51,6 @@ environment with the following packages:
  * xarray >= 0.14.1
  * dask
  * bottleneck
- * basemap
  * lxml
  * nco >= 4.8.1
  * pyproj
@@ -71,7 +70,7 @@ These can be installed via the conda command:
 ```
 conda config --add channels conda-forge
 conda create -n mpas-analysis python=3.7 numpy scipy "matplotlib>=3.0.2" \
-    netCDF4 "xarray>=0.14.1" dask bottleneck basemap lxml "nco>=4.8.1" pyproj \
+    netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
     pillow cmocean progressbar2 requests setuptools shapely cartopy \
     geometric_features gsw pyremap "mpas_tools>=0.0.8"
 conda activate mpas-analysis

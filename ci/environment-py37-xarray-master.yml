@@ -18,7 +18,6 @@ dependencies:
   - progressbar2
   - requests
   - shapely
-  - basemap
   - cartopy
   - geometric_features
   - gsw

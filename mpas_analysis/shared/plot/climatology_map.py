@@ -22,17 +22,19 @@ from __future__ import absolute_import, division, print_function, \
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
-from mpl_toolkits.basemap import Basemap
+import matplotlib.ticker as mticker
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import cartopy
+from cartopy.util import add_cyclic_point
 
 from mpas_analysis.shared.plot.colormap import setup_colormap
 
 
 def plot_polar_comparison(
         config,
-        Lons,
-        Lats,
+        lon,
+        lat,
         modelArray,
         refArray,
         diffArray,
@@ -77,8 +79,8 @@ def plot_polar_comparison(
     title : str, optional
         the subtitle of the plot
 
-    plotProjection : str, optional
-        Basemap projection for the plot
+    plotProjection : 'npstere' or 'spstere', optional
+        projection for the plot (north or south pole)
 
     modelTitle : str, optional
         title of the model panel
@@ -117,37 +119,57 @@ def plot_polar_comparison(
         Make a subplot within the figure.
         """
 
-        m = Basemap(projection=plotProjection, boundinglat=latmin,
-                    lon_0=lon0, resolution='l', ax=ax)
-
-        fieldPeriodic, LatsPeriodic, LonsPeriodic = addcyclic(field, Lats,
-                                                              Lons)
-
-        x, y = m(LonsPeriodic, LatsPeriodic)  # compute map proj coordinates
+        data_crs = cartopy.crs.PlateCarree()
+        ax.set_extent(extent, crs=data_crs)
 
         ax.set_title(title, y=1.06, **plottitle_font)
 
-        m.drawcoastlines()
-        m.fillcontinents(color='grey', lake_color='white')
-        m.drawparallels(np.arange(-80., 81., 10.))
-        m.drawmeridians(np.arange(-180., 181., 20.),
-                        labels=[True, False, True, True])
+        gl = ax.gridlines(crs=data_crs, color='k', linestyle=':', zorder=5)
+        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 20.))
+        gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
+        gl.n_steps = 100
+        # Not currently supported but keep an eye out for the 0.18.0 release
+        # with:
+        # https://github.com/SciTools/cartopy/pull/1089
+        # gl = ax.gridlines(crs=data_crs, draw_labels=True)
+        # gl.ylabels_right = False
+        # gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 20.))
+        # gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
+        # gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
+        # gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
+
+        fieldPeriodic, lonPeriodic = add_cyclic_point(field, lon)
+
+        LonsPeriodic, LatsPeriodic = np.meshgrid(lonPeriodic, lat)
 
         if levels is None:
-            plotHandle = m.pcolormesh(x, y, fieldPeriodic, cmap=colormap,
-                                      norm=norm)
+            plotHandle = ax.pcolormesh(LonsPeriodic, LatsPeriodic,
+                                       fieldPeriodic, cmap=colormap,
+                                       norm=norm, transform=data_crs,
+                                       zorder=1)
         else:
-            plotHandle = m.contourf(x, y, fieldPeriodic, cmap=colormap,
-                                    norm=norm, levels=levels)
+            plotHandle = ax.contourf(LonsPeriodic, LatsPeriodic,
+                                     fieldPeriodic, cmap=colormap,
+                                     norm=norm, levels=levels,
+                                     transform=data_crs,
+                                     zorder=1)
+
+        _add_land_lakes_coastline(ax)
 
         if contours is not None:
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
-            m.contour(x, y, field, levels=contours, colors=lineColor,
-                      linewidths=lineWidth)
+            ax.contour(LonsPeriodic, LatsPeriodic, fieldPeriodic,
+                       levels=contours, colors=lineColor,
+                       linewidths=lineWidth, transform=data_crs)
 
-        cbar = m.colorbar(plotHandle, location='right', pad="3%",
-                          spacing='uniform', ticks=ticks, boundaries=levels)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1,
+                                  axes_class=plt.Axes)
+        cbar = plt.colorbar(plotHandle, cax=cax, boundaries=levels)
         cbar.set_label(cbarlabel)
+        if ticks is not None:
+            cbar.set_ticks(ticks)
+            cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
@@ -181,16 +203,27 @@ def plot_polar_comparison(
     plottitle_font = {'size': config.get('plot',
                                          'threePanelPlotTitleFontSize')}
 
-    ax = plt.subplot(subplots[0])
+    if plotProjection == 'npstere':
+        projection = cartopy.crs.NorthPolarStereo()
+        extent = [-180, 180, latmin, 90]
+    elif plotProjection == 'spstere':
+        projection = cartopy.crs.SouthPolarStereo()
+        extent = [-180, 180, -90, latmin]
+    else:
+        raise ValueError('Unexpected plot projection {}'.format(
+                plotProjection))
+
+    ax = plt.subplot(subplots[0], projection=projection)
     do_subplot(ax=ax, field=modelArray, title=modelTitle, **dictModelRef)
 
     if refArray is not None:
-        ax = plt.subplot(subplots[1])
+        ax = plt.subplot(subplots[1], projection=projection)
         do_subplot(ax=ax, field=refArray, title=refTitle, **dictModelRef)
 
-        ax = plt.subplot(subplots[2])
+        ax = plt.subplot(subplots[2], projection=projection)
         do_subplot(ax=ax, field=diffArray, title=diffTitle, **dictDiff)
 
+    fig.canvas.draw()
     plt.tight_layout(pad=4.)
     if vertical:
         plt.subplots_adjust(top=0.9)
@@ -279,31 +312,42 @@ def plot_global_comparison(
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
-    def plot_panel(title, array, colormap, norm, levels, ticks, contours,
+    def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
 
-        plt.title(title, y=1.06, **plottitle_font)
+        ax.set_extent(extent, crs=projection)
 
-        m.drawcoastlines()
-        m.fillcontinents(color='grey', lake_color='white')
-        m.drawparallels(np.arange(-80., 80., 20.),
-                        labels=[True, False, False, False])
-        m.drawmeridians(np.arange(-180., 180., 60.),
-                        labels=[False, False, False, True])
+        ax.set_title(title, y=1.06, **plottitle_font)
+
+        gl = ax.gridlines(crs=projection, color='k', linestyle=':', zorder=5,
+                          draw_labels=True)
+        gl.ylabels_right = False
+        gl.xlabels_top = False
+        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 60.))
+        gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 20.))
+        gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
+        gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
 
         if levels is None:
-            plotHandle = m.pcolormesh(x, y, array, cmap=colormap, norm=norm)
+            plotHandle = ax.pcolormesh(Lons, Lats, array, cmap=colormap,
+                                       norm=norm, transform=projection,
+                                       zorder=1)
         else:
-            plotHandle = m.contourf(x, y, array, cmap=colormap, norm=norm,
-                                    levels=levels, extend='both')
+            plotHandle = ax.contourf(Lons, Lats, array, cmap=colormap,
+                                     norm=norm, levels=levels, extend='both',
+                                     transform=projection, zorder=1)
+
+        _add_land_lakes_coastline(ax)
 
         if contours is not None:
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
-            m.contour(x, y, array, levels=contours, colors=lineColor,
-                      linewidths=lineWidth)
+            ax.contour(Lons, Lats, array, levels=contours, colors=lineColor,
+                       linewidths=lineWidth, transform=projection)
 
-        cbar = m.colorbar(plotHandle, location='right', pad="5%",
-                          spacing='uniform', ticks=ticks, boundaries=ticks)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1,
+                                  axes_class=plt.Axes)
+        cbar = plt.colorbar(plotHandle, cax=cax, ticks=ticks, boundaries=ticks)
         cbar.set_label(cbarlabel)
 
     # set up figure
@@ -327,24 +371,27 @@ def plot_global_comparison(
     plottitle_font = {'size': config.get('plot',
                                          'threePanelPlotTitleFontSize')}
 
-    m = Basemap(projection='cyl', llcrnrlat=-85, urcrnrlat=86, llcrnrlon=-180,
-                urcrnrlon=181, resolution='l')
-    x, y = m(Lons, Lats)  # compute map proj coordinates
+    if refArray is None:
+        subplots = [111]
+    else:
+        subplots = [311, 312, 313]
+
+    projection = cartopy.crs.PlateCarree()
+
+    extent = [-180, 180, -85, 85]
 
     dictModelRef = setup_colormap(config, colorMapSectionName, suffix='Result')
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
 
-    if refArray is not None:
-        plt.subplot(3, 1, 1)
-
-    plot_panel(modelTitle, modelArray, **dictModelRef)
+    ax = plt.subplot(subplots[0], projection=projection)
+    plot_panel(ax, modelTitle, modelArray, **dictModelRef)
 
     if refArray is not None:
-        plt.subplot(3, 1, 2)
-        plot_panel(refTitle, refArray, **dictModelRef)
+        ax = plt.subplot(subplots[1], projection=projection)
+        plot_panel(ax, refTitle, refArray, **dictModelRef)
 
-        plt.subplot(3, 1, 3)
-        plot_panel(diffTitle, diffArray, **dictDiff)
+        ax = plt.subplot(subplots[2], projection=projection)
+        plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
     if (fileout is not None):
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
@@ -532,53 +579,19 @@ def plot_polar_projection_comparison(
     plt.close()
 
 
-# function copied from basemap because the latest version of this funciton
-# is buggy but no new release seems imminent
-def addcyclic(*arr, **kwargs):
-    """
-    Adds cyclic (wraparound) points in longitude to one or several arrays,
-    the last array being longitudes in degrees. e.g.
-   ``data1out, data2out, lonsout = addcyclic(data1,data2,lons)``
-    ==============   ====================================================
-    Keywords         Description
-    ==============   ====================================================
-    axis             the dimension representing longitude (default -1,
-                     or right-most)
-    cyclic           width of periodic domain (default 360)
-    ==============   ====================================================
-    """
-    # get (default) keyword arguments
-    axis = kwargs.get('axis', -1)
-    cyclic = kwargs.get('cyclic', 360)
-    # define functions
-
-    def _addcyclic(a):
-        """addcyclic function for a single data array"""
-        npsel = np.ma if np.ma.is_masked(a) else np
-        slicer = [slice(None)] * np.ndim(a)
-        try:
-            slicer[axis] = slice(0, 1)
-        except IndexError:
-            raise ValueError('The specified axis does not correspond to an '
-                             'array dimension.')
-        return npsel.concatenate((a, a[tuple(slicer)]), axis=axis)
-
-    def _addcyclic_lon(a):
-        """addcyclic function for a single longitude array"""
-        # select the right numpy functions
-        npsel = np.ma if np.ma.is_masked(a) else np
-        # get cyclic longitudes
-        clon = (np.take(a, [0], axis=axis)
-                + cyclic * np.sign(np.diff(np.take(a, [0, -1], axis=axis),
-                                           axis=axis)))
-        # ensure the values do not exceed cyclic
-        clonmod = npsel.where(clon <= cyclic, clon, np.mod(clon, cyclic))
-        return npsel.concatenate((a, clonmod), axis=axis)
-    # process array(s)
-    if len(arr) == 1:
-        return _addcyclic_lon(arr[-1])
-    else:
-        return list(map(_addcyclic, arr[:-1])) + [_addcyclic_lon(arr[-1])]
-
+def _add_land_lakes_coastline(ax):
+    land_50m = cartopy.feature.NaturalEarthFeature(
+            'physical', 'land', '50m', edgecolor='face',
+            facecolor='gray', linewidth=0.5)
+    lakes_50m = cartopy.feature.NaturalEarthFeature(
+            'physical', 'lakes', '50m', edgecolor='k',
+            facecolor=cartopy.feature.COLORS['water'],
+            linewidth=0.5)
+    coast_50m = cartopy.feature.NaturalEarthFeature(
+            'physical', 'coastline', '50m', edgecolor='k',
+            facecolor='None', linewidth=0.5)
+    ax.add_feature(land_50m, zorder=2)
+    ax.add_feature(lakes_50m, zorder=3)
+    ax.add_feature(coast_50m, zorder=4)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
