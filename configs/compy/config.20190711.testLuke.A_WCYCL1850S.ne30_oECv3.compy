@@ -62,7 +62,7 @@ mpasMeshName = oEC60to30v3
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /compyfs/vanr302/case_output/20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy_yr_30_40
+baseDirectory = /path/to/output/directory
 
 # Anvil doesn't have direct access to a web portal, so output will need
 # to be copied elsewhere (e.g. NERSC web portal)
