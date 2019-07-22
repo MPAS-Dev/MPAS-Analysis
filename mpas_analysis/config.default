@@ -1217,12 +1217,12 @@ regionGroups = ['Antarctic Regions']
 
 # the number of threads dask is allowed to spawn for each process computing
 # a year of these time series
-# Decrease this number if timeSeriesAntarcticMelt subtasks are running
+# Decrease this number if timeSeriesOceanRegions subtasks are running
 # out of available threads
 daskThreads = 12
 
 # the number of subprocesses that each task gets counted as occupying
-# Increase this number if timeSeriesAntarcticMelt subtasks are running
+# Increase this number if timeSeriesOceanRegions subtasks are running
 # out of memory, and fewer tasks will be allowed to run at once
 subprocessCount = 3
 
@@ -1259,6 +1259,49 @@ variables = [{'name': 'temperature',
 # Add these to a custom config file to override the defaults.
 # zmin = -1000
 # zmax = -400
+
+
+[regionalTSDiagrams]
+## options related to plotting time series of groups of ocean regions
+
+# the names of region groups to plot, each with its own section below
+regionGroups = ['Antarctic Regions']
+
+# a list of seasons to compute climatologies over
+seasons = ['ANN']
+
+
+[TSDiagramsForAntarcticRegions]
+## options related to plotting time series of Antarctic regions
+
+# A geojson file containing Antarctic ocean regions.  Each region must have
+# 'zmin' and 'zmax' properites in addition to the usual properies for a region
+# in geometric_features
+regionMask = 'antarcticRegions.geojson'
+
+# list of regions to plot or ['all'] for all regions in the masks file.
+# See "regionNames" in the antarcticRegions masks file in
+# regionMaskSubdirectory for details.
+regionNames = ['all']
+
+# min and max for T and S
+TBounds = [-2.5, 4]
+SBounds = [33.8, 34.8]
+
+# density contour interval
+rhoInterval = 0.1
+
+# The color map for depth
+colormap = cmo.deep_r
+
+# The minimum and maximum depth over which fields are plotted, default is
+# to take these values from the geojson feature's zmin and zmax properties.
+# Add these to a custom config file to override the defaults.
+# zmin = -1000
+# zmax = -400
+
+# Obserational data sets to compare against
+obs = ['SOSE']
 
 
 [climatologyMapSose]

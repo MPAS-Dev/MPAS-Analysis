@@ -23,7 +23,6 @@ import xarray as xr
 import numpy
 
 from geometric_features import FeatureCollection
-import matplotlib.pyplot as plt
 
 from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
     savefig, add_inset

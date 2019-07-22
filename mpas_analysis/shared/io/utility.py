@@ -206,8 +206,8 @@ def get_region_mask(config, regionMaskFile):  # {{{
     return fullFileName  # }}}
 
 
-def build_obs_path(config, component, relativePathOption,
-                   relativePathSection=None):  # {{{
+def build_obs_path(config, component, relativePathOption=None,
+                   relativePathSection=None, relativePath=None):  # {{{
     """
 
     Parameters
@@ -219,13 +219,17 @@ def build_obs_path(config, component, relativePathOption,
         the prefix on the ``*Observations`` section in ``config``, which must
         have an option ``obsSubdirectory``
 
-    relativePathOption : str
+    relativePathOption : str, optional
         the name of an option in `section` of the relative path within
         ``obsSubdirectory`` (or possibly an absolute path)
 
     relativePathSection : str, optional
         the name of a section for ``relativePathOption`` if not
         ``<component>Observations``
+
+    relativePath : str, optional
+        As an alternative to giving the option (and possibly section) of the
+        relative path, it can be supplied directly
 
     Returns
     -------
@@ -238,10 +242,12 @@ def build_obs_path(config, component, relativePathOption,
     # Xylar Asay-Davis
 
     obsSection = '{}Observations'.format(component)
-    if relativePathSection is None:
-        relativePathSection = obsSection
 
-    relativePath = config.get(relativePathSection, relativePathOption)
+    if relativePath is None:
+        if relativePathSection is None:
+            relativePathSection = obsSection
+        relativePath = config.get(relativePathSection, relativePathOption)
+
     if os.path.isabs(relativePath):
         fullPath = relativePath
     else:

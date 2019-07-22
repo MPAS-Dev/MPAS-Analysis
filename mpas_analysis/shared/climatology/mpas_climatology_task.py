@@ -81,11 +81,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, componentName, taskName=None,
-                 op='avg'):  # {{{
+    def __init__(self, config, componentName, taskName=None, op='avg'):  # {{{
         '''
-        Construct the analysis task and adds it as a subtask of the
-        ``parentTask``.
+        Construct the analysis task.
 
         Parameters
         ----------
@@ -100,7 +98,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
              operator for monthly stats
 
         taskName : str, optional
-            the name of the task, defaults to mpasClimatology<ComponentName>
+            the name of the task, defaults to
+            mpasClimatology<ComponentName><Op>
         '''
         # Authors
         # -------
