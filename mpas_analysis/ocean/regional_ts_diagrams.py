@@ -493,6 +493,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         config = self.config
         sectionName = self.sectionName
 
+        startYear = self.mpasClimatologyTask.startYear
+        endYear = self.mpasClimatologyTask.endYear
+
         regionMaskFile = config.getExpression(sectionName, 'regionMask')
 
         regionMaskFile = get_region_mask(config, regionMaskFile)
@@ -583,8 +586,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         else:
             fig.subplots_adjust(top=0.93)
 
-        suptitle = 'T-S diagram for {} ({})'.format(self.regionName,
-                                                    self.season)
+        suptitle = 'T-S diagram for {} ({}, {:04d}-{:04d})\n' \
+                   ' {} m < z < {} m'.format(self.regionName, self.season,
+                                             startYear, endYear, zmin, zmax)
         fig.text(0.5, 0.95, suptitle, horizontalalignment='center',
                  **title_font)
 
