@@ -79,16 +79,51 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
 
     nCells = len(cellPoints)
 
-    masks = []
-    regionNames = []
-    nChar = 0
-    if logger is not None:
-        logger.info('  Computing masks from {}...'.format(geojsonFileName))
     with open(geojsonFileName) as f:
         featureData = json.load(f)
 
-    properties = {}
+    regionNames = []
+    nChar = 0
+    for feature in featureData['features']:
+        name = feature['properties']['name']
+        if name not in featureList:
+            continue
+        nChar = max(nChar, len(name))
+        regionNames.append(name)
 
+    propertyNames = set()
+    for feature in featureData['features']:
+        for propertyName in feature['properties']:
+            if propertyName not in ['name', 'author', 'tags', 'component',
+                                    'object']:
+                propertyNames.add(propertyName)
+
+    properties = {}
+    for propertyName in propertyNames:
+        properties[propertyName] = []
+        for feature in featureData['features']:
+            if propertyName in feature['properties']:
+                propertyVal = feature['properties'][propertyName]
+                properties[propertyName].append(propertyVal)
+            else:
+                properties[propertyName].append('')
+
+    # create a new data array for masks and another for mask names
+    nRegions = len(regionNames)
+    dsMasks = xr.Dataset()
+    dsMasks['regionCellMasks'] = (('nRegions', 'nCells'),
+                                  numpy.zeros((nRegions, nCells), dtype=bool))
+    dsMasks['regionNames'] = (('nRegions'),
+                              numpy.zeros((nRegions),
+                                          dtype='|S{}'.format(nChar)))
+
+    for propertyName in properties:
+        dsMasks[propertyName] = (('nRegions'), properties[propertyName])
+
+    if logger is not None:
+        logger.info('  Computing masks from {}...'.format(geojsonFileName))
+
+    masks = []
     for feature in featureData['features']:
         name = feature['properties']['name']
         if name not in featureList:
@@ -129,39 +164,17 @@ def compute_region_masks(geojsonFileName, meshFileName, maskFileName,
                 bar.finish()
             pool.terminate()
 
-        nChar = max(nChar, len(name))
-
         masks.append(mask)
-        regionNames.append(name)
-
-        for propertyName in feature['properties']:
-            if propertyName not in ['name', 'author', 'tags', 'component',
-                                    'object']:
-                propertyVal = feature['properties'][propertyName]
-                if propertyName in properties:
-                    properties[propertyName].append(propertyVal)
-                else:
-                    properties[propertyName] = [propertyVal]
 
     # create a new data array for masks and another for mask names
     if logger is not None:
         logger.info('  Creating and writing masks dataset...')
-    nRegions = len(regionNames)
-    dsMasks = xr.Dataset()
-    dsMasks['regionCellMasks'] = (('nRegions', 'nCells'),
-                                  numpy.zeros((nRegions, nCells), dtype=bool))
-    dsMasks['regionNames'] = (('nRegions'),
-                              numpy.zeros((nRegions),
-                                          dtype='|S{}'.format(nChar)))
 
     for index in range(nRegions):
         regionName = regionNames[index]
         mask = masks[index]
         dsMasks['regionCellMasks'][index, :] = mask
         dsMasks['regionNames'][index] = regionName
-
-    for propertyName in properties:
-        dsMasks[propertyName] = (('nRegions'), properties[propertyName])
 
     write_netcdf(dsMasks, maskFileName)
 
