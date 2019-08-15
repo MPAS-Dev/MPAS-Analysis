@@ -1284,15 +1284,24 @@ regionMask = 'antarcticRegions.geojson'
 # regionMaskSubdirectory for details.
 regionNames = ['all']
 
-# min and max for T and S
-TBounds = [-2.5, 4]
-SBounds = [33.8, 34.8]
+# diagram type, either 'volumetric' or 'scatter', depending on if the points
+# should be binned the plot should show the volume fraction in each bin or
+# scattered points colored by their depth
+diagramType = volumetric
+
+# if diagramType == 'volumetric', the bin boundaries for T and S
+# if diagramType == 'scatter', only the min and max are important (and the
+#   bins are only used for computing neutral density contours)
+Tbins = numpy.linspace(-2.5, 4, 66)
+Sbins = numpy.linspace(33.8, 34.8, 51)
 
 # density contour interval
 rhoInterval = 0.1
 
-# The color map for depth
-colormap = cmo.deep_r
+# The color map for depth or volume
+colormap = cmo.deep
+# The following is more appropriate if diagramType == 'scatter'
+# colormap = cmo.deep_r
 
 # The minimum and maximum depth over which fields are plotted, default is
 # to take these values from the geojson feature's zmin and zmax properties.

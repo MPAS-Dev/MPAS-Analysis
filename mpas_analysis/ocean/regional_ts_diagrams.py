@@ -15,6 +15,7 @@ import os
 import xarray
 import numpy
 import matplotlib.pyplot as plt
+from matplotlib import colors
 import gsw
 
 from geometric_features import FeatureCollection, read_feature_collection
@@ -103,10 +104,13 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                          'SouthernOcean_0.167x0.167degree_20180710.nc',
             'SFileName': 'SOSE/SOSE_2005-2010_monthly_salinity_'
                          'SouthernOcean_0.167x0.167degree_20180710.nc',
+            'volFileName': 'SOSE/SOSE_volume_'
+                         'SouthernOcean_0.167x0.167degree_20190815.nc',
             'lonVar': 'lon',
             'latVar': 'lat',
             'TVar': 'theta',
             'SVar': 'salinity',
+            'volVar': 'volume',
             'zVar': 'z',
             'tVar': 'Time'}
 
@@ -221,7 +225,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
         # don't add the variables and seasons to mpasClimatologyTask until
         # we're sure this subtask is supposed to run
         variableList = ['timeMonthly_avg_activeTracers_temperature',
-                        'timeMonthly_avg_activeTracers_salinity']
+                        'timeMonthly_avg_activeTracers_salinity',
+                        'timeMonthly_avg_layerThickness']
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
     # }}}
@@ -310,6 +315,7 @@ class ComputeObsTSClimatology(AnalysisTask):
         TVarName = obsDict['TVar']
         SVarName = obsDict['SVar']
         zVarName = obsDict['zVar']
+        volVarName = obsDict['volVar']
 
         obsFileName = build_obs_path(
             config, component=self.componentName,
@@ -321,6 +327,13 @@ class ComputeObsTSClimatology(AnalysisTask):
                 relativePath=obsDict['SFileName'])
             dsS = xarray.open_dataset(obsFileName, chunks=chunk)
             ds[SVarName] = dsS[SVarName]
+
+        if obsDict['volFileName'] != obsDict['TFileName']:
+            obsFileName = build_obs_path(
+                config, component=self.componentName,
+                relativePath=obsDict['volFileName'])
+            dsVol = xarray.open_dataset(obsFileName)
+            ds[volVarName] = dsVol[volVarName]
 
         ds.compute()
 
@@ -540,28 +553,31 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         if nRows == 1:
             axarray = axarray.reshape((nRows, nCols))
 
-        T, S, zMid, zmin, zmax = self._get_mpas_T_S()
+        T, S, zMid, volume, zmin, zmax = self._get_mpas_T_S()
         mainRunName = config.get('runs', 'mainRunName')
-        plotFields = [{'S': S, 'T': T, 'z': zMid, 'title': mainRunName}]
+        plotFields = [{'S': S, 'T': T, 'z': zMid, 'vol': volume,
+                       'title': mainRunName}]
         for obsName in self.obsDicts:
-            obsT, obsS, obsZ = self._get_obs_T_S(self.obsDicts[obsName], zmin,
-                                                 zmax)
-            plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ,
+            obsT, obsS, obsZ, obsVol = self._get_obs_T_S(
+                self.obsDicts[obsName], zmin, zmax)
+            plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ, 'vol': obsVol,
                                'title': obsName})
 
-        TBounds = config.getExpression(sectionName, 'TBounds')
-        SBounds = config.getExpression(sectionName, 'SBounds')
+        Tbins = config.getExpression(sectionName, 'Tbins', usenumpyfunc=True)
+        Sbins = config.getExpression(sectionName, 'Sbins', usenumpyfunc=True)
 
-        SP = numpy.linspace(SBounds[0], SBounds[1], 101)
-        PT = numpy.linspace(TBounds[0], TBounds[1], 101)
-        PT, SP = numpy.meshgrid(PT, SP)
+        PT, SP = numpy.meshgrid(Tbins, Sbins)
         SA = gsw.SA_from_SP(SP, p=0., lon=0., lat=-75.)
         CT = gsw.CT_from_t(SA, PT, p=0.)
 
         sigma0 = gsw.density.sigma0(SA, CT)
         contours = numpy.linspace(24., 29., 26)
 
-        lastScatter = None
+        diagramType = config.get(sectionName, 'diagramType')
+        if diagramType not in ['volumetric', 'scatter']:
+            raise ValueError('Unexpected diagramType {}'.format(diagramType))
+
+        lastPanel = None
         for index in range(len(axisIndices)):
             panelIndex = axisIndices[index]
 
@@ -576,20 +592,24 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             T = plotFields[index]['T']
             S = plotFields[index]['S']
             z = plotFields[index]['z']
+            volume = plotFields[index]['vol']
             title = plotFields[index]['title']
 
-            indices = numpy.argsort(z)[::-1]
-
-            lastScatter = plt.scatter(S[indices], T[indices], c=z[indices],
-                                      s=5, vmin=zmin, vmax=zmax,
-                                      cmap=config.get(sectionName, 'colorMap'))
+            if diagramType == 'volumetric':
+                lastPanel, volMax = self._plot_volumetric_panel(T, S, volume)
+                if index == 0:
+                    volMaxMpas = volMax
+                norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
+                lastPanel.set_norm(norm)
+            else:
+                lastPanel = self._plot_scatter_panel(T, S, z, zmin, zmax)
 
             CS = plt.contour(SP, PT, sigma0, contours, linewidths=1.,
                              colors='k')
             plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
 
-            plt.ylim(TBounds)
-            plt.xlim(SBounds)
+            plt.ylim([Tbins[0], Tbins[-1]])
+            plt.xlim([Sbins[0], Sbins[-1]])
 
             plt.xlabel('Salinity (PSU)', **axis_font)
             if col == 0:
@@ -617,12 +637,17 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         # move the color bar down a little ot avoid the inset
         pos0 = inset.get_position()
         pos1 = axarray[-1, -1].get_position()
-        pad = 0.02
+        pad = 0.04
         top = pos0.y0 - pad
         height = top - pos1.y0
         cbar_ax = fig.add_axes([0.92, pos1.y0, 0.02, height])
-        cbar = fig.colorbar(lastScatter, cax=cbar_ax)
-        cbar.ax.set_ylabel('depth (m)', rotation=270)
+        cbar = fig.colorbar(lastPanel, cax=cbar_ax)
+
+        if diagramType == 'volumetric':
+            cbar.ax.get_yaxis().labelpad = 15
+            cbar.ax.set_ylabel(r'volume (m$^3$)', rotation=270)
+        else:
+            cbar.ax.set_ylabel('depth (m)', rotation=270)
 
         outFileName = '{}/{}_{}.png'.format(self.plotsDirectory, self.prefix,
                                             self.season)
@@ -689,12 +714,16 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         ds = xarray.open_dataset(inFileName)
 
         variableList = ['timeMonthly_avg_activeTracers_temperature',
-                        'timeMonthly_avg_activeTracers_salinity']
+                        'timeMonthly_avg_activeTracers_salinity',
+                        'timeMonthly_avg_layerThickness']
         ds = subset_variables(ds, variableList)
 
         ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
                                   dsRestart.maxLevelCell,
                                   dsRestart.layerThickness)
+
+        ds['volume'] = (dsRestart.areaCell *
+                        ds['timeMonthly_avg_layerThickness'])
 
         ds = ds.where(cellMask, drop=True)
 
@@ -716,7 +745,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         S = ds['timeMonthly_avg_activeTracers_salinity'].values.ravel()[mask]
         zMid = ds['zMid'].values.ravel()[mask]
 
-        return T, S, zMid, zmin, zmax  # }}}
+        volume = ds['volume'].values.ravel()[mask]
+
+        return T, S, zMid, volume, zmin, zmax  # }}}
 
     def _get_obs_T_S(self, obsDict, zmin, zmax):  # {{{
 
@@ -741,6 +772,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         TVarName = obsDict['TVar']
         SVarName = obsDict['SVar']
         zVarName = obsDict['zVar']
+        volVarName = obsDict['volVar']
 
         obsFileName = obsDict['climatologyTask'][self.season].fileName
         ds = xarray.open_dataset(obsFileName, chunks=chunk)
@@ -767,7 +799,38 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         S = ds[SVarName].values.ravel()[mask]
         z = ds['zBroadcast'].values.ravel()[mask]
 
-        return T, S, z  # }}}
+        volume = ds[volVarName].values.ravel()[mask]
+
+        return T, S, z, volume  # }}}
+
+    def _plot_volumetric_panel(self, T, S, volume):  # {{{
+
+        config = self.config
+        sectionName = self.sectionName
+        cmap = config.get(sectionName, 'colorMap')
+        Tbins = config.getExpression(sectionName, 'Tbins',
+                                     usenumpyfunc=True)
+        Sbins = config.getExpression(sectionName, 'Sbins',
+                                     usenumpyfunc=True)
+
+        hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
+                                       weights=volume, cmap=cmap)
+
+        volMax = numpy.amax(hist)
+        return panel, volMax  # }}}
+
+    def _plot_scatter_panel(self, T, S, z, zmin, zmax):  # {{{
+
+        config = self.config
+        sectionName = self.sectionName
+        cmap = config.get(sectionName, 'colorMap')
+
+        indices = numpy.argsort(z)[::-1]
+
+        panel = plt.scatter(S[indices], T[indices], c=z[indices],
+                            s=5, vmin=zmin, vmax=zmax, cmap=cmap)
+
+        return panel  # }}}
 
     # }}}
 
