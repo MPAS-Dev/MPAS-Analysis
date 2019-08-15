@@ -15,6 +15,7 @@ import os
 import xarray
 import numpy
 import matplotlib.pyplot as plt
+import gsw
 
 from geometric_features import FeatureCollection, read_feature_collection
 
@@ -548,6 +549,18 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ,
                                'title': obsName})
 
+        TBounds = config.getExpression(sectionName, 'TBounds')
+        SBounds = config.getExpression(sectionName, 'SBounds')
+
+        SP = numpy.linspace(SBounds[0], SBounds[1], 101)
+        PT = numpy.linspace(TBounds[0], TBounds[1], 101)
+        PT, SP = numpy.meshgrid(PT, SP)
+        SA = gsw.SA_from_SP(SP, p=0., lon=0., lat=-75.)
+        CT = gsw.CT_from_t(SA, PT, p=0.)
+
+        sigma0 = gsw.density.sigma0(SA, CT)
+        contours = numpy.linspace(24., 29., 26)
+
         lastScatter = None
         for index in range(len(axisIndices)):
             panelIndex = axisIndices[index]
@@ -565,11 +578,18 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             z = plotFields[index]['z']
             title = plotFields[index]['title']
 
-            lastScatter = plt.scatter(S, T, c=z, s=5, vmin=zmin, vmax=zmax,
+            indices = numpy.argsort(z)[::-1]
+
+            lastScatter = plt.scatter(S[indices], T[indices], c=z[indices],
+                                      s=5, vmin=zmin, vmax=zmax,
                                       cmap=config.get(sectionName, 'colorMap'))
 
-            plt.ylim(config.getExpression(sectionName, 'TBounds'))
-            plt.xlim(config.getExpression(sectionName, 'SBounds'))
+            CS = plt.contour(SP, PT, sigma0, contours, linewidths=1.,
+                             colors='k')
+            plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
+
+            plt.ylim(TBounds)
+            plt.xlim(SBounds)
 
             plt.xlabel('Salinity (PSU)', **axis_font)
             if col == 0:
@@ -582,14 +602,14 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         fig.subplots_adjust(right=0.91)
         if nRows == 1:
-            fig.subplots_adjust(top=0.9)
+            fig.subplots_adjust(top=0.85)
         else:
-            fig.subplots_adjust(top=0.93)
+            fig.subplots_adjust(top=0.88)
 
         suptitle = 'T-S diagram for {} ({}, {:04d}-{:04d})\n' \
                    ' {} m < z < {} m'.format(self.regionName, self.season,
                                              startYear, endYear, zmin, zmax)
-        fig.text(0.5, 0.95, suptitle, horizontalalignment='center',
+        fig.text(0.5, 0.9, suptitle, horizontalalignment='center',
                  **title_font)
 
         inset = add_inset(fig, fc, width=1.5, height=1.5)
