@@ -17,6 +17,7 @@ import numpy
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import gsw
+import gsw.freezing
 
 from geometric_features import FeatureCollection, read_feature_collection
 
@@ -607,6 +608,13 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             CS = plt.contour(SP, PT, sigma0, contours, linewidths=1.,
                              colors='k')
             plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
+
+            CTFreezing = gsw.freezing.CT_freezing(Sbins, 0, 1)
+            PTFreezing = gsw.t_from_CT(
+                gsw.SA_from_SP(Sbins, p=0., lon=0., lat=-75.),
+                CTFreezing, p=0.)
+            plt.plot(Sbins, PTFreezing, linestyle='--', linewidth=1.,
+                     color='k')
 
             plt.ylim([Tbins[0], Tbins[-1]])
             plt.xlim([Sbins[0], Sbins[-1]])
