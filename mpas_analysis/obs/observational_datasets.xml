@@ -116,6 +116,80 @@
 
   <observation>
     <name>
+      WOA18 Temperature and Salinity Climatology
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      The World Ocean Atlas 2018 (WOA18) release July 2019 updates previous
+      versions of the World Ocean Atlas to include approximately 3 million
+      new oceanographic casts added to the World  Ocean  Database (WOD) since
+      the previous release as well as renewed and updated quality control.
+      Animal mounted pinniped temperature profiles have been added as a data
+      source improving coverage in some high latitude areas. WOA18 includes
+      analysis for temperature, salinity, dissolved oxygen, and dissolved
+      inorganic nutrients (only temperature and salinity are used in MPAS-Analysis
+      as of Aug 2019). The atlas includes annual, seasonal, and monthly
+      climatologies and related statistical fields. Annual fields are available
+      for the full depth (0-5500 m), while monthly and seasonal fields are
+      available for the upper 1500 m only. Climatologies are available on a 1deg
+      regular grid and on a 0.25deg grid.
+    </description>
+    <source>
+      [NOAA National Oceanographic Data Center (NODC) website]
+      (https://www.nodc.noaa.gov/OC5/woa18)
+    </source>
+    <releasePolicy>
+      Acknowledgment: Locarnini and co-authors, 2019: World Ocean Atlas 2018,
+      Volume 1: Temperature. A. Mishonov Technical Editor, NOAA Atlas NESDIS 81.
+      Zweng and co-authors, 2019: World Ocean Atlas 2018, Volume 2: Salinity.
+      A. Mishonov Technical Editor, NOAA Atlas NESDIS 82.
+    </releasePolicy>
+    <references>
+      [Locarnini et al. (2019)](https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf)
+      [Zweng et al. (2019)](https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf)
+    </references>
+    <bibtex>
+      @manual{Locarninietal2019,
+      author = {R. A. Locarnini and A. V. Mishonov and O. K. Baranova and T. P. Boyer and
+                M. M. Zweng and H. E. Garcia and J. R. Reagan and D. Seidov and K. W. Weathers and
+                C. R. Paver and I. V. Smolyar},
+      title = {World Ocean Atlas 2018, Volume 1: Temperature},
+      organization = {NOAA Atlas NESDIS 81},
+      year = {2019},
+      edition = {A. Mishonov Technical Editor}
+      }
+      @manual{Zwenetal2019,
+      author = {M. M. Zweng and J. R. Reagan and D. Seidov and T. P. Boyer and R.A. Locarnini
+                and H. E. Garcia and A. V. Mishonov and O. K. Baranova and K. W. Weathers and
+		C. R. Paver and I. V. Smolyar},
+      title = {World Ocean Atlas 2018, Volume 2: Salinity},
+      organization = {NOAA Atlas NESDIS 82},
+      year = {2019},
+      edition = {A. Mishonov Technical Editor}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://data.nodc.noaa.gov/woa/WOA18/DATA/
+    </dataUrls>
+    <preprocessing>
+      - preprocess_observations/preprocess_WOA18Annual_data.bash
+      - preprocess_observations/preprocess_WOA18Monthly_data.bash
+    </preprocessing>
+    <tasks>
+      - climatologyMapWoa
+    </tasks>
+    <subdirectory>
+      Ocean/WOA18
+    </subdirectory>
+    <nameInDocs>
+      woa18_t_s
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
       AVISO Absolute Dynamic Topography
     </name>
     <component>

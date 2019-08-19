@@ -47,7 +47,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         A season (key in ``shared.constants.monthDictionary``) to be
         plotted.
 
-    comparisonGridName : {'latlon', 'antarctic'}
+    comparisonGridName : {'latlon', 'antarctic', 'arctic'}
         The name of the comparison grid to plot.
 
     remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
@@ -135,7 +135,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             A season (key in ``shared.constants.monthDictionary``) to be
             plotted.
 
-        comparisonGridName : {'latlon', 'antarctic'}
+        comparisonGridName : {'latlon', 'antarctic', 'arctic'}
             The name of the comparison grid to plot.
 
         remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
@@ -348,8 +348,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def run_task(self):  # {{{
         """
-        Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
-        or a control run
+        Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD
+        observations or a control run
         """
         # Authors
         # -------
@@ -455,6 +455,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         elif self.comparisonGridName == 'antarctic':
             self._plot_antarctic(remappedModelClimatology,
                                  remappedRefClimatology)
+        elif self.comparisonGridName == 'arctic':
+            self._plot_arctic(remappedModelClimatology,
+                              remappedRefClimatology)
         # }}}
 
     def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology):
@@ -522,6 +525,77 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def _plot_antarctic(self, remappedModelClimatology,
                         remappedRefClimatology):  # {{{
         """ plotting an Antarctic data set """
+
+        season = self.season
+        comparisonGridName = self.comparisonGridName
+        config = self.config
+        configSectionName = self.configSectionName
+
+        mainRunName = config.get('runs', 'mainRunName')
+
+        oceanMask = remappedModelClimatology['validMask'].values
+        self.landMask = np.ma.masked_array(
+            np.ones(oceanMask.shape),
+            mask=np.logical_not(np.isnan(oceanMask)))
+
+        modelOutput = nans_to_numpy_mask(
+            remappedModelClimatology[self.mpasFieldName].values)
+
+        if remappedRefClimatology is None:
+            refOutput = None
+            bias = None
+        else:
+            refOutput = nans_to_numpy_mask(
+                remappedRefClimatology[self.refFieldName].values)
+
+            bias = modelOutput - refOutput
+
+        x = interp_extrap_corner(remappedModelClimatology['x'].values)
+        y = interp_extrap_corner(remappedModelClimatology['y'].values)
+
+        filePrefix = self.filePrefix
+        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        title = '{} ({}, years {:04d}-{:04d})'.format(
+                self.fieldNameInTitle, season, self.startYear,
+                self.endYear)
+
+        plot_polar_projection_comparison(
+            config,
+            x,
+            y,
+            self.landMask,
+            modelOutput,
+            refOutput,
+            bias,
+            fileout=outFileName,
+            colorMapSectionName=configSectionName,
+            title=title,
+            modelTitle='{}'.format(mainRunName),
+            refTitle=self.refTitleLabel,
+            diffTitle=self.diffTitleLabel,
+            cbarlabel=self.unitsLabel)
+
+        upperGridName = comparisonGridName[0].upper() + comparisonGridName[1:]
+        caption = '{} {}'.format(season, self.imageCaption)
+        write_image_xml(
+            config,
+            filePrefix,
+            componentName='Ocean',
+            componentSubdirectory='ocean',
+            galleryGroup='{} {}'.format(upperGridName,
+                                        self.galleryGroup),
+            groupSubtitle=self.groupSubtitle,
+            groupLink=self.groupLink,
+            gallery=self.galleryName,
+            thumbnailDescription=self.thumbnailDescription,
+            imageDescription=caption,
+            imageCaption=caption)
+
+        # }}}
+
+    def _plot_arctic(self, remappedModelClimatology,
+                     remappedRefClimatology):  # {{{
+        """ plotting an Arctic data set """
 
         season = self.season
         comparisonGridName = self.comparisonGridName

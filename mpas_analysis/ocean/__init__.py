@@ -12,6 +12,8 @@ from mpas_analysis.ocean.climatology_map_antarctic_melt import \
     ClimatologyMapAntarcticMelt
 from mpas_analysis.ocean.climatology_map_sose import \
     ClimatologyMapSose
+from mpas_analysis.ocean.climatology_map_woa import \
+    ClimatologyMapWoa
 
 from mpas_analysis.ocean.climatology_map_schmidtko import \
     ClimatologyMapSchmidtko

@@ -36,7 +36,7 @@ def get_comparison_descriptor(config, comparisonGridName):  # {{{
     config :  MpasAnalysisConfigParser object
         Contains configuration options
 
-    comparisonGridName : {'latlon', 'antarctic'}
+    comparisonGridName : {'latlon', 'antarctic', 'arctic'}
         The name of the comparison grid to use for remapping.
 
     Raises
@@ -46,7 +46,7 @@ def get_comparison_descriptor(config, comparisonGridName):  # {{{
     """
     # Authors
     # -------
-    # Xylar Asay-Davis
+    # Xylar Asay-Davis, Milena Veneziani
 
     if comparisonGridName == 'latlon':
         comparisonDescriptor = \
@@ -54,6 +54,9 @@ def get_comparison_descriptor(config, comparisonGridName):  # {{{
     elif comparisonGridName == 'antarctic':
         comparisonDescriptor = \
             _get_antarctic_stereographic_comparison_descriptor(config)
+    elif comparisonGridName == 'arctic':
+        comparisonDescriptor = \
+            _get_arctic_stereographic_comparison_descriptor(config)
     else:
         raise ValueError('Unknown comaprison grid type {}'.format(
             comparisonGridName))
@@ -74,6 +77,25 @@ def get_antarctic_stereographic_projection():  # {{{
     # Xylar Asay-Davis
 
     projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
+                             '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+
+    return projection  # }}}
+
+
+def get_arctic_stereographic_projection():  # {{{
+    """
+    Get a projection for an Arctic stereographic comparison grid
+
+    Returns
+    -------
+    projection : ``pyproj.Proj`` object
+        The projection
+    """
+    # Authors
+    # -------
+    # Milena Veneziani
+
+    projection = pyproj.Proj('+proj=stere +lat_ts=75.0 +lat_0=90 +lon_0=0.0 '
                              '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
 
     return projection  # }}}
@@ -119,7 +141,7 @@ def _get_lat_lon_comparison_descriptor(config):  # {{{
 
 def _get_antarctic_stereographic_comparison_descriptor(config):  # {{{
     """
-    Get a descriptor of an Antarctic steregraphic comparison grid, used for
+    Get a descriptor of an Antarctic stereographic comparison grid, used for
     remapping and determining the grid name
 
     Parameters
@@ -150,6 +172,46 @@ def _get_antarctic_stereographic_comparison_descriptor(config):  # {{{
     x = numpy.linspace(-xMax, xMax, nx)
 
     meshName = '{}x{}km_{}km_Antarctic_stereo'.format(
+        comparisonStereoWidth, comparisonStereoWidth,
+        comparisonStereoResolution)
+    descriptor = ProjectionGridDescriptor.create(projection, x, x, meshName)
+
+    return descriptor  # }}}
+
+
+def _get_arctic_stereographic_comparison_descriptor(config):  # {{{
+    """
+    Get a descriptor of an Arctic stereographic comparison grid, used for
+    remapping and determining the grid name
+
+    Parameters
+    ----------
+    config :  instance of ``MpasAnalysisConfigParser``
+        Contains configuration options
+
+    Returns
+    -------
+    descriptor : ``ProjectionGridDescriptor`` object
+        A descriptor of the Arctic comparison grid
+    """
+    # Authors
+    # -------
+    # Milena Veneziani
+
+    climSection = 'climatology'
+
+    comparisonStereoWidth = config.getfloat(climSection,
+                                            'comparisonArcticStereoWidth')
+    comparisonStereoResolution = config.getfloat(
+        climSection, 'comparisonArcticStereoResolution')
+
+    projection = get_arctic_stereographic_projection()
+
+    xMax = 0.5 * comparisonStereoWidth * 1e3
+    nx = int(comparisonStereoWidth / comparisonStereoResolution) + 1
+    x = numpy.linspace(-xMax, xMax, nx)
+
+    meshName = '{}x{}km_{}km_Arctic_stereo'.format(
         comparisonStereoWidth, comparisonStereoWidth,
         comparisonStereoResolution)
     descriptor = ProjectionGridDescriptor.create(projection, x, x, meshName)
