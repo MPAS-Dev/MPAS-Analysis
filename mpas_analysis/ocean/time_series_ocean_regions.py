@@ -702,7 +702,6 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         controlConfig = self.controlConfig
         plotControl = controlConfig is not None
-        print(plotControl)
         if plotControl:
             controlRunName = controlConfig.get('runs', 'mainRunName')
             baseDirectory = build_config_full_path(
