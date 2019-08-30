@@ -647,7 +647,7 @@ def _get_git_hash():
                                                '--pretty=format:"%h"',
                                                '-n', '1'],
                                               stderr=devnull)
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, IOError, OSError):
             return None
 
     githash = githash.decode('utf-8').strip('\n').replace('"', '')
