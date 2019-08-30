@@ -315,9 +315,14 @@ to be generated and is set up properly.
 
 To generate the `sphinx` documentation, run:
 ```
+conda config --add channels conda-forge
+conda remove -y --all -n mpas-analysis-docs
 conda env create -f docs/environment.yml
+conda install -y -n mpas-analysis-docs mock pillow sphinx sphinx_rtd_theme
 conda activate mpas-analysis-docs
-python setup.py install
+pip install .
+rm -rf build dist mpas_analysis.egg-info
 cd docs
+make clean
 make html
 ```

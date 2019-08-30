@@ -147,14 +147,14 @@
       A. Mishonov Technical Editor, NOAA Atlas NESDIS 82.
     </releasePolicy>
     <references>
-      [Locarnini et al. (2019)](https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf)
-      [Zweng et al. (2019)](https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf)
+      - [Locarnini et al. (2019)](https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf)
+      - [Zweng et al. (2019)](https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf)
     </references>
     <bibtex>
       @manual{Locarninietal2019,
       author = {R. A. Locarnini and A. V. Mishonov and O. K. Baranova and T. P. Boyer and
-                M. M. Zweng and H. E. Garcia and J. R. Reagan and D. Seidov and K. W. Weathers and
-                C. R. Paver and I. V. Smolyar},
+      M. M. Zweng and H. E. Garcia and J. R. Reagan and D. Seidov and K. W. Weathers and
+      C. R. Paver and I. V. Smolyar},
       title = {World Ocean Atlas 2018, Volume 1: Temperature},
       organization = {NOAA Atlas NESDIS 81},
       year = {2019},
@@ -162,8 +162,8 @@
       }
       @manual{Zwenetal2019,
       author = {M. M. Zweng and J. R. Reagan and D. Seidov and T. P. Boyer and R.A. Locarnini
-                and H. E. Garcia and A. V. Mishonov and O. K. Baranova and K. W. Weathers and
-		C. R. Paver and I. V. Smolyar},
+      and H. E. Garcia and A. V. Mishonov and O. K. Baranova and K. W. Weathers and
+      C. R. Paver and I. V. Smolyar},
       title = {World Ocean Atlas 2018, Volume 2: Salinity},
       organization = {NOAA Atlas NESDIS 82},
       year = {2019},

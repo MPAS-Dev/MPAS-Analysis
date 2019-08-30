@@ -75,10 +75,10 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
               'units': r'PSU',
               'titleName': 'Salinity',
               'obsFieldName': 's_an'}]
- 
+
         tags = ['climatology', 'horizontalMap', 'woa', 'publicObs'] + \
             [field['prefix'] for field in fields]
- 
+
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapWoa, self).__init__(
             config=config, taskName='climatologyMapWoa',
@@ -86,7 +86,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
             tags=tags)
 
         sectionName = self.taskName
- 
+
         fieldList = config.getExpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
@@ -111,7 +111,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                              'list of depths'.format(sectionName))
 
         variableList = [field['mpas'] for field in fields]
- 
+
         remapMpasSubtask = RemapDepthSlicesSubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
@@ -126,7 +126,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
             fieldPrefix = field['prefix']
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
             sectionName = '{}{}'.format(self.taskName, upperFieldPrefix)
- 
+
             if controlConfig is None:
 
                 refTitleLabel = 'WOA18 Climatology'
@@ -178,13 +178,13 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
                     for depth in depths:
- 
+
                         subtaskName = 'plot{}_{}_{}_depth_{}'.format(
                                                             upperFieldPrefix,
                                                             season,
                                                             comparisonGridName,
                                                             depth)
- 
+
                         subtask = PlotClimatologyMapSubtask(
                             parentTask=self,
                             season=season,
