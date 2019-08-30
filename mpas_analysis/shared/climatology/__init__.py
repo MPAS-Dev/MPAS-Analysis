@@ -15,4 +15,5 @@ from mpas_analysis.shared.climatology.remap_mpas_climatology_subtask import \
 from mpas_analysis.shared.climatology.remap_observed_climatology_subtask \
     import RemapObservedClimatologySubtask
 from mpas_analysis.shared.climatology.comparison_descriptors import \
-    get_comparison_descriptor, get_antarctic_stereographic_projection
+    get_comparison_descriptor, get_antarctic_stereographic_projection, \
+    get_arctic_stereographic_projection

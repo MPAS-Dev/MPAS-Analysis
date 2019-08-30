@@ -78,7 +78,7 @@ observations.  ``obsSubdirectory`` is relative to ``baseDirectory`` in the
 ``diagnostics`` section, while all file paths and other subdirectories are
 relative to ``obsSubdirectory``.  You will typically not need to change any
 of these paths, since they are structured in a standard way following the
- `E3SM public data repository`_ (see the :ref:`quick_start` for more details).
+`E3SM public data repository`_ (see the :ref:`quick_start` for more details).
 
 The directories for storing cached datasets before and afer remapping
 (specified in ``climatologySubdirectory`` and ``remappedClimSubdirectory``)

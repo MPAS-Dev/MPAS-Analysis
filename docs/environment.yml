@@ -15,7 +15,7 @@ dependencies:
     - xarray
     - dask
     - lxml
-    - pyproj
+    - pyproj <= 1.9.6
     - pillow
     - cmocean
     - shapely

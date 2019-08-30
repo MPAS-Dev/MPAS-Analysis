@@ -536,8 +536,9 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     comparisonGridName : str
         The name of the comparison grid to use for remapping.  If it is one
-        of the default comparison grid names ``{'latlon', 'antarctic'}``, the
-        full grid name is looked up via get_comparison_descriptor
+        of the default comparison grid names ``{'latlon', 'antarctic',
+        'arctic'}``, the full grid name is looked up via
+        get_comparison_descriptor
 
     op : {'avg', 'min', 'max'}
          operator for monthly stats
@@ -561,7 +562,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     climatologyOpDirectory = get_climatology_op_directory(config, op)
 
-    if comparisonGridName in ['latlon', 'antarctic']:
+    if comparisonGridName in ['latlon', 'antarctic', 'arctic']:
         comparisonDescriptor = get_comparison_descriptor(config,
                                                          comparisonGridName)
         comparisonFullMeshName = comparisonDescriptor.meshName

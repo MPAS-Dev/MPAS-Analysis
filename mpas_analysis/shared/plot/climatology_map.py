@@ -403,9 +403,6 @@ def plot_polar_projection_comparison(
     title : str, optional
         the subtitle of the plot
 
-    plotProjection : str, optional
-        Basemap projection for the plot
-
     modelTitle : str, optional
         title of the model panel
 

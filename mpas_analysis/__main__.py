@@ -148,6 +148,8 @@ def build_analysis_list(config, controlConfig):  # {{{
 
     analyses.append(ocean.ClimatologyMapSose(
         config, oceanClimatolgyTasks['avg'], controlConfig))
+    analyses.append(ocean.ClimatologyMapWoa(
+        config, oceanClimatolgyTasks['avg'], controlConfig))
     analyses.append(ocean.ClimatologyMapBGC(config,
                                             oceanClimatolgyTasks['avg'],
                                             controlConfig))

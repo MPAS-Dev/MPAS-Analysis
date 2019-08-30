@@ -47,7 +47,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         The prefix in front of output files and mapping files, typically the
         name of the field being remapped
 
-    comparisonGridNames : list of {'latlon', 'antarctic'}
+    comparisonGridNames : list of {'latlon', 'antarctic', 'arctic'}
         The name(s) of the comparison grid to use for remapping.
     """
     # Authors
@@ -78,7 +78,8 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
             The prefix in front of output files and mapping files, typically
             the name of the field being remapped
 
-        comparisonGridNames : list of {'latlon', 'antarctic'}, optional
+        comparisonGridNames : list of {'latlon', 'antarctic', 'arctic'},
+            optional
             The name(s) of the comparison grid to use for remapping.
 
         subtaskName : str, optional
@@ -253,7 +254,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         season : str, optional
             One of the seasons in ``constants.monthDictionary``
 
-        comparisonGridName : {'latlon', 'antarctic'}, optional
+        comparisonGridName : {'latlon', 'antarctic', 'arctic'}, optional
             The name of the comparison grid to use for remapping.
 
         Returns
