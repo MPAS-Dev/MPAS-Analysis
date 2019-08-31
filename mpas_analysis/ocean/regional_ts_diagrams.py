@@ -44,7 +44,8 @@ from mpas_analysis.ocean.utility import compute_zmid
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.shared.climatology import compute_climatology
+from mpas_analysis.shared.climatology import compute_climatology, \
+    get_unmasked_mpas_climatology_file_name
 
 
 class RegionalTSDiagrams(AnalysisTask):  # {{{
@@ -592,9 +593,15 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             self.regionGroup[1:].replace(' ', '')
 
         nSubplots = 1 + len(self.obsDicts)
+        if self.controlConfig is not None:
+            nSubplots += 1
 
-        nCols = min(nSubplots, 3)
-        nRows = (nSubplots-1)//3 + 1
+        if nSubplots == 4:
+            nCols = 2
+            nRows = 2
+        else:
+            nCols = min(nSubplots, 3)
+            nRows = (nSubplots-1)//3 + 1
 
         axisIndices = numpy.reshape(numpy.arange(nRows*nCols),
                                     (nRows, nCols))[::-1, :].ravel()
@@ -617,10 +624,18 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         if nRows == 1:
             axarray = axarray.reshape((nRows, nCols))
 
-        T, S, zMid, volume, zmin, zmax = self._get_mpas_T_S()
+        T, S, zMid, volume, zmin, zmax = self._get_mpas_T_S(self.config)
         mainRunName = config.get('runs', 'mainRunName')
         plotFields = [{'S': S, 'T': T, 'z': zMid, 'vol': volume,
                        'title': mainRunName}]
+
+        if self.controlConfig is not None:
+            T, S, zMid, volume, _, _ = self._get_mpas_T_S(
+                self.controlConfig)
+            controlRunName = self.controlConfig.get('runs', 'mainRunName')
+            plotFields = [{'S': S, 'T': T, 'z': zMid, 'vol': volume,
+                           'title': 'Control: {}'.format(controlRunName)}]
+
         for obsName in self.obsDicts:
             obsT, obsS, obsZ, obsVol = self._get_obs_T_S(
                 self.obsDicts[obsName], zmin, zmax)
@@ -740,10 +755,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         # }}}
 
-    def _get_mpas_T_S(self):  # {{{
+    def _get_mpas_T_S(self, config):  # {{{
         self.logger.info('  Extracting T and S in the region...')
 
-        config = self.config
         sectionName = self.sectionName
 
         cellsChunk = 32768
@@ -781,7 +795,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         else:
             zmax = dsMask.zmax.values
 
-        inFileName = self.mpasClimatologyTask.get_file_name(season=self.season)
+        inFileName = get_unmasked_mpas_climatology_file_name(
+            config, self.season, self.componentName, op='avg')
 
         ds = xarray.open_dataset(inFileName)
 
