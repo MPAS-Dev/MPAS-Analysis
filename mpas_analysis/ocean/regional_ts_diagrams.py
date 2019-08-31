@@ -18,6 +18,9 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import gsw
 import gsw.freezing
+import dask
+import multiprocessing
+from multiprocessing.pool import ThreadPool
 
 from geometric_features import FeatureCollection, read_feature_collection
 
@@ -114,6 +117,20 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             'volVar': 'volume',
             'zVar': 'z',
             'tVar': 'Time'}
+        obsDicts['WOA18'] = {
+            'suffix': 'WOA18',
+            'gridName': 'Global_0.25x0.25degree',
+            'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+            'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+            'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+            'volFileName': None,
+            'lonVar': 'lon',
+            'latVar': 'lat',
+            'TVar': 't_an',
+            'SVar': 's_an',
+            'volVar': 'volume',
+            'zVar': 'depth',
+            'tVar': 'month'}
 
         allObsUsed = []
 
@@ -163,10 +180,10 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             obsList = config.getExpression(sectionName, 'obs')
             groupObsDicts = {}
 
-            for obs in obsList:
-                localObsDict = dict(obsDicts[obs])
+            for obsName in obsList:
+                localObsDict = dict(obsDicts[obsName])
                 suffix = localObsDict['suffix']
-                subtaskName = 'computeMpas{}Masks'.format(suffix)
+                subtaskName = 'compute{}{}Masks'.format(suffix, sectionSuffix)
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
@@ -178,9 +195,11 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
 
+                obsDicts[obsName]['maskTask'] = obsMasksSubtask
+
                 self.add_subtask(obsMasksSubtask)
                 localObsDict['maskTask'] = obsMasksSubtask
-                groupObsDicts[obs] = localObsDict
+                groupObsDicts[obsName] = localObsDict
 
             for regionName in regionNames:
 
@@ -196,6 +215,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     for obsName in obsList:
                         task = \
                             obsDicts[obsName]['climatologyTask'][season]
+                        plotRegionSubtask.run_after(task)
+                        task = obsDicts[obsName]['maskTask']
                         plotRegionSubtask.run_after(task)
                     self.add_subtask(plotRegionSubtask)
 
@@ -290,7 +311,12 @@ class ComputeObsTSClimatology(AnalysisTask):
 
         self.fileName = self._get_file_name(obsDict)
         parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
-        self.subprocessCount = parallelTaskCount
+        self.subprocessCount = min(parallelTaskCount,
+                                   self.config.getint(self.taskName,
+                                                      'subprocessCount'))
+        self.daskThreads = min(
+            multiprocessing.cpu_count(),
+            self.config.getint(self.taskName, 'daskThreads'))
 
         # }}}
 
@@ -305,53 +331,90 @@ class ComputeObsTSClimatology(AnalysisTask):
         if os.path.exists(self.fileName):
             return
 
-        self.logger.info("\n computing T S climatogy for {}...".format(
-            self.obsName))
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
 
-        config = self.config
-        obsDict = self.obsDict
+            self.logger.info("\n computing T S climatogy for {}...".format(
+                self.obsName))
 
-        chunk = {obsDict['tVar']: 6}
+            config = self.config
+            obsDict = self.obsDict
 
-        TVarName = obsDict['TVar']
-        SVarName = obsDict['SVar']
-        zVarName = obsDict['zVar']
-        volVarName = obsDict['volVar']
+            chunk = {obsDict['tVar']: 6}
 
-        obsFileName = build_obs_path(
-            config, component=self.componentName,
-            relativePath=obsDict['TFileName'])
-        ds = xarray.open_dataset(obsFileName, chunks=chunk)
-        if obsDict['SFileName'] != obsDict['TFileName']:
+            TVarName = obsDict['TVar']
+            SVarName = obsDict['SVar']
+            zVarName = obsDict['zVar']
+            lonVarName = obsDict['lonVar']
+            latVarName = obsDict['latVar']
+            volVarName = obsDict['volVar']
+
             obsFileName = build_obs_path(
                 config, component=self.componentName,
-                relativePath=obsDict['SFileName'])
-            dsS = xarray.open_dataset(obsFileName, chunks=chunk)
-            ds[SVarName] = dsS[SVarName]
+                relativePath=obsDict['TFileName'])
+            ds = xarray.open_dataset(obsFileName, chunks=chunk)
+            if obsDict['SFileName'] != obsDict['TFileName']:
+                obsFileName = build_obs_path(
+                    config, component=self.componentName,
+                    relativePath=obsDict['SFileName'])
+                dsS = xarray.open_dataset(obsFileName, chunks=chunk)
+                ds[SVarName] = dsS[SVarName]
 
-        if obsDict['volFileName'] != obsDict['TFileName']:
-            obsFileName = build_obs_path(
-                config, component=self.componentName,
-                relativePath=obsDict['volFileName'])
-            dsVol = xarray.open_dataset(obsFileName)
-            ds[volVarName] = dsVol[volVarName]
+            if obsDict['volFileName'] is None:
+                # compute volume from lat, lon, depth bounds
+                latBndsName = ds[latVarName].attrs['bounds']
+                lonBndsName = ds[lonVarName].attrs['bounds']
+                zBndsName = ds[zVarName].attrs['bounds']
+                latBnds = ds[latBndsName]
+                lonBnds = ds[lonBndsName]
+                zBnds = ds[zBndsName]
+                dLat = numpy.deg2rad(latBnds[:, 1] - latBnds[:, 0])
+                dLon = numpy.deg2rad(lonBnds[:, 1] - lonBnds[:, 0])
+                lat = numpy.deg2rad(ds[latVarName])
+                dz = zBnds[:, 1] - zBnds[:, 0]
+                radius = 6378137.0
+                area = radius**2*numpy.cos(lat)*dLat*dLon
+                ds[volVarName] = dz*area
 
-        ds.compute()
+            elif obsDict['volFileName'] != obsDict['TFileName']:
+                obsFileName = build_obs_path(
+                    config, component=self.componentName,
+                    relativePath=obsDict['volFileName'])
+                dsVol = xarray.open_dataset(obsFileName)
+                ds[volVarName] = dsVol[volVarName]
 
-        chunk = {obsDict['latVar']: 400,
-                 obsDict['lonVar']: 400}
+            ds.compute()
 
-        ds = ds.chunk(chunk)
+            chunk = {obsDict['latVar']: 400,
+                     obsDict['lonVar']: 400}
 
-        if obsDict['tVar'] in ds.dims:
-            monthValues = constants.monthDictionary[self.season]
-            ds = compute_climatology(ds, monthValues, maskVaries=True)
+            ds = ds.chunk(chunk)
 
-        T, S, z = xarray.broadcast(ds[TVarName], ds[SVarName], ds[zVarName])
+            if obsDict['tVar'] in ds.dims:
+                if obsDict['tVar'] != 'Time':
+                    if obsDict['tVar'] == 'month':
+                        ds = ds.rename({obsDict['tVar']: 'Time'})
+                        ds.coords['month'] = ds['Time']
+                    else:
+                        ds = ds.rename({obsDict['tVar']: 'Time'})
+                if 'year' not in ds:
+                    ds.coords['year'] = numpy.ones(ds.sizes['Time'], int)
 
-        ds['zBroadcast'] = z
+                monthValues = constants.monthDictionary[self.season]
+                ds = compute_climatology(ds, monthValues, maskVaries=True)
 
-        write_netcdf(ds, self.fileName)  # }}}
+            T, S, z = xarray.broadcast(ds[TVarName], ds[SVarName],
+                                       ds[zVarName])
+
+            if 'positive' in ds[zVarName].attrs and \
+                    ds[zVarName].attrs['positive'] == 'down':
+                ds[zVarName] = -ds[zVarName]
+                ds[zVarName].attrs['positive'] = 'up'
+                z = -z
+
+            ds['zBroadcast'] = z
+
+            write_netcdf(ds, self.fileName)  # }}}
 
     def _get_file_name(self, obsDict):
         obsSection = '{}Observations'.format(self.componentName)
@@ -598,6 +661,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
             if diagramType == 'volumetric':
                 lastPanel, volMax = self._plot_volumetric_panel(T, S, volume)
+                print(title, volMax)
                 if index == 0:
                     volMaxMpas = volMax
                 norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
