@@ -525,13 +525,13 @@ def run_analysis(config, analyses):  # {{{
                         # more processes to finish
                         break
 
+                    logger.info('Running {}'.format(
+                        analysisTask.printTaskName))
                     if analysisTask.runDirectly:
                         analysisTask.run(writeLogFile=True)
                         runDirectly = True
                         break
                     else:
-                        logger.info('Running {}'.format(
-                            analysisTask.printTaskName))
                         analysisTask._runStatus.value = AnalysisTask.RUNNING
                         analysisTask.start()
                         runningTasks[key] = analysisTask
