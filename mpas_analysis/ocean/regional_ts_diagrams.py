@@ -541,6 +541,13 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         self.season = season
         self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
 
+        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
+        self.subprocessCount = min(parallelTaskCount,
+                                   self.config.getint(self.taskName,
+                                                      'subprocessCount'))
+        self.daskThreads = min(
+            multiprocessing.cpu_count(),
+            self.config.getint(self.taskName, 'daskThreads'))
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -765,137 +772,145 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         # }}}
 
     def _get_mpas_T_S(self, config):  # {{{
-        self.logger.info('  Extracting T and S in the region...')
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
 
-        sectionName = self.sectionName
+            self.logger.info('  Extracting T and S in the region...')
 
-        cellsChunk = 32768
-        chunk = {'nCells': cellsChunk}
+            sectionName = self.sectionName
 
-        try:
-            restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file to plot T-S diagrams')
-        dsRestart = xarray.open_dataset(restartFileName)
-        dsRestart = dsRestart.isel(Time=0).chunk(chunk)
+            cellsChunk = 32768
+            chunk = {'nCells': cellsChunk}
 
-        regionMaskFileName = self.mpasMasksSubtask.maskFileName
+            try:
+                restartFileName = self.runStreams.readpath('restart')[0]
+            except ValueError:
+                raise IOError('No MPAS-O restart file found: need at least one '
+                              'restart file to plot T-S diagrams')
+            dsRestart = xarray.open_dataset(restartFileName)
+            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
 
-        dsRegionMask = xarray.open_dataset(regionMaskFileName)
+            regionMaskFileName = self.mpasMasksSubtask.maskFileName
 
-        maskRegionNames = decode_strings(dsRegionMask.regionNames)
-        regionIndex = maskRegionNames.index(self.regionName)
+            dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
-        dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
+            maskRegionNames = decode_strings(dsRegionMask.regionNames)
+            regionIndex = maskRegionNames.index(self.regionName)
 
-        cellMask = dsMask.regionCellMasks == 1
-        if 'landIceMask' in dsRestart:
-            # only the region outside of ice-shelf cavities
-            cellMask = numpy.logical_and(cellMask, dsRestart.landIceMask == 0)
+            dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
 
-        if config.has_option(sectionName, 'zmin'):
-            zmin = config.getfloat(sectionName, 'zmin')
-        else:
-            zmin = dsMask.zmin.values
+            cellMask = dsMask.regionCellMasks == 1
+            if 'landIceMask' in dsRestart:
+                # only the region outside of ice-shelf cavities
+                cellMask = numpy.logical_and(cellMask,
+                                             dsRestart.landIceMask == 0)
 
-        if config.has_option(sectionName, 'zmax'):
-            zmax = config.getfloat(sectionName, 'zmax')
-        else:
-            zmax = dsMask.zmax.values
+            if config.has_option(sectionName, 'zmin'):
+                zmin = config.getfloat(sectionName, 'zmin')
+            else:
+                zmin = dsMask.zmin.values
 
-        inFileName = get_unmasked_mpas_climatology_file_name(
-            config, self.season, self.componentName, op='avg')
+            if config.has_option(sectionName, 'zmax'):
+                zmax = config.getfloat(sectionName, 'zmax')
+            else:
+                zmax = dsMask.zmax.values
 
-        ds = xarray.open_dataset(inFileName)
+            inFileName = get_unmasked_mpas_climatology_file_name(
+                config, self.season, self.componentName, op='avg')
 
-        variableList = ['timeMonthly_avg_activeTracers_temperature',
-                        'timeMonthly_avg_activeTracers_salinity',
-                        'timeMonthly_avg_layerThickness']
-        ds = subset_variables(ds, variableList)
+            ds = xarray.open_dataset(inFileName)
 
-        ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
-                                  dsRestart.maxLevelCell,
-                                  dsRestart.layerThickness)
+            variableList = ['timeMonthly_avg_activeTracers_temperature',
+                            'timeMonthly_avg_activeTracers_salinity',
+                            'timeMonthly_avg_layerThickness']
+            ds = subset_variables(ds, variableList)
 
-        ds['volume'] = (dsRestart.areaCell *
-                        ds['timeMonthly_avg_layerThickness'])
+            ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
+                                      dsRestart.maxLevelCell,
+                                      dsRestart.layerThickness)
 
-        ds = ds.where(cellMask, drop=True)
+            ds['volume'] = (dsRestart.areaCell *
+                            ds['timeMonthly_avg_layerThickness'])
 
-        self.logger.info("Don't worry about the following dask "
-                         "warnings.")
-        depthMask = numpy.logical_and(ds.zMid >= zmin,
-                                      ds.zMid <= zmax)
-        depthMask.compute()
-        self.logger.info("Dask warnings should be done.")
-        ds['depthMask'] = depthMask
+            ds = ds.where(cellMask, drop=True)
 
-        for var in variableList:
-            ds[var] = ds[var].where(depthMask)
+            self.logger.info("Don't worry about the following dask "
+                             "warnings.")
+            depthMask = numpy.logical_and(ds.zMid >= zmin,
+                                          ds.zMid <= zmax)
+            depthMask.compute()
+            self.logger.info("Dask warnings should be done.")
+            ds['depthMask'] = depthMask
 
-        T = ds['timeMonthly_avg_activeTracers_temperature'].values.ravel()
-        mask = numpy.isfinite(T)
-        T = T[mask]
+            for var in variableList:
+                ds[var] = ds[var].where(depthMask)
 
-        S = ds['timeMonthly_avg_activeTracers_salinity'].values.ravel()[mask]
-        zMid = ds['zMid'].values.ravel()[mask]
+            T = ds['timeMonthly_avg_activeTracers_temperature'].values.ravel()
+            mask = numpy.isfinite(T)
+            T = T[mask]
 
-        volume = ds['volume'].values.ravel()[mask]
+            S = ds['timeMonthly_avg_activeTracers_salinity'].values.ravel()
+            S = S[mask]
+
+            zMid = ds['zMid'].values.ravel()[mask]
+
+            volume = ds['volume'].values.ravel()[mask]
 
         return T, S, zMid, volume, zmin, zmax  # }}}
 
     def _get_obs_T_S(self, obsDict, zmin, zmax):  # {{{
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
 
-        chunk = {obsDict['latVar']: 400,
-                 obsDict['lonVar']: 400}
+            chunk = {obsDict['latVar']: 400,
+                     obsDict['lonVar']: 400}
 
-        regionMaskFileName = obsDict['maskTask'].maskFileName
+            regionMaskFileName = obsDict['maskTask'].maskFileName
 
-        dsRegionMask = \
-            xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
-                    nCells=(obsDict['latVar'], obsDict['lonVar']))
-        dsRegionMask = dsRegionMask.reset_index('nCells').drop(
-            [obsDict['latVar'], obsDict['lonVar']])
+            dsRegionMask = \
+                xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
+                        nCells=(obsDict['latVar'], obsDict['lonVar']))
+            dsRegionMask = dsRegionMask.reset_index('nCells').drop(
+                [obsDict['latVar'], obsDict['lonVar']])
 
-        maskRegionNames = decode_strings(dsRegionMask.regionNames)
-        regionIndex = maskRegionNames.index(self.regionName)
+            maskRegionNames = decode_strings(dsRegionMask.regionNames)
+            regionIndex = maskRegionNames.index(self.regionName)
 
-        dsMask = dsRegionMask.isel(nRegions=regionIndex)
+            dsMask = dsRegionMask.isel(nRegions=regionIndex)
 
-        cellMask = dsMask.regionCellMasks == 1
+            cellMask = dsMask.regionCellMasks == 1
 
-        TVarName = obsDict['TVar']
-        SVarName = obsDict['SVar']
-        zVarName = obsDict['zVar']
-        volVarName = obsDict['volVar']
+            TVarName = obsDict['TVar']
+            SVarName = obsDict['SVar']
+            zVarName = obsDict['zVar']
+            volVarName = obsDict['volVar']
 
-        obsFileName = obsDict['climatologyTask'][self.season].fileName
-        ds = xarray.open_dataset(obsFileName, chunks=chunk)
-        ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
-        ds = ds.reset_index('nCells').drop(
-            [obsDict['latVar'], obsDict['lonVar']])
+            obsFileName = obsDict['climatologyTask'][self.season].fileName
+            ds = xarray.open_dataset(obsFileName, chunks=chunk)
+            ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
+            ds = ds.reset_index('nCells').drop(
+                [obsDict['latVar'], obsDict['lonVar']])
 
-        ds = ds.where(cellMask, drop=True)
+            ds = ds.where(cellMask, drop=True)
 
-        cellsChunk = 32768
-        chunk = {'nCells': cellsChunk}
+            cellsChunk = 32768
+            chunk = {'nCells': cellsChunk}
 
-        ds = ds.chunk(chunk)
+            ds = ds.chunk(chunk)
 
-        depthMask = numpy.logical_and(ds[zVarName] >= zmin,
-                                      ds[zVarName] <= zmax)
-        ds = ds.where(depthMask)
-        ds.compute()
+            depthMask = numpy.logical_and(ds[zVarName] >= zmin,
+                                          ds[zVarName] <= zmax)
+            ds = ds.where(depthMask)
+            ds.compute()
 
-        T = ds[TVarName].values.ravel()
-        mask = numpy.isfinite(T)
-        T = T[mask]
+            T = ds[TVarName].values.ravel()
+            mask = numpy.isfinite(T)
+            T = T[mask]
 
-        S = ds[SVarName].values.ravel()[mask]
-        z = ds['zBroadcast'].values.ravel()[mask]
+            S = ds[SVarName].values.ravel()[mask]
+            z = ds['zBroadcast'].values.ravel()[mask]
 
-        volume = ds[volVarName].values.ravel()[mask]
+            volume = ds[volVarName].values.ravel()[mask]
 
         return T, S, z, volume  # }}}
 
