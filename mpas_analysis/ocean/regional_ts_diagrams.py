@@ -55,6 +55,8 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.climatology import compute_climatology, \
     get_unmasked_mpas_climatology_file_name
 
+from mpas_analysis.shared.plot.colormap import register_custom_colormaps
+
 
 class RegionalTSDiagrams(AnalysisTask):  # {{{
     """
@@ -412,14 +414,15 @@ class ComputeObsTSClimatology(AnalysisTask):
                 monthValues = constants.monthDictionary[self.season]
                 ds = compute_climatology(ds, monthValues, maskVaries=True)
 
-            T, S, z = xarray.broadcast(ds[TVarName], ds[SVarName],
-                                       ds[zVarName])
-
             if 'positive' in ds[zVarName].attrs and \
                     ds[zVarName].attrs['positive'] == 'down':
+                attrs = ds[zVarName].attrs
                 ds[zVarName] = -ds[zVarName]
+                ds[zVarName].attrs = attrs
                 ds[zVarName].attrs['positive'] = 'up'
-                z = -z
+
+            T, S, z = xarray.broadcast(ds[TVarName], ds[SVarName],
+                                       ds[zVarName])
 
             ds['zBroadcast'] = z
 
@@ -584,6 +587,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         self.logger.info("\nPlotting TS diagram for {}"
                          "...".format(self.regionName))
 
+        register_custom_colormaps()
+
         config = self.config
         sectionName = self.sectionName
 
@@ -690,19 +695,18 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             volume = plotFields[index]['vol']
             title = plotFields[index]['title']
 
+            CS = plt.contour(SP, PT, neutralDensity, contours, linewidths=1.,
+                             colors='k', zorder=2)
+            plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
+
             if diagramType == 'volumetric':
                 lastPanel, volMax = self._plot_volumetric_panel(T, S, volume)
-                print(title, volMax)
                 if index == 0:
                     volMaxMpas = volMax
                 norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
                 lastPanel.set_norm(norm)
             else:
                 lastPanel = self._plot_scatter_panel(T, S, z, zmin, zmax)
-
-            CS = plt.contour(SP, PT, neutralDensity, contours, linewidths=1.,
-                             colors='k')
-            plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
 
             CTFreezing = freezing.CT_freezing(Sbins, 0, 1)
             PTFreezing = gsw.t_from_CT(
@@ -785,8 +789,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             try:
                 restartFileName = self.runStreams.readpath('restart')[0]
             except ValueError:
-                raise IOError('No MPAS-O restart file found: need at least one '
-                              'restart file to plot T-S diagrams')
+                raise IOError('No MPAS-O restart file found: need at least one'
+                              ' restart file to plot T-S diagrams')
             dsRestart = xarray.open_dataset(restartFileName)
             dsRestart = dsRestart.isel(Time=0).chunk(chunk)
 
@@ -925,7 +929,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                                      usenumpyfunc=True)
 
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
-                                       weights=volume, cmap=cmap)
+                                       weights=volume, cmap=cmap, zorder=1)
 
         volMax = numpy.amax(hist)
         return panel, volMax  # }}}
@@ -939,7 +943,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         indices = numpy.argsort(z)[::-1]
 
         panel = plt.scatter(S[indices], T[indices], c=z[indices],
-                            s=5, vmin=zmin, vmax=zmax, cmap=cmap)
+                            s=5, vmin=zmin, vmax=zmax, cmap=cmap, zorder=1)
 
         return panel  # }}}
 
