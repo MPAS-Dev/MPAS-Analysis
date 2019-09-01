@@ -17,7 +17,15 @@ import numpy
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import gsw
-import gsw.freezing
+try:
+    from gsw import freezing
+except ImportError:
+    from gsw.gibbs import freezing
+try:
+    from gsw.density import sigma0
+except ImportError:
+    from gsw.gibbs.density_enthalpy_ct_exact import sigma0_CT_exact as sigma0
+
 import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
@@ -649,8 +657,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         SA = gsw.SA_from_SP(SP, p=0., lon=0., lat=-75.)
         CT = gsw.CT_from_t(SA, PT, p=0.)
 
-        sigma0 = gsw.density.sigma0(SA, CT)
-        contours = numpy.linspace(24., 29., 26)
+        neutralDensity = sigma0(SA, CT)
+        rhoInterval = config.getfloat(sectionName, 'rhoInterval')
+        contours = numpy.arange(24., 29.+rhoInterval, rhoInterval)
 
         diagramType = config.get(sectionName, 'diagramType')
         if diagramType not in ['volumetric', 'scatter']:
@@ -684,11 +693,11 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             else:
                 lastPanel = self._plot_scatter_panel(T, S, z, zmin, zmax)
 
-            CS = plt.contour(SP, PT, sigma0, contours, linewidths=1.,
+            CS = plt.contour(SP, PT, neutralDensity, contours, linewidths=1.,
                              colors='k')
             plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
 
-            CTFreezing = gsw.freezing.CT_freezing(Sbins, 0, 1)
+            CTFreezing = freezing.CT_freezing(Sbins, 0, 1)
             PTFreezing = gsw.t_from_CT(
                 gsw.SA_from_SP(Sbins, p=0., lon=0., lat=-75.),
                 CTFreezing, p=0.)
