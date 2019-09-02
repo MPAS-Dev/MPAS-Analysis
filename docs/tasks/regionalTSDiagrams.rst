@@ -17,7 +17,7 @@ Configuration Options
 The following configuration options are available for this task::
 
     [regionalTSDiagrams]
-    ## options related to plotting time series of groups of ocean regions
+    ## options related to plotting T/S diagrams of ocean regions
 
     # the names of region groups to plot, each with its own section below
     regionGroups = ['Antarctic Regions', 'Ocean Basins']
@@ -38,7 +38,7 @@ The following configuration options are available for this task::
     subprocessCount = 4
 
     [TSDiagramsForAntarcticRegions]
-    ## options related to plotting time series of Antarctic regions
+    ## options related to plotting T/S diagrams of Antarctic regions
 
     # A geojson file containing Antarctic ocean regions.  Each region must have
     # 'zmin' and 'zmax' properites in addition to the usual properies for a region
@@ -65,7 +65,7 @@ The following configuration options are available for this task::
     rhoInterval = 0.1
 
     # The color map for depth or volume
-    colormap = cmo.deep
+    colormap = white_cmo_deep
     # The following is more appropriate if diagramType == 'scatter'
     # colormap = cmo.deep_r
 
@@ -79,7 +79,7 @@ The following configuration options are available for this task::
     obs = ['SOSE', 'WOA18']
 
     [TSDiagramsForOceanBasins]
-    ## options related to plotting time series of Antarctic regions
+    ## options related to plotting T/S diagrams of major ocean basins
 
     # A geojson file containing Antarctic ocean regions.  Each region must have
     # 'zmin' and 'zmax' properites in addition to the usual properies for a region
@@ -106,7 +106,7 @@ The following configuration options are available for this task::
     rhoInterval = 0.2
 
     # The color map for depth or volume
-    colormap = cmo.deep
+    colormap = white_cmo_deep
     # The following is more appropriate if diagramType == 'scatter'
     # colormap = cmo.deep_r
 
