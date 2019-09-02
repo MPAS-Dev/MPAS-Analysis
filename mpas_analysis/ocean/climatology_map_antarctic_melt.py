@@ -65,7 +65,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
             config=config, taskName='climatologyMapAntarcticMelt',
             componentName='ocean',
             tags=['climatology', 'horizontalMap', fieldName,
-                  'landIceCavities'])
+                  'landIceCavities', 'antarctic'])
 
         sectionName = self.taskName
 

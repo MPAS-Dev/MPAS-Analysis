@@ -88,11 +88,25 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
             comparisonDescriptor.meshName,
             method)
 
-        mappingSubdirectory = build_config_full_path(config, 'diagnostics',
-                                                     'mappingSubdirectory')
+        tryCustom = config.get('diagnostics', 'customDirectory') != 'none'
+        if tryCustom:
+            # first see if mapping files are in the custom directory
+            mappingSubdirectory = build_config_full_path(
+                config, 'diagnostics', 'mappingSubdirectory',
+                baseDirectoryOption='customDirectory')
 
-        mappingFileName = '{}/{}'.format(mappingSubdirectory,
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
                                          mappingBaseName)
+        if not tryCustom or not os.path.exists(mappingFileName):
+            # second see if mapping files are in the base directory
+
+            mappingSubdirectory = build_config_full_path(
+                config, 'diagnostics', 'mappingSubdirectory',
+                baseDirectoryOption='baseDirectory')
+
+            mappingFileName = '{}/{}'.format(mappingSubdirectory,
+                                             mappingBaseName)
+
         if not os.path.exists(mappingFileName):
             # we don't have a mapping file yet, so get ready to create one
             # in the output subfolder if needed
@@ -522,8 +536,9 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     comparisonGridName : str
         The name of the comparison grid to use for remapping.  If it is one
-        of the default comparison grid names ``{'latlon', 'antarctic'}``, the
-        full grid name is looked up via get_comparison_descriptor
+        of the default comparison grid names ``{'latlon', 'antarctic',
+        'arctic'}``, the full grid name is looked up via
+        get_comparison_descriptor
 
     op : {'avg', 'min', 'max'}
          operator for monthly stats
@@ -547,7 +562,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     climatologyOpDirectory = get_climatology_op_directory(config, op)
 
-    if comparisonGridName in ['latlon', 'antarctic']:
+    if comparisonGridName in ['latlon', 'antarctic', 'arctic']:
         comparisonDescriptor = get_comparison_descriptor(config,
                                                          comparisonGridName)
         comparisonFullMeshName = comparisonDescriptor.meshName

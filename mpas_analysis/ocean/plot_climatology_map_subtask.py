@@ -47,7 +47,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         A season (key in ``shared.constants.monthDictionary``) to be
         plotted.
 
-    comparisonGridName : {'latlon', 'antarctic'}
+    comparisonGridName : {'latlon', 'antarctic', 'arctic'}
         The name of the comparison grid to plot.
 
     remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
@@ -135,7 +135,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             A season (key in ``shared.constants.monthDictionary``) to be
             plotted.
 
-        comparisonGridName : {'latlon', 'antarctic'}
+        comparisonGridName : {'latlon', 'antarctic', 'arctic'}
             The name of the comparison grid to plot.
 
         remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
@@ -348,8 +348,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
     def run_task(self):  # {{{
         """
-        Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
-        or a control run
+        Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD
+        observations or a control run
         """
         # Authors
         # -------
@@ -452,9 +452,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
-        elif self.comparisonGridName == 'antarctic':
-            self._plot_antarctic(remappedModelClimatology,
-                                 remappedRefClimatology)
+        elif self.comparisonGridName == 'antarctic' or \
+             self.comparisonGridName == 'arctic':
+            self._plot_polar(remappedModelClimatology,
+                             remappedRefClimatology)
         # }}}
 
     def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology):
@@ -519,9 +520,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         # }}}
 
-    def _plot_antarctic(self, remappedModelClimatology,
-                        remappedRefClimatology):  # {{{
-        """ plotting an Antarctic data set """
+    def _plot_polar(self, remappedModelClimatology,
+                    remappedRefClimatology):  # {{{
+        """ plotting an Arctic or Antarctic data set """
 
         season = self.season
         comparisonGridName = self.comparisonGridName

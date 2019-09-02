@@ -118,8 +118,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
               'obsFieldName': 'velMag',
               'obsBotFieldName': 'botVelMag'}]
 
-        tags = ['climatology', 'horizontalMap', 'sose', 'publicObs'] \
-            + [field['prefix'] for field in fields]
+        tags = ['climatology', 'horizontalMap', 'sose', 'publicObs',
+                'antarctic'] + [field['prefix'] for field in fields]
 
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapSose, self).__init__(

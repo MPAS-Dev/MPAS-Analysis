@@ -34,7 +34,6 @@ import progressbar
 import logging
 import xarray
 import time
-import cartopy.io.shapereader as shpreader
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -49,7 +48,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.analysis_task import \
     update_time_bounds_from_file_names
 
-from mpas_analysis.shared.plot.colormap import _register_custom_colormaps, \
+from mpas_analysis.shared.plot.colormap import register_custom_colormaps, \
     _plot_color_gradients
 
 from mpas_analysis import ocean
@@ -57,8 +56,6 @@ from mpas_analysis import sea_ice
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RefYearMpasClimatologyTask
 from mpas_analysis.shared.time_series import MpasTimeSeriesTask
-
-from mpas_analysis.shared.io.download import download_files
 
 
 def update_time_bounds_in_config(config):  # {{{
@@ -151,6 +148,8 @@ def build_analysis_list(config, controlConfig):  # {{{
 
     analyses.append(ocean.ClimatologyMapSose(
         config, oceanClimatolgyTasks['avg'], controlConfig))
+    analyses.append(ocean.ClimatologyMapWoa(
+        config, oceanClimatolgyTasks['avg'], controlConfig))
     analyses.append(ocean.ClimatologyMapBGC(config,
                                             oceanClimatolgyTasks['avg'],
                                             controlConfig))
@@ -164,6 +163,9 @@ def build_analysis_list(config, controlConfig):  # {{{
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(
+        config, oceanClimatolgyTasks['avg'], controlConfig))
+
+    analyses.append(ocean.RegionalTSDiagrams(
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
@@ -523,13 +525,13 @@ def run_analysis(config, analyses):  # {{{
                         # more processes to finish
                         break
 
+                    logger.info('Running {}'.format(
+                        analysisTask.printTaskName))
                     if analysisTask.runDirectly:
                         analysisTask.run(writeLogFile=True)
                         runDirectly = True
                         break
                     else:
-                        logger.info('Running {}'.format(
-                            analysisTask.printTaskName))
                         analysisTask._runStatus.value = AnalysisTask.RUNNING
                         analysisTask.start()
                         runningTasks[key] = analysisTask
@@ -781,7 +783,7 @@ def main():
         sys.exit(0)
 
     if args.plot_colormaps:
-        _register_custom_colormaps()
+        register_custom_colormaps()
         _plot_color_gradients()
         sys.exit(0)
 
@@ -856,48 +858,7 @@ def main():
         print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
-        generate_html(config, analyses, controlConfig)
-
-
-def download_analysis_data():
-    """
-    Entry point for downloading the input data set from public repository for
-    MPAS-Analysis to work. The input data set includes: pre-processed
-    observations data, MPAS mapping files and MPAS regional mask files
-    (which are used for the MOC computation), for a subset of MPAS meshes.
-    """
-
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-o", "--outDir", dest="outDir", required=True,
-                        help="Directory where MPAS-Analysis input data will"
-                             "be downloaded")
-    parser.add_argument("-d", "--dataset", dest="dataset", default='analysis',
-                        help="Directory where MPAS-Analysis input data will"
-                             "be downloaded")
-    args = parser.parse_args()
-
-    try:
-        os.makedirs(args.outDir)
-    except OSError:
-        pass
-
-    urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
-    analysisFileList = pkg_resources.resource_string(
-        'mpas_analysis',
-        'obs/{}_input_files'.format(args.dataset)).decode('utf-8')
-
-    # remove any empty strings from the list
-    analysisFileList = list(filter(None, analysisFileList.split('\n')))
-    download_files(analysisFileList, urlBase, args.outDir, verify=True)
-
-
-def download_natural_earth_110m():
-    for name in ['ocean', 'coastline', 'land']:
-        shpfilename = shpreader.natural_earth(resolution='110m',
-                                              category='physical',
-                                              name=name)
-        reader = shpreader.Reader(shpfilename)
+        generate_html(config, analyses, controlConfig, args.configFiles)
 
 
 if __name__ == "__main__":

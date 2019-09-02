@@ -1,5 +1,6 @@
 [diagnostics]
 baseDirectory = /dir/to/diagnostics
+customDirectory = none
 mappingSubdirectory = .
 
 [input]

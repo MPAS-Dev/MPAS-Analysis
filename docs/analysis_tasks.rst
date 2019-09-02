@@ -15,6 +15,7 @@ Analysis Tasks
    tasks/climatologyMapBGC
    tasks/climatologyMapArgoTemperature
    tasks/climatologyMapArgoSalinity
+   tasks/climatologyMapWoa
    tasks/climatologyMapSchmidtko
    tasks/climatologyMapAntarcticMelt
 
@@ -31,6 +32,7 @@ Analysis Tasks
    tasks/soseTransects
    tasks/geojsonTransects
    tasks/oceanRegionalProfiles
+   tasks/regionalTSDiagrams
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH

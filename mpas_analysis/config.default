@@ -71,6 +71,11 @@ ncclimoParallelMode = serial
 # mapping files and region files.
 baseDirectory = /path/to/diagnostics
 
+# A second directory where custom diagonstics data such as mapping files and
+# regions masks for unsupported grids can be found.  The structure of
+# subdirectories in this directory must be the same as baseDirectory
+customDirectory = none
+
 # Directory for mapping files (if they have been generated already). If mapping
 # files needed by the analysis are not found here, they will be generated and
 # placed in the output mappingSubdirectory.  The user can supply an absolute
@@ -191,6 +196,10 @@ comparisonLonResolution = 0.5
 comparisonAntarcticStereoWidth = 6000.
 comparisonAntarcticStereoResolution = 10.
 
+# The comparison Arctic polar stereographic grid size and resolution in km
+comparisonArcticStereoWidth = 6000.
+comparisonArcticStereoResolution = 10.
+
 # interpolation order for model and observation results. Likely values are
 #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
 mpasInterpolationMethod = bilinear
@@ -292,6 +301,7 @@ meltSubdirectory = Melt
 soseSubdirectory = SOSE
 sshSubdirectory = SSH
 argoSubdirectory = ARGO
+woa18Subdirectory = WOA18
 schmidtkoSubdirectory = Schmidtko
 woceSubdirectory = WOCE
 no3Subdirectory = BGC/NO3
@@ -1207,12 +1217,12 @@ regionGroups = ['Antarctic Regions']
 
 # the number of threads dask is allowed to spawn for each process computing
 # a year of these time series
-# Decrease this number if timeSeriesAntarcticMelt subtasks are running
+# Decrease this number if timeSeriesOceanRegions subtasks are running
 # out of available threads
 daskThreads = 12
 
 # the number of subprocesses that each task gets counted as occupying
-# Increase this number if timeSeriesAntarcticMelt subtasks are running
+# Increase this number if timeSeriesOceanRegions subtasks are running
 # out of memory, and fewer tasks will be allowed to run at once
 subprocessCount = 3
 
@@ -1249,6 +1259,108 @@ variables = [{'name': 'temperature',
 # Add these to a custom config file to override the defaults.
 # zmin = -1000
 # zmax = -400
+
+
+[regionalTSDiagrams]
+## options related to plotting T/S diagrams of ocean regions
+
+# the names of region groups to plot, each with its own section below
+regionGroups = ['Antarctic Regions', 'Ocean Basins']
+
+# a list of seasons to compute climatologies over
+seasons = ['ANN']
+
+# the number of threads dask is allowed to spawn for each process computing
+# the observational climatologies
+# Decrease this number if regionalTSDiagrams subtasks are running
+# out of available threads
+daskThreads = 8
+
+# the number of subprocesses that each observational climatology subtask gets
+# counted as occupying
+# Increase this number if regionalTSDiagrams subtasks are running
+# out of memory, and fewer tasks will be allowed to run at once
+subprocessCount = 4
+
+[TSDiagramsForAntarcticRegions]
+## options related to plotting T/S diagrams of Antarctic regions
+
+# A geojson file containing Antarctic ocean regions.  Each region must have
+# 'zmin' and 'zmax' properites in addition to the usual properies for a region
+# in geometric_features
+regionMask = 'antarcticRegions.geojson'
+
+# list of regions to plot or ['all'] for all regions in the masks file.
+# See "regionNames" in the antarcticRegions masks file in
+# regionMaskSubdirectory for details.
+regionNames = ['all']
+
+# diagram type, either 'volumetric' or 'scatter', depending on if the points
+# should be binned the plot should show the volume fraction in each bin or
+# scattered points colored by their depth
+diagramType = volumetric
+
+# if diagramType == 'volumetric', the bin boundaries for T and S
+# if diagramType == 'scatter', only the min and max are important (and the
+#   bins are only used for computing neutral density contours)
+Tbins = numpy.linspace(-2.5, 4, 66)
+Sbins = numpy.linspace(33.8, 34.8, 51)
+
+# density contour interval
+rhoInterval = 0.1
+
+# The color map for depth or volume
+colormap = white_cmo_deep
+# The following is more appropriate if diagramType == 'scatter'
+# colormap = cmo.deep_r
+
+# The minimum and maximum depth over which fields are plotted, default is
+# to take these values from the geojson feature's zmin and zmax properties.
+# Add these to a custom config file to override the defaults.
+# zmin = -1000
+# zmax = -400
+
+# Obserational data sets to compare against
+obs = ['SOSE', 'WOA18']
+
+[TSDiagramsForOceanBasins]
+## options related to plotting T/S diagrams of major ocean basins
+
+# A geojson file containing Antarctic ocean regions.  Each region must have
+# 'zmin' and 'zmax' properites in addition to the usual properies for a region
+# in geometric_features
+regionMask = 'oceanBasins.geojson'
+
+# list of regions to plot or ['all'] for all regions in the masks file.
+# See "regionNames" in the antarcticRegions masks file in
+# regionMaskSubdirectory for details.
+regionNames = ['all']
+
+# diagram type, either 'volumetric' or 'scatter', depending on if the points
+# should be binned the plot should show the volume fraction in each bin or
+# scattered points colored by their depth
+diagramType = volumetric
+
+# if diagramType == 'volumetric', the bin boundaries for T and S
+# if diagramType == 'scatter', only the min and max are important (and the
+#   bins are only used for computing neutral density contours)
+Tbins = numpy.linspace(-2.5, 16, 75)
+Sbins = numpy.linspace(33.8, 35.8, 101)
+
+# density contour interval
+rhoInterval = 0.2
+
+# The color map for depth or volume
+colormap = white_cmo_deep
+# The following is more appropriate if diagramType == 'scatter'
+# colormap = cmo.deep_r
+
+# The minimum and maximum depth over which fields are plotted.
+zmin = -1000
+zmax = 0
+
+# Obserational data sets to compare against
+obs = ['WOA18']
 
 
 [climatologyMapSose]
@@ -1467,6 +1579,83 @@ normTypeDifference = linear
 normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 # determine the ticks automatically by default, uncomment to specify
 # colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)
+
+
+[climatologyMapWoa]
+## options related to plotting climatology maps of Temperature and Salinity
+## fields at various levels, including the sea floor against control model
+## results and WOA climatological data
+
+# comparison grid(s) ('latlon', 'antarctic', 'arctic') on which to plot analysis
+comparisonGrids = ['arctic']
+
+# Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
+# Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons =  ['ANN','JFM','JAS']
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface. Note that, for seasons='ANN', depths can be as deep as 5500 m,
+# otherwise use a maximum depth of 1500 m.
+depths = ['top', -500, -1000]
+
+# a list of fields top plot for each transect.  All supported fields are listed
+# below
+fieldList = ['temperature', 'salinity']
+
+[climatologyMapWoaTemperature]
+## options related to plotting climatology maps of potential temperature
+## at various levels, including the sea floor against control model results
+## and WOA18 climatological data
+
+# colormap for model/observations
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': -2., 'vmax': 10.}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -2., 'vmax': 2.}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+
+
+[climatologyMapWoaSalinity]
+## options related to plotting climatology maps of salinity
+## at various levels, including the sea floor against control model results
+## and WOA18 climatological data
+
+# colormap for model/observations
+colormapNameResult = haline
+# whether the colormap is indexed or continuous
+colormapTypeResult = continuous
+# the type of norm used in the colormap
+normTypeResult = linear
+# A dictionary with keywords for the norm
+normArgsResult = {'vmin': 32.5, 'vmax': 35.5}
+# place the ticks automatically by default
+# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+# place the ticks automatically by default
+# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
 
 
 [climatologyMapArgoTemperature]

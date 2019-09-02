@@ -106,7 +106,8 @@ def make_directories(path):  # {{{
 
 def build_config_full_path(config, section, relativePathOption,
                            relativePathSection=None,
-                           defaultPath=None):  # {{{
+                           defaultPath=None,
+                           baseDirectoryOption='baseDirectory'):  # {{{
     """
     Get a full path from a base directory and a relative path
 
@@ -129,6 +130,9 @@ def build_config_full_path(config, section, relativePathOption,
     defaultPath : str, optional
         the name of a path to return if the resulting path doesn't exist.
 
+    baseDirectoryOption : str, optional
+        the name of the option in ``section`` for the base directorys
+
     Returns
     -------
     fullPath : str
@@ -146,7 +150,7 @@ def build_config_full_path(config, section, relativePathOption,
     if os.path.isabs(subDirectory):
         fullPath = subDirectory
     else:
-        fullPath = '{}/{}'.format(config.get(section, 'baseDirectory'),
+        fullPath = '{}/{}'.format(config.get(section, baseDirectoryOption),
                                   subDirectory)
 
     if defaultPath is not None and not os.path.exists(fullPath):
@@ -154,8 +158,56 @@ def build_config_full_path(config, section, relativePathOption,
     return fullPath  # }}}
 
 
-def build_obs_path(config, component, relativePathOption,
-                   relativePathSection=None):  # {{{
+def get_region_mask(config, regionMaskFile):  # {{{
+    """
+    Get the full path for a region mask with a given file name
+
+    Parameters
+    ----------
+    config : MpasAnalysisConfigParser object
+        configuration from which to read the path
+
+    regionMaskFile : str
+        the file name of the region mask, typically a relative path
+
+    Returns
+    -------
+    fullFileName : str
+        The absolute path to the given fileName within the custom or base
+        diagnostics directories
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    if os.path.isabs(regionMaskFile):
+        fullFileName = regionMaskFile
+    else:
+        tryCustom = config.get('diagnostics', 'customDirectory') != 'none'
+        if tryCustom:
+            # first see if region mask file is in the custom directory
+            regionMaskDirectory = build_config_full_path(
+                config, 'diagnostics', 'regionMaskSubdirectory',
+                baseDirectoryOption='customDirectory')
+
+            fullFileName = '{}/{}'.format(regionMaskDirectory,
+                                          regionMaskFile)
+
+        if not tryCustom or not os.path.exists(fullFileName):
+            # no, so second see if mapping files are in the base directory
+
+            regionMaskDirectory = build_config_full_path(
+                config, 'diagnostics', 'regionMaskSubdirectory',
+                baseDirectoryOption='baseDirectory')
+
+            fullFileName = '{}/{}'.format(regionMaskDirectory,
+                                          regionMaskFile)
+
+    return fullFileName  # }}}
+
+
+def build_obs_path(config, component, relativePathOption=None,
+                   relativePathSection=None, relativePath=None):  # {{{
     """
 
     Parameters
@@ -167,13 +219,17 @@ def build_obs_path(config, component, relativePathOption,
         the prefix on the ``*Observations`` section in ``config``, which must
         have an option ``obsSubdirectory``
 
-    relativePathOption : str
+    relativePathOption : str, optional
         the name of an option in `section` of the relative path within
         ``obsSubdirectory`` (or possibly an absolute path)
 
     relativePathSection : str, optional
         the name of a section for ``relativePathOption`` if not
         ``<component>Observations``
+
+    relativePath : str, optional
+        As an alternative to giving the option (and possibly section) of the
+        relative path, it can be supplied directly
 
     Returns
     -------
@@ -186,10 +242,12 @@ def build_obs_path(config, component, relativePathOption,
     # Xylar Asay-Davis
 
     obsSection = '{}Observations'.format(component)
-    if relativePathSection is None:
-        relativePathSection = obsSection
 
-    relativePath = config.get(relativePathSection, relativePathOption)
+    if relativePath is None:
+        if relativePathSection is None:
+            relativePathSection = obsSection
+        relativePath = config.get(relativePathSection, relativePathOption)
+
     if os.path.isabs(relativePath):
         fullPath = relativePath
     else:
@@ -197,9 +255,13 @@ def build_obs_path(config, component, relativePathOption,
         if os.path.isabs(obsSubdirectory):
             fullPath = '{}/{}'.format(obsSubdirectory, relativePath)
         else:
-            basePath = config.get('diagnostics', 'baseDirectory')
+            basePath = config.get('diagnostics', 'customDirectory')
             fullPath = '{}/{}/{}'.format(basePath, obsSubdirectory,
                                          relativePath)
+            if basePath == 'none' or not os.path.exists(fullPath):
+                basePath = config.get('diagnostics', 'baseDirectory')
+                fullPath = '{}/{}/{}'.format(basePath, obsSubdirectory,
+                                             relativePath)
 
     return fullPath  # }}}
 

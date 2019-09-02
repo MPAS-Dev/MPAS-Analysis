@@ -59,11 +59,18 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
         taskName = 'climatologyMapIcebergConc{}'.format(hemisphere)
 
         fieldName = 'IcebergConc'
+
+        tags = ['icebergs', 'climatology', 'horizontalMap', fieldName]
+        if hemisphere == 'NH':
+            tags = tags + ['arctic']
+        else:
+            tags = tags + ['antarctic']
+
         # call the constructor from the base class (AnalysisTask)
         super(ClimatologyMapIcebergConc, self).__init__(
             config=config, taskName=taskName,
             componentName='seaIce',
-            tags=['icebergs', 'climatology', 'horizontalMap', fieldName])
+            tags=tags)
 
         mpasFieldName = 'timeMonthly_avg_bergAreaCell'
         iselValues = None

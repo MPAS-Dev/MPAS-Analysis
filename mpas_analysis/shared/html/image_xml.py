@@ -175,13 +175,16 @@ def _provenance_command(root, history):  # {{{
 
     etree.SubElement(root, 'host').text = socket.gethostname()
 
-    p = subprocess.Popen(['git', 'describe', '--always', '--dirty'],
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate()
-    stdout = stdout.decode('utf-8')
-    if p.returncode == 0:
-        githash = stdout.strip('\n')
-    else:
+    try:
+        p = subprocess.Popen(['git', 'describe', '--always', '--dirty'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        stdout = stdout.decode('utf-8')
+        if p.returncode == 0:
+            githash = stdout.strip('\n')
+        else:
+            githash = 'git hash unavailable'
+    except (IOError, OSError):
         githash = 'git hash unavailable'
 
     etree.SubElement(root, 'githash').text = githash  # }}}

@@ -24,7 +24,7 @@ from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
     timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, get_files_year_month
+    make_directories, get_files_year_month, get_region_mask
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -377,11 +377,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         # Load basin region related variables and save them to dictionary
         mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = build_config_full_path(config, 'diagnostics',
-                                                     'regionMasksubDirectory')
 
-        dictRegion = _build_region_mask_dict(regionNames, regionMaskDirectory,
-                                             mpasMeshName, self.logger)
+        dictRegion = _build_region_mask_dict(config, regionNames, mpasMeshName,
+                                             self.logger)
 
         # Add Global regionCellMask=1 everywhere to make the algorithm
         # for the global moc similar to that of the regional moc
@@ -976,9 +974,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
-        regionMaskDirectory = build_config_full_path(config, 'diagnostics',
-                                                     'regionMasksubDirectory')
-        dictRegion = _build_region_mask_dict(['Atlantic'], regionMaskDirectory,
+        dictRegion = _build_region_mask_dict(config, ['Atlantic'],
                                              mpasMeshName, self.logger)
         dictRegion = dictRegion['Atlantic']
 
@@ -1382,11 +1378,11 @@ def _load_mesh(runStreams):  # {{{
     # }}}
 
 
-def _build_region_mask_dict(regionNames, regionMaskDirectory, mpasMeshName,
-                            logger):  # {{{
+def _build_region_mask_dict(config, regionNames, mpasMeshName, logger):  # {{{
 
-    regionMaskFile = '{}/{}_SingleRegionAtlanticWTransportTransects_' \
-                     'masks.nc'.format(regionMaskDirectory, mpasMeshName)
+    regionMaskFile = get_region_mask(
+        config, '{}_SingleRegionAtlanticWTransportTransects_masks.nc'.format(
+            mpasMeshName))
 
     if not os.path.exists(regionMaskFile):
         raise IOError('Regional masking file {} for MOC calculation '

@@ -19,12 +19,14 @@ from lxml import etree
 from collections import OrderedDict
 import subprocess
 import os
+import sys
 
 import mpas_analysis
 from mpas_analysis.shared.io.utility import build_config_full_path
 
 
-def generate_html(config, analyses, controlConfig=None):  # {{{
+def generate_html(config, analyses, controlConfig, customConfigFiles):
+    # {{{
     """
     Generates webpages for diplaying the plots from each analysis task
 
@@ -39,9 +41,12 @@ def generate_html(config, analyses, controlConfig=None):  # {{{
         the list of files to include on the webpage for the associated
         component.
 
-    controlConfig : ``MpasAnalysisConfigParser``, optional
+    controlConfig : ``MpasAnalysisConfigParser``
         Config options for a control run
 
+    customConfigFiles : list of str
+        The names of custom config files to be copied to the HTML directory for
+        provenance
     """
     # Authors
     # -------
@@ -53,7 +58,7 @@ def generate_html(config, analyses, controlConfig=None):  # {{{
 
     print("Generating webpage for viewing results...")
 
-    page = MainPage(config, controlConfig)
+    page = MainPage(config, controlConfig, customConfigFiles)
 
     components = OrderedDict()
 
@@ -100,7 +105,11 @@ class MainPage(object):
     controlConfig : ``MpasAnalysisConfigParser``
         Config options for a control run
 
-    pageTemplate, componentTemplate : str
+    customConfigFiles : list of str
+        The names of custom config files to be copied to the HTML directory
+        for provenance
+
+    pageTemplate, componentTemplate, configTemplate : str
         The contents of templates used to construct the page
 
     components : OrederdDict of dict
@@ -111,7 +120,7 @@ class MainPage(object):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, controlConfig=None):
+    def __init__(self, config, controlConfig, customConfigFiles):
         """
         Create a MainPage object, reading in the templates
 
@@ -120,15 +129,20 @@ class MainPage(object):
         config : ``MpasAnalysisConfigParser``
             Config options
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : ``MpasAnalysisConfigParser``
             Config options for a control run
-        """
+
+        customConfigFiles : list of str
+            The names of custom config files to be copied to the HTML directory
+            for provenance
+       """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         self.config = config
         self.controlConfig = controlConfig
+        self.customConfigFiles = customConfigFiles
 
         # get template text
         fileName = \
@@ -143,6 +157,12 @@ class MainPage(object):
                                             "templates/main_component.html")
         with open(fileName, 'r') as templateFile:
             self.componentTemplate = templateFile.read()
+
+        fileName = \
+            pkg_resources.resource_filename(__name__,
+                                            "templates/config.html")
+        with open(fileName, 'r') as templateFile:
+            self.configTemplate = templateFile.read()
 
         # start with no components
         self.components = OrderedDict()
@@ -210,11 +230,29 @@ class MainPage(object):
         else:
             githash = 'Git Hash: {}'.format(githash)
 
+        command = ' '.join(sys.argv[:])
+
+        configsText = ''
+        for configFileName in self.customConfigFiles:
+            replacements = {'@configName': os.path.basename(configFileName),
+                            '@configDesc': os.path.basename(configFileName)}
+
+            configsText = configsText + \
+                _replace_tempate_text(self.configTemplate, replacements)
+
+        replacements = {'@configName': 'config.complete.{}'.format(runName),
+                        '@configDesc': 'Complete Configuration File'}
+
+        configsText = configsText + \
+            _replace_tempate_text(self.configTemplate, replacements)
+
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
                         '@components': componentsText,
                         '@version': mpas_analysis.__version__,
-                        '@gitHash': githash}
+                        '@gitHash': githash,
+                        '@command': command,
+                        '@configs': configsText}
 
         pageText = _replace_tempate_text(self.pageTemplate, replacements)
 
@@ -255,9 +293,13 @@ class MainPage(object):
                                             "templates/config.png")
         copyfile(fileName, '{}/config.png'.format(htmlBaseDirectory))
 
-        with open('{}/config.{}'.format(htmlBaseDirectory, runName), 'w') \
-                as configFile:
+        with open('{}/config.complete.{}'.format(htmlBaseDirectory,
+                                                 runName), 'w') as configFile:
             self.config.write(configFile)
+
+        for configFileName in self.customConfigFiles:
+            copyfile(configFileName, '{}/{}'.format(htmlBaseDirectory,
+                                                    configFileName))
 
 
 class ComponentPage(object):
@@ -605,7 +647,7 @@ def _get_git_hash():
                                                '--pretty=format:"%h"',
                                                '-n', '1'],
                                               stderr=devnull)
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, IOError, OSError):
             return None
 
     githash = githash.decode('utf-8').strip('\n').replace('"', '')

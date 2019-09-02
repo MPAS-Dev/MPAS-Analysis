@@ -32,7 +32,7 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, build_obs_path, decode_strings
+    make_directories, build_obs_path, decode_strings, get_region_mask
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -74,13 +74,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             config=config,
             taskName='timeSeriesAntarcticMelt',
             componentName='ocean',
-            tags=['timeSeries', 'melt', 'landIceCavities'])
+            tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
-        regionMaskDirectory = build_config_full_path(config,
-                                                     'diagnostics',
-                                                     'regionMaskSubdirectory')
-        self.iceShelfMasksFile = '{}/iceShelves.geojson'.format(
-            regionMaskDirectory)
+        self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
 
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')

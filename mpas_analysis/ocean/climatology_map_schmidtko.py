@@ -78,7 +78,7 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
               'obs': 'botPotentialDensity',
               'title': 'Potential Density'}]
 
-        tags = ['climatology', 'horizontalMap'] \
+        tags = ['climatology', 'horizontalMap', 'antarctic'] \
             + [field['prefix'] for field in fields]
 
         # call the constructor from the base class (AnalysisTask)

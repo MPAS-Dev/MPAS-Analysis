@@ -70,7 +70,7 @@ def setup_colormap(config, configSectionName, suffix=''):
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
-    _register_custom_colormaps()
+    register_custom_colormaps()
 
     colormapType = config.get(configSectionName,
                               'colormapType{}'.format(suffix))
@@ -113,6 +113,198 @@ def setup_colormap(config, configSectionName, suffix=''):
             'lineColor': lineColor}
 
 
+def register_custom_colormaps():
+    name = 'ferret'
+    backgroundColor = (0.9, 0.9, 0.9)
+
+    red = np.array([[0, 0.6],
+                    [0.15, 1],
+                    [0.35, 1],
+                    [0.65, 0],
+                    [0.8, 0],
+                    [1, 0.75]])
+
+    green = np.array([[0, 0],
+                      [0.1, 0],
+                      [0.35, 1],
+                      [1, 0]])
+
+    blue = np.array([[0, 0],
+                     [0.5, 0],
+                     [0.9, 0.9],
+                     [1, 0.9]])
+
+    colorCount = 21
+    colorList = np.ones((colorCount, 4), float)
+    colorList[:, 0] = np.interp(np.linspace(0, 1, colorCount),
+                                red[:, 0], red[:, 1])
+    colorList[:, 1] = np.interp(np.linspace(0, 1, colorCount),
+                                green[:, 0], green[:, 1])
+    colorList[:, 2] = np.interp(np.linspace(0, 1, colorCount),
+                                blue[:, 0], blue[:, 1])
+    colorList = colorList[::-1, :]
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    colorMap.set_bad(backgroundColor)
+    _register_colormap_and_reverse(name, colorMap)
+
+    name = 'erdc_iceFire_H'
+
+    colorArray = np.array([
+        [-1, 4.05432e-07, 0, 5.90122e-06],
+        [-0.87451, 0, 0.120401, 0.302675],
+        [-0.74902, 0, 0.216583, 0.524574],
+        [-0.623529, 0.0552475, 0.345025, 0.6595],
+        [-0.498039, 0.128047, 0.492588, 0.720288],
+        [-0.372549, 0.188955, 0.641309, 0.792092],
+        [-0.247059, 0.327673, 0.784935, 0.873434],
+        [-0.121569, 0.60824, 0.892164, 0.935547],
+        [0.00392157, 0.881371, 0.912178, 0.818099],
+        [0.129412, 0.951407, 0.835621, 0.449279],
+        [0.254902, 0.904481, 0.690489, 0],
+        [0.380392, 0.85407, 0.510864, 0],
+        [0.505882, 0.777093, 0.33018, 0.00088199],
+        [0.631373, 0.672862, 0.139087, 0.00269398],
+        [0.756863, 0.508815, 0, 0],
+        [0.882353, 0.299417, 0.000366289, 0.000547829],
+        [1, 0.0157519, 0.00332021, 4.55569e-08]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex + 1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    _register_colormap_and_reverse(name, colorMap)
+
+    name = 'erdc_iceFire_L'
+
+    colorArray = np.array([
+        [-1, 0.870485, 0.913768, 0.832905],
+        [-0.87451, 0.586919, 0.887865, 0.934003],
+        [-0.74902, 0.31583, 0.776442, 0.867858],
+        [-0.623529, 0.18302, 0.632034, 0.787722],
+        [-0.498039, 0.117909, 0.484134, 0.713825],
+        [-0.372549, 0.0507239, 0.335979, 0.654741],
+        [-0.247059, 0, 0.209874, 0.511832],
+        [-0.121569, 0, 0.114689, 0.28935],
+        [0.00392157, 0.0157519, 0.00332021, 4.55569e-08],
+        [0.129412, 0.312914, 0, 0],
+        [0.254902, 0.520865, 0, 0],
+        [0.380392, 0.680105, 0.15255, 0.0025996],
+        [0.505882, 0.785109, 0.339479, 0.000797922],
+        [0.631373, 0.857354, 0.522494, 0],
+        [0.756863, 0.910974, 0.699774, 0],
+        [0.882353, 0.951921, 0.842817, 0.478545],
+        [1, 0.881371, 0.912178, 0.818099]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex + 1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    _register_colormap_and_reverse(name, colorMap)
+
+    name = 'BuOr'
+    colors1 = plt.cm.PuOr(np.linspace(0., 1, 256))
+    colors2 = plt.cm.RdBu(np.linspace(0, 1, 256))
+
+    # combine them and build a new colormap, just the orange from the first
+    # and the blue from the second
+    colorList = np.vstack((colors1[0:128, :], colors2[128:256, :]))
+    # reverse the order
+    colorList = colorList[::-1, :]
+    colorMap = cols.LinearSegmentedColormap.from_list(name, colorList)
+
+    _register_colormap_and_reverse(name, colorMap)
+
+    name = 'Maximenko'
+    colorArray = np.array([
+        [-1, 0., 0.45882352941, 0.76470588235],
+        [-0.666667, 0., 0.70196078431, 0.90588235294],
+        [-0.333333, 0.3294117647, 0.87058823529, 1.],
+        [0., 0.76470588235, 0.94509803921, 0.98039215686],
+        [0.333333, 1., 1., 0.],
+        [0.666667, 1., 0.29411764705, 0.],
+        [1, 1., 0., 0.]], float)
+
+    colorCount = 255
+    colorList = np.ones((colorCount, 4), float)
+    x = colorArray[:, 0]
+    for cIndex in range(3):
+        colorList[:, cIndex] = np.interp(
+            np.linspace(-1., 1., colorCount),
+            x, colorArray[:, cIndex + 1])
+
+    colorMap = cols.LinearSegmentedColormap.from_list(
+        name, colorList, N=255)
+
+    _register_colormap_and_reverse(name, colorMap)
+
+    # add the cmocean color maps
+    mapNames = list(cmocean.cm.cmapnames)
+    # don't bother with gray (already exists, I think)
+    mapNames.pop(mapNames.index('gray'))
+    for mapName in mapNames:
+        _register_colormap_and_reverse(mapName, getattr(cmocean.cm, mapName))
+
+    # add Scientific Colour-Maps 3.0 from
+    # http://www.fabiocrameri.ch/colourmaps.php
+
+    for mapName in ['berlin', 'bilbao', 'broc', 'cork', 'davos', 'devon',
+                    'grayC', 'lajolla', 'lapaz', 'lisbon', 'oleron', 'oslo',
+                    'roma', 'tofino', 'tokyo', 'turku', 'vik']:
+
+        xmlFile = pkg_resources.resource_filename(
+            __name__, 'ColourMapSuite3/{}/{}.xml'.format(mapName, mapName))
+        _read_xml_colormap(xmlFile, mapName)
+
+    # add SciVisColor colormaps from
+    # https://sciviscolor.org/home/colormaps/
+
+    for mapName in ['3wave-yellow-grey-blue', '3Wbgy5',
+                    '4wave-grey-red-green-mgreen', '5wave-yellow-brown-blue',
+                    'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
+                    'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
+                    'green-7', 'green-8', 'orange-5', 'orange-6',
+                    'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
+                    'red-3', 'red-4', 'yellow-1', 'yellow-7']:
+
+        xmlFile = pkg_resources.resource_filename(
+            __name__, 'SciVisColorColormaps/{}.xml'.format(mapName))
+        _read_xml_colormap(xmlFile, mapName)
+
+    name = 'white_cmo_deep'
+    # modify cmo.deep to start at white
+    colors2 = plt.cm.get_cmap('cmo.deep')(np.linspace(0, 1, 224))
+    colorCount = 32
+    colors1 = np.ones((colorCount, 4), float)
+    x = np.linspace(0., 1., colorCount+1)[0:-1]
+    white = [1., 1., 1., 1.]
+    for cIndex in range(4):
+        colors1[:, cIndex] = np.interp(x, [0., 1.],
+                                       [white[cIndex], colors2[0, cIndex]])
+
+    colors = np.vstack((colors1, colors2))
+
+    # generating a smoothly-varying LinearSegmentedColormap
+    cmap = LinearSegmentedColormap.from_list(name, colors)
+    _register_colormap_and_reverse(name, cmap)
+
+
 def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     '''
     Set up a colormap from the registry
@@ -144,7 +336,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     # -------
     # Xylar Asay-Davis
 
-    _register_custom_colormaps()
+    register_custom_colormaps()
 
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
@@ -251,181 +443,6 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     return (colormap, norm, levels, ticks)
 
 
-def _register_custom_colormaps():
-    name = 'ferret'
-    backgroundColor = (0.9, 0.9, 0.9)
-
-    red = np.array([[0, 0.6],
-                    [0.15, 1],
-                    [0.35, 1],
-                    [0.65, 0],
-                    [0.8, 0],
-                    [1, 0.75]])
-
-    green = np.array([[0, 0],
-                      [0.1, 0],
-                      [0.35, 1],
-                      [1, 0]])
-
-    blue = np.array([[0, 0],
-                     [0.5, 0],
-                     [0.9, 0.9],
-                     [1, 0.9]])
-
-    colorCount = 21
-    colorList = np.ones((colorCount, 4), float)
-    colorList[:, 0] = np.interp(np.linspace(0, 1, colorCount),
-                                red[:, 0], red[:, 1])
-    colorList[:, 1] = np.interp(np.linspace(0, 1, colorCount),
-                                green[:, 0], green[:, 1])
-    colorList[:, 2] = np.interp(np.linspace(0, 1, colorCount),
-                                blue[:, 0], blue[:, 1])
-    colorList = colorList[::-1, :]
-
-    colorMap = cols.LinearSegmentedColormap.from_list(
-        name, colorList, N=255)
-
-    colorMap.set_bad(backgroundColor)
-    plt.register_cmap(name, colorMap)
-
-    name = 'erdc_iceFire_H'
-
-    colorArray = np.array([
-        [-1, 4.05432e-07, 0, 5.90122e-06],
-        [-0.87451, 0, 0.120401, 0.302675],
-        [-0.74902, 0, 0.216583, 0.524574],
-        [-0.623529, 0.0552475, 0.345025, 0.6595],
-        [-0.498039, 0.128047, 0.492588, 0.720288],
-        [-0.372549, 0.188955, 0.641309, 0.792092],
-        [-0.247059, 0.327673, 0.784935, 0.873434],
-        [-0.121569, 0.60824, 0.892164, 0.935547],
-        [0.00392157, 0.881371, 0.912178, 0.818099],
-        [0.129412, 0.951407, 0.835621, 0.449279],
-        [0.254902, 0.904481, 0.690489, 0],
-        [0.380392, 0.85407, 0.510864, 0],
-        [0.505882, 0.777093, 0.33018, 0.00088199],
-        [0.631373, 0.672862, 0.139087, 0.00269398],
-        [0.756863, 0.508815, 0, 0],
-        [0.882353, 0.299417, 0.000366289, 0.000547829],
-        [1, 0.0157519, 0.00332021, 4.55569e-08]], float)
-
-    colorCount = 255
-    colorList = np.ones((colorCount, 4), float)
-    x = colorArray[:, 0]
-    for cIndex in range(3):
-        colorList[:, cIndex] = np.interp(
-            np.linspace(-1., 1., colorCount),
-            x, colorArray[:, cIndex + 1])
-
-    colorMap = cols.LinearSegmentedColormap.from_list(
-        name, colorList, N=255)
-
-    plt.register_cmap(name, colorMap)
-
-    name = 'erdc_iceFire_L'
-
-    colorArray = np.array([
-        [-1, 0.870485, 0.913768, 0.832905],
-        [-0.87451, 0.586919, 0.887865, 0.934003],
-        [-0.74902, 0.31583, 0.776442, 0.867858],
-        [-0.623529, 0.18302, 0.632034, 0.787722],
-        [-0.498039, 0.117909, 0.484134, 0.713825],
-        [-0.372549, 0.0507239, 0.335979, 0.654741],
-        [-0.247059, 0, 0.209874, 0.511832],
-        [-0.121569, 0, 0.114689, 0.28935],
-        [0.00392157, 0.0157519, 0.00332021, 4.55569e-08],
-        [0.129412, 0.312914, 0, 0],
-        [0.254902, 0.520865, 0, 0],
-        [0.380392, 0.680105, 0.15255, 0.0025996],
-        [0.505882, 0.785109, 0.339479, 0.000797922],
-        [0.631373, 0.857354, 0.522494, 0],
-        [0.756863, 0.910974, 0.699774, 0],
-        [0.882353, 0.951921, 0.842817, 0.478545],
-        [1, 0.881371, 0.912178, 0.818099]], float)
-
-    colorCount = 255
-    colorList = np.ones((colorCount, 4), float)
-    x = colorArray[:, 0]
-    for cIndex in range(3):
-        colorList[:, cIndex] = np.interp(
-            np.linspace(-1., 1., colorCount),
-            x, colorArray[:, cIndex + 1])
-
-    colorMap = cols.LinearSegmentedColormap.from_list(
-        name, colorList, N=255)
-
-    plt.register_cmap(name, colorMap)
-
-    name = 'BuOr'
-    colors1 = plt.cm.PuOr(np.linspace(0., 1, 256))
-    colors2 = plt.cm.RdBu(np.linspace(0, 1, 256))
-
-    # combine them and build a new colormap, just the orange from the first
-    # and the blue from the second
-    colorList = np.vstack((colors1[0:128, :], colors2[128:256, :]))
-    # reverse the order
-    colorList = colorList[::-1, :]
-    colorMap = cols.LinearSegmentedColormap.from_list(name, colorList)
-
-    plt.register_cmap(name, colorMap)
-
-    name = 'Maximenko'
-    colorArray = np.array([
-        [-1, 0., 0.45882352941, 0.76470588235],
-        [-0.666667, 0., 0.70196078431, 0.90588235294],
-        [-0.333333, 0.3294117647, 0.87058823529, 1.],
-        [0., 0.76470588235, 0.94509803921, 0.98039215686],
-        [0.333333, 1., 1., 0.],
-        [0.666667, 1., 0.29411764705, 0.],
-        [1, 1., 0., 0.]], float)
-
-    colorCount = 255
-    colorList = np.ones((colorCount, 4), float)
-    x = colorArray[:, 0]
-    for cIndex in range(3):
-        colorList[:, cIndex] = np.interp(
-            np.linspace(-1., 1., colorCount),
-            x, colorArray[:, cIndex + 1])
-
-    colorMap = cols.LinearSegmentedColormap.from_list(
-        name, colorList, N=255)
-
-    plt.register_cmap(name, colorMap)
-
-    # add the cmocean color maps
-    mapNames = list(cmocean.cm.cmapnames)
-    # don't bother with gray (already exists, I think)
-    mapNames.pop(mapNames.index('gray'))
-    for mapName in mapNames:
-        plt.register_cmap(mapName, getattr(cmocean.cm, mapName))
-
-    # add Scientific Colour-Maps 3.0 from
-    # http://www.fabiocrameri.ch/colourmaps.php
-
-    for mapName in ['berlin', 'bilbao', 'broc', 'cork', 'davos', 'devon',
-                    'grayC', 'lajolla', 'lapaz', 'lisbon', 'oleron', 'oslo',
-                    'roma', 'tofino', 'tokyo', 'turku', 'vik']:
-
-        xmlFile = pkg_resources.resource_filename(
-            __name__, 'ColourMapSuite3/{}/{}.xml'.format(mapName, mapName))
-        _read_xml_colormap(xmlFile, mapName)
-
-    # add SciVisColor colormaps from
-    # https://sciviscolor.org/home/colormaps/
-
-    for mapName in ['3wave-yellow-grey-blue', '3Wbgy5',
-                    '4wave-grey-red-green-mgreen', '5wave-yellow-brown-blue',
-                    'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
-                    'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
-                    'green-7', 'green-8', 'orange-5', 'orange-6',
-                    'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
-                    'red-3', 'red-4', 'yellow-1', 'yellow-7']:
-
-        xmlFile = pkg_resources.resource_filename(
-            __name__, 'SciVisColorColormaps/{}.xml'.format(mapName))
-        _read_xml_colormap(xmlFile, mapName)
-
-
 def _read_xml_colormap(xmlFile, mapName):
     '''Read in an XML colormap'''
 
@@ -445,7 +462,12 @@ def _read_xml_colormap(xmlFile, mapName):
             colorDict['blue'].append((x, color[2], color[2]))
         cmap = LinearSegmentedColormap(mapName, colorDict, 256)
 
-        plt.register_cmap(mapName, cmap)
+        _register_colormap_and_reverse(mapName, cmap)
+
+
+def _register_colormap_and_reverse(mapName, cmap):
+    plt.register_cmap(mapName, cmap)
+    plt.register_cmap('{}_r'.format(mapName), cmap.reversed())
 
 
 def _plot_color_gradients():

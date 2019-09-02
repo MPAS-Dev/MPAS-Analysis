@@ -23,7 +23,7 @@ from geometric_features import FeatureCollection, read_feature_collection
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, make_directories, decode_strings
+    get_files_year_month, make_directories, decode_strings, get_region_mask
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
@@ -95,11 +95,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         hovmollerGalleryGroup = config.get('oceanRegionalProfiles',
                                            'hovmollerGalleryGroup')
 
-        regionMaskDirectory = build_config_full_path(config,
-                                                     'diagnostics',
-                                                     'regionMaskSubdirectory')
-        masksFile = '{}/{}.geojson'.format(regionMaskDirectory,
-                                           self.regionMaskSuffix)
+        masksFile = get_region_mask(config,
+                                    '{}.geojson'.format(self.regionMaskSuffix))
 
         parallelTaskCount = config.getWithDefault('execute',
                                                   'parallelTaskCount',
@@ -640,14 +637,10 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startYear = self.parentTask.startYear
         endYear = self.parentTask.endYear
 
-        regionMaskDirectory = build_config_full_path(config,
-                                                     'diagnostics',
-                                                     'regionMaskSubdirectory')
-
         regionMaskSuffix = config.get('oceanRegionalProfiles',
                                       'regionMaskSuffix')
-        regionMaskFile = '{}/{}.geojson'.format(regionMaskDirectory,
-                                                regionMaskSuffix)
+        regionMaskFile = get_region_mask(config,
+                                         '{}.geojson'.format(regionMaskSuffix))
 
         fcAll = read_feature_collection(regionMaskFile)
 

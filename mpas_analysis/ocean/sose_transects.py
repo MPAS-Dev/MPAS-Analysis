@@ -63,7 +63,7 @@ class SoseTransects(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        tags = ['climatology', 'transect', 'sose', 'publicObs']
+        tags = ['climatology', 'transect', 'sose', 'publicObs', 'antarctic']
 
         # call the constructor from the base class (AnalysisTask)
         super(SoseTransects, self).__init__(

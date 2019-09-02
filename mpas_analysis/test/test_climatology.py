@@ -53,6 +53,7 @@ class TestClimatology(TestCase):
 
         config.add_section('diagnostics')
         config.set('diagnostics', 'baseDirectory', self.test_dir)
+        config.set('diagnostics', 'customDirectory', 'none')
         config.set('diagnostics', 'mappingSubdirectory', 'maps')
 
         config.add_section('input')

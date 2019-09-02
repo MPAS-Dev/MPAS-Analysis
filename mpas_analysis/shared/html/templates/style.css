@@ -170,3 +170,19 @@ div.provenance-title {
 .image-gallery figcaption {
     display: none;
 }
+
+pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 0.5em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em;
+    display: block;
+    word-wrap: break-word;
+}
