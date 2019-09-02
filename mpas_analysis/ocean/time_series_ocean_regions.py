@@ -317,7 +317,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             restartFileName = self.runStreams.readpath('restart')[0]
         except ValueError:
             raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for Antarctic melt calculations')
+                          'restart file for ocean region time series')
 
         cellsChunk = 32768
         timeChunk = 1
@@ -552,7 +552,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
 class PlotRegionTimeSeriesSubtask(AnalysisTask):
     """
-    Plots time-series output of Antarctic sub-ice-shelf melt rates.
+    Plots time-series output of properties in an ocean region.
 
     Attributes
     ----------

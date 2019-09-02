@@ -14,9 +14,9 @@
 Creates a region mask file from a geojson file defining the regions and a mesh
 file.  The geojson file should be in the diagnostics/mpas_analysis/region_masks
 directory and the mask file will be stored in the same directory, saving the
-time of computing the mask for each analysis run.  Because mask computation with
-shapely is relatively slow, the computation can be sped up by running several
-threads in parallel.
+time of computing the mask for each analysis run.  Because mask computation
+with shapely is relatively slow, the computation can be sped up by running
+several threads in parallel.
 
 Usage: Copy this script into the main MPAS-Analysis directory (up one level).
 Modify the mesh and regions names and the local path to region masks.
@@ -27,7 +27,7 @@ import logging
 import sys
 
 from mpas_analysis.shared.regions.compute_region_masks_subtask import \
-    compute_region_masks
+    compute_mpas_region_masks
 
 # replace with the MPAS mesh name
 meshName = 'oEC60to30v3'
@@ -57,5 +57,5 @@ handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
-compute_region_masks(geojsonFileName, meshFileName, maskFileName,
-                     logger=logger, processCount=processCount)
+compute_mpas_region_masks(geojsonFileName, meshFileName, maskFileName,
+                          logger=logger, processCount=processCount)

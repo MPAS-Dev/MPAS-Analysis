@@ -37,6 +37,7 @@ mpas_analysis/region_masks/oEC60to30v3_antarcticRegions.nc
 mpas_analysis/region_masks/antarcticRegions.geojson
 mpas_analysis/region_masks/iceShelves.geojson
 mpas_analysis/region_masks/oceanBasins.geojson
+mpas_analysis/region_masks/SouthernOcean_0.167x0.167degree_antarcticRegions.nc
 observations/Icebergs/obs.bib
 observations/Icebergs/Altiberg/Altiberg_1991-2017_20180308.nc
 observations/Icebergs/README.md

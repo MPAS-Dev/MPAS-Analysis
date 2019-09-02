@@ -38,6 +38,9 @@ from mpas_analysis.ocean.time_series_antarctic_melt import \
 from mpas_analysis.ocean.time_series_ocean_regions import \
     TimeSeriesOceanRegions
 
+from mpas_analysis.ocean.regional_ts_diagrams import \
+    RegionalTSDiagrams
+
 from mpas_analysis.ocean.woce_transects import WoceTransects
 from mpas_analysis.ocean.sose_transects import SoseTransects
 from mpas_analysis.ocean.geojson_transects import GeojsonTransects

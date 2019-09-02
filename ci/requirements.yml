@@ -21,3 +21,4 @@ dependencies:
   - shapely
   - cartopy
   - geometric_features
+  - gsw

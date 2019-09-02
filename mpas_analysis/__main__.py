@@ -48,7 +48,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.analysis_task import \
     update_time_bounds_from_file_names
 
-from mpas_analysis.shared.plot.colormap import _register_custom_colormaps, \
+from mpas_analysis.shared.plot.colormap import register_custom_colormaps, \
     _plot_color_gradients
 
 from mpas_analysis import ocean
@@ -163,6 +163,9 @@ def build_analysis_list(config, controlConfig):  # {{{
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(
+        config, oceanClimatolgyTasks['avg'], controlConfig))
+
+    analyses.append(ocean.RegionalTSDiagrams(
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
@@ -522,13 +525,13 @@ def run_analysis(config, analyses):  # {{{
                         # more processes to finish
                         break
 
+                    logger.info('Running {}'.format(
+                        analysisTask.printTaskName))
                     if analysisTask.runDirectly:
                         analysisTask.run(writeLogFile=True)
                         runDirectly = True
                         break
                     else:
-                        logger.info('Running {}'.format(
-                            analysisTask.printTaskName))
                         analysisTask._runStatus.value = AnalysisTask.RUNNING
                         analysisTask.start()
                         runningTasks[key] = analysisTask
@@ -780,7 +783,7 @@ def main():
         sys.exit(0)
 
     if args.plot_colormaps:
-        _register_custom_colormaps()
+        register_custom_colormaps()
         _plot_color_gradients()
         sys.exit(0)
 

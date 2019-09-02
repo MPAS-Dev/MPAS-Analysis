@@ -433,6 +433,46 @@ def sose_v_to_nc(inPrefix, outFileName, lon, lat, z, cellFraction, botIndices):
     return dsV
 
 
+def sose_volume_to_nc(prefix, inGridName, inGridFileName, inDir):
+    outFileName = '{}_volume_{}.nc'.format(prefix, inGridName)
+
+    matGrid = loadmat(inGridFileName)
+    # lat/lon is a tensor grid so we can use 1-D arrays
+    lon = matGrid['XC'][:, 0]
+    lat = matGrid['YC'][0, :]
+    z = matGrid['RC'][:, 0]
+
+    area = matGrid['RAC']
+    dz = matGrid['DRF'][:, 0]
+    cellFraction = matGrid['hFacC']
+
+    volume = numpy.zeros(cellFraction.shape)
+
+    for zIndex in range(len(dz)):
+        volume[:, :, zIndex] = cellFraction[:, :, zIndex]*dz[zIndex]*area
+
+    volume = volume.transpose(1, 0, 2)
+
+    dictonary = {'dims': ['lon', 'lat', 'z'],
+                 'coords': {'lon': {'dims': ('lon'),
+                                    'data': lon,
+                                    'attrs': {'units': 'degrees'}},
+                            'lat': {'dims': ('lat'),
+                                    'data': lat,
+                                    'attrs': {'units': 'degrees'}},
+                            'z': {'dims': ('z'),
+                                  'data': z,
+                                  'attrs': {'units': 'm'}}},
+                 'data_vars': {'volume':
+                               {'dims': ('lat', 'lon', 'z'),
+                                'data': volume,
+                                'attrs': {'units': 'm$^3$',
+                                          'description': 'cell volumes'}}}}
+
+    dsVolume = xarray.Dataset.from_dict(dictonary)
+    write_netcdf(dsVolume, outFileName)
+
+
 def remap(ds, outDescriptor, mappingFileName, inDir, outFileName):
 
     tempFileName1 = '{}/temp_transpose.nc'.format(inDir)
@@ -755,6 +795,10 @@ def main():
 
     download_files(fileList, urlBase, args.inDir)
     unzip_sose_data(inPrefixes, args.inDir)
+
+    prefix = '{}/SOSE'.format(args.outDir)
+
+    sose_volume_to_nc(prefix, inGridName, inGridFileName, args.inDir)
 
     prefix = '{}/SOSE_2005-2010_monthly'.format(args.outDir)
 
