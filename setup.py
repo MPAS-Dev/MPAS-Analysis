@@ -67,5 +67,5 @@ setup(name='mpas_analysis',
                     ['mpas_analysis = mpas_analysis.__main__:main',
                      'download_analysis_data = '
                      'mpas_analysis.download_data:download_analysis_data',
-                     'download_nautral_earth_110m = '
-                     'mpas_analysis.download_data:download_nautral_earth_110m']})
+                     'download_natural_earth_110m = '
+                     'mpas_analysis.download_data:download_natural_earth_110m']})
