@@ -653,8 +653,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             T, S, zMid, volume, _, _ = self._get_mpas_T_S(
                 self.controlConfig)
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
-            plotFields = [{'S': S, 'T': T, 'z': zMid, 'vol': volume,
-                           'title': 'Control: {}'.format(controlRunName)}]
+            plotFields.append({'S': S, 'T': T, 'z': zMid, 'vol': volume,
+                               'title': 'Control: {}'.format(controlRunName)})
 
         for obsName in self.obsDicts:
             obsT, obsS, obsZ, obsVol = self._get_obs_T_S(
