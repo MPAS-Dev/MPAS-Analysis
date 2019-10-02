@@ -17,6 +17,9 @@ import os
 import subprocess
 from distutils.spawn import find_executable
 import dask
+import multiprocessing
+from multiprocessing.pool import ThreadPool
+
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -151,17 +154,14 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         parallelTaskCount = config.getint('execute', 'parallelTaskCount')
         if not self.useNcclimo:
+            # this process doesn't do anything on its own, so no need to
+            # block other tasks
             self.subprocessCount = 1
 
             # setup one subtask for each possible season that could be added
             for season in constants.monthDictionary:
-                if season in constants.abrevMonthNames:
-                    subprocessCount = max(parallelTaskCount // 12, 1)
-                else:
-                    # something to experiment with
-                    subprocessCount = 2
                 self.seasonSubtasks[season] = MpasClimatologySeasonSubtask(
-                    self, season, subprocessCount=subprocessCount)
+                    self, season)
                 self.add_subtask(self.seasonSubtasks[season])
 
             # make sure each season runs after the months that make up that
@@ -562,8 +562,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, season, subtaskName=None,
-                 subprocessCount=1):  # {{{
+    def __init__(self, parentTask, season, subtaskName=None):  # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -579,9 +578,6 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
         subtaskName : str, optional
             the name of the subtask, defaults to season
 
-        subprocessCount : int, optional
-            The number of subprocesses (dask threads) this task is allowed to
-            use
         '''
         # Authors
         # -------
@@ -592,9 +588,6 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
         if subtaskName is None:
             subtaskName = season
 
-        self.subprocessCount = subprocessCount
-        self.parentTask = parentTask
-
         # call the constructor from the base class (AnalysisTask)
         super(MpasClimatologySeasonSubtask, self).__init__(
             config=parentTask.config,
@@ -602,6 +595,16 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
             componentName=parentTask.componentName,
             tags=parentTask.tags,
             subtaskName=subtaskName)
+
+        self.parentTask = parentTask
+
+        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
+        self.subprocessCount = min(parallelTaskCount,
+                                   self.config.getint('climatology',
+                                                      'subprocessCount'))
+        self.daskThreads = min(
+            multiprocessing.cpu_count(),
+            self.config.getint('climatology', 'daskThreads'))
 
         # }}}
 
@@ -645,7 +648,8 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
                         break
 
         if not allExist:
-            with dask.config.set(scheduler='threads'):
+            with dask.config.set(schedular='threads',
+                                 pool=ThreadPool(self.daskThreads)):
                 self._compute_climatologies_with_xarray(
                     inDirectory=parentTask.symlinkDirectory,
                     outDirectory=climatologyDirectory)
