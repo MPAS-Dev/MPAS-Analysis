@@ -39,6 +39,7 @@ conda activate mpas-analysis
 To use the latest version for developers, you will need to set up a conda
 environment with the following packages:
 
+ * python >= 3.6
  * numpy
  * scipy
  * matplotlib >= 3.0.2
