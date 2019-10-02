@@ -479,8 +479,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                     outputDirectory, timeSeriesName, startYear, endYear)
                 inFileNames.append(inFileName)
 
-            ds = xr.open_mfdataset(inFileNames, concat_dim='Time',
-                                   decode_times=False)
+            ds = xr.open_mfdataset(inFileNames, combine='nested',
+                                   concat_dim='Time', decode_times=False)
 
             ds['totalArea'] = ds['totalArea'].isel(Time=0)
 

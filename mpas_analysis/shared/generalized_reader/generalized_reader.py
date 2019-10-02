@@ -142,16 +142,11 @@ def open_multifile_dataset(fileNames, calendar, config,
                                  startDate=startDate,
                                  endDate=endDate)
 
-    kwargs = {'decode_times': False,
-              'concat_dim': 'Time'}
-
-    # get the number of files that can be open at the same time.  We want the
-    # "soft" limit because we'll get a crash if we exceed it.
-    softLimit = resource.getrlimit(resource.RLIMIT_NOFILE)[0]
-
     ds = xarray.open_mfdataset(fileNames,
                                preprocess=preprocess_partial,
-                               **kwargs)
+                               combine='nested',
+                               concat_dim='Time',
+                               decode_times=False)
 
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
