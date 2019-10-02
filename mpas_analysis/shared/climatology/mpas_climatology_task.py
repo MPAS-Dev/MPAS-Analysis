@@ -690,6 +690,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
                 'timeSeriesStatsMonthlyOutput')
 
             with xarray.open_mfdataset(parentTask.inputFiles,
+                                       combine='nested',
                                        concat_dim='Time',
                                        chunks={'nCells': chunkSize},
                                        decode_cf=False, decode_times=False,
@@ -718,6 +719,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
                 weights.append(constants.daysInMonth[month-1])
 
             with xarray.open_mfdataset(fileNames, concat_dim='weight',
+                                       combine='nested',
                                        chunks={'nCells': chunkSize},
                                        decode_cf=False, decode_times=False,
                                        preprocess=_preprocess) as ds:

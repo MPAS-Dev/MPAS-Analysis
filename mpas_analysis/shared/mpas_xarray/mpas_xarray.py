@@ -116,7 +116,8 @@ def open_multifile_dataset(fileNames, calendar,
 
     ds = xarray.open_mfdataset(fileNames,
                                preprocess=preprocess_partial,
-                               decode_times=False, concat_dim='Time')
+                               combine='nested', concat_dim='Time',
+                               decode_times=False)
 
     ds = remove_repeated_time_index(ds)
 
