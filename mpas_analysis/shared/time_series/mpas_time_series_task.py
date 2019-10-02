@@ -260,11 +260,14 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         if os.path.exists(self.outputFile):
             # make sure all the necessary variables are also present
             with xr.open_dataset(self.outputFile) as ds:
-                updateSubset = True
-                for variableName in self.variableList:
-                    if variableName not in ds.variables:
-                        updateSubset = False
-                        break
+                if ds.sizes['Time'] == 0:
+                    updateSubset = False
+                else:
+                    updateSubset = True
+                    for variableName in self.variableList:
+                        if variableName not in ds.variables:
+                            updateSubset = False
+                            break
 
                 if updateSubset:
                     # add only input files wiht times that aren't already in
@@ -301,8 +304,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
                     # there is an output file but it has the wrong variables
                     # so we need ot delete it.
                     self.logger.warning('Warning: deleting file {} because '
-                                        'some variables were missing'.format(
-                                            self.outputFile))
+                                        'it is empty or some variables were '
+                                        'missing'.format(self.outputFile))
                     os.remove(self.outputFile)
 
         variableList = self.variableList + ['xtime_startMonthly',
