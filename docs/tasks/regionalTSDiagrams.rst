@@ -190,17 +190,6 @@ anticipate adding several additional data sets in the near future.
 :ref:`sose`
 :ref:`woa18_t_s`
 
-Performance
------------
-The options ``daskThreads`` and ``subprocessCount`` are available to allow
-users to control performance.  The subtask for computing climatologies of
-SOSE and WOA18 data (and, in the future, other observational data sets) can
-be somewhat time consuming.  Allowing it to use more dask threads should
-speed it up a bit.  The option ``subprocessCount`` tells MPAS-Analysis how
-many of its parallel tasks to reserve for this task.  If memory errors occur
-with this task, it would be safer to increase ``subprocessCount`` so fewer
-other processes run at the same time as this one.
-
 Other Config Options
 --------------------
 
@@ -208,7 +197,7 @@ For more details on the remaining config options, see
  * :ref:`config_regions`
  * :ref:`config_seasons`
  * :ref:`config_colormaps`
-
+ * :ref:`dask_treads`
 
 Example Result
 --------------
