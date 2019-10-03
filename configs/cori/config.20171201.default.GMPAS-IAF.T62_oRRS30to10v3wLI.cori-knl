@@ -118,3 +118,13 @@ endYear = 10
 # For valid statistics, index times should include at least 30 years
 startYear = 1
 endYear = 10
+
+[climatologyMapWoa]
+## options related to plotting climatology maps of Temperature and Salinity
+## fields at various levels, including the sea floor against control model
+## results and WOA climatological data
+
+# list of depths in meters (positive up) at which to analyze, 'top' for the
+# sea surface. Note that, for seasons='ANN', depths can be as deep as 5500 m,
+# otherwise use a maximum depth of 1500 m.
+depths = ['top', -200, -400, -600, -800]
