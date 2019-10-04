@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy as np
+from pyremap.descriptor import interp_extrap_corner
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -29,7 +30,6 @@ from mpas_analysis.shared.plot import plot_global_comparison, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.grid import interp_extrap_corner
 
 from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
@@ -453,7 +453,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
         elif self.comparisonGridName == 'antarctic' or \
-             self.comparisonGridName == 'arctic':
+                self.comparisonGridName == 'arctic':
             self._plot_polar(remappedModelClimatology,
                              remappedRefClimatology)
         # }}}

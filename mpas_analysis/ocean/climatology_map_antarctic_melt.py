@@ -12,6 +12,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+from pyremap import ProjectionGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -26,8 +27,6 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 from mpas_analysis.shared.constants import constants
-
-from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
 
 class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{

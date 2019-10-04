@@ -22,6 +22,7 @@ import tempfile
 import shutil
 import os
 import xarray
+from pyremap import LatLonGridDescriptor
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.configuration import MpasAnalysisConfigParser
@@ -29,7 +30,6 @@ from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
-from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 
 class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{

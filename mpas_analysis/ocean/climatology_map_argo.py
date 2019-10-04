@@ -18,6 +18,8 @@ Analysis tasks for comparing Global climatology maps against Argo data.
 import xarray as xr
 import numpy as np
 
+from pyremap import LatLonGridDescriptor
+
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.ocean.remap_depth_slices_subtask import \
@@ -29,8 +31,6 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
-
-from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 

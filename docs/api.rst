@@ -21,7 +21,7 @@ Top-level script: mpas_analysis
    update_generate
    run_analysis
    wait_for_task
- 
+
 Downloading data
 ================
 
@@ -220,25 +220,6 @@ Time Series
     compute_moving_avg
 
     MpasTimeSeriesTask
-
-Interpolation
--------------
-.. currentmodule:: mpas_analysis.shared.interpolation
-
-.. autosummary::
-   :toctree: generated/
-
-   Remapper
-
-.. currentmodule:: mpas_analysis.shared.grid
-
-.. autosummary::
-   :toctree: generated/
-
-   MpasMeshDescriptor
-   LatLonGridDescriptor
-   ProjectionGridDescriptor
-
 
 Namelist and Streams Files
 --------------------------

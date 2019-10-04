@@ -10,6 +10,8 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 
+from pyremap import LatLonGridDescriptor
+
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_obs_path
@@ -20,7 +22,6 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.grid import LatLonGridDescriptor
 from mpas_analysis.shared.interpolation.utility import add_periodic_lon
 
 
