@@ -372,7 +372,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         if depth is not None:
             if str(depth) not in remappedModelClimatology.depthSlice.values:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created\n'
+                               'depth slices of was originally created '
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
@@ -425,7 +425,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                     depthIndex = index
             if depthIndex == -1:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created'
+                               'depth slices of was originally created '
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
