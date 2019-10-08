@@ -215,6 +215,18 @@ useNcremap = True
 # weights lower than this threshold will therefore be masked out.
 renormalizationThreshold = 0.01
 
+# if useNcclimo = False, the number of threads dask is allowed to spawn for
+# each process computing a climatology for a given month or season
+# Decrease this number if mpasClimatology* subtasks are running
+# out of available threads
+daskThreads = 2
+
+# if useNcclimo = False, the number of subprocesses that each climatology
+# subtask gets counted as occupying.
+# Increase this number if mpasClimatology* subtasks are running
+# out of memory, and fewer tasks will be allowed to run at once
+subprocessCount = 1
+
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against

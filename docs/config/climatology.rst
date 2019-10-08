@@ -33,6 +33,9 @@ anomalies and to control remapping of climatologies to comparions grids::
   #   'bilinear', 'neareststod' (nearest neighbor) or 'conserve'
   mpasInterpolationMethod = bilinear
 
+  # should climatologies be performed with ncclimo or with xarray/dask
+  useNcclimo = True
+
   # should remapping be performed with ncremap or with the Remapper class
   # directly in MPAS-Analysis
   useNcremap = True
@@ -40,6 +43,19 @@ anomalies and to control remapping of climatologies to comparions grids::
   # The minimum weight of a destination cell after remapping. Any cell with
   # weights lower than this threshold will therefore be masked out.
   renormalizationThreshold = 0.01
+
+  # if useNcclimo = False, the number of threads dask is allowed to spawn for
+  # each process computing a climatology for a given month or season
+  # Decrease this number if mpasClimatology* subtasks are running
+  # out of available threads
+  daskThreads = 2
+
+  # if useNcclimo = False, the number of subprocesses that each climatology
+  # subtask gets counted as occupying.
+  # Increase this number if mpasClimatology* subtasks are running
+  # out of memory, and fewer tasks will be allowed to run at once
+  subprocessCount = 1
+
 
 Start and End Year
 ------------------
@@ -63,11 +79,6 @@ specify a different year to use for computing anomalies::
 
   anomalyRefYear = 249
 
-Comparison Grids
-----------------
-
-See :ref:`config_comparison_grids`.
-
 .. _config_remapping:
 
 Remapping Options
@@ -82,11 +93,9 @@ is ``bilinear`` and these are the mapping files distributed from the
 slower to compute and should only be used if it is necessary (e.g. because
 remapped data will be checked for conservation).
 
-MPAS-Analysis typically uses the `NCO`_ tool ``ncremap`` to perform  to
-perform remapping.  However, ``ncreamp`` does not support the Antarctic
-stereographic grids used by some MPAS-Analysis tasks so a python remapping
-function is used for these grids.  The user can force all remapping to use
-the internal remapping function by specifying::
+MPAS-Analysis typically uses the `NCO`_ tool ``ncremap`` to perform remapping.
+However, a python remapping capability is also available.  The user can force
+remapping to use the python-based remapping by specifying::
 
   useNcremap = False
 
@@ -108,6 +117,26 @@ If noisy or unphysical values occur near maked regions on the comparison grid,
 it might be necessary to increase this threshold.  If too much data appears to
 be being masked out unnecessarily on the comparison grid, perhaps this value
 should be made smaller.
+
+
+Computing climatologies
+-----------------------
+
+MPAS-Analysis typically uses the `NCO`_ tool ``ncclimo`` to compute
+climatologies.  For some large data sets on a single node, ``ncclimo`` runs
+out of memory in ``bck`` mode but is painfully slow in ``serial`` mode and
+wastes extra nodes in ``mpi`` mode.  (See :ref: `config_execute` for more on
+configuring ``ncclimo``.)  For such cases, there is also an xarray/dask method
+of computing climatologies::
+
+  useNcremap = False
+
+
+Other Options
+-------------
+
+* :ref:`config_comparison_grids`
+* :ref:`dask_treads`
 
 .. _`Common Ocean Reference Experiments, CORE`: http://data1.gfdl.noaa.gov/nomads/forms/mom4/CORE.html
 .. _`ESMF_RegridWeightGen tool`: http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_7_1_0r/ESMF_refdoc/node3.html#SECTION03020000000000000000
