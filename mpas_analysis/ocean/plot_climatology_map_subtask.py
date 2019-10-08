@@ -372,7 +372,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         if depth is not None:
             if str(depth) not in remappedModelClimatology.depthSlice.values:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created\n'
+                               'depth slices of was originally created '
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
@@ -425,7 +425,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                     depthIndex = index
             if depthIndex == -1:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created'
+                               'depth slices of was originally created '
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
@@ -512,7 +512,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             componentSubdirectory='ocean',
             galleryGroup='Global {}'.format(self.galleryGroup),
             groupSubtitle=self.groupSubtitle,
-            groupLink=self.groupLink,
+            groupLink='global_{}'.format(self.groupLink),
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
@@ -583,7 +583,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             galleryGroup='{} {}'.format(upperGridName,
                                         self.galleryGroup),
             groupSubtitle=self.groupSubtitle,
-            groupLink=self.groupLink,
+            groupLink='{}_{}'.format(comparisonGridName, self.groupLink),
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,

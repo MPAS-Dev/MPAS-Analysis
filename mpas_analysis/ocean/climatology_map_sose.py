@@ -226,7 +226,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                 refTitleLabel = galleryName
 
                 refFieldName = field['mpas']
-                outFileLabel = fieldPrefix
+                outFileLabel = '{}SOSE'.format(fieldPrefix)
                 diffTitleLabel = 'Main - Control'
 
             if field['3D']:

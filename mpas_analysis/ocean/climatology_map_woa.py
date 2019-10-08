@@ -172,7 +172,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                 refTitleLabel = galleryName
 
                 refFieldName = field['mpas']
-                outFileLabel = fieldPrefix
+                outFileLabel = '{}WOA18'.format(fieldPrefix)
                 diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
@@ -206,7 +206,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                             imageCaption=field['titleName'],
                             galleryGroup=field['titleName'],
                             groupSubtitle=None,
-                            groupLink='{}Woa'.format(fieldPrefix),
+                            groupLink='{}_woa'.format(fieldPrefix),
                             galleryName=galleryName,
                             configSectionName='climatologyMapWoa{}'.format(
                                 upperFieldPrefix))
