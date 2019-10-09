@@ -32,8 +32,6 @@ from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
 from mpas_analysis.shared.grid import LatLonGridDescriptor
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 
 class ClimatologyMapWoa(AnalysisTask):  # {{{
     """
@@ -141,32 +139,51 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                 # Since we have a WOA18 annual climatology file and
                 # another file containing the 12 WOA18 monthly climatologies,
                 # do the remapping for each season separately
-                for season in seasons:
-                    if season == 'ANN':
-                        obsFileName = \
-                            '{}/woa18_decav_04_TS_ann_20190829.nc'.format(
-                                observationsDirectory)
-                    else:
-                        obsFileName = \
-                            '{}/woa18_decav_04_TS_mon_20190829.nc'.format(
-                                observationsDirectory)
 
-                    subtaskName = 'remapObservations{}_{}'.format(
-                            upperFieldPrefix, season)
+                if 'ANN' in seasons:
+                    obsFileName = \
+                        '{}/woa18_decav_04_TS_ann_20190829.nc'.format(
+                            observationsDirectory)
+                    outFilePrefix = '{}WOA18_ann'.format(refFieldName)
+                    subtaskName = 'remapObservations{}_ann'.format(
+                            upperFieldPrefix)
+                    remapAnnObsSubtask = RemapWoaClimatology(
+                        parentTask=self, seasons=['ANN'],
+                        fileName=obsFileName,
+                        outFilePrefix=outFilePrefix,
+                        fieldName=refFieldName,
+                        depths=depths,
+                        comparisonGridNames=comparisonGridNames,
+                        subtaskName=subtaskName)
+                    self.add_subtask(remapAnnObsSubtask)
+                else:
+                    remapAnnObsSubtask = None
 
-                    remapObsSubtask = RemapWoaClimatology(
-                            parentTask=self, seasons=[season],
+                seasonsMinusAnn = list(seasons)
+                if 'ANN' in seasonsMinusAnn:
+                    seasonsMinusAnn.remove('ANN')
+                if len(seasonsMinusAnn) > 0:
+                    obsFileName = \
+                        '{}/woa18_decav_04_TS_mon_20190829.nc'.format(
+                            observationsDirectory)
+                    outFilePrefix = '{}WOA18_mon'.format(refFieldName)
+                    subtaskName = 'remapObservations{}_mon'.format(
+                            upperFieldPrefix)
+
+                    remapMonObsSubtask = RemapWoaClimatology(
+                            parentTask=self, seasons=seasonsMinusAnn,
                             fileName=obsFileName,
-                            outFilePrefix='{}WOA18'.format(refFieldName),
+                            outFilePrefix=outFilePrefix,
                             fieldName=refFieldName,
                             depths=depths,
                             comparisonGridNames=comparisonGridNames,
                             subtaskName=subtaskName)
 
-                    self.add_subtask(remapObsSubtask)
+                    self.add_subtask(remapMonObsSubtask)
 
             else:
-                remapObsSubtask = None
+                remapAnnObsSubtask = None
+                remapMonObsSubtask = None
                 controlRunName = controlConfig.get('runs', 'mainRunName')
                 galleryName = 'Control: {}'.format(controlRunName)
                 refTitleLabel = galleryName
@@ -177,6 +194,10 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
+                    if season == 'ANN':
+                        remapObsSubtask = remapAnnObsSubtask
+                    else:
+                        remapObsSubtask = remapMonObsSubtask
                     for depth in depths:
 
                         subtaskName = 'plot{}_{}_{}_depth_{}'.format(
