@@ -455,7 +455,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         outDirectory : str
             The output directory where climatologies will be written
 
-        remapper : ``shared.intrpolation.Remapper`` object, optional
+        remapper : ``pyremap.Remapper`` object, optional
             If present, a remapper that defines the source and desitnation
             grids for remapping the climatologies.
 

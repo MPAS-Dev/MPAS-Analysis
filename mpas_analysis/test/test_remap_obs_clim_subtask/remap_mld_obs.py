@@ -9,9 +9,8 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 import numpy
+from pyremap import LatLonGridDescriptor, Remapper
 
-from mpas_analysis.shared.interpolation import Remapper
-from mpas_analysis.shared.grid import LatLonGridDescriptor
 from mpas_analysis.shared.constants import constants
 
 inputFileName = '/media/xylar/extra_data/analysis/output/GMPAS-QU240/' \

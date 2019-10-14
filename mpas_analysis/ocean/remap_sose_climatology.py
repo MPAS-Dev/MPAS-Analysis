@@ -18,10 +18,10 @@ and reanalysis data.
 
 import xarray as xr
 
+from pyremap import ProjectionGridDescriptor
+
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
-
-from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 

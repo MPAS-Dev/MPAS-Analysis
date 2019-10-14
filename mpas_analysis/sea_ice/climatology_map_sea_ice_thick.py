@@ -13,6 +13,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+from pyremap import LatLonGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -23,8 +24,6 @@ from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.io.utility import build_obs_path
-
-from mpas_analysis.shared.grid import LatLonGridDescriptor
 
 
 class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{

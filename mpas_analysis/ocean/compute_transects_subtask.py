@@ -16,11 +16,11 @@ import xarray as xr
 import os
 from collections import OrderedDict
 
+from pyremap import PointCollectionDescriptor
+
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
-from mpas_analysis.shared.grid import PointCollectionDescriptor
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories

@@ -24,6 +24,7 @@ import shutil
 import os
 import numpy
 import xarray
+from pyremap import MpasMeshDescriptor, LatLonGridDescriptor
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
@@ -33,7 +34,6 @@ from mpas_analysis.shared.climatology import \
     get_comparison_descriptor, get_remapper, \
     add_years_months_days_in_month, compute_climatology, \
     compute_monthly_climatology
-from mpas_analysis.shared.grid import MpasMeshDescriptor, LatLonGridDescriptor
 from mpas_analysis.shared.constants import constants
 
 
