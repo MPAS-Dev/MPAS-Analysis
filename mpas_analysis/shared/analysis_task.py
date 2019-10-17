@@ -629,6 +629,12 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
         # this component likely doesn't have output in this run
         return
 
+    if len(inputFiles) == 0:
+        raise ValueError('No input files found for stream {} in {} between '
+                         '{} and {}'.format(streamName, componentName,
+                                            requestedStartYear,
+                                            requestedEndYear))
+
     years, months = get_files_year_month(sorted(inputFiles),
                                          historyStreams,
                                          streamName)
