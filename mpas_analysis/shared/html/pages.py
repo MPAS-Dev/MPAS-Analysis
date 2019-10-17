@@ -298,8 +298,8 @@ class MainPage(object):
             self.config.write(configFile)
 
         for configFileName in self.customConfigFiles:
-            copyfile(configFileName, '{}/{}'.format(htmlBaseDirectory,
-                                                    os.path.basename(configFileName)))
+            copyfile(configFileName, '{}/{}'.format(
+                htmlBaseDirectory, os.path.basename(configFileName)))
 
 
 class ComponentPage(object):
