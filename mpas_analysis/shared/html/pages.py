@@ -299,7 +299,7 @@ class MainPage(object):
 
         for configFileName in self.customConfigFiles:
             copyfile(configFileName, '{}/{}'.format(htmlBaseDirectory,
-                                                    configFileName))
+                                                    os.path.basename(configFileName)))
 
 
 class ComponentPage(object):
