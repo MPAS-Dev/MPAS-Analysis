@@ -1264,7 +1264,11 @@ variables = [{'name': 'temperature',
              {'name': 'potentialDensity',
               'title': 'Potential Density',
               'units': 'kg m$^{-3}$',
-              'mpas': 'timeMonthly_avg_potentialDensity'}]
+              'mpas': 'timeMonthly_avg_potentialDensity'},
+             {'name': 'mixedLayerDepth',
+              'title': 'Mixed Layer Depth',
+              'units': 'm',
+              'mpas': 'timeMonthly_avg_dThreshMLD'}]
 
 # The minimum and maximum depth over which fields are averaged, default is
 # to take these values from the geojson feature's zmin and zmax properties.
