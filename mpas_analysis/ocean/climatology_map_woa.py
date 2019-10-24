@@ -200,12 +200,12 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                 diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
-                for season in seasons:
-                    if season == 'ANN':
-                        remapObsSubtask = remapAnnObsSubtask
-                    else:
-                        remapObsSubtask = remapMonObsSubtask
-                    for depthIndex, depth in enumerate(depths):
+                for depthIndex, depth in enumerate(depths):
+                    for season in seasons:
+                        if season == 'ANN':
+                            remapObsSubtask = remapAnnObsSubtask
+                        else:
+                            remapObsSubtask = remapMonObsSubtask
 
                         subtaskName = 'plot{}_{}_{}_depth_{}'.format(
                                                             upperFieldPrefix,

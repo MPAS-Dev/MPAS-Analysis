@@ -247,8 +247,8 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                 fieldDepths = [None]
 
             for comparisonGridName in comparisonGridNames:
-                for season in seasons:
-                    for depthIndex, depth in enumerate(fieldDepths):
+                for depthIndex, depth in enumerate(fieldDepths):
+                    for season in seasons:
 
                         subtaskName = 'plot{}_{}_{}'.format(upperFieldPrefix,
                                                             season,
