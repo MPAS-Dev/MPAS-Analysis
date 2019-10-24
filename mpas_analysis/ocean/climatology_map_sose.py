@@ -163,6 +163,18 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         variableList = [field['mpas'] for field in fields
                         if field['mpas'] != 'velMag']
 
+        shallowVsDeepColormapDepth = config.getfloat(
+            sectionName, 'shallowVsDeepColormapDepth')
+
+        shallow = []
+        for depth in depths:
+            if depth == 'top':
+                shallow.append(True)
+            elif depth == 'bot':
+                shallow.append(False)
+            else:
+                shallow.append(depth >= shallowVsDeepColormapDepth)
+
         if depths is None:
             remapMpasSubtask = RemapMpasClimatologySubtask(
                 mpasClimatologyTask=mpasClimatologyTask,
@@ -236,7 +248,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
 
             for comparisonGridName in comparisonGridNames:
                 for season in seasons:
-                    for depth in fieldDepths:
+                    for depthIndex, depth in enumerate(fieldDepths):
 
                         subtaskName = 'plot{}_{}_{}'.format(upperFieldPrefix,
                                                             season,
@@ -255,6 +267,21 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                             depth=depth,
                             subtaskName=subtaskName)
 
+                        configSectionName = 'climatologyMapSose{}'.format(
+                                upperFieldPrefix)
+
+                        # if available, use a separate color map for shallow
+                        # and deep
+                        if depth is not None:
+                            if shallow[depthIndex]:
+                                suffix = 'Shallow'
+                            else:
+                                suffix = 'Deep'
+                            testSectionName = '{}{}'.format(configSectionName,
+                                                            suffix)
+                            if config.has_section(testSectionName):
+                                configSectionName = testSectionName
+
                         subtask.set_plot_info(
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=field['titleName'],
@@ -268,8 +295,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                             groupSubtitle=None,
                             groupLink='{}Sose'.format(fieldPrefix),
                             galleryName=galleryName,
-                            configSectionName='climatologyMapSose{}'.format(
-                                upperFieldPrefix))
+                            configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
         # }}}
