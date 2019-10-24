@@ -1406,7 +1406,7 @@ fieldList = ['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth',
 fileSuffix = 6000.0x6000.0km_10.0km_Antarctic_stereo_20180710
 
 # depth separating shallow from deep color maps
-shallowVsDeepColormapDepth = -500
+shallowVsDeepColormapDepth = -1000
 
 
 [climatologyMapSoseTemperatureShallow]
@@ -1704,7 +1704,7 @@ depths = ['top', -500, -1000]
 fieldList = ['temperature', 'salinity']
 
 # depth separating shallow from deep color maps
-shallowVsDeepColormapDepth = -500
+shallowVsDeepColormapDepth = -1000
 
 
 [climatologyMapWoaTemperatureShallow]
