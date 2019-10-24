@@ -109,6 +109,18 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
 
         variableList = [field['mpas'] for field in fields]
 
+        shallowVsDeepColormapDepth = config.getfloat(
+            sectionName, 'shallowVsDeepColormapDepth')
+
+        shallow = []
+        for depth in depths:
+            if depth == 'top':
+                shallow.append(True)
+            elif depth == 'bot':
+                shallow.append(False)
+            else:
+                shallow.append(depth >= shallowVsDeepColormapDepth)
+
         remapMpasSubtask = RemapDepthSlicesSubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
@@ -188,12 +200,12 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                 diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
-                for season in seasons:
-                    if season == 'ANN':
-                        remapObsSubtask = remapAnnObsSubtask
-                    else:
-                        remapObsSubtask = remapMonObsSubtask
-                    for depth in depths:
+                for depthIndex, depth in enumerate(depths):
+                    for season in seasons:
+                        if season == 'ANN':
+                            remapObsSubtask = remapAnnObsSubtask
+                        else:
+                            remapObsSubtask = remapMonObsSubtask
 
                         subtaskName = 'plot{}_{}_{}_depth_{}'.format(
                                                             upperFieldPrefix,
@@ -211,6 +223,21 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                             depth=depth,
                             subtaskName=subtaskName)
 
+                        configSectionName = 'climatologyMapWoa{}'.format(
+                                upperFieldPrefix)
+
+                        # if available, use a separate color map for shallow
+                        # and deep
+                        if depth is not None:
+                            if shallow[depthIndex]:
+                                suffix = 'Shallow'
+                            else:
+                                suffix = 'Deep'
+                            testSectionName = '{}{}'.format(configSectionName,
+                                                            suffix)
+                            if config.has_section(testSectionName):
+                                configSectionName = testSectionName
+
                         subtask.set_plot_info(
                             outFileLabel=outFileLabel,
                             fieldNameInTitle=field['titleName'],
@@ -224,8 +251,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                             groupSubtitle=None,
                             groupLink='{}_woa'.format(fieldPrefix),
                             galleryName=galleryName,
-                            configSectionName='climatologyMapWoa{}'.format(
-                                upperFieldPrefix))
+                            configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
         # }}}
