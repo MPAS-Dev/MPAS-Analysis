@@ -464,12 +464,12 @@ colormapName = balance
 # whether the colormap is indexed or continuous
 colormapType = indexed
 # color indices into colormapName for filled contours
-colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevels = [-1, -0.5, -0.2, -0.05, 0, 0.05, 0.2, 0.5, 1]
+colorbarLevels = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-1.0, 1.26, 0.25)
+contourLevels = np.arange(-5.0, 5.51, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -498,12 +498,14 @@ colormapName = balance
 # whether the colormap is indexed or continuous
 colormapType = indexed
 # color indices into colormapName for filled contours
-colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+#colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+#colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+colorbarLevels = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-0.1, 0.11, 0.02)
+contourLevels = np.arange(-2., 2.01, 0.2)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -636,7 +638,7 @@ colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevelsResult = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
 # contour line levels (use [] for automatic contour selection, 'none' for no
@@ -672,9 +674,9 @@ colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsResult = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
 contourLevelsResult = np.arange(-8, 20.1, 2)
@@ -1843,7 +1845,7 @@ normTypeResult = linear
 # A dictionary with keywords for the norm
 normArgsResult = {'vmin': -2., 'vmax': 30.}
 # place the ticks automatically by default
-# colorbarTicksResult = numpy.linspace(-2., 2., 9)
+# colorbarTicksResult = numpy.linspace(-2., 30., 9)
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1852,9 +1854,9 @@ colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
-normArgsDifference = {'vmin': -2., 'vmax': 2.}
+normArgsDifference = {'vmin': -5., 'vmax': 5.}
 # place the ticks automatically by default
-# colorbarTicksDifference = numpy.linspace(-2., 2., 9)
+# colorbarTicksDifference = numpy.linspace(-5., 5., 9)
 
 
 [climatologyMapArgoSalinity]
@@ -1882,7 +1884,7 @@ normTypeResult = linear
 # A dictionary with keywords for the norm
 normArgsResult = {'vmin': 30, 'vmax': 39.0}
 # place the ticks automatically by default
-# colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)
+# colorbarTicksResult = numpy.linspace(30.0, 39.0, 9)
 
 # colormap for differences
 colormapNameDifference = balance
@@ -1891,9 +1893,9 @@ colormapTypeDifference = continuous
 # the type of norm used in the colormap
 normTypeDifference = linear
 # A dictionary with keywords for the norm
-normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
+normArgsDifference = {'vmin': -1.5, 'vmax': 1.5}
 # place the ticks automatically by default
-# colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)
+# colorbarTicksDifference = numpy.linspace(-1.5, 1.5, 9)
 
 
 [climatologyMapSchmidtko]
