@@ -469,9 +469,15 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             outputDirectory, timeSeriesName, self.startYears[0],
             self.endYears[-1])
 
+        useExisting = False
         if os.path.exists(outputFileName):
             ds = xr.open_dataset(outputFileName, decode_times=False)
-        else:
+            if ds.sizes['Time'] > 0:
+                useExisting = True
+            else:
+                ds.close()
+
+        if not useExisting:
 
             inFileNames = []
             for startYear, endYear in zip(self.startYears, self.endYears):
@@ -479,8 +485,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                     outputDirectory, timeSeriesName, startYear, endYear)
                 inFileNames.append(inFileName)
 
-            ds = xr.open_mfdataset(inFileNames, concat_dim='Time',
-                                   decode_times=False)
+            ds = xr.open_mfdataset(inFileNames, combine='nested',
+                                   concat_dim='Time', decode_times=False)
 
             ds['totalArea'] = ds['totalArea'].isel(Time=0)
 

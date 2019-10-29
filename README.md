@@ -39,6 +39,7 @@ conda activate mpas-analysis
 To use the latest version for developers, you will need to set up a conda
 environment with the following packages:
 
+ * python >= 3.6
  * numpy
  * scipy
  * matplotlib >= 3.0.2
@@ -59,6 +60,7 @@ environment with the following packages:
  * cartopy
  * geometric\_features
  * gsw
+ * pyremap
 
 These can be installed via the conda command:
 ```
@@ -66,7 +68,7 @@ conda config --add channels conda-forge
 conda create -n mpas-analysis python=3.7 numpy scipy "matplotlib>=3.0.2" \
     netCDF4 "xarray>=0.10.0" dask bottleneck basemap lxml "nco>=4.8.1" pyproj \
     pillow cmocean progressbar2 requests setuptools shapely cartopy \
-    geometric_features gsw
+    geometric_features gsw pyremap
 conda activate mpas-analysis
 ```
 

@@ -234,8 +234,12 @@ class MainPage(object):
 
         configsText = ''
         for configFileName in self.customConfigFiles:
+            shortName = os.path.basename(configFileName)
+            if len(shortName) > 30:
+                shortName = shortName[0:30]
+
             replacements = {'@configName': os.path.basename(configFileName),
-                            '@configDesc': os.path.basename(configFileName)}
+                            '@configDesc': shortName}
 
             configsText = configsText + \
                 _replace_tempate_text(self.configTemplate, replacements)
@@ -298,8 +302,8 @@ class MainPage(object):
             self.config.write(configFile)
 
         for configFileName in self.customConfigFiles:
-            copyfile(configFileName, '{}/{}'.format(htmlBaseDirectory,
-                                                    configFileName))
+            copyfile(configFileName, '{}/{}'.format(
+                htmlBaseDirectory, os.path.basename(configFileName)))
 
 
 class ComponentPage(object):

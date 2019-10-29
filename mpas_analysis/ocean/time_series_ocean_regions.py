@@ -433,13 +433,14 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                     units = timeSeries.units
                     description = timeSeries.long_name
 
-                    if 'nVertLevels' in timeSeries.dims:
+                    is3d = 'nVertLevels' in timeSeries.dims
+                    if is3d:
                         timeSeries = \
                             (dsRegion.volCell*timeSeries.where(depthMask)).sum(
                                 dim='nVertLevels').sum(dim='nCells') / totalVol
                     else:
                         timeSeries = \
-                            (dsRegion.areaCell*timeSeries.where(cellMask)).sum(
+                            (dsRegion.areaCell*timeSeries).sum(
                                 dim='nCells') / totalArea
 
                     timeSeries.compute()
@@ -447,6 +448,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                     dsOut[outName] = timeSeries
                     dsOut[outName].attrs['units'] = units
                     dsOut[outName].attrs['description'] = description
+                    dsOut[outName].attrs['is3d'] = str(is3d)
 
                 datasets.append(dsOut)
 
@@ -538,8 +540,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                     outputDirectory, timeSeriesName, startYear, endYear)
                 inFileNames.append(inFileName)
 
-            ds = xarray.open_mfdataset(inFileNames, concat_dim='Time',
-                                       decode_times=False)
+            ds = xarray.open_mfdataset(inFileNames, combine='nested',
+                                       concat_dim='Time', decode_times=False)
 
             # a few variables have become time dependent and shouldn't be
             for var in ['totalArea', 'zbounds']:
@@ -728,9 +730,15 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         for var in self.variables:
             varName = var['name']
-            title = 'Volume-Mean {} in {}'.format(var['title'],
-                                                  self.regionName)
             mainArray = dsIn[varName]
+            is3d = mainArray.attrs['is3d'] == 'True'
+            if is3d:
+                title = 'Volume-Mean {} in {}'.format(
+                    var['title'],  self.regionName)
+            else:
+                title = 'Area-Mean {} in {}'.format(var['title'],
+                                                    self.regionName)
+
             if plotControl:
                 refArray = dsRef[varName]
             xLabel = 'Time (yr)'
@@ -749,14 +757,15 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 lineWidths.append(1.2)
                 legendText.append(controlRunName)
 
-            if not plotControl or numpy.all(zbounds == zboundsRef):
-                title = '{} ({} < z < {} m)'.format(title, zbounds[0],
-                                                    zbounds[1])
-            else:
-                legendText[0] = '{} ({} < z < {} m)'.format(
-                    legendText[0], zbounds[0], zbounds[1])
-                legendText[1] = '{} ({} < z < {} m)'.format(
-                    legendText[1], zboundsRef[0], zboundsRef[1])
+            if is3d:
+                if not plotControl or numpy.all(zbounds == zboundsRef):
+                    title = '{} ({} < z < {} m)'.format(title, zbounds[0],
+                                                        zbounds[1])
+                else:
+                    legendText[0] = '{} ({} < z < {} m)'.format(
+                        legendText[0], zbounds[0], zbounds[1])
+                    legendText[1] = '{} ({} < z < {} m)'.format(
+                        legendText[1], zboundsRef[0], zboundsRef[1])
 
             fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
                                            title, xLabel, yLabel,

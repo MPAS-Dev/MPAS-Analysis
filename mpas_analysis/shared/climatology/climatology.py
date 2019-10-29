@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import os
 import numpy
+from pyremap import Remapper, LatLonGridDescriptor, ProjectionGridDescriptor
 
 from mpas_analysis.shared.constants import constants
 
@@ -30,9 +31,6 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, fingerprint_generator
 from mpas_analysis.shared.io import write_netcdf
 
-from mpas_analysis.shared.interpolation import Remapper
-from mpas_analysis.shared.grid import LatLonGridDescriptor, \
-    ProjectionGridDescriptor
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
 
@@ -41,8 +39,8 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                  mappingFilePrefix, method, logger=None):  # {{{
     """
     Given config options and descriptions of the source and comparison grids,
-    returns a ``Remapper`` object that can be used to remap from source files
-    or data sets to corresponding data sets on the comparison grid.
+    returns a ``pyremap.Remapper`` object that can be used to remap from source
+    files or data sets to corresponding data sets on the comparison grid.
 
     If necessary, creates the mapping file containing weights and indices
     needed to perform remapping.
@@ -69,7 +67,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
     Returns
     -------
-    remapper : ``Remapper`` object
+    remapper : ``pyremap.Remapper`` object
         A remapper that can be used to remap files or data sets from the source
         grid or mesh to the comparison grid.
     """
@@ -325,7 +323,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
         The name of the output file to which the remapped data set should
         be written.
 
-    remapper : ``Remapper`` object
+    remapper : ``pyremap.Remapper`` object
         A remapper that can be used to remap files or data sets to a
         comparison grid.
 

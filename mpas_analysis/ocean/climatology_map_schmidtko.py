@@ -17,6 +17,7 @@ against observations from Schmidtko et al. (2014, DOI: 10.1126/science.1256117)
 # Xylar Asay-Davis
 
 import xarray as xr
+from pyremap import ProjectionGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -29,8 +30,6 @@ from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
-
-from mpas_analysis.shared.grid import ProjectionGridDescriptor
 
 
 class ClimatologyMapSchmidtko(AnalysisTask):  # {{{

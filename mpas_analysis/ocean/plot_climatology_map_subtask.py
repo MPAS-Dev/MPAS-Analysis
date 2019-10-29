@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy as np
+from pyremap.descriptor import interp_extrap_corner
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -29,7 +30,6 @@ from mpas_analysis.shared.plot import plot_global_comparison, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.grid import interp_extrap_corner
 
 from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
@@ -372,7 +372,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         if depth is not None:
             if str(depth) not in remappedModelClimatology.depthSlice.values:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created\n'
+                               'depth slices of was originally created '
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
@@ -425,7 +425,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                     depthIndex = index
             if depthIndex == -1:
                 raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created'
+                               'depth slices of was originally created '
                                'without depth {}. You will need to delete and '
                                'regenerate the climatology'.format(depth))
 
@@ -453,7 +453,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
         elif self.comparisonGridName == 'antarctic' or \
-             self.comparisonGridName == 'arctic':
+                self.comparisonGridName == 'arctic':
             self._plot_polar(remappedModelClimatology,
                              remappedRefClimatology)
         # }}}
@@ -512,7 +512,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             componentSubdirectory='ocean',
             galleryGroup='Global {}'.format(self.galleryGroup),
             groupSubtitle=self.groupSubtitle,
-            groupLink=self.groupLink,
+            groupLink='global_{}'.format(self.groupLink),
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
@@ -583,7 +583,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             galleryGroup='{} {}'.format(upperGridName,
                                         self.galleryGroup),
             groupSubtitle=self.groupSubtitle,
-            groupLink=self.groupLink,
+            groupLink='{}_{}'.format(comparisonGridName, self.groupLink),
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,

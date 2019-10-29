@@ -22,3 +22,4 @@ dependencies:
   - cartopy
   - geometric_features
   - gsw
+  - pyremap

@@ -6,6 +6,7 @@ dependencies:
   - pip
   - basemap
   - geometric_features
+  - pyremap
   - pip:
     - pytest
     - numpy

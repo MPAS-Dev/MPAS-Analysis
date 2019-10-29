@@ -15,6 +15,8 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy
 import os
+from pyremap import MpasMeshDescriptor
+
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -30,8 +32,6 @@ from mpas_analysis.shared.climatology.climatology import get_remapper, \
     get_climatology_op_directory
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
-
-from mpas_analysis.shared.grid import MpasMeshDescriptor
 
 from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
@@ -570,7 +570,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             The name of the output file to which the remapped data set should
             be written.
 
-        remapper : ``Remapper`` object
+        remapper : ``pyremap.Remapper`` object
             A remapper that can be used to remap files or data sets to a
             comparison grid.
 

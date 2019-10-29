@@ -23,8 +23,7 @@ import pyproj
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.shared.grid import LatLonGridDescriptor, \
-    ProjectionGridDescriptor
+from pyremap import LatLonGridDescriptor, ProjectionGridDescriptor
 
 
 def get_comparison_descriptor(config, comparisonGridName):  # {{{
