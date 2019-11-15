@@ -6,24 +6,23 @@ dependencies:
   - pip
   - geometric_features
   - pyremap
-  - pip:
-    - pytest
-    - numpy
-    - scipy
-    - matplotlib-base
-    - netcdf4
-    - xarray
-    - dask
-    - lxml
-    - pyproj
-    - pillow
-    - cmocean
-    - shapely
-    - cartopy >= 0.18.0
-    - sphinx
-    - mock
-    - sphinx_rtd_theme
-    - numpydoc
-    - tabulate >= 0.8.2
-    - m2r
-    - gsw
+  - matplotlib-base
+  - pytest
+  - numpy
+  - scipy
+  - netcdf4
+  - xarray
+  - dask
+  - lxml
+  - pyproj
+  - pillow
+  - cmocean
+  - shapely
+  - cartopy >= 0.18.0
+  - sphinx
+  - mock
+  - sphinx_rtd_theme
+  - numpydoc
+  - tabulate >= 0.8.2
+  - m2r
+  - gsw
