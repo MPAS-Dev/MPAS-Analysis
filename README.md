@@ -1,5 +1,5 @@
 # MPAS-Analysis
-[![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=latest)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
+[![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=develop)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
 [![Documentation Status](http://readthedocs.org/projects/mpas-analysis/badge/?version=latest)](http://mpas-analysis.readthedocs.io/en/latest/?badge=latest)
 
 Analysis for simulations produced with Model for Prediction Across Scales
