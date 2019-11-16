@@ -24,13 +24,18 @@ before_install:
     conda update conda
     conda config --add channels conda-forge --force
     conda config --set channel_priority strict
-    conda create --name TEST python=$PY --file ci/requirements.txt
+    conda create --name TEST python=$PY --file ci/requirements.txt --file ci/requirements_docs.txt
     source activate TEST
     # conda info --all
     # conda list
 
 install:
-    - pip install -e . --no-deps
+  - |
+    pip install -e . --no-deps
+    cd docs
+    make clean
+    make html
+    cd ..
 
 script:
     - pytest --pyargs mpas_analysis
