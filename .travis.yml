@@ -14,6 +14,10 @@ matrix:
     - name: "python-3.7"
       env: PY=3.7
 
+env:
+  global:
+    secure: b3oCW5m7W1CKes6k8Owi/Ue6xUV+N3FNMiSb1C8C+Iiu/kFBUjdz2w2jcwsFF/NfRCM3njeSsumOSMnBB7OJ6TpMOdPAank7RVkS3rZaSGSuvvoQIH7aHCxubqdhJtnKHMCFy5sexRnLwi+s3hIopfO57Vm4gy6mMIzAvMQlOpxbg2Mxmz2CpR1BIUlnSV1adzg/VZQLrJZq4/AHviZUHkp9lUc47kLB+IAPq6dv2LQb9Of9Mv+CfGERd+zCKXLi2FKoDjkEbI8Gv7nY2KTPLSnB8XiuHat9pv0IpkNkGera39m8GRnb6LKWUcZcEIMKNpMfSwWzYrMkJ7lxHKjsfChS8D1KQPXT34bEV/+csilMMsssT7z2sJyS3vmUche4+2ecZYuV6lDXU3VbJtKdvEoDSrkcwJXM1PdmruyN3heMMHIqjAL/XxUcOsmzE8qXeK4y6dfBGoum/NSYzDvLmNyIbPPjIp8Wjes6LE1mYob9mLR5Zce+kdM+bx2BASDuQueh39UCntbwcr50RE3H8NRN/NrSUNnLN3Eg8GYzB18t7n1oiZeOcVV/0wmTfmZdmjyr1SpIExbwUqm6GPIkyiU0CpWp2ECQ2rEyoDOSyGt8dczoxlyTn+gdIi8u+Ekhm/BGsetEPVPjtioi0hvl49ANjEV7wy2J3nkMej5Qi5Q=
+
 before_install:
   - |
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
@@ -36,6 +40,22 @@ install:
     make clean
     make html
     cd ..
+    mkdir html
+    mv docs/_build/html html/mpas_analysis_docs
 
 script:
     - pytest --pyargs mpas_analysis
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set as a secure variable above
+  keep_history: true
+  repo: xylar/xylar.github.io
+  target_branch: test_mpas_analysis_docs
+  on:
+    # branch: test_docs
+    all_branches: true
+    condition: $PY = 3.7
+  local_dir: html
+  edge: true
