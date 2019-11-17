@@ -34,22 +34,7 @@ before_install:
     # conda list
 
 install:
-  - |
-    pip install -e . --no-deps
-    if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
-      export DOCS_VERSION="latest"
-    elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
-      export DOCS_VERSION="stable"
-    if [ -n "$TRAVIS_TAG" ]; then
-      # this is a tag build
-      export DOCS_VERSION="$TRAVIS_TAG"
-    else
-      export DOCS_VERSION=`python -c "import mpas_analysis; print(mpas_analysis.__version__)"`
-    fi
-    cd docs
-    make clean
-    make html
-    cd ..
+  - ./ci/install.bash
 
 script:
   - pytest --pyargs mpas_analysis
