@@ -1,0 +1,6 @@
+mpas\_analysis.shared.time\_series.compute\_moving\_avg\_anomaly\_from\_start
+=============================================================================
+
+.. currentmodule:: mpas_analysis.shared.time_series
+
+.. autofunction:: compute_moving_avg_anomaly_from_start

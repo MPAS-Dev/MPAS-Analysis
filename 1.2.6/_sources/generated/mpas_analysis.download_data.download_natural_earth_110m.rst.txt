@@ -1,0 +1,6 @@
+mpas\_analysis.download\_data.download\_natural\_earth\_110m
+============================================================
+
+.. currentmodule:: mpas_analysis.download_data
+
+.. autofunction:: download_natural_earth_110m

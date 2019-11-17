@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapSSH
+======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapSSH
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSSH.__init__
+      ~ClimatologyMapSSH.add_subtask
+      ~ClimatologyMapSSH.check_analysis_enabled
+      ~ClimatologyMapSSH.check_generate
+      ~ClimatologyMapSSH.close
+      ~ClimatologyMapSSH.is_alive
+      ~ClimatologyMapSSH.join
+      ~ClimatologyMapSSH.kill
+      ~ClimatologyMapSSH.run
+      ~ClimatologyMapSSH.run_after
+      ~ClimatologyMapSSH.run_task
+      ~ClimatologyMapSSH.set_start_end_date
+      ~ClimatologyMapSSH.setup_and_check
+      ~ClimatologyMapSSH.start
+      ~ClimatologyMapSSH.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSSH.BLOCKED
+      ~ClimatologyMapSSH.FAIL
+      ~ClimatologyMapSSH.READY
+      ~ClimatologyMapSSH.RUNNING
+      ~ClimatologyMapSSH.SUCCESS
+      ~ClimatologyMapSSH.UNSET
+      ~ClimatologyMapSSH.authkey
+      ~ClimatologyMapSSH.daemon
+      ~ClimatologyMapSSH.exitcode
+      ~ClimatologyMapSSH.ident
+      ~ClimatologyMapSSH.name
+      ~ClimatologyMapSSH.pid
+      ~ClimatologyMapSSH.sentinel
+   
+   

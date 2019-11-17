@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapArgoTemperature
+==================================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapArgoTemperature
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapArgoTemperature.__init__
+      ~ClimatologyMapArgoTemperature.add_subtask
+      ~ClimatologyMapArgoTemperature.check_analysis_enabled
+      ~ClimatologyMapArgoTemperature.check_generate
+      ~ClimatologyMapArgoTemperature.close
+      ~ClimatologyMapArgoTemperature.is_alive
+      ~ClimatologyMapArgoTemperature.join
+      ~ClimatologyMapArgoTemperature.kill
+      ~ClimatologyMapArgoTemperature.run
+      ~ClimatologyMapArgoTemperature.run_after
+      ~ClimatologyMapArgoTemperature.run_task
+      ~ClimatologyMapArgoTemperature.set_start_end_date
+      ~ClimatologyMapArgoTemperature.setup_and_check
+      ~ClimatologyMapArgoTemperature.start
+      ~ClimatologyMapArgoTemperature.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapArgoTemperature.BLOCKED
+      ~ClimatologyMapArgoTemperature.FAIL
+      ~ClimatologyMapArgoTemperature.READY
+      ~ClimatologyMapArgoTemperature.RUNNING
+      ~ClimatologyMapArgoTemperature.SUCCESS
+      ~ClimatologyMapArgoTemperature.UNSET
+      ~ClimatologyMapArgoTemperature.authkey
+      ~ClimatologyMapArgoTemperature.daemon
+      ~ClimatologyMapArgoTemperature.exitcode
+      ~ClimatologyMapArgoTemperature.ident
+      ~ClimatologyMapArgoTemperature.name
+      ~ClimatologyMapArgoTemperature.pid
+      ~ClimatologyMapArgoTemperature.sentinel
+   
+   

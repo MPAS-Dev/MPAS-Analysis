@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.MeridionalHeatTransport
+============================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: MeridionalHeatTransport
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MeridionalHeatTransport.__init__
+      ~MeridionalHeatTransport.add_subtask
+      ~MeridionalHeatTransport.check_analysis_enabled
+      ~MeridionalHeatTransport.check_generate
+      ~MeridionalHeatTransport.close
+      ~MeridionalHeatTransport.is_alive
+      ~MeridionalHeatTransport.join
+      ~MeridionalHeatTransport.kill
+      ~MeridionalHeatTransport.run
+      ~MeridionalHeatTransport.run_after
+      ~MeridionalHeatTransport.run_task
+      ~MeridionalHeatTransport.set_start_end_date
+      ~MeridionalHeatTransport.setup_and_check
+      ~MeridionalHeatTransport.start
+      ~MeridionalHeatTransport.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MeridionalHeatTransport.BLOCKED
+      ~MeridionalHeatTransport.FAIL
+      ~MeridionalHeatTransport.READY
+      ~MeridionalHeatTransport.RUNNING
+      ~MeridionalHeatTransport.SUCCESS
+      ~MeridionalHeatTransport.UNSET
+      ~MeridionalHeatTransport.authkey
+      ~MeridionalHeatTransport.daemon
+      ~MeridionalHeatTransport.exitcode
+      ~MeridionalHeatTransport.ident
+      ~MeridionalHeatTransport.name
+      ~MeridionalHeatTransport.pid
+      ~MeridionalHeatTransport.sentinel
+   
+   

@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.get\_unmasked\_mpas\_climatology\_directory
+=============================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. autofunction:: get_unmasked_mpas_climatology_directory

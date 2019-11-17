@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.plot\_hovmoller\_subtask.PlotHovmollerSubtask
+==================================================================
+
+.. currentmodule:: mpas_analysis.ocean.plot_hovmoller_subtask
+
+.. autoclass:: PlotHovmollerSubtask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PlotHovmollerSubtask.__init__
+      ~PlotHovmollerSubtask.add_subtask
+      ~PlotHovmollerSubtask.check_analysis_enabled
+      ~PlotHovmollerSubtask.check_generate
+      ~PlotHovmollerSubtask.close
+      ~PlotHovmollerSubtask.is_alive
+      ~PlotHovmollerSubtask.join
+      ~PlotHovmollerSubtask.kill
+      ~PlotHovmollerSubtask.run
+      ~PlotHovmollerSubtask.run_after
+      ~PlotHovmollerSubtask.run_task
+      ~PlotHovmollerSubtask.set_start_end_date
+      ~PlotHovmollerSubtask.setup_and_check
+      ~PlotHovmollerSubtask.start
+      ~PlotHovmollerSubtask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PlotHovmollerSubtask.BLOCKED
+      ~PlotHovmollerSubtask.FAIL
+      ~PlotHovmollerSubtask.READY
+      ~PlotHovmollerSubtask.RUNNING
+      ~PlotHovmollerSubtask.SUCCESS
+      ~PlotHovmollerSubtask.UNSET
+      ~PlotHovmollerSubtask.authkey
+      ~PlotHovmollerSubtask.daemon
+      ~PlotHovmollerSubtask.exitcode
+      ~PlotHovmollerSubtask.ident
+      ~PlotHovmollerSubtask.name
+      ~PlotHovmollerSubtask.pid
+      ~PlotHovmollerSubtask.sentinel
+   
+   

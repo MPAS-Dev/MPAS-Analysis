@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapMLDMinMax
+============================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapMLDMinMax
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapMLDMinMax.__init__
+      ~ClimatologyMapMLDMinMax.add_subtask
+      ~ClimatologyMapMLDMinMax.check_analysis_enabled
+      ~ClimatologyMapMLDMinMax.check_generate
+      ~ClimatologyMapMLDMinMax.close
+      ~ClimatologyMapMLDMinMax.is_alive
+      ~ClimatologyMapMLDMinMax.join
+      ~ClimatologyMapMLDMinMax.kill
+      ~ClimatologyMapMLDMinMax.run
+      ~ClimatologyMapMLDMinMax.run_after
+      ~ClimatologyMapMLDMinMax.run_task
+      ~ClimatologyMapMLDMinMax.set_start_end_date
+      ~ClimatologyMapMLDMinMax.setup_and_check
+      ~ClimatologyMapMLDMinMax.start
+      ~ClimatologyMapMLDMinMax.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapMLDMinMax.BLOCKED
+      ~ClimatologyMapMLDMinMax.FAIL
+      ~ClimatologyMapMLDMinMax.READY
+      ~ClimatologyMapMLDMinMax.RUNNING
+      ~ClimatologyMapMLDMinMax.SUCCESS
+      ~ClimatologyMapMLDMinMax.UNSET
+      ~ClimatologyMapMLDMinMax.authkey
+      ~ClimatologyMapMLDMinMax.daemon
+      ~ClimatologyMapMLDMinMax.exitcode
+      ~ClimatologyMapMLDMinMax.ident
+      ~ClimatologyMapMLDMinMax.name
+      ~ClimatologyMapMLDMinMax.pid
+      ~ClimatologyMapMLDMinMax.sentinel
+   
+   

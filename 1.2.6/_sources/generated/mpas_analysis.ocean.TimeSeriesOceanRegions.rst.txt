@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.TimeSeriesOceanRegions
+===========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesOceanRegions
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesOceanRegions.__init__
+      ~TimeSeriesOceanRegions.add_subtask
+      ~TimeSeriesOceanRegions.check_analysis_enabled
+      ~TimeSeriesOceanRegions.check_generate
+      ~TimeSeriesOceanRegions.close
+      ~TimeSeriesOceanRegions.is_alive
+      ~TimeSeriesOceanRegions.join
+      ~TimeSeriesOceanRegions.kill
+      ~TimeSeriesOceanRegions.run
+      ~TimeSeriesOceanRegions.run_after
+      ~TimeSeriesOceanRegions.run_task
+      ~TimeSeriesOceanRegions.set_start_end_date
+      ~TimeSeriesOceanRegions.setup_and_check
+      ~TimeSeriesOceanRegions.start
+      ~TimeSeriesOceanRegions.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesOceanRegions.BLOCKED
+      ~TimeSeriesOceanRegions.FAIL
+      ~TimeSeriesOceanRegions.READY
+      ~TimeSeriesOceanRegions.RUNNING
+      ~TimeSeriesOceanRegions.SUCCESS
+      ~TimeSeriesOceanRegions.UNSET
+      ~TimeSeriesOceanRegions.authkey
+      ~TimeSeriesOceanRegions.daemon
+      ~TimeSeriesOceanRegions.exitcode
+      ~TimeSeriesOceanRegions.ident
+      ~TimeSeriesOceanRegions.name
+      ~TimeSeriesOceanRegions.pid
+      ~TimeSeriesOceanRegions.sentinel
+   
+   

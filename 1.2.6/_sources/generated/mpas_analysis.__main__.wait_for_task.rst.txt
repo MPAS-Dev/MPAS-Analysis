@@ -1,0 +1,6 @@
+mpas\_analysis.\_\_main\_\_.wait\_for\_task
+===========================================
+
+.. currentmodule:: mpas_analysis.__main__
+
+.. autofunction:: wait_for_task

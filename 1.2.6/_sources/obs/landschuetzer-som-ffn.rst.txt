@@ -1,0 +1,49 @@
+.. _landschuetzer-som-ffn:
+
+Landschuetzerv2016 SOM-FFN
+==========================
+
+Description
+-----------
+The observation-based pCO2 fields were created using a 2-step neural
+network method extensively described and validated in Landschuetzer et
+al. 2013, 2014, 2016. The method first clusters the global ocean into
+biogeochemical provinces and in a second step reconstructs the non-liner
+relationship between CO2 driver variables and observations from the 4th
+release of the Surface Ocean CO2 Atlas (SOCATv4, Bakker et al. 2016).
+This file contains the resulting monthly pCO2 fields at 1 x 1 deg resolution
+covering the global ocean with the exception of the Arctic Ocean and few
+marginal seas. The air-sea CO2 fluxes are computed from the air-sea CO2
+partial pressure difference and a bulk gas transfer formulation
+following Landschuetzer et al. 2013, 2014, 2016. Furthermore, the monthly
+climatology is created from the monthly average of the period 1985-2015.
+
+Source
+------
+`SOM-FFN Website`_
+
+Release Policy
+--------------
+This product is free to be used. Please cite the data set as:
+Landschuetzer, P., N. Gruber and D.C.E. Bakker (2017). An updated observation-based global monthly gridded sea surface pCO2 and air-sea CO2 flux product from 1982 through 2015 and its monthly climatology (NCEI Accession 0160558). Version 2.2. NOAA National Centers for Environmental Information. Dataset. [2017-07-11]
+
+References
+----------
+- `Landschuetzer et al. 2013`_
+- `Landschuetzer et al. 2014`_
+- `Landschuetzer et al. 2016`_
+- `Bakker et al. 2016`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapBGC`
+
+.. _`SOM-FFN Website`: https://www.nodc.noaa.gov/ocads/oceans/SPCO2_1982_2015_ETH_SOM_FFN.html
+.. _`Landschuetzer et al. 2013`: http://doi.org/10.5194/bg-10-7793-2013
+.. _`Landschuetzer et al. 2014`: http://doi.org/10.1002/2014GB004853
+.. _`Landschuetzer et al. 2016`: http://doi.org/10.1002/2015GB005359
+.. _`Bakker et al. 2016`: http://doi.org/10.5194/essd-8-383-2016
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/BGC/obs.bib
+

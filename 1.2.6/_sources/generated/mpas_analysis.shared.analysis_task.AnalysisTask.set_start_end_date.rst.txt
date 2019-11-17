@@ -1,0 +1,6 @@
+mpas\_analysis.shared.analysis\_task.AnalysisTask.set\_start\_end\_date
+=======================================================================
+
+.. currentmodule:: mpas_analysis.shared.analysis_task
+
+.. automethod:: AnalysisTask.set_start_end_date

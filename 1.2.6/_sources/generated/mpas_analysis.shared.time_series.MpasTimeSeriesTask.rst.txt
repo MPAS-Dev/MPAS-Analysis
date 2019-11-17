@@ -1,0 +1,55 @@
+mpas\_analysis.shared.time\_series.MpasTimeSeriesTask
+=====================================================
+
+.. currentmodule:: mpas_analysis.shared.time_series
+
+.. autoclass:: MpasTimeSeriesTask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MpasTimeSeriesTask.__init__
+      ~MpasTimeSeriesTask.add_subtask
+      ~MpasTimeSeriesTask.add_variables
+      ~MpasTimeSeriesTask.check_analysis_enabled
+      ~MpasTimeSeriesTask.check_generate
+      ~MpasTimeSeriesTask.close
+      ~MpasTimeSeriesTask.is_alive
+      ~MpasTimeSeriesTask.join
+      ~MpasTimeSeriesTask.kill
+      ~MpasTimeSeriesTask.run
+      ~MpasTimeSeriesTask.run_after
+      ~MpasTimeSeriesTask.run_task
+      ~MpasTimeSeriesTask.set_start_end_date
+      ~MpasTimeSeriesTask.setup_and_check
+      ~MpasTimeSeriesTask.start
+      ~MpasTimeSeriesTask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MpasTimeSeriesTask.BLOCKED
+      ~MpasTimeSeriesTask.FAIL
+      ~MpasTimeSeriesTask.READY
+      ~MpasTimeSeriesTask.RUNNING
+      ~MpasTimeSeriesTask.SUCCESS
+      ~MpasTimeSeriesTask.UNSET
+      ~MpasTimeSeriesTask.authkey
+      ~MpasTimeSeriesTask.daemon
+      ~MpasTimeSeriesTask.exitcode
+      ~MpasTimeSeriesTask.ident
+      ~MpasTimeSeriesTask.name
+      ~MpasTimeSeriesTask.pid
+      ~MpasTimeSeriesTask.sentinel
+   
+   

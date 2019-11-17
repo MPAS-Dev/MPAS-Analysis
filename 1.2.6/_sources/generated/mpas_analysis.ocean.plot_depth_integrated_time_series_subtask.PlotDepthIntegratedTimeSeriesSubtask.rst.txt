@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.plot\_depth\_integrated\_time\_series\_subtask.PlotDepthIntegratedTimeSeriesSubtask
+========================================================================================================
+
+.. currentmodule:: mpas_analysis.ocean.plot_depth_integrated_time_series_subtask
+
+.. autoclass:: PlotDepthIntegratedTimeSeriesSubtask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PlotDepthIntegratedTimeSeriesSubtask.__init__
+      ~PlotDepthIntegratedTimeSeriesSubtask.add_subtask
+      ~PlotDepthIntegratedTimeSeriesSubtask.check_analysis_enabled
+      ~PlotDepthIntegratedTimeSeriesSubtask.check_generate
+      ~PlotDepthIntegratedTimeSeriesSubtask.close
+      ~PlotDepthIntegratedTimeSeriesSubtask.is_alive
+      ~PlotDepthIntegratedTimeSeriesSubtask.join
+      ~PlotDepthIntegratedTimeSeriesSubtask.kill
+      ~PlotDepthIntegratedTimeSeriesSubtask.run
+      ~PlotDepthIntegratedTimeSeriesSubtask.run_after
+      ~PlotDepthIntegratedTimeSeriesSubtask.run_task
+      ~PlotDepthIntegratedTimeSeriesSubtask.set_start_end_date
+      ~PlotDepthIntegratedTimeSeriesSubtask.setup_and_check
+      ~PlotDepthIntegratedTimeSeriesSubtask.start
+      ~PlotDepthIntegratedTimeSeriesSubtask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PlotDepthIntegratedTimeSeriesSubtask.BLOCKED
+      ~PlotDepthIntegratedTimeSeriesSubtask.FAIL
+      ~PlotDepthIntegratedTimeSeriesSubtask.READY
+      ~PlotDepthIntegratedTimeSeriesSubtask.RUNNING
+      ~PlotDepthIntegratedTimeSeriesSubtask.SUCCESS
+      ~PlotDepthIntegratedTimeSeriesSubtask.UNSET
+      ~PlotDepthIntegratedTimeSeriesSubtask.authkey
+      ~PlotDepthIntegratedTimeSeriesSubtask.daemon
+      ~PlotDepthIntegratedTimeSeriesSubtask.exitcode
+      ~PlotDepthIntegratedTimeSeriesSubtask.ident
+      ~PlotDepthIntegratedTimeSeriesSubtask.name
+      ~PlotDepthIntegratedTimeSeriesSubtask.pid
+      ~PlotDepthIntegratedTimeSeriesSubtask.sentinel
+   
+   

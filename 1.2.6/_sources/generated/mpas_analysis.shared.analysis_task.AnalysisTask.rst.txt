@@ -1,0 +1,54 @@
+mpas\_analysis.shared.analysis\_task.AnalysisTask
+=================================================
+
+.. currentmodule:: mpas_analysis.shared.analysis_task
+
+.. autoclass:: AnalysisTask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AnalysisTask.__init__
+      ~AnalysisTask.add_subtask
+      ~AnalysisTask.check_analysis_enabled
+      ~AnalysisTask.check_generate
+      ~AnalysisTask.close
+      ~AnalysisTask.is_alive
+      ~AnalysisTask.join
+      ~AnalysisTask.kill
+      ~AnalysisTask.run
+      ~AnalysisTask.run_after
+      ~AnalysisTask.run_task
+      ~AnalysisTask.set_start_end_date
+      ~AnalysisTask.setup_and_check
+      ~AnalysisTask.start
+      ~AnalysisTask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AnalysisTask.BLOCKED
+      ~AnalysisTask.FAIL
+      ~AnalysisTask.READY
+      ~AnalysisTask.RUNNING
+      ~AnalysisTask.SUCCESS
+      ~AnalysisTask.UNSET
+      ~AnalysisTask.authkey
+      ~AnalysisTask.daemon
+      ~AnalysisTask.exitcode
+      ~AnalysisTask.ident
+      ~AnalysisTask.name
+      ~AnalysisTask.pid
+      ~AnalysisTask.sentinel
+   
+   
