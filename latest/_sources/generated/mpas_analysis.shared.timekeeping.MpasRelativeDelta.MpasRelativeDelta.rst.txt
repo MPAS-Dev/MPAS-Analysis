@@ -1,0 +1,29 @@
+mpas\_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta
+=====================================================================
+
+.. currentmodule:: mpas_analysis.shared.timekeeping.MpasRelativeDelta
+
+.. autoclass:: MpasRelativeDelta
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MpasRelativeDelta.__init__
+      ~MpasRelativeDelta.normalized
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MpasRelativeDelta.weeks
+   
+   

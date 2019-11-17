@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Generalize Calendar supported by Analysis &mdash; MPAS-Analysis latest documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Moving variable mapping outside of mpas_xarray" href="variable_mapping_reorg.html" />
+    <link rel="prev" title="Reorganize Timekeeping" href="timekeeping_reorg.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../design_docs.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_file_reorganization.html">Config File Reorganization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timekeeping_reorg.html">Reorganize Timekeeping</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variable_mapping_reorg.html">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis_task_template.html">Analysis Task Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
+        
+      <li>Generalize Calendar supported by Analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/design_docs/generalize_calendar.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="generalize-calendar-supported-by-analysis">
+<h1>Generalize Calendar supported by Analysis<a class="headerlink" href="#generalize-calendar-supported-by-analysis" title="Permalink to this headline">¶</a></h1>
+<h2>
+Xylar Asay-Davis <br>
+date: 2017/02/09 <br>
+</h2>
+<h3> Summary </h3>
+
+Currently, the time variable in `xarray` data sets within MPAS-Analysis has two
+major shortcomings, inherited from `xarray` (through `pandas` and `numpy.datetime64`).
+First, only the Gregorian calendar is supported.  Second, there is not support
+for dates outside the years 1678 to 2262.  The analysis needs to support both
+the Gregorian  ('gregorian') and the 365-day ('gregorian_noleap') calendars.  It also needs to
+support, at a minimum, years between 0001 and 9999, and preferably arbitrary
+years both positive and negative.
+
+A major challenge is that it seems that xarray cannot easily be forced to
+use an alternative representation of dates to the troublesome
+`numpy.datetime64` type (see, for example,
+[pydata/xarray#1084](https://github.com/pydata/xarray/issues/1084)).
+The most obvious alternative, `datetime.datetime`,
+seemingly cannot be used directly in `xarray` because objects of this type
+are converted to `numpy.datetime64` objects at various stages when using
+features from pandas, raising errors when dates are out of range.  While an
+alternative date class (e.g. `netcdftime.DatetimNoLeap`) might be used to
+represent dates on the 'gregorian_noleap' calendar, there is no such
+preexisting alternative for the 'gregorian' calendar.
+
+The solution proposed herein is to store time as floating-point days since the
+reference date 0001-01-01 and to convert dates in this format to
+`datetime.datetime` and `MpasRelativeDelta` objects whenever mathematical
+manipulation of dates is required.
+
+A successful implementation would produce essentially identical analysis to
+what is currently produced, but making use of the dates from the MPAS calendar
+(whether Gregorian or 365-day) without the need for artifical offsets (e.g.
+`yearOffset` used in the current code.  Plots of horizontal fields would remain
+unchanged while plots of time series would have a time axis with the simulation
+date instead of the offset date.
+
+
+<h2> Requirements </h2><h3> Requirement: The 'Time' coordinate of xarray data sets must be consistent
+with the MPAS calendar <br>
+Date last modified: 2017/02/09 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>For all data sets used in the analysis, the ‘Time’ coordinate must represent dates
+on the appropriate MPAS calendar, either ‘gregorian’ or ‘gregorian_noleap’, depending
+on the namelist option ‘config_calendar_type’.  There must be ways of mathematically
+manipulating times (e.g. adding/subtracting offsets and figuring out the amount of time
+between two dates) and of making plots that are consistent with these calendars.</p>
+<h3> Requirement: The 'Time' coordinate of xarray data sets must support at least years
+0001 and 9999, and preferably any conceivable value<br>
+Date last modified: 2017/02/16 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>For all data sets used in the analysis, the ‘Time’ coordinate must, at a minimum,
+support years between 0001 and 9999 (the range of <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>) and preferably
+a broader range.</p>
+<h2> Algorithmic Formulations (optional) </h2><h3> Design solution: The 'Time' coordinate of xarray data sets must be consistent
+with the MPAS calendar <br>
+Date last modified: 2017/02/11 <br>
+Contributors: Xylar Asay-Davis, Phillip J. Wolfram
+</h3><p>The proposed solution represents time in <code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> objects as the number of
+days since the reference date 0001-01-01.
+This is reasonable because the smallest unit of time output in MPAS components is
+seconds (and unlikely to ever be shorter than ms).  We note that a date specified
+as a 64-bit float has a precision high enough to represent seconds for dates up
+to +/- 100 million years:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span><span class="o">*</span><span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="go">142808207.36207813</span>
+</pre></div>
+</div>
+<p>We should have no trouble representing any number we might want (including paleo
+timescales) with this system.</p>
+<p>For purposes of performing mathematical operations and plotting dates, these
+values will be converted to <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects (via the proposed
+<code class="docutils literal notranslate"><span class="pre">days_to_datetime</span></code> utility function) and back (via the proposed
+<code class="docutils literal notranslate"><span class="pre">datetime_to_days</span></code>).</p>
+<p>The conversion operations within <code class="docutils literal notranslate"><span class="pre">datetime_to_days</span></code> and <code class="docutils literal notranslate"><span class="pre">days_to_datetime</span></code> will be
+performed with the calendar-aware functions <code class="docutils literal notranslate"><span class="pre">netCDF4.date2num</span></code> and
+<code class="docutils literal notranslate"><span class="pre">netCDF4.num2date</span></code>, respectively.  Both functions will support lists/arrays of dates
+(for efficiency and simplicity of calling code) in addition to single values.</p>
+<p>Curve ploting can be supported with <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot_date</span></code>, which takes a date
+of exactly the format used here (days since 0001-01-01).  The compatibility with <code class="docutils literal notranslate"><span class="pre">plot_date</span></code>
+was part of the reason for choosing this format for the date.</p>
+<h3> Design solution: The 'Time' coordinate of xarray data sets must support at least years
+0001 and 9999, and preferably any conceivable value<br>
+Date last modified: 2017/02/09 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>Same as above. In theory, the use of days since 0001-01-01 would allow any year
+to be supported, not just the range from 0001 to 9999.  However, the conversions
+to <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects for mathematical manipulation will constrain
+the dates to be between <code class="docutils literal notranslate"><span class="pre">datetime.min</span></code> (0001-01-01) and <code class="docutils literal notranslate"><span class="pre">datetime.max</span></code> (9999-12-31).</p>
+<h2> Design and Implementation </h2><h3> Implementation: The 'Time' coordinate of xarray data sets must be consistent
+with the MPAS calendar <br>
+Date last modified: 2017/02/16 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The proposed implementation is on the branch
+<a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/generalize_calendar">xylar/generalize_calendar</a></p>
+<p>A helper funciton, <code class="docutils literal notranslate"><span class="pre">mpas_xarray._parse_dataset_time</span></code>, computes times as days since
+0001-01-01, and serves as a replacement for <code class="docutils literal notranslate"><span class="pre">mpas_xarray._get_datetimes</span></code>.</p>
+<p><strong>Note: the current implementation breaks the convention that ``mpas_xarray`` remains
+separate from the rest of MPAS-Analyis by using 3 functions from ``timekeeping.utility``
+in ``mpas_xarray``:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..timekeeping.utility</span> <span class="kn">import</span> <span class="n">string_to_days_since_date</span><span class="p">,</span> \
+    <span class="n">days_to_datetime</span><span class="p">,</span> <span class="n">datetime_to_days</span>
+</pre></div>
+</div>
+<p><strong>This violates the first requirement in the
+`Design Document: Moving variable mapping out of mpas_xarray &lt;https://github.com/xylar/MPAS-Analysis/blob/design_doc_variable_mapping_reorg/design_docs/variable_mapping_reorg.md&gt;`_.
+I am open to alternative solutions for keeping ``mpas_xarray`` separate from the rest
+of analysis but these 3 functions do not conceptually belong in ``mpas_xarray``.  The
+problem is exacerbated by the fact that there are analysis-specific functions in
+``timekeeping``, meaning that this cannot easily be made a submodule of ``mpas_xarray``
+(nor would this make very much logical sense).  Having 2 ``timekeeping`` modules, one
+for ``mpas_xarray`` and one for MPAS-Analysis, seems unnecessarily confunsing.</strong></p>
+<p>The functions <code class="docutils literal notranslate"><span class="pre">generalized_reader.open_multifile_dataset</span></code> and
+<code class="docutils literal notranslate"><span class="pre">mpas_xarray.open_multifile_dataset</span></code> have been updated to use this method for parsing
+times.  This involves removing the <code class="docutils literal notranslate"><span class="pre">year_offset</span></code> argument and adding an optional
+<code class="docutils literal notranslate"><span class="pre">simulation_start_time</span></code> argument for supplying a date to use to convert variables
+like <code class="docutils literal notranslate"><span class="pre">daysSinceStartOfSim</span></code> to days since 0001-01-01.</p>
+<p>An example of opening a data set and manipulating times withe the new approach in
+the OHC script is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">get_simulation_start_time</span><span class="p">,</span> \
+    <span class="n">date_to_days</span><span class="p">,</span> <span class="n">days_to_datetime</span><span class="p">,</span> <span class="n">string_to_datetime</span>
+<span class="o">...</span>
+<span class="k">def</span> <span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="o">...</span>
+    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">)</span>
+<span class="o">...</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span><span class="n">file_names</span><span class="o">=</span><span class="n">file_names</span><span class="p">,</span>
+                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                <span class="n">simulation_start_time</span><span class="o">=</span><span class="n">simulation_start_time</span><span class="p">,</span>
+                                <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                                <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
+                                <span class="n">variable_map</span><span class="o">=</span><span class="n">variableMap</span><span class="p">,</span>
+                                <span class="n">start_date</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+                                <span class="n">end_date</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+
+    <span class="n">timeStart</span> <span class="o">=</span> <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">)</span>
+    <span class="n">timeEnd</span> <span class="o">=</span> <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">)</span>
+
+    <span class="c1"># Select year-1 data and average it (for later computing anomalies)</span>
+    <span class="n">timeStartFirstYear</span> <span class="o">=</span> <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">simulation_start_time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">timeStartFirstYear</span> <span class="o">&lt;</span> <span class="n">timeStart</span><span class="p">:</span>
+        <span class="n">startDateFirstYear</span> <span class="o">=</span> <span class="n">simulation_start_time</span>
+        <span class="n">firstYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startDateFirstYear</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
+        <span class="n">filesFirstYear</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span>
+                                          <span class="n">startDate</span><span class="o">=</span><span class="n">startDateFirstYear</span><span class="p">,</span>
+                                          <span class="n">endDate</span><span class="o">=</span><span class="n">endDateFirstYear</span><span class="p">,</span>
+                                          <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+        <span class="n">dsFirstYear</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span>
+            <span class="n">file_names</span><span class="o">=</span><span class="n">filesFirstYear</span><span class="p">,</span>
+            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+            <span class="n">simulation_start_time</span><span class="o">=</span><span class="n">simulation_start_time</span><span class="p">,</span>
+            <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+            <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
+            <span class="n">variable_map</span><span class="o">=</span><span class="n">variableMap</span><span class="p">,</span>
+            <span class="n">start_date</span><span class="o">=</span><span class="n">startDateFirstYear</span><span class="p">,</span>
+            <span class="n">end_date</span><span class="o">=</span><span class="n">endDateFirstYear</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dsFirstYear</span> <span class="o">=</span> <span class="n">ds</span>
+        <span class="n">firstYear</span> <span class="o">=</span> <span class="n">timeStart</span><span class="o">.</span><span class="n">year</span>
+
+    <span class="n">timeStartFirstYear</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">firstYear</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                      <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+    <span class="n">timeEndFirstYear</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">firstYear</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span>
+                                    <span class="n">hour</span><span class="o">=</span><span class="mi">23</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">59</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">59</span><span class="p">,</span>
+                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+
+    <span class="n">dsFirstYear</span> <span class="o">=</span> <span class="n">dsFirstYear</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStartFirstYear</span><span class="p">,</span>
+                                             <span class="n">timeEndFirstYear</span><span class="p">))</span>
+
+    <span class="n">meanFirstYear</span> <span class="o">=</span> <span class="n">dsFirstYear</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="o">...</span>
+    <span class="n">yearStart</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">.</span><span class="n">year</span>
+    <span class="n">yearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">year</span>
+    <span class="n">timeStart</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">yearStart</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+    <span class="n">timeEnd</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">yearEnd</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span>
+                           <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s1">&#39;  Load in OHC from preprocessed reference run...&#39;</span>
+        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;{}/OHC.{}.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">preprocessedInputDirectory</span><span class="p">,</span> <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
+        <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span>
+            <span class="n">file_names</span><span class="o">=</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
+            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+            <span class="n">simulation_start_time</span><span class="o">=</span><span class="n">simulation_start_time</span><span class="p">,</span>
+            <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+        <span class="n">yearEndPreprocessed</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">year</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">replicate_cycles</span></code> function in <code class="docutils literal notranslate"><span class="pre">sea_ice.timeseries</span></code> has been a particular
+challenge with the existing calendar.  Here is that function with the new ‘Time’
+coordinate:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">replicate_cycle</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsToReplicate</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
+    <span class="n">dsStartTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+    <span class="n">dsEndTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+    <span class="n">repStartTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsToReplicate</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+    <span class="n">repEndTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsToReplicate</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+                                  <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+
+    <span class="n">repSecondTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsToReplicate</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                                     <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+
+    <span class="n">period</span> <span class="o">=</span> <span class="p">(</span><span class="n">MpasRelativeDelta</span><span class="p">(</span><span class="n">repEndTime</span><span class="p">,</span> <span class="n">repStartTime</span><span class="p">)</span> <span class="o">+</span>
+              <span class="n">MpasRelativeDelta</span><span class="p">(</span><span class="n">repSecondTime</span><span class="p">,</span> <span class="n">repStartTime</span><span class="p">))</span>
+
+    <span class="n">startIndex</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">dsStartTime</span> <span class="o">&gt;</span> <span class="n">repStartTime</span> <span class="o">+</span> <span class="p">(</span><span class="n">startIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">period</span><span class="p">):</span>
+        <span class="n">startIndex</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">endIndex</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">dsEndTime</span> <span class="o">&gt;</span> <span class="n">repEndTime</span> <span class="o">+</span> <span class="p">(</span><span class="n">endIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">period</span><span class="p">):</span>
+        <span class="n">endIndex</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">dsShift</span> <span class="o">=</span> <span class="n">dsToReplicate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">times</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsShift</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+    <span class="n">dsShift</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                              <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="n">startIndex</span><span class="o">*</span><span class="n">period</span><span class="p">,</span>
+                                               <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">))</span>
+    <span class="c1"># replicate cycle:</span>
+    <span class="k">for</span> <span class="n">cycleIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startIndex</span><span class="p">,</span> <span class="n">endIndex</span><span class="p">):</span>
+        <span class="n">dsNew</span> <span class="o">=</span> <span class="n">dsToReplicate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">dsNew</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                                <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="p">(</span><span class="n">cycleIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">period</span><span class="p">,</span>
+                                                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">))</span>
+        <span class="n">dsShift</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsShift</span><span class="p">,</span> <span class="n">dsNew</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dsShift</span>
+</pre></div>
+</div>
+<h3> Implementation: The 'Time' coordinate of xarray data sets must support at least years
+0001 and 9999, and preferably any conceivable value<br>
+Date last modified: 2017/02/09 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>Same as above.</p>
+<h2> Testing </h2><h3> Testing and Validation: The 'Time' coordinate of xarray data sets must be consistent
+with the MPAS calendar <br>
+Date last modified: 2017/02/11 <br>
+Contributors: Xylar Asay-Davis
+</h3>
+In [xylar/generalize_calendar](https://github.com/xylar/MPAS-Analysis/tree/generalize_calendar),
+unit testing has been added for `timekeeping` and `mpas_xarray` that checks both the `gregorian`
+and `gregorian_noleap` calendars under simple test conditions.  However, we have no data sets
+that test `gregorian`, so we have a somewhat limited ability to test this calendar option.
+Fortunately, there are also no immediate plans to run with `gregorian`.
+
+I will make sure all tests with config files in the `configs/lanl` and `configs/edison`
+directories produce bit-for-bit results with the current `develop`.
+
+<h3> Testing and Validation: The 'Time' coordinate of xarray data sets must support at least years
+0001 and 9999, and preferably any conceivable value<br>
+Date last modified: 2017/02/11 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>Unit tests have been added to ensure that dates both close to 0001-01-01 and typical
+calendar dates (e.g. 2017-01-01) function as expected.</p>
+<p>&#64;akturner’s MPAS-SeaIce run with real dates (mentioned in
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/issues/81">#81</a>)  has been successfully
+run with the proposed approach.  This run started in 1958, and had presented a problem
+for MPAS-Analysis with the previous calendar.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="variable_mapping_reorg.html" class="btn btn-neutral float-right" title="Moving variable mapping outside of mpas_xarray" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="timekeeping_reorg.html" class="btn btn-neutral float-left" title="Reorganize Timekeeping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

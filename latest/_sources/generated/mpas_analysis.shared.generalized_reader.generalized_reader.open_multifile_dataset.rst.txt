@@ -1,0 +1,6 @@
+mpas\_analysis.shared.generalized\_reader.generalized\_reader.open\_multifile\_dataset
+======================================================================================
+
+.. currentmodule:: mpas_analysis.shared.generalized_reader.generalized_reader
+
+.. autofunction:: open_multifile_dataset

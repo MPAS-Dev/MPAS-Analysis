@@ -1,0 +1,6 @@
+mpas\_analysis.shared.plot.plot\_polar\_comparison
+==================================================
+
+.. currentmodule:: mpas_analysis.shared.plot
+
+.. autofunction:: plot_polar_comparison

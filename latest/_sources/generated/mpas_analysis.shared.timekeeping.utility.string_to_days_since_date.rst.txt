@@ -1,0 +1,6 @@
+mpas\_analysis.shared.timekeeping.utility.string\_to\_days\_since\_date
+=======================================================================
+
+.. currentmodule:: mpas_analysis.shared.timekeeping.utility
+
+.. autofunction:: string_to_days_since_date

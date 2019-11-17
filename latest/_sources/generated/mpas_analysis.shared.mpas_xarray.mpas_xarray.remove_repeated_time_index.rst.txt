@@ -1,0 +1,6 @@
+mpas\_analysis.shared.mpas\_xarray.mpas\_xarray.remove\_repeated\_time\_index
+=============================================================================
+
+.. currentmodule:: mpas_analysis.shared.mpas_xarray.mpas_xarray
+
+.. autofunction:: remove_repeated_time_index

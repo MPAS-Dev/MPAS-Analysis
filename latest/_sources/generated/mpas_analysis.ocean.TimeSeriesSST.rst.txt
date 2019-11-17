@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.TimeSeriesSST
+==================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesSST
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesSST.__init__
+      ~TimeSeriesSST.add_subtask
+      ~TimeSeriesSST.check_analysis_enabled
+      ~TimeSeriesSST.check_generate
+      ~TimeSeriesSST.close
+      ~TimeSeriesSST.is_alive
+      ~TimeSeriesSST.join
+      ~TimeSeriesSST.kill
+      ~TimeSeriesSST.run
+      ~TimeSeriesSST.run_after
+      ~TimeSeriesSST.run_task
+      ~TimeSeriesSST.set_start_end_date
+      ~TimeSeriesSST.setup_and_check
+      ~TimeSeriesSST.start
+      ~TimeSeriesSST.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesSST.BLOCKED
+      ~TimeSeriesSST.FAIL
+      ~TimeSeriesSST.READY
+      ~TimeSeriesSST.RUNNING
+      ~TimeSeriesSST.SUCCESS
+      ~TimeSeriesSST.UNSET
+      ~TimeSeriesSST.authkey
+      ~TimeSeriesSST.daemon
+      ~TimeSeriesSST.exitcode
+      ~TimeSeriesSST.ident
+      ~TimeSeriesSST.name
+      ~TimeSeriesSST.pid
+      ~TimeSeriesSST.sentinel
+   
+   

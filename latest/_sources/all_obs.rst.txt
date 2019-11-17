@@ -1,0 +1,27 @@
+.. toctree::
+   :maxdepth: 1
+
+   obs/hadley_center_sst.rst
+   obs/aquarius_sss.rst
+   obs/woa18_t_s.rst
+   obs/aviso_ssh.rst
+   obs/argo_mld.rst
+   obs/trenberth_mht.rst
+   obs/roemmich_gilson_argo.rst
+   obs/sose.rst
+   obs/rignot_melt.rst
+   obs/hadisst_nino.rst
+   obs/ers_sst_nino.rst
+   obs/schmidtko.rst
+   obs/woce.rst
+   obs/woa.rst
+   obs/landschuetzer-som-ffn.rst
+   obs/seawifs.rst
+   obs/glodapv2.rst
+   obs/drifter_eke.rst
+   obs/nasateam_conc.rst
+   obs/bootstrap_conc.rst
+   obs/ssmi_ice_area.rst
+   obs/icesat_thickness.rst
+   obs/piomass_ice_volume.rst
+   obs/altiberg.rst

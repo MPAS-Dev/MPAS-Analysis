@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.RemapMpasClimatologySubtask.get\_masked\_file\_name
+=====================================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. automethod:: RemapMpasClimatologySubtask.get_masked_file_name

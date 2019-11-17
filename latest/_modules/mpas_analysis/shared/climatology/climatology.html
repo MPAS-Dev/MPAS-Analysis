@@ -1,0 +1,1077 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpas_analysis.shared.climatology.climatology &mdash; MPAS-Analysis latest documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.shared.climatology.climatology</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpas_analysis.shared.climatology.climatology</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions for creating climatologies from monthly time series data</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+    <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="k">import</span> <span class="n">Remapper</span><span class="p">,</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="k">import</span> <span class="n">constants</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="k">import</span> <span class="n">days_to_datetime</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+    <span class="n">make_directories</span><span class="p">,</span> <span class="n">fingerprint_generator</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="k">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.comparison_descriptors</span> <span class="k">import</span> \
+    <span class="n">get_comparison_descriptor</span>
+
+
+<div class="viewcode-block" id="get_remapper"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper">[docs]</a><span class="k">def</span> <span class="nf">get_remapper</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">,</span>
+                 <span class="n">mappingFilePrefix</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given config options and descriptions of the source and comparison grids,</span>
+<span class="sd">    returns a ``pyremap.Remapper`` object that can be used to remap from source</span>
+<span class="sd">    files or data sets to corresponding data sets on the comparison grid.</span>
+
+<span class="sd">    If necessary, creates the mapping file containing weights and indices</span>
+<span class="sd">    needed to perform remapping.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config :  instance of ``MpasAnalysisConfigParser``</span>
+<span class="sd">        Contains configuration options</span>
+
+<span class="sd">    sourceDescriptor : ``MeshDescriptor`` subclass object</span>
+<span class="sd">        A description of the source mesh or grid</span>
+
+<span class="sd">    comparisonDescriptor : ``MeshDescriptor`` subclass object</span>
+<span class="sd">        A description of the comparison grid</span>
+
+<span class="sd">    mappingFilePrefix : str</span>
+<span class="sd">        A prefix to be prepended to the mapping file name</span>
+
+<span class="sd">    method : {&#39;bilinear&#39;, &#39;neareststod&#39;, &#39;conserve&#39;}</span>
+<span class="sd">        The method of interpolation used.</span>
+
+<span class="sd">    logger : ``logging.Logger``, optional</span>
+<span class="sd">        A logger to which ncclimo output should be redirected</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    remapper : ``pyremap.Remapper`` object</span>
+<span class="sd">        A remapper that can be used to remap files or data sets from the source</span>
+<span class="sd">        grid or mesh to the comparison grid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">mappingFileName</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_matches_comparison</span><span class="p">(</span><span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">):</span>
+        <span class="c1"># we need to remap because the grids don&#39;t match</span>
+
+        <span class="n">mappingBaseName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">mappingFilePrefix</span><span class="p">,</span>
+            <span class="n">sourceDescriptor</span><span class="o">.</span><span class="n">meshName</span><span class="p">,</span>
+            <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span><span class="p">,</span>
+            <span class="n">method</span><span class="p">)</span>
+
+        <span class="n">tryCustom</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span>
+        <span class="k">if</span> <span class="n">tryCustom</span><span class="p">:</span>
+            <span class="c1"># first see if mapping files are in the custom directory</span>
+            <span class="n">mappingSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">,</span>
+                <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span>
+
+            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">,</span>
+                                         <span class="n">mappingBaseName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tryCustom</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mappingFileName</span><span class="p">):</span>
+            <span class="c1"># second see if mapping files are in the base directory</span>
+
+            <span class="n">mappingSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">,</span>
+                <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;baseDirectory&#39;</span><span class="p">)</span>
+
+            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">,</span>
+                                             <span class="n">mappingBaseName</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mappingFileName</span><span class="p">):</span>
+            <span class="c1"># we don&#39;t have a mapping file yet, so get ready to create one</span>
+            <span class="c1"># in the output subfolder if needed</span>
+            <span class="n">mappingSubdirectory</span> <span class="o">=</span> \
+                <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">)</span>
+            <span class="n">make_directories</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">)</span>
+            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">,</span>
+                                             <span class="n">mappingBaseName</span><span class="p">)</span>
+
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">,</span>
+                        <span class="n">mappingFileName</span><span class="p">)</span>
+
+    <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">remapper</span>  <span class="c1"># }}}</span></div>
+
+
+<div class="viewcode-block" id="compute_monthly_climatology"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html#mpas_analysis.shared.climatology.compute_monthly_climatology">[docs]</a><span class="k">def</span> <span class="nf">compute_monthly_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskVaries</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute monthly climatologies from a data set.  The mean is weighted but</span>
+<span class="sd">    the number of days in each month of the data set, ignoring values masked</span>
+<span class="sd">    out with NaNs.  If the month coordinate is not present, a data array</span>
+<span class="sd">    ``month`` will be added based on ``Time`` and the provided calendar.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object</span>
+<span class="sd">        A data set with a ``Time`` coordinate expressed as days since</span>
+<span class="sd">        0001-01-01 or ``month`` coordinate</span>
+
+<span class="sd">    calendar : ``{&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}``, optional</span>
+<span class="sd">        The name of one of the calendars supported by MPAS cores, used to</span>
+<span class="sd">        determine ``month`` from ``Time`` coordinate, so must be supplied if</span>
+<span class="sd">        ``ds`` does not already have a ``month`` coordinate or data array</span>
+
+<span class="sd">    maskVaries : bool, optional</span>
+<span class="sd">        If the mask (where variables in ``ds`` are ``NaN``) varies with time.</span>
+<span class="sd">        If not, the weighted average does not need make extra effort to account</span>
+<span class="sd">        for the mask.  Most MPAS fields will have masks that don&#39;t vary in</span>
+<span class="sd">        time, whereas observations may sometimes be present only at some</span>
+<span class="sd">        times and not at others, requiring ``maskVaries = True``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    climatology : object of same type as ``ds``</span>
+<span class="sd">        A data set without the ``&#39;Time&#39;`` coordinate containing the mean</span>
+<span class="sd">        of ds over all months in monthValues, weighted by the number of days</span>
+<span class="sd">        in each month.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">compute_one_month_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+        <span class="n">monthValues</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">compute_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">maskVaries</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">add_years_months_days_in_month</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
+
+    <span class="n">monthlyClimatology</span> <span class="o">=</span> \
+        <span class="n">ds</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">compute_one_month_climatology</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">monthlyClimatology</span>  <span class="c1"># }}}</span></div>
+
+
+<div class="viewcode-block" id="compute_climatology"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology">[docs]</a><span class="k">def</span> <span class="nf">compute_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">maskVaries</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute a monthly, seasonal or annual climatology data set from a data</span>
+<span class="sd">    set.  The mean is weighted but the number of days in each month of</span>
+<span class="sd">    the data set, ignoring values masked out with NaNs.  If the month</span>
+<span class="sd">    coordinate is not present, a data array ``month`` will be added based</span>
+<span class="sd">    on ``Time`` and the provided calendar.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object</span>
+<span class="sd">        A data set with a ``Time`` coordinate expressed as days since</span>
+<span class="sd">        0001-01-01 or ``month`` coordinate</span>
+
+<span class="sd">    monthValues : int or array-like of ints</span>
+<span class="sd">        A single month or an array of months to be averaged together</span>
+
+<span class="sd">    calendar : ``{&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}``, optional</span>
+<span class="sd">        The name of one of the calendars supported by MPAS cores, used to</span>
+<span class="sd">        determine ``month`` from ``Time`` coordinate, so must be supplied if</span>
+<span class="sd">        ``ds`` does not already have a ``month`` coordinate or data array</span>
+
+<span class="sd">    maskVaries : bool, optional</span>
+<span class="sd">        If the mask (where variables in ``ds`` are ``NaN``) varies with time.</span>
+<span class="sd">        If not, the weighted average does not need make extra effort to account</span>
+<span class="sd">        for the mask.  Most MPAS fields will have masks that don&#39;t vary in</span>
+<span class="sd">        time, whereas observations may sometimes be present only at some</span>
+<span class="sd">        times and not at others, requiring ``maskVaries = True``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    climatology : object of same type as ``ds``</span>
+<span class="sd">        A data set without the ``&#39;Time&#39;`` coordinate containing the mean</span>
+<span class="sd">        of ds over all months in monthValues, weighted by the number of days</span>
+<span class="sd">        in each month.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">add_years_months_days_in_month</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="n">monthValues</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">month</span><span class="p">)</span>
+
+    <span class="n">climatologyMonths</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">climatology</span> <span class="o">=</span> <span class="n">_compute_masked_mean</span><span class="p">(</span><span class="n">climatologyMonths</span><span class="p">,</span> <span class="n">maskVaries</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">climatology</span>  <span class="c1"># }}}</span></div>
+
+
+<div class="viewcode-block" id="add_years_months_days_in_month"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html#mpas_analysis.shared.climatology.add_years_months_days_in_month">[docs]</a><span class="k">def</span> <span class="nf">add_years_months_days_in_month</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.</span>
+<span class="sd">    The number of days in each month of ``ds`` is computed either using the</span>
+<span class="sd">    ``startTime`` and ``endTime`` if available or assuming ``gregorian_noleap``</span>
+<span class="sd">    calendar and ignoring leap years.  ``year`` and ``month`` are computed</span>
+<span class="sd">    accounting correctly for the the calendar.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object</span>
+<span class="sd">        A data set with a ``Time`` coordinate expressed as days since</span>
+<span class="sd">        0001-01-01</span>
+
+<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">        The name of one of the calendars supported by MPAS cores, used to</span>
+<span class="sd">        determine ``year`` and ``month`` from ``Time`` coordinate</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds : object of same type as ``ds``</span>
+<span class="sd">        The data set with ``year``, ``month`` and ``daysInMonth`` data arrays</span>
+<span class="sd">        added (if not already present)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;year&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span> <span class="s1">&#39;month&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span>
+            <span class="s1">&#39;daysInMonth&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ds</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s1">&#39;year&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">or</span> <span class="s1">&#39;month&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">calendar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;calendar must be provided if month and year &#39;</span>
+                             <span class="s1">&#39;coordinate is not in ds.&#39;</span><span class="p">)</span>
+        <span class="n">datetimes</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;year&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">year</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">datetimes</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="s1">&#39;month&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">date</span><span class="o">.</span><span class="n">month</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">datetimes</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="s1">&#39;daysInMonth&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;startTime&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span> <span class="s1">&#39;endTime&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;daysInMonth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">endTime</span> <span class="o">-</span> <span class="n">ds</span><span class="o">.</span><span class="n">startTime</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">calendar</span> <span class="o">==</span> <span class="s1">&#39;gregorian&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: The MPAS run used the Gregorian calendar &#39;</span>
+                      <span class="s1">&#39;but does not appear to have</span><span class="se">\n</span><span class="s1">&#39;</span>
+                      <span class="s1">&#39;supplied start and end times.  Climatologies &#39;</span>
+                      <span class="s1">&#39;will be computed with</span><span class="se">\n</span><span class="s1">&#39;</span>
+                      <span class="s1">&#39;month durations ignoring leap years.&#39;</span><span class="p">)</span>
+
+            <span class="n">daysInMonth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">daysInMonth</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">month</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span>
+                 <span class="n">month</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;daysInMonth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">daysInMonth</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
+
+
+<span class="k">def</span> <span class="nf">remap_and_write_climatology</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">climatologyDataSet</span><span class="p">,</span>
+                                <span class="n">climatologyFileName</span><span class="p">,</span> <span class="n">remappedFileName</span><span class="p">,</span>
+                                <span class="n">remapper</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a field in a climatology data set, use the ``remapper`` to remap</span>
+<span class="sd">    horizontal dimensions of all fields, write the results to an output file,</span>
+<span class="sd">    and return the remapped data set.</span>
+
+<span class="sd">    Note that ``climatologyFileName`` and ``remappedFileName`` will be</span>
+<span class="sd">    overwritten if they exist, so if this behavior is not desired, the calling</span>
+<span class="sd">    code should skip this call if the files exist and simply load the contents</span>
+<span class="sd">    of ``remappedFileName``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config :  instance of ``MpasAnalysisConfigParser``</span>
+<span class="sd">        Contains configuration options</span>
+
+<span class="sd">    climatologyDataSet : ``xarray.DataSet`` or ``xarray.DataArray`` object</span>
+<span class="sd">        A data set containing a climatology</span>
+
+<span class="sd">    fieldName : str</span>
+<span class="sd">        A field within the climatology to be remapped</span>
+
+<span class="sd">    climatologyFileName : str</span>
+<span class="sd">        The name of the output file to which the data set should be written</span>
+<span class="sd">        before remapping (if using ncremap).</span>
+
+<span class="sd">    remappedFileName : str</span>
+<span class="sd">        The name of the output file to which the remapped data set should</span>
+<span class="sd">        be written.</span>
+
+<span class="sd">    remapper : ``pyremap.Remapper`` object</span>
+<span class="sd">        A remapper that can be used to remap files or data sets to a</span>
+<span class="sd">        comparison grid.</span>
+
+<span class="sd">    logger : ``logging.Logger``, optional</span>
+<span class="sd">        A logger to which ncclimo output should be redirected</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    remappedClimatology : ``xarray.DataSet`` or ``xarray.DataArray`` object</span>
+<span class="sd">        A data set containing the remapped climatology</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">useNcremap</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;useNcremap&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">remapper</span><span class="o">.</span><span class="n">mappingFileName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># no remapping is needed</span>
+        <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">climatologyDataSet</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;renormalizationThreshold&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">useNcremap</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">climatologyFileName</span><span class="p">):</span>
+                <span class="n">write_netcdf</span><span class="p">(</span><span class="n">climatologyDataSet</span><span class="p">,</span> <span class="n">climatologyFileName</span><span class="p">)</span>
+            <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">climatologyFileName</span><span class="p">,</span>
+                                <span class="n">outFileName</span><span class="o">=</span><span class="n">remappedFileName</span><span class="p">,</span>
+                                <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remappedFileName</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span><span class="n">climatologyDataSet</span><span class="p">,</span>
+                                                 <span class="n">renormalizationThreshold</span><span class="p">)</span>
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">remappedClimatology</span><span class="p">,</span> <span class="n">remappedFileName</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">remappedClimatology</span>  <span class="c1"># }}}</span>
+
+
+<div class="viewcode-block" id="get_unmasked_mpas_climatology_directory"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory">[docs]</a><span class="k">def</span> <span class="nf">get_unmasked_mpas_climatology_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the directory for an unmasked MPAS climatology produced by ncclimo,</span>
+<span class="sd">    making the directory if it doesn&#39;t already exist</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        configuration options</span>
+
+<span class="sd">    op : {&#39;avg&#39;, &#39;min&#39;, &#39;max&#39;}</span>
+<span class="sd">         operator for monthly stats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">climatologyOpDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+    <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/unmasked_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">climatologyOpDirectory</span><span class="p">,</span>
+                                        <span class="n">mpasMeshName</span><span class="p">)</span>
+
+    <span class="n">make_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">directory</span>  <span class="c1"># }}}</span></div>
+
+
+<div class="viewcode-block" id="get_unmasked_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_unmasked_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+                                            <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
+    <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the file name for an unmasked MPAS climatology produced by ncclimo</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        configuration options</span>
+
+<span class="sd">    season : str</span>
+<span class="sd">        One of the seasons in ``constants.monthDictionary``</span>
+
+<span class="sd">    componentName : {&#39;ocean&#39;, &#39;seaIce&#39;}</span>
+<span class="sd">        The MPAS component for which the climatology is being computed</span>
+
+<span class="sd">    op : {&#39;avg&#39;, &#39;min&#39;, &#39;max&#39;}</span>
+<span class="sd">         operator for monthly stats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
+    <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">componentName</span> <span class="o">==</span> <span class="s1">&#39;ocean&#39;</span><span class="p">:</span>
+        <span class="n">ncclimoModel</span> <span class="o">=</span> <span class="s1">&#39;mpaso&#39;</span>
+    <span class="k">elif</span> <span class="n">componentName</span> <span class="o">==</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">:</span>
+        <span class="n">ncclimoModel</span> <span class="o">=</span> <span class="s1">&#39;mpascice&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;component </span><span class="si">{}</span><span class="s1"> is not supported by ncclimo.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Check with Charlie Zender and Xylar Asay-Davis</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;about getting it added&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">get_unmasked_mpas_climatology_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+    <span class="n">make_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="n">monthValues</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">monthDictionary</span><span class="p">[</span><span class="n">season</span><span class="p">])</span>
+    <span class="n">startMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">endMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}{:02d}</span><span class="s1">_</span><span class="si">{:04d}{:02d}</span><span class="s1">_climo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">startYear</span><span class="p">,</span> <span class="n">startMonth</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">endMonth</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">abrevMonthNames</span><span class="p">:</span>
+        <span class="n">season</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">ncclimoModel</span><span class="p">,</span>
+                                       <span class="n">season</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fileName</span>  <span class="c1"># }}}</span></div>
+
+
+<div class="viewcode-block" id="get_masked_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_masked_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+                                          <span class="n">climatologyName</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the file name for a masked MPAS climatology</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        Configuration options</span>
+
+<span class="sd">    season : str</span>
+<span class="sd">        One of the seasons in ``constants.monthDictionary``</span>
+
+<span class="sd">    componentName : {&#39;ocean&#39;, &#39;seaIce&#39;}</span>
+<span class="sd">        The MPAS component for which the climatology is being computed</span>
+
+<span class="sd">    climatologyName : str</span>
+<span class="sd">        The name of the climatology (typically the name of a field to mask</span>
+<span class="sd">        and later remap)</span>
+
+<span class="sd">    op : {&#39;avg&#39;, &#39;min&#39;, &#39;max&#39;}</span>
+<span class="sd">         operator for monthly stats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
+    <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+    <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">componentName</span> <span class="o">==</span> <span class="s1">&#39;ocean&#39;</span><span class="p">:</span>
+        <span class="n">ncclimoModel</span> <span class="o">=</span> <span class="s1">&#39;mpaso&#39;</span>
+    <span class="k">elif</span> <span class="n">componentName</span> <span class="o">==</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">:</span>
+        <span class="n">ncclimoModel</span> <span class="o">=</span> <span class="s1">&#39;mpascice&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;component </span><span class="si">{}</span><span class="s1"> is not supported by ncclimo.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Check with Charlie Zender and Xylar Asay-Davis</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;about getting it added&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
+
+    <span class="n">climatologyOpDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+    <span class="n">stageDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/masked&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">climatologyOpDirectory</span><span class="p">)</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">stageDirectory</span><span class="p">,</span> <span class="n">climatologyName</span><span class="p">,</span>
+        <span class="n">mpasMeshName</span><span class="p">)</span>
+
+    <span class="n">make_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="n">monthValues</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">monthDictionary</span><span class="p">[</span><span class="n">season</span><span class="p">])</span>
+    <span class="n">startMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">endMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}{:02d}</span><span class="s1">_</span><span class="si">{:04d}{:02d}</span><span class="s1">_climo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">startYear</span><span class="p">,</span> <span class="n">startMonth</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">endMonth</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">abrevMonthNames</span><span class="p">:</span>
+        <span class="n">season</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">directory</span><span class="p">,</span> <span class="n">ncclimoModel</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fileName</span>  <span class="c1"># }}}</span></div>
+
+
+<div class="viewcode-block" id="get_remapped_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_remapped_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+                                            <span class="n">climatologyName</span><span class="p">,</span>
+                                            <span class="n">comparisonGridName</span><span class="p">,</span>
+                                            <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the file name for a masked MPAS climatology</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        Configuration options</span>
+
+<span class="sd">    season : str</span>
+<span class="sd">        One of the seasons in ``constants.monthDictionary``</span>
+
+<span class="sd">    componentName : {&#39;ocean&#39;, &#39;seaIce&#39;}</span>
+<span class="sd">        The MPAS component for which the climatology is being computed</span>
+
+<span class="sd">    climatologyName : str</span>
+<span class="sd">        The name of the climatology (typically the name of a field to mask</span>
+<span class="sd">        and later remap)</span>
+
+<span class="sd">    comparisonGridName : str</span>
+<span class="sd">        The name of the comparison grid to use for remapping.  If it is one</span>
+<span class="sd">        of the default comparison grid names ``{&#39;latlon&#39;, &#39;antarctic&#39;,</span>
+<span class="sd">        &#39;arctic&#39;}``, the full grid name is looked up via</span>
+<span class="sd">        get_comparison_descriptor</span>
+
+<span class="sd">    op : {&#39;avg&#39;, &#39;min&#39;, &#39;max&#39;}</span>
+<span class="sd">         operator for monthly stats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
+    <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+    <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">componentName</span> <span class="o">==</span> <span class="s1">&#39;ocean&#39;</span><span class="p">:</span>
+        <span class="n">ncclimoModel</span> <span class="o">=</span> <span class="s1">&#39;mpaso&#39;</span>
+    <span class="k">elif</span> <span class="n">componentName</span> <span class="o">==</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">:</span>
+        <span class="n">ncclimoModel</span> <span class="o">=</span> <span class="s1">&#39;mpascice&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;component </span><span class="si">{}</span><span class="s1"> is not supported by ncclimo.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Check with Charlie Zender and Xylar Asay-Davis</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;about getting it added&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
+
+    <span class="n">climatologyOpDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic&#39;</span><span class="p">]:</span>
+        <span class="n">comparisonDescriptor</span> <span class="o">=</span> <span class="n">get_comparison_descriptor</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                                         <span class="n">comparisonGridName</span><span class="p">)</span>
+        <span class="n">comparisonFullMeshName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">comparisonFullMeshName</span> <span class="o">=</span> <span class="n">comparisonGridName</span>
+
+    <span class="n">stageDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/remapped&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">climatologyOpDirectory</span><span class="p">)</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stageDirectory</span><span class="p">,</span> <span class="n">climatologyName</span><span class="p">,</span>
+                                        <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">comparisonFullMeshName</span><span class="p">)</span>
+
+    <span class="n">make_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+    <span class="n">monthValues</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">monthDictionary</span><span class="p">[</span><span class="n">season</span><span class="p">])</span>
+    <span class="n">startMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">endMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}{:02d}</span><span class="s1">_</span><span class="si">{:04d}{:02d}</span><span class="s1">_climo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">startYear</span><span class="p">,</span> <span class="n">startMonth</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">endMonth</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">abrevMonthNames</span><span class="p">:</span>
+        <span class="n">season</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">directory</span><span class="p">,</span> <span class="n">ncclimoModel</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fileName</span>  <span class="c1"># }}}</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get the output directory for MPAS climatologies from output with the given</span>
+<span class="sd">    monthly operator: avg, min or max</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">climatologyBaseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasClimatologySubdirectory&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">climatologyBaseDirectory</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_masked_mean</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">maskVaries</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Compute the time average of data set, masked out where the variables in ds</span>
+<span class="sd">    are NaN and, if ``maskVaries == True``, weighting by the number of days</span>
+<span class="sd">    used to compute each monthly mean time in ds.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">ds_to_weights</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+        <span class="c1"># make an identical data set to ds but replacing all data arrays with</span>
+        <span class="c1"># nonnull applied to that data array</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">dataarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">dataset</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+                <span class="n">weights</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;ds must be an instance of either xarray.Dataset &#39;</span>
+                            <span class="s1">&#39;or xarray.DataArray.&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">weights</span>
+
+    <span class="k">if</span> <span class="n">maskVaries</span><span class="p">:</span>
+        <span class="n">dsWeightedSum</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysInMonth</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">keep_attrs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">ds_to_weights</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+
+        <span class="n">weightSum</span> <span class="o">=</span> <span class="p">(</span><span class="n">weights</span> <span class="o">*</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysInMonth</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+
+        <span class="n">timeMean</span> <span class="o">=</span> <span class="n">dsWeightedSum</span> <span class="o">/</span> <span class="n">weightSum</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">weightSum</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysInMonth</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+
+        <span class="n">dsWeightedSum</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds</span> <span class="o">*</span> <span class="n">ds</span><span class="o">.</span><span class="n">daysInMonth</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">keep_attrs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">timeMean</span> <span class="o">=</span> <span class="n">dsWeightedSum</span> <span class="o">/</span> <span class="n">days</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">days</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">timeMean</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">_matches_comparison</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Determine if the two meshes are the same</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">comparisonDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span><span class="p">):</span>
+        <span class="c1"># pretty hard to determine if projections are the same, so we&#39;ll rely</span>
+        <span class="c1"># on the grid names</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">meshName</span> <span class="o">==</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span> <span class="ow">and</span> \
+            <span class="nb">len</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">len</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                    <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">x</span><span class="p">))</span> <span class="ow">and</span> \
+            <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                    <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="p">,</span> <span class="n">LatLonGridDescriptor</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">comparisonDescriptor</span><span class="p">,</span> <span class="n">LatLonGridDescriptor</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="p">(((</span><span class="s1">&#39;degree&#39;</span> <span class="ow">in</span> <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">units</span> <span class="ow">and</span>
+                   <span class="s1">&#39;degree&#39;</span> <span class="ow">in</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">units</span><span class="p">)</span> <span class="ow">or</span>
+                  <span class="p">(</span><span class="s1">&#39;radian&#39;</span> <span class="ow">in</span> <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">units</span> <span class="ow">and</span>
+                   <span class="s1">&#39;radian&#39;</span> <span class="ow">in</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">units</span><span class="p">))</span> <span class="ow">and</span>
+                 <span class="nb">len</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">lat</span><span class="p">)</span> <span class="ow">and</span>
+                 <span class="nb">len</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span> <span class="ow">and</span>
+                 <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span>
+                                         <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">lat</span><span class="p">))</span> <span class="ow">and</span>
+                 <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsDescriptor</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span>
+                                         <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">lon</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">match</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">_setup_climatology_caching</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">startYearClimo</span><span class="p">,</span> <span class="n">endYearClimo</span><span class="p">,</span>
+                               <span class="n">yearsPerCacheFile</span><span class="p">,</span> <span class="n">cachePrefix</span><span class="p">,</span>
+                               <span class="n">monthValues</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Determine which cache files already exist, which are incomplete and which</span>
+<span class="sd">    years are present in each cache file (whether existing or to be created).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">cacheInfo</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">cacheIndices</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="n">monthsInDs</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">yearsInDs</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># figure out which files to load and which years go in each file</span>
+    <span class="k">for</span> <span class="n">firstYear</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startYearClimo</span><span class="p">,</span> <span class="n">endYearClimo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                           <span class="n">yearsPerCacheFile</span><span class="p">):</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">firstYear</span><span class="p">,</span> <span class="n">firstYear</span> <span class="o">+</span> <span class="n">yearsPerCacheFile</span><span class="p">)</span>
+
+        <span class="n">yearString</span><span class="p">,</span> <span class="n">fileSuffix</span> <span class="o">=</span> <span class="n">_get_year_string</span><span class="p">(</span><span class="n">years</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">outputFileClimo</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cachePrefix</span><span class="p">,</span> <span class="n">fileSuffix</span><span class="p">)</span>
+
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">):</span>
+            <span class="c1"># already cached</span>
+            <span class="n">dsCached</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dsCached</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="c1"># assuming the cache file is corrupt, so deleting it.</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Deleting cache file </span><span class="si">{}</span><span class="s1">, which appears to &#39;</span>
+                      <span class="s1">&#39;have been corrupted.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">))</span>
+
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">)</span>
+
+            <span class="n">monthsIfDone</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">monthValues</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">dsCached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="n">dsCached</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalMonths&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">monthsIfDone</span><span class="p">)):</span>
+                <span class="c1"># also complete, so we can move on</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">dsCached</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">dsCached</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">cacheIndex</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cacheInfo</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="n">monthValues</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">yearsInDs</span> <span class="o">==</span> <span class="n">year</span><span class="p">,</span>
+                                         <span class="n">monthsInDs</span> <span class="o">==</span> <span class="n">month</span><span class="p">)</span>
+                <span class="n">cacheIndices</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">cacheIndex</span>
+
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">cacheIndices</span> <span class="o">==</span> <span class="n">cacheIndex</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">cacheInfo</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">outputFileClimo</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">yearString</span><span class="p">))</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;cacheIndices&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">cacheIndices</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cacheInfo</span><span class="p">,</span> <span class="n">cacheIndices</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">_cache_individual_climatologies</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">cacheInfo</span><span class="p">,</span> <span class="n">printProgress</span><span class="p">,</span>
+                                    <span class="n">yearsPerCacheFile</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span>
+                                    <span class="n">calendar</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Cache individual climatologies for later aggregation.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">for</span> <span class="n">cacheIndex</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cacheInfo</span><span class="p">):</span>
+        <span class="n">outputFileClimo</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">yearString</span> <span class="o">=</span> <span class="n">info</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">dsYear</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">cacheIndices</span> <span class="o">==</span> <span class="n">cacheIndex</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">printProgress</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;     </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yearString</span><span class="p">))</span>
+
+        <span class="n">totalDays</span> <span class="o">=</span> <span class="n">dsYear</span><span class="o">.</span><span class="n">daysInMonth</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">monthCount</span> <span class="o">=</span> <span class="n">dsYear</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+
+        <span class="n">climatology</span> <span class="o">=</span> <span class="n">compute_climatology</span><span class="p">(</span><span class="n">dsYear</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
+                                          <span class="n">maskVaries</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalDays&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalDays</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalMonths&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">monthCount</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;fingerprintClimo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fingerprint_generator</span><span class="p">()</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span> <span class="n">outputFileClimo</span><span class="p">)</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">_cache_aggregated_climatology</span><span class="p">(</span><span class="n">startYearClimo</span><span class="p">,</span> <span class="n">endYearClimo</span><span class="p">,</span> <span class="n">cachePrefix</span><span class="p">,</span>
+                                  <span class="n">printProgress</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span>
+                                  <span class="n">cacheInfo</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Cache aggregated climatology from individual climatologies.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">yearString</span><span class="p">,</span> <span class="n">fileSuffix</span> <span class="o">=</span> <span class="n">_get_year_string</span><span class="p">(</span><span class="n">startYearClimo</span><span class="p">,</span> <span class="n">endYearClimo</span><span class="p">)</span>
+    <span class="n">outputFileClimo</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cachePrefix</span><span class="p">,</span> <span class="n">fileSuffix</span><span class="p">)</span>
+
+    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cacheInfo</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">):</span>
+        <span class="c1"># already cached</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">climatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="c1"># assuming the cache file is corrupt, so deleting it.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Deleting cache file </span><span class="si">{}</span><span class="s1">, which appears to have &#39;</span>
+                  <span class="s1">&#39;been corrupted.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outputFileClimo</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cacheInfo</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">outputFileClimo</span> <span class="o">==</span> <span class="n">cacheInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1"># theres only one cache file and it already has the same name</span>
+            <span class="c1"># as the aggregated file so no need to aggregate</span>
+            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">elif</span> <span class="n">climatology</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">monthsIfDone</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">endYearClimo</span> <span class="o">-</span> <span class="n">startYearClimo</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">monthValues</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalMonths&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">monthsIfDone</span><span class="p">:</span>
+                <span class="c1"># also complete, so we can move on</span>
+                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">climatology</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">printProgress</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;   Computing aggregated climatology &#39;</span>
+                  <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yearString</span><span class="p">))</span>
+
+        <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">cacheIndex</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cacheInfo</span><span class="p">):</span>
+            <span class="n">inFileClimo</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileClimo</span><span class="p">)</span>
+            <span class="n">days</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalDays&#39;</span><span class="p">]</span>
+            <span class="n">months</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalMonths&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+                <span class="n">totalDays</span> <span class="o">=</span> <span class="n">days</span>
+                <span class="n">totalMonths</span> <span class="o">=</span> <span class="n">months</span>
+                <span class="n">climatology</span> <span class="o">=</span> <span class="n">ds</span> <span class="o">*</span> <span class="n">days</span>
+                <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">totalDays</span> <span class="o">+=</span> <span class="n">days</span>
+                <span class="n">totalMonths</span> <span class="o">+=</span> <span class="n">months</span>
+                <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span> <span class="o">+</span> <span class="n">ds</span> <span class="o">*</span> <span class="n">days</span>
+
+            <span class="n">ds</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span> <span class="o">/</span> <span class="n">totalDays</span>
+
+        <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalDays&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalDays</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;totalMonths&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalMonths</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;fingerprintClimo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fingerprint_generator</span><span class="p">()</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span> <span class="n">outputFileClimo</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">climatology</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">_get_year_string</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">startYear</span> <span class="o">==</span> <span class="n">endYear</span><span class="p">:</span>
+        <span class="n">yearString</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">)</span>
+        <span class="n">fileSuffix</span> <span class="o">=</span> <span class="s1">&#39;year</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yearString</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">yearString</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">)</span>
+        <span class="n">fileSuffix</span> <span class="o">=</span> <span class="s1">&#39;years</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yearString</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">yearString</span><span class="p">,</span> <span class="n">fileSuffix</span>
+
+
+<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+mpas\_analysis.shared.plot.colormap.setup\_colormap
+===================================================
+
+.. currentmodule:: mpas_analysis.shared.plot.colormap
+
+.. autofunction:: setup_colormap

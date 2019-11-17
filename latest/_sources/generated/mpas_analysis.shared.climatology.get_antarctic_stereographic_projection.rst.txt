@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.get\_antarctic\_stereographic\_projection
+===========================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. autofunction:: get_antarctic_stereographic_projection

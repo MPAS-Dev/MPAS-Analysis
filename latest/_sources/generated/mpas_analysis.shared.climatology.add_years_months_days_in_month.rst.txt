@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.add\_years\_months\_days\_in\_month
+=====================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. autofunction:: add_years_months_days_in_month

@@ -1,0 +1,6 @@
+mpas\_analysis.shared.io.utility.make\_directories
+==================================================
+
+.. currentmodule:: mpas_analysis.shared.io.utility
+
+.. autofunction:: make_directories

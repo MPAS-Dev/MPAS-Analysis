@@ -1,0 +1,6 @@
+mpas\_analysis.\_\_main\_\_.main
+================================
+
+.. currentmodule:: mpas_analysis.__main__
+
+.. autofunction:: main

@@ -1,0 +1,54 @@
+mpas\_analysis.sea\_ice.ClimatologyMapSeaIceConc
+================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceConc
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceConc.__init__
+      ~ClimatologyMapSeaIceConc.add_subtask
+      ~ClimatologyMapSeaIceConc.check_analysis_enabled
+      ~ClimatologyMapSeaIceConc.check_generate
+      ~ClimatologyMapSeaIceConc.close
+      ~ClimatologyMapSeaIceConc.is_alive
+      ~ClimatologyMapSeaIceConc.join
+      ~ClimatologyMapSeaIceConc.kill
+      ~ClimatologyMapSeaIceConc.run
+      ~ClimatologyMapSeaIceConc.run_after
+      ~ClimatologyMapSeaIceConc.run_task
+      ~ClimatologyMapSeaIceConc.set_start_end_date
+      ~ClimatologyMapSeaIceConc.setup_and_check
+      ~ClimatologyMapSeaIceConc.start
+      ~ClimatologyMapSeaIceConc.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceConc.BLOCKED
+      ~ClimatologyMapSeaIceConc.FAIL
+      ~ClimatologyMapSeaIceConc.READY
+      ~ClimatologyMapSeaIceConc.RUNNING
+      ~ClimatologyMapSeaIceConc.SUCCESS
+      ~ClimatologyMapSeaIceConc.UNSET
+      ~ClimatologyMapSeaIceConc.authkey
+      ~ClimatologyMapSeaIceConc.daemon
+      ~ClimatologyMapSeaIceConc.exitcode
+      ~ClimatologyMapSeaIceConc.ident
+      ~ClimatologyMapSeaIceConc.name
+      ~ClimatologyMapSeaIceConc.pid
+      ~ClimatologyMapSeaIceConc.sentinel
+   
+   

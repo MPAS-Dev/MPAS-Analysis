@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpas_analysis.ocean.climatology_map_mld_min_max &mdash; MPAS-Analysis latest documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.ocean.climatology_map_mld_min_max</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpas_analysis.ocean.climatology_map_mld_min_max</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+    <span class="n">unicode_literals</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="k">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapMLDMinMax"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapMLDMinMax</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of mixed layer depth (mld) against</span>
+<span class="sd">    observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
+
+<div class="viewcode-block" id="ClimatologyMapMLDMinMax.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTasks : dict of ``MpasClimatologyTask``</span>
+<span class="sd">            The tasks that produced the climatology of monthly min and max to</span>
+<span class="sd">            be remapped and plotted</span>
+
+<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;mld&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapMLDMinMax</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapMLDMinMax&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tasks</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Density MLD&#39;</span><span class="p">,</span>
+                        <span class="n">mpasVariableSuffix</span><span class="o">=</span><span class="s1">&#39;dThreshMLD&#39;</span><span class="p">,</span>
+                        <span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;d_mld&#39;</span><span class="p">,</span>
+                        <span class="n">sectionPrefix</span><span class="o">=</span><span class="s1">&#39;climatologyMapDensityMLD&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tasks</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Temperature MLD&#39;</span><span class="p">,</span>
+                        <span class="n">mpasVariableSuffix</span><span class="o">=</span><span class="s1">&#39;tThreshMLD&#39;</span><span class="p">,</span>
+                        <span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;t_mld&#39;</span><span class="p">,</span>
+                        <span class="n">sectionPrefix</span><span class="o">=</span><span class="s1">&#39;climatologyMapTemperatureMLD&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_tasks</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Boundary-Layer Depth&#39;</span><span class="p">,</span>
+                        <span class="n">mpasVariableSuffix</span><span class="o">=</span><span class="s1">&#39;boundaryLayerDepth&#39;</span><span class="p">,</span>
+                        <span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;bld&#39;</span><span class="p">,</span>
+                        <span class="n">sectionPrefix</span><span class="o">=</span><span class="s1">&#39;climatologyMapBLD&#39;</span><span class="p">)</span></div>
+        <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Check if MLD capability was turned on in the run.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
+        <span class="c1"># which will perform some common setup, including storing:</span>
+        <span class="c1">#     self.runDirectory , self.historyDirectory, self.plotsDirectory,</span>
+        <span class="c1">#     self.namelist, self.runStreams, self.historyStreams,</span>
+        <span class="c1">#     self.calendar</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapMLDMinMax</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_analysis_enabled</span><span class="p">(</span>
+            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_mixedlayerdepths_enable&#39;</span><span class="p">,</span>
+            <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_analysis_enabled</span><span class="p">(</span>
+            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_AM_timeSeriesStatsMonthlyMin_enable&#39;</span><span class="p">,</span>
+            <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_analysis_enabled</span><span class="p">(</span>
+            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_AM_timeSeriesStatsMonthlyMax_enable&#39;</span><span class="p">,</span>
+            <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">_add_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                   <span class="n">title</span><span class="p">,</span> <span class="n">mpasVariableSuffix</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">sectionPrefix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add tasks for a given variable</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">))</span>
+
+        <span class="n">remapClimatologySubtasks</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">mpasFieldNames</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]:</span>
+            <span class="n">upperOp</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">op</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+            <span class="n">mpasFieldNames</span><span class="p">[</span><span class="n">op</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">upperOp</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">mpasVariableSuffix</span><span class="p">)</span>
+            <span class="c1"># the variable &#39;timeMonthly_avg_dThreshMLD&#39; will be added to</span>
+            <span class="c1"># mpasClimatologyTask along with the seasons.</span>
+            <span class="n">remapClimatologySubtasks</span><span class="p">[</span><span class="n">op</span><span class="p">]</span> <span class="o">=</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">(</span>
+                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTasks</span><span class="p">[</span><span class="n">op</span><span class="p">],</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="n">filePrefix</span><span class="p">,</span>
+                <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldNames</span><span class="p">[</span><span class="n">op</span><span class="p">]],</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+                <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">,</span>
+                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remap</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">upperOp</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="s1">&#39;Max </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Min </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Max - Min </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="n">title</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_min_max&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filePrefix</span><span class="p">)</span>
+            <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">MinMax&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionPrefix</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                    <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plot_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filePrefix</span><span class="p">,</span>
+                                                         <span class="n">season</span><span class="p">,</span>
+                                                         <span class="n">comparisonGridName</span><span class="p">)</span>
+                    <span class="c1"># make a new subtask for this season and comparison grid</span>
+                    <span class="n">firstTask</span> <span class="o">=</span> <span class="n">remapClimatologySubtasks</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span>
+                    <span class="n">secondTask</span> <span class="o">=</span> <span class="n">remapClimatologySubtasks</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span>
+                    <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+                        <span class="n">remapMpasClimatologySubtask</span><span class="o">=</span><span class="n">firstTask</span><span class="p">,</span>
+                        <span class="n">secondRemapMpasClimatologySubtask</span><span class="o">=</span><span class="n">secondTask</span><span class="p">,</span>
+                        <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+                    <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                        <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
+                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldNames</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">],</span>
+                        <span class="n">refFieldName</span><span class="o">=</span><span class="n">mpasFieldNames</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">],</span>
+                        <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                        <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m&#39;</span><span class="p">,</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Min/Max Mixed-Layer Depth&#39;</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Min/Max Mixed-Layer Depth&#39;</span><span class="p">,</span>
+                        <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;mld_min_max&#39;</span><span class="p">,</span>
+                        <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
+                        <span class="n">configSectionName</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="n">title</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+            <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]:</span>
+                        <span class="n">upperOp</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">op</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                        <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plot</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">upperOp</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">)</span>
+                        <span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">upperOp</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+                        <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filePrefix</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+                        <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionPrefix</span><span class="p">,</span> <span class="n">upperOp</span><span class="p">)</span>
+
+                        <span class="c1"># make a new subtask for this season and comparison</span>
+                        <span class="c1"># grid</span>
+                        <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+                            <span class="n">remapClimatologySubtasks</span><span class="p">[</span><span class="n">op</span><span class="p">],</span>
+                            <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+                        <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                            <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                            <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
+                            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldNames</span><span class="p">[</span><span class="n">op</span><span class="p">],</span>
+                            <span class="n">refFieldName</span><span class="o">=</span><span class="n">mpasFieldNames</span><span class="p">[</span><span class="n">op</span><span class="p">],</span>
+                            <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                            <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                            <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m&#39;</span><span class="p">,</span>
+                            <span class="n">imageCaption</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
+                            <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Min/Max Mixed-Layer Depth&#39;</span><span class="p">,</span>
+                            <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;mld_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">op</span><span class="p">),</span>
+                            <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
+                            <span class="n">configSectionName</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
+
+    <span class="c1"># }}}</span>
+
+<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
