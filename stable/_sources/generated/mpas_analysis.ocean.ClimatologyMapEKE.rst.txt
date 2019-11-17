@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapEKE
+======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapEKE
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapEKE.__init__
+      ~ClimatologyMapEKE.add_subtask
+      ~ClimatologyMapEKE.check_analysis_enabled
+      ~ClimatologyMapEKE.check_generate
+      ~ClimatologyMapEKE.close
+      ~ClimatologyMapEKE.is_alive
+      ~ClimatologyMapEKE.join
+      ~ClimatologyMapEKE.kill
+      ~ClimatologyMapEKE.run
+      ~ClimatologyMapEKE.run_after
+      ~ClimatologyMapEKE.run_task
+      ~ClimatologyMapEKE.set_start_end_date
+      ~ClimatologyMapEKE.setup_and_check
+      ~ClimatologyMapEKE.start
+      ~ClimatologyMapEKE.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapEKE.BLOCKED
+      ~ClimatologyMapEKE.FAIL
+      ~ClimatologyMapEKE.READY
+      ~ClimatologyMapEKE.RUNNING
+      ~ClimatologyMapEKE.SUCCESS
+      ~ClimatologyMapEKE.UNSET
+      ~ClimatologyMapEKE.authkey
+      ~ClimatologyMapEKE.daemon
+      ~ClimatologyMapEKE.exitcode
+      ~ClimatologyMapEKE.ident
+      ~ClimatologyMapEKE.name
+      ~ClimatologyMapEKE.pid
+      ~ClimatologyMapEKE.sentinel
+   
+   

@@ -1,0 +1,55 @@
+mpas\_analysis.ocean.plot\_climatology\_map\_subtask.PlotClimatologyMapSubtask
+==============================================================================
+
+.. currentmodule:: mpas_analysis.ocean.plot_climatology_map_subtask
+
+.. autoclass:: PlotClimatologyMapSubtask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PlotClimatologyMapSubtask.__init__
+      ~PlotClimatologyMapSubtask.add_subtask
+      ~PlotClimatologyMapSubtask.check_analysis_enabled
+      ~PlotClimatologyMapSubtask.check_generate
+      ~PlotClimatologyMapSubtask.close
+      ~PlotClimatologyMapSubtask.is_alive
+      ~PlotClimatologyMapSubtask.join
+      ~PlotClimatologyMapSubtask.kill
+      ~PlotClimatologyMapSubtask.run
+      ~PlotClimatologyMapSubtask.run_after
+      ~PlotClimatologyMapSubtask.run_task
+      ~PlotClimatologyMapSubtask.set_plot_info
+      ~PlotClimatologyMapSubtask.set_start_end_date
+      ~PlotClimatologyMapSubtask.setup_and_check
+      ~PlotClimatologyMapSubtask.start
+      ~PlotClimatologyMapSubtask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PlotClimatologyMapSubtask.BLOCKED
+      ~PlotClimatologyMapSubtask.FAIL
+      ~PlotClimatologyMapSubtask.READY
+      ~PlotClimatologyMapSubtask.RUNNING
+      ~PlotClimatologyMapSubtask.SUCCESS
+      ~PlotClimatologyMapSubtask.UNSET
+      ~PlotClimatologyMapSubtask.authkey
+      ~PlotClimatologyMapSubtask.daemon
+      ~PlotClimatologyMapSubtask.exitcode
+      ~PlotClimatologyMapSubtask.ident
+      ~PlotClimatologyMapSubtask.name
+      ~PlotClimatologyMapSubtask.pid
+      ~PlotClimatologyMapSubtask.sentinel
+   
+   

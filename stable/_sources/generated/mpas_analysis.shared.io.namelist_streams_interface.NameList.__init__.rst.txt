@@ -1,0 +1,6 @@
+mpas\_analysis.shared.io.namelist\_streams\_interface.NameList.\_\_init\_\_
+===========================================================================
+
+.. currentmodule:: mpas_analysis.shared.io.namelist_streams_interface
+
+.. automethod:: NameList.__init__

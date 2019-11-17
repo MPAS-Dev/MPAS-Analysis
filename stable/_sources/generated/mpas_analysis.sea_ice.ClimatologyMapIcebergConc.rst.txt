@@ -1,0 +1,54 @@
+mpas\_analysis.sea\_ice.ClimatologyMapIcebergConc
+=================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapIcebergConc
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapIcebergConc.__init__
+      ~ClimatologyMapIcebergConc.add_subtask
+      ~ClimatologyMapIcebergConc.check_analysis_enabled
+      ~ClimatologyMapIcebergConc.check_generate
+      ~ClimatologyMapIcebergConc.close
+      ~ClimatologyMapIcebergConc.is_alive
+      ~ClimatologyMapIcebergConc.join
+      ~ClimatologyMapIcebergConc.kill
+      ~ClimatologyMapIcebergConc.run
+      ~ClimatologyMapIcebergConc.run_after
+      ~ClimatologyMapIcebergConc.run_task
+      ~ClimatologyMapIcebergConc.set_start_end_date
+      ~ClimatologyMapIcebergConc.setup_and_check
+      ~ClimatologyMapIcebergConc.start
+      ~ClimatologyMapIcebergConc.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapIcebergConc.BLOCKED
+      ~ClimatologyMapIcebergConc.FAIL
+      ~ClimatologyMapIcebergConc.READY
+      ~ClimatologyMapIcebergConc.RUNNING
+      ~ClimatologyMapIcebergConc.SUCCESS
+      ~ClimatologyMapIcebergConc.UNSET
+      ~ClimatologyMapIcebergConc.authkey
+      ~ClimatologyMapIcebergConc.daemon
+      ~ClimatologyMapIcebergConc.exitcode
+      ~ClimatologyMapIcebergConc.ident
+      ~ClimatologyMapIcebergConc.name
+      ~ClimatologyMapIcebergConc.pid
+      ~ClimatologyMapIcebergConc.sentinel
+   
+   

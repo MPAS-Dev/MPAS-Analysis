@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.compute\_anomaly\_subtask.ComputeAnomalySubtask
+====================================================================
+
+.. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
+
+.. autoclass:: ComputeAnomalySubtask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ComputeAnomalySubtask.__init__
+      ~ComputeAnomalySubtask.add_subtask
+      ~ComputeAnomalySubtask.check_analysis_enabled
+      ~ComputeAnomalySubtask.check_generate
+      ~ComputeAnomalySubtask.close
+      ~ComputeAnomalySubtask.is_alive
+      ~ComputeAnomalySubtask.join
+      ~ComputeAnomalySubtask.kill
+      ~ComputeAnomalySubtask.run
+      ~ComputeAnomalySubtask.run_after
+      ~ComputeAnomalySubtask.run_task
+      ~ComputeAnomalySubtask.set_start_end_date
+      ~ComputeAnomalySubtask.setup_and_check
+      ~ComputeAnomalySubtask.start
+      ~ComputeAnomalySubtask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComputeAnomalySubtask.BLOCKED
+      ~ComputeAnomalySubtask.FAIL
+      ~ComputeAnomalySubtask.READY
+      ~ComputeAnomalySubtask.RUNNING
+      ~ComputeAnomalySubtask.SUCCESS
+      ~ComputeAnomalySubtask.UNSET
+      ~ComputeAnomalySubtask.authkey
+      ~ComputeAnomalySubtask.daemon
+      ~ComputeAnomalySubtask.exitcode
+      ~ComputeAnomalySubtask.ident
+      ~ComputeAnomalySubtask.name
+      ~ComputeAnomalySubtask.pid
+      ~ComputeAnomalySubtask.sentinel
+   
+   

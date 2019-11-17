@@ -1,0 +1,6 @@
+mpas\_analysis.shared.regions.compute\_region\_masks\_subtask.get\_feature\_list
+================================================================================
+
+.. currentmodule:: mpas_analysis.shared.regions.compute_region_masks_subtask
+
+.. autofunction:: get_feature_list
