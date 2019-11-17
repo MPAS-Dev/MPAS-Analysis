@@ -14,6 +14,10 @@ matrix:
     - name: "python-3.7"
       env: PY=3.7
 
+env:
+  global:
+    secure: "RcARu+7YXJCWMDkwaP151JUuJW0aei0DG8ES6xwjlPjCy0wht1aDyZlcS4aE+hoQOZL/dGM4ppKLoxy7PlTMg3bocn4782VbnGT1p94FieuNVj+irs54UrTBouKbDmJQtgGPNV8WnXt3suKlcb62304eJs5Ryfl2ZOIpS+yBFcfUgTFn3wBGba4WO+wzx2mG+e5E6CIOLkoFlLYaJJ+2vShXHaCNYIgq4DrLYR1U/Jq6HAli6x3iETPqL0ZPdLAtB96lYYssV+4VZjyMzAkxNjj3RhRAIFH8K/Fe9VWke1MZqwnz0Bu2Z8GyhwFkdc8u+epUDCUIgGxGps57RgiBi2dmLW0RyNdQ2pG5WgT7M5/dkx4STq2ofv/YAKniG7LyM30X/H7G9/RlyIQ354P54265zdul1sasREeHKhNe82QsX2tos/jo7/E2f0uYtrQ1btSo1jItyTukOHER11W6yqYTSc4yqFJLCXxWFbEuzSyaIfVp7AJFHGjYU3A/ZdMG6Y+cs9Q/xapwx2Zoon67GGDJ7OItQeScKcF7pIYbo1uWWYHdQ9GBedyqWgqz75H6wCXbxo2jGUze/pP5I/2plBMeDiY4eSBulbbpupRXpj1uNOAZv+PiP1UDjwMQCzz/NwBLCcG+jxEDwOHnzoPwPnZeOBNPHXkEAZxeW9z9TjA="
+
 before_install:
   - |
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
@@ -30,12 +34,10 @@ before_install:
     # conda list
 
 install:
-  - |
-    pip install -e . --no-deps
-    cd docs
-    make clean
-    make html
-    cd ..
+  - ./ci/install.bash
 
 script:
-    - pytest --pyargs mpas_analysis
+  - pytest --pyargs mpas_analysis
+
+after_success:
+  - ./ci/publish_docs.bash
