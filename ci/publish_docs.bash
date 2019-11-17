@@ -36,9 +36,11 @@ git clone --branch=$PUBLICATION_BRANCH https://${GITHUB_TOKEN}@github.com/$TRAVI
 cd publish || exit 1
 
 # Update pages
-git rm -rf $DOCS_VERSION
-mkdir $DOCS_VERSION
-cp -r $REPO_PATH/docs/_build/html/* $DOCS_VERSION
+if [[ -d "$DOCS_VERSION" ]]; then
+  git rm -rf "$DOCS_VERSION"
+fi
+mkdir "$DOCS_VERSION"
+cp -r "$REPO_PATH/docs/_build/html/*" "$DOCS_VERSION"
 # Commit and push latest version
 git add .
 git config user.name  "Travis"
