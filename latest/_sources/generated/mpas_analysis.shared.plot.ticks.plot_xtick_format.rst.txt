@@ -1,6 +1,0 @@
-mpas\_analysis.shared.plot.ticks.plot\_xtick\_format
-====================================================
-
-.. currentmodule:: mpas_analysis.shared.plot.ticks
-
-.. autofunction:: plot_xtick_format

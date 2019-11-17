@@ -1,6 +1,0 @@
-mpas\_analysis.shared.plot.plot\_1D
-===================================
-
-.. currentmodule:: mpas_analysis.shared.plot
-
-.. autofunction:: plot_1D

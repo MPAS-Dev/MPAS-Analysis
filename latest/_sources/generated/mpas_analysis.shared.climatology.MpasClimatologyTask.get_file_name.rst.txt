@@ -1,6 +1,0 @@
-mpas\_analysis.shared.climatology.MpasClimatologyTask.get\_file\_name
-=====================================================================
-
-.. currentmodule:: mpas_analysis.shared.climatology
-
-.. automethod:: MpasClimatologyTask.get_file_name

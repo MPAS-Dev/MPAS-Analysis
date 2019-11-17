@@ -1,6 +1,0 @@
-mpas\_analysis.shared.climatology.compute\_climatology
-======================================================
-
-.. currentmodule:: mpas_analysis.shared.climatology
-
-.. autofunction:: compute_climatology

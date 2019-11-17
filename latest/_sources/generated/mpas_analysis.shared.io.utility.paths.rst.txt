@@ -1,6 +1,0 @@
-mpas\_analysis.shared.io.utility.paths
-======================================
-
-.. currentmodule:: mpas_analysis.shared.io.utility
-
-.. autofunction:: paths
