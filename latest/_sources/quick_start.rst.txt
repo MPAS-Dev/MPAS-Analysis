@@ -89,7 +89,7 @@ two subdirectories:
 * ``mpas_analysis``\ , which includes mapping and region mask files for
   standard resolution MPAS meshes
 * ``observations``\ , which includes the pre-processed observations listed in the
-  `Observations table <http://mpas-analysis.readthedocs.io/en/latest/observations.html>`_
+  `Observations table <https://mpas-dev.github.io/MPAS-Analysis/latest/observations.html>`_
   and used to evaluate the model results
 
 Once you have downloaded the analysis data, you will point to its location
