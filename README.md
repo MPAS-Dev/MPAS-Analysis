@@ -1,6 +1,5 @@
 # MPAS-Analysis
 [![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=develop)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
-[![Documentation Status](http://readthedocs.org/projects/mpas-analysis/badge/?version=latest)](http://mpas-analysis.readthedocs.io/en/latest/?badge=latest)
 
 Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
@@ -23,8 +22,7 @@ All platforms:
 
 ## Documentation
 
-[http://mpas-analysis.readthedocs.io](http://mpas-analysis.readthedocs.io)
-
+[https://mpas-dev.github.io/MPAS-Analysis/stable/](https://mpas-dev.github.io/MPAS-Analysis/stable/)
 
 ## Installation
 
@@ -97,7 +95,7 @@ two subdirectories:
 * `mpas_analysis`, which includes mapping and region mask files for
   standard resolution MPAS meshes
 * `observations`, which includes the pre-processed observations listed in the
-  [Observations table](http://mpas-analysis.readthedocs.io/en/latest/observations.html)
+  [Observations table](https://mpas-dev.github.io/MPAS-Analysis/latest/observations.html)
   and used to evaluate the model results
 
 Once you have downloaded the analysis data, you will point to its location
