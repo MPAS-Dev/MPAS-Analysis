@@ -1,6 +1,8 @@
 #!/bin/bash
 # based on https://stackoverflow.com/a/49516361/7728169
 
+set -e
+
 if [[ "$PY" != "3.7" ]]; then
   # we only deploy with the python 3.7 build
   exit 0

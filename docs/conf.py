@@ -77,7 +77,7 @@ author = u'Xylar Asay-Davis, Milena Veneziani, Phillip Wolfram, \n' \
 #
 
 if 'DOCS_VERSION' in os.environ:
-    version = os.envrion.get('DOCS_VERSION')
+    version = os.environ.get('DOCS_VERSION')
     release = version
 else:
     # The short X.Y.Z version.

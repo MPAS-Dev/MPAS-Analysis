@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 pip install -e . --no-deps
 
 if [[ "$TRAVIS_BRANCH" == "develop" ]]; then
