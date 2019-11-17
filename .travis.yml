@@ -37,7 +37,4 @@ install:
   - ./ci/install.bash
 
 script:
-  - pytest --pyargs mpas_analysis
-
-after_success:
-  - ./ci/publish_docs.bash
+  - ./ci/test_and_publish_docs.bash
