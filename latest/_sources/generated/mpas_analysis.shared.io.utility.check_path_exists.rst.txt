@@ -1,0 +1,6 @@
+mpas\_analysis.shared.io.utility.check\_path\_exists
+====================================================
+
+.. currentmodule:: mpas_analysis.shared.io.utility
+
+.. autofunction:: check_path_exists

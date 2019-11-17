@@ -1,0 +1,6 @@
+mpas\_analysis.shared.time\_series.cache\_time\_series
+======================================================
+
+.. currentmodule:: mpas_analysis.shared.time_series
+
+.. autofunction:: cache_time_series

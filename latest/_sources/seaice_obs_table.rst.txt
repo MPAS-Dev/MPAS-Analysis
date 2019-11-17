@@ -1,0 +1,36 @@
+=========================  ===============================================  ===================================
+Observational Dataset      Source                                           References
+=========================  ===============================================  ===================================
+:ref:`nasateam_conc`       `NSIDC NASATeam Website`_                        `Cavalieri et al. (1996)`_
+:ref:`bootstrap_conc`      `NSIDC Bootstrap Website`_                       `Comiso (2017)`_
+:ref:`ssmi_ice_area`       `NASA Ice area and extent website`_              - `Cavalieri et al. (1999)`_
+                                                                            - `Cavalieri et al. (2012)`_
+                                                                            - `Cavalieri and Parkinson (2012)`_
+                                                                            - `Parkinson et al. (1999)`_
+                                                                            - `Parkinson and Cavalieri (2012)`_
+                                                                            - `Zwally et al. (2002)`_
+:ref:`icesat_thickness`    `NASA: Arctic Sea Ice Freeboard and Thickness`_  `Yi and Zwally (2009)`_
+:ref:`piomass_ice_volume`  `PIOMAS website`_                                - `Schweiger et al. (2011)`_
+                                                                            - `Zhang and Rothrock (2003)`_
+:ref:`altiberg`            `Altiberg website`_                              - `Tournade et al (2017)`_
+=========================  ===============================================  ===================================
+
+.. _`NSIDC NASATeam Website`: http://nsidc.org/data/NSIDC-0051
+.. _`Cavalieri et al. (1996)`: https://doi.org/10.5067/8GQ8LZQVL0VL
+.. _`NSIDC Bootstrap Website`: http://nsidc.org/data/NSIDC-0079
+.. _`Comiso (2017)`: https://doi.org/10.5067/7Q8HCCWS4I0R
+.. _`NASA Ice area and extent website`: https://neptune.gsfc.nasa.gov/csb/index.php?section=59
+.. _`Cavalieri et al. (1999)`: https://doi.org/10.1029/1999JC900081
+.. _`Cavalieri et al. (2012)`: https://doi.org/10.1109/LGRS.2011.2166754
+.. _`Cavalieri and Parkinson (2012)`: https://doi.org/10.5194/tc-6-881-2012
+.. _`Parkinson et al. (1999)`: https://doi.org/10.1029/1999JC900082
+.. _`Parkinson and Cavalieri (2012)`: https://doi.org/10.5194/tc-6-871-2012
+.. _`Zwally et al. (2002)`: https://doi.org/10.1029/2000JC000733
+.. _`NASA: Arctic Sea Ice Freeboard and Thickness`: http://nsidc.org/data/NSIDC-0393
+.. _`Yi and Zwally (2009)`: https://doi.org/10.5067/SXJVJ3A2XIZT
+.. _`PIOMAS website`: http://psc.apl.uw.edu/research/projects/arctic-sea-ice-volume-anomaly/
+.. _`Schweiger et al. (2011)`: https://doi.org/10.1029/2011JC007084
+.. _`Zhang and Rothrock (2003)`: https://doi.org/10.1175/1520-0493%282003%29131<0845:MGSIWA>2.0.CO;2
+.. _`Altiberg website`: http://cersat.ifremer.fr/user-community/news/item/473-altiberg-a-database-for-small-icebergs
+.. _`Tournade et al (2017)`: ftp://ftp.ifremer.fr/ifremer/cersat/projects/altiberg/v2/documentation/ALTIBERG-rep_v2_1.pdf
+

@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.get\_remapped\_mpas\_climatology\_file\_name
+==============================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. autofunction:: get_remapped_mpas_climatology_file_name

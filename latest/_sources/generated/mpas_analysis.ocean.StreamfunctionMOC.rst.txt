@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.StreamfunctionMOC
+======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: StreamfunctionMOC
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~StreamfunctionMOC.__init__
+      ~StreamfunctionMOC.add_subtask
+      ~StreamfunctionMOC.check_analysis_enabled
+      ~StreamfunctionMOC.check_generate
+      ~StreamfunctionMOC.close
+      ~StreamfunctionMOC.is_alive
+      ~StreamfunctionMOC.join
+      ~StreamfunctionMOC.kill
+      ~StreamfunctionMOC.run
+      ~StreamfunctionMOC.run_after
+      ~StreamfunctionMOC.run_task
+      ~StreamfunctionMOC.set_start_end_date
+      ~StreamfunctionMOC.setup_and_check
+      ~StreamfunctionMOC.start
+      ~StreamfunctionMOC.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~StreamfunctionMOC.BLOCKED
+      ~StreamfunctionMOC.FAIL
+      ~StreamfunctionMOC.READY
+      ~StreamfunctionMOC.RUNNING
+      ~StreamfunctionMOC.SUCCESS
+      ~StreamfunctionMOC.UNSET
+      ~StreamfunctionMOC.authkey
+      ~StreamfunctionMOC.daemon
+      ~StreamfunctionMOC.exitcode
+      ~StreamfunctionMOC.ident
+      ~StreamfunctionMOC.name
+      ~StreamfunctionMOC.pid
+      ~StreamfunctionMOC.sentinel
+   
+   

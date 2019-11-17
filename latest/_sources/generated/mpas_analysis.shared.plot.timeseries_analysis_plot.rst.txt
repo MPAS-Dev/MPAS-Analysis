@@ -1,0 +1,6 @@
+mpas\_analysis.shared.plot.timeseries\_analysis\_plot
+=====================================================
+
+.. currentmodule:: mpas_analysis.shared.plot
+
+.. autofunction:: timeseries_analysis_plot

@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapOHCAnomaly
+=============================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapOHCAnomaly
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapOHCAnomaly.__init__
+      ~ClimatologyMapOHCAnomaly.add_subtask
+      ~ClimatologyMapOHCAnomaly.check_analysis_enabled
+      ~ClimatologyMapOHCAnomaly.check_generate
+      ~ClimatologyMapOHCAnomaly.close
+      ~ClimatologyMapOHCAnomaly.is_alive
+      ~ClimatologyMapOHCAnomaly.join
+      ~ClimatologyMapOHCAnomaly.kill
+      ~ClimatologyMapOHCAnomaly.run
+      ~ClimatologyMapOHCAnomaly.run_after
+      ~ClimatologyMapOHCAnomaly.run_task
+      ~ClimatologyMapOHCAnomaly.set_start_end_date
+      ~ClimatologyMapOHCAnomaly.setup_and_check
+      ~ClimatologyMapOHCAnomaly.start
+      ~ClimatologyMapOHCAnomaly.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapOHCAnomaly.BLOCKED
+      ~ClimatologyMapOHCAnomaly.FAIL
+      ~ClimatologyMapOHCAnomaly.READY
+      ~ClimatologyMapOHCAnomaly.RUNNING
+      ~ClimatologyMapOHCAnomaly.SUCCESS
+      ~ClimatologyMapOHCAnomaly.UNSET
+      ~ClimatologyMapOHCAnomaly.authkey
+      ~ClimatologyMapOHCAnomaly.daemon
+      ~ClimatologyMapOHCAnomaly.exitcode
+      ~ClimatologyMapOHCAnomaly.ident
+      ~ClimatologyMapOHCAnomaly.name
+      ~ClimatologyMapOHCAnomaly.pid
+      ~ClimatologyMapOHCAnomaly.sentinel
+   
+   

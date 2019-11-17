@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.TimeSeriesAntarcticMelt
+============================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesAntarcticMelt
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesAntarcticMelt.__init__
+      ~TimeSeriesAntarcticMelt.add_subtask
+      ~TimeSeriesAntarcticMelt.check_analysis_enabled
+      ~TimeSeriesAntarcticMelt.check_generate
+      ~TimeSeriesAntarcticMelt.close
+      ~TimeSeriesAntarcticMelt.is_alive
+      ~TimeSeriesAntarcticMelt.join
+      ~TimeSeriesAntarcticMelt.kill
+      ~TimeSeriesAntarcticMelt.run
+      ~TimeSeriesAntarcticMelt.run_after
+      ~TimeSeriesAntarcticMelt.run_task
+      ~TimeSeriesAntarcticMelt.set_start_end_date
+      ~TimeSeriesAntarcticMelt.setup_and_check
+      ~TimeSeriesAntarcticMelt.start
+      ~TimeSeriesAntarcticMelt.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesAntarcticMelt.BLOCKED
+      ~TimeSeriesAntarcticMelt.FAIL
+      ~TimeSeriesAntarcticMelt.READY
+      ~TimeSeriesAntarcticMelt.RUNNING
+      ~TimeSeriesAntarcticMelt.SUCCESS
+      ~TimeSeriesAntarcticMelt.UNSET
+      ~TimeSeriesAntarcticMelt.authkey
+      ~TimeSeriesAntarcticMelt.daemon
+      ~TimeSeriesAntarcticMelt.exitcode
+      ~TimeSeriesAntarcticMelt.ident
+      ~TimeSeriesAntarcticMelt.name
+      ~TimeSeriesAntarcticMelt.pid
+      ~TimeSeriesAntarcticMelt.sentinel
+   
+   

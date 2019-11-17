@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.get\_remapper
+===============================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. autofunction:: get_remapper

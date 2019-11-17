@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.TimeSeriesOHCAnomaly
+=========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesOHCAnomaly
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesOHCAnomaly.__init__
+      ~TimeSeriesOHCAnomaly.add_subtask
+      ~TimeSeriesOHCAnomaly.check_analysis_enabled
+      ~TimeSeriesOHCAnomaly.check_generate
+      ~TimeSeriesOHCAnomaly.close
+      ~TimeSeriesOHCAnomaly.is_alive
+      ~TimeSeriesOHCAnomaly.join
+      ~TimeSeriesOHCAnomaly.kill
+      ~TimeSeriesOHCAnomaly.run
+      ~TimeSeriesOHCAnomaly.run_after
+      ~TimeSeriesOHCAnomaly.run_task
+      ~TimeSeriesOHCAnomaly.set_start_end_date
+      ~TimeSeriesOHCAnomaly.setup_and_check
+      ~TimeSeriesOHCAnomaly.start
+      ~TimeSeriesOHCAnomaly.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesOHCAnomaly.BLOCKED
+      ~TimeSeriesOHCAnomaly.FAIL
+      ~TimeSeriesOHCAnomaly.READY
+      ~TimeSeriesOHCAnomaly.RUNNING
+      ~TimeSeriesOHCAnomaly.SUCCESS
+      ~TimeSeriesOHCAnomaly.UNSET
+      ~TimeSeriesOHCAnomaly.authkey
+      ~TimeSeriesOHCAnomaly.daemon
+      ~TimeSeriesOHCAnomaly.exitcode
+      ~TimeSeriesOHCAnomaly.ident
+      ~TimeSeriesOHCAnomaly.name
+      ~TimeSeriesOHCAnomaly.pid
+      ~TimeSeriesOHCAnomaly.sentinel
+   
+   

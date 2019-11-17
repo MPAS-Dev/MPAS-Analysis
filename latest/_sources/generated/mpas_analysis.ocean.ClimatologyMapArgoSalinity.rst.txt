@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapArgoSalinity
+===============================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapArgoSalinity
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapArgoSalinity.__init__
+      ~ClimatologyMapArgoSalinity.add_subtask
+      ~ClimatologyMapArgoSalinity.check_analysis_enabled
+      ~ClimatologyMapArgoSalinity.check_generate
+      ~ClimatologyMapArgoSalinity.close
+      ~ClimatologyMapArgoSalinity.is_alive
+      ~ClimatologyMapArgoSalinity.join
+      ~ClimatologyMapArgoSalinity.kill
+      ~ClimatologyMapArgoSalinity.run
+      ~ClimatologyMapArgoSalinity.run_after
+      ~ClimatologyMapArgoSalinity.run_task
+      ~ClimatologyMapArgoSalinity.set_start_end_date
+      ~ClimatologyMapArgoSalinity.setup_and_check
+      ~ClimatologyMapArgoSalinity.start
+      ~ClimatologyMapArgoSalinity.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapArgoSalinity.BLOCKED
+      ~ClimatologyMapArgoSalinity.FAIL
+      ~ClimatologyMapArgoSalinity.READY
+      ~ClimatologyMapArgoSalinity.RUNNING
+      ~ClimatologyMapArgoSalinity.SUCCESS
+      ~ClimatologyMapArgoSalinity.UNSET
+      ~ClimatologyMapArgoSalinity.authkey
+      ~ClimatologyMapArgoSalinity.daemon
+      ~ClimatologyMapArgoSalinity.exitcode
+      ~ClimatologyMapArgoSalinity.ident
+      ~ClimatologyMapArgoSalinity.name
+      ~ClimatologyMapArgoSalinity.pid
+      ~ClimatologyMapArgoSalinity.sentinel
+   
+   

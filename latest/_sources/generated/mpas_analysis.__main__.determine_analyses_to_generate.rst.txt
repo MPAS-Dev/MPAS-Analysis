@@ -1,0 +1,6 @@
+mpas\_analysis.\_\_main\_\_.determine\_analyses\_to\_generate
+=============================================================
+
+.. currentmodule:: mpas_analysis.__main__
+
+.. autofunction:: determine_analyses_to_generate

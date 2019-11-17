@@ -1,0 +1,57 @@
+mpas\_analysis.shared.climatology.RemapObservedClimatologySubtask
+=================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. autoclass:: RemapObservedClimatologySubtask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RemapObservedClimatologySubtask.__init__
+      ~RemapObservedClimatologySubtask.add_subtask
+      ~RemapObservedClimatologySubtask.build_observational_dataset
+      ~RemapObservedClimatologySubtask.check_analysis_enabled
+      ~RemapObservedClimatologySubtask.check_generate
+      ~RemapObservedClimatologySubtask.close
+      ~RemapObservedClimatologySubtask.get_file_name
+      ~RemapObservedClimatologySubtask.get_observation_descriptor
+      ~RemapObservedClimatologySubtask.is_alive
+      ~RemapObservedClimatologySubtask.join
+      ~RemapObservedClimatologySubtask.kill
+      ~RemapObservedClimatologySubtask.run
+      ~RemapObservedClimatologySubtask.run_after
+      ~RemapObservedClimatologySubtask.run_task
+      ~RemapObservedClimatologySubtask.set_start_end_date
+      ~RemapObservedClimatologySubtask.setup_and_check
+      ~RemapObservedClimatologySubtask.start
+      ~RemapObservedClimatologySubtask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RemapObservedClimatologySubtask.BLOCKED
+      ~RemapObservedClimatologySubtask.FAIL
+      ~RemapObservedClimatologySubtask.READY
+      ~RemapObservedClimatologySubtask.RUNNING
+      ~RemapObservedClimatologySubtask.SUCCESS
+      ~RemapObservedClimatologySubtask.UNSET
+      ~RemapObservedClimatologySubtask.authkey
+      ~RemapObservedClimatologySubtask.daemon
+      ~RemapObservedClimatologySubtask.exitcode
+      ~RemapObservedClimatologySubtask.ident
+      ~RemapObservedClimatologySubtask.name
+      ~RemapObservedClimatologySubtask.pid
+      ~RemapObservedClimatologySubtask.sentinel
+   
+   

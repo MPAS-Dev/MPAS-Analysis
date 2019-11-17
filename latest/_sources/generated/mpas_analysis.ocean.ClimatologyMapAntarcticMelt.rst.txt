@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapAntarcticMelt
+================================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapAntarcticMelt
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapAntarcticMelt.__init__
+      ~ClimatologyMapAntarcticMelt.add_subtask
+      ~ClimatologyMapAntarcticMelt.check_analysis_enabled
+      ~ClimatologyMapAntarcticMelt.check_generate
+      ~ClimatologyMapAntarcticMelt.close
+      ~ClimatologyMapAntarcticMelt.is_alive
+      ~ClimatologyMapAntarcticMelt.join
+      ~ClimatologyMapAntarcticMelt.kill
+      ~ClimatologyMapAntarcticMelt.run
+      ~ClimatologyMapAntarcticMelt.run_after
+      ~ClimatologyMapAntarcticMelt.run_task
+      ~ClimatologyMapAntarcticMelt.set_start_end_date
+      ~ClimatologyMapAntarcticMelt.setup_and_check
+      ~ClimatologyMapAntarcticMelt.start
+      ~ClimatologyMapAntarcticMelt.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapAntarcticMelt.BLOCKED
+      ~ClimatologyMapAntarcticMelt.FAIL
+      ~ClimatologyMapAntarcticMelt.READY
+      ~ClimatologyMapAntarcticMelt.RUNNING
+      ~ClimatologyMapAntarcticMelt.SUCCESS
+      ~ClimatologyMapAntarcticMelt.UNSET
+      ~ClimatologyMapAntarcticMelt.authkey
+      ~ClimatologyMapAntarcticMelt.daemon
+      ~ClimatologyMapAntarcticMelt.exitcode
+      ~ClimatologyMapAntarcticMelt.ident
+      ~ClimatologyMapAntarcticMelt.name
+      ~ClimatologyMapAntarcticMelt.pid
+      ~ClimatologyMapAntarcticMelt.sentinel
+   
+   

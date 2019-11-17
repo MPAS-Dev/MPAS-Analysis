@@ -1,0 +1,6 @@
+mpas\_analysis.shared.io.namelist\_streams\_interface.StreamsFile.find\_stream
+==============================================================================
+
+.. currentmodule:: mpas_analysis.shared.io.namelist_streams_interface
+
+.. automethod:: StreamsFile.find_stream

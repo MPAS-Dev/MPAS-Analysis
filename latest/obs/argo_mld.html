@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Argo Mixed Layer Depth (MLD) climatology &mdash; MPAS-Analysis latest documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Meridional Heat Transport (MHT)" href="trenberth_mht.html" />
+    <link rel="prev" title="AVISO Absolute Dynamic Topography" href="aviso_ssh.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../observations.html">Observations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#ocean-observations">Ocean Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#sea-ice-observations">Sea Ice Observations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observations.html#details-on-each-data-set">Details on Each Data Set</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="hadley_center_sst.html">SST merged Hadley Center-NOAA/OI data set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aquarius_sss.html">SSS from NASA Aquarius satellite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa18_t_s.html">WOA18 Temperature and Salinity Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aviso_ssh.html">AVISO Absolute Dynamic Topography</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Argo Mixed Layer Depth (MLD) climatology</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="trenberth_mht.html">Meridional Heat Transport (MHT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woce.html">WOCE sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa.html">World Ocean Atlas v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="landschuetzer-som-ffn.html">Landschuetzerv2016 SOM-FFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="glodapv2.html">GLODAPv2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drifter_eke.html">Surface Current Variance from Drifter Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nasateam_conc.html">Ice concentration: SSM/I, NASATeam algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bootstrap_conc.html">Ice concentration: SSM/I, Bootstrap algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssmi_ice_area.html">Ice area and extent time series: SSM/I derived</a></li>
+<li class="toctree-l3"><a class="reference internal" href="icesat_thickness.html">IceSat Ice Thickness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piomass_ice_volume.html">PIOMAS Arctic Sea Ice Volume Reanalysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="altiberg.html">Iceberg Concentration: Altiberg</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../observations.html">Observations</a> &raquo;</li>
+        
+      <li>Argo Mixed Layer Depth (MLD) climatology</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/obs/argo_mld.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="argo-mixed-layer-depth-mld-climatology">
+<span id="argo-mld"></span><h1>Argo Mixed Layer Depth (MLD) climatology<a class="headerlink" href="#argo-mixed-layer-depth-mld-climatology" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>A mixed layer climatology and database (described in Holte et al. 2017)
+using Argo profiles and a hybrid method (Holte and Talley 2009) for
+finding the mixed layer depth (MLD). The climatology incorporates over
+1,385,000 Argo profiles (through February 2017). The new hybrid algorithm
+models the general shape of each profile, searches for physical features
+in the profile, and calculates threshold and gradient MLDs to assemble a
+suite of possible MLD values. It then analyzes the patterns in the suite
+to select a final MLD estimate. Results are also presented for MLDs
+calculated using de Boyer Montegut et al.’s (2004) threshold values.</p>
+</div>
+<div class="section" id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://mixedlayer.ucsd.edu/">UCSD Mixed Layer Website</a></p>
+</div>
+<div class="section" id="release-policy">
+<h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://mixedlayer.ucsd.edu/">Acknowledgment:</a> If you use this data,
+please cite it as: Holte, J., L. D. Talley, J. Gilson, and D. Roemmich
+(2017), An Argo mixed layer climatology and database, Geophys. Res.
+Lett., 44, 5618-5626, doi:10.1002/2017GL073426.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1002/2017GL073426/full">Holte et al. (2017)</a></p></li>
+<li><p><a class="reference external" href="http://journals.ametsoc.org/doi/abs/10.1175/2009JTECHO543.1">Holte and Talley (2009)</a></p></li>
+<li><p><a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004JC002378">de Boyer Montegut et al. (2004)</a></p></li>
+</ul>
+<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/MLD/obs.bib">bibtex file</a></p>
+</div>
+<div class="section" id="mpas-analysis-tasks">
+<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../tasks/climatologyMapMLD.html#task-climatologymapmld"><span class="std std-ref">climatologyMapMLD</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="trenberth_mht.html" class="btn btn-neutral float-right" title="Meridional Heat Transport (MHT)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="aviso_ssh.html" class="btn btn-neutral float-left" title="AVISO Absolute Dynamic Topography" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
