@@ -12,7 +12,13 @@ else
   DOCS_VERSION=`python -c "import mpas_analysis; print(mpas_analysis.__version__)"`
   export DOCS_VERSION
 fi
+pwd
+ls
 cd docs || exit 1
+pwd
+ls
 make clean
 make html
+ls _build
+ls _build/html
 cd ..

@@ -1,6 +1,11 @@
 #!/bin/bash
 # based on https://stackoverflow.com/a/49516361/7728169
 
+if [[ "$PY" != "3.7" ]]; then
+  # we only deploy with the python 3.7 build
+  exit 0
+fi
+
 if [[ "$TRAVIS_BRANCH" == "develop" && "$TRAVIS_PULL_REQUEST" == "false" ]]; then
   export DOCS_VERSION="latest"
 elif [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == "false" ]]; then
@@ -17,6 +22,12 @@ echo "Docs version: $DOCS_VERSION"
 
 PUBLICATION_BRANCH=gh-pages
 # Checkout the branch
+pwd
+ls
+ls docs
+ls docs/_build
+ls docs/_build/html
+
 REPO_PATH=$PWD
 pushd $HOME || exit 1
 git clone --branch=$PUBLICATION_BRANCH https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG publish
