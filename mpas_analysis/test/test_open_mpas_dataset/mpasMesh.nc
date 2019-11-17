@@ -1,1 +1,0 @@
-../test_interpolate/mpasMesh.nc

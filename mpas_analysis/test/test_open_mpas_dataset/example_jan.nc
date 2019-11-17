@@ -1,1 +1,0 @@
-../test_mpas_xarray/example_jan.nc

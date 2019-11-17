@@ -1,1 +1,0 @@
-../test_interpolate/timeSeries.0002-02-01.nc
