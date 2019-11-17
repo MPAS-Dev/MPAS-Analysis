@@ -26,12 +26,6 @@ echo "Docs version: $DOCS_VERSION"
 
 PUBLICATION_BRANCH=gh-pages
 # Checkout the branch
-pwd
-ls
-ls docs
-ls docs/_build
-ls docs/_build/html
-
 REPO_PATH=$PWD
 pushd $HOME || exit 1
 git clone --branch=$PUBLICATION_BRANCH https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG publish
@@ -39,7 +33,7 @@ cd publish || exit 1
 
 # Update pages
 if [[ -d "$DOCS_VERSION" ]]; then
-  git rm -rf "$DOCS_VERSION"
+  git rm -rf "$DOCS_VERSION" > /dev/null
 fi
 mkdir "$DOCS_VERSION"
 cp -r "$REPO_PATH"/docs/_build/html/* "$DOCS_VERSION"
