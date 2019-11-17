@@ -14,4 +14,4 @@ Documentation    On GitHub
 .. _`v1.2.6`: ../1.2.6/index.html
 .. _`master`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/master
 .. _`develop`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop
-.. _`1.2.6`: .https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.2.6
+.. _`1.2.6`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.2.6
