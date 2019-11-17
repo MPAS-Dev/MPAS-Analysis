@@ -41,6 +41,6 @@ cp -r "$REPO_PATH"/docs/_build/html/* "$DOCS_VERSION"
 git add .
 git config user.name  "Travis"
 git config user.email "travis@travis-ci.org"
-git commit -m "Updated distribution."
+git commit -m "Updated $DOCS_VERSION"
 git push -fq origin $PUBLICATION_BRANCH
 popd || exit 1
