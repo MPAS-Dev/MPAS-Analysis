@@ -197,8 +197,6 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.comparison_descriptors</span> <span class="k">import</span> \
     <span class="n">get_comparison_descriptor</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray</span> <span class="k">import</span> <span class="n">mpas_xarray</span>
-
 
 <div class="viewcode-block" id="RemapMpasClimatologySubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask">[docs]</a><span class="k">class</span> <span class="nc">RemapMpasClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -402,7 +400,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">))</span>
 
         <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">subset_variables</span><span class="p">(</span><span class="n">dsMask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">]</span>
         <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">iselValues</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span><span class="p">)</span>
@@ -690,8 +688,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">maskedClimatologyFileName</span><span class="p">):</span>
             <span class="c1"># slice and mask the data set</span>
             <span class="n">climatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">climatologyFileName</span><span class="p">)</span>
-            <span class="n">climatology</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">subset_variables</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span>
-                                                       <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
+            <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">]</span>
             <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">climatology</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                 <span class="n">iselValues</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>

@@ -188,8 +188,6 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="k">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray</span> <span class="k">import</span> <span class="n">mpas_xarray</span>
-
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="k">import</span> <span class="n">constants</span>
 
 
@@ -367,8 +365,7 @@
 
         <span class="c1"># first, load the land-ice mask from the restart file</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">subset_variables</span><span class="p">(</span><span class="n">dsLandIceMask</span><span class="p">,</span>
-                                                     <span class="p">[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">])</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="p">[[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]]</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">&gt;</span> <span class="mf">0.</span>
 

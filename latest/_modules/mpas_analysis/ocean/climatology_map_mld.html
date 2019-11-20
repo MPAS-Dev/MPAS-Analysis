@@ -189,8 +189,6 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="k">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray</span> <span class="k">import</span> <span class="n">mpas_xarray</span>
-
 
 <div class="viewcode-block" id="ClimatologyMapMLD"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLD.html#mpas_analysis.ocean.ClimatologyMapMLD">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapMLD</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -412,7 +410,7 @@
         <span class="c1"># no meaningful year since this is already a climatology</span>
         <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
 
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">subset_variables</span><span class="p">(</span><span class="n">dsObs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;mld&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">])</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[[</span><span class="s1">&#39;mld&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">]]</span>
         <span class="k">return</span> <span class="n">dsObs</span>  <span class="c1"># }}}</span>
 
     <span class="c1"># }}}</span>

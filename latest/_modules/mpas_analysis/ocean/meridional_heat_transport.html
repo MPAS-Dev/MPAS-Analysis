@@ -183,7 +183,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="k">import</span> <span class="n">plot_vertical_section</span><span class="p">,</span> <span class="n">plot_1D</span><span class="p">,</span> <span class="n">savefig</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="k">import</span> <span class="n">write_netcdf</span><span class="p">,</span> <span class="n">subset_variables</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="k">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">write_image_xml</span>
@@ -413,8 +413,7 @@
                             <span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLatZ&#39;</span><span class="p">]</span>
 
             <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">climatologyFileName</span><span class="p">)</span>
-            <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">subset_variables</span><span class="p">(</span><span class="n">annualClimatology</span><span class="p">,</span>
-                                                 <span class="n">variableList</span><span class="p">)</span>
+            <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="p">[</span><span class="n">variableList</span><span class="p">]</span>
             <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                 <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
