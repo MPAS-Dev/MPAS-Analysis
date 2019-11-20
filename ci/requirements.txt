@@ -3,7 +3,7 @@ six
 numpy
 scipy
 lxml
-xarray>=0.10.0
+xarray>=0.14.1
 matplotlib>=3.0.2
 dask
 netcdf4
