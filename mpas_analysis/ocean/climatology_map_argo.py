@@ -32,8 +32,6 @@ from mpas_analysis.shared.io.utility import build_obs_path
 
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 
 class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
     """
@@ -439,7 +437,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
 
         # no meaningful year since this is already a climatology
         dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
-        dsObs = mpas_xarray.subset_variables(dsObs, [self.fieldName, 'month'])
+        dsObs = dsObs[[self.fieldName, 'month']]
 
         slices = []
         field = dsObs[self.fieldName]

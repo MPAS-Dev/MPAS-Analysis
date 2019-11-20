@@ -94,53 +94,7 @@ def open_mpas_dataset(fileName, calendar,
                              days_to_datetime(startDate, calendar=calendar),
                              days_to_datetime(endDate, calendar=calendar)))
     if variableList is not None:
-        ds = subset_variables(ds, variableList)
-
-    return ds  # }}}
-
-
-def subset_variables(ds, variableList):  # {{{
-    """
-    Given a data set and a list of variable names, returns a new data set that
-    contains only variables with those names.
-
-    Parameters
-    ----------
-    ds : ``xarray.DataSet`` object
-        The data set from which a subset of variables is to be extracted.
-
-    variableList : string or list of strings
-        The names of the variables to be extracted.
-
-    Returns
-    -------
-    ds : ``xarray.DataSet`` object
-        A copy of the original data set with only the variables in
-        variableList.
-
-    Raises
-    ------
-    ValueError
-        If the resulting data set is empty.
-    """
-    # Authors
-    # -------
-    # Phillip J. Wolfram, Xylar Asay-Davis
-
-    allvars = ds.data_vars.keys()
-
-    # get set of variables to drop (all ds variables not in vlist)
-    dropvars = set(allvars) - set(variableList)
-
-    # drop variables not requested and coordinates that are no longer needed
-    ds = ds.drop_vars(dropvars)
-
-    if len(ds.data_vars.keys()) == 0:
-        raise ValueError(
-            'Empty dataset is returned.\n'
-            'Variables {}\n'
-            'are not found within the dataset '
-            'variables: {}.'.format(variableList, allvars))
+        ds = ds[variableList]
 
     return ds  # }}}
 

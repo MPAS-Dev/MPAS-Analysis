@@ -46,8 +46,6 @@ from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
     get_feature_list
 
-from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
-
 from mpas_analysis.ocean.utility import compute_zmid
 
 from mpas_analysis.shared.constants import constants
@@ -827,7 +825,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             variableList = ['timeMonthly_avg_activeTracers_temperature',
                             'timeMonthly_avg_activeTracers_salinity',
                             'timeMonthly_avg_layerThickness']
-            ds = subset_variables(ds, variableList)
+            ds = ds[variableList]
 
             ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
                                       dsRestart.maxLevelCell,

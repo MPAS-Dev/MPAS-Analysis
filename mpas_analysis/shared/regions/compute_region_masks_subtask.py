@@ -27,8 +27,6 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_region_mask
 from mpas_analysis.shared.io import write_netcdf
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 
 def get_feature_list(geojsonFileName):
     '''
@@ -58,7 +56,7 @@ def compute_mpas_region_masks(geojsonFileName, meshFileName, maskFileName,
         return
 
     with xr.open_dataset(meshFileName) as dsMesh:
-        dsMesh = mpas_xarray.subset_variables(dsMesh, ['lonCell', 'latCell'])
+        dsMesh = dsMesh[['lonCell', 'latCell']]
         latCell = numpy.rad2deg(dsMesh.latCell.values)
 
         # transform longitudes to [-180, 180)

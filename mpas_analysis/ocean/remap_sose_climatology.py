@@ -23,8 +23,6 @@ from pyremap import ProjectionGridDescriptor
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
     get_antarctic_stereographic_projection
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 
 class RemapSoseClimatology(RemapObservedClimatologySubtask):
     # {{{
@@ -146,7 +144,7 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
 
         if self.botFieldName is not None:
             varList.append(self.botFieldName)
-        dsObs = mpas_xarray.subset_variables(dsObs, varList)
+        dsObs = dsObs[varList]
 
         if self.depths is not None:
             field = dsObs[self.fieldName]

@@ -24,8 +24,6 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 from mpas_analysis.shared.constants import constants
 
 
@@ -203,8 +201,7 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
 
         # first, load the land-ice mask from the restart file
         dsLandIceMask = xr.open_dataset(self.restartFileName)
-        dsLandIceMask = mpas_xarray.subset_variables(dsLandIceMask,
-                                                     ['landIceMask'])
+        dsLandIceMask = dsLandIceMask[['landIceMask']]
         dsLandIceMask = dsLandIceMask.isel(Time=0)
         self.landIceMask = dsLandIceMask.landIceMask > 0.
 

@@ -16,8 +16,6 @@ import numpy as np
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 from mpas_analysis.ocean.utility import compute_zmid
 
 
@@ -112,9 +110,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
         # first, load the land-ice mask from the restart file
         ds = xr.open_dataset(self.restartFileName)
-        ds = mpas_xarray.subset_variables(ds, ['maxLevelCell',
-                                               'bottomDepth',
-                                               'layerThickness'])
+        ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
         ds = ds.isel(Time=0)
 
         self.maxLevelCell = ds.maxLevelCell - 1

@@ -20,8 +20,6 @@ from pyremap import PointCollectionDescriptor
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
 from mpas_analysis.shared.io import write_netcdf
@@ -221,9 +219,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         # first, compute zMid and cell mask from the restart file
         with xr.open_dataset(self.restartFileName) as ds:
-            ds = mpas_xarray.subset_variables(ds, ['maxLevelCell',
-                                                   'bottomDepth',
-                                                   'layerThickness'])
+            ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
             ds = ds.isel(Time=0)
 
             self.maxLevelCell = ds.maxLevelCell - 1
