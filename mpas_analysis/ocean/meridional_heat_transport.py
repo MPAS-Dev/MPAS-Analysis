@@ -19,7 +19,7 @@ import os
 from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
 
 from mpas_analysis.shared.io.utility import make_directories, build_obs_path
-from mpas_analysis.shared.io import write_netcdf, subset_variables
+from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
@@ -249,8 +249,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                             'timeMonthly_avg_meridionalHeatTransportLatZ']
 
             annualClimatology = xr.open_dataset(climatologyFileName)
-            annualClimatology = subset_variables(annualClimatology,
-                                                 variableList)
+            annualClimatology = annualClimatology[variableList]
             if 'Time' in annualClimatology.dims:
                 annualClimatology = annualClimatology.isel(Time=0)
 

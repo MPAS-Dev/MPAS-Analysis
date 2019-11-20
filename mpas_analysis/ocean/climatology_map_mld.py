@@ -25,8 +25,6 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 
 class ClimatologyMapMLD(AnalysisTask):  # {{{
     """
@@ -248,7 +246,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         # no meaningful year since this is already a climatology
         dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
 
-        dsObs = mpas_xarray.subset_variables(dsObs, ['mld', 'month'])
+        dsObs = dsObs[['mld', 'month']]
         return dsObs  # }}}
 
     # }}}

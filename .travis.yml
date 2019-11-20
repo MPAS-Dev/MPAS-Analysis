@@ -10,9 +10,14 @@ matrix:
   fast_finish: true
   include:
     - name: "python-3.6"
-      env: PY=3.6
+      python: 3.6
+      env: CONDA_ENV=py36
     - name: "python-3.7"
-      env: PY=3.7
+      python: 3.7
+      env: CONDA_ENV=py37
+    - name: "python-3.7-xarray-master"
+      python: 3.7
+      env: CONDA_ENV=py37-xarray-master
 
 env:
   global:
@@ -28,7 +33,7 @@ before_install:
     conda update conda
     conda config --add channels conda-forge --force
     conda config --set channel_priority strict
-    conda create --name TEST python=$PY --file ci/requirements.txt --file ci/requirements_docs.txt
+    conda env create --file ci/environment-$CONDA_ENV.yml
     source activate TEST
     # conda info --all
     # conda list

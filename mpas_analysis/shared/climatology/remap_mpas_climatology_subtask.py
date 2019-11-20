@@ -33,8 +33,6 @@ from mpas_analysis.shared.climatology.climatology import get_remapper, \
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
 
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
-
 
 class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
     '''
@@ -238,7 +236,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             self.climatologyName))
 
         dsMask = xr.open_dataset(self.mpasClimatologyTask.inputFiles[0])
-        dsMask = mpas_xarray.subset_variables(dsMask, self.variableList)
+        dsMask = dsMask[self.variableList]
         iselValues = {'Time': 0}
         if self.iselValues is not None:
             iselValues.update(self.iselValues)
@@ -526,8 +524,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         if not os.path.exists(maskedClimatologyFileName):
             # slice and mask the data set
             climatology = xr.open_dataset(climatologyFileName)
-            climatology = mpas_xarray.subset_variables(climatology,
-                                                       self.variableList)
+            climatology = climatology[self.variableList]
             iselValues = {}
             if 'Time' in climatology.dims:
                 iselValues['Time'] = 0

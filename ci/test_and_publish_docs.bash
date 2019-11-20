@@ -5,7 +5,7 @@ set -e
 
 pytest --pyargs mpas_analysis
 
-if [[ "$PY" != "3.7" ]]; then
+if [[ "$CONDA_ENV" != "py37" ]]; then
   # we only deploy with the python 3.7 build
   exit 0
 fi

@@ -35,8 +35,6 @@ from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
-
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
     '''
@@ -676,7 +674,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
         def _preprocess(ds):
             # drop unused variables during preprocessing because only the
             # variables we want are guaranteed to be in all the files
-            return subset_variables(ds, variableList)
+            return ds[variableList]
 
         season = self.season
         parentTask = self.parentTask

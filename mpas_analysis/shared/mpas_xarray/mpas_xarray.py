@@ -157,17 +157,8 @@ def subset_variables(ds, variableList):  # {{{
     # get set of variables to drop (all ds variables not in vlist)
     dropvars = set(allvars) - set(variableList)
 
-    # drop spurious variables
-    ds = ds.drop(dropvars)
-
-    # must also drop all coordinates that are not associated with the variables
-    coords = set()
-    for avar in ds.data_vars.keys():
-        coords |= set(ds[avar].coords.keys())
-    dropcoords = set(ds.coords.keys()) - coords
-
-    # drop spurious coordinates
-    ds = ds.drop(dropcoords)
+    # drop variables not requested and coordinates that are no longer needed
+    ds = ds.drop_vars(dropvars)
 
     if len(ds.data_vars.keys()) == 0:
         raise ValueError(
