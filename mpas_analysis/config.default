@@ -171,7 +171,10 @@ htmlSubdirectory = html
 # option:
 #    mpas_analysis config.analysis --generate \
 #         only_ocean,no_timeSeries,timeSeriesSST
-generate = ['all_publicObs', 'no_icebergs']
+generate = ['all_publicObs', 'no_icebergs', 'no_climatologyMapAntarcticMelt',
+            'no_timeSeriesAntarcticMelt', 'no_timeSeriesOceanRegions',
+            'no_climatologyMapSose', 'no_climatologyMapSchmidtko',
+            'no_soseTransects']
 
 
 [climatology]
@@ -1694,7 +1697,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 ## results and WOA climatological data
 
 # comparison grid(s) ('latlon', 'antarctic', 'arctic') on which to plot analysis
-comparisonGrids = ['arctic', 'antarctic']
+comparisonGrids = ['latlon']
 
 # Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
