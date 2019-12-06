@@ -1283,7 +1283,7 @@ variables = [{'name': 'temperature',
 ## options related to plotting T/S diagrams of ocean regions
 
 # the names of region groups to plot, each with its own section below
-regionGroups = ['Antarctic Regions', 'Ocean Basins']
+regionGroups = ['Ocean Basins']
 
 # a list of seasons to compute climatologies over
 seasons = ['ANN']
