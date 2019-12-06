@@ -305,7 +305,7 @@ the OHC script is:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">get_simulation_start_time</span><span class="p">,</span> \
     <span class="n">date_to_days</span><span class="p">,</span> <span class="n">days_to_datetime</span><span class="p">,</span> <span class="n">string_to_datetime</span>
 <span class="o">...</span>
-<span class="k">def</span> <span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="o">...</span>
     <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">)</span>
 <span class="o">...</span>
@@ -326,7 +326,7 @@ the OHC script is:</p>
     <span class="k">if</span> <span class="n">timeStartFirstYear</span> <span class="o">&lt;</span> <span class="n">timeStart</span><span class="p">:</span>
         <span class="n">startDateFirstYear</span> <span class="o">=</span> <span class="n">simulation_start_time</span>
         <span class="n">firstYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startDateFirstYear</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
-        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
+        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
         <span class="n">filesFirstYear</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span>
                                           <span class="n">startDate</span><span class="o">=</span><span class="n">startDateFirstYear</span><span class="p">,</span>
                                           <span class="n">endDate</span><span class="o">=</span><span class="n">endDateFirstYear</span><span class="p">,</span>
@@ -363,8 +363,8 @@ the OHC script is:</p>
                            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s1">&#39;  Load in OHC from preprocessed reference run...&#39;</span>
-        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;{}/OHC.{}.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="nb">print</span> <span class="s1">&#39;  Load in OHC from preprocessed reference run...&#39;</span>
+        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/OHC.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">preprocessedInputDirectory</span><span class="p">,</span> <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
         <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span>
             <span class="n">file_names</span><span class="o">=</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>

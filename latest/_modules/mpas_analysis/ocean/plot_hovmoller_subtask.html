@@ -175,21 +175,21 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="k">import</span> <span class="n">plot_vertical_section</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section</span><span class="p">,</span> <span class="n">savefig</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">decode_strings</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
 
 <div class="viewcode-block" id="PlotHovmollerSubtask"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask">[docs]</a><span class="k">class</span> <span class="nc">PlotHovmollerSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
@@ -247,7 +247,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
 
-<div class="viewcode-block" id="PlotHovmollerSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileLabel</span><span class="p">,</span>
+<div class="viewcode-block" id="PlotHovmollerSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileLabel</span><span class="p">,</span>
                  <span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">mpasFieldName</span><span class="p">,</span> <span class="n">unitsLabel</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">,</span>
                  <span class="n">thumbnailSuffix</span><span class="p">,</span> <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span>
                  <span class="n">groupLink</span><span class="p">,</span> <span class="n">galleryName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>

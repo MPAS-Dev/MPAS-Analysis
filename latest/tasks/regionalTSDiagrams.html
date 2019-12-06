@@ -217,7 +217,7 @@
   <div class="section" id="regionaltsdiagrams">
 <span id="task-regionaltsdiagrams"></span><h1>regionalTSDiagrams<a class="headerlink" href="#regionaltsdiagrams" title="Permalink to this headline">¶</a></h1>
 <p>An analysis task for plotting T-S (potential temperature vs. salinity)
-diagrams of climatologis in ocean regions.</p>
+diagrams of climatologies in ocean regions.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
 <span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span> <span class="n">publicObs</span>
@@ -230,7 +230,7 @@ diagrams of climatologis in ocean regions.</p>
 <span class="c1">## options related to plotting T/S diagrams of ocean regions</span>
 
 <span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="n">regionGroups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocean Basins&#39;</span><span class="p">]</span>
+<span class="n">regionGroups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Ocean Basins&#39;</span><span class="p">]</span>
 
 <span class="c1"># a list of seasons to compute climatologies over</span>
 <span class="n">seasons</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
@@ -278,6 +278,8 @@ diagrams of climatologis in ocean regions.</p>
 <span class="n">colormap</span> <span class="o">=</span> <span class="n">white_cmo_deep</span>
 <span class="c1"># The following is more appropriate if diagramType == &#39;scatter&#39;</span>
 <span class="c1"># colormap = cmo.deep_r</span>
+<span class="c1"># the type of norm used in the colormap {&#39;linear&#39;, &#39;log&#39;}</span>
+<span class="n">normType</span> <span class="o">=</span> <span class="n">log</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are plotted, default is</span>
 <span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
@@ -319,6 +321,8 @@ diagrams of climatologis in ocean regions.</p>
 <span class="n">colormap</span> <span class="o">=</span> <span class="n">white_cmo_deep</span>
 <span class="c1"># The following is more appropriate if diagramType == &#39;scatter&#39;</span>
 <span class="c1"># colormap = cmo.deep_r</span>
+<span class="c1"># the type of norm used in the colormap {&#39;linear&#39;, &#39;log&#39;}</span>
+<span class="n">normType</span> <span class="o">=</span> <span class="n">log</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are plotted.</span>
 <span class="n">zmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>
@@ -331,17 +335,17 @@ diagrams of climatologis in ocean regions.</p>
 </div>
 <div class="section" id="region-groups">
 <h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
-<p>A list of groups of regions, each of which will get its own gallery group on
-the resulting analysis webpage.  These can be any name without punctuation.
+<p>A list of groups of regions, each of which will get its own gallery on
+the resulting analysis web page.  These can be any name without punctuation.
 For each region group, there should be a corresponding
 <code class="docutils literal notranslate"><span class="pre">TSDiagramsFor&lt;RegionGroup&gt;</span></code> section of the config file, with any spaces
 removed from the name of the region group.  By default, the only region group
-is “Antarctic Regions”.</p>
+is “Ocean Basins”.</p>
 </div>
 <div class="section" id="region-mask">
 <h2>Region Mask<a class="headerlink" href="#region-mask" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionMask</span></code> is a geojson file produce from the <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
-packge.  It should include any number of ocean regions, each of which includes
+package.  It should include any number of ocean regions, each of which includes
 properties <code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>.  Examples of how to create such a set of
 features can be found in <a class="reference external" href="https://github.com/MPAS-Dev/geometric_features/tree/master/feature_creation_scripts/antarctic_ocean_regions">antarctic_ocean_regions</a>.</p>
 </div>
@@ -369,14 +373,20 @@ are:</p>
 <div class="section" id="diagram-type">
 <h2>Diagram Type<a class="headerlink" href="#diagram-type" title="Permalink to this headline">¶</a></h2>
 <p>By default, a “volumetric” diagram is produced, where the volume of ocean water
-in a reigon is binned in T and S space, and the volume of each bin is plotted.
+in a region is binned in T and S space, and the volume of each bin is plotted.
 This allows for more quantitative comparison with observation- and model-based
 climatologies.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">diagramType</span></code> is set to <code class="docutils literal notranslate"><span class="pre">scatter</span></code>, a point cloud is plotted instead,
 shaded by depth.  We anticipate that this will useful for plotting data sets
 that are spatially scattered (e.g. the MEOP seal data), because each sample
-does not correspond to a volume.  This type of dyagram may also be helpful for
+does not correspond to a volume.  This type of diagram may also be helpful for
 comparison with publications that use scatter plots.</p>
+<p>For volumetric diagrams, two norms for the continuous color map are supported,
+<code class="docutils literal notranslate"><span class="pre">linear</span></code> and <code class="docutils literal notranslate"><span class="pre">log</span></code>, with <code class="docutils literal notranslate"><span class="pre">log</span></code> being the default.  The range of the
+colormap is is between zero and the maximum bin volume for <code class="docutils literal notranslate"><span class="pre">linear</span></code> and
+between the minimum non-zero bin volume and the max for <code class="docutils literal notranslate"><span class="pre">log</span></code>.  The min/max
+bin volume is taken from the first panel containing the “main” MPAS-Ocean plot,
+and the same color map range is used for all panels.</p>
 </div>
 <div class="section" id="bins-and-contour-intervals">
 <h2>Bins and Contour Intervals<a class="headerlink" href="#bins-and-contour-intervals" title="Permalink to this headline">¶</a></h2>
@@ -404,7 +414,7 @@ anticipate adding several additional data sets in the near future.</p>
 <li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
 <li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
 <li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
-<li><p><a class="reference internal" href="../config/dask_treads.html#dask-treads"><span class="std std-ref">Dask treads and subprocess count</span></a></p></li>
+<li><p><a class="reference internal" href="../config/dask_threads.html#dask-threads"><span class="std std-ref">Dask threads and subprocess count</span></a></p></li>
 </ul>
 </dd>
 </dl>

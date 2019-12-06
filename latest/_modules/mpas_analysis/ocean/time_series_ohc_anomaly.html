@@ -175,16 +175,16 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span> <span class="k">import</span> <span class="n">ComputeAnomalySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span> <span class="k">import</span> <span class="n">PlotHovmollerSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span> <span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span> <span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask</span> <span class="kn">import</span> \
     <span class="n">PlotDepthIntegratedTimeSeriesSubtask</span>
 
 
@@ -196,7 +196,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
 
-<div class="viewcode-block" id="TimeSeriesOHCAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSeriesOHCAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>

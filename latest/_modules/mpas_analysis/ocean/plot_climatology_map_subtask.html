@@ -180,25 +180,25 @@
 <span class="c1"># -------</span>
 <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pyremap.descriptor</span> <span class="k">import</span> <span class="n">interp_extrap_corner</span>
+<span class="kn">from</span> <span class="nn">pyremap.descriptor</span> <span class="kn">import</span> <span class="n">interp_extrap_corner</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="k">import</span> <span class="n">plot_global_comparison</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_global_comparison</span><span class="p">,</span> \
     <span class="n">plot_polar_projection_comparison</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> \
     <span class="n">get_remapped_mpas_climatology_file_name</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="k">import</span> <span class="n">nans_to_numpy_mask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">nans_to_numpy_mask</span>
 
 
 <div class="viewcode-block" id="PlotClimatologyMapSubtask"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask">[docs]</a><span class="k">class</span> <span class="nc">PlotClimatologyMapSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -282,7 +282,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
-<div class="viewcode-block" id="PlotClimatologyMapSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+<div class="viewcode-block" id="PlotClimatologyMapSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
                  <span class="n">remapMpasClimatologySubtask</span><span class="p">,</span> <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">secondRemapMpasClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">removeMean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>

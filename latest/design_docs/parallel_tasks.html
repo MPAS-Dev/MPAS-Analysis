@@ -348,9 +348,9 @@ Contributors: Xylar Asay-Davis
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span> <span class="o">=</span> <span class="n">wait_for_task</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">&quot;Task {} has finished successfully.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
+            <span class="nb">print</span> <span class="s2">&quot;Task </span><span class="si">{}</span><span class="s2"> has finished successfully.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">&quot;ERROR in task {}.  See log file {} for details&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">print</span> <span class="s2">&quot;ERROR in task </span><span class="si">{}</span><span class="s2">.  See log file </span><span class="si">{}</span><span class="s2"> for details&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">taskName</span><span class="p">,</span> <span class="n">logs</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">logs</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="c1"># remove the process from the process dictionary (no need to bother)</span>
@@ -391,14 +391,14 @@ Contributors: Xylar Asay-Davis
     <span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">taskNames</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="n">commandPrefix</span> <span class="o">+</span> <span class="p">[</span><span class="n">thisFile</span><span class="p">,</span> <span class="s1">&#39;--generate&#39;</span><span class="p">,</span> <span class="n">taskName</span><span class="p">]</span> <span class="o">+</span> <span class="n">configFiles</span>
 
-        <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">&#39;{}/{}.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">taskName</span><span class="p">)</span>
+        <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">taskName</span><span class="p">)</span>
 
         <span class="c1"># write the command to the log file</span>
         <span class="n">logFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">logFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">logFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Command: {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+        <span class="n">logFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Command: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
         <span class="c1"># make sure the command gets written before the rest of the log</span>
         <span class="n">logFile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s1">&#39;Running {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;Running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
         <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">logFile</span><span class="p">,</span>
                                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
         <span class="n">processes</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span> <span class="o">=</span> <span class="n">process</span>
@@ -441,9 +441,9 @@ Contributors: Xylar Asay-Davis
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">True</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># }}}</span>
 </pre></div>
 </div>
 <h4> Implementation: Select maximum number of tasks <br>

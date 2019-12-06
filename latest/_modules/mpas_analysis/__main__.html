@@ -182,7 +182,7 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">mpas_analysis</span>
@@ -193,33 +193,33 @@
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">progressbar</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="k">import</span> <span class="n">AnalysisFormatter</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisFormatter</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.configuration</span> <span class="k">import</span> <span class="n">MpasAnalysisConfigParser</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.configuration</span> <span class="kn">import</span> <span class="n">MpasAnalysisConfigParser</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">generate_html</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">generate_html</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> \
     <span class="n">update_time_bounds_from_file_names</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="k">import</span> <span class="n">register_custom_colormaps</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">register_custom_colormaps</span><span class="p">,</span> \
     <span class="n">_plot_color_gradients</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="k">import</span> <span class="n">ocean</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="k">import</span> <span class="n">sea_ice</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> <span class="n">MpasClimatologyTask</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="kn">import</span> <span class="n">ocean</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="kn">import</span> <span class="n">sea_ice</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">MpasClimatologyTask</span><span class="p">,</span> \
     <span class="n">RefYearMpasClimatologyTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.time_series</span> <span class="k">import</span> <span class="n">MpasTimeSeriesTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.time_series</span> <span class="kn">import</span> <span class="n">MpasTimeSeriesTask</span>
 
 
 <span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>

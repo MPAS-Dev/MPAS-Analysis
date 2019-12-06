@@ -235,7 +235,7 @@ error messages removed for brevity) is as follows:</p>
     <span class="n">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span>
-                          <span class="n">callCheckGenerate</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+                          <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">analysisTask</span> <span class="ow">in</span> <span class="n">analysesToGenerate</span><span class="p">:</span>
         <span class="k">return</span>
@@ -254,7 +254,7 @@ error messages removed for brevity) is as follows:</p>
 
     <span class="k">for</span> <span class="n">prereq</span> <span class="ow">in</span> <span class="n">prereqs</span><span class="p">:</span>
         <span class="n">add_task_and_subtasks</span><span class="p">(</span><span class="n">prereq</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span>
-                              <span class="n">callCheckGenerate</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                              <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">prereq</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
             <span class="c1"># this task should also not run</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
@@ -273,7 +273,7 @@ error messages removed for brevity) is as follows:</p>
     <span class="c1"># from the parent task</span>
     <span class="k">for</span> <span class="n">subtask</span> <span class="ow">in</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">subtasks</span><span class="p">:</span>
         <span class="n">add_task_and_subtasks</span><span class="p">(</span><span class="n">subtask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span>
-                              <span class="n">callCheckGenerate</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                              <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">subtask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
             <span class="k">return</span>

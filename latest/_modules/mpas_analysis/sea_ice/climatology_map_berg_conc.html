@@ -170,21 +170,21 @@
 <span class="c1"># distributed with this code, or at http://mpas-dev.github.com/license.html</span>
 <span class="c1">#</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="k">import</span> <span class="n">LatLonGridDescriptor</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
     <span class="n">RemapObservedClimatologySubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.sea_ice.plot_climatology_map_subtask</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.sea_ice.plot_climatology_map_subtask</span> <span class="kn">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapIcebergConc"><a class="viewcode-back" href="../../../generated/mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html#mpas_analysis.sea_ice.ClimatologyMapIcebergConc">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapIcebergConc</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -196,7 +196,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Darin Comeau, Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="ClimatologyMapIcebergConc.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html#mpas_analysis.sea_ice.ClimatologyMapIcebergConc.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
+<div class="viewcode-block" id="ClimatologyMapIcebergConc.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html#mpas_analysis.sea_ice.ClimatologyMapIcebergConc.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>

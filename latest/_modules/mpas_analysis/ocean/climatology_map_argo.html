@@ -182,19 +182,19 @@
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="k">import</span> <span class="n">LatLonGridDescriptor</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_depth_slices_subtask</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_depth_slices_subtask</span> <span class="kn">import</span> \
     <span class="n">RemapDepthSlicesSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> <span class="n">RemapObservedClimatologySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapObservedClimatologySubtask</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapArgoTemperature"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoTemperature</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -206,7 +206,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="ClimatologyMapArgoTemperature.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+<div class="viewcode-block" id="ClimatologyMapArgoTemperature.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -348,7 +348,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
 
-<div class="viewcode-block" id="ClimatologyMapArgoSalinity.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+<div class="viewcode-block" id="ClimatologyMapArgoSalinity.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -488,7 +488,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
                  <span class="n">fieldName</span><span class="p">,</span> <span class="n">depths</span><span class="p">,</span>
                  <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">],</span>
                  <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapObservations&#39;</span><span class="p">):</span>
