@@ -109,7 +109,7 @@ Other Options
 
 * :ref:`config_moving_average`
 * :ref:`config_time_axis_ticks`
-* :ref:`dask_treads`
+* :ref:`dask_threads`
 
 Observations
 ------------

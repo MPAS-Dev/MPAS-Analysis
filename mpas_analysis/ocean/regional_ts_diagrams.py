@@ -107,8 +107,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                                                   'parallelTaskCount',
                                                   default=1)
 
-        obsDicts = {}
-        obsDicts['SOSE'] = {
+        obsDicts = {'SOSE': {
             'suffix': 'SOSE',
             'gridName': 'SouthernOcean_0.167x0.167degree',
             'gridFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
@@ -118,15 +117,14 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             'SFileName': 'SOSE/SOSE_2005-2010_monthly_salinity_'
                          'SouthernOcean_0.167x0.167degree_20180710.nc',
             'volFileName': 'SOSE/SOSE_volume_'
-                         'SouthernOcean_0.167x0.167degree_20190815.nc',
+                           'SouthernOcean_0.167x0.167degree_20190815.nc',
             'lonVar': 'lon',
             'latVar': 'lat',
             'TVar': 'theta',
             'SVar': 'salinity',
             'volVar': 'volume',
             'zVar': 'z',
-            'tVar': 'Time'}
-        obsDicts['WOA18'] = {
+            'tVar': 'Time'}, 'WOA18': {
             'suffix': 'WOA18',
             'gridName': 'Global_0.25x0.25degree',
             'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
@@ -139,7 +137,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             'SVar': 's_an',
             'volVar': 'volume',
             'zVar': 'depth',
-            'tVar': 'month'}
+            'tVar': 'month'}}
 
         allObsUsed = []
 
@@ -232,7 +230,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
         # }}}
 
     def setup_and_check(self):  # {{{
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -241,7 +239,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -269,15 +267,11 @@ class ComputeObsTSClimatology(AnalysisTask):
 
     Attributes
     ----------
-    sectionName : str
-        The config section with options for this regionGroup
-
     obsDict : dicts
         Information on the observational data sets
 
     season : str
-        The season to comput the climatogy for
-    Information on the observations to compare agains
+        The season to compute the climatology for
     """
     # Authors
     # -------
@@ -293,14 +287,11 @@ class ComputeObsTSClimatology(AnalysisTask):
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 
-        sectionName : str
-            The config section with options for this regionGroup
-
         obsDict : dicts
             Information on the observational data sets
 
         season : str
-            The season to comput the climatogy for
+            The season to compute the climatology for
         """
         # Authors
         # -------
@@ -468,7 +459,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         A task for creating mask MPAS files for each region to plot, used
         to get the mask file name
 
-    obsDicts : list of dicts
+    obsDicts : dict of dicts
         Information on the observations to compare agains
 
     season : str
@@ -514,7 +505,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             A task for creating mask MPAS files for each region to plot, used
             to get the mask file name
 
-        obsDicts : list of dicts
+        obsDicts : dict of dicts
             Information on the observations to compare agains
 
         season : str
@@ -633,6 +624,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         width = 3 + 4.5*nCols
         height = 2 + 4*nRows
 
+        # noinspection PyTypeChecker
         fig, axarray = plt.subplots(nrows=nRows, ncols=nCols, sharey=True,
                                     figsize=(width, height))
 
@@ -642,26 +634,28 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         if nRows == 1:
             axarray = axarray.reshape((nRows, nCols))
 
-        T, S, zMid, volume, zmin, zmax = self._get_mpas_T_S(self.config)
+        T, S, zMid, volume, zmin, zmax = self._get_mpas_t_s(self.config)
         mainRunName = config.get('runs', 'mainRunName')
         plotFields = [{'S': S, 'T': T, 'z': zMid, 'vol': volume,
                        'title': mainRunName}]
 
         if self.controlConfig is not None:
-            T, S, zMid, volume, _, _ = self._get_mpas_T_S(
+            T, S, zMid, volume, _, _ = self._get_mpas_t_s(
                 self.controlConfig)
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
             plotFields.append({'S': S, 'T': T, 'z': zMid, 'vol': volume,
                                'title': 'Control: {}'.format(controlRunName)})
 
         for obsName in self.obsDicts:
-            obsT, obsS, obsZ, obsVol = self._get_obs_T_S(
+            obsT, obsS, obsZ, obsVol = self._get_obs_t_s(
                 self.obsDicts[obsName], zmin, zmax)
             plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ, 'vol': obsVol,
                                'title': obsName})
 
         Tbins = config.getExpression(sectionName, 'Tbins', usenumpyfunc=True)
         Sbins = config.getExpression(sectionName, 'Sbins', usenumpyfunc=True)
+
+        normType = config.get(sectionName, 'normType')
 
         PT, SP = numpy.meshgrid(Tbins, Sbins)
         SA = gsw.SA_from_SP(SP, p=0., lon=0., lat=-75.)
@@ -676,6 +670,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             raise ValueError('Unexpected diagramType {}'.format(diagramType))
 
         lastPanel = None
+        volMinMpas = None
+        volMaxMpas = None
         for index in range(len(axisIndices)):
             panelIndex = axisIndices[index]
 
@@ -698,10 +694,18 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             plt.clabel(CS, fontsize=12, inline=1, fmt='%4.2f')
 
             if diagramType == 'volumetric':
-                lastPanel, volMax = self._plot_volumetric_panel(T, S, volume)
+                lastPanel, volMin, volMax = \
+                    self._plot_volumetric_panel(T, S, volume)
+
                 if index == 0:
+                    volMinMpas = volMin
                     volMaxMpas = volMax
-                norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
+                if normType == 'linear':
+                    norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
+                elif normType == 'log':
+                    norm = colors.LogNorm(vmin=volMinMpas, vmax=volMaxMpas)
+                else:
+                    raise ValueError('Unsupported normType {}'.format(normType))
                 lastPanel.set_norm(norm)
             else:
                 lastPanel = self._plot_scatter_panel(T, S, z, zmin, zmax)
@@ -773,7 +777,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         # }}}
 
-    def _get_mpas_T_S(self, config):  # {{{
+    def _get_mpas_t_s(self, config):  # {{{
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
 
@@ -860,7 +864,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         return T, S, zMid, volume, zmin, zmax  # }}}
 
-    def _get_obs_T_S(self, obsDict, zmin, zmax):  # {{{
+    def _get_obs_t_s(self, obsDict, zmin, zmax):  # {{{
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
 
@@ -872,7 +876,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             dsRegionMask = \
                 xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
                         nCells=(obsDict['latVar'], obsDict['lonVar']))
-            dsRegionMask = dsRegionMask.reset_index('nCells').drop(
+            dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
 
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
@@ -890,7 +894,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             obsFileName = obsDict['climatologyTask'][self.season].fileName
             ds = xarray.open_dataset(obsFileName, chunks=chunk)
             ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
-            ds = ds.reset_index('nCells').drop(
+            ds = ds.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
 
             ds = ds.where(cellMask, drop=True)
@@ -929,8 +933,14 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
                                        weights=volume, cmap=cmap, zorder=1)
 
-        volMax = numpy.amax(hist)
-        return panel, volMax  # }}}
+        poshist = hist[hist > 0.]
+        if len(poshist) > 0:
+            volMin = numpy.amin(poshist)
+            volMax = numpy.amax(poshist)
+        else:
+            volMin = None
+            volMax = None
+        return panel, volMin, volMax  # }}}
 
     def _plot_scatter_panel(self, T, S, z, zmin, zmax):  # {{{
 

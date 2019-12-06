@@ -1283,7 +1283,7 @@ variables = [{'name': 'temperature',
 ## options related to plotting T/S diagrams of ocean regions
 
 # the names of region groups to plot, each with its own section below
-regionGroups = ['Antarctic Regions', 'Ocean Basins']
+regionGroups = ['Ocean Basins']
 
 # a list of seasons to compute climatologies over
 seasons = ['ANN']
@@ -1321,8 +1321,8 @@ diagramType = volumetric
 # if diagramType == 'volumetric', the bin boundaries for T and S
 # if diagramType == 'scatter', only the min and max are important (and the
 #   bins are only used for computing neutral density contours)
-Tbins = numpy.linspace(-2.5, 4, 66)
-Sbins = numpy.linspace(33.8, 34.8, 51)
+Tbins = numpy.linspace(-2.5, 4, 651)
+Sbins = numpy.linspace(33.8, 34.8, 1001)
 
 # density contour interval
 rhoInterval = 0.1
@@ -1331,6 +1331,8 @@ rhoInterval = 0.1
 colormap = white_cmo_deep
 # The following is more appropriate if diagramType == 'scatter'
 # colormap = cmo.deep_r
+# the type of norm used in the colormap {'linear', 'log'}
+normType = log
 
 # The minimum and maximum depth over which fields are plotted, default is
 # to take these values from the geojson feature's zmin and zmax properties.
@@ -1362,8 +1364,8 @@ diagramType = volumetric
 # if diagramType == 'volumetric', the bin boundaries for T and S
 # if diagramType == 'scatter', only the min and max are important (and the
 #   bins are only used for computing neutral density contours)
-Tbins = numpy.linspace(-2.5, 16, 75)
-Sbins = numpy.linspace(33.8, 35.8, 101)
+Tbins = numpy.linspace(-2.5, 16, 926)
+Sbins = numpy.linspace(33.8, 35.8, 1001)
 
 # density contour interval
 rhoInterval = 0.2
@@ -1372,6 +1374,8 @@ rhoInterval = 0.2
 colormap = white_cmo_deep
 # The following is more appropriate if diagramType == 'scatter'
 # colormap = cmo.deep_r
+# the type of norm used in the colormap {'linear', 'log'}
+normType = log
 
 # The minimum and maximum depth over which fields are plotted.
 zmin = -1000

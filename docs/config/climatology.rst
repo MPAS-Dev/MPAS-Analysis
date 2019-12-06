@@ -136,7 +136,7 @@ Other Options
 -------------
 
 * :ref:`config_comparison_grids`
-* :ref:`dask_treads`
+* :ref:`dask_threads`
 
 .. _`Common Ocean Reference Experiments, CORE`: http://data1.gfdl.noaa.gov/nomads/forms/mom4/CORE.html
 .. _`ESMF_RegridWeightGen tool`: http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_7_1_0r/ESMF_refdoc/node3.html#SECTION03020000000000000000
