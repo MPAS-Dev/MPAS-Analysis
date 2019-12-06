@@ -109,7 +109,7 @@ corresponding field in the MPAS-Ocean ``timeSeriesStatsMonthlyOutput`` files.
 Other Options
 -------------
 
-* :ref:`dask_treads`
+* :ref:`dask_threads`
 
 Example Result
 --------------

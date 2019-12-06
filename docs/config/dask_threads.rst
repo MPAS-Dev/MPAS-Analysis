@@ -27,7 +27,7 @@ it is possible to spawn huge numbers of dask threads in MPAS-Analysis that both
 slow down analysis and lead to errors when the node runs out of threads
 completely.
 
-To prevent this, many tasks or subtasks that use dask treading take the number
+To prevent this, many tasks or subtasks that use dask threading take the number
 of execution threads from a config option, typically in the config section for
 the parent task.  Typically, the number of ``daskThreads`` should be around
 the same as the number of cores on a node divided by the number of tasks
@@ -38,7 +38,7 @@ by ``subprocessCount``, see below, this number might differ from
 Subprocess count
 ----------------
 
-Tasks or subtasks that use dask treading may consume too much memory or use
+Tasks or subtasks that use dask threading may consume too much memory or use
 too many threads to "count" as a single task.  That is, it might not be safe to
 run with ``parallelTaskCount`` simultaneious instances of the task/subtask and
 it would be better if it occupied the slot of multiple tasks in the pool of

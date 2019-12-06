@@ -197,7 +197,7 @@ For more details on the remaining config options, see
  * :ref:`config_regions`
  * :ref:`config_seasons`
  * :ref:`config_colormaps`
- * :ref:`dask_treads`
+ * :ref:`dask_threads`
 
 Example Result
 --------------
