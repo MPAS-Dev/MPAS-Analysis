@@ -1,7 +1,7 @@
-.. _dask_treads:
+.. _dask_threads:
 
-Dask treads and subprocess count
-================================
+Dask threads and subprocess count
+=================================
 
 Several tasks and subtasks have config options ``daskThreads`` and
 ``subprocessCount`` used to control threading within a subtask::
@@ -15,15 +15,15 @@ Several tasks and subtasks have config options ``daskThreads`` and
   # memory, so that fewer tasks will be allowed to run at once
   subprocessCount = 1
 
-Dask treads
------------
+Dask threads
+------------
 
 Dask and xarray support thread-parallel operations on data sets.  They also
 support chunk-wise operation on data sets that can't fit in memory.  These
 capabilities are very powerful but also difficult to configure for general
 cases.  Dask is also not desigend by default with the idea that multiple tasks,
-each with multiple dask treads, might operate simultaneously.  As a result,
-it is possible to spawn huge numbers of dask treads in MPAS-Analysis that both
+each with multiple dask threads, might operate simultaneously.  As a result,
+it is possible to spawn huge numbers of dask threads in MPAS-Analysis that both
 slow down analysis and lead to errors when the node runs out of threads
 completely.
 
