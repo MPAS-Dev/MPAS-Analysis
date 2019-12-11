@@ -174,7 +174,7 @@ htmlSubdirectory = html
 generate = ['all_publicObs', 'no_icebergs', 'no_climatologyMapAntarcticMelt',
             'no_timeSeriesAntarcticMelt', 'no_timeSeriesOceanRegions',
             'no_climatologyMapSose', 'no_climatologyMapSchmidtko',
-            'no_soseTransects']
+            'no_soseTransects', 'no_oceanRegionalProfiles']
 
 
 [climatology]
