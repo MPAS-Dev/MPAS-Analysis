@@ -703,10 +703,14 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                 if normType == 'linear':
                     norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
                 elif normType == 'log':
-                    norm = colors.LogNorm(vmin=volMinMpas, vmax=volMaxMpas)
+                    if volMinMpas is None or volMaxMpas is None:
+                        norm = None
+                    else:
+                        norm = colors.LogNorm(vmin=volMinMpas, vmax=volMaxMpas)
                 else:
                     raise ValueError('Unsupported normType {}'.format(normType))
-                lastPanel.set_norm(norm)
+                if norm is not None:
+                    lastPanel.set_norm(norm)
             else:
                 lastPanel = self._plot_scatter_panel(T, S, z, zmin, zmax)
 
