@@ -432,8 +432,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 '{:02d}-01.nc'.format(symlinkDirectory, self.ncclimoModel,
                                       year, month)
 
-            if not os.path.exists(outFileName):
+            try:
                 os.symlink(inFileName, outFileName)
+            except OSError:
+                pass
 
         return symlinkDirectory
 
