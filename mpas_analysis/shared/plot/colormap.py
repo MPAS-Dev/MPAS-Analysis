@@ -27,6 +27,7 @@ from six.moves import configparser
 import cmocean
 import pkg_resources
 from six import string_types
+import mpas_analysis.shares.plots.ScientifiColourMaps5
 
 
 def setup_colormap(config, configSectionName, suffix=''):
@@ -260,17 +261,6 @@ def register_custom_colormaps():
     mapNames.pop(mapNames.index('gray'))
     for mapName in mapNames:
         _register_colormap_and_reverse(mapName, getattr(cmocean.cm, mapName))
-
-    # add Scientific Colour-Maps 3.0 from
-    # http://www.fabiocrameri.ch/colourmaps.php
-
-    for mapName in ['berlin', 'bilbao', 'broc', 'cork', 'davos', 'devon',
-                    'grayC', 'lajolla', 'lapaz', 'lisbon', 'oleron', 'oslo',
-                    'roma', 'tofino', 'tokyo', 'turku', 'vik']:
-
-        xmlFile = pkg_resources.resource_filename(
-            __name__, 'ColourMapSuite3/{}/{}.xml'.format(mapName, mapName))
-        _read_xml_colormap(xmlFile, mapName)
 
     # add SciVisColor colormaps from
     # https://sciviscolor.org/home/colormaps/
