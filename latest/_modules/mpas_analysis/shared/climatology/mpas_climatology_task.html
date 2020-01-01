@@ -596,8 +596,10 @@
                 <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">-01.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symlinkDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncclimoModel</span><span class="p">,</span>
                                       <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">pass</span>
 
         <span class="k">return</span> <span class="n">symlinkDirectory</span>
 
