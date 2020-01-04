@@ -191,6 +191,7 @@
 <span class="kn">import</span> <span class="nn">cmocean</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">string_types</span>
+<span class="kn">import</span> <span class="nn">mpas_analysis.shared.plot.ScientificColourMaps5</span>
 
 
 <div class="viewcode-block" id="setup_colormap"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap">[docs]</a><span class="k">def</span> <span class="nf">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -424,17 +425,6 @@
     <span class="n">mapNames</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">mapNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">mapName</span> <span class="ow">in</span> <span class="n">mapNames</span><span class="p">:</span>
         <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">mapName</span><span class="p">))</span>
-
-    <span class="c1"># add Scientific Colour-Maps 3.0 from</span>
-    <span class="c1"># http://www.fabiocrameri.ch/colourmaps.php</span>
-
-    <span class="k">for</span> <span class="n">mapName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;bilbao&#39;</span><span class="p">,</span> <span class="s1">&#39;broc&#39;</span><span class="p">,</span> <span class="s1">&#39;cork&#39;</span><span class="p">,</span> <span class="s1">&#39;davos&#39;</span><span class="p">,</span> <span class="s1">&#39;devon&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;grayC&#39;</span><span class="p">,</span> <span class="s1">&#39;lajolla&#39;</span><span class="p">,</span> <span class="s1">&#39;lapaz&#39;</span><span class="p">,</span> <span class="s1">&#39;lisbon&#39;</span><span class="p">,</span> <span class="s1">&#39;oleron&#39;</span><span class="p">,</span> <span class="s1">&#39;oslo&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;roma&#39;</span><span class="p">,</span> <span class="s1">&#39;tofino&#39;</span><span class="p">,</span> <span class="s1">&#39;tokyo&#39;</span><span class="p">,</span> <span class="s1">&#39;turku&#39;</span><span class="p">,</span> <span class="s1">&#39;vik&#39;</span><span class="p">]:</span>
-
-        <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span>
-            <span class="vm">__name__</span><span class="p">,</span> <span class="s1">&#39;ColourMapSuite3/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">mapName</span><span class="p">))</span>
-        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="n">mapName</span><span class="p">)</span>
 
     <span class="c1"># add SciVisColor colormaps from</span>
     <span class="c1"># https://sciviscolor.org/home/colormaps/</span>
