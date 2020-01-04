@@ -27,7 +27,7 @@ from six.moves import configparser
 import cmocean
 import pkg_resources
 from six import string_types
-import mpas_analysis.shares.plots.ScientifiColourMaps5
+import mpas_analysis.shared.plot.ScientificColourMaps5
 
 
 def setup_colormap(config, configSectionName, suffix=''):
