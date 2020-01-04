@@ -55,7 +55,7 @@ setup(name='mpas_analysis',
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
                     'mpas_analysis.shared.plot':
-                        ['ColourMapSuite3/*/*.xml',
+                        ['ScientificColourMaps5/*/*.txt',
                          'SciVisColorColormaps/*.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'lxml',
