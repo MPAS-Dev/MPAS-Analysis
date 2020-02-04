@@ -523,6 +523,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             tags=parentTask.tags,
             subtaskName='plot{}_{}'.format(fullSuffix, season))
 
+        self.run_after(mpasClimatologyTask)
         self.regionGroup = regionGroup
         self.regionName = regionName
         self.sectionName = sectionName
