@@ -62,7 +62,7 @@ seaIceStreamsFileName = streams.seaice
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /lcrc/group/acme/xylar/analysis/SO60to10ISC.20200108/yrs006-010
+baseDirectory = /path/to/output
 
 # Anvil doesn't have direct access to a web portal, so output will need
 # to be copied elsewhere (e.g. NERSC web portal)
