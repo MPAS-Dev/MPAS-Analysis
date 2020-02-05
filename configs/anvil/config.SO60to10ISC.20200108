@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20170926.FCT2.A_WCYCL1850S.ne30_oECv3.anvil
+mainRunName = SO60to10ISC.20200108 
 
 # config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
@@ -45,24 +45,24 @@ baseDirectory = /lcrc/group/acme/diagnostics
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /lcrc/group/acme/jwolfe/acme_scratch/20170926.FCT2.A_WCYCL1850S.ne30_oECv3.anvil/run
+baseDirectory = /lcrc/group/acme/kehoch/acme_scratch/anvil/SO60to10ISC.20200108/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
-mpasMeshName = oEC60to30v3
+mpasMeshName = oSO60to10wISC
 
 # names of namelist and streams files, either a path relative to baseDirectory
 # or an absolute path.
-oceanNamelistFileName = mpas-o_in
+oceanNamelistFileName = mpaso_in
 oceanStreamsFileName = streams.ocean
-seaIceNamelistFileName = mpas-cice_in
-seaIceStreamsFileName = streams.cice
+seaIceNamelistFileName = mpassi_in
+seaIceStreamsFileName = streams.seaice
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
 ## etc.
 
 # directory where analysis should be written
-baseDirectory = /dir/to/analysis/output
+baseDirectory = /path/to/output
 
 # Anvil doesn't have direct access to a web portal, so output will need
 # to be copied elsewhere (e.g. NERSC web portal)
@@ -93,17 +93,17 @@ htmlSubdirectory = html
 #         all,no_ocean,all_timeSeries
 # All tasks with tag "landIceCavities" are disabled because this run did not
 # include land-ice cavities.
-generate = ['all', 'no_landIceCavities', 'no_eke', 'no_BGC', 'no_icebergs',
-            'no_min', 'no_max']
+generate = ['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', 'no_min',
+            'no_max']
 
 [climatology]
 ## options related to producing climatologies, typically to compare against
 ## observations and previous runs
 
 # the first year over which to average climatalogies
-startYear = 11
+startYear = 6
 # the last year over which to average climatalogies
-endYear = 20
+endYear = 10
 
 [timeSeries]
 ## options related to producing time series plots, often to compare against
@@ -113,7 +113,7 @@ endYear = 20
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 22
+endYear = 9999
 
 [index]
 ## options related to producing nino index.
