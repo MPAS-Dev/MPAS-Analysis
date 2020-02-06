@@ -179,7 +179,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             subtaskName = 'computeMpas{}Masks'.format(sectionSuffix)
             mpasMasksSubtask = ComputeRegionMasksSubtask(
                 self, regionMaskFile, outFileSuffix=fileSuffix,
-                featureList=regionNames, subtaskName=subtaskName,
+                featureList=None, subtaskName=subtaskName,
                 subprocessCount=parallelTaskCount)
 
             self.add_subtask(mpasMasksSubtask)
@@ -196,7 +196,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     relativePath=localObsDict['gridFileName'])
                 obsMasksSubtask = ComputeRegionMasksSubtask(
                     self, regionMaskFile, outFileSuffix=fileSuffix,
-                    featureList=regionNames, subtaskName=subtaskName,
+                    featureList=None, subtaskName=subtaskName,
                     subprocessCount=parallelTaskCount,
                     obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
