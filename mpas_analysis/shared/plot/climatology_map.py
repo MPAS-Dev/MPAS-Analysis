@@ -124,19 +124,14 @@ def plot_polar_comparison(
 
         ax.set_title(title, y=1.06, **plottitle_font)
 
-        gl = ax.gridlines(crs=data_crs, color='k', linestyle=':', zorder=5)
+        gl = ax.gridlines(crs=data_crs, color='k', linestyle=':', zorder=5,
+                          draw_labels=True)
         gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 20.))
         gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
         gl.n_steps = 100
-        # Not currently supported but keep an eye out for the 0.18.0 release
-        # with:
-        # https://github.com/SciTools/cartopy/pull/1089
-        # gl = ax.gridlines(crs=data_crs, draw_labels=True)
-        # gl.ylabels_right = False
-        # gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 20.))
-        # gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
-        # gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
-        # gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
+        gl.right_labels = False
+        gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
+        gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
 
         fieldPeriodic, lonPeriodic = add_cyclic_point(field, lon)
 
@@ -321,8 +316,8 @@ def plot_global_comparison(
 
         gl = ax.gridlines(crs=projection, color='k', linestyle=':', zorder=5,
                           draw_labels=True)
-        gl.ylabels_right = False
-        gl.xlabels_top = False
+        gl.right_labels = False
+        gl.top_labels = False
         gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 60.))
         gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 20.))
         gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
