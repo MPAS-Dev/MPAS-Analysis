@@ -99,7 +99,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
             subtaskName = 'compute{}Masks'.format(sectionSuffix)
             masksSubtask = ComputeRegionMasksSubtask(
                 self, regionMaskFile, outFileSuffix=fileSuffix,
-                featureList=regionNames, subtaskName=subtaskName,
+                featureList=None, subtaskName=subtaskName,
                 subprocessCount=parallelTaskCount,)
 
             self.add_subtask(masksSubtask)
