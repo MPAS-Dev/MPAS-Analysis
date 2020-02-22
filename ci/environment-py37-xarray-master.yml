@@ -18,7 +18,7 @@ dependencies:
   - progressbar2
   - requests
   - shapely
-  - cartopy
+  - cartopy >=0.18.0
   - geometric_features
   - gsw
   - pyremap
