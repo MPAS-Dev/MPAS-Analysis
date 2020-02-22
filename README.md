@@ -46,7 +46,7 @@ environment with the following packages:
  * python >= 3.6
  * numpy
  * scipy
- * matplotlib >= 3.0.2
+ * matplotlib-base >= 3.0.2
  * netCDF4
  * xarray >= 0.14.1
  * dask
@@ -69,7 +69,7 @@ environment with the following packages:
 These can be installed via the conda command:
 ```
 conda config --add channels conda-forge
-conda create -n mpas-analysis python=3.7 numpy scipy "matplotlib>=3.0.2" \
+conda create -n mpas-analysis python=3.7 numpy scipy "matplotlib-base>=3.0.2" \
     netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
     pillow cmocean progressbar2 requests setuptools shapely cartopy>=0.18.0 \
     geometric_features gsw "pyremap<0.1.0" "mpas_tools>=0.0.8"

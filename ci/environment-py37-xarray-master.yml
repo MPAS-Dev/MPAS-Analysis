@@ -6,7 +6,7 @@ dependencies:
   - numpy
   - scipy
   - lxml
-  - matplotlib >=3.0.2
+  - matplotlib-base >=3.0.2
   - dask
   - netcdf4
   - hdf5

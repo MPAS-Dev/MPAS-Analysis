@@ -10,16 +10,16 @@ dependencies:
     - pytest
     - numpy
     - scipy
-    - matplotlib
+    - matplotlib-base
     - netcdf4
     - xarray
     - dask
     - lxml
-    - pyproj <= 1.9.6
+    - pyproj
     - pillow
     - cmocean
     - shapely
-    - cartopy
+    - cartopy >= 0.18.0
     - sphinx
     - mock
     - sphinx_rtd_theme
