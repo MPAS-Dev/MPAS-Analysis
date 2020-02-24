@@ -330,7 +330,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
                     try:
                         transectIndex = maskTransectNames.index(transect)
                     except ValueError:
-                        self.logger.warning('      Not found in masks. Skipping.')
+                        self.logger.warning('      Not found in masks. '
+                                            'Skipping.')
                         continue
                     transectIndices.append(transectIndex)
 
@@ -339,7 +340,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
                     edgeIndices = dsMask.transectEdgeGlobalIDs - 1
                     edgeIndices = edgeIndices.where(edgeIndices >= 0,
                                                     drop=True).astype(int)
-                    edgeSign = dsMask.transectEdgeMaskSigns.isel(nEdges=edgeIndices)
+                    edgeSign = dsMask.transectEdgeMaskSigns.isel(
+                        nEdges=edgeIndices)
 
                     dsIn = dsTimeSlice.isel(nEdges=edgeIndices)
 
