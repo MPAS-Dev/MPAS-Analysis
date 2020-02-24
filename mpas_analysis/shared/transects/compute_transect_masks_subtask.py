@@ -24,7 +24,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf
 
 
-def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName):
+def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
+                                logger=None):
     """
     Build a transect mask file from the given MPAS mesh and geojson file \
     defining a set of transects.
@@ -34,7 +35,8 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName):
 
     dsMesh = xr.open_dataset(meshFileName)
     fcMask = read_feature_collection(geojsonFileName)
-    dsMask = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask)
+    dsMask = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
+                                        logger=logger)
 
     write_netcdf(dsMask, maskFileName)
 
@@ -174,7 +176,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             return
 
         compute_mpas_transect_masks(
-            self.geojsonFileName, self.obsFileName, self.maskFileName)
+            self.geojsonFileName, self.obsFileName, self.maskFileName,
+            logger=self.logger)
 
     # }}}
 
