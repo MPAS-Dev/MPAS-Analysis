@@ -31,7 +31,7 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    decode_strings, get_region_mask
+    get_files_year_month, decode_strings, get_region_mask
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -49,7 +49,7 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
+    def __init__(self, config, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -58,9 +58,6 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
         ----------
         config :  ``MpasAnalysisConfigParser``
             Configuration options
-
-        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
-            The task that extracts the time series from MPAS monthly output
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -76,6 +73,11 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['timeSeries', 'transport'])
 
+        startYear = config.getint('timeSeries', 'startYear')
+        endYear = config.getint('timeSeries', 'endYear')
+
+        years = [year for year in range(startYear, endYear + 1)]
+
         transportTransectFileName = \
             get_region_mask(config, 'transportTransects.geojson')
 
@@ -89,14 +91,25 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         self.add_subtask(masksSubtask)
 
-        computeTransportSubtask = ComputeTransportSubtask(
-            self, mpasTimeSeriesTask, masksSubtask, transectsToPlot)
-        self.add_subtask(computeTransportSubtask)
+        # in the end, we'll combine all the time series into one, but we
+        # create this task first so it's easier to tell it to run after all
+        # the compute tasks
+        combineSubtask = CombineTransportSubtask(
+            self, startYears=years, endYears=years)
+
+        # run one subtask per year
+        for year in years:
+            computeSubtask = ComputeTransportSubtask(
+                self, startYear=year, endYear=year, masksSubtask=masksSubtask,
+                transectsToPlot=transectsToPlot)
+            self.add_subtask(computeSubtask)
+            computeSubtask.run_after(masksSubtask)
+            combineSubtask.run_after(computeSubtask)
 
         for index, transect in enumerate(transectsToPlot):
             plotTransportSubtask = PlotTransportSubtask(
                 self, transect, index, controlConfig, transportTransectFileName)
-            plotTransportSubtask.run_after(computeTransportSubtask)
+            plotTransportSubtask.run_after(combineSubtask)
             self.add_subtask(plotTransportSubtask)
 
         # }}}
@@ -110,8 +123,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
 
     Attributes
     ----------
-    mpasTimeSeriesTask : ``MpasTimeSeriesTask``
-        The task that extracts the time series from MPAS monthly output
+    startYear, endYear : int
+        The beginning and end of the time series to compute
 
     masksSubtask : ``ComputeRegionMasksSubtask``
         A task for creating mask files for each ice shelf to plot
@@ -123,8 +136,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, parentTask, mpasTimeSeriesTask, masksSubtask,
-                 transectsToPlot):  # {{{
+    def __init__(self, parentTask, startYear, endYear,
+                 masksSubtask, transectsToPlot):  # {{{
         """
         Construct the analysis task.
 
@@ -134,8 +147,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 
-        mpasTimeSeriesTask : ``MpasTimeSeriesTask``
-            The task that extracts the time series from MPAS monthly output
+        startYear, endYear : int
+            The beginning and end of the time series to compute
 
         masksSubtask : ``ComputeRegionMasksSubtask``
             A task for creating mask files for each ice shelf to plot
@@ -153,10 +166,11 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='computeTransport')
+            subtaskName='computeTransport_{:04d}-{:04d}'.format(startYear,
+                                                                endYear))
 
-        self.mpasTimeSeriesTask = mpasTimeSeriesTask
-        self.run_after(mpasTimeSeriesTask)
+        self.startYear = startYear
+        self.endYear = endYear
 
         self.masksSubtask = masksSubtask
         self.run_after(masksSubtask)
@@ -170,6 +184,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         self.daskThreads = min(
             multiprocessing.cpu_count(),
             self.config.getint(self.taskName, 'daskThreads'))
+
+        self.restartFileName = None
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -199,8 +215,6 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        config = self.config
-
         # Load mesh related variables
         try:
             self.restartFileName = self.runStreams.readpath('restart')[0]
@@ -208,35 +222,7 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for transport calculations')
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        self.startDate = config.get('timeSeries', 'startDate')
-        self.endDate = config.get('timeSeries', 'endDate')
-
-        try:
-            self.variableList = \
-                ['timeMonthly_avg_normalTransportVelocity',
-                 'timeMonthly_avg_layerThickness']
-            self.mpasTimeSeriesTask.add_variables(
-                variableList=self.variableList)
-        except ValueError:
-            try:
-                self.variableList = \
-                    ['timeMonthly_avg_normalVelocity',
-                     'timeMonthly_avg_normalGMBolusVelocity'
-                     'timeMonthly_avg_layerThickness']
-                self.mpasTimeSeriesTask.add_variables(
-                    variableList=self.variableList)
-            except ValueError:
-                print('Warning: computing transport with advection velocity '
-                      'without GM contribution')
-                self.variableList = \
-                    ['timeMonthly_avg_normalVelocity',
-                     'timeMonthly_avg_layerThickness']
-                self.mpasTimeSeriesTask.add_variables(
-                    variableList=self.variableList)
-
-        return  # }}}
+        # }}}
 
     def run_task(self):  # {{{
         """
@@ -251,39 +237,81 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
 
         self.logger.info('  Load transport velocity data...')
 
-        mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
 
-        baseDirectory = build_config_full_path(
-            config, 'output', 'timeSeriesSubdirectory')
+        startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
+        endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
 
-        outFileName = '{}/transectTransport.nc'.format(baseDirectory)
+        outputDirectory = '{}/transport/'.format(
+            build_config_full_path(config, 'output', 'timeseriesSubdirectory'))
+        try:
+            os.makedirs(outputDirectory)
+        except OSError:
+            pass
+
+        outFileName = '{}/transport_{:04d}-{:04d}.nc'.format(
+            outputDirectory, self.startYear, self.endYear)
+
+        inputFiles = sorted(self.historyStreams.readpath(
+            'timeSeriesStatsMonthlyOutput', startDate=startDate,
+            endDate=endDate, calendar=self.calendar))
+
+        years, months = get_files_year_month(inputFiles,
+                                             self.historyStreams,
+                                             'timeSeriesStatsMonthlyOutput')
+
+        variableList = ['timeMonthly_avg_layerThickness']
+        with open_mpas_dataset(fileName=inputFiles[0],
+                               calendar=self.calendar,
+                               startDate=startDate,
+                               endDate=endDate) as dsIn:
+            if 'timeMonthly_avg_normalTransportVelocity' in dsIn:
+                variableList.append('timeMonthly_avg_normalTransportVelocity')
+            elif 'timeMonthly_avg_normalGMBolusVelocity' in dsIn:
+                variableList = variableList + \
+                    ['timeMonthly_avg_normalVelocity',
+                     'timeMonthly_avg_normalGMBolusVelocity']
+            else:
+                self.logger.warning('Cannot compute transport velocity. '
+                                    'Using advection velocity.')
+                variableList.append('timeMonthly_avg_normalVelocity')
+
+        outputExists = os.path.exists(outFileName)
+        outputValid = outputExists
+        if outputExists:
+            with open_mpas_dataset(fileName=outFileName,
+                                   calendar=self.calendar,
+                                   timeVariableNames=None,
+                                   variableList=None,
+                                   startDate=startDate,
+                                   endDate=endDate) as dsOut:
+
+                for inIndex in range(dsOut.dims['Time']):
+
+                    mask = numpy.logical_and(
+                        dsOut.year[inIndex].values == years,
+                        dsOut.month[inIndex].values == months)
+                    if numpy.count_nonzero(mask) == 0:
+                        outputValid = False
+                        break
+
+        if outputValid:
+            self.logger.info('  Time series exists -- Done.')
+            return
+
+        datasets = []
+        for fileName in inputFiles:
+
+            dsTimeSlice = open_mpas_dataset(
+                fileName=fileName,
+                calendar=self.calendar,
+                variableList=variableList,
+                startDate=startDate,
+                endDate=endDate)
+            datasets.append(dsTimeSlice)
 
         # Load data:
-        inputFile = mpasTimeSeriesTask.outputFile
-        dsIn = open_mpas_dataset(fileName=inputFile,
-                                 calendar=self.calendar,
-                                 variableList=self.variableList,
-                                 startDate=self.startDate,
-                                 endDate=self.endDate)
-
-        dsIn = dsIn.chunk({'Time': 12})
-        try:
-            if os.path.exists(outFileName):
-                # The file already exists so load it
-                dsOut = xarray.open_dataset(outFileName)
-                if numpy.all(dsOut.Time.values == dsIn.Time.values):
-                    return
-                else:
-                    self.logger.warning('File {} is incomplete. Deleting '
-                                        'it.'.format(outFileName))
-                    os.remove(outFileName)
-        except OSError:
-            # something is potentially wrong with the file, so let's delete
-            # it and try again
-            self.logger.warning('Problems reading file {}. Deleting '
-                                'it.'.format(outFileName))
-            os.remove(outFileName)
+        dsIn = xarray.concat(datasets, 'Time').chunk({'Time': 1})
 
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
@@ -342,12 +370,79 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             dsOut.transport.attrs['units'] = 'Sv'
             dsOut.transport.attrs['description'] = \
                 'Transport through transects'
-            dsOut['transectNames'] = ('nTransects', outTransectNames)
+            dsOut.coords['transectNames'] = ('nTransects', outTransectNames)
 
             write_netcdf(dsOut, outFileName)
 
         # }}}
 
+    # }}}
+
+
+class CombineTransportSubtask(AnalysisTask):  # {{{
+    """
+    Combine individual time series into a single data set
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, startYears, endYears):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask : ``TimeSeriesOceanRegions``
+            The main task of which this is a subtask
+
+        startYears, endYears : list of int
+            The beginning and end of each time series to combine
+
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(CombineTransportSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='combineTimeSeries')
+
+        self.startYears = startYears
+        self.endYears = endYears
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Combine the time series
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        outputDirectory = '{}/transport/'.format(
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'))
+
+        outFileName = '{}/transport_{:04d}-{:04d}.nc'.format(
+            outputDirectory, self.startYears[0], self.endYears[-1])
+
+        if not os.path.exists(outFileName):
+            inFileNames = []
+            for startYear, endYear in zip(self.startYears, self.endYears):
+                inFileName = '{}/transport_{:04d}-{:04d}.nc'.format(
+                    outputDirectory, startYear, endYear)
+                inFileNames.append(inFileName)
+
+            ds = xarray.open_mfdataset(inFileNames, combine='nested',
+                                       concat_dim='Time', decode_times=False)
+
+            write_netcdf(ds, outFileName)
+        # }}}
     # }}}
 
 
@@ -541,7 +636,11 @@ class PlotTransportSubtask(AnalysisTask):
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 
-        inFileName = '{}/transectTransport.nc'.format(baseDirectory)
+        startYear = config.getint('timeSeries', 'startYear')
+        endYear = config.getint('timeSeries', 'endYear')
+
+        inFileName = '{}/transport/transport_{:04d}-{:04d}.nc'.format(
+            baseDirectory, startYear, endYear)
 
         dsIn = xarray.open_dataset(inFileName)
         return dsIn.transport.isel(nTransects=self.transectIndex)  # }}}
