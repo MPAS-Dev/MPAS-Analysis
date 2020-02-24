@@ -235,8 +235,6 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         self.logger.info("Computing time series of transport through "
                          "transects...")
 
-        self.logger.info('  Load transport velocity data...')
-
         config = self.config
 
         startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
@@ -299,79 +297,93 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             self.logger.info('  Time series exists -- Done.')
             return
 
-        datasets = []
-        for fileName in inputFiles:
-
-            dsTimeSlice = open_mpas_dataset(
-                fileName=fileName,
-                calendar=self.calendar,
-                variableList=variableList,
-                startDate=startDate,
-                endDate=endDate)
-            datasets.append(dsTimeSlice)
-
         # Load data:
-        dsIn = xarray.concat(datasets, 'Time').chunk({'Time': 1})
-
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
-
-            dsMesh = xarray.open_dataset(self.restartFileName)
-            dvEdge = dsMesh.dvEdge
-
-            # work on data from simulations
-            if 'timeMonthly_avg_normalTransportVelocity' in dsIn:
-                vel = dsIn.timeMonthly_avg_normalTransportVelocity
-            elif 'timeMonthly_avg_normalGMBolusVelocity' in dsIn:
-                vel = (dsIn.timeMonthly_avg_normalVelocity +
-                       dsIn.timeMonthly_avg_normalGMBolusVelocity)
-            else:
-                vel = dsIn.timeMonthly_avg_normalVelocity
-
-            # get layer thickness on edges by averaging adjacent cells
-            h = 0.5*dsIn.timeMonthly_avg_layerThickness.isel(
-                nCells=(dsMesh.cellsOnEdge-1)).sum(dim='TWO')
 
             transectMaskFileName = self.masksSubtask.maskFileName
 
             dsTransectMask = xarray.open_dataset(transectMaskFileName)
 
             # figure out the indices of the transects to plot
-            transectNames = decode_strings(dsTransectMask.transectNames)
+            maskTransectNames = decode_strings(dsTransectMask.transectNames)
 
-            transectIndices = []
-            outTransectNames = []
-            for transect in self.transectsToPlot:
-                found = False
-                for index, otherName in enumerate(transectNames):
-                    if transect == otherName:
-                        transectIndices.append(index)
-                        outTransectNames.append(transect)
-                        found = True
-                        break
-                if not found:
-                    self.logger.warning('transect {} was not found in transect '
-                                        'masks'.format(transect))
+            dsMesh = xarray.open_dataset(self.restartFileName)
+            dvEdge = dsMesh.dvEdge
+            cellsOnEdge = dsMesh.cellsOnEdge - 1
 
-            # select only those transects we want to plot
-            dsTransectMask = dsTransectMask.isel(nTransects=transectIndices)
-            edgeSign = dsTransectMask.transectEdgeMaskSigns.chunk(
-                {'nTransects': 5})
+            timeDatasets = []
+            self.logger.info('  Computing transport...')
+            for fileName in inputFiles:
+                self.logger.info('    input file: {}'.format(fileName))
+                dsTimeSlice = open_mpas_dataset(
+                    fileName=fileName,
+                    calendar=self.calendar,
+                    variableList=variableList,
+                    startDate=startDate,
+                    endDate=endDate)
 
-            # convert from m^3/s to Sv
-            transport = (constants.m3ps_to_Sv *
-                         (edgeSign * vel * h * dvEdge).sum(
-                             dim=['nEdges', 'nVertLevels']))
-            self.logger.info(transport)
-            transport.compute()
+                transectDatasets = []
+                transectIndices = []
+                for transect in self.transectsToPlot:
+                    self.logger.info('    transect: {}'.format(transect))
+                    try:
+                        transectIndex = maskTransectNames.index(transect)
+                    except ValueError:
+                        self.logger.warning('      Not found in masks. Skipping.')
+                        continue
+                    transectIndices.append(transectIndex)
 
-            dsOut = xarray.Dataset()
-            dsOut['transport'] = transport
-            dsOut.transport.attrs['units'] = 'Sv'
-            dsOut.transport.attrs['description'] = \
-                'Transport through transects'
-            dsOut.coords['transectNames'] = ('nTransects', outTransectNames)
+                    # select the current transect
+                    dsMask = dsTransectMask.isel(nTransects=[transectIndex])
+                    edgeIndices = dsMask.transectEdgeGlobalIDs - 1
+                    edgeIndices = edgeIndices.where(edgeIndices >= 0,
+                                                    drop=True).astype(int)
+                    edgeSign = dsMask.transectEdgeMaskSigns.isel(nEdges=edgeIndices)
 
+                    dsIn = dsTimeSlice.isel(nEdges=edgeIndices)
+
+                    dv = dvEdge.isel(nEdges=edgeIndices)
+                    coe = cellsOnEdge.isel(nEdges=edgeIndices)
+
+                    # work on data from simulations
+                    if 'timeMonthly_avg_normalTransportVelocity' in dsIn:
+                        vel = dsIn.timeMonthly_avg_normalTransportVelocity
+                    elif 'timeMonthly_avg_normalGMBolusVelocity' in dsIn:
+                        vel = (dsIn.timeMonthly_avg_normalVelocity +
+                               dsIn.timeMonthly_avg_normalGMBolusVelocity)
+                    else:
+                        vel = dsIn.timeMonthly_avg_normalVelocity
+
+                    # get layer thickness on edges by averaging adjacent cells
+                    h = 0.5 * dsIn.timeMonthly_avg_layerThickness.isel(
+                        nCells=coe).sum(dim='TWO')
+
+                    edgeTransport = edgeSign * vel * h * dv
+
+                    # convert from m^3/s to Sv
+                    transport = (constants.m3ps_to_Sv * edgeTransport.sum(
+                        dim=['maxEdgesInTransect', 'nVertLevels']))
+
+                    dsOut = xarray.Dataset()
+                    dsOut['transport'] = transport
+                    dsOut.transport.attrs['units'] = 'Sv'
+                    dsOut.transport.attrs['description'] = \
+                        'Transport through transects'
+                    transectDatasets.append(dsOut)
+
+                dsOut = xarray.concat(transectDatasets, 'nTransects')
+                dsOut.compute()
+                timeDatasets.append(dsOut)
+
+            # combine data sets into a single data set
+            dsOut = xarray.concat(timeDatasets, 'Time')
+            dsOut.coords['transectNames'] = dsTransectMask.transectNames.isel(
+                nTransects=transectIndices)
+            dsOut.coords['year'] = (('Time'), years)
+            dsOut['year'].attrs['units'] = 'years'
+            dsOut.coords['month'] = (('Time'), months)
+            dsOut['month'].attrs['units'] = 'months'
             write_netcdf(dsOut, outFileName)
 
         # }}}
