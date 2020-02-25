@@ -454,7 +454,7 @@ class CombineTransportSubtask(AnalysisTask):  # {{{
 
             ds = xarray.open_mfdataset(inFileNames, combine='nested',
                                        concat_dim='Time', decode_times=False)
-
+            ds.load()
             write_netcdf(ds, outFileName)
         # }}}
     # }}}
@@ -567,7 +567,7 @@ class PlotTransportSubtask(AnalysisTask):
                 fc.add_feature(feature)
                 break
 
-        transport = self._load_transport(config)
+        transport, trans_mean, trans_std = self._load_transport(config)
 
         plotControl = self.controlConfig is not None
 
@@ -591,8 +591,9 @@ class PlotTransportSubtask(AnalysisTask):
         legendText = [mainRunName]
         if plotControl:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
-            refTransport = self._load_transport(self.controlConfig)
-            fields.append(refTransport)
+            ref_transport, ref_mean, ref_std = \
+                self._load_transport(self.controlConfig)
+            fields.append(ref_transport)
             lineColors.append('r')
             lineWidths.append(1.2)
             legendText.append(controlRunName)
@@ -657,7 +658,10 @@ class PlotTransportSubtask(AnalysisTask):
             baseDirectory, startYear, endYear)
 
         dsIn = xarray.open_dataset(inFileName)
-        return dsIn.transport.isel(nTransects=self.transectIndex)  # }}}
+        transport = dsIn.transport.isel(nTransects=self.transectIndex)
+        mean = transport.mean()
+        std = transport.std()
+        return transport, mean, std  # }}}
 
     # }}}
 
