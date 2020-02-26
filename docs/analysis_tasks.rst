@@ -25,6 +25,7 @@ Analysis Tasks
    tasks/timeSeriesSalinityAnomaly
    tasks/timeSeriesOHCAnomaly
    tasks/timeSeriesSST
+   tasks/timeSeriesTransport
    tasks/meridionalHeatTransport
    tasks/streamfunctionMOC
    tasks/indexNino34
