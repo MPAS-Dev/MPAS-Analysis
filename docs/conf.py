@@ -41,12 +41,15 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.intersphinx',
               'sphinx.ext.mathjax',
               'sphinx.ext.viewcode',
-              'numpydoc']
+              'sphinx.ext.napoleon']
 
 autosummary_generate = True
 
-numpydoc_class_members_toctree = True
-numpydoc_show_class_members = False
+# Otherwise, the Return parameter list looks different from the Parameters list
+napoleon_use_rtype = False
+# Otherwise, the Attributes parameter list looks different from the Parameters
+# list
+napoleon_use_ivar = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
