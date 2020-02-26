@@ -1177,6 +1177,8 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         ds = xr.open_mfdataset(outputFileNames, concat_dim='Time',
                                combine='nested', decode_times=False)
 
+        ds.load()
+
         write_netcdf(ds, outputFileName)  # }}}
     # }}}
 

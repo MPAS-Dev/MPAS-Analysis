@@ -488,6 +488,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             ds = xr.open_mfdataset(inFileNames, combine='nested',
                                    concat_dim='Time', decode_times=False)
 
+            ds.load()
+
             ds['totalArea'] = ds['totalArea'].isel(Time=0)
 
             write_netcdf(ds, outputFileName)

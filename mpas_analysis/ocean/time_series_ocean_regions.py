@@ -543,6 +543,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             ds = xarray.open_mfdataset(inFileNames, combine='nested',
                                        concat_dim='Time', decode_times=False)
 
+            ds.load()
+
             # a few variables have become time dependent and shouldn't be
             for var in ['totalArea', 'zbounds']:
                 ds[var] = ds[var].isel(Time=0, drop=True)

@@ -1282,6 +1282,41 @@ variables = [{'name': 'temperature',
 # zmax = -400
 
 
+[timeSeriesTransport]
+## options related to plotting time series of transport through transects
+
+# list of ocean transects from geometric_features to plot or ['all'] for all
+# available transects.
+transectsToPlot = ['Drake Passage', 'Tasmania-Ant', 'Africa-Ant', 'Antilles Inflow',
+                   'Mona Passage', 'Windward Passage', 'Florida-Cuba', 'Florida-Bahamas',
+                   'Indonesian Throughflow', 'Agulhas', 'Mozambique Channel', 'Bering Strait',
+                   'Lancaster Sound', 'Fram Strait', 'Nares Strait']
+
+# Number of months over which to compute moving average
+movingAverageMonths = 1
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+# the number of threads dask is allowed to spawn for each process computing
+# a year of these time series
+# Decrease this number if timeSeriesTransport subtasks are running
+# out of available threads
+daskThreads = 4
+
+# the number of subprocesses that each task gets counted as occupying
+# Increase this number if timeSeriesTransport subtasks are running
+# out of memory, and fewer tasks will be allowed to run at once
+subprocessCount = 1
+
+
 [regionalTSDiagrams]
 ## options related to plotting T/S diagrams of ocean regions
 

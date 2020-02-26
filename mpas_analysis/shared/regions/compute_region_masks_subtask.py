@@ -265,8 +265,8 @@ def _contains(shape, cellPoints):
 
 class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     '''
-    An analysis tasks for computing climatologies from output from the
-    ``timeSeriesStatsMonthly`` analysis member.
+    An analysis tasks for computing cell masks for regions defined by geojson
+    features
 
     Attributes
     ----------
@@ -331,7 +331,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             The name of the subtask
 
         subprocessCount : int, optional
-            The nunumber of processes that can be used to make the mask
+            The number of processes that can be used to make the mask
 
         obsFileName : str, optional
             The name of an observations file to create masks for.  But default,

@@ -23,6 +23,7 @@ dependencies:
   - geometric_features
   - gsw
   - pyremap
+  - mpas_tools
   - sphinx
   - mock
   - sphinx_rtd_theme
