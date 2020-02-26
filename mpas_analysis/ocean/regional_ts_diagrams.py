@@ -51,7 +51,8 @@ from mpas_analysis.ocean.utility import compute_zmid
 from mpas_analysis.shared.constants import constants
 
 from mpas_analysis.shared.climatology import compute_climatology, \
-    get_unmasked_mpas_climatology_file_name
+    get_unmasked_mpas_climatology_file_name, \
+    get_masked_mpas_climatology_file_name
 
 from mpas_analysis.shared.plot.colormap import register_custom_colormaps
 
@@ -215,6 +216,13 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     regionName[1:].replace(' ', '')
 
                 for season in self.seasons:
+                    computeRegionSubtask = ComputeRegionTSSubtask(
+                        self, regionGroup, regionName, controlConfig,
+                        sectionName, fullSuffix, mpasClimatologyTask,
+                        mpasMasksSubtask, groupObsDicts, season)
+
+                    self.add_subtask(computeRegionSubtask)
+
                     plotRegionSubtask = PlotRegionTSDiagramSubtask(
                         self, regionGroup, regionName, controlConfig,
                         sectionName, fullSuffix, mpasClimatologyTask,
@@ -225,6 +233,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                         plotRegionSubtask.run_after(task)
                         task = obsDicts[obsName]['maskTask']
                         plotRegionSubtask.run_after(task)
+                    plotRegionSubtask.run_after(computeRegionSubtask)
                     self.add_subtask(plotRegionSubtask)
 
         # }}}
@@ -232,13 +241,6 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
     def setup_and_check(self):  # {{{
         """
         Perform steps to set up the analysis and check for errors in the setup.
-
-        Raises
-        ------
-        IOError :
-            If a restart file is not available from which to read mesh
-            information or if no history files are available from which to
-            compute the climatology in the desired time range.
         """
         # Authors
         # -------
@@ -434,6 +436,314 @@ class ComputeObsTSClimatology(AnalysisTask):
     # }}}
 
 
+class ComputeRegionTSSubtask(AnalysisTask):
+    """
+    Plots a T-S diagram for a given ocean region
+
+    Attributes
+    ----------
+    regionGroup : str
+        Name of the collection of region to plot
+
+    regionName : str
+        Name of the region to plot
+
+    sectionName : str
+        The section of the config file to get options from
+
+    controlConfig : ``MpasAnalysisConfigParser``
+        The configuration options for the control run (if any)
+
+    mpasClimatologyTask : ``MpasClimatologyTask``
+        The task that produced the climatology to be remapped and plotted
+
+    mpasMasksSubtask : ``ComputeRegionMasksSubtask``
+        A task for creating mask MPAS files for each region to plot, used
+        to get the mask file name
+
+    obsDicts : dict of dicts
+        Information on the observations to compare against
+
+    season : str
+        The season to compute the climatology for
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, regionGroup, regionName, controlConfig,
+                 sectionName, fullSuffix, mpasClimatologyTask,
+                 mpasMasksSubtask, obsDicts, season):
+        # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask :  ``AnalysisTask``
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        regionGroup : str
+            Name of the collection of region to plot
+
+        regionName : str
+            Name of the region to plot
+
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
+
+        sectionName : str
+            The config section with options for this regionGroup
+
+        fullSuffix : str
+            The regionGroup and regionName combined and modified to be
+            appropriate as a task or file suffix
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
+
+        mpasMasksSubtask : ``ComputeRegionMasksSubtask``
+            A task for creating mask MPAS files for each region to plot, used
+            to get the mask file name
+
+        obsDicts : dict of dicts
+            Information on the observations to compare agains
+
+        season : str
+            The season to comput the climatogy for
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(ComputeRegionTSSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='compute{}_{}'.format(fullSuffix, season))
+
+        self.run_after(mpasClimatologyTask)
+        self.regionGroup = regionGroup
+        self.regionName = regionName
+        self.sectionName = sectionName
+        self.controlConfig = controlConfig
+        self.mpasClimatologyTask = mpasClimatologyTask
+        self.mpasMasksSubtask = mpasMasksSubtask
+        self.obsDicts = obsDicts
+        self.season = season
+        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+
+        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
+        self.subprocessCount = min(parallelTaskCount,
+                                   self.config.getint(self.taskName,
+                                                      'subprocessCount'))
+        self.daskThreads = min(
+            multiprocessing.cpu_count(),
+            self.config.getint(self.taskName, 'daskThreads'))
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Plots time-series output of properties in an ocean region.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        self.logger.info("\nComputing TS for {}...".format(self.regionName))
+
+        zmin, zmax = self._write_mpas_t_s(self.config)
+
+        for obsName in self.obsDicts:
+            self._write_obs_t_s(self.obsDicts[obsName], zmin, zmax)
+
+    def _write_mpas_t_s(self, config):  # {{{
+
+        climatologyName = 'TS_{}_{}'.format(self.prefix, self.season)
+        outFileName = get_masked_mpas_climatology_file_name(
+            config, self.season, self.componentName, climatologyName, op='avg')
+
+        if os.path.exists(outFileName):
+            ds = xarray.open_dataset(outFileName)
+            zmin, zmax = ds.zbounds.values
+            return zmin, zmax
+
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
+
+            self.logger.info('  Extracting T and S in the region...')
+
+            sectionName = self.sectionName
+
+            cellsChunk = 32768
+            chunk = {'nCells': cellsChunk}
+
+            try:
+                restartFileName = self.runStreams.readpath('restart')[0]
+            except ValueError:
+                raise IOError('No MPAS-O restart file found: need at least one'
+                              ' restart file to plot T-S diagrams')
+            dsRestart = xarray.open_dataset(restartFileName)
+            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
+
+            regionMaskFileName = self.mpasMasksSubtask.maskFileName
+
+            dsRegionMask = xarray.open_dataset(regionMaskFileName)
+
+            maskRegionNames = decode_strings(dsRegionMask.regionNames)
+            regionIndex = maskRegionNames.index(self.regionName)
+
+            dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
+
+            cellMask = dsMask.regionCellMasks == 1
+            if 'landIceMask' in dsRestart:
+                # only the region outside of ice-shelf cavities
+                cellMask = numpy.logical_and(cellMask,
+                                             dsRestart.landIceMask == 0)
+
+            if config.has_option(sectionName, 'zmin'):
+                zmin = config.getfloat(sectionName, 'zmin')
+            else:
+                zmin = dsMask.zmin.values
+
+            if config.has_option(sectionName, 'zmax'):
+                zmax = config.getfloat(sectionName, 'zmax')
+            else:
+                zmax = dsMask.zmax.values
+
+            inFileName = get_unmasked_mpas_climatology_file_name(
+                config, self.season, self.componentName, op='avg')
+
+            ds = xarray.open_dataset(inFileName)
+
+            variableList = ['timeMonthly_avg_activeTracers_temperature',
+                            'timeMonthly_avg_activeTracers_salinity',
+                            'timeMonthly_avg_layerThickness']
+            ds = ds[variableList]
+
+            ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
+                                      dsRestart.maxLevelCell,
+                                      dsRestart.layerThickness)
+
+            ds['volume'] = (dsRestart.areaCell *
+                            ds['timeMonthly_avg_layerThickness'])
+
+            ds = ds.where(cellMask, drop=True)
+
+            self.logger.info("Don't worry about the following dask "
+                             "warnings.")
+            depthMask = numpy.logical_and(ds.zMid >= zmin,
+                                          ds.zMid <= zmax)
+            depthMask.compute()
+            self.logger.info("Dask warnings should be done.")
+            ds['depthMask'] = depthMask
+
+            for var in variableList:
+                ds[var] = ds[var].where(depthMask)
+
+            T = ds['timeMonthly_avg_activeTracers_temperature'].values.ravel()
+            mask = numpy.isfinite(T)
+            T = T[mask]
+
+            S = ds['timeMonthly_avg_activeTracers_salinity'].values.ravel()
+            S = S[mask]
+
+            zMid = ds['zMid'].values.ravel()[mask]
+
+            volume = ds['volume'].values.ravel()[mask]
+
+            dsOut = xarray.Dataset()
+            dsOut['T'] = ('nPoints', T)
+            dsOut['S'] = ('nPoints', S)
+            dsOut['z'] = ('nPoints', zMid)
+            dsOut['volume'] = ('nPoints', volume)
+            dsOut['zbounds'] = ('nBounds', [zmin, zmax])
+            write_netcdf(dsOut, outFileName)
+
+        return zmin, zmax  # }}}
+
+    def _write_obs_t_s(self, obsDict, zmin, zmax):  # {{{
+        obsSection = '{}Observations'.format(self.componentName)
+        climatologyDirectory = build_config_full_path(
+            config=self.config, section='output',
+            relativePathOption='climatologySubdirectory',
+            relativePathSection=obsSection)
+
+        outFileName = '{}/TS_{}_{}_{}.nc'.format(
+            climatologyDirectory, obsDict['suffix'], self.prefix, self.season)
+
+        if os.path.exists(outFileName):
+            return
+
+        with dask.config.set(schedular='threads',
+                             pool=ThreadPool(self.daskThreads)):
+
+            chunk = {obsDict['latVar']: 400,
+                     obsDict['lonVar']: 400}
+
+            regionMaskFileName = obsDict['maskTask'].maskFileName
+
+            dsRegionMask = \
+                xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
+                        nCells=(obsDict['latVar'], obsDict['lonVar']))
+            dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
+                [obsDict['latVar'], obsDict['lonVar']])
+
+            maskRegionNames = decode_strings(dsRegionMask.regionNames)
+            regionIndex = maskRegionNames.index(self.regionName)
+
+            dsMask = dsRegionMask.isel(nRegions=regionIndex)
+
+            cellMask = dsMask.regionCellMasks == 1
+
+            TVarName = obsDict['TVar']
+            SVarName = obsDict['SVar']
+            zVarName = obsDict['zVar']
+            volVarName = obsDict['volVar']
+
+            obsFileName = obsDict['climatologyTask'][self.season].fileName
+            ds = xarray.open_dataset(obsFileName, chunks=chunk)
+            ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
+            ds = ds.reset_index('nCells').drop_vars(
+                [obsDict['latVar'], obsDict['lonVar']])
+
+            ds = ds.where(cellMask, drop=True)
+
+            cellsChunk = 32768
+            chunk = {'nCells': cellsChunk}
+
+            ds = ds.chunk(chunk)
+
+            depthMask = numpy.logical_and(ds[zVarName] >= zmin,
+                                          ds[zVarName] <= zmax)
+            ds = ds.where(depthMask)
+            ds.compute()
+
+            T = ds[TVarName].values.ravel()
+            mask = numpy.isfinite(T)
+            T = T[mask]
+
+            S = ds[SVarName].values.ravel()[mask]
+            z = ds['zBroadcast'].values.ravel()[mask]
+
+            volume = ds[volVarName].values.ravel()[mask]
+
+            dsOut = xarray.Dataset()
+            dsOut['T'] = ('nPoints', T)
+            dsOut['S'] = ('nPoints', S)
+            dsOut['z'] = ('nPoints', z)
+            dsOut['volume'] = ('nPoints', volume)
+            dsOut['zbounds'] = ('nBounds', [zmin, zmax])
+            write_netcdf(dsOut, outFileName)
+
+        # }}}
+
+    # }}}
+
+
 class PlotRegionTSDiagramSubtask(AnalysisTask):
     """
     Plots a T-S diagram for a given ocean region
@@ -460,10 +770,10 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         to get the mask file name
 
     obsDicts : dict of dicts
-        Information on the observations to compare agains
+        Information on the observations to compare against
 
     season : str
-        The season to comput the climatogy for
+        The season to compute the climatology for
     """
     # Authors
     # -------
@@ -783,145 +1093,35 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         # }}}
 
     def _get_mpas_t_s(self, config):  # {{{
-        with dask.config.set(schedular='threads',
-                             pool=ThreadPool(self.daskThreads)):
+        climatologyName = 'TS_{}_{}'.format(self.prefix, self.season)
+        inFileName = get_masked_mpas_climatology_file_name(
+            config, self.season, self.componentName, climatologyName, op='avg')
 
-            self.logger.info('  Extracting T and S in the region...')
+        ds = xarray.open_dataset(inFileName)
+        T = ds.T.values
+        S = ds.S.values
+        z = ds.z.values
+        volume = ds.volume.values
+        zmin, zmax = ds.zbounds.values
 
-            sectionName = self.sectionName
-
-            cellsChunk = 32768
-            chunk = {'nCells': cellsChunk}
-
-            try:
-                restartFileName = self.runStreams.readpath('restart')[0]
-            except ValueError:
-                raise IOError('No MPAS-O restart file found: need at least one'
-                              ' restart file to plot T-S diagrams')
-            dsRestart = xarray.open_dataset(restartFileName)
-            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
-
-            regionMaskFileName = self.mpasMasksSubtask.maskFileName
-
-            dsRegionMask = xarray.open_dataset(regionMaskFileName)
-
-            maskRegionNames = decode_strings(dsRegionMask.regionNames)
-            regionIndex = maskRegionNames.index(self.regionName)
-
-            dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
-
-            cellMask = dsMask.regionCellMasks == 1
-            if 'landIceMask' in dsRestart:
-                # only the region outside of ice-shelf cavities
-                cellMask = numpy.logical_and(cellMask,
-                                             dsRestart.landIceMask == 0)
-
-            if config.has_option(sectionName, 'zmin'):
-                zmin = config.getfloat(sectionName, 'zmin')
-            else:
-                zmin = dsMask.zmin.values
-
-            if config.has_option(sectionName, 'zmax'):
-                zmax = config.getfloat(sectionName, 'zmax')
-            else:
-                zmax = dsMask.zmax.values
-
-            inFileName = get_unmasked_mpas_climatology_file_name(
-                config, self.season, self.componentName, op='avg')
-
-            ds = xarray.open_dataset(inFileName)
-
-            variableList = ['timeMonthly_avg_activeTracers_temperature',
-                            'timeMonthly_avg_activeTracers_salinity',
-                            'timeMonthly_avg_layerThickness']
-            ds = ds[variableList]
-
-            ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
-                                      dsRestart.maxLevelCell,
-                                      dsRestart.layerThickness)
-
-            ds['volume'] = (dsRestart.areaCell *
-                            ds['timeMonthly_avg_layerThickness'])
-
-            ds = ds.where(cellMask, drop=True)
-
-            self.logger.info("Don't worry about the following dask "
-                             "warnings.")
-            depthMask = numpy.logical_and(ds.zMid >= zmin,
-                                          ds.zMid <= zmax)
-            depthMask.compute()
-            self.logger.info("Dask warnings should be done.")
-            ds['depthMask'] = depthMask
-
-            for var in variableList:
-                ds[var] = ds[var].where(depthMask)
-
-            T = ds['timeMonthly_avg_activeTracers_temperature'].values.ravel()
-            mask = numpy.isfinite(T)
-            T = T[mask]
-
-            S = ds['timeMonthly_avg_activeTracers_salinity'].values.ravel()
-            S = S[mask]
-
-            zMid = ds['zMid'].values.ravel()[mask]
-
-            volume = ds['volume'].values.ravel()[mask]
-
-        return T, S, zMid, volume, zmin, zmax  # }}}
+        return T, S, z, volume, zmin, zmax  # }}}
 
     def _get_obs_t_s(self, obsDict, zmin, zmax):  # {{{
-        with dask.config.set(schedular='threads',
-                             pool=ThreadPool(self.daskThreads)):
 
-            chunk = {obsDict['latVar']: 400,
-                     obsDict['lonVar']: 400}
+        obsSection = '{}Observations'.format(self.componentName)
+        climatologyDirectory = build_config_full_path(
+            config=self.config, section='output',
+            relativePathOption='climatologySubdirectory',
+            relativePathSection=obsSection)
 
-            regionMaskFileName = obsDict['maskTask'].maskFileName
+        inFileName = '{}/TS_{}_{}_{}.nc'.format(
+            climatologyDirectory, obsDict['suffix'], self.prefix, self.season)
 
-            dsRegionMask = \
-                xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
-                        nCells=(obsDict['latVar'], obsDict['lonVar']))
-            dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar']])
-
-            maskRegionNames = decode_strings(dsRegionMask.regionNames)
-            regionIndex = maskRegionNames.index(self.regionName)
-
-            dsMask = dsRegionMask.isel(nRegions=regionIndex)
-
-            cellMask = dsMask.regionCellMasks == 1
-
-            TVarName = obsDict['TVar']
-            SVarName = obsDict['SVar']
-            zVarName = obsDict['zVar']
-            volVarName = obsDict['volVar']
-
-            obsFileName = obsDict['climatologyTask'][self.season].fileName
-            ds = xarray.open_dataset(obsFileName, chunks=chunk)
-            ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
-            ds = ds.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar']])
-
-            ds = ds.where(cellMask, drop=True)
-
-            cellsChunk = 32768
-            chunk = {'nCells': cellsChunk}
-
-            ds = ds.chunk(chunk)
-
-            depthMask = numpy.logical_and(ds[zVarName] >= zmin,
-                                          ds[zVarName] <= zmax)
-            ds = ds.where(depthMask)
-            ds.compute()
-
-            T = ds[TVarName].values.ravel()
-            mask = numpy.isfinite(T)
-            T = T[mask]
-
-            S = ds[SVarName].values.ravel()[mask]
-            z = ds['zBroadcast'].values.ravel()[mask]
-
-            volume = ds[volVarName].values.ravel()[mask]
+        ds = xarray.open_dataset(inFileName)
+        T = ds.T.values
+        S = ds.S.values
+        z = ds.z.values
+        volume = ds.volume.values
 
         return T, S, z, volume  # }}}
 
