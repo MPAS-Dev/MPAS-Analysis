@@ -588,15 +588,21 @@ class PlotTransportSubtask(AnalysisTask):
         fields = [transport]
         lineColors = ['k']
         lineWidths = [2.5]
-        legendText = [mainRunName]
+        meanString = 'mean={:5.2f} $\pm$ {:5.2f}'.format(trans_mean, trans_std)
         if plotControl:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
             ref_transport, ref_mean, ref_std = \
                 self._load_transport(self.controlConfig)
+            refMeanString = 'mean={:5.2f} $\pm$ {:5.2f}'.format(ref_mean,
+                                                                 ref_std)
             fields.append(ref_transport)
             lineColors.append('r')
             lineWidths.append(1.2)
-            legendText.append(controlRunName)
+            legendText = ['{} ({})'.format(mainRunName, meanString),
+                          '{} ({})'.format(controlRunName, refMeanString)]
+        else:
+            legendText = [mainRunName]
+            title = '{} ({})'.format(title, meanString)
 
         if config.has_option(self.taskName, 'firstYearXTicks'):
             firstYearXTicks = config.getint(self.taskName,
