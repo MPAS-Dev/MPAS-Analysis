@@ -562,7 +562,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         #   self.calendar
         super(PlotRegionTSDiagramSubtask, self).setup_and_check()
 
-        self.xmlFileNames = ['{}/{}_{}.xml'.format(
+        self.xmlFileNames = ['{}/TS_diagram_{}_{}.xml'.format(
             self.plotsDirectory, self.prefix, self.season)]
         return  # }}}
 
@@ -763,14 +763,14 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         else:
             cbar.ax.set_ylabel('depth (m)', rotation=270)
 
-        outFileName = '{}/{}_{}.png'.format(self.plotsDirectory, self.prefix,
-                                            self.season)
+        outFileName = '{}/TS_diagram_{}_{}.png'.format(
+            self.plotsDirectory, self.prefix, self.season)
         savefig(outFileName, tight=False)
 
         caption = 'Regional mean of {}'.format(suptitle)
         write_image_xml(
             config=config,
-            filePrefix='{}_{}'.format(self.prefix, self.season),
+            filePrefix='TS_diagram_{}_{}'.format(self.prefix, self.season),
             componentName='Ocean',
             componentSubdirectory='ocean',
             galleryGroup='T-S Diagrams',
