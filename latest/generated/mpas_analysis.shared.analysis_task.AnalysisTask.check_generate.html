@@ -194,26 +194,18 @@
 <h1>mpas_analysis.shared.analysis_task.AnalysisTask.check_generate<a class="headerlink" href="#mpas-analysis-shared-analysis-task-analysistask-check-generate" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.shared.analysis_task.AnalysisTask.check_generate">
-<code class="sig-prename descclassname">AnalysisTask.</code><code class="sig-name descname">check_generate</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/analysis_task.html#AnalysisTask.check_generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.analysis_task.AnalysisTask.check_generate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">AnalysisTask.</code><code class="sig-name descname">check_generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/analysis_task.html#AnalysisTask.check_generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.analysis_task.AnalysisTask.check_generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if this analysis should be generated, based on the
 <code class="docutils literal notranslate"><span class="pre">generate</span></code> config option and <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code> and
 <code class="docutils literal notranslate"><span class="pre">tags</span></code>.</p>
 <p>Individual tasks do not need to create their own versions of this
 function.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>generate</strong><span class="classifier">bool</span></dt><dd><p>Whether or not this task should be run.</p>
+<dd class="field-odd"><p><strong>generate</strong> (<em>bool</em>) – Whether or not this task should be run.</p>
 </dd>
 </dl>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><dl>
-<dt><strong>ValueError</strong><span class="classifier">If one of <code class="docutils literal notranslate"><span class="pre">self.taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">self.componentName</span></code></span></dt><dd><p>or <code class="docutils literal notranslate"><span class="pre">self.tags</span></code> has not been set.</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<p>:raises ValueError : If one of <code class="docutils literal notranslate"><span class="pre">self.taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">self.componentName</span></code>: or <code class="docutils literal notranslate"><span class="pre">self.tags</span></code> has not been set.</p>
 </dd></dl>
 
 </div>

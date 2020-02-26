@@ -201,25 +201,16 @@
 <code class="sig-prename descclassname">mpas_analysis.shared.timekeeping.utility.</code><code class="sig-name descname">get_simulation_start_time</code><span class="sig-paren">(</span><em class="sig-param">streams</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/timekeeping/utility.html#get_simulation_start_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.get_simulation_start_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a <code class="docutils literal notranslate"><span class="pre">StreamsFile</span></code> object, returns the simulation start time parsed
 from a restart file.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>steams</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">StreamsFile</span></code> object</span></dt><dd><p>For parsing an MPAS streams file</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>steams</strong> (<code class="docutils literal notranslate"><span class="pre">StreamsFile</span></code> object) – For parsing an MPAS streams file</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>simulation_start_time</strong><span class="classifier">str</span></dt><dd><p>The start date of the simulation parsed from a restart file identified
+<dd class="field-even"><p><strong>simulation_start_time</strong> (<em>str</em>) – The start date of the simulation parsed from a restart file identified
 by the contents of <code class="docutils literal notranslate"><span class="pre">streams</span></code>.</p>
 </dd>
-</dl>
-</dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>IOError</dt><dd><p>If no restart file can be found.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IOError" title="(in Python v3.8)"><strong>IOError</strong></a> – If no restart file can be found.</p>
 </dd>
 </dl>
 </dd></dl>

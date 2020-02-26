@@ -194,17 +194,14 @@
 <h1>mpas_analysis.shared.analysis_task.AnalysisTask.add_subtask<a class="headerlink" href="#mpas-analysis-shared-analysis-task-analysistask-add-subtask" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.shared.analysis_task.AnalysisTask.add_subtask">
-<code class="sig-prename descclassname">AnalysisTask.</code><code class="sig-name descname">add_subtask</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">subtask</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/analysis_task.html#AnalysisTask.add_subtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.analysis_task.AnalysisTask.add_subtask" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">AnalysisTask.</code><code class="sig-name descname">add_subtask</code><span class="sig-paren">(</span><em class="sig-param">subtask</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/analysis_task.html#AnalysisTask.add_subtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.analysis_task.AnalysisTask.add_subtask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a subtask to this tasks.  This task always runs after the subtask
 has finished.  However, this task gets set up <em>before</em> the subtask,
 so the setup of the subtask can depend on fields defined during the
 setup of this task (the parent).</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>subtask</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code></span></dt><dd><p>The subtask to run as part of this task</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>subtask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The subtask to run as part of this task</p>
 </dd>
 </dl>
 </dd></dl>

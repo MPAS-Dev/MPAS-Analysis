@@ -210,28 +210,23 @@
 <h1>mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables<a class="headerlink" href="#mpas-analysis-shared-climatology-mpasclimatologytask-add-variables" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables">
-<code class="sig-prename descclassname">MpasClimatologyTask.</code><code class="sig-name descname">add_variables</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">variableList</em>, <em class="sig-param">seasons=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/mpas_climatology_task.html#MpasClimatologyTask.add_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">MpasClimatologyTask.</code><code class="sig-name descname">add_variables</code><span class="sig-paren">(</span><em class="sig-param">variableList</em>, <em class="sig-param">seasons=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/mpas_climatology_task.html#MpasClimatologyTask.add_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add one or more variables and optionally one or more seasons for which
 to compute climatologies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>variableList</strong><span class="classifier">list of str</span></dt><dd><p>A list of variable names in the stream to be included in the
-climatologies</p>
-</dd>
-<dt><strong>seasons</strong><span class="classifier">list of str, optional</span></dt><dd><p>A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variableList</strong> (<em>list of str</em>) – A list of variable names in the stream to be included in the
+climatologies</p></li>
+<li><p><strong>seasons</strong> (<em>list of str</em><em>, </em><em>optional</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 to be computed or <code class="docutils literal notranslate"><span class="pre">None</span></code> if only monthly
-climatologies are needed.</p>
-</dd>
-</dl>
+climatologies are needed.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><dl class="simple">
-<dt>ValueError</dt><dd><p>if this funciton is called before this task has been set up (so
-the list of available variables has not yet been set) or if one
-or more of the requested variables is not available in the stream.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – if this funciton is called before this task has been set up (so
+    the list of available variables has not yet been set) or if one
+    or more of the requested variables is not available in the stream.</p>
 </dd>
 </dl>
 </dd></dl>

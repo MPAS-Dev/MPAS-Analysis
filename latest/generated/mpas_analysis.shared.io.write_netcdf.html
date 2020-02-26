@@ -195,21 +195,18 @@
 <h1>mpas_analysis.shared.io.write_netcdf<a class="headerlink" href="#mpas-analysis-shared-io-write-netcdf" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="mpas_analysis.shared.io.write_netcdf">
-<code class="sig-prename descclassname">mpas_analysis.shared.io.</code><code class="sig-name descname">write_netcdf</code><span class="sig-paren">(</span><em class="sig-param">ds</em>, <em class="sig-param">fileName</em>, <em class="sig-param">fillValues={'S1': 'x00'</em>, <em class="sig-param">'i1': -127</em>, <em class="sig-param">'u1': 255</em>, <em class="sig-param">'i2': -32767</em>, <em class="sig-param">'u2': 65535</em>, <em class="sig-param">'i4': -2147483647</em>, <em class="sig-param">'u4': 4294967295</em>, <em class="sig-param">'i8': -9223372036854775806</em>, <em class="sig-param">'u8': 18446744073709551614</em>, <em class="sig-param">'f4': 9.969209968386869e+36</em>, <em class="sig-param">'f8': 9.969209968386869e+36}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/write_netcdf.html#write_netcdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.write_netcdf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.io.</code><code class="sig-name descname">write_netcdf</code><span class="sig-paren">(</span><em class="sig-param">ds</em>, <em class="sig-param">fileName</em>, <em class="sig-param">fillValues={'S1': '\x00'</em>, <em class="sig-param">'f4': 9.969209968386869e+36</em>, <em class="sig-param">'f8': 9.969209968386869e+36</em>, <em class="sig-param">'i1': -127</em>, <em class="sig-param">'i2': -32767</em>, <em class="sig-param">'i4': -2147483647</em>, <em class="sig-param">'i8': -9223372036854775806</em>, <em class="sig-param">'u1': 255</em>, <em class="sig-param">'u2': 65535</em>, <em class="sig-param">'u4': 4294967295</em>, <em class="sig-param">'u8': 18446744073709551614}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/write_netcdf.html#write_netcdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.write_netcdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an xarray data set to a NetCDF file using finite fill values and
 unicode strings</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>ds</strong><span class="classifier">xarray.Dataset object</span></dt><dd><p>The xarray data set to be written to a file</p>
-</dd>
-<dt><strong>fileName</strong><span class="classifier">str</span></dt><dd><p>The fileName to write the data set to</p>
-</dd>
-<dt><strong>fillValues</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of fill values for each supported data type.  By default,
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<em>xarray.Dataset object</em>) – The xarray data set to be written to a file</p></li>
+<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The fileName to write the data set to</p></li>
+<li><p><strong>fillValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary of fill values for each supported data type.  By default,
 this is the dictionary used by the netCDF4 package.  Key entries should
-be of the form ‘f8’ (for float64), ‘i4’ (for int32), etc.</p>
-</dd>
-</dl>
+be of the form ‘f8’ (for float64), ‘i4’ (for int32), etc.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

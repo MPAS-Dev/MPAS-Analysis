@@ -210,24 +210,19 @@
 <h1>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name<a class="headerlink" href="#mpas-analysis-shared-climatology-remapmpasclimatologysubtask-get-remapped-file-name" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name">
-<code class="sig-prename descclassname">RemapMpasClimatologySubtask.</code><code class="sig-name descname">get_remapped_file_name</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">season</em>, <em class="sig-param">comparisonGridName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/remap_mpas_climatology_subtask.html#RemapMpasClimatologySubtask.get_remapped_file_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">RemapMpasClimatologySubtask.</code><code class="sig-name descname">get_remapped_file_name</code><span class="sig-paren">(</span><em class="sig-param">season</em>, <em class="sig-param">comparisonGridName</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/remap_mpas_climatology_subtask.html#RemapMpasClimatologySubtask.get_remapped_file_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given config options, the name of a field and a string identifying the
 months in a seasonal climatology, returns the full path for MPAS
 climatology files before and after remapping.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>season</strong><span class="classifier">str</span></dt><dd><p>One of the seasons in <code class="docutils literal notranslate"><span class="pre">constants.monthDictionary</span></code></p>
-</dd>
-<dt><strong>comparisonGridName</strong><span class="classifier">{‘latlon’, ‘antarctic’, ‘arctic’}</span></dt><dd><p>The name of the comparison grid to use for remapping.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – One of the seasons in <code class="docutils literal notranslate"><span class="pre">constants.monthDictionary</span></code></p></li>
+<li><p><strong>comparisonGridName</strong> (<em>{'latlon'</em><em>, </em><em>'antarctic'</em><em>, </em><em>'arctic'}</em>) – The name of the comparison grid to use for remapping.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fileName</strong><span class="classifier">str</span></dt><dd><p>The path to the climatology file for the specified season.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>fileName</strong> (<em>str</em>) – The path to the climatology file for the specified season.</p>
 </dd>
 </dl>
 </dd></dl>

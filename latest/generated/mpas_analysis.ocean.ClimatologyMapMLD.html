@@ -215,18 +215,15 @@
 observations</p>
 <dl class="method">
 <dt id="mpas_analysis.ocean.ClimatologyMapMLD.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">config</em>, <em class="sig-param">mpasClimatologyTask</em>, <em class="sig-param">controlConfig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/climatology_map_mld.html#ClimatologyMapMLD.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapMLD.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">mpasClimatologyTask</em>, <em class="sig-param">controlConfig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/climatology_map_mld.html#ClimatologyMapMLD.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapMLD.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the analysis task.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>config</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code></span></dt><dd><p>Configuration options</p>
-</dd>
-<dt><strong>mpasClimatologyTask</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code></span></dt><dd><p>The task that produced the climatology to be remapped and plotted</p>
-</dd>
-<dt><strong>controlConfig</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional</span></dt><dd><p>Configuration options for a control run (if any)</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options</p></li>
+<li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped and plotted</p></li>
+<li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – Configuration options for a control run (if any)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -238,49 +235,49 @@ observations</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapMLD.__init__" title="mpas_analysis.ocean.ClimatologyMapMLD.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, config, mpasClimatologyTask)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapMLD.__init__" title="mpas_analysis.ocean.ClimatologyMapMLD.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, mpasClimatologyTask[, …])</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(self, subtask)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
 <td><p>Add a subtask to this tasks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(self, analysisOptionName)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, …])</p></td>
 <td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>()</p></td>
 <td><p>Determines if this analysis should be generated, based on the <code class="docutils literal notranslate"><span class="pre">generate</span></code> config option and <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code> and <code class="docutils literal notranslate"><span class="pre">tags</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
 <td><p>Close the Process object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
 <td><p>Return whether process is alive</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>(self[, timeout])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
 <td><p>Wait until child process terminates</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
 <td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>(self[, writeLogFile])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
 <td><p>Sets up logging and then runs the analysis task.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(self, task)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
 <td><p>Only run this task after the given task has completed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
 <td><p>Run the analysis.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(self, section)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
 <td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>()</p></td>
 <td><p>Check if MLD capability was turned on in the run.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
 <td><p>Start child process</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
 <td><p>Terminate process; sends SIGTERM signal or uses TerminateProcess()</p></td>
 </tr>
 </tbody>

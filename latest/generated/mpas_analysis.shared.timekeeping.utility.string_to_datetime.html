@@ -200,10 +200,9 @@
 <dt id="mpas_analysis.shared.timekeeping.utility.string_to_datetime">
 <code class="sig-prename descclassname">mpas_analysis.shared.timekeeping.utility.</code><code class="sig-name descname">string_to_datetime</code><span class="sig-paren">(</span><em class="sig-param">dateString</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/timekeeping/utility.html#string_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.string_to_datetime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a date string and a calendar, returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>dateString</strong><span class="classifier">string</span></dt><dd><p>A date and time in one of the following formats:</p>
+<dd class="field-odd"><p><strong>dateString</strong> (<em>string</em>) – <p>A date and time in one of the following formats:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">hh</span><span class="p">:</span><span class="n">mm</span><span class="p">:</span><span class="n">ss</span>
 <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">hh</span><span class="o">.</span><span class="n">mm</span><span class="o">.</span><span class="n">ss</span>
 <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">SSSSS</span>
@@ -219,19 +218,13 @@
 </div>
 <p>Note: either underscores or spaces can be used to separate the date
 from the time portion of the string.</p>
-</dd>
-</dl>
+</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>datetime</strong><span class="classifier">A <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object</span></dt><dd></dd>
-</dl>
+<dd class="field-even"><p><strong>datetime</strong> (A <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object)</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>If an invalid <code class="docutils literal notranslate"><span class="pre">dateString</span></code> is supplied.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">dateString</span></code> is supplied.</p>
 </dd>
 </dl>
 </dd></dl>

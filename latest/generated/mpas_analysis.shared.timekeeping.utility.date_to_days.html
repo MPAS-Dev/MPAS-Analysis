@@ -200,34 +200,26 @@
 <dt id="mpas_analysis.shared.timekeeping.utility.date_to_days">
 <code class="sig-prename descclassname">mpas_analysis.shared.timekeeping.utility.</code><code class="sig-name descname">date_to_days</code><span class="sig-paren">(</span><em class="sig-param">year=1</em>, <em class="sig-param">month=1</em>, <em class="sig-param">day=1</em>, <em class="sig-param">hour=0</em>, <em class="sig-param">minute=0</em>, <em class="sig-param">second=0</em>, <em class="sig-param">calendar='gregorian'</em>, <em class="sig-param">referenceDate='0001-01-01'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/timekeeping/utility.html#date_to_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.date_to_days" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a date to days since the reference date.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>year, month, day, hour, minute, second</strong><span class="classifier">int, optional</span></dt><dd><p>The date to be converted to days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the
-given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier">{‘gregorian’, ‘gregorian_noleap’}, optional</span></dt><dd><p>A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
-object.</p>
-</dd>
-<dt><strong>referenceDate</strong><span class="classifier">str, optional</span></dt><dd><p>A reference date of the form:</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>month</strong><strong>, </strong><strong>day</strong><strong>, </strong><strong>hour</strong><strong>, </strong><strong>minute</strong><strong>, </strong><strong>second</strong> (<em>year</em><em>,</em>) – The date to be converted to days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the
+given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p></li>
+<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
+object.</p></li>
+<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
 <span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
 </pre></div>
 </div>
-</dd>
-</dl>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>days</strong><span class="classifier">float</span></dt><dd><p>The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>days</strong> (<em>float</em>) – The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>If an invalid <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is supplied.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is supplied.</p>
 </dd>
 </dl>
 </dd></dl>

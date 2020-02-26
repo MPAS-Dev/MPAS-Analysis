@@ -203,39 +203,25 @@
 <dd><p>Plots a 1D line plot with error bars if available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>config</strong><span class="classifier">instance of ConfigParser</span></dt><dd><p>the configuration, containing a [plot] section with options that
-control plotting</p>
-</dd>
-<dt><strong>xArrays</strong><span class="classifier">list of float arrays</span></dt><dd><p>x array (latitude, or any other x axis except time)</p>
-</dd>
-<dt><strong>fieldArrays</strong><span class="classifier">list of float arrays</span></dt><dd><p>y array (any field as function of x)</p>
-</dd>
-<dt><strong>errArrays</strong><span class="classifier">list of float arrays</span></dt><dd><p>error array (y errors)</p>
-</dd>
-<dt><strong>lineColors, lineStyles, markers, legendText</strong><span class="classifier">list of str, optional</span></dt><dd><p>control line color, style, marker, and corresponding legend
-text.  Default is black, solid line with no marker, and no legend.</p>
-</dd>
-<dt><strong>lineWidths</strong><span class="classifier">list of float, optional</span></dt><dd><p>control line width.  Default is 1.0.</p>
-</dd>
-<dt><strong>title</strong><span class="classifier">str, optional</span></dt><dd><p>title of plot</p>
-</dd>
-<dt><strong>xlabel, ylabel</strong><span class="classifier">str, optional</span></dt><dd><p>label of x- and y-axis</p>
-</dd>
-<dt><strong>fileout</strong><span class="classifier">str, optional</span></dt><dd><p>the file name to be written</p>
-</dd>
-<dt><strong>figsize</strong><span class="classifier">tuple of float, optional</span></dt><dd><p>size of the figure in inches</p>
-</dd>
-<dt><strong>dpi</strong><span class="classifier">int, optional</span></dt><dd><p>the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
-option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p>
-</dd>
-<dt><strong>xLim</strong><span class="classifier">float array, optional</span></dt><dd><p>x range of plot</p>
-</dd>
-<dt><strong>yLim</strong><span class="classifier">float array, optional</span></dt><dd><p>y range of plot</p>
-</dd>
-<dt><strong>invertYAxis</strong><span class="classifier">logical, optional</span></dt><dd><p>if True, invert Y axis</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
+control plotting</p></li>
+<li><p><strong>xArrays</strong> (<em>list of float arrays</em>) – x array (latitude, or any other x axis except time)</p></li>
+<li><p><strong>fieldArrays</strong> (<em>list of float arrays</em>) – y array (any field as function of x)</p></li>
+<li><p><strong>errArrays</strong> (<em>list of float arrays</em>) – error array (y errors)</p></li>
+<li><p><strong>lineStyles</strong><strong>, </strong><strong>markers</strong><strong>, </strong><strong>legendText</strong> (<em>lineColors</em><em>,</em>) – control line color, style, marker, and corresponding legend
+text.  Default is black, solid line with no marker, and no legend.</p></li>
+<li><p><strong>lineWidths</strong> (<em>list of float</em><em>, </em><em>optional</em>) – control line width.  Default is 1.0.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – title of plot</p></li>
+<li><p><strong>ylabel</strong> (<em>xlabel</em><em>,</em>) – label of x- and y-axis</p></li>
+<li><p><strong>fileout</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – the file name to be written</p></li>
+<li><p><strong>figsize</strong> (<em>tuple of float</em><em>, </em><em>optional</em>) – size of the figure in inches</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p></li>
+<li><p><strong>xLim</strong> (<em>float array</em><em>, </em><em>optional</em>) – x range of plot</p></li>
+<li><p><strong>yLim</strong> (<em>float array</em><em>, </em><em>optional</em>) – y range of plot</p></li>
+<li><p><strong>invertYAxis</strong> (<em>logical</em><em>, </em><em>optional</em>) – if True, invert Y axis</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

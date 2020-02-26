@@ -215,31 +215,25 @@
 the number of days in each month of the data set, ignoring values masked
 out with NaNs.  If the month coordinate is not present, a data array
 <code class="docutils literal notranslate"><span class="pre">month</span></code> will be added based on <code class="docutils literal notranslate"><span class="pre">Time</span></code> and the provided calendar.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> or <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object</span></dt><dd><p>A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
-0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, optional</span></dt><dd><p>The name of one of the calendars supported by MPAS cores, used to
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> or <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
+0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p></li>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, optional) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate, so must be supplied if
-<code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p>
-</dd>
-<dt><strong>maskVaries</strong><span class="classifier">bool, optional</span></dt><dd><p>If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
+<code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p></li>
+<li><p><strong>maskVaries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
 If not, the weighted average does not need make extra effort to account
 for the mask.  Most MPAS fields will have masks that don’t vary in
 time, whereas observations may sometimes be present only at some
-times and not at others, requiring <code class="docutils literal notranslate"><span class="pre">maskVaries</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
-</dd>
-</dl>
+times and not at others, requiring <code class="docutils literal notranslate"><span class="pre">maskVaries</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>climatology</strong><span class="classifier">object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code></span></dt><dd><p>A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
+<dd class="field-even"><p><strong>climatology</strong> (object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
 of ds over all months in monthValues, weighted by the number of days
 in each month.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>

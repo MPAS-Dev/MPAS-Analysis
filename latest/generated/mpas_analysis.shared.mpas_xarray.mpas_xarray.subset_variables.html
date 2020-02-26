@@ -199,27 +199,19 @@
 <code class="sig-prename descclassname">mpas_analysis.shared.mpas_xarray.mpas_xarray.</code><code class="sig-name descname">subset_variables</code><span class="sig-paren">(</span><em class="sig-param">ds</em>, <em class="sig-param">variableList</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#subset_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a data set and a list of variable names, returns a new data set that
 contains only variables with those names.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object</span></dt><dd><p>The data set from which a subset of variables is to be extracted.</p>
-</dd>
-<dt><strong>variableList</strong><span class="classifier">string or list of strings</span></dt><dd><p>The names of the variables to be extracted.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object) – The data set from which a subset of variables is to be extracted.</p></li>
+<li><p><strong>variableList</strong> (<em>string</em><em> or </em><em>list of strings</em>) – The names of the variables to be extracted.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object</span></dt><dd><p>A copy of the original data set with only the variables in
+<dd class="field-even"><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object) – A copy of the original data set with only the variables in
 variableList.</p>
 </dd>
-</dl>
-</dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>If the resulting data set is empty.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the resulting data set is empty.</p>
 </dd>
 </dl>
 </dd></dl>

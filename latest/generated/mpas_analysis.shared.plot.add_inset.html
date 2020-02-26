@@ -203,37 +203,26 @@
 <dd><p>Plots an inset map showing the location of a transect or polygon.  Shapes
 are plotted on a polar grid if they are entirely poleward of +/-50 deg.
 latitude and with a lat/lon grid if not.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>fig</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></span></dt><dd><p>A matplotlib figure to add the inset to</p>
-</dd>
-<dt><strong>fc</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">geometric_features.FeatureCollection</span></code></span></dt><dd><p>A collection of regions, transects and/or points to plot in the inset</p>
-</dd>
-<dt><strong>latlonbuffer</strong><span class="classifier">float, optional</span></dt><dd><p>The number of degrees lat/lon to use as a buffer around the shape(s)
-to plot if a lat/lon plot is used.</p>
-</dd>
-<dt><strong>polarbuffer</strong><span class="classifier">float, optional</span></dt><dd><p>The number of degrees latitude to use as a buffer equatorward of the
-shape(s) in polar plots</p>
-</dd>
-<dt><strong>width, height</strong><span class="classifier">float, optional</span></dt><dd><p>width and height in inches of the inset</p>
-</dd>
-<dt><strong>lowerleft</strong><span class="classifier">pair of floats, optional</span></dt><dd><p>the location of the lower left corner of the axis in inches, default
-puts the inset in the upper right corner of <code class="docutils literal notranslate"><span class="pre">fig</span></code>.</p>
-</dd>
-<dt><strong>xbuffer, ybuffer</strong><span class="classifier">float, optional</span></dt><dd><p>right and top buffers from the top-right corner (in inches) if
-lowerleft is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
-</dd>
-<dt><strong>maxlength</strong><span class="classifier">float or <code class="docutils literal notranslate"><span class="pre">None</span></code>, optional</span></dt><dd><p>Any segments longer than maxlength will be subdivided in the plot to
-ensure curvature.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, no subdivision is performed.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code>) – A matplotlib figure to add the inset to</p></li>
+<li><p><strong>fc</strong> (<code class="docutils literal notranslate"><span class="pre">geometric_features.FeatureCollection</span></code>) – A collection of regions, transects and/or points to plot in the inset</p></li>
+<li><p><strong>latlonbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>optional</em>) – The number of degrees lat/lon to use as a buffer around the shape(s)
+to plot if a lat/lon plot is used.</p></li>
+<li><p><strong>polarbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>optional</em>) – The number of degrees latitude to use as a buffer equatorward of the
+shape(s) in polar plots</p></li>
+<li><p><strong>height</strong> (<em>width</em><em>,</em>) – width and height in inches of the inset</p></li>
+<li><p><strong>lowerleft</strong> (<em>pair of floats</em><em>, </em><em>optional</em>) – the location of the lower left corner of the axis in inches, default
+puts the inset in the upper right corner of <code class="docutils literal notranslate"><span class="pre">fig</span></code>.</p></li>
+<li><p><strong>ybuffer</strong> (<em>xbuffer</em><em>,</em>) – right and top buffers from the top-right corner (in inches) if
+lowerleft is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>maxlength</strong> (float or <code class="docutils literal notranslate"><span class="pre">None</span></code>, optional) – Any segments longer than maxlength will be subdivided in the plot to
+ensure curvature.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, no subdivision is performed.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>inset</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></span></dt><dd><p>The new inset axis</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>inset</strong> (<code class="docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code>) – The new inset axis</p>
 </dd>
 </dl>
 </dd></dl>

@@ -216,29 +216,20 @@ returns a <code class="docutils literal notranslate"><span class="pre">pyremap.R
 files or data sets to corresponding data sets on the comparison grid.</p>
 <p>If necessary, creates the mapping file containing weights and indices
 needed to perform remapping.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>config</strong><span class="classifier">instance of <code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code></span></dt><dd><p>Contains configuration options</p>
-</dd>
-<dt><strong>sourceDescriptor</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> subclass object</span></dt><dd><p>A description of the source mesh or grid</p>
-</dd>
-<dt><strong>comparisonDescriptor</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> subclass object</span></dt><dd><p>A description of the comparison grid</p>
-</dd>
-<dt><strong>mappingFilePrefix</strong><span class="classifier">str</span></dt><dd><p>A prefix to be prepended to the mapping file name</p>
-</dd>
-<dt><strong>method</strong><span class="classifier">{‘bilinear’, ‘neareststod’, ‘conserve’}</span></dt><dd><p>The method of interpolation used.</p>
-</dd>
-<dt><strong>logger</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>, optional</span></dt><dd><p>A logger to which ncclimo output should be redirected</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (instance of <code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Contains configuration options</p></li>
+<li><p><strong>sourceDescriptor</strong> (<code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> subclass object) – A description of the source mesh or grid</p></li>
+<li><p><strong>comparisonDescriptor</strong> (<code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> subclass object) – A description of the comparison grid</p></li>
+<li><p><strong>mappingFilePrefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A prefix to be prepended to the mapping file name</p></li>
+<li><p><strong>method</strong> (<em>{'bilinear'</em><em>, </em><em>'neareststod'</em><em>, </em><em>'conserve'}</em>) – The method of interpolation used.</p></li>
+<li><p><strong>logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>, optional) – A logger to which ncclimo output should be redirected</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>remapper</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">pyremap.Remapper</span></code> object</span></dt><dd><p>A remapper that can be used to remap files or data sets from the source
+<dd class="field-even"><p><strong>remapper</strong> (<code class="docutils literal notranslate"><span class="pre">pyremap.Remapper</span></code> object) – A remapper that can be used to remap files or data sets from the source
 grid or mesh to the comparison grid.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>

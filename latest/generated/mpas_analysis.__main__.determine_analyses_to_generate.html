@@ -192,21 +192,16 @@
 option (or command-line flag) and prerequisites and subtasks of each
 requested task.  Each task’s <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code> method is called in the
 process.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>analyses</strong><span class="classifier">list of <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code> objects</span></dt><dd><p>A list of all analysis tasks</p>
-</dd>
-<dt><strong>verbose</strong><span class="classifier">bool</span></dt><dd><p>Whether to write out a full stack trace when exceptions occur during
-<code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> calls for each task</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyses</strong> (list of <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code> objects) – A list of all analysis tasks</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to write out a full stack trace when exceptions occur during
+<code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> calls for each task</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>analysesToGenerate</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> of <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code> objects</span></dt><dd><p>A dictionary of analysis tasks to run</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>analysesToGenerate</strong> (<code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> of <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code> objects) – A dictionary of analysis tasks to run</p>
 </dd>
 </dl>
 </dd></dl>

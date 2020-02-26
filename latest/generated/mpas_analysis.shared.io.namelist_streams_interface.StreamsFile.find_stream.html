@@ -203,28 +203,19 @@
 <h1>mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream<a class="headerlink" href="#mpas-analysis-shared-io-namelist-streams-interface-streamsfile-find-stream" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream">
-<code class="sig-prename descclassname">StreamsFile.</code><code class="sig-name descname">find_stream</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">possibleStreams</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/namelist_streams_interface.html#StreamsFile.find_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">StreamsFile.</code><code class="sig-name descname">find_stream</code><span class="sig-paren">(</span><em class="sig-param">possibleStreams</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/namelist_streams_interface.html#StreamsFile.find_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream" title="Permalink to this definition">¶</a></dt>
 <dd><p>If one (or more) of the names in <code class="docutils literal notranslate"><span class="pre">possibleStreams</span></code> is an stream in
 this streams file, returns the first match.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>possibleStreams</strong><span class="classifier">list of str</span></dt><dd><p>A list of streams to search for</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>possibleStreams</strong> (<em>list of str</em>) – A list of streams to search for</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>streamName</strong><span class="classifier">str</span></dt><dd><p>The name of an stream from possibleOptions occurring in the
+<dd class="field-even"><p><strong>streamName</strong> (<em>str</em>) – The name of an stream from possibleOptions occurring in the
 streams file</p>
 </dd>
-</dl>
-</dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>If no match is found.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If no match is found.</p>
 </dd>
 </dl>
 </dd></dl>

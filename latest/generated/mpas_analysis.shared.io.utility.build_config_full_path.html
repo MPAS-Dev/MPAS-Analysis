@@ -199,29 +199,20 @@
 <dd><p>Get a full path from a base directory and a relative path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>config</strong><span class="classifier">MpasAnalysisConfigParser object</span></dt><dd><p>configuration from which to read the path</p>
-</dd>
-<dt><strong>section</strong><span class="classifier">str</span></dt><dd><p>the name of a section in <cite>config</cite>, which must have an option
-<code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code></p>
-</dd>
-<dt><strong>relativePathOption</strong><span class="classifier">str</span></dt><dd><p>the name of an option in <code class="docutils literal notranslate"><span class="pre">section</span></code> of the relative path within
-<code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> (or possibly an absolute path)</p>
-</dd>
-<dt><strong>relativePathSection</strong><span class="classifier">str, optional</span></dt><dd><p>the name of a section for <code class="docutils literal notranslate"><span class="pre">relativePathOption</span></code> if not <code class="docutils literal notranslate"><span class="pre">section</span></code></p>
-</dd>
-<dt><strong>defaultPath</strong><span class="classifier">str, optional</span></dt><dd><p>the name of a path to return if the resulting path doesn’t exist.</p>
-</dd>
-<dt><strong>baseDirectoryOption</strong><span class="classifier">str, optional</span></dt><dd><p>the name of the option in <code class="docutils literal notranslate"><span class="pre">section</span></code> for the base directorys</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>MpasAnalysisConfigParser object</em>) – configuration from which to read the path</p></li>
+<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of a section in <cite>config</cite>, which must have an option
+<code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code></p></li>
+<li><p><strong>relativePathOption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of an option in <code class="docutils literal notranslate"><span class="pre">section</span></code> of the relative path within
+<code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> (or possibly an absolute path)</p></li>
+<li><p><strong>relativePathSection</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – the name of a section for <code class="docutils literal notranslate"><span class="pre">relativePathOption</span></code> if not <code class="docutils literal notranslate"><span class="pre">section</span></code></p></li>
+<li><p><strong>defaultPath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – the name of a path to return if the resulting path doesn’t exist.</p></li>
+<li><p><strong>baseDirectoryOption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – the name of the option in <code class="docutils literal notranslate"><span class="pre">section</span></code> for the base directorys</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fullPath</strong><span class="classifier">str</span></dt><dd><p>The full path to the given relative path within the given
+<dd class="field-even"><p><strong>fullPath</strong> (<em>str</em>) – The full path to the given relative path within the given
 <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code></p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>

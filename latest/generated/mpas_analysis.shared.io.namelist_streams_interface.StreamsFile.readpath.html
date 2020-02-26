@@ -203,38 +203,30 @@
 <h1>mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath<a class="headerlink" href="#mpas-analysis-shared-io-namelist-streams-interface-streamsfile-readpath" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath">
-<code class="sig-prename descclassname">StreamsFile.</code><code class="sig-name descname">readpath</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">streamName</em>, <em class="sig-param">startDate=None</em>, <em class="sig-param">endDate=None</em>, <em class="sig-param">calendar=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/namelist_streams_interface.html#StreamsFile.readpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">StreamsFile.</code><code class="sig-name descname">readpath</code><span class="sig-paren">(</span><em class="sig-param">streamName</em>, <em class="sig-param">startDate=None</em>, <em class="sig-param">endDate=None</em>, <em class="sig-param">calendar=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/namelist_streams_interface.html#StreamsFile.readpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the name of a stream and optionally start and end dates and a
 calendar type, returns a list of files that match the file template in
 the stream.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>streamName</strong><span class="classifier">string</span></dt><dd><p>The name of a stream that produced the files</p>
-</dd>
-<dt><strong>startDate, endDate</strong><span class="classifier">string or datetime.datetime, optional</span></dt><dd><p>String or datetime.datetime objects identifying the beginning
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>streamName</strong> (<em>string</em>) – The name of a stream that produced the files</p></li>
+<li><p><strong>endDate</strong> (<em>startDate</em><em>,</em>) – <p>String or datetime.datetime objects identifying the beginning
 and end dates to be found.</p>
 <p>Note: a buffer of one output interval is subtracted from startDate
 and added to endDate because the file date might be the first
 or last date contained in the file (or anything in between).</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier">{‘gregorian’, ‘gregorian_noleap’}, optional</span></dt><dd><p>The name of one of the calendars supported by MPAS cores, and is
-required if startDate and/or endDate are supplied</p>
-</dd>
-</dl>
+</p></li>
+<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores, and is
+required if startDate and/or endDate are supplied</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>fileList</strong><span class="classifier">list</span></dt><dd><p>A list of file names produced by the stream that fall between
+<dd class="field-even"><p><strong>fileList</strong> (<em>list</em>) – A list of file names produced by the stream that fall between
 the startDate and endDate (if supplied)</p>
 </dd>
-</dl>
-</dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>If no files from the stream are found.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If no files from the stream are found.</p>
 </dd>
 </dl>
 </dd></dl>

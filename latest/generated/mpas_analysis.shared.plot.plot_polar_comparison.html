@@ -203,44 +203,28 @@
 <dd><p>Plots a data set around either the north or south pole.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>config</strong><span class="classifier">instance of ConfigParser</span></dt><dd><p>the configuration, containing a [plot] section with options that
-control plotting</p>
-</dd>
-<dt><strong>Lons, Lats</strong><span class="classifier">float arrays</span></dt><dd><p>longitude and latitude arrays</p>
-</dd>
-<dt><strong>modelArray, refArray</strong><span class="classifier">float arrays</span></dt><dd><p>model and observational or control run data sets</p>
-</dd>
-<dt><strong>diffArray</strong><span class="classifier">float array</span></dt><dd><p>difference between modelArray and refArray</p>
-</dd>
-<dt><strong>colorMapSectionName</strong><span class="classifier">str</span></dt><dd><p>section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p>
-</dd>
-<dt><strong>fileout</strong><span class="classifier">str</span></dt><dd><p>the file name to be written</p>
-</dd>
-<dt><strong>title</strong><span class="classifier">str, optional</span></dt><dd><p>the subtitle of the plot</p>
-</dd>
-<dt><strong>plotProjection</strong><span class="classifier">str, optional</span></dt><dd><p>Basemap projection for the plot</p>
-</dd>
-<dt><strong>modelTitle</strong><span class="classifier">str, optional</span></dt><dd><p>title of the model panel</p>
-</dd>
-<dt><strong>refTitle</strong><span class="classifier">str, optional</span></dt><dd><p>title of the observations or control run panel</p>
-</dd>
-<dt><strong>diffTitle</strong><span class="classifier">str, optional</span></dt><dd><p>title of the difference (bias) panel</p>
-</dd>
-<dt><strong>cbarlabel</strong><span class="classifier">str, optional</span></dt><dd><p>label on the colorbar</p>
-</dd>
-<dt><strong>titleFontSize</strong><span class="classifier">int, optional</span></dt><dd><p>size of the title font</p>
-</dd>
-<dt><strong>figsize</strong><span class="classifier">tuple of float, optional</span></dt><dd><p>the size of the figure in inches.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the figure size is
-<code class="docutils literal notranslate"><span class="pre">(8,</span> <span class="pre">22)</span></code> if <code class="docutils literal notranslate"><span class="pre">vertical</span> <span class="pre">==</span> <span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">(22,</span> <span class="pre">8)</span></code> otherwise.</p>
-</dd>
-<dt><strong>dpi</strong><span class="classifier">int, optional</span></dt><dd><p>the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
-option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p>
-</dd>
-<dt><strong>vertical</strong><span class="classifier">bool, optional</span></dt><dd><p>whether the subplots should be stacked vertically rather than
-horizontally</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
+control plotting</p></li>
+<li><p><strong>Lats</strong> (<em>Lons</em><em>,</em>) – longitude and latitude arrays</p></li>
+<li><p><strong>refArray</strong> (<em>modelArray</em><em>,</em>) – model and observational or control run data sets</p></li>
+<li><p><strong>diffArray</strong> (<em>float array</em>) – difference between modelArray and refArray</p></li>
+<li><p><strong>colorMapSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p></li>
+<li><p><strong>fileout</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the file name to be written</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – the subtitle of the plot</p></li>
+<li><p><strong>plotProjection</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – Basemap projection for the plot</p></li>
+<li><p><strong>modelTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – title of the model panel</p></li>
+<li><p><strong>refTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – title of the observations or control run panel</p></li>
+<li><p><strong>diffTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – title of the difference (bias) panel</p></li>
+<li><p><strong>cbarlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – label on the colorbar</p></li>
+<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – size of the title font</p></li>
+<li><p><strong>figsize</strong> (<em>tuple of float</em><em>, </em><em>optional</em>) – the size of the figure in inches.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the figure size is
+<code class="docutils literal notranslate"><span class="pre">(8,</span> <span class="pre">22)</span></code> if <code class="docutils literal notranslate"><span class="pre">vertical</span> <span class="pre">==</span> <span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">(22,</span> <span class="pre">8)</span></code> otherwise.</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p></li>
+<li><p><strong>vertical</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – whether the subplots should be stacked vertically rather than
+horizontally</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

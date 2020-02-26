@@ -183,22 +183,19 @@
 <h1>mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault<a class="headerlink" href="#mpas-analysis-configuration-mpasanalysisconfigparser-getwithdefault" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault">
-<code class="sig-prename descclassname">MpasAnalysisConfigParser.</code><code class="sig-name descname">getWithDefault</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">section</em>, <em class="sig-param">option</em>, <em class="sig-param">default</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/configuration/mpas_analysis_config_parser.html#MpasAnalysisConfigParser.getWithDefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">MpasAnalysisConfigParser.</code><code class="sig-name descname">getWithDefault</code><span class="sig-paren">(</span><em class="sig-param">section</em>, <em class="sig-param">option</em>, <em class="sig-param">default</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/configuration/mpas_analysis_config_parser.html#MpasAnalysisConfigParser.getWithDefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an option, using the supplied default value if the option is not
 present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>section</strong><span class="classifier">str</span></dt><dd><p>The section in the config file</p>
-</dd>
-<dt><strong>option</strong><span class="classifier">str</span></dt><dd><p>The option in the config file</p>
-</dd>
-<dt><strong>default</strong><span class="classifier">one of bool, int, float, list, tuple, dict, str</span></dt><dd><p>The default value if the option and/or section is not found, used
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The section in the config file</p></li>
+<li><p><strong>option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The option in the config file</p></li>
+<li><p><strong>default</strong> (<em>one of bool</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The default value if the option and/or section is not found, used
 to determine the type of the option if it <em>is</em> found. If
 <code class="docutils literal notranslate"><span class="pre">default</span></code> is a list, tuple, or dict, <code class="docutils literal notranslate"><span class="pre">getExpression(...)</span></code> is
-used if the option is present in the config file.</p>
-</dd>
-</dl>
+used if the option is present in the config file.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

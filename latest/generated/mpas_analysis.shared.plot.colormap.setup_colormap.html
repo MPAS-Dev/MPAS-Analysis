@@ -201,32 +201,27 @@
 <dt id="mpas_analysis.shared.plot.colormap.setup_colormap">
 <code class="sig-prename descclassname">mpas_analysis.shared.plot.colormap.</code><code class="sig-name descname">setup_colormap</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">configSectionName</em>, <em class="sig-param">suffix=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/plot/colormap.html#setup_colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.plot.colormap.setup_colormap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up a colormap from the registry</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>config</strong><span class="classifier">instance of ConfigParser</span></dt><dd><p>the configuration, containing a [plot] section with options that
-control plotting</p>
-</dd>
-<dt><strong>configSectionName</strong><span class="classifier">str</span></dt><dd><p>name of config section</p>
-</dd>
-<dt><strong>suffix: str, optional</strong></dt><dd><p>suffix of colormap related options</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
+control plotting</p></li>
+<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – name of config section</p></li>
+<li><p><strong>suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – suffix of colormap related options</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>colormapDict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of colormap information.</p>
-<p>‘colormap’ specifies the name of the new colormap</p>
-<p>‘norm’ is a matplotlib norm object used to normalize the colormap</p>
-<p>‘levels’ is an array of contour levels or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not using indexed
+<dd class="field-even"><p><p><strong>colormapDict</strong> (<em>dict</em>) – A dictionary of colormap information.</p>
+<p>’colormap’ specifies the name of the new colormap</p>
+<p>’norm’ is a matplotlib norm object used to normalize the colormap</p>
+<p>’levels’ is an array of contour levels or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not using indexed
 color map</p>
-<p>‘ticks’ is an array of values where ticks should be placed</p>
-<p>‘contours’ is an array of contour values to plot or <code class="docutils literal notranslate"><span class="pre">None</span></code> if none
+<p>’ticks’ is an array of values where ticks should be placed</p>
+<p>’contours’ is an array of contour values to plot or <code class="docutils literal notranslate"><span class="pre">None</span></code> if none
 have been specified</p>
-<p>‘lineWidth’ is the width of contour lines or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not specified</p>
-<p>‘lineColor’ is the color of contour lines or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not specified</p>
-</dd>
-</dl>
+<p>’lineWidth’ is the width of contour lines or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not specified</p>
+<p>’lineColor’ is the color of contour lines or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not specified</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
