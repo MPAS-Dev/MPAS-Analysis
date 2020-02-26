@@ -556,6 +556,24 @@ class PlotTransportSubtask(AnalysisTask):
 
         self.logger.info('  Load transport data...')
 
+        obsDict = {'Drake Passage': [120, 175],
+                   'Tasmania-Ant': [147, 167],
+                   'Africa-Ant': None,
+                   'Antilles Inflow': [-23.1, -13.7],
+                   'Mona Passage': [-3.8, -1.4],
+                   'Windward Passage': [-7.2, -6.8],
+                   'Florida-Cuba': [30, 33],
+                   'Florida-Bahamas': [30, 33],
+                   'Indonesian Throughflow': [-21, -11],
+                   'Agulhas': [-90, -50],
+                   'Mozambique Channel': [-20, -8],
+                   'Bering Strait': [0.6, 1.0],
+                   'Lancaster Sound': [-1.0, -0.5],
+                   'Fram Strait': [-4.7, 0.7],
+                   'Davis Strait': [-1.6, -3.6],
+                   'Barents Sea Opening': [1.4, 2.6],
+                   'Nares Strait': [-1.8, 0.2]}
+
         config = self.config
         calendar = self.calendar
 
@@ -568,6 +586,11 @@ class PlotTransportSubtask(AnalysisTask):
                 break
 
         transport, trans_mean, trans_std = self._load_transport(config)
+
+        if self.transect in obsDict:
+            bounds = obsDict[self.transect]
+        else:
+            bounds = None
 
         plotControl = self.controlConfig is not None
 
@@ -588,13 +611,12 @@ class PlotTransportSubtask(AnalysisTask):
         fields = [transport]
         lineColors = ['k']
         lineWidths = [2.5]
-        meanString = 'mean={:5.2f} $\pm$ {:5.2f}'.format(trans_mean, trans_std)
+        meanString = 'mean={:.2f} $\pm$ {:.2f}'.format(trans_mean, trans_std)
         if plotControl:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
             ref_transport, ref_mean, ref_std = \
                 self._load_transport(self.controlConfig)
-            refMeanString = 'mean={:5.2f} $\pm$ {:5.2f}'.format(ref_mean,
-                                                                 ref_std)
+            refMeanString = 'mean={:.2f} $\pm$ {:.2f}'.format(ref_mean, ref_std)
             fields.append(ref_transport)
             lineColors.append('r')
             lineWidths.append(1.2)
@@ -624,6 +646,14 @@ class PlotTransportSubtask(AnalysisTask):
                                        legendText=legendText,
                                        firstYearXTicks=firstYearXTicks,
                                        yearStrideXTicks=yearStrideXTicks)
+
+        if bounds is not None:
+            t = transport.Time.values
+            plt.gca().fill_between(t, bounds[0]*numpy.ones_like(t),
+                                   bounds[1]*numpy.ones_like(t), alpha=0.3,
+                                   label='observations')
+            plt.legend(loc='lower left')
+
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway
@@ -665,8 +695,8 @@ class PlotTransportSubtask(AnalysisTask):
 
         dsIn = xarray.open_dataset(inFileName)
         transport = dsIn.transport.isel(nTransects=self.transectIndex)
-        mean = transport.mean()
-        std = transport.std()
+        mean = transport.mean().values
+        std = transport.std().values
         return transport, mean, std  # }}}
 
     # }}}
