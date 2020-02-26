@@ -142,6 +142,7 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesSST.html">mpas_analysis.ocean.TimeSeriesSST</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html">mpas_analysis.ocean.TimeSeriesAntarcticMelt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html">mpas_analysis.ocean.TimeSeriesOceanRegions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info</a></li>
@@ -256,6 +257,11 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html">mpas_analysis.shared.timekeeping.utility.datetime_to_days</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.date_to_days.html">mpas_analysis.shared.timekeeping.utility.date_to_days</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.html">mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#transects">Transects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html">mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html">mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask</a></li>
 </ul>
 </li>
 </ul>
@@ -495,6 +501,9 @@ the documentation.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions" title="mpas_analysis.ocean.TimeSeriesOceanRegions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesOceanRegions</span></code></a>(config[, controlConfig])</p></td>
 <td><p>Performs analysis of the time-series output of regionoal mean temperature, salinity, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport" title="mpas_analysis.ocean.TimeSeriesTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesTransport</span></code></a>(config[, controlConfig])</p></td>
+<td><p>Extract and plot time series of transport through transects on the MPAS mesh.</p></td>
 </tr>
 </tbody>
 </table>
@@ -868,7 +877,7 @@ the documentation.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" title="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_region_masks_subtask.ComputeRegionMasksSubtask</span></code></a>(…)</p></td>
-<td><p>An analysis tasks for computing climatologies from output from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member.</p></td>
+<td><p>An analysis tasks for computing cell masks for regions defined by geojson features</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_region_masks_subtask.get_feature_list</span></code></a>(…)</p></td>
 <td><p>Builds a list of features found in the geojson file</p></td>
@@ -907,6 +916,23 @@ the documentation.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.html#mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta" title="mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasRelativeDelta.MpasRelativeDelta</span></code></a>([dt1, …])</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> is a subclass of <code class="docutils literal notranslate"><span class="pre">dateutil.relativedelta</span></code> for relative time intervals with different MPAS calendars.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="transects">
+<h3>Transects<a class="headerlink" href="#transects" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_transect_masks_subtask.compute_mpas_transect_masks</span></code></a>(…)</p></td>
+<td><p>Build a transect mask file from the given MPAS mesh and geojson file     defining a set of transects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_transect_masks_subtask.ComputeTransectMasksSubtask</span></code></a>(…)</p></td>
+<td><p>An analysis tasks for computing cell masks for transects defined by geojson features</p></td>
 </tr>
 </tbody>
 </table>

@@ -110,6 +110,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -193,8 +194,8 @@
 <dl class="class">
 <dt id="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask">
 <em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.shared.regions.compute_region_masks_subtask.</code><code class="sig-name descname">ComputeRegionMasksSubtask</code><span class="sig-paren">(</span><em class="sig-param">parentTask</em>, <em class="sig-param">geojsonFileName</em>, <em class="sig-param">outFileSuffix</em>, <em class="sig-param">featureList=None</em>, <em class="sig-param">subtaskName='computeRegionMasks'</em>, <em class="sig-param">subprocessCount=1</em>, <em class="sig-param">obsFileName=None</em>, <em class="sig-param">lonVar='lon'</em>, <em class="sig-param">latVar='lat'</em>, <em class="sig-param">meshName=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#ComputeRegionMasksSubtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" title="Permalink to this definition">¶</a></dt>
-<dd><p>An analysis tasks for computing climatologies from output from the
-<code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member.</p>
+<dd><p>An analysis tasks for computing cell masks for regions defined by geojson
+features</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -228,7 +229,7 @@ repository, defining the shapes to be masked</p></li>
 <li><p><strong>featureList</strong> (<em>list of str</em><em>, </em><em>optional</em>) – A list of features to include.  Default is all features in all
 files</p></li>
 <li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
-<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The nunumber of processes that can be used to make the mask</p></li>
+<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask</p></li>
 <li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The name of an observations file to create masks for.  But default,
 lon/lat are taken from an MPAS restart file</p></li>
 <li><p><strong>latVar</strong> (<em>lonVar</em><em>,</em>) – The name of the longitude and latitude variables in <code class="docutils literal notranslate"><span class="pre">obsFileName</span></code></p></li>

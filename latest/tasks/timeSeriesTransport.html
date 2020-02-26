@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeSeriesTransport &mdash; MPAS-Analysis latest documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="meridionalHeatTransport" href="meridionalHeatTransport.html" />
+    <link rel="prev" title="timeSeriesSST" href="timeSeriesSST.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                latest
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">timeSeriesTransport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transect-names">Transect Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-options">Other Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../analysis_tasks.html">Analysis Tasks</a> &raquo;</li>
+        
+      <li>timeSeriesTransport</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/tasks/timeSeriesTransport.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="timeseriestransport">
+<span id="task-timeseriestransport"></span><h1>timeSeriesTransport<a class="headerlink" href="#timeseriestransport" title="Permalink to this headline">¶</a></h1>
+<p>An analysis task for plotting time series of of temperature, salinity,
+potential density and other fields of interest averaged over ocean regions.</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">timeSeries</span><span class="p">,</span> <span class="n">transport</span>
+</pre></div>
+</div>
+<div class="section" id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">timeSeriesTransport</span><span class="p">]</span>
+<span class="c1">## options related to plotting time series of transport through transects</span>
+
+<span class="c1"># list of ocean transects from geometric_features to plot or [&#39;all&#39;] for all</span>
+<span class="c1"># available transects.</span>
+<span class="n">transectsToPlot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Drake Passage&#39;</span><span class="p">,</span> <span class="s1">&#39;Tasmania-Ant&#39;</span><span class="p">,</span> <span class="s1">&#39;Africa-Ant&#39;</span><span class="p">,</span> <span class="s1">&#39;Antilles Inflow&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;Mona Passage&#39;</span><span class="p">,</span> <span class="s1">&#39;Windward Passage&#39;</span><span class="p">,</span> <span class="s1">&#39;Florida-Cuba&#39;</span><span class="p">,</span> <span class="s1">&#39;Florida-Bahamas&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;Indonesian Throughflow&#39;</span><span class="p">,</span> <span class="s1">&#39;Agulhas&#39;</span><span class="p">,</span> <span class="s1">&#39;Mozambique Channel&#39;</span><span class="p">,</span> <span class="s1">&#39;Bering Strait&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;Lancaster Sound&#39;</span><span class="p">,</span> <span class="s1">&#39;Fram Strait&#39;</span><span class="p">,</span> <span class="s1">&#39;Nares Strait&#39;</span><span class="p">]</span>
+
+<span class="c1"># Number of months over which to compute moving average</span>
+<span class="n">movingAverageMonths</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
+<span class="c1"># to start at the beginning of the time series.</span>
+
+<span class="c1"># firstYearXTicks = 1</span>
+
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+
+<span class="c1"># yearStrideXTicks = 1</span>
+
+<span class="c1"># the number of threads dask is allowed to spawn for each process computing</span>
+<span class="c1"># a year of these time series</span>
+<span class="c1"># Decrease this number if timeSeriesTransport subtasks are running</span>
+<span class="c1"># out of available threads</span>
+<span class="n">daskThreads</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="c1"># the number of subprocesses that each task gets counted as occupying</span>
+<span class="c1"># Increase this number if timeSeriesTransport subtasks are running</span>
+<span class="c1"># out of memory, and fewer tasks will be allowed to run at once</span>
+<span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transect-names">
+<h2>Transect Names<a class="headerlink" href="#transect-names" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">transectsToPlot</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> (the default) to plot all of the
+transects defined in <code class="docutils literal notranslate"><span class="pre">transportTransects.geojson</span></code>.  These are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Africa-Ant&quot;</span><span class="p">,</span>  <span class="s2">&quot;Agulhas&quot;</span><span class="p">,</span> <span class="s2">&quot;Antarctic Peninsula&quot;</span><span class="p">,</span> <span class="s2">&quot;Antilles Inflow&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Baja CA blockage&quot;</span><span class="p">,</span> <span class="s2">&quot;Baltic Sea Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Barents Sea Opening&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Bering Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Davis Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Drake Passage&quot;</span><span class="p">,</span> <span class="s2">&quot;English Channel Deepen&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Florida-Bahamas&quot;</span><span class="p">,</span> <span class="s2">&quot;Florida-Cuba&quot;</span><span class="p">,</span> <span class="s2">&quot;Fram Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Indonesian Throughflow&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Ireland North Channel Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Japan Hokkaido blockage&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Japan La Perouse Strait Deepen&quot;</span><span class="p">,</span>  <span class="s2">&quot;Japan Tsugaru Strait Deepen&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Japan blockage&quot;</span><span class="p">,</span> <span class="s2">&quot;Lancaster Sound&quot;</span><span class="p">,</span> <span class="s2">&quot;Mona Passage&quot;</span><span class="p">,</span> <span class="s2">&quot;Mozambique Channel&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Nares Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Nares Strait Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Persian Gulf Deepen&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Red Sea Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Sakhalin blockage&quot;</span><span class="p">,</span> <span class="s2">&quot;Strait of Gibralter Deepen 1&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;Strait of Gibralter Deepen 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Tasmania-Ant&quot;</span><span class="p">,</span> <span class="s2">&quot;White Sea&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;Windward Passage&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Many of these are likely not of interest in most simulations, so a subset of
+the most relevant transects has been chosen in the default configuration.</p>
+</div>
+<div class="section" id="other-options">
+<h2>Other Options<a class="headerlink" href="#other-options" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../config/moving_average.html#config-moving-average"><span class="std std-ref">Moving Average</span></a></p></li>
+<li><p><a class="reference internal" href="../config/time_axis_ticks.html#config-time-axis-ticks"><span class="std std-ref">Time-Axis Tick Marks</span></a></p></li>
+<li><p><a class="reference internal" href="../config/dask_threads.html#dask-threads"><span class="std std-ref">Dask threads and subprocess count</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/drake_passage_transport.png"><img alt="../_images/drake_passage_transport.png" class="align-center" src="../_images/drake_passage_transport.png" style="width: 500px;" /></a>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="meridionalHeatTransport.html" class="btn btn-neutral float-right" title="meridionalHeatTransport" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="timeSeriesSST.html" class="btn btn-neutral float-left" title="timeSeriesSST" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

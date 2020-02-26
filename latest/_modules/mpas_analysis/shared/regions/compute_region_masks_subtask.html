@@ -429,8 +429,8 @@
 
 <div class="viewcode-block" id="ComputeRegionMasksSubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask">[docs]</a><span class="k">class</span> <span class="nc">ComputeRegionMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    An analysis tasks for computing climatologies from output from the</span>
-<span class="sd">    ``timeSeriesStatsMonthly`` analysis member.</span>
+<span class="sd">    An analysis tasks for computing cell masks for regions defined by geojson</span>
+<span class="sd">    features</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -495,7 +495,7 @@
 <span class="sd">            The name of the subtask</span>
 
 <span class="sd">        subprocessCount : int, optional</span>
-<span class="sd">            The nunumber of processes that can be used to make the mask</span>
+<span class="sd">            The number of processes that can be used to make the mask</span>
 
 <span class="sd">        obsFileName : str, optional</span>
 <span class="sd">            The name of an observations file to create masks for.  But default,</span>
