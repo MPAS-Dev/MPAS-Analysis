@@ -86,6 +86,12 @@ mappingSubdirectory = mpas_analysis/maps
 # point to a path that is not within the baseDirectory above.
 regionMaskSubdirectory = mpas_analysis/region_masks
 
+# A path to a directory for geometric data cached from the geometric_features
+# package.  If none is supplied, a geometric_data subdirectory of the analysis
+# output baseDirectory is used.
+geometricDataDirectory = none
+
+
 [input]
 ## options related to reading in the results to be analyzed
 

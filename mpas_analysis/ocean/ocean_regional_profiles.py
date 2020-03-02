@@ -104,10 +104,11 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
         masksSubtask = ComputeRegionMasksSubtask(
             self, masksFile, outFileSuffix=self.regionMaskSuffix,
-            featureList=None, subprocessCount=parallelTaskCount)
+            featureList=None, subprocessCount=parallelTaskCount,
+            useMpasMaskCreator=True)
 
         if 'all' in self.regionNames:
-            self.regionNames = get_feature_list(config, masksFile)
+            self.regionNames = get_feature_list(masksFile)
 
         self.masksSubtask = masksSubtask
 
