@@ -182,13 +182,15 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">netCDF4</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">GeometricFeatures</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.ocean.moc</span> <span class="kn">import</span> <span class="n">make_moc_basins_and_transects</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants.constants</span> <span class="kn">import</span> <span class="n">m3ps_to_Sv</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section_comparison</span><span class="p">,</span> \
     <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
-    <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">get_region_mask</span>
+    <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">get_region_mask</span><span class="p">,</span> <span class="n">get_geometric_data</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf</span>
 
@@ -202,7 +204,7 @@
 
 
 <div class="viewcode-block" id="StreamfunctionMOC"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC">[docs]</a><span class="k">class</span> <span class="nc">StreamfunctionMOC</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation and plotting of model meridional overturning circulation.</span>
 <span class="sd">    Will eventually support:</span>
 
@@ -210,13 +212,13 @@
 <span class="sd">        * MOC streamfunction, from MOC analysis member</span>
 <span class="sd">        * MOC time series (max value at 24.5N), post-processed</span>
 <span class="sd">        * MOC time series (max value at 24.5N), from MOC analysis member</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
 <div class="viewcode-block" id="StreamfunctionMOC.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -229,7 +231,7 @@
 
 <span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -242,8 +244,12 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;streamfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;moc&#39;</span><span class="p">,</span> <span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span>
                   <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
 
+        <span class="n">maskSubtask</span> <span class="o">=</span> <span class="n">ComputeMOCMasksSubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
+
         <span class="n">computeClimSubtask</span> <span class="o">=</span> <span class="n">ComputeMOCClimatologySubtask</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">)</span>
+        <span class="n">computeClimSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
         <span class="n">plotClimSubtask</span> <span class="o">=</span> <span class="n">PlotMOCClimatologySubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">)</span>
         <span class="n">plotClimSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeClimSubtask</span><span class="p">)</span>
 
@@ -262,7 +268,9 @@
         <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
             <span class="n">computeTimeSeriesSubtask</span> <span class="o">=</span> <span class="n">ComputeMOCTimeSeriesSubtask</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">startYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">endYear</span><span class="o">=</span><span class="n">year</span><span class="p">)</span>
+            <span class="n">computeTimeSeriesSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
             <span class="n">combineTimeSeriesSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeTimeSeriesSubtask</span><span class="p">)</span>
+
 
         <span class="n">plotTimeSeriesSubtask</span> <span class="o">=</span> <span class="n">PlotMOCTimeSeriesSubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">)</span>
         <span class="n">plotTimeSeriesSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">combineTimeSeriesSubtask</span><span class="p">)</span></div></div>
@@ -271,8 +279,78 @@
     <span class="c1"># }}}</span>
 
 
+<span class="k">class</span> <span class="nc">ComputeMOCMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis subtasks for computing cell masks and southern transects for</span>
+<span class="sd">    MOC regions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">):</span>
+        <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
+<span class="sd">        ``parentTask``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComputeMOCMasksSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeRegionMasks&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="n">meshName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                                               <span class="s1">&#39;moc_basins.geojson&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_moc_masks.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshName</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_moc_masks_and_transects.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshName</span><span class="p">))</span>
+
+        <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the requested climatologies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="c1"># make the geojson file</span>
+        <span class="n">geometricDataDirectory</span> <span class="o">=</span> <span class="n">get_geometric_data</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">(</span><span class="n">cacheLocation</span><span class="o">=</span><span class="n">geometricDataDirectory</span><span class="p">)</span>
+
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">make_moc_basins_and_transects</span><span class="p">(</span><span class="n">gf</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">,</span>
+                                      <span class="n">geojson_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span>
+                                      <span class="n">mask_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">,</span>
+                                      <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># }}}</span>
+<span class="c1"># }}}</span>
+
+
 <span class="k">class</span> <span class="nc">ComputeMOCClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation of a climatology of the model meridional overturning</span>
 <span class="sd">    circulation.</span>
 
@@ -282,13 +360,13 @@
 <span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">        The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -298,7 +376,7 @@
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -318,14 +396,14 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            if timeSeriesStatsMonthly is not enabled in the MPAS run</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -374,10 +452,10 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process MOC analysis member data if available, or compute MOC at</span>
 <span class="sd">        post-processing if not.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -394,7 +472,7 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_compute_moc_climo_analysismember</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;compute mean MOC streamfunction from analysis member&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction from analysis member&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
@@ -520,7 +598,7 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_compute_moc_climo_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;compute mean MOC streamfunction as a post-process&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction as a post-process&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
@@ -661,16 +739,16 @@
 
 
 <span class="k">class</span> <span class="nc">PlotMOCClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation of a climatology of the model meridional overturning</span>
 <span class="sd">    circulation.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -680,7 +758,7 @@
 
 <span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -699,14 +777,14 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            if timeSeriesStatsMonthly is not enabled in the MPAS run</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -745,9 +823,9 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the MOC climatology</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -843,7 +921,7 @@
                 <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>  <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;compute mean MOC streamfunction from analysis member&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction from analysis member&quot;&quot;&quot;</span>
 
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
         <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
@@ -872,22 +950,22 @@
 
 
 <span class="k">class</span> <span class="nc">ComputeMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation of a time series of max Atlantic MOC at 26.5N.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        parentTask : ``StreamfunctionMOC``</span>
 <span class="sd">            The main task of which this is a subtask</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -907,14 +985,14 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            if timeSeriesStatsMonthly is not enabled in the MPAS run</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -954,10 +1032,10 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process MOC analysis member data if available, or compute MOC at</span>
 <span class="sd">        post-processing if not.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -976,7 +1054,7 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_compute_moc_time_series_analysismember</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;compute MOC time series from analysis member&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;compute MOC time series from analysis member&quot;&quot;&quot;</span>
 
         <span class="c1"># Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  Compute Atlantic MOC time series from analysis &#39;</span>
@@ -1114,7 +1192,7 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_compute_moc_time_series_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;compute MOC time series as a post-process&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;compute MOC time series as a post-process&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
@@ -1273,16 +1351,16 @@
 
 
 <span class="k">class</span> <span class="nc">CombineMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine individual time series of max Atlantic MOC at 26.5N into a single</span>
 <span class="sd">    data set</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -1292,7 +1370,7 @@
 
 <span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -1311,9 +1389,9 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the MOC time series</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -1348,15 +1426,15 @@
 
 
 <span class="k">class</span> <span class="nc">PlotMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a time series of max Atlantic MOC at 26.5N.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -1366,7 +1444,7 @@
 
 <span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -1385,14 +1463,14 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            if timeSeriesStatsMonthly is not enabled in the MPAS run</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -1418,9 +1496,9 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the MOC time series</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -1500,7 +1578,7 @@
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;compute mean MOC streamfunction from analysis member&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction from analysis member&quot;&quot;&quot;</span>
 
         <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
                                                  <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">)</span>
@@ -1547,8 +1625,7 @@
 <span class="k">def</span> <span class="nf">_build_region_mask_dict</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>  <span class="c1"># {{{</span>
 
     <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_SingleRegionAtlanticWTransportTransects_masks.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mpasMeshName</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_moc_masks_and_transects.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpasMeshName</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Regional masking file </span><span class="si">{}</span><span class="s1"> for MOC calculation &#39;</span>
@@ -1584,7 +1661,7 @@
 <span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="n">maxEdgesInTransect</span><span class="p">,</span> <span class="n">transectEdgeGlobalIDs</span><span class="p">,</span>
                        <span class="n">transectEdgeMaskSigns</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dvEdge</span><span class="p">,</span>
                        <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">horizontalVel</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;compute mass transport across southern transect of ocean basin&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;compute mass transport across southern transect of ocean basin&quot;&quot;&quot;</span>
 
     <span class="n">transportZEdge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nz</span><span class="p">,</span> <span class="n">maxEdgesInTransect</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxEdgesInTransect</span><span class="p">):</span>
@@ -1602,7 +1679,7 @@
 
 <span class="k">def</span> <span class="nf">_compute_moc</span><span class="p">(</span><span class="n">latBins</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">regionCellMask</span><span class="p">,</span> <span class="n">transportZ</span><span class="p">,</span>
                  <span class="n">velArea</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;compute meridionally integrated MOC streamfunction&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;compute meridionally integrated MOC streamfunction&quot;&quot;&quot;</span>
 
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">latBins</span><span class="p">),</span> <span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
     <span class="n">mocTop</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">transportZ</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>

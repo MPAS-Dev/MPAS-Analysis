@@ -184,6 +184,8 @@
 <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
 <span class="kn">import</span> <span class="nn">progressbar</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
+<span class="kn">import</span> <span class="nn">mpas_tools.conversion</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -211,7 +213,8 @@
 
 <span class="k">def</span> <span class="nf">compute_mpas_region_masks</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
                               <span class="n">featureList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">processCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                              <span class="n">chunkSize</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">showProgress</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                              <span class="n">chunkSize</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">showProgress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Build a region mask file from the given MPAS mesh and geojson file defining</span>
 <span class="sd">    a set of regions.</span>
@@ -219,43 +222,51 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">maskFileName</span><span class="p">):</span>
         <span class="k">return</span>
 
-    <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;latCell&#39;</span><span class="p">]]</span>
-        <span class="n">latCell</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-        <span class="c1"># transform longitudes to [-180, 180)</span>
-        <span class="n">lonCell</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mf">180.</span><span class="p">,</span>
-                            <span class="mf">360.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.</span>
+    <span class="k">if</span> <span class="n">useMpasMaskCreator</span><span class="p">:</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">)</span>
+        <span class="n">fcMask</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">)</span>
+        <span class="n">dsMasks</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
+                                             <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
-    <span class="c1"># create shapely geometry for lonCell and latCell</span>
-    <span class="n">cellPoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span>
-                  <span class="nb">zip</span><span class="p">(</span><span class="n">lonCell</span><span class="p">,</span> <span class="n">latCell</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;latCell&#39;</span><span class="p">]]</span>
+            <span class="n">latCell</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-    <span class="n">regionNames</span><span class="p">,</span> <span class="n">masks</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">nChar</span> <span class="o">=</span> <span class="n">compute_region_masks</span><span class="p">(</span>
-        <span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">cellPoints</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span> <span class="n">featureList</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
-        <span class="n">processCount</span><span class="p">,</span> <span class="n">chunkSize</span><span class="p">,</span> <span class="n">showProgress</span><span class="p">)</span>
+            <span class="c1"># transform longitudes to [-180, 180)</span>
+            <span class="n">lonCell</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">lonCell</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mf">180.</span><span class="p">,</span>
+                                <span class="mf">360.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.</span>
 
-    <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellPoints</span><span class="p">)</span>
+        <span class="c1"># create shapely geometry for lonCell and latCell</span>
+        <span class="n">cellPoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span>
+                      <span class="nb">zip</span><span class="p">(</span><span class="n">lonCell</span><span class="p">,</span> <span class="n">latCell</span><span class="p">)]</span>
 
-    <span class="c1"># create a new data array for masks and another for mask names</span>
-    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Creating and writing masks dataset...&#39;</span><span class="p">)</span>
-    <span class="n">nRegions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">regionNames</span><span class="p">)</span>
-    <span class="n">dsMasks</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-    <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">),</span>
-                                  <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRegions</span><span class="p">,</span> <span class="n">nCells</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">))</span>
-    <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
-                              <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRegions</span><span class="p">),</span>
-                                          <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;|S</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nChar</span><span class="p">)))</span>
+        <span class="n">regionNames</span><span class="p">,</span> <span class="n">masks</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">nChar</span> <span class="o">=</span> <span class="n">compute_region_masks</span><span class="p">(</span>
+            <span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">cellPoints</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span> <span class="n">featureList</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+            <span class="n">processCount</span><span class="p">,</span> <span class="n">chunkSize</span><span class="p">,</span> <span class="n">showProgress</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRegions</span><span class="p">):</span>
-        <span class="n">regionName</span> <span class="o">=</span> <span class="n">regionNames</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">masks</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mask</span>
-        <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">regionName</span>
+        <span class="n">nCells</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cellPoints</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">propertyName</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-        <span class="n">dsMasks</span><span class="p">[</span><span class="n">propertyName</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">),</span> <span class="n">properties</span><span class="p">[</span><span class="n">propertyName</span><span class="p">])</span>
+        <span class="c1"># create a new data array for masks and another for mask names</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Creating and writing masks dataset...&#39;</span><span class="p">)</span>
+        <span class="n">nRegions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">regionNames</span><span class="p">)</span>
+        <span class="n">dsMasks</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+        <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">),</span>
+                                      <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRegions</span><span class="p">,</span> <span class="n">nCells</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">))</span>
+        <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">),</span>
+                                  <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRegions</span><span class="p">),</span>
+                                              <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;|S</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nChar</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRegions</span><span class="p">):</span>
+            <span class="n">regionName</span> <span class="o">=</span> <span class="n">regionNames</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">masks</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mask</span>
+            <span class="n">dsMasks</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">regionName</span>
+
+        <span class="k">for</span> <span class="n">propertyName</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="n">dsMasks</span><span class="p">[</span><span class="n">propertyName</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">),</span> <span class="n">properties</span><span class="p">[</span><span class="n">propertyName</span><span class="p">])</span>
 
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMasks</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">)</span>
 
@@ -468,7 +479,7 @@
 <div class="viewcode-block" id="ComputeRegionMasksSubtask.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="p">,</span>
                  <span class="n">featureList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeRegionMasks&#39;</span><span class="p">,</span>
                  <span class="n">subprocessCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">obsFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lonVar</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span>
-                 <span class="n">latVar</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">latVar</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># {{{</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
@@ -507,6 +518,10 @@
 <span class="sd">        meshName : str, optional</span>
 <span class="sd">            The name of the mesh or grid, used as part of the mask file name.</span>
 <span class="sd">            Default is the MPAS mesh name</span>
+
+<span class="sd">        useMpasMaskCreator : bool, optional</span>
+<span class="sd">            If ``True``, the mask creator from ``mpas_tools`` will be used</span>
+<span class="sd">            to create the mask.  Otherwise, python code is used.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
@@ -529,9 +544,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lonVar</span> <span class="o">=</span> <span class="n">lonVar</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latVar</span> <span class="o">=</span> <span class="n">latVar</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span> <span class="o">=</span> <span class="n">meshName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">useMpasMaskCreator</span> <span class="o">=</span> <span class="n">useMpasMaskCreator</span>
 
-        <span class="c1"># because this uses a Pool, it cannot be launched as a separate process</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">runDirectly</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">useMpasMaskCreator</span><span class="p">:</span>
+            <span class="c1"># because this uses a Pool, it cannot be launched as a separate</span>
+            <span class="c1"># process</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runDirectly</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">parentTask</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
@@ -571,11 +589,6 @@
                                                   <span class="s1">&#39;maskSubdirectory&#39;</span><span class="p">)</span>
         <span class="n">make_directories</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">featureList</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># get a list of features for use by other tasks (e.g. to determine</span>
-            <span class="c1"># plot names)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">featureList</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
 
@@ -611,11 +624,16 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">):</span>
             <span class="k">return</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">featureList</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># get a list of features for use by other tasks (e.g. to determine</span>
+            <span class="c1"># plot names)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">featureList</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useMpasMesh</span><span class="p">:</span>
             <span class="n">compute_mpas_region_masks</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">featureList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span><span class="p">,</span>
-                <span class="n">showProgress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">showProgress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">useMpasMaskCreator</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
 
             <span class="n">dsGrid</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obsFileName</span><span class="p">)</span>

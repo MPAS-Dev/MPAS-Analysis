@@ -253,7 +253,8 @@
 
         <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">ComputeRegionMasksSubtask</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelfMasks&#39;</span><span class="p">,</span>
-            <span class="n">featureList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="n">parallelTaskCount</span><span class="p">)</span>
+            <span class="n">featureList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="n">parallelTaskCount</span><span class="p">,</span>
+            <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
 
