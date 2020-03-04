@@ -89,7 +89,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
 
         masksSubtask = ComputeRegionMasksSubtask(
             self, self.iceShelfMasksFile, outFileSuffix='iceShelfMasks',
-            featureList=None, subprocessCount=parallelTaskCount)
+            featureList=None, subprocessCount=parallelTaskCount,
+            useMpasMaskCreator=True)
 
         self.add_subtask(masksSubtask)
 

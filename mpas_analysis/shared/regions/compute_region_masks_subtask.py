@@ -20,6 +20,8 @@ import json
 from multiprocessing import Pool
 import progressbar
 from functools import partial
+from geometric_features import read_feature_collection
+import mpas_tools.conversion
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -47,7 +49,8 @@ def get_feature_list(geojsonFileName):
 
 def compute_mpas_region_masks(geojsonFileName, meshFileName, maskFileName,
                               featureList=None, logger=None, processCount=1,
-                              chunkSize=1000, showProgress=True):
+                              chunkSize=1000, showProgress=True,
+                              useMpasMaskCreator=False):
     '''
     Build a region mask file from the given MPAS mesh and geojson file defining
     a set of regions.
@@ -55,43 +58,51 @@ def compute_mpas_region_masks(geojsonFileName, meshFileName, maskFileName,
     if os.path.exists(maskFileName):
         return
 
-    with xr.open_dataset(meshFileName) as dsMesh:
-        dsMesh = dsMesh[['lonCell', 'latCell']]
-        latCell = numpy.rad2deg(dsMesh.latCell.values)
 
-        # transform longitudes to [-180, 180)
-        lonCell = numpy.mod(numpy.rad2deg(dsMesh.lonCell.values) + 180.,
-                            360.) - 180.
+    if useMpasMaskCreator:
+        dsMesh = xr.open_dataset(meshFileName)
+        fcMask = read_feature_collection(geojsonFileName)
+        dsMasks = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
+                                             logger=logger)
 
-    # create shapely geometry for lonCell and latCell
-    cellPoints = [shapely.geometry.Point(x, y) for x, y in
-                  zip(lonCell, latCell)]
+    else:
+        with xr.open_dataset(meshFileName) as dsMesh:
+            dsMesh = dsMesh[['lonCell', 'latCell']]
+            latCell = numpy.rad2deg(dsMesh.latCell.values)
 
-    regionNames, masks, properties, nChar = compute_region_masks(
-        geojsonFileName, cellPoints, maskFileName, featureList, logger,
-        processCount, chunkSize, showProgress)
+            # transform longitudes to [-180, 180)
+            lonCell = numpy.mod(numpy.rad2deg(dsMesh.lonCell.values) + 180.,
+                                360.) - 180.
 
-    nCells = len(cellPoints)
+        # create shapely geometry for lonCell and latCell
+        cellPoints = [shapely.geometry.Point(x, y) for x, y in
+                      zip(lonCell, latCell)]
 
-    # create a new data array for masks and another for mask names
-    if logger is not None:
-        logger.info('  Creating and writing masks dataset...')
-    nRegions = len(regionNames)
-    dsMasks = xr.Dataset()
-    dsMasks['regionCellMasks'] = (('nRegions', 'nCells'),
-                                  numpy.zeros((nRegions, nCells), dtype=bool))
-    dsMasks['regionNames'] = (('nRegions'),
-                              numpy.zeros((nRegions),
-                                          dtype='|S{}'.format(nChar)))
+        regionNames, masks, properties, nChar = compute_region_masks(
+            geojsonFileName, cellPoints, maskFileName, featureList, logger,
+            processCount, chunkSize, showProgress)
 
-    for index in range(nRegions):
-        regionName = regionNames[index]
-        mask = masks[index]
-        dsMasks['regionCellMasks'][index, :] = mask
-        dsMasks['regionNames'][index] = regionName
+        nCells = len(cellPoints)
 
-    for propertyName in properties:
-        dsMasks[propertyName] = (('nRegions'), properties[propertyName])
+        # create a new data array for masks and another for mask names
+        if logger is not None:
+            logger.info('  Creating and writing masks dataset...')
+        nRegions = len(regionNames)
+        dsMasks = xr.Dataset()
+        dsMasks['regionCellMasks'] = (('nRegions', 'nCells'),
+                                      numpy.zeros((nRegions, nCells), dtype=bool))
+        dsMasks['regionNames'] = (('nRegions'),
+                                  numpy.zeros((nRegions),
+                                              dtype='|S{}'.format(nChar)))
+
+        for index in range(nRegions):
+            regionName = regionNames[index]
+            mask = masks[index]
+            dsMasks['regionCellMasks'][index, :] = mask
+            dsMasks['regionNames'][index] = regionName
+
+        for propertyName in properties:
+            dsMasks[propertyName] = (('nRegions'), properties[propertyName])
 
     write_netcdf(dsMasks, maskFileName)
 
@@ -304,7 +315,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, geojsonFileName, outFileSuffix,
                  featureList=None, subtaskName='computeRegionMasks',
                  subprocessCount=1, obsFileName=None, lonVar='lon',
-                 latVar='lat', meshName=None):
+                 latVar='lat', meshName=None, useMpasMaskCreator=False):
         # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
@@ -343,6 +354,10 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         meshName : str, optional
             The name of the mesh or grid, used as part of the mask file name.
             Default is the MPAS mesh name
+
+        useMpasMaskCreator : bool, optional
+            If ``True``, the mask creator from ``mpas_tools`` will be used
+            to create the mask.  Otherwise, python code is used.
         '''
         # Authors
         # -------
@@ -365,9 +380,12 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.lonVar = lonVar
         self.latVar = latVar
         self.meshName = meshName
+        self.useMpasMaskCreator = useMpasMaskCreator
 
-        # because this uses a Pool, it cannot be launched as a separate process
-        self.runDirectly = True
+        if not self.useMpasMaskCreator:
+            # because this uses a Pool, it cannot be launched as a separate
+            # process
+            self.runDirectly = True
 
         parentTask.add_subtask(self)
 
@@ -407,11 +425,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
                                                   'maskSubdirectory')
         make_directories(maskSubdirectory)
 
-        if self.featureList is None:
-            # get a list of features for use by other tasks (e.g. to determine
-            # plot names)
-            self.featureList = get_feature_list(self.geojsonFileName)
-
         if self.meshName is None:
             self.meshName = self.config.get('input', 'mpasMeshName')
 
@@ -447,11 +460,16 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         if os.path.exists(self.maskFileName):
             return
 
+        if self.featureList is None:
+            # get a list of features for use by other tasks (e.g. to determine
+            # plot names)
+            self.featureList = get_feature_list(self.geojsonFileName)
+
         if self.useMpasMesh:
             compute_mpas_region_masks(
                 self.geojsonFileName, self.obsFileName, self.maskFileName,
                 self.featureList, self.logger, self.subprocessCount,
-                showProgress=False)
+                showProgress=False, useMpasMaskCreator=self.useMpasMaskCreator)
         else:
 
             dsGrid = xr.open_dataset(self.obsFileName)

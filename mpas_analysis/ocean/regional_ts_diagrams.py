@@ -181,7 +181,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             mpasMasksSubtask = ComputeRegionMasksSubtask(
                 self, regionMaskFile, outFileSuffix=fileSuffix,
                 featureList=None, subtaskName=subtaskName,
-                subprocessCount=parallelTaskCount)
+                subprocessCount=parallelTaskCount,
+                useMpasMaskCreator=True)
 
             self.add_subtask(mpasMasksSubtask)
 
