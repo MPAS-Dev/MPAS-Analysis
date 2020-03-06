@@ -221,6 +221,8 @@
     <span class="n">RefYearMpasClimatologyTask</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.time_series</span> <span class="kn">import</span> <span class="n">MpasTimeSeriesTask</span>
 
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasks</span>
+
 
 <span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -282,6 +284,9 @@
     <span class="n">oceanRefYearClimatolgyTask</span> <span class="o">=</span> <span class="n">RefYearMpasClimatologyTask</span><span class="p">(</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
 
+    <span class="n">oceanRegionMasksTask</span> <span class="o">=</span> <span class="n">ComputeRegionMasks</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                              <span class="n">conponentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">oceanClimatolgyTasks</span><span class="p">:</span>
         <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="n">op</span><span class="p">])</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oceanRefYearClimatolgyTask</span><span class="p">)</span>
@@ -330,12 +335,15 @@
         <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">RegionalTSDiagrams</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+        <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanTimeSeriesTask</span><span class="p">,</span>
+                                                  <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
                                                   <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+                                                 <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesTemperatureAnomaly</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                                        <span class="n">oceanTimeSeriesTask</span><span class="p">))</span>
@@ -365,7 +373,8 @@
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">GeojsonTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                            <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+                                                <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="c1"># Sea Ice Analyses</span>
     <span class="n">seaIceClimatolgyTask</span> <span class="o">=</span> <span class="n">MpasClimatologyTask</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>

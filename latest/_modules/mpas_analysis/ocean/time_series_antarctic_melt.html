@@ -200,8 +200,7 @@
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasksSubtask</span><span class="p">,</span> \
-    <span class="n">get_feature_list</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
 
 
 <div class="viewcode-block" id="TimeSeriesAntarcticMelt"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -213,7 +212,8 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-<div class="viewcode-block" id="TimeSeriesAntarcticMelt.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSeriesAntarcticMelt.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -225,6 +225,9 @@
 
 <span class="sd">        mpasTimeSeriesTask : ``MpasTimeSeriesTask``</span>
 <span class="sd">            The task that extracts the time series from MPAS monthly output</span>
+
+<span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
+<span class="sd">            A task for computing region masks</span>
 
 <span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
@@ -247,16 +250,8 @@
         <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">iceShelvesToPlot</span><span class="p">:</span>
             <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">)</span>
 
-        <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span>
-                                                  <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">ComputeRegionMasksSubtask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelfMasks&#39;</span><span class="p">,</span>
-            <span class="n">featureList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="n">parallelTaskCount</span><span class="p">,</span>
-            <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
+        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelfMasks&#39;</span><span class="p">)</span>
 
         <span class="n">computeMeltSubtask</span> <span class="o">=</span> <span class="n">ComputeMeltSubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span>
                                                 <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">iceShelvesToPlot</span><span class="p">)</span>

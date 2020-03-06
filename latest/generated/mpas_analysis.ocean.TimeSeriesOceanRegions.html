@@ -211,17 +211,18 @@
 <h1>mpas_analysis.ocean.TimeSeriesOceanRegions<a class="headerlink" href="#mpas-analysis-ocean-timeseriesoceanregions" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="mpas_analysis.ocean.TimeSeriesOceanRegions">
-<em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.ocean.</code><code class="sig-name descname">TimeSeriesOceanRegions</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">controlConfig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/time_series_ocean_regions.html#TimeSeriesOceanRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.TimeSeriesOceanRegions" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.ocean.</code><code class="sig-name descname">TimeSeriesOceanRegions</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">regionMasksTask</em>, <em class="sig-param">controlConfig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/time_series_ocean_regions.html#TimeSeriesOceanRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.TimeSeriesOceanRegions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs analysis of the time-series output of regionoal mean temperature,
 salinity, etc.</p>
 <dl class="method">
 <dt id="mpas_analysis.ocean.TimeSeriesOceanRegions.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">controlConfig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/time_series_ocean_regions.html#TimeSeriesOceanRegions.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.TimeSeriesOceanRegions.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">regionMasksTask</em>, <em class="sig-param">controlConfig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/time_series_ocean_regions.html#TimeSeriesOceanRegions.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.TimeSeriesOceanRegions.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the analysis task.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options</p></li>
+<li><p><strong>regionMasksTask</strong> (<code class="docutils literal notranslate"><span class="pre">ComputeRegionMasks</span></code>) – A task for computing region masks</p></li>
 <li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – Configuration options for a control run (if any)</p></li>
 </ul>
 </dd>
@@ -235,7 +236,7 @@ salinity, etc.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.TimeSeriesOceanRegions.__init__" title="mpas_analysis.ocean.TimeSeriesOceanRegions.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config[, controlConfig])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.TimeSeriesOceanRegions.__init__" title="mpas_analysis.ocean.TimeSeriesOceanRegions.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, regionMasksTask[, …])</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
