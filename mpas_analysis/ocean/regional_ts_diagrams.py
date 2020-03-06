@@ -527,6 +527,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             subtaskName='compute{}_{}'.format(fullSuffix, season))
 
         self.run_after(mpasClimatologyTask)
+        self.run_after(mpasMasksSubtask)
         self.regionGroup = regionGroup
         self.regionName = regionName
         self.sectionName = sectionName
