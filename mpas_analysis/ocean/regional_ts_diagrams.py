@@ -43,8 +43,7 @@ from mpas_analysis.shared.io.utility import decode_strings, get_region_mask, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
-    get_feature_list
+from mpas_analysis.shared.regions import get_feature_list
 
 from mpas_analysis.ocean.utility import compute_zmid
 
@@ -70,7 +69,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
+    def __init__(self, config, mpasClimatologyTask, regionMasksTask,
+                 controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -82,6 +82,9 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -103,10 +106,6 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
         regionGroups = config.getExpression(self.taskName, 'regionGroups')
 
         self.seasons = config.getExpression(self.taskName, 'seasons')
-
-        parallelTaskCount = config.getWithDefault('execute',
-                                                  'parallelTaskCount',
-                                                  default=1)
 
         obsDicts = {'SOSE': {
             'suffix': 'SOSE',
@@ -177,14 +176,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             if 'all' in regionNames and os.path.exists(regionMaskFile):
                 regionNames = get_feature_list(regionMaskFile)
 
-            subtaskName = 'computeMpas{}Masks'.format(sectionSuffix)
-            mpasMasksSubtask = ComputeRegionMasksSubtask(
-                self, regionMaskFile, outFileSuffix=fileSuffix,
-                featureList=None, subtaskName=subtaskName,
-                subprocessCount=parallelTaskCount,
-                useMpasMaskCreator=True)
-
-            self.add_subtask(mpasMasksSubtask)
+            mpasMasksSubtask = regionMasksTask.add_mask_subtask(
+                regionMaskFile, outFileSuffix=fileSuffix)
 
             obsList = config.getExpression(sectionName, 'obs')
             groupObsDicts = {}
@@ -192,21 +185,17 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             for obsName in obsList:
                 localObsDict = dict(obsDicts[obsName])
                 suffix = localObsDict['suffix']
-                subtaskName = 'compute{}{}Masks'.format(suffix, sectionSuffix)
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
-                obsMasksSubtask = ComputeRegionMasksSubtask(
-                    self, regionMaskFile, outFileSuffix=fileSuffix,
-                    featureList=None, subtaskName=subtaskName,
-                    subprocessCount=parallelTaskCount,
+                obsMasksSubtask = regionMasksTask.add_mask_subtask(
+                    regionMaskFile, outFileSuffix=fileSuffix,
                     obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
 
                 obsDicts[obsName]['maskTask'] = obsMasksSubtask
 
-                self.add_subtask(obsMasksSubtask)
                 localObsDict['maskTask'] = obsMasksSubtask
                 groupObsDicts[obsName] = localObsDict
 
@@ -221,6 +210,13 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                         self, regionGroup, regionName, controlConfig,
                         sectionName, fullSuffix, mpasClimatologyTask,
                         mpasMasksSubtask, groupObsDicts, season)
+                    computeRegionSubtask.run_after(mpasMasksSubtask)
+                    for obsName in obsList:
+                        task = \
+                            obsDicts[obsName]['climatologyTask'][season]
+                        computeRegionSubtask.run_after(task)
+                        task = obsDicts[obsName]['maskTask']
+                        computeRegionSubtask.run_after(task)
 
                     self.add_subtask(computeRegionSubtask)
 
@@ -228,12 +224,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                         self, regionGroup, regionName, controlConfig,
                         sectionName, fullSuffix, mpasClimatologyTask,
                         mpasMasksSubtask, groupObsDicts, season)
-                    for obsName in obsList:
-                        task = \
-                            obsDicts[obsName]['climatologyTask'][season]
-                        plotRegionSubtask.run_after(task)
-                        task = obsDicts[obsName]['maskTask']
-                        plotRegionSubtask.run_after(task)
+
                     plotRegionSubtask.run_after(computeRegionSubtask)
                     self.add_subtask(plotRegionSubtask)
 
@@ -527,7 +518,6 @@ class ComputeRegionTSSubtask(AnalysisTask):
             subtaskName='compute{}_{}'.format(fullSuffix, season))
 
         self.run_after(mpasClimatologyTask)
-        self.run_after(mpasMasksSubtask)
         self.regionGroup = regionGroup
         self.regionName = regionName
         self.sectionName = sectionName

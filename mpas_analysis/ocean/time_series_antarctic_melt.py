@@ -36,8 +36,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
-    get_feature_list
+from mpas_analysis.shared.regions import get_feature_list
 
 
 class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
@@ -49,7 +48,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, regionMasksTask,
+                 controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -61,6 +61,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -83,16 +86,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         if 'all' in iceShelvesToPlot:
             iceShelvesToPlot = get_feature_list(self.iceShelfMasksFile)
 
-        parallelTaskCount = config.getWithDefault('execute',
-                                                  'parallelTaskCount',
-                                                  default=1)
-
-        masksSubtask = ComputeRegionMasksSubtask(
-            self, self.iceShelfMasksFile, outFileSuffix='iceShelfMasks',
-            featureList=None, subprocessCount=parallelTaskCount,
-            useMpasMaskCreator=True)
-
-        self.add_subtask(masksSubtask)
+        masksSubtask = regionMasksTask.add_mask_subtask(
+            self.iceShelfMasksFile, outFileSuffix='iceShelfMasks')
 
         computeMeltSubtask = ComputeMeltSubtask(self, mpasTimeSeriesTask,
                                                 masksSubtask, iceShelvesToPlot)

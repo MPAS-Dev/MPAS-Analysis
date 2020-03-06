@@ -33,8 +33,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
-    get_feature_list
+from mpas_analysis.shared.regions import get_feature_list
 
 from mpas_analysis.ocean.utility import compute_zmid
 
@@ -48,7 +47,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, controlConfig=None):
+    def __init__(self, config, regionMasksTask, controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -57,6 +56,9 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
         ----------
         config :  ``MpasAnalysisConfigParser``
             Configuration options
+
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -77,10 +79,6 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
         regionGroups = config.getExpression(self.taskName, 'regionGroups')
 
-        parallelTaskCount = config.getWithDefault('execute',
-                                                  'parallelTaskCount',
-                                                  default=1)
-
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
@@ -96,14 +94,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
             if 'all' in regionNames and os.path.exists(regionMaskFile):
                 regionNames = get_feature_list(regionMaskFile)
 
-            subtaskName = 'compute{}Masks'.format(sectionSuffix)
-            masksSubtask = ComputeRegionMasksSubtask(
-                self, regionMaskFile, outFileSuffix=fileSuffix,
-                featureList=None, subtaskName=subtaskName,
-                subprocessCount=parallelTaskCount,
-                useMpasMaskCreator=True)
-
-            self.add_subtask(masksSubtask)
+            masksSubtask = regionMasksTask.add_mask_subtask(
+                regionMaskFile, outFileSuffix=fileSuffix)
 
             years = range(startYear, endYear + 1)
 

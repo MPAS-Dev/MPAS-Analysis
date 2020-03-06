@@ -74,6 +74,8 @@ class MpasAnalysisConfigParser(ConfigParser):
                     return self.get(section, option)
 
         # we didn't find the entry so set it to the default
+        if not self.has_section(section):
+            self.add_section(section)
         self.set(section, option, str(default))
         return default
 

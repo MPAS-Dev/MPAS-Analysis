@@ -118,7 +118,9 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
 
-    remapper.build_mapping_file(method=method, logger=logger)
+    mpiTasks = config.getWithDefault('execute', 'mapMpiTasks', 1)
+
+    remapper.build_mapping_file(method=method, logger=logger, mpiTasks=mpiTasks)
 
     return remapper  # }}}
 

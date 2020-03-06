@@ -59,6 +59,10 @@ parallelTaskCount = 1
 # node to reach 12 total threads.
 ncclimoParallelMode = serial
 
+# the number of MPI tasks to use in creating mapping files (1 means tasks run in
+# serial, the default)
+mapMpiTasks = 1
+
 
 [diagnostics]
 ## config options related to observations, mapping files and region files used

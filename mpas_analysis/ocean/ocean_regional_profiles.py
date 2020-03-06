@@ -26,8 +26,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings, get_region_mask
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
-from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
-    get_feature_list
+from mpas_analysis.shared.regions import get_feature_list
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
@@ -47,7 +46,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, controlConfig=None):  # {{{
+    def __init__(self, config, regionMasksTask, controlConfig=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -56,8 +55,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        mpasClimatologyTask : ``MpasClimatologyTask``
-            The task that produced the climatology to be remapped and plotted
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -98,14 +97,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         masksFile = get_region_mask(config,
                                     '{}.geojson'.format(self.regionMaskSuffix))
 
-        parallelTaskCount = config.getWithDefault('execute',
-                                                  'parallelTaskCount',
-                                                  default=1)
-
-        masksSubtask = ComputeRegionMasksSubtask(
-            self, masksFile, outFileSuffix=self.regionMaskSuffix,
-            featureList=None, subprocessCount=parallelTaskCount,
-            useMpasMaskCreator=True)
+        masksSubtask = regionMasksTask.add_mask_subtask(
+            masksFile, outFileSuffix=self.regionMaskSuffix)
 
         if 'all' in self.regionNames:
             self.regionNames = get_feature_list(masksFile)

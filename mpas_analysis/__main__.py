@@ -57,6 +57,8 @@ from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RefYearMpasClimatologyTask
 from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 
+from mpas_analysis.shared.regions import ComputeRegionMasks
+
 
 def update_time_bounds_in_config(config):  # {{{
     """
@@ -118,6 +120,9 @@ def build_analysis_list(config, controlConfig):  # {{{
     oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
         config=config, componentName='ocean')
 
+    oceanRegionMasksTask = ComputeRegionMasks(config=config,
+                                              conponentName='ocean')
+
     for op in oceanClimatolgyTasks:
         analyses.append(oceanClimatolgyTasks[op])
     analyses.append(oceanRefYearClimatolgyTask)
@@ -166,12 +171,15 @@ def build_analysis_list(config, controlConfig):  # {{{
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.RegionalTSDiagrams(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+        controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
+                                                  oceanRegionMasksTask,
                                                   controlConfig))
 
-    analyses.append(ocean.TimeSeriesOceanRegions(config, controlConfig))
+    analyses.append(ocean.TimeSeriesOceanRegions(config, oceanRegionMasksTask,
+                                                 controlConfig))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
@@ -201,7 +209,8 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTasks['avg'],
                                            controlConfig))
 
-    analyses.append(ocean.OceanRegionalProfiles(config, controlConfig))
+    analyses.append(ocean.OceanRegionalProfiles(config, oceanRegionMasksTask,
+                                                controlConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,

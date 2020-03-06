@@ -600,7 +600,9 @@ class PlotTransportSubtask(AnalysisTask):
 
         self.logger.info('  Plotting...')
 
-        title = self.transect.replace('_', ' ')
+        transectName = self.transect.replace('_', ' ')
+        title = transectName
+        thumbnailDescription = transectName
 
         xLabel = 'Time (yr)'
         yLabel = 'Transport (Sv)'
@@ -622,6 +624,7 @@ class PlotTransportSubtask(AnalysisTask):
             lineWidths.append(1.2)
             legendText = ['{} ({})'.format(mainRunName, meanString),
                           '{} ({})'.format(controlRunName, refMeanString)]
+
         else:
             legendText = [mainRunName]
             title = '{} ({})'.format(title, meanString)
@@ -663,7 +666,7 @@ class PlotTransportSubtask(AnalysisTask):
 
         savefig(outFileName)
 
-        caption = 'Transport through the {} Transect'.format(title)
+        caption = 'Transport through the {} Transect'.format(transectName)
         write_image_xml(
             config=config,
             filePrefix=filePrefix,
@@ -671,7 +674,7 @@ class PlotTransportSubtask(AnalysisTask):
             componentSubdirectory='ocean',
             galleryGroup='Transport Time Series',
             groupLink='transporttime',
-            thumbnailDescription=title,
+            thumbnailDescription=thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
         # }}}
