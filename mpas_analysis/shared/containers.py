@@ -19,10 +19,10 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
-import collections
+from collections.abc import Mapping
 
 
-class ReadOnlyDict(collections.Mapping):  # {{{
+class ReadOnlyDict(Mapping):  # {{{
     """ Read only-dictionary
     http://stackoverflow.com/questions/19022868/how-to-make-dictionary-read-only-in-python
     310/22/2016
