@@ -556,12 +556,22 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Don&#39;t worry about the following dask &quot;</span>
                                  <span class="s2">&quot;warnings.&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">config_zmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmin</span>
+                    <span class="k">if</span> <span class="s1">&#39;zminRegions&#39;</span> <span class="ow">in</span> <span class="n">dsMask</span><span class="p">:</span>
+                        <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zminRegions</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># the old naming convention, used in some pre-generated</span>
+                        <span class="c1"># mask files</span>
+                        <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmin</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">zmin</span> <span class="o">=</span> <span class="n">config_zmin</span>
 
                 <span class="k">if</span> <span class="n">config_zmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmax</span>
+                    <span class="k">if</span> <span class="s1">&#39;zmaxRegions&#39;</span> <span class="ow">in</span> <span class="n">dsMask</span><span class="p">:</span>
+                        <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmaxRegions</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># the old naming convention, used in some pre-generated</span>
+                        <span class="c1"># mask files</span>
+                        <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmax</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">zmax</span> <span class="o">=</span> <span class="n">config_zmax</span>
 

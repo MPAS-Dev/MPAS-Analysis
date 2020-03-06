@@ -330,7 +330,7 @@
     <span class="n">ds</span> <span class="o">=</span> <span class="n">add_years_months_days_in_month</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
     <span class="n">monthlyClimatology</span> <span class="o">=</span> \
-        <span class="n">ds</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">compute_one_month_climatology</span><span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">compute_one_month_climatology</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">monthlyClimatology</span>  <span class="c1"># }}}</span></div>
 
