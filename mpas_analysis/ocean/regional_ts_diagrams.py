@@ -527,6 +527,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             subtaskName='compute{}_{}'.format(fullSuffix, season))
 
         self.run_after(mpasClimatologyTask)
+        self.run_after(mpasMasksSubtask)
         self.regionGroup = regionGroup
         self.regionName = regionName
         self.sectionName = sectionName
@@ -608,12 +609,22 @@ class ComputeRegionTSSubtask(AnalysisTask):
             if config.has_option(sectionName, 'zmin'):
                 zmin = config.getfloat(sectionName, 'zmin')
             else:
-                zmin = dsMask.zmin.values
+                if 'zminRegions' in dsMask:
+                    zmin = dsMask.zminRegions.values
+                else:
+                    # the old naming convention, used in some pre-generated
+                    # mask files
+                    zmin = dsMask.zmin.values
 
             if config.has_option(sectionName, 'zmax'):
                 zmax = config.getfloat(sectionName, 'zmax')
             else:
-                zmax = dsMask.zmax.values
+                if 'zmaxRegions' in dsMask:
+                    zmax = dsMask.zmaxRegions.values
+                else:
+                    # the old naming convention, used in some pre-generated
+                    # mask files
+                    zmax = dsMask.zmax.values
 
             inFileName = get_unmasked_mpas_climatology_file_name(
                 config, self.season, self.componentName, op='avg')

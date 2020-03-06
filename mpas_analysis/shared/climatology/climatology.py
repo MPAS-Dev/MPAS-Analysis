@@ -166,7 +166,7 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
     ds = add_years_months_days_in_month(ds, calendar)
 
     monthlyClimatology = \
-        ds.groupby('month').apply(compute_one_month_climatology)
+        ds.groupby('month').map(compute_one_month_climatology)
 
     return monthlyClimatology  # }}}
 

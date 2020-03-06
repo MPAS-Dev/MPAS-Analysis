@@ -392,12 +392,22 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                 self.logger.info("Don't worry about the following dask "
                                  "warnings.")
                 if config_zmin is None:
-                    zmin = dsMask.zmin
+                    if 'zminRegions' in dsMask:
+                        zmin = dsMask.zminRegions
+                    else:
+                        # the old naming convention, used in some pre-generated
+                        # mask files
+                        zmin = dsMask.zmin
                 else:
                     zmin = config_zmin
 
                 if config_zmax is None:
-                    zmax = dsMask.zmax
+                    if 'zmaxRegions' in dsMask:
+                        zmax = dsMask.zmaxRegions
+                    else:
+                        # the old naming convention, used in some pre-generated
+                        # mask files
+                        zmax = dsMask.zmax
                 else:
                     zmax = config_zmax
 
