@@ -163,7 +163,8 @@ def compute_lon_lat_region_masks(geojsonFileName, lon, lat, maskFileName,
         dsMasks['regionNames'][index] = regionName
 
     for propertyName in properties:
-        dsMasks[propertyName] = (('nRegions'), properties[propertyName])
+        dsMasks['{}Regions'.format(propertyName)] = \
+            (('nRegions'), properties[propertyName])
 
     write_netcdf(dsMasks, maskFileName)
 
