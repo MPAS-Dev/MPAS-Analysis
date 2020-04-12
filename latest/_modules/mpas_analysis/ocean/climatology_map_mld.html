@@ -395,7 +395,7 @@
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
 
         <span class="c1"># Increment month value to be consistent with the model output</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">iMONTH</span><span class="o">.</span><span class="n">values</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">iMONTH</span><span class="o">=</span><span class="n">dsObs</span><span class="o">.</span><span class="n">iMONTH</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="c1"># Rename the dimensions to be consistent with other obs. data sets</span>
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="s1">&#39;calmonth&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="s1">&#39;latCoord&#39;</span><span class="p">,</span>
                               <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="s1">&#39;lonCoord&#39;</span><span class="p">,</span> <span class="s1">&#39;mld_dt_mean&#39;</span><span class="p">:</span> <span class="s1">&#39;mld&#39;</span><span class="p">})</span>

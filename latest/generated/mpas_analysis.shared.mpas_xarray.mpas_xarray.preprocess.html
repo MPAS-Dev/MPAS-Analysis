@@ -195,9 +195,9 @@
             
   <div class="section" id="mpas-analysis-shared-mpas-xarray-mpas-xarray-preprocess">
 <h1>mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess<a class="headerlink" href="#mpas-analysis-shared-mpas-xarray-mpas-xarray-preprocess" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">
-<code class="sig-prename descclassname">mpas_analysis.shared.mpas_xarray.mpas_xarray.</code><code class="sig-name descname">preprocess</code><span class="sig-paren">(</span><em class="sig-param">ds</em>, <em class="sig-param">calendar</em>, <em class="sig-param">simulationStartTime</em>, <em class="sig-param">timeVariableName</em>, <em class="sig-param">variableList</em>, <em class="sig-param">selValues</em>, <em class="sig-param">iselValues</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#preprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.mpas_xarray.mpas_xarray.</code><code class="sig-name descname">preprocess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ds</span></em>, <em class="sig-param"><span class="n">calendar</span></em>, <em class="sig-param"><span class="n">simulationStartTime</span></em>, <em class="sig-param"><span class="n">timeVariableName</span></em>, <em class="sig-param"><span class="n">variableList</span></em>, <em class="sig-param"><span class="n">selValues</span></em>, <em class="sig-param"><span class="n">iselValues</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#preprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds correct time specification for MPAS, allowing a date offset
 because the time must be between 1678 and 2262 based on the xarray
 library.  Also, if slicing information (<cite>selValues</cite> and/or
