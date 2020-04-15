@@ -377,12 +377,14 @@ class ComputeObsTSClimatology(AnalysisTask):
                 dsVol = xarray.open_dataset(obsFileName)
                 ds[volVarName] = dsVol[volVarName]
 
-            ds.compute()
+            temp_file_name = self._get_file_name(obsDict, suffix='_combined')
+            temp_files = [temp_file_name]
+            write_netcdf(ds, temp_file_name)
 
             chunk = {obsDict['latVar']: 400,
                      obsDict['lonVar']: 400}
 
-            ds = ds.chunk(chunk)
+            ds = xarray.open_dataset(temp_file_name, chunks=chunk)
 
             if obsDict['tVar'] in ds.dims:
                 if obsDict['tVar'] != 'Time':
@@ -397,6 +399,11 @@ class ComputeObsTSClimatology(AnalysisTask):
                 monthValues = constants.monthDictionary[self.season]
                 ds = compute_climatology(ds, monthValues, maskVaries=True)
 
+            temp_file_name = self._get_file_name(obsDict, suffix='_clim')
+            temp_files.append(temp_file_name)
+            write_netcdf(ds, temp_file_name)
+            ds = xarray.open_dataset(temp_file_name, chunks=chunk)
+
             if 'positive' in ds[zVarName].attrs and \
                     ds[zVarName].attrs['positive'] == 'down':
                 attrs = ds[zVarName].attrs
@@ -409,9 +416,12 @@ class ComputeObsTSClimatology(AnalysisTask):
 
             ds['zBroadcast'] = z
 
-            write_netcdf(ds, self.fileName)  # }}}
+            write_netcdf(ds, self.fileName)
+            for file_name in temp_files:
+                os.remove(file_name)
+        # }}}
 
-    def _get_file_name(self, obsDict):
+    def _get_file_name(self, obsDict, suffix=''):
         obsSection = '{}Observations'.format(self.componentName)
         climatologyDirectory = build_config_full_path(
             config=self.config, section='output',
@@ -420,9 +430,9 @@ class ComputeObsTSClimatology(AnalysisTask):
 
         make_directories(climatologyDirectory)
 
-        fileName = '{}/{}_{}_{}.nc'.format(
+        fileName = '{}/{}_{}_{}{}.nc'.format(
             climatologyDirectory, 'TS_{}'.format(obsDict['suffix']),
-            obsDict['gridName'], self.season)
+            obsDict['gridName'], self.season, suffix)
         return fileName
 
     # }}}
