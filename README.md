@@ -9,7 +9,7 @@ used those components.
 
 ## conda-forge
 
-###Current build status
+### Current build status
 
 <table><tr><td>All platforms:</td>
     <td>
