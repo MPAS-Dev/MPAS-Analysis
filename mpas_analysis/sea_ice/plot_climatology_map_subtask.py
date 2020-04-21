@@ -365,6 +365,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 mask = np.logical_or(refOutput.mask,
                                      refOutput == self.maskValue)
                 refOutput = np.ma.masked_array(refOutput, mask)
+                difference = np.ma.masked_array(difference, mask)
 
         # mask with maskValue only after taking the diff
         if self.maskValue is not None:
