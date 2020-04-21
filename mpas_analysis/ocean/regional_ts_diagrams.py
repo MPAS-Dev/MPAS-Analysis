@@ -346,16 +346,19 @@ class ComputeObsTSClimatology(AnalysisTask):
             obsFileName = build_obs_path(
                 config, component=self.componentName,
                 relativePath=obsDict['TFileName'])
+            self.logger.info('  Reading from {}...'.format(obsFileName))
             ds = xarray.open_dataset(obsFileName, chunks=chunk)
             if obsDict['SFileName'] != obsDict['TFileName']:
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=obsDict['SFileName'])
+                self.logger.info('  Reading from {}...'.format(obsFileName))
                 dsS = xarray.open_dataset(obsFileName, chunks=chunk)
                 ds[SVarName] = dsS[SVarName]
 
             if obsDict['volFileName'] is None:
                 # compute volume from lat, lon, depth bounds
+                self.logger.info('  Computing volume...'.format(obsFileName))
                 latBndsName = ds[latVarName].attrs['bounds']
                 lonBndsName = ds[lonVarName].attrs['bounds']
                 zBndsName = ds[zVarName].attrs['bounds']
@@ -374,15 +377,22 @@ class ComputeObsTSClimatology(AnalysisTask):
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=obsDict['volFileName'])
+                self.logger.info('  Reading from {}...'.format(obsFileName))
                 dsVol = xarray.open_dataset(obsFileName)
                 ds[volVarName] = dsVol[volVarName]
 
+            temp_file_name = self._get_file_name(obsDict, suffix='_combined')
+            temp_files = [temp_file_name]
+            self.logger.info('  computing the dataset')
             ds.compute()
+            self.logger.info('  writing temp file {}...'.format(temp_file_name))
+            write_netcdf(ds, temp_file_name)
 
             chunk = {obsDict['latVar']: 400,
                      obsDict['lonVar']: 400}
 
-            ds = ds.chunk(chunk)
+            self.logger.info('  Reading back from {}...'.format(temp_file_name))
+            ds = xarray.open_dataset(temp_file_name, chunks=chunk)
 
             if obsDict['tVar'] in ds.dims:
                 if obsDict['tVar'] != 'Time':
@@ -395,8 +405,19 @@ class ComputeObsTSClimatology(AnalysisTask):
                     ds.coords['year'] = numpy.ones(ds.sizes['Time'], int)
 
                 monthValues = constants.monthDictionary[self.season]
+                self.logger.info('  Computing climatology...')
                 ds = compute_climatology(ds, monthValues, maskVaries=True)
 
+            temp_file_name = self._get_file_name(obsDict, suffix='_clim')
+            temp_files.append(temp_file_name)
+            self.logger.info('  computing the dataset')
+            ds.compute()
+            self.logger.info('  writing temp file {}...'.format(temp_file_name))
+            write_netcdf(ds, temp_file_name)
+            self.logger.info('  Reading back from {}...'.format(temp_file_name))
+            ds = xarray.open_dataset(temp_file_name, chunks=chunk)
+
+            self.logger.info('  Broadcasting z coordinate...')
             if 'positive' in ds[zVarName].attrs and \
                     ds[zVarName].attrs['positive'] == 'down':
                 attrs = ds[zVarName].attrs
@@ -409,9 +430,17 @@ class ComputeObsTSClimatology(AnalysisTask):
 
             ds['zBroadcast'] = z
 
-            write_netcdf(ds, self.fileName)  # }}}
+            self.logger.info('  computing the dataset')
+            ds.compute()
+            self.logger.info('  writing {}...'.format(self.fileName))
+            write_netcdf(ds, self.fileName)
+            for file_name in temp_files:
+                self.logger.info('  Deleting temp file {}'.format(file_name))
+                os.remove(file_name)
+            self.logger.info('  Done!')
+        # }}}
 
-    def _get_file_name(self, obsDict):
+    def _get_file_name(self, obsDict, suffix=''):
         obsSection = '{}Observations'.format(self.componentName)
         climatologyDirectory = build_config_full_path(
             config=self.config, section='output',
@@ -420,9 +449,9 @@ class ComputeObsTSClimatology(AnalysisTask):
 
         make_directories(climatologyDirectory)
 
-        fileName = '{}/{}_{}_{}.nc'.format(
+        fileName = '{}/{}_{}_{}{}.nc'.format(
             climatologyDirectory, 'TS_{}'.format(obsDict['suffix']),
-            obsDict['gridName'], self.season)
+            obsDict['gridName'], self.season, suffix)
         return fileName
 
     # }}}
