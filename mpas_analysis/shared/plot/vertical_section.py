@@ -730,6 +730,22 @@ def plot_vertical_section(
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
 
+    # compute moving averages with respect to the x dimension
+    if movingAveragePoints is not None and movingAveragePoints != 1:
+        N = movingAveragePoints
+        movingAverageDepthSlices = []
+        for nVertLevel in range(len(depthArray)):
+            depthSlice = fieldArray[[nVertLevel]][0]
+            # in case it's not an xarray already
+            depthSlice = xr.DataArray(depthSlice)
+            mean = pd.Series.rolling(depthSlice.to_series(), N,
+                                     center=True).mean()
+            mean = xr.DataArray.from_series(mean)
+            mean = mean[int(N / 2.0):-int(round(N / 2.0) - 1)]
+            movingAverageDepthSlices.append(mean)
+        xArray = xArray[int(N / 2.0):-int(round(N / 2.0) - 1)]
+        fieldArray = xr.DataArray(movingAverageDepthSlices)
+
     dimX = xArray.shape
     dimZ = depthArray.shape
     dimF = fieldArray.shape
@@ -858,22 +874,6 @@ def plot_vertical_section(
         fig = plt.figure(figsize=figsize, dpi=dpi)
     else:
         fig = plt.gcf()
-
-    # compute moving averages with respect to the x dimension
-    if movingAveragePoints is not None and movingAveragePoints != 1:
-        N = movingAveragePoints
-        movingAverageDepthSlices = []
-        for nVertLevel in range(len(depthArray)):
-            depthSlice = fieldArray[[nVertLevel]][0]
-            # in case it's not an xarray already
-            depthSlice = xr.DataArray(depthSlice)
-            mean = pd.Series.rolling(depthSlice.to_series(), N,
-                                     center=True).mean()
-            mean = xr.DataArray.from_series(mean)
-            mean = mean[int(N / 2.0):-int(round(N / 2.0) - 1)]
-            movingAverageDepthSlices.append(mean)
-        xArray = xArray[int(N / 2.0):-int(round(N / 2.0) - 1)]
-        fieldArray = xr.DataArray(movingAverageDepthSlices)
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 

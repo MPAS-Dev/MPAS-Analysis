@@ -282,6 +282,9 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
+        movingAverageMonths = config.getWithDefault(
+            self.sectionName, 'movingAverageMonths', 1)
+
         if config.has_option(self.sectionName, 'yLim'):
             yLim = config.getExpression(self.sectionName, 'yLim')
         else:
@@ -290,8 +293,8 @@ class PlotHovmollerSubtask(AnalysisTask):
         plot_vertical_section(config, Time, z, field, self.sectionName,
                               suffix='', colorbarLabel=self.unitsLabel,
                               title=title, xlabel=xLabel, ylabel=yLabel,
-                              lineWidth=1,
-                              xArrayIsTime=True, calendar=self.calendar,
+                              lineWidth=1, xArrayIsTime=True, 
+                              N=movingAverageMonths, calendar=self.calendar,
                               firstYearXTicks=firstYearXTicks,
                               yearStrideXTicks=yearStrideXTicks,
                               yLim=yLim, invertYAxis=False)
