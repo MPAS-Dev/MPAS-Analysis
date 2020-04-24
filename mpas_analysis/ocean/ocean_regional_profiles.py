@@ -148,7 +148,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                         groupSubtitle=None,
                         groupLink='ocnreghovs',
                         galleryName=titleName,
-                        subtaskName=subtaskName)
+                        subtaskName=subtaskName,
+                        controlConfig=controlConfig)
                     hovmollerSubtask.run_after(combineSubtask)
                     self.add_subtask(hovmollerSubtask)
 
@@ -370,7 +371,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                     (cellMasks * areaCell * var**2).sum('nCells') / totalArea
 
             # drop the original variables
-            dsLocal = dsLocal.drop(variableList)
+            dsLocal = dsLocal.drop_vars(variableList)
 
             datasets.append(dsLocal)
 

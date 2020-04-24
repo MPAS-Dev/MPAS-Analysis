@@ -20,7 +20,7 @@ import os
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot import plot_vertical_section, savefig
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, savefig
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     decode_strings
@@ -34,6 +34,9 @@ class PlotHovmollerSubtask(AnalysisTask):
 
     Attributes
     ----------
+
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
 
     regionName : str
         The name of the region to plot
@@ -86,7 +89,8 @@ class PlotHovmollerSubtask(AnalysisTask):
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
-                 groupLink, galleryName, subtaskName=None):  # {{{
+                 groupLink, galleryName, subtaskName=None,
+                 controlConfig=None):  # {{{
         """
         Construct the analysis task.
 
@@ -140,6 +144,9 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         subtaskName :  str
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
+
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
         """
         # Authors
         # -------
@@ -156,6 +163,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             componentName='ocean',
             tags=parentTask.tags,
             subtaskName=subtaskName)
+
+        self.controlConfig = controlConfig
 
         self.regionName = regionName
         self.inFileName = inFileName
@@ -191,6 +200,16 @@ class PlotHovmollerSubtask(AnalysisTask):
         super(PlotHovmollerSubtask, self).setup_and_check()
 
         config = self.config
+
+        if self.controlConfig is not None:
+            assert(not os.path.isabs(self.inFileName))
+            baseDirectory = build_config_full_path(
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
+
+            self.controlFileName = '{}/{}'.format(baseDirectory,
+                                                  self.inFileName)
+        else:
+            self.controlFileName = None
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -265,8 +284,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         xLabel = 'Time (years)'
         yLabel = 'Depth (m)'
 
-        title = '{}, {} \n {}'.format(self.fieldNameInTitle, regionNameInTitle,
-                                      mainRunName)
+        title = '{}, {}'.format(self.fieldNameInTitle, regionNameInTitle)
 
         outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
@@ -290,14 +308,44 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yLim = None
 
-        plot_vertical_section(config, Time, z, field, self.sectionName,
-                              suffix='', colorbarLabel=self.unitsLabel,
-                              title=title, xlabel=xLabel, ylabel=yLabel,
-                              lineWidth=1, xArrayIsTime=True, 
-                              N=movingAverageMonths, calendar=self.calendar,
-                              firstYearXTicks=firstYearXTicks,
-                              yearStrideXTicks=yearStrideXTicks,
-                              yLim=yLim, invertYAxis=False)
+        if self.controlConfig is None:
+            refField = None
+            diff = None
+            refTitle = None
+            diffTitle = None
+        else:
+            controlConfig = self.controlConfig
+            dsRef = xr.open_dataset(self.controlFileName)
+
+            if 'regionNames' in dsRef.coords:
+                allRegionNames = decode_strings(dsRef.regionNames)
+                regionIndex = allRegionNames.index(self.regionName)
+                regionNameInTitle = self.regionName.replace('_', ' ')
+                regionDim = dsRef.regionNames.dims[0]
+            else:
+                plotTitles = controlConfig.getExpression('regions',
+                                                         'plotTitles')
+                allRegionNames = controlConfig.getExpression('regions',
+                                                             'regions')
+                regionIndex = allRegionNames.index(self.regionName)
+                regionNameInTitle = plotTitles[regionIndex]
+                regionDim = 'nOceanRegionsTmp'
+
+            dsRef = dsRef.isel(**{regionDim: regionIndex})
+            refField = dsRef[self.mpasFieldName].values.transpose()
+            assert(field.shape == refField.shape)
+            diff = field - refField
+            refTitle = self.controlConfig.get('runs', 'mainRunName')
+            diffTitle = 'Main - Control'
+
+        plot_vertical_section_comparison(
+            config, Time, z, field, refField, diff, self.sectionName,
+            colorbarLabel=self.unitsLabel, title=title, modelTitle=mainRunName,
+            refTitle=refTitle, diffTitle=diffTitle, xlabel=xLabel,
+            ylabel=yLabel, lineWidth=1, xArrayIsTime=True,
+            movingAveragePoints=movingAverageMonths, calendar=self.calendar,
+            firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
+            yLim=yLim, invertYAxis=False)
 
         savefig(outFileName)
 

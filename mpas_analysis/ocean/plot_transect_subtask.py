@@ -532,7 +532,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             refOutput,
             bias,
             configSectionName,
-            cbarLabel=self.unitsLabel,
+            colorbarLabel=self.unitsLabel,
             xlabel=xLabel,
             ylabel=yLabel,
             title=title,

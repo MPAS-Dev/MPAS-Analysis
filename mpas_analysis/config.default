@@ -2997,13 +2997,22 @@ profileGalleryGroup = Ocean Basin Profiles
 movingAveragePoints = 1
 
 # colormap
-colormapName = RdYlBu_r
+colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': -2., 'vmax': 30.}
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -5., 'vmax': 5.}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
@@ -3033,13 +3042,22 @@ contourLevels = 'none'
 movingAveragePoints = 1
 
 # colormap
-colormapName = haline
+colormapNameResult = haline
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': 30, 'vmax': 39.0}
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
@@ -3069,13 +3087,23 @@ contourLevels = 'none'
 movingAveragePoints = 1
 
 # colormap
-colormapName = Spectral_r
+colormapNameResult = Spectral_r
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': 1026.5, 'vmax': 1028.}
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
