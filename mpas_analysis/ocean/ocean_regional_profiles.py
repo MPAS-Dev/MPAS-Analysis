@@ -149,7 +149,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                         groupLink='ocnreghovs',
                         galleryName=titleName,
                         subtaskName=subtaskName,
-                        controlConfig=controlConfig)
+                        controlConfig=controlConfig,
+                        regionMaskFile=masksFile)
                     hovmollerSubtask.run_after(combineSubtask)
                     self.add_subtask(hovmollerSubtask)
 

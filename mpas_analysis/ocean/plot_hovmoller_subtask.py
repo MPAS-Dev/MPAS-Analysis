@@ -17,11 +17,13 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+from geometric_features import FeatureCollection, read_feature_collection
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot import plot_vertical_section_comparison, savefig
-
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
+    savefig, add_inset
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     decode_strings
 
@@ -60,6 +62,10 @@ class PlotHovmollerSubtask(AnalysisTask):
         A section in the config file where the colormap and contour values
         are defined
 
+    regionMaskFile : str
+        A geojson file with regions (including one corresponding to
+        ``regionName``) that will be used to make an inset
+
     thumbnailSuffix : str
         The text to be displayed under the thumbnail image, to which the
         region name will be prepended
@@ -90,7 +96,7 @@ class PlotHovmollerSubtask(AnalysisTask):
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
                  groupLink, galleryName, subtaskName=None,
-                 controlConfig=None):  # {{{
+                 controlConfig=None, regionMaskFile=None):  # {{{
         """
         Construct the analysis task.
 
@@ -142,11 +148,15 @@ class PlotHovmollerSubtask(AnalysisTask):
         galleryName : str
             the name of the gallery in which this plot belongs
 
-        subtaskName :  str
+        subtaskName :  str, optional
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
+
+        regionMaskFile : str, optional
+            A geojson file with regions (including one corresponding to
+            ``regionName``) that will be used to make an inset
         """
         # Authors
         # -------
@@ -173,6 +183,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.mpasFieldName = mpasFieldName
         self.unitsLabel = unitsLabel
         self.sectionName = sectionName
+        self.regionMaskFile = regionMaskFile
 
         # xml/html related variables
         self.thumbnailSuffix = thumbnailSuffix
@@ -338,7 +349,7 @@ class PlotHovmollerSubtask(AnalysisTask):
             refTitle = self.controlConfig.get('runs', 'mainRunName')
             diffTitle = 'Main - Control'
 
-        plot_vertical_section_comparison(
+        fig, _, suptitle = plot_vertical_section_comparison(
             config, Time, z, field, refField, diff, self.sectionName,
             colorbarLabel=self.unitsLabel, title=title, modelTitle=mainRunName,
             refTitle=refTitle, diffTitle=diffTitle, xlabel=xLabel,
@@ -347,7 +358,27 @@ class PlotHovmollerSubtask(AnalysisTask):
             firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
             yLim=yLim, invertYAxis=False)
 
-        savefig(outFileName)
+        if self.regionMaskFile is not None:
+
+            # shift the super-title a little to the left to make room for the
+            # inset
+            pos = suptitle.get_position()
+            suptitle.set_position((pos[0] - 0.05, pos[1]))
+
+            fcAll = read_feature_collection(self.regionMaskFile)
+
+            fc = FeatureCollection()
+            for feature in fcAll.features:
+                if feature['properties']['name'] == self.regionName:
+                    fc.add_feature(feature)
+                    break
+
+            add_inset(fig, fc, width=1.0, height=1.0, xbuffer=0.1, ybuffer=0.1)
+
+            savefig(outFileName, tight=False)
+
+        else:
+            savefig(outFileName)
 
         write_image_xml(
             config=config,
