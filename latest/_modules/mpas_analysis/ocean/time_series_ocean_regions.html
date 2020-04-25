@@ -936,12 +936,11 @@
                     <span class="n">legendText</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> &lt; z &lt; </span><span class="si">{}</span><span class="s1"> m)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">legendText</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">zboundsRef</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zboundsRef</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-            <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">movingAverageMonths</span><span class="p">,</span>
-                                           <span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="p">,</span>
-                                           <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                           <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
-                                           <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
-                                           <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">)</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
+                <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
+                <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span> <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
+                <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">)</span>
 
             <span class="c1"># do this before the inset because otherwise it moves the inset</span>
             <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>

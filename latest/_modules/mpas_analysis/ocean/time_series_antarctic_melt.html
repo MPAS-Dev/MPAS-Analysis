@@ -712,9 +712,10 @@
             <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
             <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">movingAverageMonths</span><span class="p">,</span>
-                                       <span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="p">,</span>
-                                       <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
+                                       <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
+                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
                                        <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
                                        <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                        <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
@@ -774,17 +775,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">movingAverageMonths</span><span class="p">,</span>
-                                       <span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="p">,</span>
-                                       <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
+                                       <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
+                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
                                        <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
                                        <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                        <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
+                                       <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
+                                       <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
                                        <span class="n">obsMean</span><span class="o">=</span><span class="n">obsMeltRate</span><span class="p">,</span>
                                        <span class="n">obsUncertainty</span><span class="o">=</span><span class="n">obsMeltRateUnc</span><span class="p">,</span>
-                                       <span class="n">obsLegend</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
-                                       <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
-                                       <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">)</span>
+                                       <span class="n">obsLegend</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
         <span class="c1"># do this before the inset because otherwise it moves the inset</span>
         <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>
