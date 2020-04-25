@@ -440,16 +440,16 @@ movingAveragePoints = 12
 # plot
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
+colorbarLevelsResult = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-2.5, 2.6, 0.5)
+contourLevelsResult = np.arange(-2.5, 2.6, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -473,16 +473,16 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevels = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
+colorbarLevelsResult = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-5.0, 5.51, 0.5)
+contourLevelsResult = np.arange(-5.0, 5.51, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -507,18 +507,18 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-#colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
+#colormapIndicesResult = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-#colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
-colorbarLevels = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
+#colorbarLevelsResult = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+colorbarLevelsResult = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-2., 2.01, 0.2)
+contourLevelsResult = np.arange(-2., 2.01, 0.2)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
