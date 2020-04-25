@@ -641,9 +641,10 @@ class PlotTransportSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                       title, xLabel, yLabel,
-                                       calendar=calendar,
+        fig = timeseries_analysis_plot(config, fields, calendar=calendar,
+                                       title=title, xlabel=xLabel,
+                                       ylabel=yLabel,
+                                       movingAveragePoints=movingAverageMonths,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,

@@ -462,17 +462,14 @@ class TimeSeriesSeaIce(AnalysisTask):
                     yearStrideXTicks = None
 
                 # separate plots for nothern and southern hemispheres
-                timeseries_analysis_plot(config, dsvalues,
-                                         movingAveragePoints,
-                                         title[key], xLabel,
-                                         units[variableName],
-                                         calendar=calendar,
-                                         lineColors=lineColors,
-                                         lineWidths=lineWidths,
-                                         legendText=legendText,
-                                         titleFontSize=titleFontSize,
-                                         firstYearXTicks=firstYearXTicks,
-                                         yearStrideXTicks=yearStrideXTicks)
+                timeseries_analysis_plot(
+                    config, dsvalues, calendar=calendar, title=title[key],
+                    xlabel=xLabel, ylabel=units[variableName],
+                    movingAveragePoints=movingAveragePoints,
+                    lineColors=lineColors, lineWidths=lineWidths,
+                    legendText=legendText, titleFontSize=titleFontSize,
+                    firstYearXTicks=firstYearXTicks,
+                    yearStrideXTicks=yearStrideXTicks)
 
                 savefig(figureNameStd[key])
 
@@ -495,15 +492,12 @@ class TimeSeriesSeaIce(AnalysisTask):
                     imageCaption=caption)
 
                 if (polarPlot):
-                    timeseries_analysis_plot_polar(
-                        config,
-                        dsvalues,
-                        movingAveragePoints,
-                        title[key],
-                        lineColors=lineColors,
-                        lineWidths=lineWidths,
-                        legendText=legendText,
-                        titleFontSize=titleFontSize)
+                    timeseries_analysis_plot_polar(config, dsvalues, title[key],
+                                                   movingAveragePoints,
+                                                   lineColors=lineColors,
+                                                   lineWidths=lineWidths,
+                                                   legendText=legendText,
+                                                   titleFontSize=titleFontSize)
 
                     savefig(figureNamePolar[key])
 

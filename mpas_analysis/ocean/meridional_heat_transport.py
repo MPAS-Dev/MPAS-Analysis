@@ -352,7 +352,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                   title=title, xlabel=xLabel, ylabel=yLabel,
                                   xLim=xLimGlobal,
                                   yLim=depthLimGlobal, invertYAxis=False,
-                                  N=movingAveragePoints)
+                                  movingAveragePoints=movingAveragePoints)
 
             savefig(outFileName)
 
