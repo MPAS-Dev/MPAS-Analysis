@@ -548,9 +548,10 @@ class PlotMeltSubtask(AnalysisTask):
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 
-        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                       title, xLabel, yLabel,
-                                       calendar=calendar,
+        fig = timeseries_analysis_plot(config, fields, calendar=calendar,
+                                       title=title, xlabel=xLabel,
+                                       ylabel=yLabel,
+                                       movingAveragePoints=movingAverageMonths,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
@@ -610,17 +611,18 @@ class PlotMeltSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                       title, xLabel, yLabel,
-                                       calendar=calendar,
+        fig = timeseries_analysis_plot(config, fields, calendar=calendar,
+                                       title=title, xlabel=xLabel,
+                                       ylabel=yLabel,
+                                       movingAveragePoints=movingAverageMonths,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
+                                       firstYearXTicks=firstYearXTicks,
+                                       yearStrideXTicks=yearStrideXTicks,
                                        obsMean=obsMeltRate,
                                        obsUncertainty=obsMeltRateUnc,
-                                       obsLegend=list(obsDict.keys()),
-                                       firstYearXTicks=firstYearXTicks,
-                                       yearStrideXTicks=yearStrideXTicks)
+                                       obsLegend=list(obsDict.keys()))
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway

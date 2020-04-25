@@ -30,8 +30,8 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot.ticks import plot_xtick_format
 
 
-def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
-                             calendar, lineColors=None,
+def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
+                             movingAveragePoints=None, lineColors=None,
                              lineStyles=None, markers=None, lineWidths=None,
                              legendText=None, maxPoints=None,
                              titleFontSize=None, figsize=(15, 6), dpi=None,
@@ -50,8 +50,8 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     dsvalues : list of xarray DataSets
         the data set(s) to be plotted
 
-    N : int
-        the numer of time points over which to perform a moving average
+    movingAveragePoints : int
+        the number of time points over which to perform a moving average
 
     title : str
         the title of the plot
@@ -129,10 +129,10 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
             continue
-        if N == 1 or N is None:
+        if movingAveragePoints == 1 or movingAveragePoints is None:
             mean = dsvalue
         else:
-            mean = pd.Series.rolling(dsvalue.to_pandas(), N,
+            mean = pd.Series.rolling(dsvalue.to_pandas(), movingAveragePoints,
                                      center=True).mean()
             mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
@@ -238,11 +238,12 @@ def timeseries_analysis_plot(config, dsvalues, N, title, xlabel, ylabel,
     return fig
 
 
-def timeseries_analysis_plot_polar(config, dsvalues, N, title,
-                                   lineColors=None, lineStyles=None,
-                                   markers=None, lineWidths=None,
-                                   legendText=None, titleFontSize=None,
-                                   figsize=(15, 6), dpi=None):
+def timeseries_analysis_plot_polar(config, dsvalues, title,
+                                   movingAveragePoints=None, lineColors=None,
+                                   lineStyles=None, markers=None,
+                                   lineWidths=None, legendText=None,
+                                   titleFontSize=None, figsize=(15, 6),
+                                   dpi=None):
     """
     Plots the list of time series data sets on a polar plot.
 
@@ -255,7 +256,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
     dsvalues : list of xarray DataSets
         the data set(s) to be plotted
 
-    N : int
+    movingAveragePoints : int
         the numer of time points over which to perform a moving average
 
     title : str
@@ -298,7 +299,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, N, title,
         dsvalue = dsvalues[dsIndex]
         if dsvalue is None:
             continue
-        mean = pd.Series.rolling(dsvalue.to_pandas(), N, center=True).mean()
+        mean = pd.Series.rolling(dsvalue.to_pandas(), movingAveragePoints,
+                                 center=True).mean()
         mean = xr.DataArray.from_series(mean)
         minDays.append(mean.Time.min())
         maxDays.append(mean.Time.max())

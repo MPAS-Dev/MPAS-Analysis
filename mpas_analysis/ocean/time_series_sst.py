@@ -273,9 +273,9 @@ class TimeSeriesSST(AnalysisTask):
             else:
                 yearStrideXTicks = None
 
-            timeseries_analysis_plot(config, fields, movingAveragePoints,
-                                     title, xLabel, yLabel,
-                                     calendar=calendar,
+            timeseries_analysis_plot(config, fields, calendar=calendar,
+                                     title=title, xlabel=xLabel, ylabel=yLabel,
+                                     movingAveragePoints=movingAveragePoints,
                                      lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,

@@ -772,12 +772,11 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                     legendText[1] = '{} ({} < z < {} m)'.format(
                         legendText[1], zboundsRef[0], zboundsRef[1])
 
-            fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                           title, xLabel, yLabel,
-                                           calendar=calendar,
-                                           lineColors=lineColors,
-                                           lineWidths=lineWidths,
-                                           legendText=legendText)
+            fig = timeseries_analysis_plot(
+                config, fields, calendar=calendar, title=title, xlabel=xLabel,
+                ylabel=yLabel, movingAveragePoints=movingAverageMonths,
+                lineColors=lineColors, lineWidths=lineWidths,
+                legendText=legendText)
 
             # do this before the inset because otherwise it moves the inset
             # and cartopy doesn't play too well with tight_layout anyway

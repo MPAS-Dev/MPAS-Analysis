@@ -64,7 +64,7 @@ def plot_vertical_section_comparison(
         upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
         xArrayIsTime=False,
-        N=None,
+        movingAveragePoints=None,
         firstYearXTicks=None,
         yearStrideXTicks=None,
         maxXTicks=20,
@@ -213,7 +213,7 @@ def plot_vertical_section_comparison(
         if True, format the x axis for time (this applies only to the primary
         x axis, not to the optional second or third x axes)
 
-    N : int, optional
+    movingAveragePoints : int, optional
         the number of points over which to perform a moving average
         NOTE: this option is mostly intended for use when xArrayIsTime is True,
         although it will work with other data as well.  Also, the moving
@@ -373,7 +373,7 @@ def plot_vertical_section_comparison(
         upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
         invertYAxis=invertYAxis,
         xArrayIsTime=xArrayIsTime,
-        N=None,
+        movingAveragePoints=None,
         firstYearXTicks=firstYearXTicks,
         yearStrideXTicks=yearStrideXTicks,
         maxXTicks=maxXTicks, calendar=calendar,
@@ -419,7 +419,7 @@ def plot_vertical_section_comparison(
             numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
             xArrayIsTime=xArrayIsTime,
-            N=None,
+            movingAveragePoints=None,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
             maxXTicks=maxXTicks,
@@ -459,7 +459,7 @@ def plot_vertical_section_comparison(
             numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
             xArrayIsTime=xArrayIsTime,
-            N=None,
+            movingAveragePoints=None,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
             maxXTicks=maxXTicks,
@@ -511,7 +511,7 @@ def plot_vertical_section(
         upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
         xArrayIsTime=False,
-        N=None,
+        movingAveragePoints=None,
         firstYearXTicks=None,
         yearStrideXTicks=None,
         maxXTicks=20,
@@ -651,7 +651,7 @@ def plot_vertical_section(
         if True, format the x axis for time (this applies only to the primary
         x axis, not to the optional second or third x axes)
 
-    N : int, optional
+    movingAveragePoints : int, optional
         the number of points over which to perform a moving average
         NOTE: this option is mostly intended for use when xArrayIsTime is True,
         although it will work with other data as well.  Also, the moving
@@ -860,7 +860,8 @@ def plot_vertical_section(
         fig = plt.gcf()
 
     # compute moving averages with respect to the x dimension
-    if N is not None and N != 1:
+    if movingAveragePoints is not None and movingAveragePoints != 1:
+        N = movingAveragePoints
         movingAverageDepthSlices = []
         for nVertLevel in range(len(depthArray)):
             depthSlice = fieldArray[[nVertLevel]][0]

@@ -471,12 +471,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
-                                 title=title, xlabel=xLabel, ylabel=yLabel,
-                                 calendar=calendar,
+        timeseries_analysis_plot(config=config, dsvalues=timeSeries,
+                                 calendar=calendar, title=title, xlabel=xLabel,
+                                 ylabel=yLabel, movingAveragePoints=None,
                                  lineColors=lineColors, lineStyles=lineStyles,
                                  markers=lineMarkers, lineWidths=lineWidths,
-                                 maxPoints=maxPoints, legendText=legendText,
+                                 legendText=legendText, maxPoints=maxPoints,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
 
