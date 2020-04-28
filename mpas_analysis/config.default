@@ -440,16 +440,16 @@ movingAveragePoints = 12
 # plot
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
+colorbarLevelsResult = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-2.5, 2.6, 0.5)
+contourLevelsResult = np.arange(-2.5, 2.6, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -473,16 +473,16 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevels = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
+colorbarLevelsResult = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-5.0, 5.51, 0.5)
+contourLevelsResult = np.arange(-5.0, 5.51, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -507,18 +507,18 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-#colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
+#colormapIndicesResult = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-#colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
-colorbarLevels = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
+#colorbarLevelsResult = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+colorbarLevelsResult = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-2., 2.01, 0.2)
+contourLevelsResult = np.arange(-2., 2.01, 0.2)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -2997,13 +2997,22 @@ profileGalleryGroup = Ocean Basin Profiles
 movingAveragePoints = 1
 
 # colormap
-colormapName = RdYlBu_r
+colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': -2., 'vmax': 30.}
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -5., 'vmax': 5.}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
@@ -3033,13 +3042,22 @@ contourLevels = 'none'
 movingAveragePoints = 1
 
 # colormap
-colormapName = haline
+colormapNameResult = haline
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': 30, 'vmax': 39.0}
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
@@ -3069,13 +3087,23 @@ contourLevels = 'none'
 movingAveragePoints = 1
 
 # colormap
-colormapName = Spectral_r
+colormapNameResult = Spectral_r
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': 1026.5, 'vmax': 1028.}
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)

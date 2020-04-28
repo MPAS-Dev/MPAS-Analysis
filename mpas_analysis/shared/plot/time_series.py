@@ -50,9 +50,6 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     dsvalues : list of xarray DataSets
         the data set(s) to be plotted
 
-    movingAveragePoints : int
-        the number of time points over which to perform a moving average
-
     title : str
         the title of the plot
 
@@ -61,6 +58,9 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
 
     calendar : str
         the calendar to use for formatting the time axis
+
+    movingAveragePoints : int, optional
+        the number of time points over which to perform a moving average
 
     lineColors, lineStyles, markers, legendText : list of str, optional
         control line color, style, marker, and corresponding legend

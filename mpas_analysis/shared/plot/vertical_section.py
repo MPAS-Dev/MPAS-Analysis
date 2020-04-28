@@ -38,7 +38,7 @@ def plot_vertical_section_comparison(
         refArray,
         diffArray,
         colorMapSectionName,
-        cbarLabel=None,
+        colorbarLabel=None,
         xlabel=None,
         ylabel=None,
         title=None,
@@ -70,11 +70,12 @@ def plot_vertical_section_comparison(
         maxXTicks=20,
         calendar='gregorian',
         compareAsContours=False,
-        contourLineStyle=None,
         comparisonContourLineStyle=None,
         comparisonContourLineColor=None,
         labelContours=False,
-        contourLabelPrecision=1):
+        contourLabelPrecision=1,
+        resultSuffix='Result',
+        diffSuffix='Difference'):
     """
     Plots vertical section plots in a three-panel format, comparing model data
     (in modelArray) to some reference dataset (in refArray), which can be
@@ -107,7 +108,7 @@ def plot_vertical_section_comparison(
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
 
-    cbarLabel : str, optional
+    colorbarLabel : str, optional
         the label for the colorbar.  If compareAsContours and labelContours are
         both True, colorbarLabel is used as follows (typically in order to
         indicate the units that are associated with the contour labels):
@@ -260,6 +261,13 @@ def plot_vertical_section_comparison(
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
 
+    resultSuffix : str, optional
+        a suffix added to the config options related to colormap information
+        for the main and control fields
+
+    diffSuffix : str, optional
+        a suffix added to the config options related to colormap information
+        for the difference field
 
     Returns
     -------
@@ -302,7 +310,7 @@ def plot_vertical_section_comparison(
 
     fig = plt.figure(figsize=figsize, dpi=dpi)
 
-    if (title is not None):
+    if title is not None:
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'threePanelTitleFontSize')
         title_font = {'size': titleFontSize,
@@ -351,8 +359,8 @@ def plot_vertical_section_comparison(
         depthArray,
         modelArray,
         colorMapSectionName,
-        suffix='Result',
-        colorbarLabel=cbarLabel,
+        suffix=resultSuffix,
+        colorbarLabel=colorbarLabel,
         title=title,
         xlabel=xlabel,
         ylabel=ylabel,
@@ -373,7 +381,7 @@ def plot_vertical_section_comparison(
         upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
         invertYAxis=invertYAxis,
         xArrayIsTime=xArrayIsTime,
-        movingAveragePoints=None,
+        movingAveragePoints=movingAveragePoints,
         firstYearXTicks=firstYearXTicks,
         yearStrideXTicks=yearStrideXTicks,
         maxXTicks=maxXTicks, calendar=calendar,
@@ -397,8 +405,8 @@ def plot_vertical_section_comparison(
             depthArray,
             refArray,
             colorMapSectionName,
-            suffix='Result',
-            colorbarLabel=cbarLabel,
+            suffix=resultSuffix,
+            colorbarLabel=colorbarLabel,
             title=refTitle,
             xlabel=xlabel,
             ylabel=ylabel,
@@ -419,7 +427,7 @@ def plot_vertical_section_comparison(
             numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
             xArrayIsTime=xArrayIsTime,
-            movingAveragePoints=None,
+            movingAveragePoints=movingAveragePoints,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
             maxXTicks=maxXTicks,
@@ -437,8 +445,8 @@ def plot_vertical_section_comparison(
             depthArray,
             diffArray,
             colorMapSectionName,
-            suffix='Difference',
-            colorbarLabel=cbarLabel,
+            suffix=diffSuffix,
+            colorbarLabel=colorbarLabel,
             title=diffTitle,
             xlabel=xlabel,
             ylabel=ylabel,
@@ -459,7 +467,7 @@ def plot_vertical_section_comparison(
             numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
             xArrayIsTime=xArrayIsTime,
-            movingAveragePoints=None,
+            movingAveragePoints=movingAveragePoints,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
             maxXTicks=maxXTicks,
@@ -474,7 +482,7 @@ def plot_vertical_section_comparison(
         if thirdXAxisData is not None and refArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
-            plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.80])
+            plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.9])
     else:
         plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.01, 0.0, 1.0, 0.93])
 
@@ -730,6 +738,22 @@ def plot_vertical_section(
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
 
+    # compute moving averages with respect to the x dimension
+    if movingAveragePoints is not None and movingAveragePoints != 1:
+        N = movingAveragePoints
+        movingAverageDepthSlices = []
+        for nVertLevel in range(len(depthArray)):
+            depthSlice = fieldArray[[nVertLevel]][0]
+            # in case it's not an xarray already
+            depthSlice = xr.DataArray(depthSlice)
+            mean = pd.Series.rolling(depthSlice.to_series(), N,
+                                     center=True).mean()
+            mean = xr.DataArray.from_series(mean)
+            mean = mean[int(N / 2.0):-int(round(N / 2.0) - 1)]
+            movingAverageDepthSlices.append(mean)
+        xArray = xArray[int(N / 2.0):-int(round(N / 2.0) - 1)]
+        fieldArray = xr.DataArray(movingAverageDepthSlices)
+
     dimX = xArray.shape
     dimZ = depthArray.shape
     dimF = fieldArray.shape
@@ -806,10 +830,10 @@ def plot_vertical_section(
 
     # Verify that the upper x-axis parameters are consistent with each other
     # and with xArray
-    if (secondXAxisData is None and thirdXAxisData is not None):
+    if secondXAxisData is None and thirdXAxisData is not None:
         raise ValueError('secondXAxisData cannot be None if thirdXAxisData '
                          'is not None')
-    if (secondXAxisData is not None):
+    if secondXAxisData is not None:
         arrayShape = secondXAxisData.shape
         if len(arrayShape) == 1 and arrayShape[0] != num_x:
             raise ValueError('secondXAxisData has %d x values, '
@@ -823,7 +847,7 @@ def plot_vertical_section(
             raise ValueError('secondXAxisData must be a 1D or 2D array, '
                              'but is of dimension %d' %
                              (len(arrayShape)))
-    if (thirdXAxisData is not None):
+    if thirdXAxisData is not None:
         arrayShape = thirdXAxisData.shape
         if len(arrayShape) == 1 and arrayShape[0] != num_x:
             raise ValueError('thirdXAxisData has %d x values, '
@@ -859,22 +883,6 @@ def plot_vertical_section(
     else:
         fig = plt.gcf()
 
-    # compute moving averages with respect to the x dimension
-    if movingAveragePoints is not None and movingAveragePoints != 1:
-        N = movingAveragePoints
-        movingAverageDepthSlices = []
-        for nVertLevel in range(len(depthArray)):
-            depthSlice = fieldArray[[nVertLevel]][0]
-            # in case it's not an xarray already
-            depthSlice = xr.DataArray(depthSlice)
-            mean = pd.Series.rolling(depthSlice.to_series(), N,
-                                     center=True).mean()
-            mean = xr.DataArray.from_series(mean)
-            mean = mean[int(N / 2.0):-int(round(N / 2.0) - 1)]
-            movingAverageDepthSlices.append(mean)
-        xArray = xArray[int(N / 2.0):-int(round(N / 2.0) - 1)]
-        fieldArray = xr.DataArray(movingAverageDepthSlices)
-
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
     if not plotAsContours:    # display a heatmap of fieldArray
@@ -908,7 +916,7 @@ def plot_vertical_section(
 
     else:     # display a white heatmap to get a white background for non-land
         zeroArray = np.ma.where(fieldArray != np.nan, 0.0, fieldArray)
-        plotHandle = plt.contourf(x, y, zeroArray, colors='white')
+        plt.contourf(x, y, zeroArray, colors='white')
 
     # set the color for NaN or masked regions, and draw a black
     # outline around them; technically, the contour level used should

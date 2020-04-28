@@ -17,11 +17,13 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import numpy as np
 import os
+import matplotlib.pyplot as plt
+from geometric_features import FeatureCollection, read_feature_collection
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.plot import plot_vertical_section, savefig
-
+from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
+    savefig, add_inset
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     decode_strings
 
@@ -34,6 +36,9 @@ class PlotHovmollerSubtask(AnalysisTask):
 
     Attributes
     ----------
+
+    controlConfig :  ``MpasAnalysisConfigParser``
+        Configuration options for a control run (if any)
 
     regionName : str
         The name of the region to plot
@@ -56,6 +61,10 @@ class PlotHovmollerSubtask(AnalysisTask):
     sectionName : str
         A section in the config file where the colormap and contour values
         are defined
+
+    regionMaskFile : str
+        A geojson file with regions (including one corresponding to
+        ``regionName``) that will be used to make an inset
 
     thumbnailSuffix : str
         The text to be displayed under the thumbnail image, to which the
@@ -86,7 +95,8 @@ class PlotHovmollerSubtask(AnalysisTask):
     def __init__(self, parentTask, regionName, inFileName, outFileLabel,
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
-                 groupLink, galleryName, subtaskName=None):  # {{{
+                 groupLink, galleryName, subtaskName=None,
+                 controlConfig=None, regionMaskFile=None):  # {{{
         """
         Construct the analysis task.
 
@@ -138,8 +148,15 @@ class PlotHovmollerSubtask(AnalysisTask):
         galleryName : str
             the name of the gallery in which this plot belongs
 
-        subtaskName :  str
+        subtaskName :  str, optional
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
+
+        controlConfig :  ``MpasAnalysisConfigParser``, optional
+            Configuration options for a control run (if any)
+
+        regionMaskFile : str, optional
+            A geojson file with regions (including one corresponding to
+            ``regionName``) that will be used to make an inset
         """
         # Authors
         # -------
@@ -157,6 +174,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             tags=parentTask.tags,
             subtaskName=subtaskName)
 
+        self.controlConfig = controlConfig
+
         self.regionName = regionName
         self.inFileName = inFileName
         self.outFileLabel = outFileLabel
@@ -164,6 +183,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.mpasFieldName = mpasFieldName
         self.unitsLabel = unitsLabel
         self.sectionName = sectionName
+        self.regionMaskFile = regionMaskFile
 
         # xml/html related variables
         self.thumbnailSuffix = thumbnailSuffix
@@ -191,6 +211,16 @@ class PlotHovmollerSubtask(AnalysisTask):
         super(PlotHovmollerSubtask, self).setup_and_check()
 
         config = self.config
+
+        if self.controlConfig is not None:
+            assert(not os.path.isabs(self.inFileName))
+            baseDirectory = build_config_full_path(
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
+
+            self.controlFileName = '{}/{}'.format(baseDirectory,
+                                                  self.inFileName)
+        else:
+            self.controlFileName = None
 
         if not os.path.isabs(self.inFileName):
             baseDirectory = build_config_full_path(
@@ -265,8 +295,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         xLabel = 'Time (years)'
         yLabel = 'Depth (m)'
 
-        title = '{}, {} \n {}'.format(self.fieldNameInTitle, regionNameInTitle,
-                                      mainRunName)
+        title = '{}, {}'.format(self.fieldNameInTitle, regionNameInTitle)
 
         outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
@@ -282,21 +311,74 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
+        movingAverageMonths = config.getWithDefault(
+            self.sectionName, 'movingAverageMonths', 1)
+
         if config.has_option(self.sectionName, 'yLim'):
             yLim = config.getExpression(self.sectionName, 'yLim')
         else:
             yLim = None
 
-        plot_vertical_section(config, Time, z, field, self.sectionName,
-                              suffix='', colorbarLabel=self.unitsLabel,
-                              title=title, xlabel=xLabel, ylabel=yLabel,
-                              lineWidth=1,
-                              xArrayIsTime=True, calendar=self.calendar,
-                              firstYearXTicks=firstYearXTicks,
-                              yearStrideXTicks=yearStrideXTicks,
-                              yLim=yLim, invertYAxis=False)
+        if self.controlConfig is None:
+            refField = None
+            diff = None
+            refTitle = None
+            diffTitle = None
+        else:
+            controlConfig = self.controlConfig
+            dsRef = xr.open_dataset(self.controlFileName)
 
-        savefig(outFileName)
+            if 'regionNames' in dsRef.coords:
+                allRegionNames = decode_strings(dsRef.regionNames)
+                regionIndex = allRegionNames.index(self.regionName)
+                regionNameInTitle = self.regionName.replace('_', ' ')
+                regionDim = dsRef.regionNames.dims[0]
+            else:
+                plotTitles = controlConfig.getExpression('regions',
+                                                         'plotTitles')
+                allRegionNames = controlConfig.getExpression('regions',
+                                                             'regions')
+                regionIndex = allRegionNames.index(self.regionName)
+                regionNameInTitle = plotTitles[regionIndex]
+                regionDim = 'nOceanRegionsTmp'
+
+            dsRef = dsRef.isel(**{regionDim: regionIndex})
+            refField = dsRef[self.mpasFieldName].values.transpose()
+            assert(field.shape == refField.shape)
+            diff = field - refField
+            refTitle = self.controlConfig.get('runs', 'mainRunName')
+            diffTitle = 'Main - Control'
+
+        fig, _, suptitle = plot_vertical_section_comparison(
+            config, Time, z, field, refField, diff, self.sectionName,
+            colorbarLabel=self.unitsLabel, title=title, modelTitle=mainRunName,
+            refTitle=refTitle, diffTitle=diffTitle, xlabel=xLabel,
+            ylabel=yLabel, lineWidth=1, xArrayIsTime=True,
+            movingAveragePoints=movingAverageMonths, calendar=self.calendar,
+            firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
+            yLim=yLim, invertYAxis=False)
+
+        if self.regionMaskFile is not None:
+
+            # shift the super-title a little to the left to make room for the
+            # inset
+            pos = suptitle.get_position()
+            suptitle.set_position((pos[0] - 0.05, pos[1]))
+
+            fcAll = read_feature_collection(self.regionMaskFile)
+
+            fc = FeatureCollection()
+            for feature in fcAll.features:
+                if feature['properties']['name'] == self.regionName:
+                    fc.add_feature(feature)
+                    break
+
+            add_inset(fig, fc, width=1.0, height=1.0, xbuffer=0.1, ybuffer=0.1)
+
+            savefig(outFileName, tight=False)
+
+        else:
+            savefig(outFileName)
 
         write_image_xml(
             config=config,
