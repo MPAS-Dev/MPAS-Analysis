@@ -485,6 +485,8 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             dsControl = None
             controlRunName = None
 
+        regionNames = decode_strings(ds.regionNames)
+
         tableFileName = get_masked_mpas_climatology_file_name(
             self.config, self.season, self.componentName,
             climatologyName='antarcticMeltRateTable')
