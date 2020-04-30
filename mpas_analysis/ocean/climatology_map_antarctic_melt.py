@@ -14,6 +14,8 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import csv
 import xarray as xr
+import dask
+from multiprocessing.pool import ThreadPool
 from pyremap import ProjectionGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
@@ -275,7 +277,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
     # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):  # {{{
-        '''
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -287,7 +289,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -300,7 +302,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         return obsDescriptor  # }}}
 
     def build_observational_dataset(self, fileName):  # {{{
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -313,7 +315,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -378,7 +380,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
 
         self.iceShelvesInTable = config.getExpression(sectionName,
-                                                 'iceShelvesInTable')
+                                                      'iceShelvesInTable')
         if 'all' in self.iceShelvesInTable:
             self.iceShelvesInTable = get_feature_list(self.iceShelfMasksFile)
 
@@ -403,65 +405,68 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             climatologyName='antarcticMeltTable')
 
         if not os.path.exists(meltRateFileName):
+            with dask.config.set(schedular='threads',
+                                 pool=ThreadPool(1)):
 
-            # Load data:
-            inFileName = self.mpasClimatologyTask.get_file_name(self.season)
-            mpasFieldName = 'timeMonthly_avg_landIceFreshwaterFlux'
-            dsIn = xr.open_dataset(inFileName)
-            freshwaterFlux = dsIn[mpasFieldName].isel(Time=0)
+                # Load data:
+                inFileName = self.mpasClimatologyTask.get_file_name(self.season)
+                mpasFieldName = 'timeMonthly_avg_landIceFreshwaterFlux'
+                dsIn = xr.open_dataset(inFileName)
+                freshwaterFlux = dsIn[mpasFieldName].isel(Time=0)
 
-            regionMaskFileName = self.masksSubtask.maskFileName
+                regionMaskFileName = self.masksSubtask.maskFileName
 
-            dsRegionMask = xr.open_dataset(regionMaskFileName)
+                dsRegionMask = xr.open_dataset(regionMaskFileName)
 
-            # figure out the indices of the regions to plot
-            regionNames = decode_strings(dsRegionMask.regionNames)
+                # figure out the indices of the regions to plot
+                regionNames = decode_strings(dsRegionMask.regionNames)
 
-            regionIndices = []
-            for iceShelf in self.iceShelvesInTable:
-                for index, regionName in enumerate(regionNames):
-                    if iceShelf == regionName:
-                        regionIndices.append(index)
-                        break
+                regionIndices = []
+                for iceShelf in self.iceShelvesInTable:
+                    for index, regionName in enumerate(regionNames):
+                        if iceShelf == regionName:
+                            regionIndices.append(index)
+                            break
 
-            # select only those regions we want to plot
-            dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-            cellMasks = dsRegionMask.regionCellMasks
+                # select only those regions we want to plot
+                dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+                cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
-            restartFileName = \
-                self.runStreams.readpath('restart')[0]
+                restartFileName = \
+                    self.runStreams.readpath('restart')[0]
 
-            dsRestart = xr.open_dataset(restartFileName)
-            areaCell = \
-                dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
+                dsRestart = xr.open_dataset(restartFileName)
+                areaCell = \
+                    dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
 
-            # convert from kg/s to kg/yr
-            totalMeltFlux = constants.sec_per_year * \
-                (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
-            totalMeltFlux.compute()
+                # convert from kg/s to kg/yr
+                totalMeltFlux = constants.sec_per_year * \
+                    (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
+                totalMeltFlux.compute()
 
-            totalArea = (cellMasks * areaCell).sum(dim='nCells')
+                totalArea = (cellMasks * areaCell).sum(dim='nCells')
 
-            # from kg/m^2/yr to m/yr
-            meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
-            meltRates.compute()
+                # from kg/m^2/yr to m/yr
+                meltRates = ((1. / constants.rho_fw) *
+                             (totalMeltFlux / totalArea))
+                meltRates.compute()
 
-            # convert from kg/yr to GT/yr
-            totalMeltFlux /= constants.kg_per_GT
+                # convert from kg/yr to GT/yr
+                totalMeltFlux /= constants.kg_per_GT
 
-            ds = xr.Dataset()
-            ds['totalMeltFlux'] = totalMeltFlux
-            ds.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
-            ds.totalMeltFlux.attrs['description'] = \
-                'Total melt flux summed over each ice shelf or region'
-            ds['meltRates'] = meltRates
-            ds.meltRates.attrs['units'] = 'm a$^{-1}$'
-            ds.meltRates.attrs['description'] = \
-                'Melt rate averaged over each ice shelf or region'
+                ds = xr.Dataset()
+                ds['totalMeltFlux'] = totalMeltFlux
+                ds.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+                ds.totalMeltFlux.attrs['description'] = \
+                    'Total melt flux summed over each ice shelf or region'
+                ds['meltRates'] = meltRates
+                ds.meltRates.attrs['units'] = 'm a$^{-1}$'
+                ds.meltRates.attrs['description'] = \
+                    'Melt rate averaged over each ice shelf or region'
 
-            ds['regionNames'] = dsRegionMask.regionNames
+                ds['regionNames'] = dsRegionMask.regionNames
 
-            write_netcdf(ds, meltRateFileName)
+                write_netcdf(ds, meltRateFileName)
         else:
             ds = xr.open_dataset(meltRateFileName)
 
