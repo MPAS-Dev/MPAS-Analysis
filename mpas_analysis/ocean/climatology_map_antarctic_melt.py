@@ -464,6 +464,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 ds.meltRates.attrs['description'] = \
                     'Melt rate averaged over each ice shelf or region'
 
+                ds['area'] = 1e-6*totalArea
+                ds.meltRates.attrs['units'] = 'km$^2$'
+                ds.meltRates.attrs['description'] = \
+                    'Region or ice shelf area'
+
                 ds['regionNames'] = dsRegionMask.regionNames
 
                 write_netcdf(ds, meltRateFileName)
@@ -471,7 +476,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             ds = xr.open_dataset(meltRateFileName)
 
         mainRunName = self.config.get('runs', 'mainRunName')
-        fieldNames = ['Region', mainRunName]
+        fieldNames = ['Region', 'Area', mainRunName]
 
         controlConfig = self.controlConfig
         if controlConfig is not None:
@@ -498,6 +503,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             writer.writeheader()
             for index, regionName in enumerate(regionNames):
                 row = {'Region': regionName,
+                       'Area': '{}'.format(ds.area[index].values),
                        mainRunName: '{}'.format(ds.meltRates[index].values)}
                 if dsControl is not None:
                     row[controlRunName] = \
@@ -515,6 +521,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             writer.writeheader()
             for index, regionName in enumerate(regionNames):
                 row = {'Region': regionName,
+                       'Area': '{}'.format(ds.area[index].values),
                        mainRunName: '{}'.format(ds.totalMeltFlux[index].values)}
                 if dsControl is not None:
                     row[controlRunName] = \
