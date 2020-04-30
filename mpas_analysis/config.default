@@ -1198,6 +1198,13 @@ normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
 colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
                            5., 10., 20., 50., 100.]
 
+# make a tables of mean melt rates and melt fluxes for individual ice shelves?
+makeTables = True
+
+# If making tables, which ice shelves?  This is a list of ice shelves or
+# ['all'] for all 106 ice shelves and regions.
+iceShelvesInTable = ['all']
+
 
 [timeSeriesAntarcticMelt]
 ## options related to plotting time series of melt below Antarctic ice shelves

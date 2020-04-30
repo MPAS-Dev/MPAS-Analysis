@@ -168,7 +168,8 @@ def build_analysis_list(config, controlConfig):  # {{{
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+        controlConfig))
 
     analyses.append(ocean.RegionalTSDiagrams(
         config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,

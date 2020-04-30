@@ -11,20 +11,28 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import os
+import csv
 import xarray as xr
 from pyremap import ProjectionGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_obs_path
+from mpas_analysis.shared.io.utility import build_obs_path, get_region_mask, \
+    decode_strings
+from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
+from mpas_analysis.shared.climatology.climatology import \
+    get_masked_mpas_climatology_file_name
 
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.constants import constants
+
+from mpas_analysis.shared.regions import get_feature_list
 
 
 class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
@@ -36,8 +44,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, regionMasksTask,
+                 controlConfig):  # {{{
         """
         Construct the analysis task.
 
@@ -49,8 +57,11 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
-            Configuration options for a control run (if any)
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
+
+        controlConfig :  ``MpasAnalysisConfigParser``
+            Configuration options for a control run
         """
         # Authors
         # -------
@@ -78,6 +89,16 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
 
         comparisonGridNames = config.getExpression(sectionName,
                                                    'comparisonGrids')
+
+        makeTables = config.getboolean(sectionName, 'makeTables')
+
+        if makeTables:
+            for season in seasons:
+                tableSubtask = AntarcticMeltTableSubtask(
+                    parentTask=self, mpasClimatologyTask=mpasClimatologyTask,
+                    controlConfig=controlConfig,
+                    regionMasksTask=regionMasksTask, season=season)
+                self.add_subtask(tableSubtask)
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
@@ -303,5 +324,198 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         return dsObs  # }}}
 
     # }}}
+
+
+class AntarcticMeltTableSubtask(AnalysisTask):
+    def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
+                 regionMasksTask, season, subtaskName=None):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask :  ``ClimatologyMapAntarcticMelt``
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        mpasClimatologyTask : ``MpasClimatologyTask``
+            The task that produced the climatology to be remapped and plotted
+
+        controlConfig :  ``MpasAnalysisConfigParser``
+            Configuration options for a control run (if any)
+
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
+
+        season : str
+            One of the seasons in ``constants.monthDictionary``
+
+        subtaskName : str, optional
+            The name of the subtask
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+        tags = ['climatology', 'table']
+
+        if subtaskName is None:
+            subtaskName = 'table{}'.format(season)
+
+        # call the constructor from the base class (AnalysisTask)
+        super(AntarcticMeltTableSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            subtaskName=subtaskName,
+            componentName=parentTask.componentName,
+            tags=tags)
+
+        config = parentTask.config
+        sectionName = self.taskName
+        self.season = season
+        self.mpasClimatologyTask = mpasClimatologyTask
+        self.controlConfig = controlConfig
+
+        self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
+
+        self.iceShelvesInTable = config.getExpression(sectionName,
+                                                 'iceShelvesInTable')
+        if 'all' in self.iceShelvesInTable:
+            self.iceShelvesInTable = get_feature_list(self.iceShelfMasksFile)
+
+        self.masksSubtask = regionMasksTask.add_mask_subtask(
+            self.iceShelfMasksFile, outFileSuffix='iceShelfMasks')
+
+        self.run_after(self.masksSubtask)
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Computes and plots table of Antarctic sub-ice-shelf melt rates.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        self.logger.info("Computing Antarctic melt rate table...")
+
+        meltRateFileName = get_masked_mpas_climatology_file_name(
+            self.config, self.season, self.componentName,
+            climatologyName='antarcticMeltTable')
+
+        if not os.path.exists(meltRateFileName):
+
+            # Load data:
+            inFileName = self.mpasClimatologyTask.get_file_name(self.season)
+            mpasFieldName = 'timeMonthly_avg_landIceFreshwaterFlux'
+            dsIn = xr.open_dataset(inFileName)
+            freshwaterFlux = dsIn[mpasFieldName].isel(Time=0)
+
+            regionMaskFileName = self.masksSubtask.maskFileName
+
+            dsRegionMask = xr.open_dataset(regionMaskFileName)
+
+            # figure out the indices of the regions to plot
+            regionNames = decode_strings(dsRegionMask.regionNames)
+
+            regionIndices = []
+            for iceShelf in self.iceShelvesInTable:
+                for index, regionName in enumerate(regionNames):
+                    if iceShelf == regionName:
+                        regionIndices.append(index)
+                        break
+
+            # select only those regions we want to plot
+            dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+            cellMasks = dsRegionMask.regionCellMasks
+
+            restartFileName = \
+                self.runStreams.readpath('restart')[0]
+
+            dsRestart = xr.open_dataset(restartFileName)
+            areaCell = \
+                dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
+
+            # convert from kg/s to kg/yr
+            totalMeltFlux = constants.sec_per_year * \
+                (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
+            totalMeltFlux.compute()
+
+            totalArea = (cellMasks * areaCell).sum(dim='nCells')
+
+            # from kg/m^2/yr to m/yr
+            meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
+            meltRates.compute()
+
+            # convert from kg/yr to GT/yr
+            totalMeltFlux /= constants.kg_per_GT
+
+            ds = xr.Dataset()
+            ds['totalMeltFlux'] = totalMeltFlux
+            ds.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+            ds.totalMeltFlux.attrs['description'] = \
+                'Total melt flux summed over each ice shelf or region'
+            ds['meltRates'] = meltRates
+            ds.meltRates.attrs['units'] = 'm a$^{-1}$'
+            ds.meltRates.attrs['description'] = \
+                'Melt rate averaged over each ice shelf or region'
+
+            ds['regionNames'] = dsRegionMask.regionNames
+
+            write_netcdf(ds, meltRateFileName)
+        else:
+            ds = xr.open_dataset(meltRateFileName)
+
+        mainRunName = self.config.get('runs', 'mainRunName')
+        fieldNames = ['Region', mainRunName]
+
+        controlConfig = self.controlConfig
+        if controlConfig is not None:
+            controlFileName = get_masked_mpas_climatology_file_name(
+                controlConfig, self.season, self.componentName,
+                climatologyName='antarcticMeltTable')
+            dsControl = xr.open_dataset(controlFileName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            fieldNames.append(controlRunName)
+        else:
+            dsControl = None
+            controlRunName = None
+
+        tableFileName = get_masked_mpas_climatology_file_name(
+            self.config, self.season, self.componentName,
+            climatologyName='antarcticMeltRateTable')
+        tableFileName = tableFileName.replace('.nc', '.csv')
+
+        with open(tableFileName, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+
+            writer.writeheader()
+            for index, regionName in enumerate(regionNames):
+                row = {'Region': regionName,
+                       mainRunName: '{}'.format(ds.meltRates[index].values)}
+                if dsControl is not None:
+                    row[controlRunName] = \
+                        '{}'.format(dsControl.meltRates[index].values)
+                writer.writerow(row)
+
+        tableFileName = get_masked_mpas_climatology_file_name(
+            self.config, self.season, self.componentName,
+            climatologyName='antarcticMeltFluxTable')
+        tableFileName = tableFileName.replace('.nc', '.csv')
+
+        with open(tableFileName, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+
+            writer.writeheader()
+            for index, regionName in enumerate(regionNames):
+                row = {'Region': regionName,
+                       mainRunName: '{}'.format(ds.totalMeltFlux[index].values)}
+                if dsControl is not None:
+                    row[controlRunName] = \
+                        '{}'.format(dsControl.totalMeltFlux[index].values)
+                writer.writerow(row)
+
+        # }}}
+    # }}}
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
