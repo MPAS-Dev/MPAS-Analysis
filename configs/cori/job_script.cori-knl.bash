@@ -20,7 +20,7 @@
 #SBATCH -C knl
 #SBATCH --nodes=1
 #SBATCH --time=1:00:00
-#SBATCH --account=acme
+#SBATCH --account=e3sm
 #SBATCH --job-name=mpas_analysis
 #SBATCH --output=mpas_analysis.o%j
 #SBATCH --error=mpas_analysis.e%j
@@ -30,7 +30,7 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-source /global/project/projectdirs/acme/software/anaconda_envs/load_latest_e3sm_unified.sh
+source /global/project/projectdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
