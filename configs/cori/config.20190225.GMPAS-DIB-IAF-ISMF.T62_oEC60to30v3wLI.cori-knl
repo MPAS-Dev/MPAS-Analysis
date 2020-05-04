@@ -39,7 +39,7 @@ ncclimoParallelMode = bck
 # its location).  For other machines, this would be the directory pointed to
 # when running "download_analysis_data.py" to get the public observations,
 # mapping files and region files.
-baseDirectory = /global/project/projectdirs/acme/diagnostics
+baseDirectory = /global/project/projectdirs/e3sm/diagnostics
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -73,7 +73,7 @@ baseDirectory = /path/to/output/dir
 
 # provide an absolute path to put HTML in an alternative location (e.g. a web
 # portal)
-# htmlSubdirectory = /global/project/projectdirs/acme/www/USERNAME/RUNNAME
+# htmlSubdirectory = /global/project/projectdirs/e3sm/www/USERNAME/RUNNAME
 htmlSubdirectory = html
 
 
