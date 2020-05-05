@@ -30,7 +30,7 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-source /global/project/projectdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
+source /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
