@@ -32,12 +32,11 @@ environment with the following packages:
 * python >= 3.6
 * numpy
 * scipy
-* matplotlib >= 3.0.2
+* matplotlib-base >= 3.0.2
 * netCDF4
 * xarray >= 0.14.1
 * dask
 * bottleneck
-* basemap
 * lxml
 * nco >= 4.8.1
 * pyproj
@@ -47,10 +46,10 @@ environment with the following packages:
 * requests
 * setuptools
 * shapely
-* cartopy
+* cartopy >= 0.18.0
 * geometric_features
 * gsw
-* pyremap
+* pyremap < 0.1.0
 * mpas_tools >= 0.0.8
 
 These can be installed via the conda command:
@@ -58,10 +57,11 @@ These can be installed via the conda command:
 .. code-block::
 
    conda config --add channels conda-forge
-   conda create -n mpas-analysis python=3.7 numpy scipy "matplotlib>=3.0.2" \
-       netCDF4 "xarray>=0.14.1" dask bottleneck basemap lxml "nco>=4.8.1" pyproj \
-       pillow cmocean progressbar2 requests setuptools shapely cartopy \
-       geometric_features gsw pyremap "mpas_tools>=0.0.8"
+   conda config --set channel_priority strict
+   conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib-base>=3.0.2" \
+       netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
+       pillow cmocean progressbar2 requests setuptools shapely cartopy>=0.18.0 \
+       geometric_features gsw "pyremap<0.1.0" "mpas_tools>=0.0.8"
    conda activate mpas-analysis
 
 Then, get the code from:

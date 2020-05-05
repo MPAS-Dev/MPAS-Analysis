@@ -484,8 +484,6 @@
         <span class="n">lon</span> <span class="o">=</span> <span class="n">remappedClimatology</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">remappedClimatology</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-        <span class="n">lonTarg</span><span class="p">,</span> <span class="n">latTarg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remapObsClimatologySubtask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">remappedFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remapObsClimatologySubtask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span>
                 <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;remapped&#39;</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
@@ -555,8 +553,8 @@
         <span class="n">fileout</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
         <span class="n">plot_polar_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
-            <span class="n">lonTarg</span><span class="p">,</span>
-            <span class="n">latTarg</span><span class="p">,</span>
+            <span class="n">lon</span><span class="p">,</span>
+            <span class="n">lat</span><span class="p">,</span>
             <span class="n">modelOutput</span><span class="p">,</span>
             <span class="n">refOutput</span><span class="p">,</span>
             <span class="n">difference</span><span class="p">,</span>
