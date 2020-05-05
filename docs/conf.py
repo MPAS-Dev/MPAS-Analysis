@@ -16,7 +16,6 @@ import os
 import m2r
 from glob import glob
 import mpas_analysis
-# a hack to get basemap to work
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
     os.environ['PROJ_LIB'] = '{}/{}/share/proj'.format(

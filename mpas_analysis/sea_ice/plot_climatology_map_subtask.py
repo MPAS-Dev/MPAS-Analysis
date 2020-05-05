@@ -320,8 +320,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         lon = remappedClimatology['lon'].values
         lat = remappedClimatology['lat'].values
 
-        lonTarg, latTarg = np.meshgrid(lon, lat)
-
         if self.remapObsClimatologySubtask is not None:
             remappedFileName = self.remapObsClimatologySubtask.get_file_name(
                 stage='remapped', season=season,
@@ -391,8 +389,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         fileout = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         plot_polar_comparison(
             config,
-            lonTarg,
-            latTarg,
+            lon,
+            lat,
             modelOutput,
             refOutput,
             difference,

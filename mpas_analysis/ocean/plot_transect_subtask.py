@@ -285,7 +285,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.xmlFileNames = []
 
         prefixPieces = []
-        if self.outFileLabel is not '':
+        if self.outFileLabel != '':
             prefixPieces.append(self.outFileLabel)
         prefixPieces.append(self.transectName.replace(' ', '_'))
         prefixPieces.append(mainRunName)

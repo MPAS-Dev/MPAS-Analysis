@@ -6,7 +6,7 @@ dependencies:
   - numpy
   - scipy
   - lxml
-  - matplotlib >=3.0.2
+  - matplotlib-base >=3.0.2
   - dask
   - netcdf4
   - hdf5
@@ -18,8 +18,7 @@ dependencies:
   - progressbar2
   - requests
   - shapely
-  - basemap
-  - cartopy
+  - cartopy >=0.18.0
   - geometric_features
   - gsw
   - pyremap
