@@ -576,17 +576,17 @@ def plot_polar_projection_comparison(
 
 def _add_land_lakes_coastline(ax):
     land_50m = cartopy.feature.NaturalEarthFeature(
-            'physical', 'land', '50m', edgecolor='face',
+            'physical', 'land', '50m', edgecolor='k',
+            facecolor='gray', linewidth=0.5)
+    ice_50m = cartopy.feature.NaturalEarthFeature(
+            'physical', 'antarctic_ice_shelves_polys', '50m', edgecolor='k',
             facecolor='gray', linewidth=0.5)
     lakes_50m = cartopy.feature.NaturalEarthFeature(
             'physical', 'lakes', '50m', edgecolor='k',
             facecolor='white',
             linewidth=0.5)
-    coast_50m = cartopy.feature.NaturalEarthFeature(
-            'physical', 'coastline', '50m', edgecolor='k',
-            facecolor='None', linewidth=0.5)
     ax.add_feature(land_50m, zorder=2)
-    ax.add_feature(lakes_50m, zorder=3)
-    ax.add_feature(coast_50m, zorder=4)
+    ax.add_feature(ice_50m, zorder=3)
+    ax.add_feature(lakes_50m, zorder=4)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
