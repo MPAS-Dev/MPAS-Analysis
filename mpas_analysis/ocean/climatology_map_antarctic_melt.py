@@ -372,17 +372,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             tags=tags)
 
         config = parentTask.config
-        sectionName = self.taskName
         self.season = season
         self.mpasClimatologyTask = mpasClimatologyTask
         self.controlConfig = controlConfig
 
         self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
-
-        self.iceShelvesInTable = config.getExpression(sectionName,
-                                                      'iceShelvesInTable')
-        if 'all' in self.iceShelvesInTable:
-            self.iceShelvesInTable = get_feature_list(self.iceShelfMasksFile)
 
         self.masksSubtask = regionMasksTask.add_mask_subtask(
             self.iceShelfMasksFile, outFileSuffix='iceShelfMasks')
@@ -399,9 +393,16 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         # Xylar Asay-Davis
 
         self.logger.info("Computing Antarctic melt rate table...")
+        config = self.config
+
+        sectionName = self.taskName
+        iceShelvesInTable = config.getExpression(sectionName,
+                                                 'iceShelvesInTable')
+        if 'all' in iceShelvesInTable:
+            iceShelvesInTable = get_feature_list(self.iceShelfMasksFile)
 
         meltRateFileName = get_masked_mpas_climatology_file_name(
-            self.config, self.season, self.componentName,
+            config, self.season, self.componentName,
             climatologyName='antarcticMeltTable')
 
         if not os.path.exists(meltRateFileName):
@@ -422,7 +423,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 regionNames = decode_strings(dsRegionMask.regionNames)
 
                 regionIndices = []
-                for iceShelf in self.iceShelvesInTable:
+                for iceShelf in iceShelvesInTable:
                     for index, regionName in enumerate(regionNames):
                         if iceShelf == regionName:
                             regionIndices.append(index)
@@ -475,7 +476,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         else:
             ds = xr.open_dataset(meltRateFileName)
 
-        mainRunName = self.config.get('runs', 'mainRunName')
+        mainRunName = config.get('runs', 'mainRunName')
         fieldNames = ['Region', 'Area', mainRunName]
 
         controlConfig = self.controlConfig
@@ -493,7 +494,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         regionNames = decode_strings(ds.regionNames)
 
         tableFileName = get_masked_mpas_climatology_file_name(
-            self.config, self.season, self.componentName,
+            config, self.season, self.componentName,
             climatologyName='antarcticMeltRateTable')
         tableFileName = tableFileName.replace('.nc', '.csv')
 
@@ -511,7 +512,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 writer.writerow(row)
 
         tableFileName = get_masked_mpas_climatology_file_name(
-            self.config, self.season, self.componentName,
+            config, self.season, self.componentName,
             climatologyName='antarcticMeltFluxTable')
         tableFileName = tableFileName.replace('.nc', '.csv')
 
