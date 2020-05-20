@@ -11,8 +11,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 """
-Entry points for downloading data (either for cartopy or for MPAS-Analysis
-itself)
+Entry points for downloading data for MPAS-Analysis
 """
 # Authors
 # -------
@@ -25,7 +24,6 @@ from __future__ import absolute_import, division, print_function, \
 import argparse
 import pkg_resources
 import os
-import cartopy.io.shapereader as shpreader
 
 from mpas_analysis.shared.io.download import download_files
 
@@ -62,12 +60,5 @@ def download_analysis_data():
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
     download_files(analysisFileList, urlBase, args.outDir, verify=True)
 
-
-def download_natural_earth_110m():
-    for name in ['ocean', 'coastline', 'land']:
-        shpfilename = shpreader.natural_earth(resolution='110m',
-                                              category='physical',
-                                              name=name)
-        shpreader.Reader(shpfilename)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
