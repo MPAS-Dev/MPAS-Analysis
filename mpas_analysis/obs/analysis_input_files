@@ -78,6 +78,9 @@ observations/Ocean/SOSE/README.md
 observations/Ocean/SOSE/SOSE_2005-2010_monthly_neut_den_6000.0x6000.0km_10.0km_Antarctic_stereo_20180710.nc
 observations/Ocean/SOSE/SOSE_2005-2010_monthly_merid_vel_6000.0x6000.0km_10.0km_Antarctic_stereo_20180710.nc
 observations/Ocean/SOSE/SOSE_2005-2010_monthly_mld_6000.0x6000.0km_10.0km_Antarctic_stereo_20180710.nc
+observations/Ocean/SOSE/SOSE_ANN_T_S_z_vol_SouthernOcean_0.167x0.167degree_20200514.nc
+observations/Ocean/SOSE/SOSE_JAS_T_S_z_vol_SouthernOcean_0.167x0.167degree_20200514.nc
+observations/Ocean/SOSE/SOSE_JFM_T_S_z_vol_SouthernOcean_0.167x0.167degree_20200514.nc
 observations/Ocean/BGC/obs.bib
 observations/Ocean/BGC/Chl/Chl_SeaWIFS_20180702.nc
 observations/Ocean/BGC/CO2_gas_flux/CO2_gas_flux_1.0x1.0degree_20180628.nc
@@ -110,6 +113,9 @@ observations/Ocean/WOA18/README.md
 observations/Ocean/WOA18/obs.bib
 observations/Ocean/WOA18/woa18_decav_04_TS_ann_20190829.nc
 observations/Ocean/WOA18/woa18_decav_04_TS_mon_20190829.nc
+observations/Ocean/WOA18/woa18_ANN_T_S_z_vol_20200514.nc
+observations/Ocean/WOA18/woa18_JAS_T_S_z_vol_20200514.nc
+observations/Ocean/WOA18/woa18_JFM_T_S_z_vol_20200514.nc
 observations/SeaIce/PIOMAS/obs.bib
 observations/SeaIce/PIOMAS/PIOMASvolume_monthly_climo_20180710.nc
 observations/SeaIce/PIOMAS/README.md

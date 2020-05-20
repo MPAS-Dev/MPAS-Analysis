@@ -17,14 +17,8 @@ import numpy
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import gsw
-try:
-    from gsw import freezing
-except ImportError:
-    from gsw.gibbs import freezing
-try:
-    from gsw.density import sigma0
-except ImportError:
-    from gsw.gibbs.density_enthalpy_ct_exact import sigma0_CT_exact as sigma0
+from gsw import freezing
+from gsw.density import sigma0
 
 import dask
 import multiprocessing
@@ -107,37 +101,44 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
 
         self.seasons = config.getExpression(self.taskName, 'seasons')
 
-        obsDicts = {'SOSE': {
-            'suffix': 'SOSE',
-            'gridName': 'SouthernOcean_0.167x0.167degree',
-            'gridFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
-                            'SouthernOcean_0.167x0.167degree_20180710.nc',
-            'TFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
-                         'SouthernOcean_0.167x0.167degree_20180710.nc',
-            'SFileName': 'SOSE/SOSE_2005-2010_monthly_salinity_'
-                         'SouthernOcean_0.167x0.167degree_20180710.nc',
-            'volFileName': 'SOSE/SOSE_volume_'
-                           'SouthernOcean_0.167x0.167degree_20190815.nc',
-            'lonVar': 'lon',
-            'latVar': 'lat',
-            'TVar': 'theta',
-            'SVar': 'salinity',
-            'volVar': 'volume',
-            'zVar': 'z',
-            'tVar': 'Time'}, 'WOA18': {
-            'suffix': 'WOA18',
-            'gridName': 'Global_0.25x0.25degree',
-            'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-            'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-            'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-            'volFileName': None,
-            'lonVar': 'lon',
-            'latVar': 'lat',
-            'TVar': 't_an',
-            'SVar': 's_an',
-            'volVar': 'volume',
-            'zVar': 'depth',
-            'tVar': 'month'}}
+        obsDicts = {
+            'SOSE': {
+                'suffix': 'SOSE',
+                'gridName': 'SouthernOcean_0.167x0.167degree',
+                'gridFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
+                                'SouthernOcean_0.167x0.167degree_20180710.nc',
+                'TFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
+                             'SouthernOcean_0.167x0.167degree_20180710.nc',
+                'SFileName': 'SOSE/SOSE_2005-2010_monthly_salinity_'
+                             'SouthernOcean_0.167x0.167degree_20180710.nc',
+                'volFileName': 'SOSE/SOSE_volume_'
+                               'SouthernOcean_0.167x0.167degree_20190815.nc',
+                'preprocessedFileTemplate':
+                    'SOSE/SOSE_{}_T_S_z_vol_'
+                    'SouthernOcean_0.167x0.167degree_20200514.nc',
+                'lonVar': 'lon',
+                'latVar': 'lat',
+                'TVar': 'theta',
+                'SVar': 'salinity',
+                'volVar': 'volume',
+                'zVar': 'z',
+                'tVar': 'Time'},
+            'WOA18': {
+                'suffix': 'WOA18',
+                'gridName': 'Global_0.25x0.25degree',
+                'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'volFileName': None,
+                'preprocessedFileTemplate':
+                    'WOA18/woa18_{}_T_S_z_vol_20200514.nc',
+                'lonVar': 'lon',
+                'latVar': 'lat',
+                'TVar': 't_an',
+                'SVar': 's_an',
+                'volVar': 'volume',
+                'zVar': 'depth',
+                'tVar': 'month'}}
 
         allObsUsed = []
 
@@ -184,7 +185,6 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
 
             for obsName in obsList:
                 localObsDict = dict(obsDicts[obsName])
-                suffix = localObsDict['suffix']
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
@@ -325,14 +325,24 @@ class ComputeObsTSClimatology(AnalysisTask):
         if os.path.exists(self.fileName):
             return
 
+        config = self.config
+        obsDict = self.obsDict
+        season = self.season
+
+        obsFileName = build_obs_path(
+            config, component=self.componentName,
+            relativePath=obsDict['preprocessedFileTemplate'].format(season))
+
+        if os.path.exists(obsFileName):
+            # we already pre-processed this data so no need to redo it!
+            os.symlink(obsFileName, self.fileName)
+            return
+
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
 
             self.logger.info("\n computing T S climatogy for {}...".format(
                 self.obsName))
-
-            config = self.config
-            obsDict = self.obsDict
 
             chunk = {obsDict['tVar']: 6}
 
@@ -404,7 +414,7 @@ class ComputeObsTSClimatology(AnalysisTask):
                 if 'year' not in ds:
                     ds.coords['year'] = numpy.ones(ds.sizes['Time'], int)
 
-                monthValues = constants.monthDictionary[self.season]
+                monthValues = constants.monthDictionary[season]
                 self.logger.info('  Computing climatology...')
                 ds = compute_climatology(ds, monthValues, maskVaries=True)
 
@@ -990,7 +1000,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         for obsName in self.obsDicts:
             obsT, obsS, obsZ, obsVol = self._get_obs_t_s(
-                self.obsDicts[obsName], zmin, zmax)
+                self.obsDicts[obsName])
             plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ, 'vol': obsVol,
                                'title': obsName})
 
@@ -1137,7 +1147,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         return T, S, z, volume, zmin, zmax  # }}}
 
-    def _get_obs_t_s(self, obsDict, zmin, zmax):  # {{{
+    def _get_obs_t_s(self, obsDict):  # {{{
 
         obsSection = '{}Observations'.format(self.componentName)
         climatologyDirectory = build_config_full_path(
