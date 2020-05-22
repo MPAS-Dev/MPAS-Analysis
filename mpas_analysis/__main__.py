@@ -487,6 +487,7 @@ def run_analysis(config, analyses):  # {{{
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+    logger.propagate = False
 
     totalTaskCount = len(analyses)
     widgets = ['Running tasks: ', progressbar.Percentage(), ' ',

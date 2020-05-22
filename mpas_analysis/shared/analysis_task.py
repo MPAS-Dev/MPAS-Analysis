@@ -316,6 +316,7 @@ class AnalysisTask(Process):  # {{{
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
         self.logger.setLevel(logging.INFO)
+        self.logger.propagate = False
 
         if writeLogFile:
             oldStdout = sys.stdout

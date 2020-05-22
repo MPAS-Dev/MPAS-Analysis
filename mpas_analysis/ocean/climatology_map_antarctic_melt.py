@@ -413,7 +413,9 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 inFileName = self.mpasClimatologyTask.get_file_name(self.season)
                 mpasFieldName = 'timeMonthly_avg_landIceFreshwaterFlux'
                 dsIn = xr.open_dataset(inFileName)
-                freshwaterFlux = dsIn[mpasFieldName].isel(Time=0)
+                freshwaterFlux = dsIn[mpasFieldName]
+                if 'Time' in freshwaterFlux.dims:
+                    freshwaterFlux.isel(Time=0)
 
                 regionMaskFileName = self.masksSubtask.maskFileName
 

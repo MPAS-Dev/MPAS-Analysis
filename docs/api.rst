@@ -31,7 +31,6 @@ Downloading data
    :toctree: generated/
 
    download_analysis_data
-   download_natural_earth_110m
 
 Analysis tasks
 ==============
