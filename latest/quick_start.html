@@ -88,7 +88,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-analysis-input-data">Download analysis input data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#download-natural-earth-data-for-cartopy">Download Natural Earth data for cartopy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#list-analysis">List Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-analysis">Running the analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-mpas-output-files-that-are-needed-by-mpas-analysis">List of MPAS output files that are needed by MPAS-Analysis:</a></li>
@@ -212,6 +211,7 @@ environment with the following packages:</p>
 <li><p>setuptools</p></li>
 <li><p>shapely</p></li>
 <li><p>cartopy &gt;= 0.18.0</p></li>
+<li><p>cartopy_offlinedata</p></li>
 <li><p>geometric_features</p></li>
 <li><p>gsw</p></li>
 <li><p>pyremap &lt; 0.1.0</p></li>
@@ -223,7 +223,8 @@ environment with the following packages:</p>
 <span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.8</span> <span class="n">numpy</span> <span class="n">scipy</span> <span class="s2">&quot;matplotlib-base&gt;=3.0.2&quot;</span> \
     <span class="n">netCDF4</span> <span class="s2">&quot;xarray&gt;=0.14.1&quot;</span> <span class="n">dask</span> <span class="n">bottleneck</span> <span class="n">lxml</span> <span class="s2">&quot;nco&gt;=4.8.1&quot;</span> <span class="n">pyproj</span> \
     <span class="n">pillow</span> <span class="n">cmocean</span> <span class="n">progressbar2</span> <span class="n">requests</span> <span class="n">setuptools</span> <span class="n">shapely</span> <span class="s2">&quot;cartopy&gt;=0.18.0&quot;</span> \
-    <span class="n">geometric_features</span> <span class="n">gsw</span> <span class="s2">&quot;pyremap&lt;0.1.0&quot;</span> <span class="s2">&quot;mpas_tools&gt;=0.0.8&quot;</span>
+    <span class="n">cartopy_offlinedata</span> <span class="n">geometric_features</span> <span class="n">gsw</span> <span class="s2">&quot;pyremap&lt;0.1.0&quot;</span>
+    <span class="s2">&quot;mpas_tools&gt;=0.0.8&quot;</span>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span>
 </pre></div>
 </div>
@@ -255,39 +256,6 @@ and used to evaluate the model results</p></li>
 <p>Once you have downloaded the analysis data, you will point to its location
 (your equivalent of <code class="docutils literal notranslate"><span class="pre">path/to/mpas_analysis/diagnostics</span></code> above) in the config
 option <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section.</p>
-</div>
-<div class="section" id="download-natural-earth-data-for-cartopy">
-<h2>Download Natural Earth data for cartopy<a class="headerlink" href="#download-natural-earth-data-for-cartopy" title="Permalink to this headline">¶</a></h2>
-<p>The cartopy package (used for creating inset maps) requires shapes of the land,
-ocean and coastline from <a class="reference external" href="https://www.naturalearthdata.com">Natural Earth</a>.
-Typically, these data are downloaded automatically by cartopy.  However, for
-systems with compute nodes that cannot reach the internet, you will need to
-download the data manually into your conda environment from a login node before
-launching any MPAS-Analysis jobs:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">download_natural_earth_110m</span>
-</pre></div>
-</div>
-<p>(or if using the git repo: <code class="docutils literal notranslate"><span class="pre">./download_natural_earth_110m.py</span></code>).</p>
-<p>If the data have already been downloaded, you will see nothing.  Otherwise, you
-should see a warning that the data are being downloaded.</p>
-<p><strong>Note</strong>: If you are having issues downloading the shape files (e.g., a time out error or forbidden error), follow these steps:</p>
-<ol class="arabic">
-<li><p>Run the following in python on your local machine (i.e., one that has no trouble downloading these files):
-.. code-block:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cartopy.io.shapereader</span> <span class="k">as</span> <span class="nn">shpreader</span>
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;coastline&#39;</span><span class="p">,</span> <span class="s1">&#39;land&#39;</span><span class="p">]:</span>
- <span class="n">shpfilename</span> <span class="o">=</span> <span class="n">shpreader</span><span class="o">.</span><span class="n">natural_earth</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;110m&#39;</span><span class="p">,</span>
-                                       <span class="n">category</span><span class="o">=</span><span class="s1">&#39;physical&#39;</span><span class="p">,</span>
-                                       <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
- <span class="n">shpreader</span><span class="o">.</span><span class="n">Reader</span><span class="p">(</span><span class="n">shpfilename</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p>On your local machine, run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">cartopy;</span> <span class="pre">print(cartopy.config['data_dir'])&quot;</span></code>. This will print out the directory in which the natural earth shapefiles are being placed locally.</p></li>
-<li><p>Copy these files onto the remote machine you are working on. Include folders <code class="docutils literal notranslate"><span class="pre">shapefiles/natural_earth/physical/*</span></code> where <code class="docutils literal notranslate"><span class="pre">*</span></code> is the set of shapefiles that were downloaded.</p></li>
-<li><p>On your remote machine, run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">cartopy;</span> <span class="pre">print(cartopy.config['data_dir'])&quot;</span></code>. Copy the <code class="docutils literal notranslate"><span class="pre">shapefiles</span></code> folder and all contents over to this location.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cartopy</span></code> should now be able to find these files for <code class="docutils literal notranslate"><span class="pre">MPAS-Analysis</span></code>.`</p></li>
-</ol>
 </div>
 <div class="section" id="list-analysis">
 <h2>List Analysis<a class="headerlink" href="#list-analysis" title="Permalink to this headline">¶</a></h2>

@@ -175,8 +175,7 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Entry points for downloading data (either for cartopy or for MPAS-Analysis</span>
-<span class="sd">itself)</span>
+<span class="sd">Entry points for downloading data for MPAS-Analysis</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
@@ -189,7 +188,6 @@
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">cartopy.io.shapereader</span> <span class="k">as</span> <span class="nn">shpreader</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.download</span> <span class="kn">import</span> <span class="n">download_files</span>
 
@@ -226,13 +224,6 @@
     <span class="n">analysisFileList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">analysisFileList</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
     <span class="n">download_files</span><span class="p">(</span><span class="n">analysisFileList</span><span class="p">,</span> <span class="n">urlBase</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">outDir</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="download_natural_earth_110m"><a class="viewcode-back" href="../../generated/mpas_analysis.download_data.download_natural_earth_110m.html#mpas_analysis.download_data.download_natural_earth_110m">[docs]</a><span class="k">def</span> <span class="nf">download_natural_earth_110m</span><span class="p">():</span>
-    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;coastline&#39;</span><span class="p">,</span> <span class="s1">&#39;land&#39;</span><span class="p">]:</span>
-        <span class="n">shpfilename</span> <span class="o">=</span> <span class="n">shpreader</span><span class="o">.</span><span class="n">natural_earth</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;110m&#39;</span><span class="p">,</span>
-                                              <span class="n">category</span><span class="o">=</span><span class="s1">&#39;physical&#39;</span><span class="p">,</span>
-                                              <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">shpreader</span><span class="o">.</span><span class="n">Reader</span><span class="p">(</span><span class="n">shpfilename</span><span class="p">)</span></div>
 
 <span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>

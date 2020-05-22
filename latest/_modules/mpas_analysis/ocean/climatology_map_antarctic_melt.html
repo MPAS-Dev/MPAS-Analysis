@@ -577,7 +577,9 @@
                 <span class="n">inFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
                 <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
                 <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
-                <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">freshwaterFlux</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                    <span class="n">freshwaterFlux</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
                 <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 
