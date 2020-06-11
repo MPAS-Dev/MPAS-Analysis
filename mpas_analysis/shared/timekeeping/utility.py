@@ -20,11 +20,13 @@ from __future__ import absolute_import, division, print_function, \
 
 import datetime
 import netCDF4
+import xarray
 import numpy
 import six
 
 from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
     MpasRelativeDelta
+from mpas_analysis.shared.io.utility import decode_strings
 
 
 def get_simulation_start_time(streams):
@@ -58,13 +60,14 @@ def get_simulation_start_time(streams):
         raise IOError('No MPAS restart file found: need at least one '
                       'restart file for analysis to work correctly')
 
-    ncFile = netCDF4.Dataset(restartFile, mode='r')
-    simulationStartTime = ncFile.variables['simulationStartTime'][:]
-    # convert from character array to str
-    simulationStartTime = ''.join(simulationStartTime.astype('U')).strip()
+    ds = xarray.open_dataset(restartFile)
+    da = ds.simulationStartTime
+    if da.dtype.type is numpy.string_:
+        simulationStartTime = bytes.decode(da.values.tostring())
+    else:
+        simulationStartTime = da.values.tostring()
     # replace underscores so it works as a CF-compliant reference date
-    simulationStartTime = simulationStartTime.replace('_', ' ')
-    ncFile.close()
+    simulationStartTime = simulationStartTime.rstrip('\x00').replace('_', ' ')
 
     return simulationStartTime
 
@@ -425,7 +428,7 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
         offset = 1
 
     # change underscores to spaces so both can be supported
-    dateString = dateString.replace('_', ' ').strip()
+    dateString = dateString.rstrip('\x00').replace('_', ' ').strip()
     if ' ' in dateString:
         ymd, hms = dateString.split(' ')
     else:
