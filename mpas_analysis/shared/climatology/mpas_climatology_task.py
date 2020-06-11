@@ -497,6 +497,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             seasons = ['none']
 
         args = ['ncclimo',
+                '--no_stdin',
                 '-4',
                 '--clm_md=mth',
                 '-a', 'sdd',
