@@ -440,7 +440,13 @@
                             <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]</span>
 
             <span class="c1"># Add the bolus velocity if GM is enabled</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s1">&#39;config_use_standardgm&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># the new name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s1">&#39;config_use_gm&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># the old name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span>
+                    <span class="s1">&#39;config_use_standardgm&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span><span class="p">:</span>
                 <span class="n">variableList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                     <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">,</span>
@@ -1024,7 +1030,13 @@
                                  <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]</span>
 
             <span class="c1"># Add the bolus velocity if GM is enabled</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s1">&#39;config_use_standardgm&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># the new name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s1">&#39;config_use_gm&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># the old name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span>
+                    <span class="s1">&#39;config_use_standardgm&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                     <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">,</span>
