@@ -184,11 +184,13 @@
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">netCDF4</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.MpasRelativeDelta</span> <span class="kn">import</span> \
     <span class="n">MpasRelativeDelta</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">decode_strings</span>
 
 
 <div class="viewcode-block" id="get_simulation_start_time"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html#mpas_analysis.shared.timekeeping.utility.get_simulation_start_time">[docs]</a><span class="k">def</span> <span class="nf">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">):</span>
@@ -222,13 +224,14 @@
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS restart file found: need at least one &#39;</span>
                       <span class="s1">&#39;restart file for analysis to work correctly&#39;</span><span class="p">)</span>
 
-    <span class="n">ncFile</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;simulationStartTime&#39;</span><span class="p">][:]</span>
-    <span class="c1"># convert from character array to str</span>
-    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simulationStartTime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">)</span>
+    <span class="n">da</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">simulationStartTime</span>
+    <span class="k">if</span> <span class="n">da</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">numpy</span><span class="o">.</span><span class="n">string_</span><span class="p">:</span>
+        <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span>
     <span class="c1"># replace underscores so it works as a CF-compliant reference date</span>
-    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">simulationStartTime</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
-    <span class="n">ncFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">simulationStartTime</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">simulationStartTime</span></div>
 
@@ -589,7 +592,7 @@
         <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="c1"># change underscores to spaces so both can be supported</span>
-    <span class="n">dateString</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">dateString</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="n">dateString</span><span class="p">:</span>
         <span class="n">ymd</span><span class="p">,</span> <span class="n">hms</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
