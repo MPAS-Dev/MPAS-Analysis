@@ -276,7 +276,13 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
                             'timeMonthly_avg_vertVelocityTop']
 
             # Add the bolus velocity if GM is enabled
-            self.includeBolus = self.namelist.getbool('config_use_standardgm')
+            try:
+                # the new name
+                self.includeBolus = self.namelist.getbool('config_use_gm')
+            except KeyError:
+                # the old name
+                self.includeBolus = self.namelist.getbool(
+                    'config_use_standardgm')
             if self.includeBolus:
                 variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
@@ -860,7 +866,13 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                  'timeMonthly_avg_vertVelocityTop']
 
             # Add the bolus velocity if GM is enabled
-            self.includeBolus = self.namelist.getbool('config_use_standardgm')
+            try:
+                # the new name
+                self.includeBolus = self.namelist.getbool('config_use_gm')
+            except KeyError:
+                # the old name
+                self.includeBolus = self.namelist.getbool(
+                    'config_use_standardgm')
             if self.includeBolus:
                 self.variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
