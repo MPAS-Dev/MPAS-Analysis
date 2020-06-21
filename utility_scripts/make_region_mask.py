@@ -35,7 +35,7 @@ meshName = 'oEC60to30v3'
 # the prefix/suffix used for this set of regions.  This should be the name
 # of the geojson file (without extension) and will be used as a suffix on the
 # resulting region masks file.
-regionsName = 'oceanBasins'
+regionsName = 'oceanBasins20200621'
 
 # the number of parallel threads to use
 processCount = 64
