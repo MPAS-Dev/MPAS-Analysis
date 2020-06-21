@@ -76,7 +76,7 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
         years = [year for year in range(startYear, endYear + 1)]
 
         transportTransectFileName = \
-            get_region_mask(config, 'transportTransects.geojson')
+            get_region_mask(config, 'transportTransects20200621.geojson')
 
         transectsToPlot = config.getExpression('timeSeriesTransport',
                                                'transectsToPlot')
@@ -84,7 +84,8 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
             transectsToPlot = get_feature_list(transportTransectFileName)
 
         masksSubtask = ComputeTransectMasksSubtask(
-            self, transportTransectFileName, outFileSuffix='transportMasks')
+            self, transportTransectFileName,
+            outFileSuffix='transportTransects20200621')
 
         self.add_subtask(masksSubtask)
 

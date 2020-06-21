@@ -76,7 +76,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
-        self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
+        self.iceShelfMasksFile = get_region_mask(config, 'iceShelves20200621.geojson')
 
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
@@ -84,7 +84,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             iceShelvesToPlot = get_feature_list(self.iceShelfMasksFile)
 
         masksSubtask = regionMasksTask.add_mask_subtask(
-            self.iceShelfMasksFile, outFileSuffix='iceShelfMasks')
+            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
 
         computeMeltSubtask = ComputeMeltSubtask(self, mpasTimeSeriesTask,
                                                 masksSubtask, iceShelvesToPlot)
