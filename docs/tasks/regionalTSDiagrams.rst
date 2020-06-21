@@ -43,7 +43,7 @@ The following configuration options are available for this task::
     # A geojson file containing Antarctic ocean regions.  Each region must have
     # 'zmin' and 'zmax' properites in addition to the usual properies for a region
     # in geometric_features
-    regionMask = 'antarcticRegions.geojson'
+    regionMask = 'antarcticRegions20200621.geojson'
 
     # list of regions to plot or ['all'] for all regions in the masks file.
     # See "regionNames" in the antarcticRegions masks file in
@@ -86,10 +86,10 @@ The following configuration options are available for this task::
     # A geojson file containing Antarctic ocean regions.  Each region must have
     # 'zmin' and 'zmax' properites in addition to the usual properies for a region
     # in geometric_features
-    regionMask = 'oceanBasins.geojson'
+    regionMask = 'oceanBasins20200621.geojson'
 
     # list of regions to plot or ['all'] for all regions in the masks file.
-    # See "regionNames" in the antarcticRegions masks file in
+    # See "regionNames" in the oceanBasins masks file in
     # regionMaskSubdirectory for details.
     regionNames = ['all']
 
