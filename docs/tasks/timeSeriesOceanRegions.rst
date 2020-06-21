@@ -26,10 +26,11 @@ The following configuration options are available for this task::
   [timeSeriesAntarcticRegions]
   ## options related to plotting time series of Antarctic regions
 
-  # A geojson file containing Antarctic ocean regions.  Each region must have
-  # 'zmin' and 'zmax' properites in addition to the usual properies for a region
-  # in geometric_features
-  regionMask = 'antarcticRegions20200621.geojson'
+  # An identifying string that is the prefix for a geojson file containing
+  # Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+  # in addition to the usual properties for a region in geometric_features.  The
+  # string is also used as the suffix for mask files generated from the geojson
+  regionMaskSuffix = 'antarcticRegions20200621'
 
   # list of regions to plot or ['all'] for all regions in the masks file.
   # See "regionNames" in the antarcticRegions masks file in
@@ -64,16 +65,17 @@ from the name of the region group.  By default, the only region group is
 Region Mask
 -----------
 
-The ``regionMask`` is a geojson file produce from the ``geometric_features``
-packge.  It should include any number of ocean regions, each of which includes
-properties ``zmin`` and ``zmax``.  Examples of how to create such a set of
-features can be found in `antarctic_ocean_regions`_.
+The ``regionMaskSuffix`` is a prefix for a geojson file produce from the
+``geometric_features`` package and documented in the ``preprocess_masks``
+directory of the GitHub repo.  It should include any number of ocean regions,
+each of which includes properties ``zmin`` and ``zmax``.  Examples of how to
+create such a set of features can be found in `antarctic_ocean_regions`_.
 
 Region Names
 ------------
 
 The ``regionNames`` can be set to ``['all']`` (the default) to plot all of the
-regions in the ``regionMask`` file.  In the case of "Antarctic Regions", these
+regions in the geojson file.  In the case of "Antarctic Regions", these
 are::
 
   ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",

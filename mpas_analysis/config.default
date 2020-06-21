@@ -1242,10 +1242,11 @@ regionGroups = ['Antarctic Regions']
 [timeSeriesAntarcticRegions]
 ## options related to plotting time series of Antarctic regions
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'antarcticRegions20200621.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+# in addition to the usual properties for a region in geometric_features.  The
+# string is also used as the suffix for mask files generated from the geojson
+regionMaskSuffix = 'antarcticRegions20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
@@ -1325,10 +1326,11 @@ subprocessCount = 4
 [TSDiagramsForAntarcticRegions]
 ## options related to plotting T/S diagrams of Antarctic regions
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'antarcticRegions20200621.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+# in addition to the usual properties for a region in geometric_features.  The
+# string is also used as the suffix for mask files generated from the geojson
+regionMaskSuffix = 'antarcticRegions20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
@@ -1368,10 +1370,11 @@ obs = ['SOSE', 'WOA18']
 [TSDiagramsForOceanBasins]
 ## options related to plotting T/S diagrams of major ocean basins
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'oceanBasins20200621.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
+# to the usual properties for a region in geometric_features.  The string is
+# also used as the suffix for mask files generated from the geojson file
+regionMaskSuffix = 'oceanBasins20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the oceanBasins masks file in
