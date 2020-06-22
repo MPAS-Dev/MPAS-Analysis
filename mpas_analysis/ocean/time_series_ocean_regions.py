@@ -491,7 +491,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             return
 
         regionMaskFileName = '{}/depthMasks{}.nc'.format(outputDirectory,
-                                                  timeSeriesName)
+                                                         timeSeriesName)
         dsRegionMask = xarray.open_dataset(regionMaskFileName)
         nRegions = dsRegionMask.sizes['nRegions']
         areaCell = dsRegionMask.areaCell

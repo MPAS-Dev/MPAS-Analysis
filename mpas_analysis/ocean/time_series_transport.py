@@ -285,7 +285,6 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             self.logger.info('  Time series exists -- Done.')
             return
 
-
         transectMaskFileName = self.masksSubtask.maskFileName
 
         dsTransectMask = xarray.open_dataset(transectMaskFileName)
