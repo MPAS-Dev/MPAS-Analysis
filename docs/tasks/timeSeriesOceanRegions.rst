@@ -22,16 +22,6 @@ The following configuration options are available for this task::
   # the names of region groups to plot, each with its own section below
   regionGroups = ['Antarctic Regions']
 
-  # the number of threads dask is allowed to spawn for each process computing
-  # a year of these time series
-  # Decrease this number if timeSeriesOceanRegions subtasks are running
-  # out of available threads
-  daskThreads = 12
-
-  # the number of subprocesses that each task gets counted as occupying
-  # Increase this number if timeSeriesOceanRegions subtasks are running
-  # out of memory, and fewer tasks will be allowed to run at once
-  subprocessCount = 3
 
   [timeSeriesAntarcticRegions]
   ## options related to plotting time series of Antarctic regions
@@ -105,11 +95,6 @@ y-axis label of each plot.  The ``"name"`` is the name of the variable in
 the NetCDF files as well as the text appended to subtaks names and file names.
 It should contain no spaces.  The ``"mpas"`` entry is the name of the
 corresponding field in the MPAS-Ocean ``timeSeriesStatsMonthlyOutput`` files.
-
-Other Options
--------------
-
-* :ref:`dask_threads`
 
 Example Result
 --------------

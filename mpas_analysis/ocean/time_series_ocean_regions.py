@@ -14,9 +14,6 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import xarray
 import numpy
-import dask
-import multiprocessing
-from multiprocessing.pool import ThreadPool
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
@@ -97,7 +94,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
             masksSubtask = regionMasksTask.add_mask_subtask(
                 regionMaskFile, outFileSuffix=fileSuffix)
 
-            years = range(startYear, endYear + 1)
+            years = list(range(startYear, endYear + 1))
 
             # in the end, we'll combine all the time series into one, but we
             # create this task first so it's easier to tell it to run after all
@@ -106,6 +103,11 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 self, startYears=years, endYears=years,
                 regionGroup=regionGroup)
 
+            depthMasksSubtask = ComputeRegionDepthMasksSubtask(
+                self,  masksSubtask=masksSubtask, regionGroup=regionGroup,
+                regionNames=regionNames)
+            depthMasksSubtask.run_after(masksSubtask)
+
             # run one subtask per year
             for year in years:
                 computeSubtask = ComputeRegionTimeSeriesSubtask(
@@ -113,6 +115,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                     masksSubtask=masksSubtask, regionGroup=regionGroup,
                     regionNames=regionNames)
                 self.add_subtask(computeSubtask)
+                computeSubtask.run_after(depthMasksSubtask)
                 computeSubtask.run_after(masksSubtask)
                 combineSubtask.run_after(computeSubtask)
 
@@ -134,8 +137,198 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
     # }}}
 
 
+class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
+    """
+    Compute masks for regional and depth mean
+
+    Attributes
+    ----------
+    masksSubtask : ``ComputeRegionMasksSubtask``
+        A task for creating mask files for each region to plot
+
+    regionGroup : str
+        The name of the region group being computed (e.g. "Antarctic Basins")
+
+    regionNames : list of str
+        The names of the regions to compute
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, masksSubtask, regionGroup, regionNames):
+        # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask : ``TimeSeriesOceanRegions``
+            The main task of which this is a subtask
+
+        masksSubtask : ``ComputeRegionMasksSubtask``
+            A task for creating mask files for each region to plot
+
+        regionGroup : str
+            The name of the region group being computed (e.g. "Antarctic
+            Basins")
+
+        regionNames : list of str
+            The names of the regions to compute
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        suffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(ComputeRegionDepthMasksSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='computeDepthMask{}'.format(suffix))
+
+        parentTask.add_subtask(self)
+        self.masksSubtask = masksSubtask
+        self.regionGroup = regionGroup
+        self.regionNames = regionNames
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Compute the regional-mean time series
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+
+        self.logger.info("\nCompute depth mask for regional means...")
+
+        regionGroup = self.regionGroup
+        sectionSuffix = regionGroup[0].upper() + \
+            regionGroup[1:].replace(' ', '')
+        timeSeriesName = sectionSuffix[0].lower() + sectionSuffix[1:]
+        sectionName = 'timeSeries{}'.format(sectionSuffix)
+
+        outputDirectory = '{}/{}/'.format(
+            build_config_full_path(config, 'output', 'timeseriesSubdirectory'),
+            timeSeriesName)
+        try:
+            os.makedirs(outputDirectory)
+        except OSError:
+            pass
+
+        outFileName = '{}/depthMasks{}.nc'.format(outputDirectory,
+                                                  timeSeriesName)
+
+        if os.path.exists(outFileName):
+            self.logger.info('  Mask file exists -- Done.')
+            return
+
+        # Load mesh related variables
+        try:
+            restartFileName = self.runStreams.readpath('restart')[0]
+        except ValueError:
+            raise IOError('No MPAS-O restart file found: need at least one '
+                          'restart file for ocean region time series')
+
+        if config.has_option(sectionName, 'zmin'):
+            config_zmin = config.getfloat(sectionName, 'zmin')
+        else:
+            config_zmin = None
+
+        if config.has_option(sectionName, 'zmax'):
+            config_zmax = config.getfloat(sectionName, 'zmax')
+        else:
+            config_zmax = None
+
+        dsRestart = xarray.open_dataset(restartFileName).isel(Time=0)
+        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell,
+                            dsRestart.layerThickness)
+        areaCell = dsRestart.areaCell
+        if 'landIceMask' in dsRestart:
+            # only the region outside of ice-shelf cavities
+            openOceanMask = dsRestart.landIceMask == 0
+        else:
+            openOceanMask = None
+
+        regionMaskFileName = self.masksSubtask.maskFileName
+        dsRegionMask = xarray.open_dataset(regionMaskFileName)
+        maskRegionNames = decode_strings(dsRegionMask.regionNames)
+
+        regionIndices = []
+        for regionName in self.regionNames:
+            for index, otherName in enumerate(maskRegionNames):
+                if regionName == otherName:
+                    regionIndices.append(index)
+                    break
+
+        # select only those regions we want to plot
+        dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+
+        nRegions = dsRegionMask.sizes['nRegions']
+
+        datasets = []
+        for regionIndex in range(nRegions):
+            self.logger.info('    region: {}'.format(
+                self.regionNames[regionIndex]))
+            dsRregion = dsRegionMask.isel(nRegions=regionIndex)
+            cellMask = dsRregion.regionCellMasks == 1
+
+            if openOceanMask is not None:
+                cellMask = numpy.logical_and(cellMask, openOceanMask)
+
+            totalArea = areaCell.where(cellMask).sum()
+            self.logger.info('      totalArea: {} mil. km^2'.format(
+                1e-12 * totalArea.values))
+
+            if config_zmin is None:
+                if 'zminRegions' in dsRregion:
+                    zmin = dsRregion.zminRegions
+                else:
+                    # the old naming convention, used in some pre-generated
+                    # mask files
+                    zmin = dsRregion.zmin
+            else:
+                zmin = (('nRegions',), config_zmin)
+
+            if config_zmax is None:
+                if 'zmaxRegions' in dsRregion:
+                    zmax = dsRregion.zmaxRegions
+                else:
+                    # the old naming convention, used in some pre-generated
+                    # mask files
+                    zmax = dsRregion.zmax
+            else:
+                zmax = (('nRegions',), config_zmax)
+
+            depthMask = numpy.logical_and(zMid >= zmin, zMid <= zmax)
+            dsOut = xarray.Dataset()
+            dsOut['zmin'] = zmin
+            dsOut['zmax'] = zmax
+            dsOut['totalArea'] = totalArea
+            dsOut['cellMask'] = cellMask
+            dsOut['depthMask'] = depthMask
+            datasets.append(dsOut)
+
+        dsOut = xarray.concat(objs=datasets, dim='nRegions')
+        zbounds = numpy.zeros((nRegions, 2))
+        zbounds[:, 0] = dsOut.zmin.values
+        zbounds[:, 1] = dsOut.zmax.values
+        dsOut['zbounds'] = (('nRegions', 'nbounds'), zbounds)
+        dsOut['areaCell'] = areaCell
+        dsOut['regionNames'] = dsRegionMask.regionNames
+        write_netcdf(dsOut, outFileName)
+        # }}}
+    # }}}
+
+
 class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
-    '''
+    """
     Compute regional and depth mean at a function of time for a set of MPAS
     fields
 
@@ -152,14 +345,14 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
     regionNames : list of str
         The names of the regions to compute
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, startYear, endYear, masksSubtask,
                  regionGroup, regionNames):  # {{{
-        '''
+        """
         Construct the analysis task.
 
         Parameters
@@ -179,7 +372,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
         regionNames : list of str
             The names of the regions to compute
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -201,25 +394,17 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         self.masksSubtask = masksSubtask
         self.regionGroup = regionGroup
         self.regionNames = regionNames
-
-        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
-        self.subprocessCount = min(parallelTaskCount,
-                                   self.config.getint(self.taskName,
-                                                      'subprocessCount'))
-        self.daskThreads = min(
-            multiprocessing.cpu_count(),
-            self.config.getint(self.taskName, 'daskThreads'))
         # }}}
 
     def setup_and_check(self):  # {{{
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
         ------
         ValueError
             if timeSeriesStatsMonthly is not enabled in the MPAS run
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -238,9 +423,9 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def run_task(self):  # {{{
-        '''
+        """
         Compute the regional-mean time series
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -305,181 +490,101 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             self.logger.info('  Time series exists -- Done.')
             return
 
-        # Load mesh related variables
-        try:
-            restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for ocean region time series')
-
-        cellsChunk = 32768
-        timeChunk = 1
+        regionMaskFileName = '{}/depthMasks{}.nc'.format(outputDirectory,
+                                                         timeSeriesName)
+        dsRegionMask = xarray.open_dataset(regionMaskFileName)
+        nRegions = dsRegionMask.sizes['nRegions']
+        areaCell = dsRegionMask.areaCell
 
         datasets = []
-        for timeIndex, fileName in enumerate(inputFiles):
+        nTime = len(inputFiles)
+        for tIndex in range(nTime):
+            self.logger.info('  {}/{}'.format(tIndex + 1, nTime))
 
-            dsTimeSlice = open_mpas_dataset(
-                fileName=fileName,
+            dsIn = open_mpas_dataset(
+                fileName=inputFiles[tIndex],
                 calendar=self.calendar,
                 variableList=variableList,
                 startDate=startDate,
-                endDate=endDate)
-            datasets.append(dsTimeSlice)
+                endDate=endDate).isel(Time=0)
 
-        chunk = {'Time': timeChunk, 'nCells': cellsChunk}
+            layerThickness = dsIn.timeMonthly_avg_layerThickness
 
-        if config.has_option(sectionName, 'zmin'):
-            config_zmin = config.getfloat(sectionName, 'zmin')
-        else:
-            config_zmin = None
+            innerDatasets = []
+            for regionIndex in range(nRegions):
+                self.logger.info('    region: {}'.format(
+                    self.regionNames[regionIndex]))
+                dsRegion = dsRegionMask.isel(nRegions=regionIndex)
+                cellMask = dsRegion.cellMask
+                totalArea = dsRegion.totalArea
+                depthMask = dsRegion.depthMask.where(cellMask, drop=True)
+                localArea = areaCell.where(cellMask, drop=True)
+                localThickness = layerThickness.where(cellMask, drop=True)
 
-        if config.has_option(sectionName, 'zmax'):
-            config_zmax = config.getfloat(sectionName, 'zmax')
-        else:
-            config_zmax = None
-
-        with dask.config.set(schedular='threads',
-                             pool=ThreadPool(self.daskThreads)):
-            # combine data sets into a single data set
-            dsIn = xarray.concat(datasets, 'Time').chunk(chunk)
-
-            chunk = {'nCells': cellsChunk}
-            dsRestart = xarray.open_dataset(restartFileName)
-            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
-            dsIn['areaCell'] = dsRestart.areaCell
-            if 'landIceMask' in dsRestart:
-                # only the region outside of ice-shelf cavities
-                dsIn['openOceanMask'] = dsRestart.landIceMask == 0
-
-            dsIn['zMid'] = compute_zmid(dsRestart.bottomDepth,
-                                        dsRestart.maxLevelCell,
-                                        dsRestart.layerThickness)
-
-            regionMaskFileName = self.masksSubtask.maskFileName
-
-            dsRegionMask = xarray.open_dataset(regionMaskFileName)
-
-            maskRegionNames = decode_strings(dsRegionMask.regionNames)
-
-            datasets = []
-            regionIndices = []
-            for regionName in self.regionNames:
-
-                self.logger.info('    region: {}'.format(regionName))
-                regionIndex = maskRegionNames.index(regionName)
-                regionIndices.append(regionIndex)
-
-                chunk = {'nCells': cellsChunk}
-                dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
-
-                cellMask = dsMask.regionCellMasks == 1
-                if 'openOceanMask' in dsIn:
-                    cellMask = numpy.logical_and(cellMask, dsIn.openOceanMask)
-                dsRegion = dsIn.where(cellMask, drop=True)
-
-                totalArea = dsRegion['areaCell'].sum()
-                self.logger.info('      totalArea: {} mil. km^2'.format(
-                    1e-12*totalArea.values))
-
-                self.logger.info("Don't worry about the following dask "
-                                 "warnings.")
-                if config_zmin is None:
-                    if 'zminRegions' in dsMask:
-                        zmin = dsMask.zminRegions
-                    else:
-                        # the old naming convention, used in some pre-generated
-                        # mask files
-                        zmin = dsMask.zmin
-                else:
-                    zmin = config_zmin
-
-                if config_zmax is None:
-                    if 'zmaxRegions' in dsMask:
-                        zmax = dsMask.zmaxRegions
-                    else:
-                        # the old naming convention, used in some pre-generated
-                        # mask files
-                        zmax = dsMask.zmax
-                else:
-                    zmax = config_zmax
-
-                depthMask = numpy.logical_and(dsRegion.zMid >= zmin,
-                                              dsRegion.zMid <= zmax)
-                depthMask.compute()
-                self.logger.info("Dask warnings should be done.")
-                dsRegion['depthMask'] = depthMask
-
-                layerThickness = dsRegion.timeMonthly_avg_layerThickness
-                dsRegion['volCell'] = (dsRegion.areaCell*layerThickness).where(
-                    depthMask)
-                totalVol = dsRegion.volCell.sum(dim='nVertLevels').sum(
-                    dim='nCells')
-                totalVol.compute()
+                volCell = (localArea*localThickness).where(depthMask)
+                volCell = volCell.transpose('nCells', 'nVertLevels')
+                totalVol = volCell.sum(dim='nVertLevels').sum(dim='nCells')
                 self.logger.info('      totalVol (mil. km^3): {}'.format(
                     1e-15*totalVol.values))
-
-                dsRegion = dsRegion.transpose('Time', 'nCells', 'nVertLevels')
 
                 dsOut = xarray.Dataset()
                 dsOut['totalVol'] = totalVol
                 dsOut.totalVol.attrs['units'] = 'm^3'
-                dsOut['totalArea'] = totalArea
-                dsOut.totalArea.attrs['units'] = 'm^2'
-                dsOut['zbounds'] = ('nbounds', [zmin, zmax])
-                dsOut.zbounds.attrs['units'] = 'm'
 
                 for var in variables:
                     outName = var['name']
                     self.logger.info('      {}'.format(outName))
                     mpasVarName = var['mpas']
-                    timeSeries = dsRegion[mpasVarName]
+                    timeSeries = dsIn[mpasVarName].where(cellMask, drop=True)
                     units = timeSeries.units
                     description = timeSeries.long_name
 
                     is3d = 'nVertLevels' in timeSeries.dims
                     if is3d:
                         timeSeries = \
-                            (dsRegion.volCell*timeSeries.where(depthMask)).sum(
+                            (volCell*timeSeries.where(depthMask)).sum(
                                 dim='nVertLevels').sum(dim='nCells') / totalVol
                     else:
                         timeSeries = \
-                            (dsRegion.areaCell*timeSeries).sum(
+                            (localArea*timeSeries).sum(
                                 dim='nCells') / totalArea
-
-                    timeSeries.compute()
 
                     dsOut[outName] = timeSeries
                     dsOut[outName].attrs['units'] = units
                     dsOut[outName].attrs['description'] = description
                     dsOut[outName].attrs['is3d'] = str(is3d)
 
-                datasets.append(dsOut)
+                innerDatasets.append(dsOut)
 
-            # combine data sets into a single data set
-            dsOut = xarray.concat(datasets, 'nRegions')
+            datasets.append(innerDatasets)
 
-            dsOut.coords['regionNames'] = dsRegionMask.regionNames.isel(
-                nRegions=regionIndices)
-            dsOut.coords['year'] = (('Time'), years)
-            dsOut['year'].attrs['units'] = 'years'
-            dsOut.coords['month'] = (('Time'), months)
-            dsOut['month'].attrs['units'] = 'months'
+        # combine data sets into a single data set
+        dsOut = xarray.combine_nested(datasets, ['Time', 'nRegions'])
 
-            write_netcdf(dsOut, outFileName)
-        # }}}
+        dsOut['totalArea'] = dsRegionMask.totalArea
+        dsOut.totalArea.attrs['units'] = 'm^2'
+        dsOut['zbounds'] = dsRegionMask.zbounds
+        dsOut.zbounds.attrs['units'] = 'm'
+        dsOut.coords['regionNames'] = dsRegionMask.regionNames
+        dsOut.coords['year'] = (('Time'), years)
+        dsOut['year'].attrs['units'] = 'years'
+        dsOut.coords['month'] = (('Time'), months)
+        dsOut['month'].attrs['units'] = 'months'
+
+        write_netcdf(dsOut, outFileName)  # }}}
     # }}}
 
 
 class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
-    '''
+    """
     Combine individual time series into a single data set
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, startYears, endYears, regionGroup):  # {{{
-        '''
+        """
         Construct the analysis task.
 
         Parameters
@@ -494,7 +599,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             The name of the region group being computed (e.g. "Antarctic
             Basins")
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -516,9 +621,9 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def run_task(self):  # {{{
-        '''
+        """
         Combine the time series
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

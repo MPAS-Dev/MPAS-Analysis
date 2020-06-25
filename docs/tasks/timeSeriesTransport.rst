@@ -39,17 +39,6 @@ The following configuration options are available for this task::
 
     # yearStrideXTicks = 1
 
-    # the number of threads dask is allowed to spawn for each process computing
-    # a year of these time series
-    # Decrease this number if timeSeriesTransport subtasks are running
-    # out of available threads
-    daskThreads = 4
-
-    # the number of subprocesses that each task gets counted as occupying
-    # Increase this number if timeSeriesTransport subtasks are running
-    # out of memory, and fewer tasks will be allowed to run at once
-    subprocessCount = 1
-
 Transect Names
 --------------
 
@@ -76,7 +65,6 @@ Other Options
 
 * :ref:`config_moving_average`
 * :ref:`config_time_axis_ticks`
-* :ref:`dask_threads`
 
 Example Result
 --------------
