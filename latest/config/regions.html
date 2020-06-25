@@ -231,12 +231,14 @@ define regions in an MPAS mesh as part of their analysis.  The option
 <code class="docutils literal notranslate"><span class="pre">diagnostics/mpas_analysis/region_masks</span></code>.  Region  masks for common MPAS
 Ocean and Seaice grids are supplied as part of the data from the
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a> (see the <a class="reference internal" href="../quick_start.html#quick-start"><span class="std std-ref">Quick Start Guide</span></a>).</p>
-<p>If ice shelf or ocean basin masks for a given grid don’t already exist in the
-cached mask location, they will be generated automatically from the associated
-geojson files (<code class="docutils literal notranslate"><span class="pre">iceShelves.geojson</span></code> or <code class="docutils literal notranslate"><span class="pre">oceanBasins.geojson</span></code>), a process
-that can be very time consuming.  To generate them in advance (possibly using
-threading to speed up the process), see the example utility script
-<code class="docutils literal notranslate"><span class="pre">utility/make_region_mask.py</span></code></p>
+<p>If ice shelf, ocean basin, Antarctic or Arctic masks for a given grid don’t
+already exist in the cached mask location, they will be generated
+automatically from the associated geojson files (<code class="docutils literal notranslate"><span class="pre">iceShelves20200621.geojson</span></code>
+<code class="docutils literal notranslate"><span class="pre">oceanBasins20200621.geojson</span></code>, <code class="docutils literal notranslate"><span class="pre">antarcticRegions20200621.geojson</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">arcticRegions.geojson</span></code>), a process that can be time consuming for
+large meshes.  To generate them in advance (using threading to speed up the
+process), see the example utility script
+<code class="docutils literal notranslate"><span class="pre">utility_scripts/make_region_mask.py</span></code></p>
 </div>
 </div>
 

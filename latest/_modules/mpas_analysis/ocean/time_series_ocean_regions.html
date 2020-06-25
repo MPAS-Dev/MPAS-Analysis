@@ -246,12 +246,13 @@
         <span class="k">for</span> <span class="n">regionGroup</span> <span class="ow">in</span> <span class="n">regionGroups</span><span class="p">:</span>
             <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
                 <span class="n">regionGroup</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="n">fileSuffix</span> <span class="o">=</span> <span class="n">sectionSuffix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="n">sectionSuffix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeries</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionSuffix</span><span class="p">)</span>
 
-            <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionMask&#39;</span><span class="p">)</span>
+            <span class="n">regionMaskSuffix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                    <span class="s1">&#39;regionMaskSuffix&#39;</span><span class="p">)</span>
 
-            <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">)</span>
+            <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskSuffix</span><span class="p">))</span>
 
             <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
 
@@ -259,7 +260,7 @@
                 <span class="n">regionNames</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">)</span>
 
             <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
-                <span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="n">fileSuffix</span><span class="p">)</span>
+                <span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="n">regionMaskSuffix</span><span class="p">)</span>
 
             <span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
@@ -951,9 +952,11 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
 
-        <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionMask&#39;</span><span class="p">)</span>
+        <span class="n">regionMaskSuffix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
+                                                <span class="s1">&#39;regionMaskSuffix&#39;</span><span class="p">)</span>
 
-        <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">)</span>
+        <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskSuffix</span><span class="p">))</span>
 
         <span class="n">fcAll</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">)</span>
 

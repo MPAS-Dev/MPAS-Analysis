@@ -43,7 +43,7 @@ Transect Names
 --------------
 
 The ``transectsToPlot`` can be set to ``['all']`` (the default) to plot all of the
-transects defined in ``transportTransects.geojson``.  These are::
+transects defined in ``transportTransects20200621.geojson``.  These are::
 
   ["Africa-Ant",  "Agulhas", "Antarctic Peninsula", "Antilles Inflow",
    "Baja CA blockage", "Baltic Sea Deepen", "Barents Sea Opening",
