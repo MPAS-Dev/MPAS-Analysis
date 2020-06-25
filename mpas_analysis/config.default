@@ -1215,7 +1215,7 @@ iceShelvesInTable = ['all']
 iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
                     'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
                     'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
-                    'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                    'Totten', 'Eastern_Ross', 'Western_Ross', 'Ross', 'Getz',
                     'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 # Number of months over which to compute moving average
@@ -1242,10 +1242,11 @@ regionGroups = ['Antarctic Regions']
 [timeSeriesAntarcticRegions]
 ## options related to plotting time series of Antarctic regions
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'antarcticRegions.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+# in addition to the usual properties for a region in geometric_features.  The
+# string is also used as the suffix for mask files generated from the geojson
+regionMaskSuffix = 'antarcticRegions20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
@@ -1325,10 +1326,11 @@ subprocessCount = 4
 [TSDiagramsForAntarcticRegions]
 ## options related to plotting T/S diagrams of Antarctic regions
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'antarcticRegions.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+# in addition to the usual properties for a region in geometric_features.  The
+# string is also used as the suffix for mask files generated from the geojson
+regionMaskSuffix = 'antarcticRegions20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
@@ -1368,13 +1370,14 @@ obs = ['SOSE', 'WOA18']
 [TSDiagramsForOceanBasins]
 ## options related to plotting T/S diagrams of major ocean basins
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'oceanBasins.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
+# to the usual properties for a region in geometric_features.  The string is
+# also used as the suffix for mask files generated from the geojson file
+regionMaskSuffix = 'oceanBasins20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
-# See "regionNames" in the antarcticRegions masks file in
+# See "regionNames" in the oceanBasins masks file in
 # regionMaskSubdirectory for details.
 regionNames = ['all']
 
@@ -2943,7 +2946,7 @@ depthRange = []
 # The suffix on the regional mask file to be used to determine the regions to
 # plot.  A region mask file should be in the regionMaskDirectory and should
 # be named <mpasMeshName>_<regionMaskSuffix>.nc
-regionMaskSuffix = oceanBasins
+regionMaskSuffix = oceanBasins20200621
 
 # a list of region names from the region masks file to plot
 regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",

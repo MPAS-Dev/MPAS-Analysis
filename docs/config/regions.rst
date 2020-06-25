@@ -43,11 +43,13 @@ define regions in an MPAS mesh as part of their analysis.  The option
 Ocean and Seaice grids are supplied as part of the data from the
 `E3SM public data repository`_ (see the :ref:`quick_start`).
 
-If ice shelf or ocean basin masks for a given grid don't already exist in the
-cached mask location, they will be generated automatically from the associated
-geojson files (``iceShelves.geojson`` or ``oceanBasins.geojson``), a process
-that can be very time consuming.  To generate them in advance (possibly using
-threading to speed up the process), see the example utility script
-``utility/make_region_mask.py``
+If ice shelf, ocean basin, Antarctic or Arctic masks for a given grid don't
+already exist in the cached mask location, they will be generated
+automatically from the associated geojson files (``iceShelves20200621.geojson``
+``oceanBasins20200621.geojson``, ``antarcticRegions20200621.geojson``, or
+``arcticRegions.geojson``), a process that can be time consuming for
+large meshes.  To generate them in advance (using threading to speed up the
+process), see the example utility script
+``utility_scripts/make_region_mask.py``
 
 .. _`E3SM public data repository`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/

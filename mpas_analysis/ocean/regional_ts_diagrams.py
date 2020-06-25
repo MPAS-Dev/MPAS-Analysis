@@ -165,12 +165,12 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
             sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
-            fileSuffix = sectionSuffix[0].lower() + sectionSuffix[1:]
 
-            regionMaskFile = config.getExpression(sectionName,
-                                                  'regionMask')
+            regionMaskSuffix = config.getExpression(sectionName,
+                                                    'regionMaskSuffix')
 
-            regionMaskFile = get_region_mask(config, regionMaskFile)
+            regionMaskFile = get_region_mask(
+                config, '{}.geojson'.format(regionMaskSuffix))
 
             regionNames = config.getExpression(sectionName, 'regionNames')
 
@@ -178,7 +178,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                 regionNames = get_feature_list(regionMaskFile)
 
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=fileSuffix)
+                regionMaskFile, outFileSuffix=regionMaskSuffix)
 
             obsList = config.getExpression(sectionName, 'obs')
             groupObsDicts = {}
@@ -189,7 +189,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
                 obsMasksSubtask = regionMasksTask.add_mask_subtask(
-                    regionMaskFile, outFileSuffix=fileSuffix,
+                    regionMaskFile, outFileSuffix=regionMaskSuffix,
                     obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
@@ -936,9 +936,10 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         startYear = self.mpasClimatologyTask.startYear
         endYear = self.mpasClimatologyTask.endYear
 
-        regionMaskFile = config.getExpression(sectionName, 'regionMask')
+        regionMaskSuffix = config.getExpression(sectionName, 'regionMaskSuffix')
 
-        regionMaskFile = get_region_mask(config, regionMaskFile)
+        regionMaskFile = get_region_mask(config,
+                                         '{}.geojson'.format(regionMaskSuffix))
 
         fcAll = read_feature_collection(regionMaskFile)
 

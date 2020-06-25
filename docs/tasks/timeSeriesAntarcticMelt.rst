@@ -25,7 +25,7 @@ The following configuration options are available for this task::
   iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
                       'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
                       'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
-                      'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                      'Totten', 'Eastern_Ross', 'Western_Ross', 'Ross', 'Getz',
                       'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
   # Number of months over which to compute moving average
@@ -59,8 +59,8 @@ it is a list consisting of any subset of the following ice shelves::
    "Mendelssohn", "Mertz", "Moscow_University", "Moubray", "Mulebreen",
    "Myers", "Nansen", "Nickerson", "Ninnis", "Nivl", "Noll", "Nordenskjold",
    "Pine_Island", "PourquoiPas", "Prince_Harald", "Publications",  "Quar",
-   "Rayner_Thyer", "Rennick", "Richter", "Riiser-Larsen", "Ronne", "Ross_East",
-   "Ross_West", "Shackleton", "Shirase", "Slava", "SmithInlet", "Stange",
+   "Rayner_Thyer", "Rennick", "Richter", "Riiser-Larsen", "Ronne", "Western_Ross",
+   "Eastern_Ross", "Shackleton", "Shirase", "Slava", "SmithInlet", "Stange",
    "Sulzberger", "Suvorov", "Swinburne", "Thwaites", "Tinker", "Totten",
    "Tracy_Tremenchus", "Tucker", "Underwood", "Utsikkar", "Venable", "Verdi",
    "Vigrid", "Vincennes", "Voyeykov", "West", "Wilkins", "Wilma_Robert_Downer",

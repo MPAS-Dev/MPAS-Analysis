@@ -376,10 +376,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         self.mpasClimatologyTask = mpasClimatologyTask
         self.controlConfig = controlConfig
 
-        self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
+        self.iceShelfMasksFile = get_region_mask(config,
+                                                 'iceShelves20200621.geojson')
 
         self.masksSubtask = regionMasksTask.add_mask_subtask(
-            self.iceShelfMasksFile, outFileSuffix='iceShelfMasks')
+            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
 
         self.run_after(self.masksSubtask)
         # }}}

@@ -49,7 +49,7 @@ The following configuration options are available for this task::
   # The suffix on the regional mask file to be used to determine the regions to
   # plot.  A region mask file should be in the regionMaskDirectory and should
   # be named <mpasMeshName>_<regionMaskSuffix>.nc
-  regionMaskSuffix = oceanBasins
+  regionMaskSuffix = oceanBasins20200621
 
   # a list of region names from the region masks file to plot
   regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",

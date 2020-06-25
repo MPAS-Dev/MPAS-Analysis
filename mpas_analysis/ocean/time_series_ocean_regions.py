@@ -79,12 +79,13 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
-            fileSuffix = sectionSuffix[0].lower() + sectionSuffix[1:]
             sectionName = 'timeSeries{}'.format(sectionSuffix)
 
-            regionMaskFile = config.getExpression(sectionName, 'regionMask')
+            regionMaskSuffix = config.getExpression(sectionName,
+                                                    'regionMaskSuffix')
 
-            regionMaskFile = get_region_mask(config, regionMaskFile)
+            regionMaskFile = get_region_mask(
+                config, '{}.geojson'.format(regionMaskSuffix))
 
             regionNames = config.getExpression(sectionName, 'regionNames')
 
@@ -92,7 +93,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionNames = get_feature_list(regionMaskFile)
 
             masksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=fileSuffix)
+                regionMaskFile, outFileSuffix=regionMaskSuffix)
 
             years = list(range(startYear, endYear + 1))
 
@@ -784,9 +785,11 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         config = self.config
         calendar = self.calendar
 
-        regionMaskFile = config.getExpression(self.sectionName, 'regionMask')
+        regionMaskSuffix = config.getExpression(self.sectionName,
+                                                'regionMaskSuffix')
 
-        regionMaskFile = get_region_mask(config, regionMaskFile)
+        regionMaskFile = get_region_mask(config,
+                                         '{}.geojson'.format(regionMaskSuffix))
 
         fcAll = read_feature_collection(regionMaskFile)
 

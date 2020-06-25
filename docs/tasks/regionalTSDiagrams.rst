@@ -40,10 +40,11 @@ The following configuration options are available for this task::
     [TSDiagramsForAntarcticRegions]
     ## options related to plotting T/S diagrams of Antarctic regions
 
-    # A geojson file containing Antarctic ocean regions.  Each region must have
-    # 'zmin' and 'zmax' properites in addition to the usual properies for a region
-    # in geometric_features
-    regionMask = 'antarcticRegions.geojson'
+    # An identifying string that is the prefix for a geojson file containing
+    # Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+    # in addition to the usual properties for a region in geometric_features.  The
+    # string is also used as the suffix for mask files generated from the geojson
+    regionMaskSuffix = 'antarcticRegions20200621'
 
     # list of regions to plot or ['all'] for all regions in the masks file.
     # See "regionNames" in the antarcticRegions masks file in
@@ -83,13 +84,14 @@ The following configuration options are available for this task::
     [TSDiagramsForOceanBasins]
     ## options related to plotting T/S diagrams of major ocean basins
 
-    # A geojson file containing Antarctic ocean regions.  Each region must have
-    # 'zmin' and 'zmax' properites in addition to the usual properies for a region
-    # in geometric_features
-    regionMask = 'oceanBasins.geojson'
+    # An identifying string that is the prefix for a geojson file containing
+    # ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
+    # to the usual properties for a region in geometric_features.  The string is
+    # also used as the suffix for mask files generated from the geojson file
+    regionMaskSuffix = 'oceanBasins20200621'
 
     # list of regions to plot or ['all'] for all regions in the masks file.
-    # See "regionNames" in the antarcticRegions masks file in
+    # See "regionNames" in the oceanBasins masks file in
     # regionMaskSubdirectory for details.
     regionNames = ['all']
 
@@ -134,16 +136,17 @@ is "Ocean Basins".
 Region Mask
 -----------
 
-The ``regionMask`` is a geojson file produce from the ``geometric_features``
-package.  It should include any number of ocean regions, each of which includes
-properties ``zmin`` and ``zmax``.  Examples of how to create such a set of
-features can be found in `antarctic_ocean_regions`_.
+The ``regionMaskSuffix`` is a prefix for a geojson file produce from the
+``geometric_features`` package and documented in the ``preprocess_masks``
+directory of the GitHub repo.  It should include any number of ocean regions,
+each of which includes properties ``zmin`` and ``zmax``.  Examples of how to
+create such a set of features can be found in `antarctic_ocean_regions`_.
 
 Region Names
 ------------
 
 The ``regionNames`` can be set to ``['all']`` (the default) to plot all of the
-regions in the ``regionMask`` file.  In the case of "Antarctic Regions", these
+regions in the geojson file.  In the case of "Antarctic Regions", these
 are::
 
   ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",
@@ -190,7 +193,7 @@ plots of neutral density and are used to determine the bounds of the figure
 in T/S space.  ``rhoInterval`` is the interval between contours of neutral
 density.  ``zmin`` and ``zmax`` are the minimum and maximum depths (positive
 up) of the ocean region.  If available (e.g. for "Antarctic Regions"), the
-default is to read them from ``regionMask``.
+default is to read them from geojson file.
 
 Observations
 ------------
