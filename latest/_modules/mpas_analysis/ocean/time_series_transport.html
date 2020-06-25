@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -104,6 +106,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -142,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -178,9 +181,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">dask</span>
-<span class="kn">import</span> <span class="nn">multiprocessing</span>
-<span class="kn">from</span> <span class="nn">multiprocessing.pool</span> <span class="kn">import</span> <span class="n">ThreadPool</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
@@ -340,15 +340,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">transectsToPlot</span>
-
-        <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">parallelTaskCount</span><span class="p">,</span>
-                                   <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-                                                      <span class="s1">&#39;subprocessCount&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">daskThreads</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
-            <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;daskThreads&#39;</span><span class="p">))</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># }}}</span>
 
@@ -461,96 +452,91 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Time series exists -- Done.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="c1"># Load data:</span>
-        <span class="k">with</span> <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">schedular</span><span class="o">=</span><span class="s1">&#39;threads&#39;</span><span class="p">,</span>
-                             <span class="n">pool</span><span class="o">=</span><span class="n">ThreadPool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daskThreads</span><span class="p">)):</span>
+        <span class="n">transectMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 
-            <span class="n">transectMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
+        <span class="n">dsTransectMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">transectMaskFileName</span><span class="p">)</span>
 
-            <span class="n">dsTransectMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">transectMaskFileName</span><span class="p">)</span>
+        <span class="c1"># figure out the indices of the transects to plot</span>
+        <span class="n">maskTransectNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="p">)</span>
 
-            <span class="c1"># figure out the indices of the transects to plot</span>
-            <span class="n">maskTransectNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">dvEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">dvEdge</span>
+        <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
 
-            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-            <span class="n">dvEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">dvEdge</span>
-            <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">timeDatasets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing transport...&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">inputFiles</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    input file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+            <span class="n">dsTimeSlice</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
+                <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
+                <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
+                <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+                <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
 
-            <span class="n">timeDatasets</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing transport...&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">inputFiles</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    input file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
-                <span class="n">dsTimeSlice</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
-                    <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
-                    <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
-                    <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
-                    <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
-                    <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+            <span class="n">transectDatasets</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">transectIndices</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">transect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="p">))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">transectIndex</span> <span class="o">=</span> <span class="n">maskTransectNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">transect</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;      Not found in masks. &#39;</span>
+                                        <span class="s1">&#39;Skipping.&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">transectIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transectIndex</span><span class="p">)</span>
 
-                <span class="n">transectDatasets</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="n">transectIndices</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">transect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="p">))</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">transectIndex</span> <span class="o">=</span> <span class="n">maskTransectNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">transect</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;      Not found in masks. &#39;</span>
-                                            <span class="s1">&#39;Skipping.&#39;</span><span class="p">)</span>
-                        <span class="k">continue</span>
-                    <span class="n">transectIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transectIndex</span><span class="p">)</span>
+                <span class="c1"># select the current transect</span>
+                <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="p">[</span><span class="n">transectIndex</span><span class="p">])</span>
+                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeGlobalIDs</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgeIndices</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">edgeIndices</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMaskSigns</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                    <span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
 
-                    <span class="c1"># select the current transect</span>
-                    <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="p">[</span><span class="n">transectIndex</span><span class="p">])</span>
-                    <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeGlobalIDs</span> <span class="o">-</span> <span class="mi">1</span>
-                    <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgeIndices</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">edgeIndices</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
-                                                    <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-                    <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMaskSigns</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
-                        <span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+                <span class="n">dsIn</span> <span class="o">=</span> <span class="n">dsTimeSlice</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
 
-                    <span class="n">dsIn</span> <span class="o">=</span> <span class="n">dsTimeSlice</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+                <span class="n">dv</span> <span class="o">=</span> <span class="n">dvEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+                <span class="n">coe</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
 
-                    <span class="n">dv</span> <span class="o">=</span> <span class="n">dvEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
-                    <span class="n">coe</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+                <span class="c1"># work on data from simulations</span>
+                <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_normalTransportVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
+                    <span class="n">vel</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalTransportVelocity</span>
+                <span class="k">elif</span> <span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
+                    <span class="n">vel</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span> <span class="o">+</span>
+                           <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalGMBolusVelocity</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">vel</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span>
 
-                    <span class="c1"># work on data from simulations</span>
-                    <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_normalTransportVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
-                        <span class="n">vel</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalTransportVelocity</span>
-                    <span class="k">elif</span> <span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
-                        <span class="n">vel</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span> <span class="o">+</span>
-                               <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalGMBolusVelocity</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">vel</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span>
+                <span class="c1"># get layer thickness on edges by averaging adjacent cells</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                    <span class="n">nCells</span><span class="o">=</span><span class="n">coe</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;TWO&#39;</span><span class="p">)</span>
 
-                    <span class="c1"># get layer thickness on edges by averaging adjacent cells</span>
-                    <span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
-                        <span class="n">nCells</span><span class="o">=</span><span class="n">coe</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;TWO&#39;</span><span class="p">)</span>
+                <span class="n">edgeTransport</span> <span class="o">=</span> <span class="n">edgeSign</span> <span class="o">*</span> <span class="n">vel</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">dv</span>
 
-                    <span class="n">edgeTransport</span> <span class="o">=</span> <span class="n">edgeSign</span> <span class="o">*</span> <span class="n">vel</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">dv</span>
+                <span class="c1"># convert from m^3/s to Sv</span>
+                <span class="n">transport</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">m3ps_to_Sv</span> <span class="o">*</span> <span class="n">edgeTransport</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;maxEdgesInTransect&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
 
-                    <span class="c1"># convert from m^3/s to Sv</span>
-                    <span class="n">transport</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">m3ps_to_Sv</span> <span class="o">*</span> <span class="n">edgeTransport</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                        <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;maxEdgesInTransect&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
+                <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+                <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;transport&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transport</span>
+                <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
+                <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="s1">&#39;Transport through transects&#39;</span>
+                <span class="n">transectDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
 
-                    <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-                    <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;transport&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transport</span>
-                    <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
-                    <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                        <span class="s1">&#39;Transport through transects&#39;</span>
-                    <span class="n">transectDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
+            <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">transectDatasets</span><span class="p">,</span> <span class="s1">&#39;nTransects&#39;</span><span class="p">)</span>
+            <span class="n">timeDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
 
-                <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">transectDatasets</span><span class="p">,</span> <span class="s1">&#39;nTransects&#39;</span><span class="p">)</span>
-                <span class="n">dsOut</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-                <span class="n">timeDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
-
-            <span class="c1"># combine data sets into a single data set</span>
-            <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">timeDatasets</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;transectNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
-                <span class="n">nTransects</span><span class="o">=</span><span class="n">transectIndices</span><span class="p">)</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span> <span class="n">years</span><span class="p">)</span>
-            <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;years&#39;</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span> <span class="n">months</span><span class="p">)</span>
-            <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;months&#39;</span>
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
+        <span class="c1"># combine data sets into a single data set</span>
+        <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">timeDatasets</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;transectNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+            <span class="n">nTransects</span><span class="o">=</span><span class="n">transectIndices</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span> <span class="n">years</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;years&#39;</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span> <span class="n">months</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;months&#39;</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
         <span class="c1"># }}}</span>
 
@@ -882,11 +868,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -897,7 +891,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
