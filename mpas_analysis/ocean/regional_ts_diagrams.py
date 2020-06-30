@@ -660,7 +660,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = ds[variableList]
 
             ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
-                                      dsRestart.maxLevelCell,
+                                      dsRestart.maxLevelCell-1,
                                       dsRestart.layerThickness)
 
             ds['volume'] = (dsRestart.areaCell *
