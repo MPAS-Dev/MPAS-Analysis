@@ -585,7 +585,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
                                                          comparisonGridName)
         comparisonFullMeshName = comparisonDescriptor.meshName
     else:
-        comparisonFullMeshName = comparisonGridName
+        comparisonFullMeshName = comparisonGridName.replace(' ', '_')
 
     stageDirectory = '{}/remapped'.format(climatologyOpDirectory)
 
