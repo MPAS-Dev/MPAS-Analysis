@@ -382,6 +382,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         lat = remappedModelClimatology.lat
         lon = remappedModelClimatology.lon
 
+        if len(lat.dims) > 1:
+            lat = lat[:, 0]
+
+        if len(lon.dims) > 1:
+            lon = lon[:, 0]
+
         # This will do strange things at the antemeridian but there's little
         # we can do about that.
         lon_pm180 = numpy.mod(lon + 180., 360.) - 180.
@@ -544,7 +550,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             numUpperTicks=numUpperTicks,
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             invertYAxis=False,
-            backgroundColor='#918167',
+            backgroundColor='#d9bf96',
             xLim=self.horizontalBounds,
             compareAsContours=compareAsContours,
             lineStyle=contourLineStyle,

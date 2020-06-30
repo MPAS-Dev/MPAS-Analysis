@@ -28,6 +28,10 @@ from mpas_analysis.ocean.utility import compute_zmid
 
 from mpas_analysis.shared.interpolation import interp_1d
 
+from mpas_analysis.shared.transects import subdivide_great_circle, \
+    cartesian_to_great_circle_distance, find_transect_edges_and_cells, \
+    get_edge_bounds
+
 
 class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
     """
@@ -80,7 +84,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                  subtaskName='remapTransects'):
 
         # {{{
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -131,7 +135,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         subtaskName : str, optional
             The name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -147,11 +151,17 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         self.transectCollectionName = transectCollectionName
         self.verticalComparisonGridName = verticalComparisonGridName
         self.verticalComparisonGrid = verticalComparisonGrid
+        self.transectNumber = None
+        self.x = None
+        self.collectionDescriptor = None
+        self.maxLevelCell = None
+        self.zMid = None
+        self.remap = self.obsDatasets.horizontalResolution != 'mpas'
 
         # }}}
 
     def setup_and_check(self):  # {{{
-        '''
+        """
         Creates a PointCollectionDescriptor describing all the points in the
         transects to remap to.  Keeps track of which transects index each point
         belongs to.
@@ -162,90 +172,91 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
-        transectNumber = []
-        lats = []
-        lons = []
-        x = []
-        obsDatasets = self.obsDatasets.get_observations()
-        datasets = list(obsDatasets.values())
-        for transectIndex, ds in enumerate(datasets):
-            localLats = list(ds.lat.values)
-            localLons = list(ds.lon.values)
-            localX = list(ds.x.values)
-            localIndices = [transectIndex for lat in localLats]
-            lats.extend(localLats)
-            lons.extend(localLons)
-            x.extend(localX)
-            transectNumber.extend(localIndices)
+        if self.remap:
+            transectNumber = []
+            lats = []
+            lons = []
+            x = []
+            obsDatasets = self.obsDatasets.get_observations()
+            datasets = list(obsDatasets.values())
+            for transectIndex, ds in enumerate(datasets):
+                localLats = list(ds.lat.values)
+                localLons = list(ds.lon.values)
+                localX = list(ds.x.values)
+                localIndices = [transectIndex for _ in localLats]
+                lats.extend(localLats)
+                lons.extend(localLons)
+                x.extend(localX)
+                transectNumber.extend(localIndices)
 
-        self.transectNumber = xr.DataArray.from_dict(
-            {'dims': ('nPoints'),
-             'data': transectNumber})
+            self.transectNumber = xr.DataArray.from_dict(
+                {'dims': ('nPoints',),
+                 'data': transectNumber})
 
-        self.x = xr.DataArray.from_dict(
-            {'dims': ('nPoints'),
-             'data': x})
+            self.x = xr.DataArray.from_dict(
+                {'dims': ('nPoints',),
+                 'data': x})
 
-        self.collectionDescriptor = PointCollectionDescriptor(
-            lats, lons, collectionName=self.transectCollectionName,
-            units='degrees', outDimension='nPoints')
+            self.collectionDescriptor = PointCollectionDescriptor(
+                lats, lons, collectionName=self.transectCollectionName,
+                units='degrees', outDimension='nPoints')
 
-        self.add_comparison_grid_descriptor(self.transectCollectionName,
-                                            self.collectionDescriptor)
+            self.add_comparison_grid_descriptor(self.transectCollectionName,
+                                                self.collectionDescriptor)
 
-        # then, call setup_and_check from the base class
+            for transectName in obsDatasets:
+                obsDatasets[transectName].close()
+
+        # then, call setup_and_check from the parent class
         # (RemapMpasClimatologySubtask)
-        super(ComputeTransectsSubtask, self).setup_and_check()
-
-        for transectName in obsDatasets:
-            obsDatasets[transectName].close()
+        super().setup_and_check()
 
     def run_task(self):  # {{{
-        '''
+        """
         Compute climatologies of melt rates from E3SM/MPAS output
 
         This function has been overridden to compute  ``zMid`` based on data
         from a restart file for later use in vertically interpolating to
         reference depths.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
-        # first, compute zMid and cell mask from the restart file
-        with xr.open_dataset(self.restartFileName) as ds:
-            ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
-            ds = ds.isel(Time=0)
+        # first, get maxLevelCell and zMid, needed for masking
 
-            self.maxLevelCell = ds.maxLevelCell - 1
+        dsMesh = xr.open_dataset(self.restartFileName)
+        dsMesh = dsMesh.isel(Time=0)
 
-            zMid = compute_zmid(ds.bottomDepth, ds.maxLevelCell,
-                                ds.layerThickness)
+        self.maxLevelCell = dsMesh.maxLevelCell - 1
+        zMid = compute_zmid(dsMesh.bottomDepth, dsMesh.maxLevelCell-1,
+                            dsMesh.layerThickness)
 
-            self.zMid = \
-                xr.DataArray.from_dict({'dims': ('nCells', 'nVertLevels'),
-                                        'data': zMid})
-            ds.close()
+        self.zMid = \
+            xr.DataArray.from_dict({'dims': ('nCells', 'nVertLevels'),
+                                    'data': zMid})
 
         # then, call run from the base class (RemapMpasClimatologySubtask),
-        # which will perform the horizontal remapping
+        # which will perform masking and possibly horizontal remapping
         super(ComputeTransectsSubtask, self).run_task()
 
         obsDatasets = self.obsDatasets.get_observations()
 
-        self.logger.info('Interpolating each transect vertically...')
-        # finally, vertically interpolate and write out each transect
-        for season in self.seasons:
+        if self.remap:
 
-            remappedFileName = self.get_remapped_file_name(
-                season, comparisonGridName=self.transectCollectionName)
+            self.logger.info('Interpolating each transect vertically...')
+            # vertically interpolate and write out each transect
+            for season in self.seasons:
 
-            with xr.open_dataset(remappedFileName) as ds:
+                remappedFileName = self.get_remapped_file_name(
+                    season, comparisonGridName=self.transectCollectionName)
+
+                ds = xr.open_dataset(remappedFileName)
                 transectNames = list(obsDatasets.keys())
                 for transectIndex, transectName in enumerate(transectNames):
                     self.logger.info('  {}'.format(transectName))
@@ -258,14 +269,58 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                                           outFileName, outObsFileName)
                 ds.close()
 
+        else:
+            edgeBounds = get_edge_bounds(dsMesh)
+
+            for transectName, dsTransect in obsDatasets.items():
+                self.logger.info('  {}'.format(transectName))
+                if 'z' in dsTransect:
+                    transectZ = dsTransect.z
+                else:
+                    transectZ = None
+                edgeIndices, cellIndices, X, Z, mask, lonOut, latOut, \
+                    obsCellIndices, obsLayerIndices = \
+                    find_transect_edges_and_cells(
+                        dsTransect.lon, dsTransect.lat, edgeBounds, dsMesh,
+                        transectZ=transectZ, degrees=True)
+
+                for season in self.seasons:
+                    maskedFileName = self.get_masked_file_name(season)
+                    dsMask = xr.open_dataset(maskedFileName)
+
+                    dsOnMpas = dsMask.isel(nCells=cellIndices)
+                    dsOnMpas = dsOnMpas.where(cellIndices>=0)
+                    dsOnMpas.coords['x'] = X
+                    dsOnMpas.coords['z'] = Z
+                    dsOnMpas.coords['mask'] = mask
+                    dsOnMpas.coords['lon'] = lonOut
+                    dsOnMpas.coords['lat'] = latOut
+
+                    outFileName = self.get_remapped_file_name(
+                        season, comparisonGridName=transectName)
+                    write_netcdf(dsOnMpas, outFileName)
+
+                    if obsCellIndices is not None and \
+                            obsLayerIndices is not None:
+                        dsAtObs = dsMask.isel(nCells=obsCellIndices,
+                                              nVertLevels=obsLayerIndices)
+                        outFileName = self.get_remapped_file_name(
+                            season,
+                            comparisonGridName='{}AtObs'.format(transectName))
+                        write_netcdf(dsAtObs, outFileName)
+
+                    dsMask.close()
+
+        dsMesh.close()
+
         for transectName in obsDatasets:
             obsDatasets[transectName].close()
 
         # }}}
 
     def customize_masked_climatology(self, climatology, season):  # {{{
-        '''
-        Add zMid to the climatologys
+        """
+        Add zMid to the climatologies
 
         Parameters
         ----------
@@ -279,7 +334,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         -------
         climatology : ``xarray.Dataset`` object
             the modified climatology data set
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -302,7 +357,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
     def customize_remapped_climatology(self, climatology, comparisonGridNames,
                                        season):  # {{{
-        '''
+        """
         Add the transect index to the data set
 
         Parameters
@@ -321,7 +376,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         climatology : ``xarray.Dataset```
             The same data set with any custom fields added or modifications
             made
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -342,7 +397,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
     def _vertical_interp(self, ds, transectIndex, dsObs, outFileName,
                          outObsFileName):
-        '''
+        """
         Vertically interpolate a transect and write it to a unique file
 
         Parameters
@@ -363,7 +418,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         outObsFileName : str
             The name of the file to which the resulting obs data set should be
             written if it is interpolated
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -438,7 +493,7 @@ class TransectsObservations(object):  # {{{
 
     def __init__(self, config, obsFileNames, horizontalResolution,
                  transectCollectionName):  # {{{
-        '''
+        """
         Construct the object, setting the observations dictionary to None.
 
         Parameters
@@ -458,7 +513,7 @@ class TransectsObservations(object):  # {{{
             A name that describes the collection of transects (e.g. the name
             of the collection of observations) used to name the
             destination "mesh" for regridding
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -466,21 +521,21 @@ class TransectsObservations(object):  # {{{
         self.obsDatasets = None
         self.config = config
         self.obsFileNames = obsFileNames
-        if horizontalResolution != 'obs':
+        if horizontalResolution not in ['obs', 'mpas']:
             horizontalResolution = float(horizontalResolution)
         self.horizontalResolution = horizontalResolution
         self.transectCollectionName = transectCollectionName
 
     def get_observations(self):
         # {{{
-        '''
+        """
         Read in and set up the observations.
 
         Returns
         -------
         obsDatasets : OrderedDict
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -500,17 +555,14 @@ class TransectsObservations(object):  # {{{
                 for coord in ['lon', 'lat']:
                     dsObs.coords[coord] = dsObs[coord]
 
-                if self.horizontalResolution == 'obs':
-                    dsObs = self._add_distance(dsObs)
-                else:
-                    dsObs = self._subdivide_observations(dsObs)
+                dsObs = self._add_distance(dsObs)
                 write_netcdf(dsObs, outFileName)
             obsDatasets[name] = dsObs
 
         return obsDatasets  # }}}
 
     def build_observational_dataset(self, fileName, transectName):  # {{{
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -526,7 +578,7 @@ class TransectsObservations(object):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -542,7 +594,7 @@ class TransectsObservations(object):  # {{{
 
     def get_out_file_name(self, transectName,
                           verticalComparisonGridName='obs'):  # {{{
-        '''
+        """
         Given config options, the name of a field and a string identifying the
         months in a seasonal climatology, returns the full path for MPAS
         climatology files before and after remapping.
@@ -564,7 +616,7 @@ class TransectsObservations(object):  # {{{
         -------
         fileName : str
             The path to the climatology file for the specified season.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -578,91 +630,54 @@ class TransectsObservations(object):  # {{{
 
         make_directories(remappedDirectory)
 
+        transectSuffix = transectName.replace(' ', '_')
+
         if verticalComparisonGridName == 'obs':
             fileName = '{}/{}_{}.nc'.format(
-                remappedDirectory, self.transectCollectionName, transectName)
+                remappedDirectory, self.transectCollectionName, transectSuffix)
         else:
             fileName = '{}/{}_{}_{}.nc'.format(
-                remappedDirectory, self.transectCollectionName, transectName,
+                remappedDirectory, self.transectCollectionName, transectSuffix,
                 verticalComparisonGridName)
         return fileName  # }}}
 
     def _add_distance(self, dsObs):  # {{{
-        '''
-        Subdivide each segment of the transect so the horizontal resolution
-        approximately matches the requested resolution
-        '''
-
-        lat = dsObs.lat.values
-        lon = dsObs.lon.values
-
-        # compute the great circle distance between these points
-        dxIn = self._haversine(lon[0:-1], lat[0:-1], lon[1:], lat[1:])
-
-        xIn = numpy.zeros(lat.shape)
-        xIn[1:] = numpy.cumsum(dxIn)
-
-        dsObs['x'] = (('nPoints',), xIn)
-        return dsObs  # }}}
-
-    def _subdivide_observations(self, dsObs):  # {{{
-        '''
-        Subdivide each segment of the transect so the horizontal resolution
-        approximately matches the requested resolution
-        '''
-
-        lat = dsObs.lat.values
-        lon = dsObs.lon.values
-
-        # compute the great circle distance between these points
-        dxIn = self._haversine(lon[0:-1], lat[0:-1], lon[1:], lat[1:])
-
-        nSegments = numpy.maximum(
-            (dxIn / self.horizontalResolution + 0.5).astype(int), 1)
-
-        xIn = numpy.zeros(lat.shape)
-        xIn[1:] = numpy.cumsum(dxIn)
-
-        outIndex = []
-        for index in range(len(xIn) - 1):
-            n = nSegments[index]
-            outIndex.extend(index + numpy.arange(0, n) / n)
-        outIndex.append(len(xIn) - 1)
-
-        xOut = numpy.interp(outIndex, numpy.arange(len(xIn)), xIn)
-
-        dsObs['xIn'] = (('nPoints',), xIn)
-        dsObs['xOut'] = (('nPointsOut',), xOut)
-
-        # interpolate fields without and with vertical dimension
-        dsObs = interp_1d(dsObs, inInterpDim='nPoints',
-                          inInterpCoord='xIn', outInterpDim='nPointsOut',
-                          outInterpCoord='xOut')
-        dsObs = dsObs.drop_vars(['xIn'])
-        dsObs = dsObs.rename({'nPointsOut': 'nPoints', 'xOut': 'x'})
-        return dsObs  # }}}
-
-    def _haversine(self, lon1, lat1, lon2, lat2):  # {{{
         """
-        Calculate the great circle distance in km between two points on the
-        earth (specified in decimal degrees). Based on
-        https://stackoverflow.com/a/4913653
+        Add a distance coordinate for the transect.  If a horizontal resolution
+        for subdivision is provided, subdivide each segment of the transect so
+        the horizontal resolution is at least as high as the requested
+        resolution
         """
-        # convert decimal degrees to radians
-        lon1 = numpy.deg2rad(lon1)
-        lat1 = numpy.deg2rad(lat1)
-        lon2 = numpy.deg2rad(lon2)
-        lat2 = numpy.deg2rad(lat2)
 
-        # haversine formula
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
-        a = numpy.sin(dlat / 2.)**2 + numpy.cos(lat1) * numpy.cos(lat2) * \
-            numpy.sin(dlon / 2.)**2
-        c = 2 * numpy.arcsin(numpy.sqrt(a))
-        r = 6371  # Radius of earth in kilometers. Use 3956 for miles
-        return c * r  # }}}
+        subdivide = self.horizontalResolution not in ['obs', 'mpas']
 
+        lat = numpy.deg2rad(dsObs.lat.values)
+        lon = numpy.deg2rad(dsObs.lon.values)
+
+        earth_radius = 6371  # Radius of earth in kilometers
+
+        x = earth_radius * numpy.cos(lat) * numpy.cos(lon)
+        y = earth_radius * numpy.cos(lat) * numpy.sin(lon)
+        z = earth_radius * numpy.sin(lat)
+
+        if subdivide:
+            xOut, yOut, zOut, dIn, dOut = subdivide_great_circle(
+                x, y, z, self.horizontalResolution, earth_radius)
+
+            dsObs['xIn'] = (('nPoints',), dIn)
+            dsObs['xOut'] = (('nPointsOut',), dOut)
+
+            # interpolate fields without and with vertical dimension
+            dsObs = interp_1d(dsObs, inInterpDim='nPoints',
+                              inInterpCoord='xIn', outInterpDim='nPointsOut',
+                              outInterpCoord='xOut')
+            dsObs = dsObs.drop_vars(['xIn'])
+            dsObs = dsObs.rename({'nPointsOut': 'nPoints', 'xOut': 'x'})
+        else:
+            dIn = cartesian_to_great_circle_distance(x, y, z, earth_radius)
+            dsObs['x'] = (('nPoints',), dIn)
+
+        return dsObs  # }}}
     # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
