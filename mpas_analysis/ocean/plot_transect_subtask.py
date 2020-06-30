@@ -36,8 +36,6 @@ from mpas_analysis.shared.climatology import compute_climatology, \
 
 from mpas_analysis.shared.constants import constants
 
-from mpas_analysis.ocean.utility import nans_to_numpy_mask
-
 
 class PlotTransectSubtask(AnalysisTask):  # {{{
     """
@@ -377,22 +375,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        # broadcast x and z to have the same dimensions
-        x, z = xr.broadcast(remappedModelClimatology.x,
-                            remappedModelClimatology.z)
+        x = remappedModelClimatology.x
+        z = remappedModelClimatology.z
 
         # set lat and lon in case we want to plot versus these quantities
         lat = remappedModelClimatology.lat
         lon = remappedModelClimatology.lon
-
-        # convert x, z, lat, and lon to numpy arrays; make a copy because
-        # they are sometimes read-only (not sure why)
-        x = x.values.copy().transpose()
-        z = z.values.copy().transpose()
-        lat = lat.values.copy().transpose()
-        lon = lon.values.copy().transpose()
-        self.lat = lat
-        self.lon = lon
 
         # This will do strange things at the antemeridian but there's little
         # we can do about that.
@@ -402,11 +390,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             mask = numpy.logical_and(
                 remappedModelClimatology.x.values >= self.horizontalBounds[0],
                 remappedModelClimatology.x.values <= self.horizontalBounds[1])
-            inset_lon = lon_pm180[mask]
-            inset_lat = lat[mask]
+            inset_lon = lon_pm180.values[mask]
+            inset_lat = lat.values[mask]
         else:
-            inset_lon = lon_pm180
-            inset_lat = lat
+            inset_lon = lon_pm180.values
+            inset_lat = lat.values
         fc = FeatureCollection()
         fc.add_feature(
             {"type": "Feature",
@@ -421,23 +409,15 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # z is masked out with NaNs in some locations (where there is land) but
         # this makes pcolormesh unhappy so we'll zero out those locations
-        z[numpy.isnan(z)] = 0.
+        z = z.where(z.notnull(), 0.)
 
-        modelOutput = nans_to_numpy_mask(
-            remappedModelClimatology[self.mpasFieldName].values)
-        modelOutput = modelOutput.transpose()
+        modelOutput = remappedModelClimatology[self.mpasFieldName]
 
         if remappedRefClimatology is None:
             refOutput = None
             bias = None
         else:
             refOutput = remappedRefClimatology[self.refFieldName]
-            dims = refOutput.dims
-            refOutput = nans_to_numpy_mask(refOutput.values)
-            if dims[1] != 'nPoints':
-                assert(dims[0] == 'nPoints')
-                refOutput = refOutput.transpose()
-
             bias = modelOutput - refOutput
 
         filePrefix = self.filePrefix
@@ -446,8 +426,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
 
-        xLabel = 'Distance [km]'
-        yLabel = 'Depth [m]'
+        xs = [x]
+        xLabels = ['Distance (km)']
+        yLabel = 'Depth (m)'
 
         # define the axis labels and the data to use for the upper
         # x axis or axes, if such additional axes have been requested
@@ -458,44 +439,49 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             'transects',
             'upperXAxisTickLabelPrecision')
 
-        self._set_third_x_axis_to_none()
+        add_lat = False
+        add_lon = False
 
-        if upperXAxes == 'neither':
-            self._set_second_x_axis_to_none()
-        elif upperXAxes == 'lat':
-            self._set_second_x_axis_to_latitude()
-        elif upperXAxes == 'lon':
-            self._set_second_x_axis_to_longitude()
-        elif upperXAxes == 'both':
-            self._set_second_x_axis_to_longitude()
-            self._set_third_x_axis_to_latitude()
-        elif upperXAxes == 'greatestExtent':
-            if self._greatest_extent(lat, lon):
-                self._set_second_x_axis_to_latitude()
+        if upperXAxes in ['lat', 'both']:
+            add_lat = True
+        if upperXAxes in ['lon', 'both']:
+            add_lon = True
+        if upperXAxes == 'greatestExtent':
+            if self._lat_greater_extent(lat, lon):
+                add_lat = True
             else:
-                self._set_second_x_axis_to_longitude()
+                add_lon = True
         elif upperXAxes == 'strictlyMonotonic':
-            if self._strictly_monotonic(lat, lon):
-                self._set_second_x_axis_to_latitude()
+            if self._strictly_monotonic(lat):
+                add_lat = True
+            elif self._strictly_monotonic(lon):
+                add_lon = True
             else:
-                self._set_second_x_axis_to_longitude()
+                raise ValueError('Neither lat nor lon is strictly monotonic.')
         elif upperXAxes == 'mostMonotonic':
-            if self._most_monotonic(lat, lon):
-                self._set_second_x_axis_to_latitude()
+            if self._lat_most_monotonic(lat, lon):
+                add_lat = True
             else:
-                self._set_second_x_axis_to_longitude()
+                add_lon = True
         elif upperXAxes == 'mostStepsInSameDirection':
-            if self._most_steps_in_same_direction(lat, lon):
-                self._set_second_x_axis_to_latitude()
+            if self._lat_most_steps_in_same_direction(lat, lon):
+                add_lat = True
             else:
-                self._set_second_x_axis_to_longitude()
+                add_lon = True
         elif upperXAxes == 'fewestDirectionChanges':
-            if self._fewest_direction_changes(lat, lon):
-                self._set_second_x_axis_to_latitude()
+            if self._lat_fewest_direction_changes(lat, lon):
+                add_lat = True
             else:
-                self._set_second_x_axis_to_longitude()
+                add_lon = True
         else:
             raise ValueError('invalid option for upperXAxes')
+
+        if add_lat:
+            xs.append(lat)
+            xLabels.append('Latitude')
+        if add_lon:
+            xs.append(lon)
+            xLabels.append('Longitude')
 
         # get the parameters determining what type of plot to use,
         # what line styles and line colors to use, and whether and how
@@ -542,23 +528,19 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         fig, axes, suptitle = plot_vertical_section_comparison(
             config,
-            x,
+            xs,
             z,
             modelOutput,
             refOutput,
             bias,
             configSectionName,
             colorbarLabel=self.unitsLabel,
-            xlabel=xLabel,
+            xlabels=xLabels,
             ylabel=yLabel,
             title=title,
             modelTitle='{}'.format(mainRunName),
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
-            secondXAxisData=self.secondXAxisData,
-            secondXAxisLabel=self.secondXAxisLabel,
-            thirdXAxisData=self.thirdXAxisData,
-            thirdXAxisLabel=self.thirdXAxisLabel,
             numUpperTicks=numUpperTicks,
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             invertYAxis=False,
@@ -607,31 +589,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # }}}
 
-    def _set_second_x_axis_to_latitude(self):
-        self.secondXAxisData = self.lat
-        self.secondXAxisLabel = 'Latitude'
 
-    def _set_second_x_axis_to_longitude(self):
-        self.secondXAxisData = self.lon
-        self.secondXAxisLabel = 'Longitude'
-
-    def _set_second_x_axis_to_none(self):
-        self.secondXAxisData = None
-        self.secondXAxisLabel = None
-
-    def _set_third_x_axis_to_latitude(self):
-        self.thirdXAxisData = self.lat
-        self.thirdXAxisLabel = 'Latitude'
-
-    def _set_third_x_axis_to_longitude(self):
-        self.thirdXAxisData = self.lon
-        self.thirdXAxisLabel = 'Longitude'
-
-    def _set_third_x_axis_to_none(self):
-        self.thirdXAxisData = None
-        self.thirdXAxisLabel = None
-
-    def _greatest_extent(self, lat, lon):
+    def _lat_greater_extent(self, lat, lon):
         # {{{
         """
         Returns True if lat has a greater extent (in degrees) than lon (or the
@@ -639,7 +598,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         Authors
         -------
-        Greg Streletz
+        Greg Streletz, Xylar Asay-Davis
         """
         lat_extent = numpy.max(lat) - numpy.min(lat)
 
@@ -709,41 +668,31 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return False
         # }}}
 
-    def _strictly_monotonic(self, lat, lon):
+    def _strictly_monotonic(self, coord):
         # {{{
-        """
-        Returns True if lat is strictly monotonic;  returns false if lon is
-        strictly monotonic and lat is not strictly monotonic;  throws an error
-        if neither are strictly monotonic.
+        """Whether the coordinate is strictly monotonic"""
+        # Authors
+        # -------
+        # Greg Streletz, Xylar Asay-Davis
 
-        Authors
-        -------
-        Greg Streletz
-        """
-        lat_diff = numpy.diff(lat)
-        if numpy.all(lat_diff > 0) or numpy.all(lat_diff < 0):
-            return True
-        lon_diff = numpy.diff(lon)
-        lon_diff = numpy.where(lon_diff > 180, lon_diff - 360, lon_diff)
-        lon_diff = numpy.where(lon_diff < -180, lon_diff + 360, lon_diff)
-        if numpy.all(lon_diff > 0) or numpy.all(lon_diff < 0):
-            return False
-        else:
-            raise ValueError('neither input array is strictly monotonic')
+        coord_diff = numpy.diff(coord.values)
+        coord_diff = numpy.where(coord_diff > 180, coord_diff - 360, coord_diff)
+        coord_diff = numpy.where(coord_diff < -180, coord_diff + 360,
+                                 coord_diff)
+        return numpy.all(coord_diff > 0) or numpy.all(coord_diff < 0)
         # }}}
 
-    def _most_monotonic(self, lat, lon):
+    def _lat_most_monotonic(self, lat, lon):
         # {{{
         """
         Returns True if lat is "more monotonic" than lon in terms of the
         difference between the total number of degrees traversed and the net
         number of degrees traversed (or if both are equally as monotonic in
         this sense), and False otherwise.
-
-        Authors
-        -------
-        Greg Streletz
         """
+        # Authors
+        # -------
+        # Greg Streletz, Xylar Asay-Davis
         lat_diff = numpy.diff(lat)
         lat_score = numpy.sum(numpy.fabs(lat_diff)) - abs(numpy.sum(lat_diff))
 
@@ -758,17 +707,17 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return False
         # }}}
 
-    def _most_steps_in_same_direction(self, lat, lon):
+    def _lat_most_steps_in_same_direction(self, lat, lon):
         # {{{
         """
         Returns True if lat is has more steps in the same direction (either
         steps that increase the latitude or steps that decrease the latitude)
         than lon (or the same number as lon), and False otherwise.
-
-        Authors
-        -------
-        Greg Streletz
         """
+        # Authors
+        # -------
+        # Greg Streletz, Xylar Asay-Davis
+
         lat_changes = numpy.diff(lat)
         lat_changes = lat_changes[lat_changes != 0.0]  # ignore flat regions
         lat_changedirs = lat_changes / numpy.fabs(lat_changes)
@@ -793,7 +742,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return False
         # }}}
 
-    def _fewest_direction_changes(self, lat, lon):
+    def _lat_fewest_direction_changes(self, lat, lon):
         # {{{
         """
         Returns True if lat is has fewer changes in direction (from increasing
@@ -802,7 +751,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         Authors
         -------
-        Greg Streletz
+        Greg Streletz, Xylar Asay-Davis
         """
         lat_changes = numpy.diff(lat)
         lat_changes = lat_changes[lat_changes != 0.0]  # ignore flat regions

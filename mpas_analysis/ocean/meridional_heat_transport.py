@@ -181,9 +181,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         if os.path.exists(outFileName):
             self.logger.info('  Reading results from previous analysis run...')
             annualClimatology = xr.open_dataset(outFileName)
-            refZMid = annualClimatology.refZMid.values
+            refZMid = annualClimatology.refZMid
             binBoundaryMerHeatTrans = \
-                annualClimatology.binBoundaryMerHeatTrans.values
+                annualClimatology.binBoundaryMerHeatTrans
         else:
 
             # Read in depth and MHT latitude points
@@ -195,14 +195,17 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                               'one for MHT calcuation')
 
             with xr.open_dataset(restartFileName) as dsRestart:
-                refBottomDepth = dsRestart.refBottomDepth.values
+                refBottomDepth = dsRestart.refBottomDepth
 
-            nVertLevels = len(refBottomDepth)
+            nVertLevels = refBottomDepth.sizes['nVertLevels']
             refLayerThickness = np.zeros(nVertLevels)
             refLayerThickness[0] = refBottomDepth[0]
             refLayerThickness[1:nVertLevels] = \
                 refBottomDepth[1:nVertLevels] - \
                 refBottomDepth[0:nVertLevels - 1]
+
+            refLayerThickness = xr.DataArray(dims='nVertLevels',
+                                             data=refLayerThickness)
 
             refZMid = -refBottomDepth + 0.5 * refLayerThickness
 
@@ -220,7 +223,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                 with xr.open_dataset(inputFile) as ds:
                     if 'binBoundaryMerHeatTrans' in ds.data_vars:
                         binBoundaryMerHeatTrans = \
-                            ds.binBoundaryMerHeatTrans.values
+                            ds.binBoundaryMerHeatTrans
                         break
 
             if binBoundaryMerHeatTrans is None:
@@ -251,12 +254,22 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             annualClimatology = xr.open_dataset(climatologyFileName)
             annualClimatology = annualClimatology[variableList]
+            annualClimatology = annualClimatology.rename(
+                {'timeMonthly_avg_meridionalHeatTransportLat':
+                     'meridionalHeatTransportLat',
+                 'timeMonthly_avg_meridionalHeatTransportLatZ':
+                     'meridionalHeatTransportLatZ'})
             if 'Time' in annualClimatology.dims:
                 annualClimatology = annualClimatology.isel(Time=0)
 
-            annualClimatology.coords['refZMid'] = (('nVertLevels',), refZMid)
+            annualClimatology.coords['refZMid'] = refZMid
             annualClimatology.coords['binBoundaryMerHeatTrans'] = \
-                (('nMerHeatTransBinsP1',), binBoundaryMerHeatTrans)
+                binBoundaryMerHeatTrans
+
+            if config.getboolean(self.sectionName, 'plotVerticalSection'):
+                # normalize 2D MHT by layer thickness
+                annualClimatology['meridionalHeatTransportLatZ'] /= \
+                    refLayerThickness
 
             write_netcdf(annualClimatology, outFileName)
 
@@ -265,9 +278,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         self.logger.info('   Plot global MHT...')
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
-        y = annualClimatology.timeMonthly_avg_meridionalHeatTransportLat
-        xLabel = 'latitude [deg]'
-        yLabel = 'meridional heat transport [PW]'
+        y = annualClimatology.meridionalHeatTransportLat
+        xLabel = 'latitude (deg)'
+        yLabel = 'meridional heat transport (PW)'
+
         title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
             self.startYear, self.endYear, mainRunName)
         filePrefix = self.filePrefixes['mht']
@@ -314,8 +328,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             lineWidths.append(1.2)
             legendText.append(controlRunName)
             xArrays.append(dsControl.binBoundaryMerHeatTrans)
-            fieldArrays.append(
-                dsControl.timeMonthly_avg_meridionalHeatTransportLat)
+            fieldArrays.append(dsControl.meridionalHeatTransportLat)
             errArrays.append(None)
 
         if len(legendText) == 1:
@@ -333,26 +346,19 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         if config.getboolean(self.sectionName, 'plotVerticalSection'):
             # Plot 2D MHT (zonally integrated)
 
-            # normalize 2D MHT by layer thickness
-            MHTLatZVar = \
-                annualClimatology.timeMonthly_avg_meridionalHeatTransportLatZ
-            MHTLatZ = MHTLatZVar.values.T[:, :]
-            for k in range(nVertLevels):
-                MHTLatZ[k, :] = MHTLatZ[k, :] / refLayerThickness[k]
-
             x = binBoundaryMerHeatTrans
             y = refZMid
-            z = MHTLatZ
-            xLabel = 'latitude [deg]'
-            yLabel = 'depth [m]'
+            z = annualClimatology.meridionalHeatTransportLatZ
+            xLabel = 'latitude (deg)'
+            yLabel = 'depth (m)'
             title = 'Global MHT (ANN, years {:04d}-{:04d})\n {}'.format(
                 self.startYear, self.endYear, mainRunName)
             filePrefix = self.filePrefixes['mhtZ']
             outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-            colorbarLabel = '[PW/m]'
+            colorbarLabel = '(PW/m)'
             plot_vertical_section(config, x, y, z, self.sectionName,
                                   suffix='', colorbarLabel=colorbarLabel,
-                                  title=title, xlabel=xLabel, ylabel=yLabel,
+                                  title=title, xlabels=xLabel, ylabel=yLabel,
                                   xLim=xLimGlobal,
                                   yLim=depthLimGlobal, invertYAxis=False,
                                   movingAveragePoints=movingAveragePoints,
