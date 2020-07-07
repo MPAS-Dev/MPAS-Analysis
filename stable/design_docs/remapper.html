@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Prerequisite Tasks and Subtasks" href="prerequisite_tasks.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -111,10 +113,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -153,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
         
@@ -235,13 +241,13 @@ Contributors: Xylar Asay-Davis
 methods:</p>
 <ul class="simple">
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">meshName</span></code>: a name of the mesh or grid, used for naming mapping files and</dt><dd><p>climatologies</p>
+<dt><code class="docutils literal notranslate"><span class="pre">meshName</span></code><span class="classifier">a name of the mesh or grid, used for naming mapping files and</span></dt><dd><p>climatologies</p>
 </dd>
 </dl>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">regional</span></code>: whether the mesh is regional or global</p></li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">coords</span></code> and <code class="docutils literal notranslate"><span class="pre">dims</span></code>: dictionaries defining the coordinates and dimensions</dt><dd><p>of this mesh, used to update a data set following remapping</p>
+<dt><code class="docutils literal notranslate"><span class="pre">coords</span></code> and <code class="docutils literal notranslate"><span class="pre">dims</span></code><span class="classifier">dictionaries defining the coordinates and dimensions</span></dt><dd><p>of this mesh, used to update a data set following remapping</p>
 </dd>
 </dl>
 </li>
@@ -250,14 +256,14 @@ methods:</p>
 <h4> Remapper class </h4><p>Below is a skeleton of the <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> public API.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Remapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">destinationDescriptor</span><span class="p">,</span>
-                 <span class="n">mappingFileName</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">mappingFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create the remapper and read weights and indices from the given file</span>
 <span class="sd">        for later used in remapping fields.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
-                           <span class="n">additionalArgs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                           <span class="n">additionalArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Given a source file defining either an MPAS mesh or a lat-lon grid and</span>
 <span class="sd">        a destination file or set of arrays defining a lat-lon grid, constructs</span>
@@ -266,7 +272,7 @@ methods:</p>
 <span class="sd">        &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">remap_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
-                   <span class="n">variableList</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                   <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Given a source file defining either an MPAS mesh or a lat-lon grid and</span>
 <span class="sd">        a destination file or set of arrays defining a lat-lon grid, constructs</span>
@@ -274,7 +280,7 @@ methods:</p>
 <span class="sd">        destination grids.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Given a source data set, returns a remapped version of the data set,</span>
 <span class="sd">        possibly masked and renormalized.</span>
@@ -316,11 +322,19 @@ perform remapping with stereographic grids.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -331,7 +345,6 @@ perform remapping with stereographic grids.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

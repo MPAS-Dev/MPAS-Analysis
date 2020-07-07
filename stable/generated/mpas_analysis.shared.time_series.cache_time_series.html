@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start" href="mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -112,6 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -122,10 +125,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -164,7 +171,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -189,48 +196,39 @@
             
   <div class="section" id="mpas-analysis-shared-time-series-cache-time-series">
 <h1>mpas_analysis.shared.time_series.cache_time_series<a class="headerlink" href="#mpas-analysis-shared-time-series-cache-time-series" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.time_series.cache_time_series">
-<code class="sig-prename descclassname">mpas_analysis.shared.time_series.</code><code class="sig-name descname">cache_time_series</code><span class="sig-paren">(</span><em class="sig-param">timesInDataSet</em>, <em class="sig-param">timeSeriesCalcFunction</em>, <em class="sig-param">cacheFileName</em>, <em class="sig-param">calendar</em>, <em class="sig-param">yearsPerCacheUpdate=1</em>, <em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/time_series/time_series.html#cache_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.time_series.cache_time_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.time_series.</code><code class="sig-name descname">cache_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timesInDataSet</span></em>, <em class="sig-param"><span class="n">timeSeriesCalcFunction</span></em>, <em class="sig-param"><span class="n">cacheFileName</span></em>, <em class="sig-param"><span class="n">calendar</span></em>, <em class="sig-param"><span class="n">yearsPerCacheUpdate</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/time_series/time_series.html#cache_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.time_series.cache_time_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or update a NetCDF file <code class="docutils literal notranslate"><span class="pre">cacheFileName</span></code> containing the given time
 series, calculated with <code class="docutils literal notranslate"><span class="pre">timeSeriesCalcFunction</span></code> over the given times,
 start and end year, and time frequency with which results are cached.</p>
 <p>Note: only works with climatologies where the mask (locations of <code class="docutils literal notranslate"><span class="pre">NaN</span></code>
 values) doesn’t vary with time.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>timesInDataSet</strong><span class="classifier">array-like</span></dt><dd><p>Times at which the time series is to be calculated, typically taken
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timesInDataSet</strong> (<em>array-like</em>) – Times at which the time series is to be calculated, typically taken
 from <code class="docutils literal notranslate"><span class="pre">ds.Times.values</span></code> for a data set from which the time series
-will be extracted or computed.</p>
-</dd>
-<dt><strong>timeSeriesCalcFunction</strong><span class="classifier">function</span></dt><dd><p>A function with arguments <code class="docutils literal notranslate"><span class="pre">timeIndices</span></code>, indicating the entries in
+will be extracted or computed.</p></li>
+<li><p><strong>timeSeriesCalcFunction</strong> (<em>function</em>) – A function with arguments <code class="docutils literal notranslate"><span class="pre">timeIndices</span></code>, indicating the entries in
 <code class="docutils literal notranslate"><span class="pre">timesInDataSet</span></code> to be computed, and <code class="docutils literal notranslate"><span class="pre">firstCall</span></code>, indicating
 whether this is the first call to the funciton (useful for printing
-progress information).</p>
-</dd>
-<dt><strong>cacheFileName</strong><span class="classifier">str</span></dt><dd><p>The absolute path to the cache file where the times series will be
-stored</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code></span></dt><dd><p>The name of one of the calendars supported by MPAS cores, used to
-determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p>
-</dd>
-<dt><strong>yearsPerCacheUpdate</strong><span class="classifier">int, optional</span></dt><dd><p>The frequency with which the cache file is updated as the computation
+progress information).</p></li>
+<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
+stored</p></li>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>) – The name of one of the calendars supported by MPAS cores, used to
+determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
+<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
 progresses.  If the computation is expensive, it may be useful to
 output the file frequently.  If not, there will be needless overhead
-in caching the file too frequently.</p>
-</dd>
-<dt><strong>logger</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>, optional</span></dt><dd><p>A logger to which to write output as the time series is computed</p>
-</dd>
-</dl>
+in caching the file too frequently.</p></li>
+<li><p><strong>logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>, optional) – A logger to which to write output as the time series is computed</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>climatology</strong><span class="classifier">object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code></span></dt><dd><p>A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
+<dd class="field-even"><p><strong>climatology</strong> (object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
 of ds over all months in monthValues, weighted by the number of days
 in each month.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -257,11 +255,19 @@ in each month.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -272,7 +278,6 @@ in each month.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

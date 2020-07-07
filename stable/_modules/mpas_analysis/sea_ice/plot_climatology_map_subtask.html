@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -161,16 +167,16 @@
   <h1>Source code for mpas_analysis.sea_ice.plot_climatology_map_subtask</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">numpy.ma</span> <span class="k">as</span> <span class="nn">ma</span>
@@ -178,13 +184,13 @@
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="k">import</span> <span class="n">plot_polar_comparison</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_polar_comparison</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> \
     <span class="n">get_remapped_mpas_climatology_file_name</span>
 
 
@@ -258,7 +264,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
-<div class="viewcode-block" id="PlotClimatologyMapSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+<div class="viewcode-block" id="PlotClimatologyMapSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
                  <span class="n">remapMpasClimatologySubtask</span><span class="p">,</span> <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subtaskSuffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># {{{</span>
@@ -481,8 +487,6 @@
         <span class="n">lon</span> <span class="o">=</span> <span class="n">remappedClimatology</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">remappedClimatology</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-        <span class="n">lonTarg</span><span class="p">,</span> <span class="n">latTarg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remapObsClimatologySubtask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">remappedFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remapObsClimatologySubtask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span>
                 <span class="n">stage</span><span class="o">=</span><span class="s1">&#39;remapped&#39;</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
@@ -526,6 +530,7 @@
                 <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">refOutput</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span>
                                      <span class="n">refOutput</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskValue</span><span class="p">)</span>
                 <span class="n">refOutput</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">refOutput</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+                <span class="n">difference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">difference</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
 
         <span class="c1"># mask with maskValue only after taking the diff</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskValue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -551,8 +556,8 @@
         <span class="n">fileout</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
         <span class="n">plot_polar_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
-            <span class="n">lonTarg</span><span class="p">,</span>
-            <span class="n">latTarg</span><span class="p">,</span>
+            <span class="n">lon</span><span class="p">,</span>
+            <span class="n">lat</span><span class="p">,</span>
             <span class="n">modelOutput</span><span class="p">,</span>
             <span class="n">refOutput</span><span class="p">,</span>
             <span class="n">difference</span><span class="p">,</span>
@@ -596,11 +601,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -611,7 +624,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

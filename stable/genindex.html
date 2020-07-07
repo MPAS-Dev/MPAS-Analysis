@@ -1,9 +1,7 @@
 
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
 </head>
@@ -49,7 +49,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -76,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -140,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Index</li>
     
@@ -240,6 +245,8 @@
 </li>
         <li><a href="generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.__init__">(mpas_analysis.ocean.TimeSeriesTemperatureAnomaly method)</a>
 </li>
+        <li><a href="generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport.__init__">(mpas_analysis.ocean.TimeSeriesTransport method)</a>
+</li>
         <li><a href="generated/mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html#mpas_analysis.sea_ice.ClimatologyMapIcebergConc.__init__">(mpas_analysis.sea_ice.ClimatologyMapIcebergConc method)</a>
 </li>
         <li><a href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.__init__">(mpas_analysis.sea_ice.ClimatologyMapSeaIceConc method)</a>
@@ -267,6 +274,8 @@
         <li><a href="generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask.__init__">(mpas_analysis.shared.time_series.MpasTimeSeriesTask method)</a>
 </li>
         <li><a href="generated/mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.html#mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.__init__">(mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta method)</a>
+</li>
+        <li><a href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__">(mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -333,10 +342,10 @@
 </li>
       <li><a href="generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly">ClimatologyMapOHCAnomaly (class in mpas_analysis.ocean)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceConc">ClimatologyMapSeaIceConc (class in mpas_analysis.sea_ice)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceThick">ClimatologyMapSeaIceThick (class in mpas_analysis.sea_ice)</a>
 </li>
       <li><a href="generated/mpas_analysis.ocean.ClimatologyMapSose.html#mpas_analysis.ocean.ClimatologyMapSose">ClimatologyMapSose (class in mpas_analysis.ocean)</a>
@@ -355,9 +364,13 @@
 </li>
       <li><a href="generated/mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start.html#mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start">compute_moving_avg_anomaly_from_start() (in module mpas_analysis.shared.time_series)</a>
 </li>
+      <li><a href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks">compute_mpas_transect_masks() (in module mpas_analysis.shared.transects.compute_transect_masks_subtask)</a>
+</li>
       <li><a href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask">ComputeAnomalySubtask (class in mpas_analysis.ocean.compute_anomaly_subtask)</a>
 </li>
       <li><a href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask">ComputeRegionMasksSubtask (class in mpas_analysis.shared.regions.compute_region_masks_subtask)</a>
+</li>
+      <li><a href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask">ComputeTransectMasksSubtask (class in mpas_analysis.shared.transects.compute_transect_masks_subtask)</a>
 </li>
       <li><a href="generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html#mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict">convert_namelist_to_dict() (in module mpas_analysis.shared.io.namelist_streams_interface)</a>
 </li>
@@ -371,15 +384,13 @@
 </li>
       <li><a href="generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html#mpas_analysis.shared.timekeeping.utility.datetime_to_days">datetime_to_days() (in module mpas_analysis.shared.timekeeping.utility)</a>
 </li>
-      <li><a href="generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime">days_to_datetime() (in module mpas_analysis.shared.timekeeping.utility)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime">days_to_datetime() (in module mpas_analysis.shared.timekeeping.utility)</a>
+</li>
       <li><a href="generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">determine_analyses_to_generate() (in module mpas_analysis.__main__)</a>
 </li>
       <li><a href="generated/mpas_analysis.download_data.download_analysis_data.html#mpas_analysis.download_data.download_analysis_data">download_analysis_data() (in module mpas_analysis.download_data)</a>
-</li>
-      <li><a href="generated/mpas_analysis.download_data.download_natural_earth_110m.html#mpas_analysis.download_data.download_natural_earth_110m">download_natural_earth_110m() (in module mpas_analysis.download_data)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -595,10 +606,10 @@
 </li>
       <li><a href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions">TimeSeriesOceanRegions (class in mpas_analysis.ocean)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly">TimeSeriesOHCAnomaly (class in mpas_analysis.ocean)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly">TimeSeriesSalinityAnomaly (class in mpas_analysis.ocean)</a>
 </li>
       <li><a href="generated/mpas_analysis.sea_ice.TimeSeriesSeaIce.html#mpas_analysis.sea_ice.TimeSeriesSeaIce">TimeSeriesSeaIce (class in mpas_analysis.sea_ice)</a>
@@ -606,6 +617,8 @@
       <li><a href="generated/mpas_analysis.ocean.TimeSeriesSST.html#mpas_analysis.ocean.TimeSeriesSST">TimeSeriesSST (class in mpas_analysis.ocean)</a>
 </li>
       <li><a href="generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly">TimeSeriesTemperatureAnomaly (class in mpas_analysis.ocean)</a>
+</li>
+      <li><a href="generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport">TimeSeriesTransport (class in mpas_analysis.ocean)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -642,11 +655,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -657,7 +678,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

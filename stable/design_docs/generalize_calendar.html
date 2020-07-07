@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Moving variable mapping outside of mpas_xarray" href="variable_mapping_reorg.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -111,10 +113,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -153,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
         
@@ -302,7 +308,7 @@ the OHC script is:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">get_simulation_start_time</span><span class="p">,</span> \
     <span class="n">date_to_days</span><span class="p">,</span> <span class="n">days_to_datetime</span><span class="p">,</span> <span class="n">string_to_datetime</span>
 <span class="o">...</span>
-<span class="k">def</span> <span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="o">...</span>
     <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">)</span>
 <span class="o">...</span>
@@ -323,7 +329,7 @@ the OHC script is:</p>
     <span class="k">if</span> <span class="n">timeStartFirstYear</span> <span class="o">&lt;</span> <span class="n">timeStart</span><span class="p">:</span>
         <span class="n">startDateFirstYear</span> <span class="o">=</span> <span class="n">simulation_start_time</span>
         <span class="n">firstYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startDateFirstYear</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
-        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
+        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
         <span class="n">filesFirstYear</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span>
                                           <span class="n">startDate</span><span class="o">=</span><span class="n">startDateFirstYear</span><span class="p">,</span>
                                           <span class="n">endDate</span><span class="o">=</span><span class="n">endDateFirstYear</span><span class="p">,</span>
@@ -360,8 +366,8 @@ the OHC script is:</p>
                            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s1">&#39;  Load in OHC from preprocessed reference run...&#39;</span>
-        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;{}/OHC.{}.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="nb">print</span> <span class="s1">&#39;  Load in OHC from preprocessed reference run...&#39;</span>
+        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/OHC.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">preprocessedInputDirectory</span><span class="p">,</span> <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
         <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span>
             <span class="n">file_names</span><span class="o">=</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
@@ -465,11 +471,19 @@ for MPAS-Analysis with the previous calendar.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -480,7 +494,6 @@ for MPAS-Analysis with the previous calendar.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

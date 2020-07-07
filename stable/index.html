@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Quick Start Guide" href="quick_start.html" /> 
@@ -49,7 +50,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> MPAS-Analysis
+            <a href="#" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -76,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -98,10 +100,14 @@
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -140,7 +146,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
       <li>MPAS-Analysis</li>
     
@@ -175,7 +181,6 @@ used those components.</p>
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quick_start.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start.html#download-analysis-input-data">Download analysis input data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quick_start.html#download-natural-earth-data-for-cartopy">Download Natural Earth data for cartopy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start.html#list-analysis">List Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start.html#running-the-analysis">Running the analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quick_start.html#list-of-mpas-output-files-that-are-needed-by-mpas-analysis">List of MPAS output files that are needed by MPAS-Analysis:</a></li>
@@ -188,6 +193,7 @@ used those components.</p>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="config/runs.html">Runs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config/execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/dask_threads.html">Dask threads and subprocess count</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config/diagnostics.html">Diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config/input.html">Input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config/output.html">Output</a></li>
@@ -228,6 +234,7 @@ used those components.</p>
 <li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesTransport.html">timeSeriesTransport</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/streamfunctionMOC.html">streamfunctionMOC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/indexNino34.html">indexNino34</a></li>
@@ -302,6 +309,14 @@ used those components.</p>
 </ul>
 </div>
 </div>
+<div class="section" id="versions">
+<h1>Versions<a class="headerlink" href="#versions" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
+</div>
+</div>
 
 
            </div>
@@ -321,11 +336,19 @@ used those components.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -336,7 +359,6 @@ used those components.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

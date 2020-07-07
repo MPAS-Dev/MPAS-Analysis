@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -161,44 +167,40 @@
   <h1>Source code for mpas_analysis.ocean.time_series_antarctic_melt</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">dask</span>
-<span class="kn">import</span> <span class="nn">multiprocessing</span>
-<span class="kn">from</span> <span class="nn">multiprocessing.pool</span> <span class="k">import</span> <span class="n">ThreadPool</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="k">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="k">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="k">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span><span class="p">,</span> \
     <span class="n">add_inset</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="k">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> <span class="n">get_region_mask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="k">import</span> <span class="n">ComputeRegionMasksSubtask</span><span class="p">,</span> \
-    <span class="n">get_feature_list</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
 
 
 <div class="viewcode-block" id="TimeSeriesAntarcticMelt"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -210,7 +212,8 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-<div class="viewcode-block" id="TimeSeriesAntarcticMelt.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSeriesAntarcticMelt.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -222,6 +225,9 @@
 
 <span class="sd">        mpasTimeSeriesTask : ``MpasTimeSeriesTask``</span>
 <span class="sd">            The task that extracts the time series from MPAS monthly output</span>
+
+<span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
+<span class="sd">            A task for computing region masks</span>
 
 <span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
@@ -237,22 +243,16 @@
             <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;melt&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceCavities&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;iceShelves.geojson&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                                 <span class="s1">&#39;iceShelves20200621.geojson&#39;</span><span class="p">)</span>
 
         <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
                                                 <span class="s1">&#39;iceShelvesToPlot&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">iceShelvesToPlot</span><span class="p">:</span>
             <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">)</span>
 
-        <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span>
-                                                  <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">ComputeRegionMasksSubtask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelfMasks&#39;</span><span class="p">,</span>
-            <span class="n">featureList</span><span class="o">=</span><span class="n">iceShelvesToPlot</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="n">parallelTaskCount</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
+        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelves20200621&#39;</span><span class="p">)</span>
 
         <span class="n">computeMeltSubtask</span> <span class="o">=</span> <span class="n">ComputeMeltSubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span>
                                                 <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">iceShelvesToPlot</span><span class="p">)</span>
@@ -288,7 +288,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span>
                  <span class="n">iceShelvesToPlot</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -327,14 +327,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">iceShelvesToPlot</span>
-
-        <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">parallelTaskCount</span><span class="p">,</span>
-                                   <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-                                                      <span class="s1">&#39;subprocessCount&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">daskThreads</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
-            <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;daskThreads&#39;</span><span class="p">))</span>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -400,9 +392,7 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\Computing Antarctic melt rate time series...&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load melt rate data...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing Antarctic melt rate time series...&quot;</span><span class="p">)</span>
 
         <span class="n">mpasTimeSeriesTask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -436,62 +426,76 @@
                                 <span class="s1">&#39;it.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFileName</span><span class="p">))</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">schedular</span><span class="o">=</span><span class="s1">&#39;threads&#39;</span><span class="p">,</span>
-                             <span class="n">pool</span><span class="o">=</span><span class="n">ThreadPool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daskThreads</span><span class="p">)):</span>
-            <span class="c1"># work on data from simulations</span>
-            <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFreshwaterFlux</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">restartFileName</span> <span class="o">=</span> \
+            <span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="n">restartFileName</span> <span class="o">=</span> \
-                <span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">areaCell</span> <span class="o">=</span> \
+            <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
 
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-            <span class="n">areaCell</span> <span class="o">=</span> \
-                <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
+        <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 
-            <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
+        <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">regionMaskFileName</span><span class="p">)</span>
 
-            <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">regionMaskFileName</span><span class="p">)</span>
+        <span class="c1"># figure out the indices of the regions to plot</span>
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
 
-            <span class="c1"># figure out the indices of the regions to plot</span>
-            <span class="n">regionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+        <span class="n">regionIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">iceShelf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelvesToPlot</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">iceShelf</span> <span class="o">==</span> <span class="n">regionName</span><span class="p">:</span>
+                    <span class="n">regionIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                    <span class="k">break</span>
 
-            <span class="n">regionIndices</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">iceShelf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelvesToPlot</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">iceShelf</span> <span class="o">==</span> <span class="n">regionName</span><span class="p">:</span>
-                        <span class="n">regionIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-                        <span class="k">break</span>
+        <span class="c1"># select only those regions we want to plot</span>
+        <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndices</span><span class="p">)</span>
 
-            <span class="c1"># select only those regions we want to plot</span>
-            <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndices</span><span class="p">)</span>
-            <span class="n">cellMasks</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;nRegions&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+        <span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nTime</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nTime</span><span class="p">))</span>
 
-            <span class="c1"># convert from kg/s to kg/yr</span>
-            <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">*</span> \
-                <span class="p">(</span><span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span> <span class="o">*</span> <span class="n">freshwaterFlux</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
-            <span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+            <span class="n">freshwaterFlux</span> <span class="o">=</span> \
+                <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_landIceFreshwaterFlux</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span>
 
-            <span class="n">totalArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+            <span class="n">nRegions</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nRegions&#39;</span><span class="p">]</span>
+            <span class="n">meltRates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRegions</span><span class="p">,))</span>
+            <span class="n">totalMeltFluxes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nRegions</span><span class="p">,))</span>
 
-            <span class="c1"># from kg/m^2/yr to m/yr</span>
-            <span class="n">meltRates</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">totalMeltFlux</span> <span class="o">/</span> <span class="n">totalArea</span><span class="p">)</span>
-            <span class="n">meltRates</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">regionIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRegions</span><span class="p">):</span>
+                <span class="n">cellMask</span> <span class="o">=</span> \
+                    <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
 
-            <span class="c1"># convert from kg/yr to GT/yr</span>
-            <span class="n">totalMeltFlux</span> <span class="o">/=</span> <span class="n">constants</span><span class="o">.</span><span class="n">kg_per_GT</span>
+                <span class="c1"># convert from kg/s to kg/yr</span>
+                <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">*</span> \
+                    <span class="p">(</span><span class="n">cellMask</span> <span class="o">*</span> <span class="n">areaCell</span> <span class="o">*</span> <span class="n">freshwaterFlux</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+
+                <span class="n">totalArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">cellMask</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+
+                <span class="c1"># from kg/m^2/yr to m/yr</span>
+                <span class="n">meltRates</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span><span class="p">)</span> <span class="o">*</span>
+                                          <span class="p">(</span><span class="n">totalMeltFlux</span> <span class="o">/</span> <span class="n">totalArea</span><span class="p">))</span>
+
+                <span class="c1"># convert from kg/yr to GT/yr</span>
+                <span class="n">totalMeltFlux</span> <span class="o">/=</span> <span class="n">constants</span><span class="o">.</span><span class="n">kg_per_GT</span>
+                <span class="n">totalMeltFluxes</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalMeltFlux</span>
 
             <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-            <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalMeltFlux</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GT a$^{-1}$&#39;</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="s1">&#39;Total melt flux summed over each ice shelf or region&#39;</span>
-            <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;meltRates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meltRates</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m a$^{-1}$&#39;</span>
-            <span class="n">dsOut</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="s1">&#39;Melt rate averaged over each ice shelf or region&#39;</span>
+            <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span>
+            <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">),</span> <span class="n">totalMeltFluxes</span><span class="p">)</span>
+            <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;meltRates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nRegions&#39;</span><span class="p">),</span> <span class="n">meltRates</span><span class="p">)</span>
+            <span class="n">datasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
 
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
+        <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">objs</span><span class="o">=</span><span class="n">datasets</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GT a$^{-1}$&#39;</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">&#39;Total melt flux summed over each ice shelf or region&#39;</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m a$^{-1}$&#39;</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">&#39;Melt rate averaged over each ice shelf or region&#39;</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
         <span class="c1"># }}}</span>
 
@@ -518,7 +522,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">iceShelf</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">iceShelf</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
         <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -624,9 +628,9 @@
         <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
                                                <span class="s1">&#39;meltSubdirectory&#39;</span><span class="p">)</span>
         <span class="n">obsFileNameDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Rignot et al. (2013)&#39;</span><span class="p">:</span>
-                           <span class="s1">&#39;Rignot_2013_melt_rates.csv&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Rignot_2013_melt_rates_20200623.csv&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;Rignot et al. (2013) SS&#39;</span><span class="p">:</span>
-                           <span class="s1">&#39;Rignot_2013_melt_rates_SS.csv&#39;</span><span class="p">}</span>
+                           <span class="s1">&#39;Rignot_2013_melt_rates_SS_20200623.csv&#39;</span><span class="p">}</span>
 
         <span class="n">obsDict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># dict for storing dict of obs data</span>
         <span class="k">for</span> <span class="n">obsName</span> <span class="ow">in</span> <span class="n">obsFileNameDict</span><span class="p">:</span>
@@ -713,9 +717,10 @@
             <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
             <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">movingAverageMonths</span><span class="p">,</span>
-                                       <span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="p">,</span>
-                                       <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
+                                       <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
+                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
                                        <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
                                        <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                        <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
@@ -775,17 +780,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">movingAverageMonths</span><span class="p">,</span>
-                                       <span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="p">,</span>
-                                       <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
+                                       <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
+                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
                                        <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
                                        <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                        <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
+                                       <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
+                                       <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
                                        <span class="n">obsMean</span><span class="o">=</span><span class="n">obsMeltRate</span><span class="p">,</span>
                                        <span class="n">obsUncertainty</span><span class="o">=</span><span class="n">obsMeltRateUnc</span><span class="p">,</span>
-                                       <span class="n">obsLegend</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
-                                       <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
-                                       <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">)</span>
+                                       <span class="n">obsLegend</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">obsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
         <span class="c1"># do this before the inset because otherwise it moves the inset</span>
         <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>
@@ -843,11 +849,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -858,7 +872,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

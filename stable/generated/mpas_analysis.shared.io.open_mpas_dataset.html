@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -114,6 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -124,10 +127,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -166,7 +173,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -191,42 +198,33 @@
             
   <div class="section" id="mpas-analysis-shared-io-open-mpas-dataset">
 <h1>mpas_analysis.shared.io.open_mpas_dataset<a class="headerlink" href="#mpas-analysis-shared-io-open-mpas-dataset" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.io.open_mpas_dataset">
-<code class="sig-prename descclassname">mpas_analysis.shared.io.</code><code class="sig-name descname">open_mpas_dataset</code><span class="sig-paren">(</span><em class="sig-param">fileName, calendar, timeVariableNames=['xtime_startMonthly', 'xtime_endMonthly'], variableList=None, startDate=None, endDate=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/mpas_reader.html#open_mpas_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.open_mpas_dataset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.io.</code><code class="sig-name descname">open_mpas_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fileName</span></em>, <em class="sig-param"><span class="n">calendar</span></em>, <em class="sig-param"><span class="n">timeVariableNames</span><span class="o">=</span><span class="default_value">['xtime_startMonthly', 'xtime_endMonthly']</span></em>, <em class="sig-param"><span class="n">variableList</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">startDate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">endDate</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/mpas_reader.html#open_mpas_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.open_mpas_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens and returns an xarray data set given file name(s) and the MPAS
 calendar name.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>fileName</strong><span class="classifier">str</span></dt><dd><p>File path to read</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>}, optional</span></dt><dd><p>The name of one of the calendars supported by MPAS cores</p>
-</dd>
-<dt><strong>timeVariableNames</strong><span class="classifier">str or list of 2 str, optional</span></dt><dd><p>The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – File path to read</p></li>
+<li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>}, optional) – The name of one of the calendars supported by MPAS cores</p></li>
+<li><p><strong>timeVariableNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>list of 2 str</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code>
 or <code class="docutils literal notranslate"><span class="pre">['xtime_startMonthly',</span> <span class="pre">'xtime_endMonthly']</span></code>), or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
 time does not need to be parsed (and is already in the <code class="docutils literal notranslate"><span class="pre">Time</span></code>
-variable)</p>
-</dd>
-<dt><strong>variableList</strong><span class="classifier">list of strings, optional</span></dt><dd><p>If present, a list of variables to be included in the data set</p>
-</dd>
-<dt><strong>startDate, endDate</strong><span class="classifier">string or datetime.datetime, optional</span></dt><dd><p>If present, the first and last dates to be used in the data set.  The
-time variable is sliced to only include dates within this range.</p>
-</dd>
-</dl>
+variable)</p></li>
+<li><p><strong>variableList</strong> (<em>list of strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>endDate</strong> (<em>startDate</em><em>,</em>) – If present, the first and last dates to be used in the data set.  The
+time variable is sliced to only include dates within this range.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></span></dt><dd></dd>
-</dl>
+<dd class="field-even"><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code>)</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>TypeError</dt><dd><p>If the time variable has an unsupported type (not a date string).</p>
-</dd>
-<dt>ValueError</dt><dd><p>If the time variable is not found in the data set</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.8)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string).</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the time variable is not found in the data set</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -253,11 +251,19 @@ time variable is sliced to only include dates within this range.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -268,7 +274,6 @@ time variable is sliced to only include dates within this range.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

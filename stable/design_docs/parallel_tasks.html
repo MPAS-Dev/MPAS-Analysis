@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Analysis Task Template" href="analysis_task_template.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -111,10 +113,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -153,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
         
@@ -345,9 +351,9 @@ Contributors: Xylar Asay-Davis
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span> <span class="o">=</span> <span class="n">wait_for_task</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">&quot;Task {} has finished successfully.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
+            <span class="nb">print</span> <span class="s2">&quot;Task </span><span class="si">{}</span><span class="s2"> has finished successfully.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">&quot;ERROR in task {}.  See log file {} for details&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">print</span> <span class="s2">&quot;ERROR in task </span><span class="si">{}</span><span class="s2">.  See log file </span><span class="si">{}</span><span class="s2"> for details&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">taskName</span><span class="p">,</span> <span class="n">logs</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">logs</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="c1"># remove the process from the process dictionary (no need to bother)</span>
@@ -388,14 +394,14 @@ Contributors: Xylar Asay-Davis
     <span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">taskNames</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="n">commandPrefix</span> <span class="o">+</span> <span class="p">[</span><span class="n">thisFile</span><span class="p">,</span> <span class="s1">&#39;--generate&#39;</span><span class="p">,</span> <span class="n">taskName</span><span class="p">]</span> <span class="o">+</span> <span class="n">configFiles</span>
 
-        <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">&#39;{}/{}.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">taskName</span><span class="p">)</span>
+        <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">taskName</span><span class="p">)</span>
 
         <span class="c1"># write the command to the log file</span>
         <span class="n">logFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">logFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">logFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Command: {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+        <span class="n">logFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Command: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
         <span class="c1"># make sure the command gets written before the rest of the log</span>
         <span class="n">logFile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s1">&#39;Running {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;Running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
         <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">logFile</span><span class="p">,</span>
                                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
         <span class="n">processes</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span> <span class="o">=</span> <span class="n">process</span>
@@ -438,9 +444,9 @@ Contributors: Xylar Asay-Davis
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="kc">False</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">True</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># }}}</span>
 </pre></div>
 </div>
 <h4> Implementation: Select maximum number of tasks <br>
@@ -543,11 +549,19 @@ leave this consideration for investigation in the future.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -558,7 +572,6 @@ leave this consideration for investigation in the future.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

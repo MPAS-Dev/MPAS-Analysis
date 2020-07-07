@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.climatology.add_years_months_days_in_month" href="mpas_analysis.shared.climatology.add_years_months_days_in_month.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -128,6 +130,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -138,10 +141,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -180,7 +187,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -205,41 +212,34 @@
             
   <div class="section" id="mpas-analysis-shared-climatology-compute-climatology">
 <h1>mpas_analysis.shared.climatology.compute_climatology<a class="headerlink" href="#mpas-analysis-shared-climatology-compute-climatology" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.climatology.compute_climatology">
-<code class="sig-prename descclassname">mpas_analysis.shared.climatology.</code><code class="sig-name descname">compute_climatology</code><span class="sig-paren">(</span><em class="sig-param">ds</em>, <em class="sig-param">monthValues</em>, <em class="sig-param">calendar=None</em>, <em class="sig-param">maskVaries=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/climatology.html#compute_climatology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.compute_climatology" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.climatology.</code><code class="sig-name descname">compute_climatology</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ds</span></em>, <em class="sig-param"><span class="n">monthValues</span></em>, <em class="sig-param"><span class="n">calendar</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maskVaries</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/climatology.html#compute_climatology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.compute_climatology" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a monthly, seasonal or annual climatology data set from a data
 set.  The mean is weighted but the number of days in each month of
 the data set, ignoring values masked out with NaNs.  If the month
 coordinate is not present, a data array <code class="docutils literal notranslate"><span class="pre">month</span></code> will be added based
 on <code class="docutils literal notranslate"><span class="pre">Time</span></code> and the provided calendar.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> or <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object</span></dt><dd><p>A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
-0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p>
-</dd>
-<dt><strong>monthValues</strong><span class="classifier">int or array-like of ints</span></dt><dd><p>A single month or an array of months to be averaged together</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, optional</span></dt><dd><p>The name of one of the calendars supported by MPAS cores, used to
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> or <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
+0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p></li>
+<li><p><strong>monthValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><em>array-like of ints</em>) – A single month or an array of months to be averaged together</p></li>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, optional) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate, so must be supplied if
-<code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p>
-</dd>
-<dt><strong>maskVaries</strong><span class="classifier">bool, optional</span></dt><dd><p>If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
+<code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p></li>
+<li><p><strong>maskVaries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
 If not, the weighted average does not need make extra effort to account
 for the mask.  Most MPAS fields will have masks that don’t vary in
 time, whereas observations may sometimes be present only at some
-times and not at others, requiring <code class="docutils literal notranslate"><span class="pre">maskVaries</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
-</dd>
-</dl>
+times and not at others, requiring <code class="docutils literal notranslate"><span class="pre">maskVaries</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>climatology</strong><span class="classifier">object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code></span></dt><dd><p>A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
+<dd class="field-even"><p><strong>climatology</strong> (object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
 of ds over all months in monthValues, weighted by the number of days
 in each month.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -266,11 +266,19 @@ in each month.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -281,7 +289,6 @@ in each month.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

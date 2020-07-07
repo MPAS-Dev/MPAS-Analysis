@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,31 +11,33 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html" />
-    <link rel="prev" title="mpas_analysis.ocean.TimeSeriesOceanRegions" href="mpas_analysis.ocean.TimeSeriesOceanRegions.html" /> 
+    <link rel="prev" title="mpas_analysis.ocean.TimeSeriesTransport" href="mpas_analysis.ocean.TimeSeriesTransport.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -118,6 +120,7 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.TimeSeriesSST.html">mpas_analysis.ocean.TimeSeriesSST</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.TimeSeriesAntarcticMelt.html">mpas_analysis.ocean.TimeSeriesAntarcticMelt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.TimeSeriesOceanRegions.html">mpas_analysis.ocean.TimeSeriesOceanRegions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info</a></li>
@@ -138,10 +141,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -180,7 +187,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -205,60 +212,48 @@
             
   <div class="section" id="mpas-analysis-ocean-compute-anomaly-subtask-computeanomalysubtask">
 <h1>mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask<a class="headerlink" href="#mpas-analysis-ocean-compute-anomaly-subtask-computeanomalysubtask" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask">
-<em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.ocean.compute_anomaly_subtask.</code><code class="sig-name descname">ComputeAnomalySubtask</code><span class="sig-paren">(</span><em class="sig-param">parentTask</em>, <em class="sig-param">mpasTimeSeriesTask</em>, <em class="sig-param">outFileName</em>, <em class="sig-param">variableList</em>, <em class="sig-param">movingAveragePoints</em>, <em class="sig-param">subtaskName='computeAnomaly'</em>, <em class="sig-param">alter_dataset=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/compute_anomaly_subtask.html#ComputeAnomalySubtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.ocean.compute_anomaly_subtask.</code><code class="sig-name descname">ComputeAnomalySubtask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parentTask</span></em>, <em class="sig-param"><span class="n">mpasTimeSeriesTask</span></em>, <em class="sig-param"><span class="n">outFileName</span></em>, <em class="sig-param"><span class="n">variableList</span></em>, <em class="sig-param"><span class="n">movingAveragePoints</span></em>, <em class="sig-param"><span class="n">subtaskName</span><span class="o">=</span><span class="default_value">'computeAnomaly'</span></em>, <em class="sig-param"><span class="n">alter_dataset</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/compute_anomaly_subtask.html#ComputeAnomalySubtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask" title="Permalink to this definition">¶</a></dt>
 <dd><p>A subtask for computing anomalies of moving averages and writing them out.</p>
-<dl class="field-list">
-<dt class="field-odd">Attributes</dt>
-<dd class="field-odd"><dl>
-<dt><strong>mpasTimeSeriesTask</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code></span></dt><dd><p>The task that extracts the time series from MPAS monthly output</p>
-</dd>
-<dt><strong>outFileName</strong><span class="classifier">str</span></dt><dd><p>The file name (usually without full path) where the resulting
-data set should be written</p>
-</dd>
-<dt><strong>variableList</strong><span class="classifier">list of str</span></dt><dd><p>Variables to be included in the data set</p>
-</dd>
-<dt><strong>movingAveragePoints</strong><span class="classifier">int</span></dt><dd><p>The number of points (months) used in the moving average used to
-smooth the data set</p>
-</dd>
-<dt><strong>alter_dataset</strong><span class="classifier">function</span></dt><dd><p>A function that takes an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> and returns an
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mpasTimeSeriesTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code>) – The task that extracts the time series from MPAS monthly output</p></li>
+<li><p><strong>outFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The file name (usually without full path) where the resulting
+data set should be written</p></li>
+<li><p><strong>variableList</strong> (<em>list of str</em>) – Variables to be included in the data set</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of points (months) used in the moving average used to
+smooth the data set</p></li>
+<li><p><strong>alter_dataset</strong> (<em>function</em>) – A function that takes an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> and returns an
 <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> for manipulating the data set (e.g. adding a new
 variable computed from others).  This operation is performed before
 computing moving averages and anomalies, so that these operations are
-also performed on any new variables added to the data set.</p>
+also performed on any new variables added to the data set.</p></li>
+</ul>
 </dd>
 </dl>
-</dd>
-</dl>
-<dl class="method">
+<dl class="py method">
 <dt id="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">parentTask</em>, <em class="sig-param">mpasTimeSeriesTask</em>, <em class="sig-param">outFileName</em>, <em class="sig-param">variableList</em>, <em class="sig-param">movingAveragePoints</em>, <em class="sig-param">subtaskName='computeAnomaly'</em>, <em class="sig-param">alter_dataset=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/compute_anomaly_subtask.html#ComputeAnomalySubtask.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parentTask</span></em>, <em class="sig-param"><span class="n">mpasTimeSeriesTask</span></em>, <em class="sig-param"><span class="n">outFileName</span></em>, <em class="sig-param"><span class="n">variableList</span></em>, <em class="sig-param"><span class="n">movingAveragePoints</span></em>, <em class="sig-param"><span class="n">subtaskName</span><span class="o">=</span><span class="default_value">'computeAnomaly'</span></em>, <em class="sig-param"><span class="n">alter_dataset</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/compute_anomaly_subtask.html#ComputeAnomalySubtask.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the analysis task.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>parentTask</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code></span></dt><dd><p>The parent task of which this is a subtask</p>
-</dd>
-<dt><strong>mpasTimeSeriesTask</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code></span></dt><dd><p>The task that extracts the time series from MPAS monthly output</p>
-</dd>
-<dt><strong>outFileName</strong><span class="classifier">str</span></dt><dd><p>The file name (usually without full path) where the resulting
-data set should be written</p>
-</dd>
-<dt><strong>variableList</strong><span class="classifier">list of str</span></dt><dd><p>Variables to be included in the data set</p>
-</dd>
-<dt><strong>movingAveragePoints</strong><span class="classifier">int</span></dt><dd><p>The number of points (months) used in the moving average used to
-smooth the data set</p>
-</dd>
-<dt><strong>subtaskName</strong><span class="classifier">str, optional</span></dt><dd><p>The name of the subtask</p>
-</dd>
-<dt><strong>alter_dataset</strong><span class="classifier">function</span></dt><dd><p>A function that takes an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> and returns an
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task of which this is a subtask</p></li>
+<li><p><strong>mpasTimeSeriesTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code>) – The task that extracts the time series from MPAS monthly output</p></li>
+<li><p><strong>outFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The file name (usually without full path) where the resulting
+data set should be written</p></li>
+<li><p><strong>variableList</strong> (<em>list of str</em>) – Variables to be included in the data set</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of points (months) used in the moving average used to
+smooth the data set</p></li>
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
+<li><p><strong>alter_dataset</strong> (<em>function</em>) – A function that takes an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> and returns an
 <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> for manipulating the data set (e.g. adding a new
 variable computed from others).  This operation is performed before
 computing moving averages and anomalies, so that these operations
-are also performed on any new variables added to the data set.</p>
-</dd>
-</dl>
+are also performed on any new variables added to the data set.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -270,49 +265,49 @@ are also performed on any new variables added to the data set.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__" title="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, parentTask, …[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__" title="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, mpasTimeSeriesTask, …)</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(self, subtask)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
 <td><p>Add a subtask to this tasks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(self, analysisOptionName)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, …])</p></td>
 <td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>()</p></td>
 <td><p>Determines if this analysis should be generated, based on the <code class="docutils literal notranslate"><span class="pre">generate</span></code> config option and <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code> and <code class="docutils literal notranslate"><span class="pre">tags</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
 <td><p>Close the Process object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
 <td><p>Return whether process is alive</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>(self[, timeout])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
 <td><p>Wait until child process terminates</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
 <td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>(self[, writeLogFile])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
 <td><p>Sets up logging and then runs the analysis task.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(self, task)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
 <td><p>Only run this task after the given task has completed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
 <td><p>Performs analysis of ocean heat content (OHC) from time-series output.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(self, section)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
 <td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>()</p></td>
 <td><p>Perform steps to set up the analysis and check for errors in the setup.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>(self)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
 <td><p>Start child process</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>(self)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
 <td><p>Terminate process; sends SIGTERM signal or uses TerminateProcess()</p></td>
 </tr>
 </tbody>
@@ -380,7 +375,7 @@ are also performed on any new variables added to the data set.</p>
         <a href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mpas_analysis.ocean.TimeSeriesOceanRegions.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.TimeSeriesOceanRegions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="mpas_analysis.ocean.TimeSeriesTransport.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.TimeSeriesTransport" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -389,11 +384,19 @@ are also performed on any new variables added to the data set.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -404,7 +407,6 @@ are also performed on any new variables added to the data set.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

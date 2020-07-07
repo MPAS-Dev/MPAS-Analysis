@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -114,6 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -124,10 +127,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -166,7 +173,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -191,23 +198,21 @@
             
   <div class="section" id="mpas-analysis-shared-mpas-xarray-mpas-xarray-preprocess">
 <h1>mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess<a class="headerlink" href="#mpas-analysis-shared-mpas-xarray-mpas-xarray-preprocess" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">
-<code class="sig-prename descclassname">mpas_analysis.shared.mpas_xarray.mpas_xarray.</code><code class="sig-name descname">preprocess</code><span class="sig-paren">(</span><em class="sig-param">ds</em>, <em class="sig-param">calendar</em>, <em class="sig-param">simulationStartTime</em>, <em class="sig-param">timeVariableName</em>, <em class="sig-param">variableList</em>, <em class="sig-param">selValues</em>, <em class="sig-param">iselValues</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#preprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.mpas_xarray.mpas_xarray.</code><code class="sig-name descname">preprocess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ds</span></em>, <em class="sig-param"><span class="n">calendar</span></em>, <em class="sig-param"><span class="n">simulationStartTime</span></em>, <em class="sig-param"><span class="n">timeVariableName</span></em>, <em class="sig-param"><span class="n">variableList</span></em>, <em class="sig-param"><span class="n">selValues</span></em>, <em class="sig-param"><span class="n">iselValues</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#preprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds correct time specification for MPAS, allowing a date offset
 because the time must be between 1678 and 2262 based on the xarray
 library.  Also, if slicing information (<cite>selValues</cite> and/or
 <cite>iselValues</cite>) was provided in <cite>openMultifileDataSet</cite>, this
 function performs the appropriate slicing on the data set.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object</span></dt><dd><p>The data set containing an MPAS time variable to be used to build
-an xarray time coordinate.</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>}</span></dt><dd><p>The name of one of the calendars supported by MPAS cores</p>
-</dd>
-<dt><strong>simulationStartTime</strong><span class="classifier">string, optinal</span></dt><dd><p>The start date of the simulation, used to convert from time
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object) – The data set containing an MPAS time variable to be used to build
+an xarray time coordinate.</p></li>
+<li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>}) – The name of one of the calendars supported by MPAS cores</p></li>
+<li><p><strong>simulationStartTime</strong> (<em>string</em><em>, </em><em>optinal</em>) – <p>The start date of the simulation, used to convert from time
 variables expressed as days since the start of the simulation to
 days since the reference date. <code class="docutils literal notranslate"><span class="pre">simulationStartTime</span></code> takes one
 of the following forms:</p>
@@ -218,20 +223,18 @@ of the following forms:</p>
 <p><code class="docutils literal notranslate"><span class="pre">simulationStartTime</span></code> is only required if the MPAS time variable
 (identified by <code class="docutils literal notranslate"><span class="pre">timeVariableName</span></code>) is a number of days since the
 start of the simulation.</p>
-</dd>
-<dt><strong>timeVariableName</strong><span class="classifier">string, optional</span></dt><dd><p>The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> or <code class="docutils literal notranslate"><span class="pre">'Time'</span></code>).</p>
-</dd>
-<dt><strong>variableList</strong><span class="classifier">list of strings</span></dt><dd><p>If present, a list of variables to be included in the data set</p>
-</dd>
-<dt><strong>selectCorrdValues</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of coordinate names (keys) and values or arrays of
+</p></li>
+<li><p><strong>timeVariableName</strong> (<em>string</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> or <code class="docutils literal notranslate"><span class="pre">'Time'</span></code>).</p></li>
+<li><p><strong>variableList</strong> (<em>list of strings</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>selectCorrdValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>A dictionary of coordinate names (keys) and values or arrays of
 values used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.sel()</span></code> for details on how this dictonary is used.
 An example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">selectCorrdValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cellLon&#39;</span><span class="p">:</span> <span class="mf">180.0</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd>
-<dt><strong>iselValues</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of coordinate names (keys) and indices, slices or
+</p></li>
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>A dictionary of coordinate names (keys) and indices, slices or
 arrays of indices used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.isel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -239,15 +242,12 @@ An example:</p>
               <span class="s1">&#39;nCells&#39;</span><span class="p">:</span> <span class="n">cellIDs</span><span class="p">}</span>
 </pre></div>
 </div>
-</dd>
-</dl>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>ds</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object</span></dt><dd><p>A copy of the data set with the time coordinate set and which
+<dd class="field-even"><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object) – A copy of the data set with the time coordinate set and which
 has been sliced.</p>
-</dd>
-</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -274,11 +274,19 @@ has been sliced.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -289,7 +297,6 @@ has been sliced.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Config File Reorganization" href="config_file_reorganization.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -111,10 +113,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -153,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
         
@@ -181,13 +187,9 @@
 <h2>
 Xylar Asay-Davis <br>
 date: 2017/01/19 <br>
-</h2>
-<h3> Summary </h3>
-
-Currently, MPAS-Analysis uses various methods to perform horizontal interpolation.  For constructing ocean climatologies, nearest-neighbor interpolation is used, while for sea-ice climatologies, `ncremap` is used with the requirement that a mapping file for the appropriate source and destination grids is provided through the config file.  This project intends to move MPAS-Analysis to a unified approach to horizontal interpolation that does not require pre-generated mapping files (though it should support caching mapping files for faster execution).
-
-Many types of analysis in MPAS will require fields that are interpolated from MPAS grids to arbitrary points, not just to points on a lat/lon grid.  This project will not attempt to address that case completely but will take that need into consideration in designing a solution that can be extended to interpolation at arbitrary points in the future.
-
+</h2><p>Horizontal interpolation and related utilities for remapping are now in the <a class="reference external" href="https://github.com/MPAS-Dev/pyremap/">pyremap repo</a>.</p>
+<h3> Summary </h3><p>Currently, MPAS-Analysis uses various methods to perform horizontal interpolation.  For constructing ocean climatologies, nearest-neighbor interpolation is used, while for sea-ice climatologies, <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> is used with the requirement that a mapping file for the appropriate source and destination grids is provided through the config file.  This project intends to move MPAS-Analysis to a unified approach to horizontal interpolation that does not require pre-generated mapping files (though it should support caching mapping files for faster execution).</p>
+<p>Many types of analysis in MPAS will require fields that are interpolated from MPAS grids to arbitrary points, not just to points on a lat/lon grid.  This project will not attempt to address that case completely but will take that need into consideration in designing a solution that can be extended to interpolation at arbitrary points in the future.</p>
 <h2> Requirements </h2>
 <h3>Requirement: Higher-order interpolation <br>
 Date last modified: 2017/02/25 <br>
@@ -297,11 +299,19 @@ Contributors: Xylar Asay-Davis</h3><p>I have verified that I can rerun without r
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -312,7 +322,6 @@ Contributors: Xylar Asay-Davis</h3><p>I have verified that I can rerun without r
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

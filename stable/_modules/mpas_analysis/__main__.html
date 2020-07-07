@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
@@ -162,10 +168,10 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -179,7 +185,7 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">mpas_analysis</span>
@@ -190,33 +196,35 @@
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">progressbar</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="k">import</span> <span class="n">AnalysisFormatter</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisFormatter</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.configuration</span> <span class="k">import</span> <span class="n">MpasAnalysisConfigParser</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.configuration</span> <span class="kn">import</span> <span class="n">MpasAnalysisConfigParser</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="k">import</span> <span class="n">generate_html</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">generate_html</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="k">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> \
     <span class="n">update_time_bounds_from_file_names</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="k">import</span> <span class="n">register_custom_colormaps</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">register_custom_colormaps</span><span class="p">,</span> \
     <span class="n">_plot_color_gradients</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="k">import</span> <span class="n">ocean</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="k">import</span> <span class="n">sea_ice</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="k">import</span> <span class="n">MpasClimatologyTask</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="kn">import</span> <span class="n">ocean</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis</span> <span class="kn">import</span> <span class="n">sea_ice</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">MpasClimatologyTask</span><span class="p">,</span> \
     <span class="n">RefYearMpasClimatologyTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.time_series</span> <span class="k">import</span> <span class="n">MpasTimeSeriesTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.time_series</span> <span class="kn">import</span> <span class="n">MpasTimeSeriesTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasks</span>
 
 
 <span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -279,6 +287,9 @@
     <span class="n">oceanRefYearClimatolgyTask</span> <span class="o">=</span> <span class="n">RefYearMpasClimatologyTask</span><span class="p">(</span>
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
 
+    <span class="n">oceanRegionMasksTask</span> <span class="o">=</span> <span class="n">ComputeRegionMasks</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                                              <span class="n">conponentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">oceanClimatolgyTasks</span><span class="p">:</span>
         <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="n">op</span><span class="p">])</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oceanRefYearClimatolgyTask</span><span class="p">)</span>
@@ -324,15 +335,19 @@
         <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapAntarcticMelt</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+        <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">RegionalTSDiagrams</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+        <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanTimeSeriesTask</span><span class="p">,</span>
+                                                  <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
                                                   <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+                                                 <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesTemperatureAnomaly</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                                        <span class="n">oceanTimeSeriesTask</span><span class="p">))</span>
@@ -343,6 +358,8 @@
                                                <span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesSST</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanTimeSeriesTask</span><span class="p">,</span>
                                         <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesTransport</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
+
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">MeridionalHeatTransport</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
 
@@ -360,7 +377,8 @@
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">GeojsonTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                            <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+                                                <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="c1"># Sea Ice Analyses</span>
     <span class="n">seaIceClimatolgyTask</span> <span class="o">=</span> <span class="n">MpasClimatologyTask</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
@@ -636,6 +654,7 @@
     <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">totalTaskCount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">analyses</span><span class="p">)</span>
     <span class="n">widgets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Running tasks: &#39;</span><span class="p">,</span> <span class="n">progressbar</span><span class="o">.</span><span class="n">Percentage</span><span class="p">(),</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
@@ -1038,11 +1057,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1053,7 +1080,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

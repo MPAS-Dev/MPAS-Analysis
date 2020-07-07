@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.timekeeping.utility.datetime_to_days" href="mpas_analysis.shared.timekeeping.utility.datetime_to_days.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -116,6 +118,7 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.html">mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -126,10 +129,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -168,7 +175,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -193,38 +200,30 @@
             
   <div class="section" id="mpas-analysis-shared-timekeeping-utility-days-to-datetime">
 <h1>mpas_analysis.shared.timekeeping.utility.days_to_datetime<a class="headerlink" href="#mpas-analysis-shared-timekeeping-utility-days-to-datetime" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.timekeeping.utility.days_to_datetime">
-<code class="sig-prename descclassname">mpas_analysis.shared.timekeeping.utility.</code><code class="sig-name descname">days_to_datetime</code><span class="sig-paren">(</span><em class="sig-param">days</em>, <em class="sig-param">calendar='gregorian'</em>, <em class="sig-param">referenceDate='0001-01-01'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/timekeeping/utility.html#days_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.days_to_datetime" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.timekeeping.utility.</code><code class="sig-name descname">days_to_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">days</span></em>, <em class="sig-param"><span class="n">calendar</span><span class="o">=</span><span class="default_value">'gregorian'</span></em>, <em class="sig-param"><span class="n">referenceDate</span><span class="o">=</span><span class="default_value">'0001-01-01'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/timekeeping/utility.html#days_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.days_to_datetime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Covert days to <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects given a reference date and an
 MPAS calendar (either ‘gregorian’ or ‘gregorian_noleap’).</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>days</strong><span class="classifier">float or array-like of floats</span></dt><dd><p>The number of days since the reference date.</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier">{‘gregorian’, ‘gregorian_noleap’}, optional</span></dt><dd><p>A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
-object.</p>
-</dd>
-<dt><strong>referenceDate</strong><span class="classifier">str, optional</span></dt><dd><p>A reference date of the form:</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>days</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> or </em><em>array-like of floats</em>) – The number of days since the reference date.</p></li>
+<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
+object.</p></li>
+<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
 <span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
 </pre></div>
 </div>
-</dd>
-</dl>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>datetime</strong><span class="classifier"><cite>datetime.datetime</cite> (or array-like of datetimes)</span></dt><dd><p>The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>datetime</strong> (<cite>datetime.datetime</cite> (or array-like of datetimes)) – The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><dl class="simple">
-<dt>ValueError</dt><dd><p>If an invalid <code class="docutils literal notranslate"><span class="pre">days</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is supplied.</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">days</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is supplied.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,11 +250,19 @@ object.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -266,7 +273,6 @@ object.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

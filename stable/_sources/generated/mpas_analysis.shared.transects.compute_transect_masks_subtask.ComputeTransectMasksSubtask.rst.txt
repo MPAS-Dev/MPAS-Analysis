@@ -1,0 +1,54 @@
+mpas\_analysis.shared.transects.compute\_transect\_masks\_subtask.ComputeTransectMasksSubtask
+=============================================================================================
+
+.. currentmodule:: mpas_analysis.shared.transects.compute_transect_masks_subtask
+
+.. autoclass:: ComputeTransectMasksSubtask
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ComputeTransectMasksSubtask.__init__
+      ~ComputeTransectMasksSubtask.add_subtask
+      ~ComputeTransectMasksSubtask.check_analysis_enabled
+      ~ComputeTransectMasksSubtask.check_generate
+      ~ComputeTransectMasksSubtask.close
+      ~ComputeTransectMasksSubtask.is_alive
+      ~ComputeTransectMasksSubtask.join
+      ~ComputeTransectMasksSubtask.kill
+      ~ComputeTransectMasksSubtask.run
+      ~ComputeTransectMasksSubtask.run_after
+      ~ComputeTransectMasksSubtask.run_task
+      ~ComputeTransectMasksSubtask.set_start_end_date
+      ~ComputeTransectMasksSubtask.setup_and_check
+      ~ComputeTransectMasksSubtask.start
+      ~ComputeTransectMasksSubtask.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComputeTransectMasksSubtask.BLOCKED
+      ~ComputeTransectMasksSubtask.FAIL
+      ~ComputeTransectMasksSubtask.READY
+      ~ComputeTransectMasksSubtask.RUNNING
+      ~ComputeTransectMasksSubtask.SUCCESS
+      ~ComputeTransectMasksSubtask.UNSET
+      ~ComputeTransectMasksSubtask.authkey
+      ~ComputeTransectMasksSubtask.daemon
+      ~ComputeTransectMasksSubtask.exitcode
+      ~ComputeTransectMasksSubtask.ident
+      ~ComputeTransectMasksSubtask.name
+      ~ComputeTransectMasksSubtask.pid
+      ~ComputeTransectMasksSubtask.sentinel
+   
+   

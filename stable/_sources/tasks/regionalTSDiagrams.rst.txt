@@ -4,7 +4,7 @@ regionalTSDiagrams
 ==================
 
 An analysis task for plotting T-S (potential temperature vs. salinity)
-diagrams of climatologis in ocean regions.
+diagrams of climatologies in ocean regions.
 
 Component and Tags::
 
@@ -20,7 +20,7 @@ The following configuration options are available for this task::
     ## options related to plotting T/S diagrams of ocean regions
 
     # the names of region groups to plot, each with its own section below
-    regionGroups = ['Antarctic Regions', 'Ocean Basins']
+    regionGroups = ['Ocean Basins']
 
     # a list of seasons to compute climatologies over
     seasons = ['ANN']
@@ -40,10 +40,11 @@ The following configuration options are available for this task::
     [TSDiagramsForAntarcticRegions]
     ## options related to plotting T/S diagrams of Antarctic regions
 
-    # A geojson file containing Antarctic ocean regions.  Each region must have
-    # 'zmin' and 'zmax' properites in addition to the usual properies for a region
-    # in geometric_features
-    regionMask = 'antarcticRegions.geojson'
+    # An identifying string that is the prefix for a geojson file containing
+    # Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+    # in addition to the usual properties for a region in geometric_features.  The
+    # string is also used as the suffix for mask files generated from the geojson
+    regionMaskSuffix = 'antarcticRegions20200621'
 
     # list of regions to plot or ['all'] for all regions in the masks file.
     # See "regionNames" in the antarcticRegions masks file in
@@ -68,6 +69,8 @@ The following configuration options are available for this task::
     colormap = white_cmo_deep
     # The following is more appropriate if diagramType == 'scatter'
     # colormap = cmo.deep_r
+    # the type of norm used in the colormap {'linear', 'log'}
+    normType = log
 
     # The minimum and maximum depth over which fields are plotted, default is
     # to take these values from the geojson feature's zmin and zmax properties.
@@ -81,13 +84,14 @@ The following configuration options are available for this task::
     [TSDiagramsForOceanBasins]
     ## options related to plotting T/S diagrams of major ocean basins
 
-    # A geojson file containing Antarctic ocean regions.  Each region must have
-    # 'zmin' and 'zmax' properites in addition to the usual properies for a region
-    # in geometric_features
-    regionMask = 'oceanBasins.geojson'
+    # An identifying string that is the prefix for a geojson file containing
+    # ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
+    # to the usual properties for a region in geometric_features.  The string is
+    # also used as the suffix for mask files generated from the geojson file
+    regionMaskSuffix = 'oceanBasins20200621'
 
     # list of regions to plot or ['all'] for all regions in the masks file.
-    # See "regionNames" in the antarcticRegions masks file in
+    # See "regionNames" in the oceanBasins masks file in
     # regionMaskSubdirectory for details.
     regionNames = ['all']
 
@@ -109,6 +113,8 @@ The following configuration options are available for this task::
     colormap = white_cmo_deep
     # The following is more appropriate if diagramType == 'scatter'
     # colormap = cmo.deep_r
+    # the type of norm used in the colormap {'linear', 'log'}
+    normType = log
 
     # The minimum and maximum depth over which fields are plotted.
     zmin = -1000
@@ -120,26 +126,27 @@ The following configuration options are available for this task::
 Region Groups
 -------------
 
-A list of groups of regions, each of which will get its own gallery group on
-the resulting analysis webpage.  These can be any name without punctuation.
+A list of groups of regions, each of which will get its own gallery on
+the resulting analysis web page.  These can be any name without punctuation.
 For each region group, there should be a corresponding
 ``TSDiagramsFor<RegionGroup>`` section of the config file, with any spaces
 removed from the name of the region group.  By default, the only region group
-is "Antarctic Regions".
+is "Ocean Basins".
 
 Region Mask
 -----------
 
-The ``regionMask`` is a geojson file produce from the ``geometric_features``
-packge.  It should include any number of ocean regions, each of which includes
-properties ``zmin`` and ``zmax``.  Examples of how to create such a set of
-features can be found in `antarctic_ocean_regions`_.
+The ``regionMaskSuffix`` is a prefix for a geojson file produce from the
+``geometric_features`` package and documented in the ``preprocess_masks``
+directory of the GitHub repo.  It should include any number of ocean regions,
+each of which includes properties ``zmin`` and ``zmax``.  Examples of how to
+create such a set of features can be found in `antarctic_ocean_regions`_.
 
 Region Names
 ------------
 
 The ``regionNames`` can be set to ``['all']`` (the default) to plot all of the
-regions in the ``regionMask`` file.  In the case of "Antarctic Regions", these
+regions in the geojson file.  In the case of "Antarctic Regions", these
 are::
 
   ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",
@@ -160,15 +167,22 @@ Diagram Type
 ------------
 
 By default, a "volumetric" diagram is produced, where the volume of ocean water
-in a reigon is binned in T and S space, and the volume of each bin is plotted.
+in a region is binned in T and S space, and the volume of each bin is plotted.
 This allows for more quantitative comparison with observation- and model-based
 climatologies.
 
 If ``diagramType`` is set to ``scatter``, a point cloud is plotted instead,
 shaded by depth.  We anticipate that this will useful for plotting data sets
 that are spatially scattered (e.g. the MEOP seal data), because each sample
-does not correspond to a volume.  This type of dyagram may also be helpful for
+does not correspond to a volume.  This type of diagram may also be helpful for
 comparison with publications that use scatter plots.
+
+For volumetric diagrams, two norms for the continuous color map are supported,
+``linear`` and ``log``, with ``log`` being the default.  The range of the
+colormap is is between zero and the maximum bin volume for ``linear`` and
+between the minimum non-zero bin volume and the max for ``log``.  The min/max
+bin volume is taken from the first panel containing the "main" MPAS-Ocean plot,
+and the same color map range is used for all panels.
 
 Bins and Contour Intervals
 --------------------------
@@ -179,7 +193,7 @@ plots of neutral density and are used to determine the bounds of the figure
 in T/S space.  ``rhoInterval`` is the interval between contours of neutral
 density.  ``zmin`` and ``zmax`` are the minimum and maximum depths (positive
 up) of the ocean region.  If available (e.g. for "Antarctic Regions"), the
-default is to read them from ``regionMask``.
+default is to read them from geojson file.
 
 Observations
 ------------
@@ -197,7 +211,7 @@ For more details on the remaining config options, see
  * :ref:`config_regions`
  * :ref:`config_seasons`
  * :ref:`config_colormaps`
- * :ref:`dask_treads`
+ * :ref:`dask_threads`
 
 Example Result
 --------------

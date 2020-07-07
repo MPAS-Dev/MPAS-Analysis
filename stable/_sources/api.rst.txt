@@ -31,7 +31,6 @@ Downloading data
    :toctree: generated/
 
    download_analysis_data
-   download_natural_earth_110m
 
 Analysis tasks
 ==============
@@ -82,6 +81,7 @@ Ocean tasks
    TimeSeriesSST
    TimeSeriesAntarcticMelt
    TimeSeriesOceanRegions
+   TimeSeriesTransport
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 
@@ -285,7 +285,6 @@ Regions
    compute_region_masks_subtask.ComputeRegionMasksSubtask
    compute_region_masks_subtask.get_feature_list
 
-
 Timekeeping
 -----------
 .. currentmodule:: mpas_analysis.shared.timekeeping
@@ -301,4 +300,14 @@ Timekeeping
    utility.datetime_to_days
    utility.date_to_days
    MpasRelativeDelta.MpasRelativeDelta
+
+Transects
+---------
+.. currentmodule:: mpas_analysis.shared.transects
+
+.. autosummary::
+   :toctree: generated/
+
+   compute_transect_masks_subtask.compute_mpas_transect_masks
+   compute_transect_masks_subtask.ComputeTransectMasksSubtask
 

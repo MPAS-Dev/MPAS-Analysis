@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
@@ -161,10 +167,10 @@
   <h1>Source code for mpas_analysis.shared.plot.vertical_section</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -177,7 +183,7 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -185,10 +191,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="k">import</span> <span class="n">date_to_days</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">date_to_days</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="k">import</span> <span class="n">setup_colormap</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="k">import</span> <span class="n">plot_xtick_format</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">setup_colormap</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="kn">import</span> <span class="n">plot_xtick_format</span>
 
 
 <span class="k">def</span> <span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
@@ -199,7 +205,7 @@
         <span class="n">refArray</span><span class="p">,</span>
         <span class="n">diffArray</span><span class="p">,</span>
         <span class="n">colorMapSectionName</span><span class="p">,</span>
-        <span class="n">cbarLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">colorbarLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -225,17 +231,18 @@
         <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">xArrayIsTime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
         <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span>
         <span class="n">compareAsContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">contourLineStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">comparisonContourLineStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">comparisonContourLineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">labelContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">resultSuffix</span><span class="o">=</span><span class="s1">&#39;Result&#39;</span><span class="p">,</span>
+        <span class="n">diffSuffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots vertical section plots in a three-panel format, comparing model data</span>
 <span class="sd">    (in modelArray) to some reference dataset (in refArray), which can be</span>
@@ -268,7 +275,7 @@
 <span class="sd">    colorMapSectionName : str</span>
 <span class="sd">        section name in ``config`` where color map info can be found.</span>
 
-<span class="sd">    cbarLabel : str, optional</span>
+<span class="sd">    colorbarLabel : str, optional</span>
 <span class="sd">        the label for the colorbar.  If compareAsContours and labelContours are</span>
 <span class="sd">        both True, colorbarLabel is used as follows (typically in order to</span>
 <span class="sd">        indicate the units that are associated with the contour labels):</span>
@@ -374,7 +381,7 @@
 <span class="sd">        if True, format the x axis for time (this applies only to the primary</span>
 <span class="sd">        x axis, not to the optional second or third x axes)</span>
 
-<span class="sd">    N : int, optional</span>
+<span class="sd">    movingAveragePoints : int, optional</span>
 <span class="sd">        the number of points over which to perform a moving average</span>
 <span class="sd">        NOTE: this option is mostly intended for use when xArrayIsTime is True,</span>
 <span class="sd">        although it will work with other data as well.  Also, the moving</span>
@@ -421,6 +428,13 @@
 <span class="sd">        the precision (in terms of number of figures to the right of the</span>
 <span class="sd">        decimal point) of contour labels</span>
 
+<span class="sd">    resultSuffix : str, optional</span>
+<span class="sd">        a suffix added to the config options related to colormap information</span>
+<span class="sd">        for the main and control fields</span>
+
+<span class="sd">    diffSuffix : str, optional</span>
+<span class="sd">        a suffix added to the config options related to colormap information</span>
+<span class="sd">        for the difference field</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -463,7 +477,7 @@
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;threePanelTitleFontSize&#39;</span><span class="p">)</span>
         <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
@@ -512,8 +526,8 @@
         <span class="n">depthArray</span><span class="p">,</span>
         <span class="n">modelArray</span><span class="p">,</span>
         <span class="n">colorMapSectionName</span><span class="p">,</span>
-        <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;Result&#39;</span><span class="p">,</span>
-        <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">cbarLabel</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="n">resultSuffix</span><span class="p">,</span>
+        <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
         <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
@@ -534,7 +548,7 @@
         <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="n">upperXAxisTickLabelPrecision</span><span class="p">,</span>
         <span class="n">invertYAxis</span><span class="o">=</span><span class="n">invertYAxis</span><span class="p">,</span>
         <span class="n">xArrayIsTime</span><span class="o">=</span><span class="n">xArrayIsTime</span><span class="p">,</span>
-        <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
         <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
         <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
         <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
@@ -558,8 +572,8 @@
             <span class="n">depthArray</span><span class="p">,</span>
             <span class="n">refArray</span><span class="p">,</span>
             <span class="n">colorMapSectionName</span><span class="p">,</span>
-            <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;Result&#39;</span><span class="p">,</span>
-            <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">cbarLabel</span><span class="p">,</span>
+            <span class="n">suffix</span><span class="o">=</span><span class="n">resultSuffix</span><span class="p">,</span>
+            <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
             <span class="n">title</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span>
             <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span>
             <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
@@ -580,7 +594,7 @@
             <span class="n">numUpperTicks</span><span class="o">=</span><span class="n">numUpperTicks</span><span class="p">,</span>
             <span class="n">invertYAxis</span><span class="o">=</span><span class="n">invertYAxis</span><span class="p">,</span>
             <span class="n">xArrayIsTime</span><span class="o">=</span><span class="n">xArrayIsTime</span><span class="p">,</span>
-            <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
             <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
             <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
             <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span>
@@ -598,8 +612,8 @@
             <span class="n">depthArray</span><span class="p">,</span>
             <span class="n">diffArray</span><span class="p">,</span>
             <span class="n">colorMapSectionName</span><span class="p">,</span>
-            <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">,</span>
-            <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">cbarLabel</span><span class="p">,</span>
+            <span class="n">suffix</span><span class="o">=</span><span class="n">diffSuffix</span><span class="p">,</span>
+            <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
             <span class="n">title</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span>
             <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span>
             <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
@@ -620,7 +634,7 @@
             <span class="n">numUpperTicks</span><span class="o">=</span><span class="n">numUpperTicks</span><span class="p">,</span>
             <span class="n">invertYAxis</span><span class="o">=</span><span class="n">invertYAxis</span><span class="p">,</span>
             <span class="n">xArrayIsTime</span><span class="o">=</span><span class="n">xArrayIsTime</span><span class="p">,</span>
-            <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
             <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
             <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
             <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span>
@@ -635,7 +649,7 @@
         <span class="k">if</span> <span class="n">thirdXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.80</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.93</span><span class="p">])</span>
 
@@ -672,7 +686,7 @@
         <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">xArrayIsTime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">N</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
@@ -812,7 +826,7 @@
 <span class="sd">        if True, format the x axis for time (this applies only to the primary</span>
 <span class="sd">        x axis, not to the optional second or third x axes)</span>
 
-<span class="sd">    N : int, optional</span>
+<span class="sd">    movingAveragePoints : int, optional</span>
 <span class="sd">        the number of points over which to perform a moving average</span>
 <span class="sd">        NOTE: this option is mostly intended for use when xArrayIsTime is True,</span>
 <span class="sd">        although it will work with other data as well.  Also, the moving</span>
@@ -891,6 +905,22 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz</span>
 
+    <span class="c1"># compute moving averages with respect to the x dimension</span>
+    <span class="k">if</span> <span class="n">movingAveragePoints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">movingAveragePoints</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">movingAveragePoints</span>
+        <span class="n">movingAverageDepthSlices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">nVertLevel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depthArray</span><span class="p">)):</span>
+            <span class="n">depthSlice</span> <span class="o">=</span> <span class="n">fieldArray</span><span class="p">[[</span><span class="n">nVertLevel</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># in case it&#39;s not an xarray already</span>
+            <span class="n">depthSlice</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">depthSlice</span><span class="p">)</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">depthSlice</span><span class="o">.</span><span class="n">to_series</span><span class="p">(),</span> <span class="n">N</span><span class="p">,</span>
+                                     <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_series</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">):</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">movingAverageDepthSlices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+        <span class="n">xArray</span> <span class="o">=</span> <span class="n">xArray</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">):</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">fieldArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">movingAverageDepthSlices</span><span class="p">)</span>
+
     <span class="n">dimX</span> <span class="o">=</span> <span class="n">xArray</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">dimZ</span> <span class="o">=</span> <span class="n">depthArray</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">dimF</span> <span class="o">=</span> <span class="n">fieldArray</span><span class="o">.</span><span class="n">shape</span>
@@ -967,10 +997,10 @@
 
     <span class="c1"># Verify that the upper x-axis parameters are consistent with each other</span>
     <span class="c1"># and with xArray</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">secondXAxisData</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">thirdXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">secondXAxisData</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">thirdXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;secondXAxisData cannot be None if thirdXAxisData &#39;</span>
                          <span class="s1">&#39;is not None&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">secondXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">secondXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">arrayShape</span> <span class="o">=</span> <span class="n">secondXAxisData</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrayShape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">arrayShape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">num_x</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;secondXAxisData has </span><span class="si">%d</span><span class="s1"> x values, &#39;</span>
@@ -984,7 +1014,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;secondXAxisData must be a 1D or 2D array, &#39;</span>
                              <span class="s1">&#39;but is of dimension </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span>
                              <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arrayShape</span><span class="p">)))</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">thirdXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">thirdXAxisData</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">arrayShape</span> <span class="o">=</span> <span class="n">thirdXAxisData</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrayShape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">arrayShape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">num_x</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;thirdXAxisData has </span><span class="si">%d</span><span class="s1"> x values, &#39;</span>
@@ -1020,21 +1050,6 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
 
-    <span class="c1"># compute moving averages with respect to the x dimension</span>
-    <span class="k">if</span> <span class="n">N</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">N</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">movingAverageDepthSlices</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">nVertLevel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depthArray</span><span class="p">)):</span>
-            <span class="n">depthSlice</span> <span class="o">=</span> <span class="n">fieldArray</span><span class="p">[[</span><span class="n">nVertLevel</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="c1"># in case it&#39;s not an xarray already</span>
-            <span class="n">depthSlice</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">depthSlice</span><span class="p">)</span>
-            <span class="n">mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">depthSlice</span><span class="o">.</span><span class="n">to_series</span><span class="p">(),</span> <span class="n">N</span><span class="p">,</span>
-                                     <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-            <span class="n">mean</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_series</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
-            <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">):</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
-            <span class="n">movingAverageDepthSlices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
-        <span class="n">xArray</span> <span class="o">=</span> <span class="n">xArray</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">):</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="n">fieldArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">movingAverageDepthSlices</span><span class="p">)</span>
-
     <span class="n">colormapDict</span> <span class="o">=</span> <span class="n">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">colorMapSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">plotAsContours</span><span class="p">:</span>    <span class="c1"># display a heatmap of fieldArray</span>
@@ -1068,7 +1083,7 @@
 
     <span class="k">else</span><span class="p">:</span>     <span class="c1"># display a white heatmap to get a white background for non-land</span>
         <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fieldArray</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">fieldArray</span><span class="p">)</span>
-        <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">zeroArray</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">zeroArray</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
 
     <span class="c1"># set the color for NaN or masked regions, and draw a black</span>
     <span class="c1"># outline around them; technically, the contour level used should</span>
@@ -1199,11 +1214,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1214,7 +1237,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

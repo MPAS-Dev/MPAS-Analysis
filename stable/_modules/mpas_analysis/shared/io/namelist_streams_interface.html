@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
@@ -162,10 +168,10 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -178,17 +184,17 @@
 <span class="c1"># -------</span>
 <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">lxml</span> <span class="k">import</span> <span class="n">etree</span>
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.containers</span> <span class="k">import</span> <span class="n">ReadOnlyDict</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="k">import</span> <span class="n">paths</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="k">import</span> <span class="n">string_to_datetime</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.containers</span> <span class="kn">import</span> <span class="n">ReadOnlyDict</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">paths</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">string_to_datetime</span>
 
 
 <div class="viewcode-block" id="convert_namelist_to_dict"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html#mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict">[docs]</a><span class="k">def</span> <span class="nf">convert_namelist_to_dict</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -233,7 +239,7 @@
     <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
     <span class="c1"># constructor</span>
-<div class="viewcode-block" id="NameList.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="NameList.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the namelist file</span>
 
@@ -262,7 +268,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nml</span> <span class="o">=</span> <span class="n">convert_namelist_to_dict</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
     <span class="c1"># note following accessors do not do type casting</span>
-<div class="viewcode-block" id="NameList.__getattr__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__">[docs]</a>    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="NameList.__getattr__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__">[docs]</a>    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accessor for dot noation, e.g., nml.field</span>
 
@@ -283,7 +289,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nml</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span></div>
 
     <span class="c1"># provide accessor for dictionary notation (returns string)</span>
-<div class="viewcode-block" id="NameList.__getitem__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="NameList.__getitem__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__">[docs]</a>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accessor for bracket noation, e.g., nml[&#39;field&#39;]</span>
 
@@ -432,7 +438,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="StreamsFile.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">streamsdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamsFile.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">streamsdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the streams file.</span>
 
@@ -708,11 +714,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -723,7 +737,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

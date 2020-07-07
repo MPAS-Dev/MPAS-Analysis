@@ -12,11 +12,22 @@ Generalized Horizontal Interpolation in MPAS-Analysis
    Xylar Asay-Davis <br>
    date: 2017/01/19 <br>
    </h2>
+
+
+Horizontal interpolation and related utilities for remapping are now in the `pyremap repo <https://github.com/MPAS-Dev/pyremap/>`_.
+
+
+.. raw:: html
+
    <h3> Summary </h3>
 
-   Currently, MPAS-Analysis uses various methods to perform horizontal interpolation.  For constructing ocean climatologies, nearest-neighbor interpolation is used, while for sea-ice climatologies, `ncremap` is used with the requirement that a mapping file for the appropriate source and destination grids is provided through the config file.  This project intends to move MPAS-Analysis to a unified approach to horizontal interpolation that does not require pre-generated mapping files (though it should support caching mapping files for faster execution).
 
-   Many types of analysis in MPAS will require fields that are interpolated from MPAS grids to arbitrary points, not just to points on a lat/lon grid.  This project will not attempt to address that case completely but will take that need into consideration in designing a solution that can be extended to interpolation at arbitrary points in the future.
+Currently, MPAS-Analysis uses various methods to perform horizontal interpolation.  For constructing ocean climatologies, nearest-neighbor interpolation is used, while for sea-ice climatologies, ``ncremap`` is used with the requirement that a mapping file for the appropriate source and destination grids is provided through the config file.  This project intends to move MPAS-Analysis to a unified approach to horizontal interpolation that does not require pre-generated mapping files (though it should support caching mapping files for faster execution).
+
+Many types of analysis in MPAS will require fields that are interpolated from MPAS grids to arbitrary points, not just to points on a lat/lon grid.  This project will not attempt to address that case completely but will take that need into consideration in designing a solution that can be extended to interpolation at arbitrary points in the future.
+
+
+.. raw:: html
 
    <h2> Requirements </h2>
    <h3>Requirement: Higher-order interpolation <br>

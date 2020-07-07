@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
@@ -48,7 +49,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -97,10 +99,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -139,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
@@ -161,10 +167,10 @@
   <h1>Source code for mpas_analysis.shared.plot.colormap</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2019 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -176,18 +182,19 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">cols</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">LinearSegmentedColormap</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
 <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">configparser</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">configparser</span>
 <span class="kn">import</span> <span class="nn">cmocean</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">string_types</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">string_types</span>
+<span class="kn">import</span> <span class="nn">mpas_analysis.shared.plot.ScientificColourMaps5</span>
 
 
 <div class="viewcode-block" id="setup_colormap"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap">[docs]</a><span class="k">def</span> <span class="nf">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -421,17 +428,6 @@
     <span class="n">mapNames</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">mapNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">mapName</span> <span class="ow">in</span> <span class="n">mapNames</span><span class="p">:</span>
         <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">mapName</span><span class="p">))</span>
-
-    <span class="c1"># add Scientific Colour-Maps 3.0 from</span>
-    <span class="c1"># http://www.fabiocrameri.ch/colourmaps.php</span>
-
-    <span class="k">for</span> <span class="n">mapName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;bilbao&#39;</span><span class="p">,</span> <span class="s1">&#39;broc&#39;</span><span class="p">,</span> <span class="s1">&#39;cork&#39;</span><span class="p">,</span> <span class="s1">&#39;davos&#39;</span><span class="p">,</span> <span class="s1">&#39;devon&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;grayC&#39;</span><span class="p">,</span> <span class="s1">&#39;lajolla&#39;</span><span class="p">,</span> <span class="s1">&#39;lapaz&#39;</span><span class="p">,</span> <span class="s1">&#39;lisbon&#39;</span><span class="p">,</span> <span class="s1">&#39;oleron&#39;</span><span class="p">,</span> <span class="s1">&#39;oslo&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;roma&#39;</span><span class="p">,</span> <span class="s1">&#39;tofino&#39;</span><span class="p">,</span> <span class="s1">&#39;tokyo&#39;</span><span class="p">,</span> <span class="s1">&#39;turku&#39;</span><span class="p">,</span> <span class="s1">&#39;vik&#39;</span><span class="p">]:</span>
-
-        <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span>
-            <span class="vm">__name__</span><span class="p">,</span> <span class="s1">&#39;ColourMapSuite3/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">mapName</span><span class="p">))</span>
-        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="n">mapName</span><span class="p">)</span>
 
     <span class="c1"># add SciVisColor colormaps from</span>
     <span class="c1"># https://sciviscolor.org/home/colormaps/</span>
@@ -670,11 +666,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -685,7 +689,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

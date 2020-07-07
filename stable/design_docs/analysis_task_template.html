@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Remapper for “online” remapping of data sets" href="remapper.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -111,10 +113,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -153,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
         
@@ -237,7 +243,7 @@ This class will include methods:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: construct the task, including assigning variable and streams maps
 (optional).</p></li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>: performs common tasks to all analysis, such as reading</dt><dd><p>namelist and streams files</p>
+<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code><span class="classifier">performs common tasks to all analysis, such as reading</span></dt><dd><p>namelist and streams files</p>
 </dd>
 </dl>
 </li>
@@ -245,14 +251,14 @@ This class will include methods:</p>
 </ul>
 <p>The template will show how to set up a child class that decends from <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>.
 It will show examples of:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: construct the task, including assigning the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code></dt><dd><p>and <code class="docutils literal notranslate"><span class="pre">categories</span></code> of the analysis, and calling the base class’s constructor.</p>
+<ul>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">__init__</span></code><span class="classifier">construct the task, including assigning the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code></span></dt><dd><p>and <code class="docutils literal notranslate"><span class="pre">categories</span></code> of the analysis, and calling the base class’s constructor.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>: first, calls the base class’ version of <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>, then,</dt><dd><p>determines if the configuration is valid for running this task (e.g. if
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code><span class="classifier">first, calls the base class’ version of <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>, then,</span></dt><dd><p>determines if the configuration is valid for running this task (e.g. if
 necessary files and config options are present)</p>
 </dd>
 </dl>
@@ -334,7 +340,7 @@ of individual lines easier:</p>
 <span class="sd">    -------------</span>
 <span class="sd">    03/16/2017</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -461,36 +467,36 @@ of individual lines easier:</p>
 
         <span class="k">for</span> <span class="n">memberName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;taskName&#39;</span><span class="p">,</span> <span class="s1">&#39;componentName&#39;</span><span class="p">,</span> <span class="s1">&#39;categories&#39;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memberName</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Analysis tasks must define self.{} in their &#39;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Analysis tasks must define self.</span><span class="si">{}</span><span class="s1"> in their &#39;</span>
                                  <span class="s1">&#39;__init__ method.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">memberName</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Analysis tasks</span><span class="se">\&#39;</span><span class="s1">s member self.categories &#39;</span>
                              <span class="s1">&#39;must be NOne or a list of strings.&#39;</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">generateList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">)</span>
-        <span class="n">generate</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">generate</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">generateList</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;_&#39;</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
                 <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">prefix</span> <span class="o">=</span> <span class="n">element</span>
-                <span class="n">suffix</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="n">allSuffixes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">allSuffixes</span> <span class="o">=</span> <span class="n">allSuffixes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span>
             <span class="n">noSuffixes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">]</span> <span class="o">+</span> <span class="n">allSuffixes</span>
             <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">allSuffixes</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">suffix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
-                    <span class="n">generate</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">allSuffixes</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="n">generate</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">elif</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">noSuffixes</span><span class="p">:</span>
-                    <span class="n">generate</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">generate</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">:</span>
-                <span class="n">generate</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">generate</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="n">generate</span>  <span class="c1"># }}}</span>
 <span class="c1"># }}}</span>
@@ -534,7 +540,7 @@ of individual lines easier:</p>
 <span class="sd">    -------------</span>
 <span class="sd">    &lt;MM/DD/YYYY&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">myArg</span><span class="o">=</span><span class="s1">&#39;myDefaultValue&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -610,14 +616,14 @@ of individual lines easier:</p>
             <span class="c1"># would be confusing to break up the string (even though it</span>
             <span class="c1"># violates the PEP8 standard)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;MyTask must be constructed with argument myArg having one of the values</span><span class="se">\n</span><span class="s1">&#39;</span>
-                             <span class="s1">&#39;{}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleArgs</span><span class="p">))</span>
+                             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleArgs</span><span class="p">))</span>
 
         <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;MyTask&#39;</span>
-        <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
@@ -655,16 +661,16 @@ of individual lines easier:</p>
     <span class="c1"># you can either pass arguments (with or without defaults) or you can</span>
     <span class="c1"># &quot;save&quot; arguments as member variables of `self` and then get them back</span>
     <span class="c1"># (like `self.myArg` here).</span>
-    <span class="k">def</span> <span class="nf">_my_sub_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_my_sub_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;Performs my favority subtask&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># perform the task</span>
-        <span class="k">print</span> <span class="s1">&#39;myArg:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">myArg</span>
-        <span class="k">print</span> <span class="s1">&#39;arg1:&#39;</span><span class="p">,</span> <span class="n">arg1</span>
-        <span class="k">if</span> <span class="n">arg2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s1">&#39;arg2:&#39;</span><span class="p">,</span> <span class="n">arg2</span>
+        <span class="nb">print</span> <span class="s1">&#39;myArg:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">myArg</span>
+        <span class="nb">print</span> <span class="s1">&#39;arg1:&#39;</span><span class="p">,</span> <span class="n">arg1</span>
+        <span class="k">if</span> <span class="n">arg2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;arg2:&#39;</span><span class="p">,</span> <span class="n">arg2</span>
         <span class="c1"># }}}</span>
 
 <span class="c1"># }}}</span>
@@ -677,8 +683,8 @@ Date last modified: 2017/03/08 <br>
 Contributors: Xylar Asay-Davis
 </h4><p>Here is an example (from <code class="docutils literal notranslate"><span class="pre">ocean.climatology_map.ClimatologyMap</span></code>) of what
 the new <code class="docutils literal notranslate"><span class="pre">__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code> methods :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">fieldName</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">fieldName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct the analysis task.</span>
 
@@ -722,17 +728,17 @@ the new <code class="docutils literal notranslate"><span class="pre">__init__</s
                        <span class="c1"># &#39;moc&#39;: &#39;MOC&#39;</span>
                        <span class="p">}</span>
 
-    <span class="k">if</span> <span class="n">fieldName</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">fieldName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;fieldName must be supplied.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fieldName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">upperFieldNames</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;fieldName must be one of {}.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;fieldName must be one of </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">upperFieldNames</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">fieldName</span> <span class="o">=</span> <span class="n">fieldName</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">upperFieldName</span> <span class="o">=</span> <span class="n">upperFieldNames</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span>
 
     <span class="c1"># name the task, component and category</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span> <span class="o">=</span> <span class="s1">&#39;climatologyMap{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upperFieldName</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span> <span class="o">=</span> <span class="s1">&#39;climatologyMap</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upperFieldName</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span> <span class="o">=</span> <span class="s1">&#39;ocean&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatologyMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">]</span>
 
@@ -757,11 +763,11 @@ the new <code class="docutils literal notranslate"><span class="pre">__init__</s
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
     <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;climatology&#39;</span>
-    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">):</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
-    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;{:04d}-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">):</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
@@ -781,8 +787,8 @@ but don’t cause the code to exit.</p>
     <span class="n">analysisTask</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
 <span class="o">...</span>
 <span class="k">except</span><span class="p">:</span>
-    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-    <span class="k">print</span> <span class="s2">&quot;ERROR: analysis module {} failed during check and &quot;</span> \
+    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="s2">&quot;ERROR: analysis module </span><span class="si">{}</span><span class="s2"> failed during check and &quot;</span> \
         <span class="s2">&quot;will not be run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">analysisTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">)</span>
 
 <span class="o">...</span>
@@ -790,8 +796,8 @@ but don’t cause the code to exit.</p>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">analysisModule</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 <span class="k">except</span><span class="p">:</span>
-    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-    <span class="k">print</span> <span class="s2">&quot;ERROR: analysis module {} failed during run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="s2">&quot;ERROR: analysis module </span><span class="si">{}</span><span class="s2"> failed during run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">analysisTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -834,8 +840,8 @@ example for calling <code class="docutils literal notranslate"><span class="pre"
     <span class="k">try</span><span class="p">:</span>
         <span class="n">analysisTask</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s2">&quot;ERROR: analysis module {} failed during run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s2">&quot;ERROR: analysis module </span><span class="si">{}</span><span class="s2"> failed during run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -887,11 +893,19 @@ her or his task to the analysis.  I think this requirement has been satisfied wi
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -902,7 +916,6 @@ her or his task to the analysis.  I think this requirement has been satisfied wi
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

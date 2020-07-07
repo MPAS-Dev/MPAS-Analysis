@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="timeSeriesOceanRegions" href="timeSeriesOceanRegions.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -115,6 +117,7 @@
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
 <li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
@@ -142,10 +145,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -184,7 +191,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../analysis_tasks.html">Analysis Tasks</a> &raquo;</li>
         
@@ -228,7 +235,7 @@ Antarctic region along with observations from <a class="reference external" href
 <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctica&#39;</span><span class="p">,</span> <span class="s1">&#39;Peninsula&#39;</span><span class="p">,</span> <span class="s1">&#39;West Antarctica&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;East Antarctica&#39;</span><span class="p">,</span> <span class="s1">&#39;Larsen_C&#39;</span><span class="p">,</span> <span class="s1">&#39;Filchner&#39;</span><span class="p">,</span> <span class="s1">&#39;Ronne&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Filchner-Ronne&#39;</span><span class="p">,</span> <span class="s1">&#39;Brunt_Stancomb&#39;</span><span class="p">,</span> <span class="s1">&#39;Fimbul&#39;</span><span class="p">,</span> <span class="s1">&#39;Amery&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;Totten&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross_West&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross_East&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Getz&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Totten&#39;</span><span class="p">,</span> <span class="s1">&#39;Eastern_Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Western_Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Getz&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Thwaites&#39;</span><span class="p">,</span> <span class="s1">&#39;Pine_Island&#39;</span><span class="p">,</span> <span class="s1">&#39;Abbot&#39;</span><span class="p">,</span> <span class="s1">&#39;George_VI&#39;</span><span class="p">]</span>
 
 <span class="c1"># Number of months over which to compute moving average</span>
@@ -243,17 +250,6 @@ Antarctic region along with observations from <a class="reference external" href
 <span class="c1"># commented out to determine the distance between ticks automatically.</span>
 
 <span class="c1"># yearStrideXTicks = 1</span>
-
-<span class="c1"># the number of threads dask is allowed to spawn for each process computing</span>
-<span class="c1"># a year of these time series</span>
-<span class="c1"># Decrease this number if timeSeriesAntarcticMelt subtasks are running</span>
-<span class="c1"># out of available threads</span>
-<span class="n">daskThreads</span> <span class="o">=</span> <span class="mi">4</span>
-
-<span class="c1"># the number of subprocesses that each task gets counted as occupying</span>
-<span class="c1"># Increase this number if timeSeriesAntarcticMelt subtasks are running</span>
-<span class="c1"># out of memory, and fewer tasks will be allowed to run at once</span>
-<span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
 </div>
@@ -273,8 +269,8 @@ it is a list consisting of any subset of the following ice shelves:</p>
  <span class="s2">&quot;Mendelssohn&quot;</span><span class="p">,</span> <span class="s2">&quot;Mertz&quot;</span><span class="p">,</span> <span class="s2">&quot;Moscow_University&quot;</span><span class="p">,</span> <span class="s2">&quot;Moubray&quot;</span><span class="p">,</span> <span class="s2">&quot;Mulebreen&quot;</span><span class="p">,</span>
  <span class="s2">&quot;Myers&quot;</span><span class="p">,</span> <span class="s2">&quot;Nansen&quot;</span><span class="p">,</span> <span class="s2">&quot;Nickerson&quot;</span><span class="p">,</span> <span class="s2">&quot;Ninnis&quot;</span><span class="p">,</span> <span class="s2">&quot;Nivl&quot;</span><span class="p">,</span> <span class="s2">&quot;Noll&quot;</span><span class="p">,</span> <span class="s2">&quot;Nordenskjold&quot;</span><span class="p">,</span>
  <span class="s2">&quot;Pine_Island&quot;</span><span class="p">,</span> <span class="s2">&quot;PourquoiPas&quot;</span><span class="p">,</span> <span class="s2">&quot;Prince_Harald&quot;</span><span class="p">,</span> <span class="s2">&quot;Publications&quot;</span><span class="p">,</span>  <span class="s2">&quot;Quar&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Rayner_Thyer&quot;</span><span class="p">,</span> <span class="s2">&quot;Rennick&quot;</span><span class="p">,</span> <span class="s2">&quot;Richter&quot;</span><span class="p">,</span> <span class="s2">&quot;Riiser-Larsen&quot;</span><span class="p">,</span> <span class="s2">&quot;Ronne&quot;</span><span class="p">,</span> <span class="s2">&quot;Ross_East&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Ross_West&quot;</span><span class="p">,</span> <span class="s2">&quot;Shackleton&quot;</span><span class="p">,</span> <span class="s2">&quot;Shirase&quot;</span><span class="p">,</span> <span class="s2">&quot;Slava&quot;</span><span class="p">,</span> <span class="s2">&quot;SmithInlet&quot;</span><span class="p">,</span> <span class="s2">&quot;Stange&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Rayner_Thyer&quot;</span><span class="p">,</span> <span class="s2">&quot;Rennick&quot;</span><span class="p">,</span> <span class="s2">&quot;Richter&quot;</span><span class="p">,</span> <span class="s2">&quot;Riiser-Larsen&quot;</span><span class="p">,</span> <span class="s2">&quot;Ronne&quot;</span><span class="p">,</span> <span class="s2">&quot;Western_Ross&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Eastern_Ross&quot;</span><span class="p">,</span> <span class="s2">&quot;Shackleton&quot;</span><span class="p">,</span> <span class="s2">&quot;Shirase&quot;</span><span class="p">,</span> <span class="s2">&quot;Slava&quot;</span><span class="p">,</span> <span class="s2">&quot;SmithInlet&quot;</span><span class="p">,</span> <span class="s2">&quot;Stange&quot;</span><span class="p">,</span>
  <span class="s2">&quot;Sulzberger&quot;</span><span class="p">,</span> <span class="s2">&quot;Suvorov&quot;</span><span class="p">,</span> <span class="s2">&quot;Swinburne&quot;</span><span class="p">,</span> <span class="s2">&quot;Thwaites&quot;</span><span class="p">,</span> <span class="s2">&quot;Tinker&quot;</span><span class="p">,</span> <span class="s2">&quot;Totten&quot;</span><span class="p">,</span>
  <span class="s2">&quot;Tracy_Tremenchus&quot;</span><span class="p">,</span> <span class="s2">&quot;Tucker&quot;</span><span class="p">,</span> <span class="s2">&quot;Underwood&quot;</span><span class="p">,</span> <span class="s2">&quot;Utsikkar&quot;</span><span class="p">,</span> <span class="s2">&quot;Venable&quot;</span><span class="p">,</span> <span class="s2">&quot;Verdi&quot;</span><span class="p">,</span>
  <span class="s2">&quot;Vigrid&quot;</span><span class="p">,</span> <span class="s2">&quot;Vincennes&quot;</span><span class="p">,</span> <span class="s2">&quot;Voyeykov&quot;</span><span class="p">,</span> <span class="s2">&quot;West&quot;</span><span class="p">,</span> <span class="s2">&quot;Wilkins&quot;</span><span class="p">,</span> <span class="s2">&quot;Wilma_Robert_Downer&quot;</span><span class="p">,</span>
@@ -312,7 +308,6 @@ base directory</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../config/moving_average.html#config-moving-average"><span class="std std-ref">Moving Average</span></a></p></li>
 <li><p><a class="reference internal" href="../config/time_axis_ticks.html#config-time-axis-ticks"><span class="std std-ref">Time-Axis Tick Marks</span></a></p></li>
-<li><p><a class="reference internal" href="../config/dask_treads.html#dask-treads"><span class="std std-ref">Dask treads and subprocess count</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="observations">
@@ -345,11 +340,19 @@ base directory</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -360,7 +363,6 @@ base directory</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

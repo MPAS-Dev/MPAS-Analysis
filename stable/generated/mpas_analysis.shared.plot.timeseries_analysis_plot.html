@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,27 +11,29 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.plot.timeseries_analysis_plot_polar" href="mpas_analysis.shared.plot.timeseries_analysis_plot_polar.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -117,6 +119,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
 </ul>
 </li>
 </ul>
@@ -127,10 +130,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -169,7 +176,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
@@ -194,68 +201,47 @@
             
   <div class="section" id="mpas-analysis-shared-plot-timeseries-analysis-plot">
 <h1>mpas_analysis.shared.plot.timeseries_analysis_plot<a class="headerlink" href="#mpas-analysis-shared-plot-timeseries-analysis-plot" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="mpas_analysis.shared.plot.timeseries_analysis_plot">
-<code class="sig-prename descclassname">mpas_analysis.shared.plot.</code><code class="sig-name descname">timeseries_analysis_plot</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">dsvalues</em>, <em class="sig-param">N</em>, <em class="sig-param">title</em>, <em class="sig-param">xlabel</em>, <em class="sig-param">ylabel</em>, <em class="sig-param">calendar</em>, <em class="sig-param">lineColors=None</em>, <em class="sig-param">lineStyles=None</em>, <em class="sig-param">markers=None</em>, <em class="sig-param">lineWidths=None</em>, <em class="sig-param">legendText=None</em>, <em class="sig-param">maxPoints=None</em>, <em class="sig-param">titleFontSize=None</em>, <em class="sig-param">figsize=(15</em>, <em class="sig-param">6)</em>, <em class="sig-param">dpi=None</em>, <em class="sig-param">firstYearXTicks=None</em>, <em class="sig-param">yearStrideXTicks=None</em>, <em class="sig-param">maxXTicks=20</em>, <em class="sig-param">obsMean=None</em>, <em class="sig-param">obsUncertainty=None</em>, <em class="sig-param">obsLegend=None</em>, <em class="sig-param">legendLocation='lower left'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/plot/time_series.html#timeseries_analysis_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.plot.timeseries_analysis_plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">mpas_analysis.shared.plot.</code><code class="sig-name descname">timeseries_analysis_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">dsvalues</span></em>, <em class="sig-param"><span class="n">calendar</span></em>, <em class="sig-param"><span class="n">title</span></em>, <em class="sig-param"><span class="n">xlabel</span></em>, <em class="sig-param"><span class="n">ylabel</span></em>, <em class="sig-param"><span class="n">movingAveragePoints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lineColors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lineStyles</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">markers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lineWidths</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">legendText</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maxPoints</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">titleFontSize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">15, 6</span></em>, <em class="sig-param"><span class="n">dpi</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">firstYearXTicks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yearStrideXTicks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maxXTicks</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">obsMean</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">obsUncertainty</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">obsLegend</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">legendLocation</span><span class="o">=</span><span class="default_value">'lower left'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/plot/time_series.html#timeseries_analysis_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.plot.timeseries_analysis_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the list of time series data sets.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>config</strong><span class="classifier">instance of ConfigParser</span></dt><dd><p>the configuration, containing a [plot] section with options that
-control plotting</p>
-</dd>
-<dt><strong>dsvalues</strong><span class="classifier">list of xarray DataSets</span></dt><dd><p>the data set(s) to be plotted</p>
-</dd>
-<dt><strong>N</strong><span class="classifier">int</span></dt><dd><p>the numer of time points over which to perform a moving average</p>
-</dd>
-<dt><strong>title</strong><span class="classifier">str</span></dt><dd><p>the title of the plot</p>
-</dd>
-<dt><strong>xlabel, ylabel</strong><span class="classifier">str</span></dt><dd><p>axis labels</p>
-</dd>
-<dt><strong>calendar</strong><span class="classifier">str</span></dt><dd><p>the calendar to use for formatting the time axis</p>
-</dd>
-<dt><strong>lineColors, lineStyles, markers, legendText</strong><span class="classifier">list of str, optional</span></dt><dd><p>control line color, style, marker, and corresponding legend
-text.  Default is black, solid line with no marker, and no legend.</p>
-</dd>
-<dt><strong>lineWidths</strong><span class="classifier">list of float, optional</span></dt><dd><p>control line width.  Default is 1.0.</p>
-</dd>
-<dt><strong>maxPoints</strong><span class="classifier">list of {None, int}, optional</span></dt><dd><p>the approximate maximum number of time points to use in a time series.
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
+control plotting</p></li>
+<li><p><strong>dsvalues</strong> (<em>list of xarray DataSets</em>) – the data set(s) to be plotted</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the title of the plot</p></li>
+<li><p><strong>ylabel</strong> (<em>xlabel</em><em>,</em>) – axis labels</p></li>
+<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the calendar to use for formatting the time axis</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – the number of time points over which to perform a moving average</p></li>
+<li><p><strong>lineStyles</strong><strong>, </strong><strong>markers</strong><strong>, </strong><strong>legendText</strong> (<em>lineColors</em><em>,</em>) – control line color, style, marker, and corresponding legend
+text.  Default is black, solid line with no marker, and no legend.</p></li>
+<li><p><strong>lineWidths</strong> (<em>list of float</em><em>, </em><em>optional</em>) – control line width.  Default is 1.0.</p></li>
+<li><p><strong>maxPoints</strong> (<em>list of {None</em><em>, </em><em>int}</em><em>, </em><em>optional</em>) – the approximate maximum number of time points to use in a time series.
 This can be helpful for reducing the number of symbols plotted if
 plotting with markers.  Otherwise the markers become indistinguishable
-from each other.</p>
-</dd>
-<dt><strong>titleFontSize</strong><span class="classifier">int, optional</span></dt><dd><p>the size of the title font</p>
-</dd>
-<dt><strong>figsize</strong><span class="classifier">tuple of float, optional</span></dt><dd><p>the size of the figure in inches</p>
-</dd>
-<dt><strong>dpi</strong><span class="classifier">int, optional</span></dt><dd><p>the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
-option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p>
-</dd>
-<dt><strong>firstYearXTicks</strong><span class="classifier">int, optional</span></dt><dd><p>The year of the first tick on the x axis.  By default, the first time
-entry is the first tick.</p>
-</dd>
-<dt><strong>yearStrideXTicks</strong><span class="classifier">int, optional</span></dt><dd><p>The number of years between x ticks. By default, the stride is chosen
-automatically to have <code class="docutils literal notranslate"><span class="pre">maxXTicks</span></code> tick marks or fewer.</p>
-</dd>
-<dt><strong>maxXTicks</strong><span class="classifier">int, optional</span></dt><dd><p>the maximum number of tick marks that will be allowed along the x axis.
+from each other.</p></li>
+<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – the size of the title font</p></li>
+<li><p><strong>figsize</strong> (<em>tuple of float</em><em>, </em><em>optional</em>) – the size of the figure in inches</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p></li>
+<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
+entry is the first tick.</p></li>
+<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
+automatically to have <code class="docutils literal notranslate"><span class="pre">maxXTicks</span></code> tick marks or fewer.</p></li>
+<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the x axis.
 This may need to be adjusted depending on the figure size and aspect
-ratio.</p>
-</dd>
-<dt><strong>obsMean, obsUncertainty</strong><span class="classifier">list of float, optional</span></dt><dd><p>Mean values and uncertainties for observations to be plotted as error
-bars. The two lists must have the same number of elements.</p>
-</dd>
-<dt><strong>obsLegend</strong><span class="classifier">list of str, optional</span></dt><dd><p>The label in the legend for each element in <code class="docutils literal notranslate"><span class="pre">obsMean</span></code> (and
-<code class="docutils literal notranslate"><span class="pre">obsUncertainty</span></code>)</p>
-</dd>
-<dt><strong>legendLocation</strong><span class="classifier">str, optional</span></dt><dd><p>The location of the legend (see <code class="docutils literal notranslate"><span class="pre">pyplot.legend()</span></code> for details)</p>
-</dd>
-</dl>
+ratio.</p></li>
+<li><p><strong>obsUncertainty</strong> (<em>obsMean</em><em>,</em>) – Mean values and uncertainties for observations to be plotted as error
+bars. The two lists must have the same number of elements.</p></li>
+<li><p><strong>obsLegend</strong> (<em>list of str</em><em>, </em><em>optional</em>) – The label in the legend for each element in <code class="docutils literal notranslate"><span class="pre">obsMean</span></code> (and
+<code class="docutils literal notranslate"><span class="pre">obsUncertainty</span></code>)</p></li>
+<li><p><strong>legendLocation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The location of the legend (see <code class="docutils literal notranslate"><span class="pre">pyplot.legend()</span></code> for details)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl>
-<dt><strong>fig</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></span></dt><dd><p>The resulting figure</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>fig</strong> (<code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code>) – The resulting figure</p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,11 +268,19 @@ bars. The two lists must have the same number of elements.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2019 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -297,7 +291,6 @@ bars. The two lists must have the same number of elements.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
