@@ -1,0 +1,6 @@
+mpas\_analysis.sea\_ice.plot\_climatology\_map\_subtask.PlotClimatologyMapSubtask.set\_plot\_info
+=================================================================================================
+
+.. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
+
+.. automethod:: PlotClimatologyMapSubtask.set_plot_info

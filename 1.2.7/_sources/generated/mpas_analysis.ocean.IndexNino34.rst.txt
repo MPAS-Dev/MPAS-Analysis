@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.IndexNino34
+================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: IndexNino34
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IndexNino34.__init__
+      ~IndexNino34.add_subtask
+      ~IndexNino34.check_analysis_enabled
+      ~IndexNino34.check_generate
+      ~IndexNino34.close
+      ~IndexNino34.is_alive
+      ~IndexNino34.join
+      ~IndexNino34.kill
+      ~IndexNino34.run
+      ~IndexNino34.run_after
+      ~IndexNino34.run_task
+      ~IndexNino34.set_start_end_date
+      ~IndexNino34.setup_and_check
+      ~IndexNino34.start
+      ~IndexNino34.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IndexNino34.BLOCKED
+      ~IndexNino34.FAIL
+      ~IndexNino34.READY
+      ~IndexNino34.RUNNING
+      ~IndexNino34.SUCCESS
+      ~IndexNino34.UNSET
+      ~IndexNino34.authkey
+      ~IndexNino34.daemon
+      ~IndexNino34.exitcode
+      ~IndexNino34.ident
+      ~IndexNino34.name
+      ~IndexNino34.pid
+      ~IndexNino34.sentinel
+   
+   

@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dask threads and subprocess count &mdash; MPAS-Analysis 1.2.7 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Diagnostics" href="diagnostics.html" />
+    <link rel="prev" title="Execute" href="execute.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="runs.html">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execute.html">Execute</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Dask threads and subprocess count</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Dask threads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subprocess-count">Subprocess count</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../configuration.html">Configuration</a> &raquo;</li>
+        
+      <li>Dask threads and subprocess count</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/config/dask_threads.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dask-threads-and-subprocess-count">
+<span id="dask-threads"></span><h1>Dask threads and subprocess count<a class="headerlink" href="#dask-threads-and-subprocess-count" title="Permalink to this headline">¶</a></h1>
+<p>Several tasks and subtasks have config options <code class="docutils literal notranslate"><span class="pre">daskThreads</span></code> and
+<code class="docutils literal notranslate"><span class="pre">subprocessCount</span></code> used to control threading within a subtask:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The number of threads dask is allowed to spawn for each task/subtask.</span>
+<span class="c1"># Decrease this number if tasks/subtasks are running out of available threads</span>
+<span class="n">daskThreads</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="c1"># The number of subprocesses that each task/subtask gets counted as</span>
+<span class="c1"># occupying. Increase this number if tasks/subtasks are running out of</span>
+<span class="c1"># memory, so that fewer tasks will be allowed to run at once</span>
+<span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>Dask threads<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Dask and xarray support thread-parallel operations on data sets.  They also
+support chunk-wise operation on data sets that can’t fit in memory.  These
+capabilities are very powerful but also difficult to configure for general
+cases.  Dask is also not desigend by default with the idea that multiple tasks,
+each with multiple dask threads, might operate simultaneously.  As a result,
+it is possible to spawn huge numbers of dask threads in MPAS-Analysis that both
+slow down analysis and lead to errors when the node runs out of threads
+completely.</p>
+<p>To prevent this, many tasks or subtasks that use dask threading take the number
+of execution threads from a config option, typically in the config section for
+the parent task.  Typically, the number of <code class="docutils literal notranslate"><span class="pre">daskThreads</span></code> should be around
+the same as the number of cores on a node divided by the number of tasks
+that will run simultaneiously.  Since the number of running tasks is controlled
+by <code class="docutils literal notranslate"><span class="pre">subprocessCount</span></code>, see below, this number might differ from
+<code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code>.</p>
+</div>
+<div class="section" id="subprocess-count">
+<h2>Subprocess count<a class="headerlink" href="#subprocess-count" title="Permalink to this headline">¶</a></h2>
+<p>Tasks or subtasks that use dask threading may consume too much memory or use
+too many threads to “count” as a single task.  That is, it might not be safe to
+run with <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code> simultaneious instances of the task/subtask and
+it would be better if it occupied the slot of multiple tasks in the pool of
+tasks.  MPAS-Analysis will treat a dask-based task or subtask as occupying
+the number of task slots given by the <code class="docutils literal notranslate"><span class="pre">subprocessCount</span></code> option.  For example,
+if <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span> <span class="pre">=</span> <span class="pre">8</span></code> and <code class="docutils literal notranslate"><span class="pre">subprocessCount</span> <span class="pre">=</span> <span class="pre">2</span></code>, up to 4 tasks or
+subtasks would be allowed to run simultaneiously.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="diagnostics.html" class="btn btn-neutral float-right" title="Diagnostics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="execute.html" class="btn btn-neutral float-left" title="Execute" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

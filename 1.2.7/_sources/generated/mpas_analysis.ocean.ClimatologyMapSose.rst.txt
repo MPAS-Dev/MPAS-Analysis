@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapSose
+=======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapSose
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSose.__init__
+      ~ClimatologyMapSose.add_subtask
+      ~ClimatologyMapSose.check_analysis_enabled
+      ~ClimatologyMapSose.check_generate
+      ~ClimatologyMapSose.close
+      ~ClimatologyMapSose.is_alive
+      ~ClimatologyMapSose.join
+      ~ClimatologyMapSose.kill
+      ~ClimatologyMapSose.run
+      ~ClimatologyMapSose.run_after
+      ~ClimatologyMapSose.run_task
+      ~ClimatologyMapSose.set_start_end_date
+      ~ClimatologyMapSose.setup_and_check
+      ~ClimatologyMapSose.start
+      ~ClimatologyMapSose.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSose.BLOCKED
+      ~ClimatologyMapSose.FAIL
+      ~ClimatologyMapSose.READY
+      ~ClimatologyMapSose.RUNNING
+      ~ClimatologyMapSose.SUCCESS
+      ~ClimatologyMapSose.UNSET
+      ~ClimatologyMapSose.authkey
+      ~ClimatologyMapSose.daemon
+      ~ClimatologyMapSose.exitcode
+      ~ClimatologyMapSose.ident
+      ~ClimatologyMapSose.name
+      ~ClimatologyMapSose.pid
+      ~ClimatologyMapSose.sentinel
+   
+   

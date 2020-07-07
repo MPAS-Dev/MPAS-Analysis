@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.ClimatologyMapMLD
+======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapMLD
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapMLD.__init__
+      ~ClimatologyMapMLD.add_subtask
+      ~ClimatologyMapMLD.check_analysis_enabled
+      ~ClimatologyMapMLD.check_generate
+      ~ClimatologyMapMLD.close
+      ~ClimatologyMapMLD.is_alive
+      ~ClimatologyMapMLD.join
+      ~ClimatologyMapMLD.kill
+      ~ClimatologyMapMLD.run
+      ~ClimatologyMapMLD.run_after
+      ~ClimatologyMapMLD.run_task
+      ~ClimatologyMapMLD.set_start_end_date
+      ~ClimatologyMapMLD.setup_and_check
+      ~ClimatologyMapMLD.start
+      ~ClimatologyMapMLD.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapMLD.BLOCKED
+      ~ClimatologyMapMLD.FAIL
+      ~ClimatologyMapMLD.READY
+      ~ClimatologyMapMLD.RUNNING
+      ~ClimatologyMapMLD.SUCCESS
+      ~ClimatologyMapMLD.UNSET
+      ~ClimatologyMapMLD.authkey
+      ~ClimatologyMapMLD.daemon
+      ~ClimatologyMapMLD.exitcode
+      ~ClimatologyMapMLD.ident
+      ~ClimatologyMapMLD.name
+      ~ClimatologyMapMLD.pid
+      ~ClimatologyMapMLD.sentinel
+   
+   

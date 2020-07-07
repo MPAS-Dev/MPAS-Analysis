@@ -1,0 +1,6 @@
+mpas\_analysis.download\_data.download\_analysis\_data
+======================================================
+
+.. currentmodule:: mpas_analysis.download_data
+
+.. autofunction:: download_analysis_data

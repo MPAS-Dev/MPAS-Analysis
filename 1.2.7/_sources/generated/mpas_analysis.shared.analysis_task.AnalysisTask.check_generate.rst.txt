@@ -1,0 +1,6 @@
+mpas\_analysis.shared.analysis\_task.AnalysisTask.check\_generate
+=================================================================
+
+.. currentmodule:: mpas_analysis.shared.analysis_task
+
+.. automethod:: AnalysisTask.check_generate

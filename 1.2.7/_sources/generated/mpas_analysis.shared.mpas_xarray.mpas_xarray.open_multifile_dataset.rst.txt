@@ -1,0 +1,6 @@
+mpas\_analysis.shared.mpas\_xarray.mpas\_xarray.open\_multifile\_dataset
+========================================================================
+
+.. currentmodule:: mpas_analysis.shared.mpas_xarray.mpas_xarray
+
+.. autofunction:: open_multifile_dataset

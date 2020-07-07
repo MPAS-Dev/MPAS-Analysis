@@ -1,0 +1,6 @@
+mpas\_analysis.shared.climatology.MpasClimatologyTask.add\_variables
+====================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. automethod:: MpasClimatologyTask.add_variables

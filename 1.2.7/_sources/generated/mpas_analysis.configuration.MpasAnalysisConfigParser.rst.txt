@@ -1,0 +1,63 @@
+mpas\_analysis.configuration.MpasAnalysisConfigParser
+=====================================================
+
+.. currentmodule:: mpas_analysis.configuration
+
+.. autoclass:: MpasAnalysisConfigParser
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MpasAnalysisConfigParser.__init__
+      ~MpasAnalysisConfigParser.add_section
+      ~MpasAnalysisConfigParser.clear
+      ~MpasAnalysisConfigParser.defaults
+      ~MpasAnalysisConfigParser.get
+      ~MpasAnalysisConfigParser.getExpression
+      ~MpasAnalysisConfigParser.getWithDefault
+      ~MpasAnalysisConfigParser.getboolean
+      ~MpasAnalysisConfigParser.getfloat
+      ~MpasAnalysisConfigParser.getint
+      ~MpasAnalysisConfigParser.has_option
+      ~MpasAnalysisConfigParser.has_section
+      ~MpasAnalysisConfigParser.items
+      ~MpasAnalysisConfigParser.keys
+      ~MpasAnalysisConfigParser.options
+      ~MpasAnalysisConfigParser.optionxform
+      ~MpasAnalysisConfigParser.pop
+      ~MpasAnalysisConfigParser.popitem
+      ~MpasAnalysisConfigParser.read
+      ~MpasAnalysisConfigParser.read_dict
+      ~MpasAnalysisConfigParser.read_file
+      ~MpasAnalysisConfigParser.read_string
+      ~MpasAnalysisConfigParser.readfp
+      ~MpasAnalysisConfigParser.remove_option
+      ~MpasAnalysisConfigParser.remove_section
+      ~MpasAnalysisConfigParser.sections
+      ~MpasAnalysisConfigParser.set
+      ~MpasAnalysisConfigParser.setdefault
+      ~MpasAnalysisConfigParser.update
+      ~MpasAnalysisConfigParser.values
+      ~MpasAnalysisConfigParser.write
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MpasAnalysisConfigParser.BOOLEAN_STATES
+      ~MpasAnalysisConfigParser.NONSPACECRE
+      ~MpasAnalysisConfigParser.OPTCRE
+      ~MpasAnalysisConfigParser.OPTCRE_NV
+      ~MpasAnalysisConfigParser.SECTCRE
+      ~MpasAnalysisConfigParser.converters
+   
+   

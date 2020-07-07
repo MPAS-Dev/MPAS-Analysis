@@ -1,0 +1,54 @@
+mpas\_analysis.sea\_ice.TimeSeriesSeaIce
+========================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: TimeSeriesSeaIce
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesSeaIce.__init__
+      ~TimeSeriesSeaIce.add_subtask
+      ~TimeSeriesSeaIce.check_analysis_enabled
+      ~TimeSeriesSeaIce.check_generate
+      ~TimeSeriesSeaIce.close
+      ~TimeSeriesSeaIce.is_alive
+      ~TimeSeriesSeaIce.join
+      ~TimeSeriesSeaIce.kill
+      ~TimeSeriesSeaIce.run
+      ~TimeSeriesSeaIce.run_after
+      ~TimeSeriesSeaIce.run_task
+      ~TimeSeriesSeaIce.set_start_end_date
+      ~TimeSeriesSeaIce.setup_and_check
+      ~TimeSeriesSeaIce.start
+      ~TimeSeriesSeaIce.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesSeaIce.BLOCKED
+      ~TimeSeriesSeaIce.FAIL
+      ~TimeSeriesSeaIce.READY
+      ~TimeSeriesSeaIce.RUNNING
+      ~TimeSeriesSeaIce.SUCCESS
+      ~TimeSeriesSeaIce.UNSET
+      ~TimeSeriesSeaIce.authkey
+      ~TimeSeriesSeaIce.daemon
+      ~TimeSeriesSeaIce.exitcode
+      ~TimeSeriesSeaIce.ident
+      ~TimeSeriesSeaIce.name
+      ~TimeSeriesSeaIce.pid
+      ~TimeSeriesSeaIce.sentinel
+   
+   

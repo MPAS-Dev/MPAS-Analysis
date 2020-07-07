@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.TimeSeriesSalinityAnomaly
+==============================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesSalinityAnomaly
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesSalinityAnomaly.__init__
+      ~TimeSeriesSalinityAnomaly.add_subtask
+      ~TimeSeriesSalinityAnomaly.check_analysis_enabled
+      ~TimeSeriesSalinityAnomaly.check_generate
+      ~TimeSeriesSalinityAnomaly.close
+      ~TimeSeriesSalinityAnomaly.is_alive
+      ~TimeSeriesSalinityAnomaly.join
+      ~TimeSeriesSalinityAnomaly.kill
+      ~TimeSeriesSalinityAnomaly.run
+      ~TimeSeriesSalinityAnomaly.run_after
+      ~TimeSeriesSalinityAnomaly.run_task
+      ~TimeSeriesSalinityAnomaly.set_start_end_date
+      ~TimeSeriesSalinityAnomaly.setup_and_check
+      ~TimeSeriesSalinityAnomaly.start
+      ~TimeSeriesSalinityAnomaly.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesSalinityAnomaly.BLOCKED
+      ~TimeSeriesSalinityAnomaly.FAIL
+      ~TimeSeriesSalinityAnomaly.READY
+      ~TimeSeriesSalinityAnomaly.RUNNING
+      ~TimeSeriesSalinityAnomaly.SUCCESS
+      ~TimeSeriesSalinityAnomaly.UNSET
+      ~TimeSeriesSalinityAnomaly.authkey
+      ~TimeSeriesSalinityAnomaly.daemon
+      ~TimeSeriesSalinityAnomaly.exitcode
+      ~TimeSeriesSalinityAnomaly.ident
+      ~TimeSeriesSalinityAnomaly.name
+      ~TimeSeriesSalinityAnomaly.pid
+      ~TimeSeriesSalinityAnomaly.sentinel
+   
+   

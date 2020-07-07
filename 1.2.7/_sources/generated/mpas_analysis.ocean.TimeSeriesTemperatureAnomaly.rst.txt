@@ -1,0 +1,54 @@
+mpas\_analysis.ocean.TimeSeriesTemperatureAnomaly
+=================================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesTemperatureAnomaly
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesTemperatureAnomaly.__init__
+      ~TimeSeriesTemperatureAnomaly.add_subtask
+      ~TimeSeriesTemperatureAnomaly.check_analysis_enabled
+      ~TimeSeriesTemperatureAnomaly.check_generate
+      ~TimeSeriesTemperatureAnomaly.close
+      ~TimeSeriesTemperatureAnomaly.is_alive
+      ~TimeSeriesTemperatureAnomaly.join
+      ~TimeSeriesTemperatureAnomaly.kill
+      ~TimeSeriesTemperatureAnomaly.run
+      ~TimeSeriesTemperatureAnomaly.run_after
+      ~TimeSeriesTemperatureAnomaly.run_task
+      ~TimeSeriesTemperatureAnomaly.set_start_end_date
+      ~TimeSeriesTemperatureAnomaly.setup_and_check
+      ~TimeSeriesTemperatureAnomaly.start
+      ~TimeSeriesTemperatureAnomaly.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesTemperatureAnomaly.BLOCKED
+      ~TimeSeriesTemperatureAnomaly.FAIL
+      ~TimeSeriesTemperatureAnomaly.READY
+      ~TimeSeriesTemperatureAnomaly.RUNNING
+      ~TimeSeriesTemperatureAnomaly.SUCCESS
+      ~TimeSeriesTemperatureAnomaly.UNSET
+      ~TimeSeriesTemperatureAnomaly.authkey
+      ~TimeSeriesTemperatureAnomaly.daemon
+      ~TimeSeriesTemperatureAnomaly.exitcode
+      ~TimeSeriesTemperatureAnomaly.ident
+      ~TimeSeriesTemperatureAnomaly.name
+      ~TimeSeriesTemperatureAnomaly.pid
+      ~TimeSeriesTemperatureAnomaly.sentinel
+   
+   

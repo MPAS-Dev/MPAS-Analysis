@@ -1,0 +1,6 @@
+mpas\_analysis.shared.io.open\_mpas\_dataset
+============================================
+
+.. currentmodule:: mpas_analysis.shared.io
+
+.. autofunction:: open_mpas_dataset
