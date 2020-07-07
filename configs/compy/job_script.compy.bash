@@ -1,10 +1,10 @@
 #!/bin/bash -l
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -20,7 +20,7 @@
 cd $SLURM_SUBMIT_DIR
 export OMP_NUM_THREADS=1
 
-source /compyfs/software/e3sm-unified/load_latest_e3sm_unified.sh 
+source /compyfs/software/e3sm-unified/load_latest_e3sm_unified.sh
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and

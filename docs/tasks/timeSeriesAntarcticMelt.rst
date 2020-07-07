@@ -25,7 +25,7 @@ The following configuration options are available for this task::
   iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
                       'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
                       'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
-                      'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                      'Totten', 'Eastern_Ross', 'Western_Ross', 'Ross', 'Getz',
                       'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
   # Number of months over which to compute moving average
@@ -40,17 +40,6 @@ The following configuration options are available for this task::
   # commented out to determine the distance between ticks automatically.
 
   # yearStrideXTicks = 1
-
-  # the number of threads dask is allowed to spawn for each process computing
-  # a year of these time series
-  # Decrease this number if timeSeriesAntarcticMelt subtasks are running
-  # out of available threads
-  daskThreads = 4
-
-  # the number of subprocesses that each task gets counted as occupying
-  # Increase this number if timeSeriesAntarcticMelt subtasks are running
-  # out of memory, and fewer tasks will be allowed to run at once
-  subprocessCount = 1
 
 Ice Shelf and Region Names
 --------------------------
@@ -70,8 +59,8 @@ it is a list consisting of any subset of the following ice shelves::
    "Mendelssohn", "Mertz", "Moscow_University", "Moubray", "Mulebreen",
    "Myers", "Nansen", "Nickerson", "Ninnis", "Nivl", "Noll", "Nordenskjold",
    "Pine_Island", "PourquoiPas", "Prince_Harald", "Publications",  "Quar",
-   "Rayner_Thyer", "Rennick", "Richter", "Riiser-Larsen", "Ronne", "Ross_East",
-   "Ross_West", "Shackleton", "Shirase", "Slava", "SmithInlet", "Stange",
+   "Rayner_Thyer", "Rennick", "Richter", "Riiser-Larsen", "Ronne", "Western_Ross",
+   "Eastern_Ross", "Shackleton", "Shirase", "Slava", "SmithInlet", "Stange",
    "Sulzberger", "Suvorov", "Swinburne", "Thwaites", "Tinker", "Totten",
    "Tracy_Tremenchus", "Tucker", "Underwood", "Utsikkar", "Venable", "Verdi",
    "Vigrid", "Vincennes", "Voyeykov", "West", "Wilkins", "Wilma_Robert_Downer",
@@ -109,7 +98,6 @@ Other Options
 
 * :ref:`config_moving_average`
 * :ref:`config_time_axis_ticks`
-* :ref:`dask_treads`
 
 Observations
 ------------

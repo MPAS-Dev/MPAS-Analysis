@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -184,6 +184,8 @@ def get_region_mask(config, regionMaskFile):  # {{{
         fullFileName = regionMaskFile
     else:
         tryCustom = config.get('diagnostics', 'customDirectory') != 'none'
+        found = False
+        fullFileName = None
         if tryCustom:
             # first see if region mask file is in the custom directory
             regionMaskDirectory = build_config_full_path(
@@ -192,19 +194,59 @@ def get_region_mask(config, regionMaskFile):  # {{{
 
             fullFileName = '{}/{}'.format(regionMaskDirectory,
                                           regionMaskFile)
+            found = os.path.exists(fullFileName)
 
-        if not tryCustom or not os.path.exists(fullFileName):
+        if not found:
             # no, so second see if mapping files are in the base directory
-
             regionMaskDirectory = build_config_full_path(
                 config, 'diagnostics', 'regionMaskSubdirectory',
                 baseDirectoryOption='baseDirectory')
 
             fullFileName = '{}/{}'.format(regionMaskDirectory,
                                           regionMaskFile)
+            found = os.path.exists(fullFileName)
+
+        if not found:
+            # still not found, point to a local mask directory
+            maskSubdirectory = build_config_full_path(config, 'output',
+                                                      'maskSubdirectory')
+            make_directories(maskSubdirectory)
+
+            fullFileName = '{}/{}'.format(maskSubdirectory,
+                                          regionMaskFile)
 
     return fullFileName  # }}}
 
+
+def get_geometric_data(config):  # {{{
+    """
+    Get the full path for a region mask with a given file name
+
+    Parameters
+    ----------
+    config : MpasAnalysisConfigParser object
+        configuration from which to read the path
+
+    Returns
+    -------
+    geometricDataDirectory : str
+        A directory where geometric data cached from ``geometric_features`` can
+        be stored
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    geometricDataDirectory = config.get('diagnostics',
+                                        'geometricDataDirectory')
+
+    if geometricDataDirectory == 'none':
+        geometricDataDirectory = '{}/geometric_data'.format(
+            config.get('output', 'baseDirectory'))
+
+    make_directories(geometricDataDirectory)
+
+    return geometricDataDirectory  # }}}
 
 def build_obs_path(config, component, relativePathOption=None,
                    relativePathSection=None, relativePath=None):  # {{{

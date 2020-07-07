@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -94,62 +94,7 @@ def open_mpas_dataset(fileName, calendar,
                              days_to_datetime(startDate, calendar=calendar),
                              days_to_datetime(endDate, calendar=calendar)))
     if variableList is not None:
-        ds = subset_variables(ds, variableList)
-
-    return ds  # }}}
-
-
-def subset_variables(ds, variableList):  # {{{
-    """
-    Given a data set and a list of variable names, returns a new data set that
-    contains only variables with those names.
-
-    Parameters
-    ----------
-    ds : ``xarray.DataSet`` object
-        The data set from which a subset of variables is to be extracted.
-
-    variableList : string or list of strings
-        The names of the variables to be extracted.
-
-    Returns
-    -------
-    ds : ``xarray.DataSet`` object
-        A copy of the original data set with only the variables in
-        variableList.
-
-    Raises
-    ------
-    ValueError
-        If the resulting data set is empty.
-    """
-    # Authors
-    # -------
-    # Phillip J. Wolfram, Xylar Asay-Davis
-
-    allvars = ds.data_vars.keys()
-
-    # get set of variables to drop (all ds variables not in vlist)
-    dropvars = set(allvars) - set(variableList)
-
-    # drop spurious variables
-    ds = ds.drop(dropvars)
-
-    # must also drop all coordinates that are not associated with the variables
-    coords = set()
-    for avar in ds.data_vars.keys():
-        coords |= set(ds[avar].coords.keys())
-    dropcoords = set(ds.coords.keys()) - coords
-
-    # drop spurious coordinates
-    ds = ds.drop(dropcoords)
-
-    if len(ds.data_vars.keys()) == 0:
-        raise ValueError(
-            'Empty dataset is returned.\n'
-            'Variables {}\n'
-            'are not found within the dataset '
-            'variables: {}.'.format(variableList, allvars))
+        ds = ds[variableList]
 
     return ds  # }}}
 

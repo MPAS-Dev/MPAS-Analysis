@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -27,6 +27,7 @@ from six.moves import configparser
 import cmocean
 import pkg_resources
 from six import string_types
+import mpas_analysis.shared.plot.ScientificColourMaps5
 
 
 def setup_colormap(config, configSectionName, suffix=''):
@@ -260,17 +261,6 @@ def register_custom_colormaps():
     mapNames.pop(mapNames.index('gray'))
     for mapName in mapNames:
         _register_colormap_and_reverse(mapName, getattr(cmocean.cm, mapName))
-
-    # add Scientific Colour-Maps 3.0 from
-    # http://www.fabiocrameri.ch/colourmaps.php
-
-    for mapName in ['berlin', 'bilbao', 'broc', 'cork', 'davos', 'devon',
-                    'grayC', 'lajolla', 'lapaz', 'lisbon', 'oleron', 'oslo',
-                    'roma', 'tofino', 'tokyo', 'turku', 'vik']:
-
-        xmlFile = pkg_resources.resource_filename(
-            __name__, 'ColourMapSuite3/{}/{}.xml'.format(mapName, mapName))
-        _read_xml_colormap(xmlFile, mapName)
 
     # add SciVisColor colormaps from
     # https://sciviscolor.org/home/colormaps/

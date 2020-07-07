@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -29,7 +29,6 @@ from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
 
 from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
-from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -463,17 +462,14 @@ class TimeSeriesSeaIce(AnalysisTask):
                     yearStrideXTicks = None
 
                 # separate plots for nothern and southern hemispheres
-                timeseries_analysis_plot(config, dsvalues,
-                                         movingAveragePoints,
-                                         title[key], xLabel,
-                                         units[variableName],
-                                         calendar=calendar,
-                                         lineColors=lineColors,
-                                         lineWidths=lineWidths,
-                                         legendText=legendText,
-                                         titleFontSize=titleFontSize,
-                                         firstYearXTicks=firstYearXTicks,
-                                         yearStrideXTicks=yearStrideXTicks)
+                timeseries_analysis_plot(
+                    config, dsvalues, calendar=calendar, title=title[key],
+                    xlabel=xLabel, ylabel=units[variableName],
+                    movingAveragePoints=movingAveragePoints,
+                    lineColors=lineColors, lineWidths=lineWidths,
+                    legendText=legendText, titleFontSize=titleFontSize,
+                    firstYearXTicks=firstYearXTicks,
+                    yearStrideXTicks=yearStrideXTicks)
 
                 savefig(figureNameStd[key])
 
@@ -496,15 +492,12 @@ class TimeSeriesSeaIce(AnalysisTask):
                     imageCaption=caption)
 
                 if (polarPlot):
-                    timeseries_analysis_plot_polar(
-                        config,
-                        dsvalues,
-                        movingAveragePoints,
-                        title[key],
-                        lineColors=lineColors,
-                        lineWidths=lineWidths,
-                        legendText=legendText,
-                        titleFontSize=titleFontSize)
+                    timeseries_analysis_plot_polar(config, dsvalues, title[key],
+                                                   movingAveragePoints,
+                                                   lineColors=lineColors,
+                                                   lineWidths=lineWidths,
+                                                   legendText=legendText,
+                                                   titleFontSize=titleFontSize)
 
                     savefig(figureNamePolar[key])
 
@@ -612,8 +605,7 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         dsTimeSeries = {}
         dsMesh = xr.open_dataset(self.restartFileName)
-        dsMesh = subset_variables(dsMesh,
-                                  variableList=['latCell', 'areaCell'])
+        dsMesh = dsMesh[['latCell', 'areaCell']]
         # Load data
         ds = open_mpas_dataset(
             fileName=self.inputFile,

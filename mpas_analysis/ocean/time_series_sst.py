@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -273,9 +273,9 @@ class TimeSeriesSST(AnalysisTask):
             else:
                 yearStrideXTicks = None
 
-            timeseries_analysis_plot(config, fields, movingAveragePoints,
-                                     title, xLabel, yLabel,
-                                     calendar=calendar,
+            timeseries_analysis_plot(config, fields, calendar=calendar,
+                                     title=title, xlabel=xLabel, ylabel=yLabel,
+                                     movingAveragePoints=movingAveragePoints,
                                      lineColors=lineColors,
                                      lineWidths=lineWidths,
                                      legendText=legendText,

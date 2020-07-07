@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -24,8 +24,6 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 
 from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
-
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class ClimatologyMapMLD(AnalysisTask):  # {{{
@@ -233,7 +231,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs = xr.open_dataset(fileName)
 
         # Increment month value to be consistent with the model output
-        dsObs.iMONTH.values += 1
+        dsObs.assign_coords(iMONTH=dsObs.iMONTH+1)
         # Rename the dimensions to be consistent with other obs. data sets
         dsObs = dsObs.rename({'month': 'calmonth', 'lat': 'latCoord',
                               'lon': 'lonCoord', 'mld_dt_mean': 'mld'})
@@ -248,7 +246,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         # no meaningful year since this is already a climatology
         dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
 
-        dsObs = mpas_xarray.subset_variables(dsObs, ['mld', 'month'])
+        dsObs = dsObs[['mld', 'month']]
         return dsObs  # }}}
 
     # }}}

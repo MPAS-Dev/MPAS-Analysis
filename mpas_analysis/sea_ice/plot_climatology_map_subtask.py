@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -320,8 +320,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         lon = remappedClimatology['lon'].values
         lat = remappedClimatology['lat'].values
 
-        lonTarg, latTarg = np.meshgrid(lon, lat)
-
         if self.remapObsClimatologySubtask is not None:
             remappedFileName = self.remapObsClimatologySubtask.get_file_name(
                 stage='remapped', season=season,
@@ -365,6 +363,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                 mask = np.logical_or(refOutput.mask,
                                      refOutput == self.maskValue)
                 refOutput = np.ma.masked_array(refOutput, mask)
+                difference = np.ma.masked_array(difference, mask)
 
         # mask with maskValue only after taking the diff
         if self.maskValue is not None:
@@ -390,8 +389,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         fileout = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         plot_polar_comparison(
             config,
-            lonTarg,
-            latTarg,
+            lon,
+            lat,
             modelOutput,
             refOutput,
             difference,

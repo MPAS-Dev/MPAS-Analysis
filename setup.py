@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,7 +15,7 @@ import warnings
 
 isrelease = True
 
-version = '1.2.6'
+version = '1.2.7'
 
 if not isrelease:
     import subprocess
@@ -45,6 +45,7 @@ setup(name='mpas_analysis',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
           'Topic :: Scientific/Engineering',
       ],
       packages=find_packages(),
@@ -55,7 +56,7 @@ setup(name='mpas_analysis',
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
                     'mpas_analysis.shared.plot':
-                        ['ColourMapSuite3/*/*.xml',
+                        ['ScientificColourMaps5/*/*.txt',
                          'SciVisColorColormaps/*.xml']},
       install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
                         'dask', 'lxml',
@@ -64,6 +65,4 @@ setup(name='mpas_analysis',
       entry_points={'console_scripts':
                     ['mpas_analysis = mpas_analysis.__main__:main',
                      'download_analysis_data = '
-                     'mpas_analysis.download_data:download_analysis_data',
-                     'download_natural_earth_110m = '
-                     'mpas_analysis.download_data:download_natural_earth_110m']})
+                     'mpas_analysis.download_data:download_analysis_data']})

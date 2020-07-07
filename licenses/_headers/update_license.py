@@ -4,12 +4,12 @@ import glob
 
 extensions = ['py', 'sh', 'bash', 'html', 'css', 'js', 'ncl']
 
-replace = {'Copyright (c) 2019 Triad National Security, LLC.':
-           'Copyright (c) 2019 Triad National Security, LLC.',
-           'Copyright (c) 2019 Lawrence Livermore National Security, LLC.':
-           'Copyright (c) 2019 Lawrence Livermore National Security, LLC.',
-           'Copyright (c) 2019 UT-Battelle, LLC.':
-           'Copyright (c) 2019 UT-Battelle, LLC.'}
+replace = {'Copyright (c) 2020 Triad National Security, LLC.':
+           'Copyright (c) 2020 Triad National Security, LLC.',
+           'Copyright (c) 2020 Lawrence Livermore National Security, LLC.':
+           'Copyright (c) 2020 Lawrence Livermore National Security, LLC.',
+           'Copyright (c) 2020 UT-Battelle, LLC.':
+           'Copyright (c) 2020 UT-Battelle, LLC.'}
 
 files = []
 for ext in extensions:

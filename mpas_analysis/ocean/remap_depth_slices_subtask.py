@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,8 +15,6 @@ import xarray as xr
 import numpy as np
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
-
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 from mpas_analysis.ocean.utility import compute_zmid
 
@@ -112,9 +110,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
         # first, load the land-ice mask from the restart file
         ds = xr.open_dataset(self.restartFileName)
-        ds = mpas_xarray.subset_variables(ds, ['maxLevelCell',
-                                               'bottomDepth',
-                                               'layerThickness'])
+        ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
         ds = ds.isel(Time=0)
 
         self.maxLevelCell = ds.maxLevelCell - 1

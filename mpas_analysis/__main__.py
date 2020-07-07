@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -56,6 +56,8 @@ from mpas_analysis import sea_ice
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RefYearMpasClimatologyTask
 from mpas_analysis.shared.time_series import MpasTimeSeriesTask
+
+from mpas_analysis.shared.regions import ComputeRegionMasks
 
 
 def update_time_bounds_in_config(config):  # {{{
@@ -118,6 +120,9 @@ def build_analysis_list(config, controlConfig):  # {{{
     oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
         config=config, componentName='ocean')
 
+    oceanRegionMasksTask = ComputeRegionMasks(config=config,
+                                              conponentName='ocean')
+
     for op in oceanClimatolgyTasks:
         analyses.append(oceanClimatolgyTasks[op])
     analyses.append(oceanRefYearClimatolgyTask)
@@ -163,15 +168,19 @@ def build_analysis_list(config, controlConfig):  # {{{
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+        controlConfig))
 
     analyses.append(ocean.RegionalTSDiagrams(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+        controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
+                                                  oceanRegionMasksTask,
                                                   controlConfig))
 
-    analyses.append(ocean.TimeSeriesOceanRegions(config, controlConfig))
+    analyses.append(ocean.TimeSeriesOceanRegions(config, oceanRegionMasksTask,
+                                                 controlConfig))
 
     analyses.append(ocean.TimeSeriesTemperatureAnomaly(config,
                                                        oceanTimeSeriesTask))
@@ -182,6 +191,8 @@ def build_analysis_list(config, controlConfig):  # {{{
                                                controlConfig))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
                                         controlConfig))
+    analyses.append(ocean.TimeSeriesTransport(config, controlConfig))
+
     analyses.append(ocean.MeridionalHeatTransport(
         config, oceanClimatolgyTasks['avg'], controlConfig))
 
@@ -199,7 +210,8 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTasks['avg'],
                                            controlConfig))
 
-    analyses.append(ocean.OceanRegionalProfiles(config, controlConfig))
+    analyses.append(ocean.OceanRegionalProfiles(config, oceanRegionMasksTask,
+                                                controlConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
@@ -475,6 +487,7 @@ def run_analysis(config, analyses):  # {{{
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+    logger.propagate = False
 
     totalTaskCount = len(analyses)
     widgets = ['Running tasks: ', progressbar.Percentage(), ' ',

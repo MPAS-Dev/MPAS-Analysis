@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -32,8 +32,6 @@ from mpas_analysis.shared.climatology.climatology import get_remapper, \
     get_climatology_op_directory
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
-
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 
 class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
@@ -238,7 +236,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             self.climatologyName))
 
         dsMask = xr.open_dataset(self.mpasClimatologyTask.inputFiles[0])
-        dsMask = mpas_xarray.subset_variables(dsMask, self.variableList)
+        dsMask = dsMask[self.variableList]
         iselValues = {'Time': 0}
         if self.iselValues is not None:
             iselValues.update(self.iselValues)
@@ -526,8 +524,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         if not os.path.exists(maskedClimatologyFileName):
             # slice and mask the data set
             climatology = xr.open_dataset(climatologyFileName)
-            climatology = mpas_xarray.subset_variables(climatology,
-                                                       self.variableList)
+            climatology = climatology[self.variableList]
             iselValues = {}
             if 'Time' in climatology.dims:
                 iselValues['Time'] = 0

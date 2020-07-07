@@ -5,6 +5,9 @@ Generalized Horizontal Interpolation in MPAS-Analysis
 Xylar Asay-Davis <br>
 date: 2017/01/19 <br>
 </h2>
+
+Horizontal interpolation and related utilities for remapping are now in the [pyremap repo](https://github.com/MPAS-Dev/pyremap/).
+
 <h3> Summary </h3>
 
 Currently, MPAS-Analysis uses various methods to perform horizontal interpolation.  For constructing ocean climatologies, nearest-neighbor interpolation is used, while for sea-ice climatologies, `ncremap` is used with the requirement that a mapping file for the appropriate source and destination grids is provided through the config file.  This project intends to move MPAS-Analysis to a unified approach to horizontal interpolation that does not require pre-generated mapping files (though it should support caching mapping files for faster execution).

@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,9 +15,6 @@ import os
 import xarray
 import numpy
 import csv
-import dask
-import multiprocessing
-from multiprocessing.pool import ThreadPool
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
@@ -36,8 +33,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
-    get_feature_list
+from mpas_analysis.shared.regions import get_feature_list
 
 
 class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
@@ -49,7 +45,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
+    def __init__(self, config, mpasTimeSeriesTask, regionMasksTask,
+                 controlConfig=None):
         # {{{
         """
         Construct the analysis task.
@@ -61,6 +58,9 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
+
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -76,22 +76,16 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
-        self.iceShelfMasksFile = get_region_mask(config, 'iceShelves.geojson')
+        self.iceShelfMasksFile = get_region_mask(config,
+                                                 'iceShelves20200621.geojson')
 
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
         if 'all' in iceShelvesToPlot:
             iceShelvesToPlot = get_feature_list(self.iceShelfMasksFile)
 
-        parallelTaskCount = config.getWithDefault('execute',
-                                                  'parallelTaskCount',
-                                                  default=1)
-
-        masksSubtask = ComputeRegionMasksSubtask(
-            self, self.iceShelfMasksFile, outFileSuffix='iceShelfMasks',
-            featureList=iceShelvesToPlot, subprocessCount=parallelTaskCount)
-
-        self.add_subtask(masksSubtask)
+        masksSubtask = regionMasksTask.add_mask_subtask(
+            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
 
         computeMeltSubtask = ComputeMeltSubtask(self, mpasTimeSeriesTask,
                                                 masksSubtask, iceShelvesToPlot)
@@ -166,14 +160,6 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         self.run_after(masksSubtask)
 
         self.iceShelvesToPlot = iceShelvesToPlot
-
-        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
-        self.subprocessCount = min(parallelTaskCount,
-                                   self.config.getint(self.taskName,
-                                                      'subprocessCount'))
-        self.daskThreads = min(
-            multiprocessing.cpu_count(),
-            self.config.getint(self.taskName, 'daskThreads'))
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -239,9 +225,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis, Stephen Price
 
-        self.logger.info(r"\Computing Antarctic melt rate time series...")
-
-        self.logger.info('  Load melt rate data...')
+        self.logger.info("Computing Antarctic melt rate time series...")
 
         mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
@@ -275,62 +259,76 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
                                 'it.'.format(outFileName))
             os.remove(outFileName)
 
-        with dask.config.set(schedular='threads',
-                             pool=ThreadPool(self.daskThreads)):
-            # work on data from simulations
-            freshwaterFlux = dsIn.timeMonthly_avg_landIceFreshwaterFlux.chunk(
-                {'Time': 12})
+        restartFileName = \
+            mpasTimeSeriesTask.runStreams.readpath('restart')[0]
 
-            restartFileName = \
-                mpasTimeSeriesTask.runStreams.readpath('restart')[0]
+        dsRestart = xarray.open_dataset(restartFileName)
+        areaCell = \
+            dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
 
-            dsRestart = xarray.open_dataset(restartFileName)
-            areaCell = \
-                dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
+        regionMaskFileName = self.masksSubtask.maskFileName
 
-            regionMaskFileName = self.masksSubtask.maskFileName
+        dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
-            dsRegionMask = xarray.open_dataset(regionMaskFileName)
+        # figure out the indices of the regions to plot
+        regionNames = decode_strings(dsRegionMask.regionNames)
 
-            # figure out the indices of the regions to plot
-            regionNames = decode_strings(dsRegionMask.regionNames)
+        regionIndices = []
+        for iceShelf in self.iceShelvesToPlot:
+            for index, regionName in enumerate(regionNames):
+                if iceShelf == regionName:
+                    regionIndices.append(index)
+                    break
 
-            regionIndices = []
-            for iceShelf in self.iceShelvesToPlot:
-                for index, regionName in enumerate(regionNames):
-                    if iceShelf == regionName:
-                        regionIndices.append(index)
-                        break
+        # select only those regions we want to plot
+        dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
 
-            # select only those regions we want to plot
-            dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-            cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
+        datasets = []
+        nTime = dsIn.sizes['Time']
+        for tIndex in range(nTime):
+            self.logger.info('  {}/{}'.format(tIndex+1, nTime))
 
-            # convert from kg/s to kg/yr
-            totalMeltFlux = constants.sec_per_year * \
-                (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
-            totalMeltFlux.compute()
+            freshwaterFlux = \
+                dsIn.timeMonthly_avg_landIceFreshwaterFlux.isel(Time=tIndex)
 
-            totalArea = (cellMasks * areaCell).sum(dim='nCells')
+            nRegions = dsRegionMask.sizes['nRegions']
+            meltRates = numpy.zeros((nRegions,))
+            totalMeltFluxes = numpy.zeros((nRegions,))
 
-            # from kg/m^2/yr to m/yr
-            meltRates = (1. / constants.rho_fw) * (totalMeltFlux / totalArea)
-            meltRates.compute()
+            for regionIndex in range(nRegions):
+                cellMask = \
+                    dsRegionMask.regionCellMasks.isel(nRegions=regionIndex)
 
-            # convert from kg/yr to GT/yr
-            totalMeltFlux /= constants.kg_per_GT
+                # convert from kg/s to kg/yr
+                totalMeltFlux = constants.sec_per_year * \
+                    (cellMask * areaCell * freshwaterFlux).sum(dim='nCells')
+
+                totalArea = (cellMask * areaCell).sum(dim='nCells')
+
+                # from kg/m^2/yr to m/yr
+                meltRates[regionIndex] = ((1. / constants.rho_fw) *
+                                          (totalMeltFlux / totalArea))
+
+                # convert from kg/yr to GT/yr
+                totalMeltFlux /= constants.kg_per_GT
+                totalMeltFluxes[regionIndex] = totalMeltFlux
 
             dsOut = xarray.Dataset()
-            dsOut['totalMeltFlux'] = totalMeltFlux
-            dsOut.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
-            dsOut.totalMeltFlux.attrs['description'] = \
-                'Total melt flux summed over each ice shelf or region'
-            dsOut['meltRates'] = meltRates
-            dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
-            dsOut.meltRates.attrs['description'] = \
-                'Melt rate averaged over each ice shelf or region'
+            dsOut.coords['Time'] = dsIn.Time.isel(Time=tIndex)
+            dsOut['totalMeltFlux'] = (('nRegions'), totalMeltFluxes)
+            dsOut['meltRates'] = (('nRegions'), meltRates)
+            datasets.append(dsOut)
 
-            write_netcdf(dsOut, outFileName)
+        dsOut = xarray.concat(objs=datasets, dim='Time')
+        dsOut['regionNames'] = dsRegionMask.regionNames
+        dsOut.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+        dsOut.totalMeltFlux.attrs['description'] = \
+            'Total melt flux summed over each ice shelf or region'
+        dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
+        dsOut.meltRates.attrs['description'] = \
+            'Melt rate averaged over each ice shelf or region'
+
+        write_netcdf(dsOut, outFileName)
 
         # }}}
 
@@ -463,9 +461,9 @@ class PlotMeltSubtask(AnalysisTask):
         observationsDirectory = build_obs_path(config, 'ocean',
                                                'meltSubdirectory')
         obsFileNameDict = {'Rignot et al. (2013)':
-                           'Rignot_2013_melt_rates.csv',
+                           'Rignot_2013_melt_rates_20200623.csv',
                            'Rignot et al. (2013) SS':
-                           'Rignot_2013_melt_rates_SS.csv'}
+                           'Rignot_2013_melt_rates_SS_20200623.csv'}
 
         obsDict = {}  # dict for storing dict of obs data
         for obsName in obsFileNameDict:
@@ -552,9 +550,10 @@ class PlotMeltSubtask(AnalysisTask):
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 
-        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                       title, xLabel, yLabel,
-                                       calendar=calendar,
+        fig = timeseries_analysis_plot(config, fields, calendar=calendar,
+                                       title=title, xlabel=xLabel,
+                                       ylabel=yLabel,
+                                       movingAveragePoints=movingAverageMonths,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
@@ -614,17 +613,18 @@ class PlotMeltSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        fig = timeseries_analysis_plot(config, fields, movingAverageMonths,
-                                       title, xLabel, yLabel,
-                                       calendar=calendar,
+        fig = timeseries_analysis_plot(config, fields, calendar=calendar,
+                                       title=title, xlabel=xLabel,
+                                       ylabel=yLabel,
+                                       movingAveragePoints=movingAverageMonths,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
+                                       firstYearXTicks=firstYearXTicks,
+                                       yearStrideXTicks=yearStrideXTicks,
                                        obsMean=obsMeltRate,
                                        obsUncertainty=obsMeltRateUnc,
-                                       obsLegend=list(obsDict.keys()),
-                                       firstYearXTicks=firstYearXTicks,
-                                       yearStrideXTicks=yearStrideXTicks)
+                                       obsLegend=list(obsDict.keys()))
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway

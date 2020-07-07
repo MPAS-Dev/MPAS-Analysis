@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -34,8 +34,6 @@ from mpas_analysis.shared.io.utility import make_directories, \
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.constants import constants
-
-from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 
 
 class MpasClimatologyTask(AnalysisTask):  # {{{
@@ -434,8 +432,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 '{:02d}-01.nc'.format(symlinkDirectory, self.ncclimoModel,
                                       year, month)
 
-            if not os.path.exists(outFileName):
+            try:
                 os.symlink(inFileName, outFileName)
+            except OSError:
+                pass
 
         return symlinkDirectory
 
@@ -497,6 +497,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             seasons = ['none']
 
         args = ['ncclimo',
+                '--no_stdin',
                 '-4',
                 '--clm_md=mth',
                 '-a', 'sdd',
@@ -676,7 +677,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
         def _preprocess(ds):
             # drop unused variables during preprocessing because only the
             # variables we want are guaranteed to be in all the files
-            return subset_variables(ds, variableList)
+            return ds[variableList]
 
         season = self.season
         parentTask = self.parentTask

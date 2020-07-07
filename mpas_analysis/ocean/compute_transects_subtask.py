@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -19,8 +19,6 @@ from collections import OrderedDict
 from pyremap import PointCollectionDescriptor
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
-
-from mpas_analysis.shared.mpas_xarray import mpas_xarray
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
@@ -221,9 +219,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         # first, compute zMid and cell mask from the restart file
         with xr.open_dataset(self.restartFileName) as ds:
-            ds = mpas_xarray.subset_variables(ds, ['maxLevelCell',
-                                                   'bottomDepth',
-                                                   'layerThickness'])
+            ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
             ds = ds.isel(Time=0)
 
             self.maxLevelCell = ds.maxLevelCell - 1

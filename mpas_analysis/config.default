@@ -59,6 +59,10 @@ parallelTaskCount = 1
 # node to reach 12 total threads.
 ncclimoParallelMode = serial
 
+# the number of MPI tasks to use in creating mapping files (1 means tasks run in
+# serial, the default)
+mapMpiTasks = 1
+
 
 [diagnostics]
 ## config options related to observations, mapping files and region files used
@@ -85,6 +89,12 @@ mappingSubdirectory = mpas_analysis/maps
 # Directory for region mask files. The user can supply an absolute path here to
 # point to a path that is not within the baseDirectory above.
 regionMaskSubdirectory = mpas_analysis/region_masks
+
+# A path to a directory for geometric data cached from the geometric_features
+# package.  If none is supplied, a geometric_data subdirectory of the analysis
+# output baseDirectory is used.
+geometricDataDirectory = none
+
 
 [input]
 ## options related to reading in the results to be analyzed
@@ -171,7 +181,10 @@ htmlSubdirectory = html
 # option:
 #    mpas_analysis config.analysis --generate \
 #         only_ocean,no_timeSeries,timeSeriesSST
-generate = ['all_publicObs', 'no_icebergs']
+generate = ['all_publicObs', 'no_icebergs', 'no_climatologyMapAntarcticMelt',
+            'no_timeSeriesAntarcticMelt', 'no_timeSeriesOceanRegions',
+            'no_climatologyMapSose', 'no_climatologyMapSchmidtko',
+            'no_soseTransects', 'no_oceanRegionalProfiles']
 
 
 [climatology]
@@ -427,16 +440,16 @@ movingAveragePoints = 12
 # plot
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevels = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
+colorbarLevelsResult = [-2.4, -0.8, -0.4, -0.2, 0, 0.2, 0.4, 0.8, 2.4]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-2.5, 2.6, 0.5)
+contourLevelsResult = np.arange(-2.5, 2.6, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -460,16 +473,16 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-colorbarLevels = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
+colorbarLevelsResult = [-2.0, -1.0, -0.5, -0.25, -0.1, 0, 0.1, 0.25, 0.5, 1.0, 2.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-5.0, 5.51, 0.5)
+contourLevelsResult = np.arange(-5.0, 5.51, 0.5)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -494,18 +507,18 @@ regions = ['global']
 movingAveragePoints = 12
 
 # colormap
-colormapName = balance
+colormapNameResult = balance
 # whether the colormap is indexed or continuous
-colormapType = indexed
+colormapTypeResult = indexed
 # color indices into colormapName for filled contours
-#colormapIndices = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-colormapIndices = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
+#colormapIndicesResult = [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
+colormapIndicesResult = [0, 28, 57, 85, 113, 125, 130, 142, 170, 198, 227, 255]
 # colormap levels/values for contour boundaries
-#colorbarLevels = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
-colorbarLevels = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
+#colorbarLevelsResult = [-0.1, -0.02, -0.003, -0.001, 0, 0.001, 0.003, 0.02, 0.1]
+colorbarLevelsResult = [-1.0, -0.5, -0.2, -0.1, -0.02, 0, 0.02, 0.1, 0.2, 0.5, 1.0]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevels = np.arange(-2., 2.01, 0.2)
+contourLevelsResult = np.arange(-2., 2.01, 0.2)
 
 # An optional first year for the tick marks on the x axis. Leave commented out
 # to start at the beginning of the time series.
@@ -1185,6 +1198,13 @@ normArgsDifference = {'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,
 colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
                            5., 10., 20., 50., 100.]
 
+# make a tables of mean melt rates and melt fluxes for individual ice shelves?
+makeTables = True
+
+# If making tables, which ice shelves?  This is a list of ice shelves or
+# ['all'] for all 106 ice shelves and regions.
+iceShelvesInTable = ['all']
+
 
 [timeSeriesAntarcticMelt]
 ## options related to plotting time series of melt below Antarctic ice shelves
@@ -1195,7 +1215,7 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
 iceShelvesToPlot = ['Antarctica', 'Peninsula', 'West Antarctica',
                     'East Antarctica', 'Larsen_C', 'Filchner', 'Ronne',
                     'Filchner-Ronne', 'Brunt_Stancomb', 'Fimbul', 'Amery',
-                    'Totten', 'Ross_West', 'Ross_East', 'Ross', 'Getz',
+                    'Totten', 'Eastern_Ross', 'Western_Ross', 'Ross', 'Getz',
                     'Thwaites', 'Pine_Island', 'Abbot', 'George_VI']
 
 # Number of months over which to compute moving average
@@ -1211,17 +1231,6 @@ movingAverageMonths = 1
 
 # yearStrideXTicks = 1
 
-# the number of threads dask is allowed to spawn for each process computing
-# a year of these time series
-# Decrease this number if timeSeriesAntarcticMelt subtasks are running
-# out of available threads
-daskThreads = 4
-
-# the number of subprocesses that each task gets counted as occupying
-# Increase this number if timeSeriesAntarcticMelt subtasks are running
-# out of memory, and fewer tasks will be allowed to run at once
-subprocessCount = 1
-
 
 [timeSeriesOceanRegions]
 ## options related to plotting time series of groups of ocean regions
@@ -1229,25 +1238,15 @@ subprocessCount = 1
 # the names of region groups to plot, each with its own section below
 regionGroups = ['Antarctic Regions']
 
-# the number of threads dask is allowed to spawn for each process computing
-# a year of these time series
-# Decrease this number if timeSeriesOceanRegions subtasks are running
-# out of available threads
-daskThreads = 12
-
-# the number of subprocesses that each task gets counted as occupying
-# Increase this number if timeSeriesOceanRegions subtasks are running
-# out of memory, and fewer tasks will be allowed to run at once
-subprocessCount = 3
-
 
 [timeSeriesAntarcticRegions]
 ## options related to plotting time series of Antarctic regions
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'antarcticRegions.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+# in addition to the usual properties for a region in geometric_features.  The
+# string is also used as the suffix for mask files generated from the geojson
+regionMaskSuffix = 'antarcticRegions20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
@@ -1279,11 +1278,35 @@ variables = [{'name': 'temperature',
 # zmax = -400
 
 
+[timeSeriesTransport]
+## options related to plotting time series of transport through transects
+
+# list of ocean transects from geometric_features to plot or ['all'] for all
+# available transects.
+transectsToPlot = ['Drake Passage', 'Tasmania-Ant', 'Africa-Ant', 'Antilles Inflow',
+                   'Mona Passage', 'Windward Passage', 'Florida-Cuba', 'Florida-Bahamas',
+                   'Indonesian Throughflow', 'Agulhas', 'Mozambique Channel', 'Bering Strait',
+                   'Lancaster Sound', 'Fram Strait', 'Nares Strait']
+
+# Number of months over which to compute moving average
+movingAverageMonths = 1
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+
+# yearStrideXTicks = 1
+
+
 [regionalTSDiagrams]
 ## options related to plotting T/S diagrams of ocean regions
 
 # the names of region groups to plot, each with its own section below
-regionGroups = ['Antarctic Regions', 'Ocean Basins']
+regionGroups = ['Ocean Basins']
 
 # a list of seasons to compute climatologies over
 seasons = ['ANN']
@@ -1303,10 +1326,11 @@ subprocessCount = 4
 [TSDiagramsForAntarcticRegions]
 ## options related to plotting T/S diagrams of Antarctic regions
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'antarcticRegions.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
+# in addition to the usual properties for a region in geometric_features.  The
+# string is also used as the suffix for mask files generated from the geojson
+regionMaskSuffix = 'antarcticRegions20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
@@ -1321,8 +1345,8 @@ diagramType = volumetric
 # if diagramType == 'volumetric', the bin boundaries for T and S
 # if diagramType == 'scatter', only the min and max are important (and the
 #   bins are only used for computing neutral density contours)
-Tbins = numpy.linspace(-2.5, 4, 66)
-Sbins = numpy.linspace(33.8, 34.8, 51)
+Tbins = numpy.linspace(-2.5, 4, 651)
+Sbins = numpy.linspace(33.8, 34.8, 1001)
 
 # density contour interval
 rhoInterval = 0.1
@@ -1331,6 +1355,8 @@ rhoInterval = 0.1
 colormap = white_cmo_deep
 # The following is more appropriate if diagramType == 'scatter'
 # colormap = cmo.deep_r
+# the type of norm used in the colormap {'linear', 'log'}
+normType = log
 
 # The minimum and maximum depth over which fields are plotted, default is
 # to take these values from the geojson feature's zmin and zmax properties.
@@ -1344,13 +1370,14 @@ obs = ['SOSE', 'WOA18']
 [TSDiagramsForOceanBasins]
 ## options related to plotting T/S diagrams of major ocean basins
 
-# A geojson file containing Antarctic ocean regions.  Each region must have
-# 'zmin' and 'zmax' properites in addition to the usual properies for a region
-# in geometric_features
-regionMask = 'oceanBasins.geojson'
+# An identifying string that is the prefix for a geojson file containing
+# ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
+# to the usual properties for a region in geometric_features.  The string is
+# also used as the suffix for mask files generated from the geojson file
+regionMaskSuffix = 'oceanBasins20200621'
 
 # list of regions to plot or ['all'] for all regions in the masks file.
-# See "regionNames" in the antarcticRegions masks file in
+# See "regionNames" in the oceanBasins masks file in
 # regionMaskSubdirectory for details.
 regionNames = ['all']
 
@@ -1362,8 +1389,8 @@ diagramType = volumetric
 # if diagramType == 'volumetric', the bin boundaries for T and S
 # if diagramType == 'scatter', only the min and max are important (and the
 #   bins are only used for computing neutral density contours)
-Tbins = numpy.linspace(-2.5, 16, 75)
-Sbins = numpy.linspace(33.8, 35.8, 101)
+Tbins = numpy.linspace(-2.5, 16, 926)
+Sbins = numpy.linspace(33.8, 35.8, 1001)
 
 # density contour interval
 rhoInterval = 0.2
@@ -1372,6 +1399,8 @@ rhoInterval = 0.2
 colormap = white_cmo_deep
 # The following is more appropriate if diagramType == 'scatter'
 # colormap = cmo.deep_r
+# the type of norm used in the colormap {'linear', 'log'}
+normType = log
 
 # The minimum and maximum depth over which fields are plotted.
 zmin = -1000
@@ -1690,7 +1719,7 @@ normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 ## results and WOA climatological data
 
 # comparison grid(s) ('latlon', 'antarctic', 'arctic') on which to plot analysis
-comparisonGrids = ['arctic', 'antarctic']
+comparisonGrids = ['latlon']
 
 # Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
 # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
@@ -2917,7 +2946,7 @@ depthRange = []
 # The suffix on the regional mask file to be used to determine the regions to
 # plot.  A region mask file should be in the regionMaskDirectory and should
 # be named <mpasMeshName>_<regionMaskSuffix>.nc
-regionMaskSuffix = oceanBasins
+regionMaskSuffix = oceanBasins20200621
 
 # a list of region names from the region masks file to plot
 regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
@@ -2945,13 +2974,22 @@ profileGalleryGroup = Ocean Basin Profiles
 movingAveragePoints = 1
 
 # colormap
-colormapName = RdYlBu_r
+colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': -2., 'vmax': 30.}
+normArgsResult = {'vmin': -2., 'vmax': 30.}
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -5., 'vmax': 5.}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
@@ -2981,13 +3019,22 @@ contourLevels = 'none'
 movingAveragePoints = 1
 
 # colormap
-colormapName = haline
+colormapNameResult = haline
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': 30, 'vmax': 39.0}
+normArgsResult = {'vmin': 30, 'vmax': 39.0}
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.5, 'vmax': 0.5}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
@@ -3017,13 +3064,23 @@ contourLevels = 'none'
 movingAveragePoints = 1
 
 # colormap
-colormapName = Spectral_r
+colormapNameResult = Spectral_r
 # whether the colormap is indexed or continuous
-colormapType = continuous
+colormapTypeResult = continuous
 # the type of norm used in the colormap
-normType = linear
+normTypeResult = linear
 # A dictionary with keywords for the norm
-normArgs = {'vmin': 1026.5, 'vmax': 1028.}
+normArgsResult = {'vmin': 1026.5, 'vmax': 1028.}
+
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = continuous
+# the type of norm used in the colormap
+normTypeDifference = linear
+# A dictionary with keywords for the norm
+normArgsDifference = {'vmin': -0.3, 'vmax': 0.3}
 
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)

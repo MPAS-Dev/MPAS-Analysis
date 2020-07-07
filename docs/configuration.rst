@@ -16,6 +16,7 @@ options that are most commonly modified.
 
    config/runs
    config/execute
+   config/dask_threads
    config/diagnostics
    config/input
    config/output

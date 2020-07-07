@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -285,7 +285,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.xmlFileNames = []
 
         prefixPieces = []
-        if self.outFileLabel is not '':
+        if self.outFileLabel != '':
             prefixPieces.append(self.outFileLabel)
         prefixPieces.append(self.transectName.replace(' ', '_'))
         prefixPieces.append(mainRunName)
@@ -532,7 +532,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             refOutput,
             bias,
             configSectionName,
-            cbarLabel=self.unitsLabel,
+            colorbarLabel=self.unitsLabel,
             xlabel=xLabel,
             ylabel=yLabel,
             title=title,

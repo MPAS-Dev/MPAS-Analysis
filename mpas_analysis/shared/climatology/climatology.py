@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -118,7 +118,9 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
 
-    remapper.build_mapping_file(method=method, logger=logger)
+    mpiTasks = config.getWithDefault('execute', 'mapMpiTasks', 1)
+
+    remapper.build_mapping_file(method=method, logger=logger, mpiTasks=mpiTasks)
 
     return remapper  # }}}
 
@@ -166,7 +168,7 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
     ds = add_years_months_days_in_month(ds, calendar)
 
     monthlyClimatology = \
-        ds.groupby('month').apply(compute_one_month_climatology)
+        ds.groupby('month').map(compute_one_month_climatology)
 
     return monthlyClimatology  # }}}
 

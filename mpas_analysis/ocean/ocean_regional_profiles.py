@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -26,8 +26,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings, get_region_mask
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
-from mpas_analysis.shared.regions import ComputeRegionMasksSubtask, \
-    get_feature_list
+from mpas_analysis.shared.regions import get_feature_list
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
@@ -47,7 +46,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, controlConfig=None):  # {{{
+    def __init__(self, config, regionMasksTask, controlConfig=None):  # {{{
         '''
         Construct the analysis task.
 
@@ -56,8 +55,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         config :  instance of MpasAnalysisConfigParser
             Contains configuration options
 
-        mpasClimatologyTask : ``MpasClimatologyTask``
-            The task that produced the climatology to be remapped and plotted
+        regionMasksTask : ``ComputeRegionMasks``
+            A task for computing region masks
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
@@ -98,16 +97,11 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         masksFile = get_region_mask(config,
                                     '{}.geojson'.format(self.regionMaskSuffix))
 
-        parallelTaskCount = config.getWithDefault('execute',
-                                                  'parallelTaskCount',
-                                                  default=1)
-
-        masksSubtask = ComputeRegionMasksSubtask(
-            self, masksFile, outFileSuffix=self.regionMaskSuffix,
-            featureList=self.regionNames, subprocessCount=parallelTaskCount)
+        masksSubtask = regionMasksTask.add_mask_subtask(
+            masksFile, outFileSuffix=self.regionMaskSuffix)
 
         if 'all' in self.regionNames:
-            self.regionNames = get_feature_list(config, masksFile)
+            self.regionNames = get_feature_list(masksFile)
 
         self.masksSubtask = masksSubtask
 
@@ -132,9 +126,10 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                 for regionName in self.regionNames:
                     subtaskName = 'plotHovmoller_{}_{}'.format(
                         prefix, regionName.replace(' ', '_'))
-                    inFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
-                        self.regionMaskSuffix, self.regionMaskSuffix,
-                        self.startYear, self.endYear)
+                    inFileName = \
+                        '{}/regionalProfiles_{}_{:04d}-{:04d}.nc'.format(
+                            self.regionMaskSuffix, self.regionMaskSuffix,
+                            self.startYear, self.endYear)
                     titleName = field['titleName']
                     caption = 'Time series of {} {} vs ' \
                               'depth'.format(regionName.replace('_', ' '),
@@ -154,7 +149,9 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                         groupSubtitle=None,
                         groupLink='ocnreghovs',
                         galleryName=titleName,
-                        subtaskName=subtaskName)
+                        subtaskName=subtaskName,
+                        controlConfig=controlConfig,
+                        regionMaskFile=masksFile)
                     hovmollerSubtask.run_after(combineSubtask)
                     self.add_subtask(hovmollerSubtask)
 
@@ -269,7 +266,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         except OSError:
             pass
 
-        outputFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
+        outputFileName = '{}/regionalProfiles_{}_{:04d}-{:04d}.nc'.format(
             outputDirectory, timeSeriesName, self.startYear, self.endYear)
 
         inputFiles = sorted(self.historyStreams.readpath(
@@ -376,7 +373,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                     (cellMasks * areaCell * var**2).sum('nCells') / totalArea
 
             # drop the original variables
-            dsLocal = dsLocal.drop(variableList)
+            dsLocal = dsLocal.drop_vars(variableList)
 
             datasets.append(dsLocal)
 
@@ -465,7 +462,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                    'timeseriesSubdirectory'),
             timeSeriesName)
 
-        outputFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
+        outputFileName = '{}/regionalProfiles_{}_{:04d}-{:04d}.nc'.format(
             outputDirectory, timeSeriesName, self.startYears[0],
             self.endYears[-1])
 
@@ -481,19 +478,21 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
             inFileNames = []
             for startYear, endYear in zip(self.startYears, self.endYears):
-                inFileName = '{}/{}_{:04d}-{:04d}.nc'.format(
+                inFileName = '{}/regionalProfiles_{}_{:04d}-{:04d}.nc'.format(
                     outputDirectory, timeSeriesName, startYear, endYear)
                 inFileNames.append(inFileName)
 
             ds = xr.open_mfdataset(inFileNames, combine='nested',
                                    concat_dim='Time', decode_times=False)
 
+            ds.load()
+
             ds['totalArea'] = ds['totalArea'].isel(Time=0)
 
             write_netcdf(ds, outputFileName)
 
         regionNames = ds['regionNames']
-        ds = ds.drop('regionNames')
+        ds = ds.drop_vars('regionNames')
 
         profileMask = ds['totalArea'] > 0
 
@@ -503,9 +502,10 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         make_directories(outputDirectory)
 
         for season in self.parentTask.seasons:
-            outputFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
-                outputDirectory, timeSeriesName, season,
-                self.startYears[0], self.endYears[-1])
+            outputFileName = \
+                '{}/{}_{}_{:04d}-{:04d}.nc'.format(
+                    outputDirectory, timeSeriesName, season,
+                    self.startYears[0], self.endYears[-1])
             if not os.path.exists(outputFileName):
                 monthValues = constants.monthDictionary[season]
                 dsSeason = compute_climatology(ds, monthValues,
@@ -623,7 +623,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.xmlFileNames = []
         self.filePrefixes = {}
 
-        self.filePrefix = '{}_{}_{}_years{:04d}-{:04d}'.format(
+        self.filePrefix = 'regionalProfile_{}_{}_{}_years{:04d}-{:04d}'.format(
             self.field['prefix'], self.regionName.replace(' ', '_'),
             self.season, self.parentTask.startYear,
             self.parentTask.endYear)
@@ -719,9 +719,10 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 self.controlConfig, 'output',
                 'profilesSubdirectory')
 
-            controlFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
-                controlDirectory, timeSeriesName, self.season,
-                controlStartYear, controlEndYear)
+            controlFileName = \
+                '{}/{}_{}_{:04d}-{:04d}.nc'.format(
+                    controlDirectory, timeSeriesName, self.season,
+                    controlStartYear, controlEndYear)
 
             dsControl = xr.open_dataset(controlFileName)
             allRegionNames = decode_strings(dsControl.regionNames)

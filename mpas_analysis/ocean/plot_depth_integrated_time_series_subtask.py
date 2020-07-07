@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -471,12 +471,12 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        timeseries_analysis_plot(config=config, dsvalues=timeSeries, N=None,
-                                 title=title, xlabel=xLabel, ylabel=yLabel,
-                                 calendar=calendar,
+        timeseries_analysis_plot(config=config, dsvalues=timeSeries,
+                                 calendar=calendar, title=title, xlabel=xLabel,
+                                 ylabel=yLabel, movingAveragePoints=None,
                                  lineColors=lineColors, lineStyles=lineStyles,
                                  markers=lineMarkers, lineWidths=lineWidths,
-                                 maxPoints=maxPoints, legendText=legendText,
+                                 legendText=legendText, maxPoints=maxPoints,
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
 

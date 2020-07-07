@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -19,7 +19,7 @@ import os
 from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
 
 from mpas_analysis.shared.io.utility import make_directories, build_obs_path
-from mpas_analysis.shared.io import write_netcdf, subset_variables
+from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
@@ -249,8 +249,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                             'timeMonthly_avg_meridionalHeatTransportLatZ']
 
             annualClimatology = xr.open_dataset(climatologyFileName)
-            annualClimatology = subset_variables(annualClimatology,
-                                                 variableList)
+            annualClimatology = annualClimatology[variableList]
             if 'Time' in annualClimatology.dims:
                 annualClimatology = annualClimatology.isel(Time=0)
 
@@ -353,7 +352,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                   title=title, xlabel=xLabel, ylabel=yLabel,
                                   xLim=xLimGlobal,
                                   yLim=depthLimGlobal, invertYAxis=False,
-                                  N=movingAveragePoints)
+                                  movingAveragePoints=movingAveragePoints)
 
             savefig(outFileName)
 

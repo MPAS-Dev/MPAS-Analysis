@@ -39,7 +39,7 @@ ncclimoParallelMode = bck
 # its location).  For other machines, this would be the directory pointed to
 # when running "download_analysis_data.py" to get the public observations,
 # mapping files and region files.
-baseDirectory = /lustre/atlas/proj-shared/cli115/diagnostics
+baseDirectory = /gpfs/alpine/proj-shared/cli115/diagnostics/
 
 [input]
 ## options related to reading in the results to be analyzed

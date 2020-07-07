@@ -44,3 +44,11 @@ Authors
    :maxdepth: 1
 
    authors
+
+Versions
+========
+.. toctree::
+   :maxdepth: 1
+
+   versions
+

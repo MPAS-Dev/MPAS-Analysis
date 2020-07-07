@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2019 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2019 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2019 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -157,17 +157,8 @@ def subset_variables(ds, variableList):  # {{{
     # get set of variables to drop (all ds variables not in vlist)
     dropvars = set(allvars) - set(variableList)
 
-    # drop spurious variables
-    ds = ds.drop(dropvars)
-
-    # must also drop all coordinates that are not associated with the variables
-    coords = set()
-    for avar in ds.data_vars.keys():
-        coords |= set(ds[avar].coords.keys())
-    dropcoords = set(ds.coords.keys()) - coords
-
-    # drop spurious coordinates
-    ds = ds.drop(dropcoords)
+    # drop variables not requested and coordinates that are no longer needed
+    ds = ds.drop_vars(dropvars)
 
     if len(ds.data_vars.keys()) == 0:
         raise ValueError(
