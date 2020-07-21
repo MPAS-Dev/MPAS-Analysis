@@ -135,6 +135,11 @@ file_cache_maxsize = 1200
 # with a single time slice.
 maxChunkSize = 10000
 
+# Whether missing input data should produce an error.  If not, the user gets
+# a warning and the time bounds are adjusted to the beginning and end of the
+# available data
+errorOnMissing = False
+
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -254,7 +259,7 @@ subprocessCount = 1
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 9999
+endYear = end
 
 
 [index]
@@ -265,7 +270,7 @@ endYear = 9999
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 9999
+endYear = end
 
 
 [regions]
