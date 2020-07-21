@@ -2969,9 +2969,9 @@ profileGalleryGroup = Ocean Basin Profiles
 ## regions
 
 # Number of points over which to compute moving average(e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 1
+movingAverageMonths = 1
 
 # colormap
 colormapNameResult = RdYlBu_r
@@ -3014,9 +3014,9 @@ contourLevels = 'none'
 ## regions
 
 # Number of points over which to compute moving average(e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 1
+movingAverageMonths = 1
 
 # colormap
 colormapNameResult = haline
@@ -3059,9 +3059,9 @@ contourLevels = 'none'
 ## ocean regions
 
 # Number of points over which to compute moving average(e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 1
+movingAverageMonths = 1
 
 # colormap
 colormapNameResult = Spectral_r
