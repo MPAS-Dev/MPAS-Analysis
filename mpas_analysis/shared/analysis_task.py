@@ -666,7 +666,6 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
         config.set(section, 'endYear', str(endYear))
         requestedEndYear = endYear
 
-
     if startYear != requestedStartYear or endYear != requestedEndYear:
         if errorOnMissing:
             raise ValueError(
