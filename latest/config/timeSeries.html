@@ -210,19 +210,23 @@ for anomalies:</p>
 <span class="c1"># only the anomaly over a later span of years is of interest.</span>
 <span class="c1"># anomalyRefYear = 249</span>
 
-<span class="c1"># start and end years for timeseries analysis. Using out-of-bounds values</span>
-<span class="c1">#   like start_year = 1 and end_year = 9999 will be clipped to the valid range</span>
-<span class="c1">#   of years, and is a good way of insuring that all values are used.</span>
+<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
 <span class="n">startYear</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">endYear</span> <span class="o">=</span> <span class="mi">9999</span>
+<span class="n">endYear</span> <span class="o">=</span> <span class="n">end</span>
 </pre></div>
 </div>
 <div class="section" id="start-and-end-year">
 <h2>Start and End Year<a class="headerlink" href="#start-and-end-year" title="Permalink to this headline">¶</a></h2>
 <p>A custom config file should specify a start and end year for time series.
-If the end year is beyond the range of the simulation (typically true for the
-default <code class="docutils literal notranslate"><span class="pre">endYear</span> <span class="pre">=</span> <span class="pre">9999</span></code>), the range will be reduced to those dates with
-available data and a warning message will be displayed.</p>
+If <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">False</span></code> in the <code class="docutils literal notranslate"><span class="pre">input</span></code> section and the start or end
+year is beyond the range of the simulation, the range will be reduced to those
+dates with available data and a warning message will be displayed.  If
+<code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">True</span></code>, out of range year will produce an error.</p>
 </div>
 <div class="section" id="anomaly-reference-year">
 <h2>Anomaly Reference Year<a class="headerlink" href="#anomaly-reference-year" title="Permalink to this headline">¶</a></h2>
