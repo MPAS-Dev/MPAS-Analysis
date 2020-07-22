@@ -120,7 +120,7 @@ endYear = 8
 #   like start_year = 1 and end_year = 9999 will be clipped to the valid range
 #   of years, and is a good way of insuring that all values are used.
 startYear = 1
-endYear = 9999
+endYear = end
 
 [index]
 ## options related to producing nino index.
@@ -130,7 +130,7 @@ endYear = 9999
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 9999
+endYear = end
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning

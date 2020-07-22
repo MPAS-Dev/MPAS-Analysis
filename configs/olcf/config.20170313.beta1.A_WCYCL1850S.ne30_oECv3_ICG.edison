@@ -123,7 +123,7 @@ endYear = 20
 #   of years, and is a good way of insuring that all values are used.
 # For valid statistics, index times should include at least 30 years
 startYear = 1
-endYear = 9999
+endYear = end
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning
