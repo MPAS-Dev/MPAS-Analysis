@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, \
 
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.tri import Triangulation
 import xarray as xr
 import numpy as np
 
@@ -56,6 +57,7 @@ def plot_vertical_section_comparison(
         lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
+        outlineValid=True,
         xLim=None,
         yLim=None,
         numUpperTicks=None,
@@ -177,6 +179,10 @@ def plot_vertical_section_comparison(
     backgroundColor : str, optional
         the background color for the plot (NaNs and masked areas will be
         shown in this color)
+
+    outlineValid : bool, optional
+        whether to outline the boundary between the valid an invalid regions
+        with a black contour
 
     xLim : float array, optional
         x range of plot
@@ -383,6 +389,7 @@ def plot_vertical_section_comparison(
         yearStrideXTicks=yearStrideXTicks,
         maxXTicks=maxXTicks, calendar=calendar,
         backgroundColor=backgroundColor,
+        outlineValid=outlineValid,
         plotAsContours=compareAsContours,
         contourComparisonField=contourComparisonField,
         comparisonFieldName=comparisonFieldName,
@@ -428,6 +435,7 @@ def plot_vertical_section_comparison(
             maxXTicks=maxXTicks,
             calendar=calendar,
             backgroundColor=backgroundColor,
+            outlineValid=outlineValid,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
             maxTitleLength=maxTitleLength)
@@ -466,6 +474,7 @@ def plot_vertical_section_comparison(
             maxXTicks=maxXTicks,
             calendar=calendar,
             backgroundColor=backgroundColor,
+            outlineValid=outlineValid,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
             maxTitleLength=maxTitleLength)
@@ -506,6 +515,7 @@ def plot_vertical_section(
         lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
+        outlineValid=True,
         numUpperTicks=None,
         upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
@@ -627,6 +637,10 @@ def plot_vertical_section(
 
     backgroundColor : str, optional
         the background color for the plot (NaNs will be shown in this color)
+
+    outlineValid : bool, optional
+        whether to outline the boundary between the valid an invalid regions
+        with a black contour
 
     numUpperTicks :  int, optional
         the approximate number of ticks to use on the upper x axis
@@ -780,56 +794,49 @@ def plot_vertical_section(
 
     colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
 
+    mask = field.notnull()
+    maskedTriangulation, unmaskedTriangulation = _get_triangulation(x, y, mask)
     if not plotAsContours:
         # display a heatmap of fieldArray
+        fieldMasked = field.where(mask, 0.0).values.ravel()
 
         if colormapDict['levels'] is None:
-            # interpFieldArray contains the values at centers of grid cells,
-            # for pcolormesh plots (using bilinear interpolation)
 
-            interpField = field.values
-            if field.sizes == x.sizes:
-                # interpFieldArray contains the values at centers of grid cells,
-                # for pcolormesh plots (using bilinear interpolation)
-                interpField = 0.25 * (interpField[1:, 1:] +
-                                      interpField[0:-1, 1:] +
-                                      interpField[1:, 0:-1] +
-                                      interpField[0:-1, 0:-1])
-
-            plotHandle = plt.pcolormesh(x.values, y.values, interpField,
-                                        cmap=colormapDict['colormap'],
-                                        norm=colormapDict['norm'],
-                                        rasterized=True)
+            plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
+                                       cmap=colormapDict['colormap'],
+                                       norm=colormapDict['norm'],
+                                       rasterized=True)
         else:
-            plotHandle = plt.contourf(x.values, y.values, field.values,
-                                      cmap=colormapDict['colormap'],
-                                      norm=colormapDict['norm'],
-                                      levels=colormapDict['levels'],
-                                      extend='both')
+            plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
+                                         cmap=colormapDict['colormap'],
+                                         norm=colormapDict['norm'],
+                                         levels=colormapDict['levels'],
+                                         extend='both')
 
         cbar = plt.colorbar(plotHandle,
                             orientation='vertical',
                             spacing='uniform',
                             aspect=9,
-                            ticks=colormapDict['ticks'],
-                            boundaries=colormapDict['ticks'])
+                            ticks=colormapDict['ticks'])
 
         if colorbarLabel is not None:
             cbar.set_label(colorbarLabel)
 
     else:
         # display a white heatmap to get a white background for non-land
-        zeroArray = xr.zeros_like(field).where(field.nonnull())
-        plt.contourf(x.values, y.values, zeroArray.values, colors='white')
+        zeroArray = xr.zeros_like(field)
+        plt.tricontourf(maskedTriangulation, zeroArray.values, colors='white')
 
-    # set the color for NaN or masked regions, and draw a black
-    # outline around them; technically, the contour level used should
-    # be 1.0, but the contours don't show up when using 1.0, so 0.999
-    # is used instead
-    ax = plt.gca()
-    ax.set_facecolor(backgroundColor)
-    landMask = np.isnan(field.values)
-    plt.contour(x, y, landMask, levels=[0.0001], colors='black', linewidths=1)
+    if outlineValid:
+        # set the color for NaN or masked regions, and draw a black
+        # outline around them; technically, the contour level used should
+        # be 1.0, but the contours don't show up when using 1.0, so 0.999
+        # is used instead
+        ax = plt.gca()
+        ax.set_facecolor(backgroundColor)
+        landMask = np.isnan(field.values).ravel()
+        plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
+                       colors='black', linewidths=1)
 
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
@@ -841,20 +848,21 @@ def plot_vertical_section(
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        cs1 = plt.contour(x, y, field,
-                          levels=contourLevels,
-                          colors=lineColor,
-                          linestyles=lineStyle,
-                          linewidths=lineWidth)
+        cs1 = plt.tricontour(maskedTriangulation, field.values.ravel(),
+                             levels=contourLevels,
+                             colors=lineColor,
+                             linestyles=lineStyle,
+                             linewidths=lineWidth)
         if labelContours:
             fmt_string = "%%1.%df" % int(contourLabelPrecision)
             plt.clabel(cs1, fmt=fmt_string)
         if plotAsContours and contourComparisonField is not None:
-            cs2 = plt.contour(x, y, contourComparisonField,
-                              levels=contourLevels,
-                              colors=comparisonContourLineColor,
-                              linestyles=comparisonContourLineStyle,
-                              linewidths=lineWidth)
+            cs2 = plt.tricontour(maskedTriangulation,
+                                 contourComparisonField.values.ravel(),
+                                 levels=contourLevels,
+                                 colors=comparisonContourLineColor,
+                                 linestyles=comparisonContourLineStyle,
+                                 linewidths=lineWidth)
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
 
@@ -947,5 +955,44 @@ def plot_vertical_section(
 
     return fig, ax  # }}}
 
+
+def _get_triangulation(x, y, mask):
+    """divide each quad in the x/y mesh into 2 triangles"""
+
+    nx = x.sizes[x.dims[0]] - 1
+    ny = x.sizes[x.dims[1]] - 1
+    nTriangles = 2*nx*ny
+
+    mask = mask.values
+    mask = np.logical_and(np.logical_and(mask[0:-1, 0:-1], mask[1:, 0:-1]),
+                          np.logical_and(mask[0:-1, 1:], mask[1:, 1:]))
+    triMask = np.zeros((nx, ny, 2), bool)
+    triMask[:, :, 0] = np.logical_not(mask)
+    triMask[:, :, 1] = triMask[:, :, 0]
+
+    triMask = triMask.ravel()
+
+    xIndices, yIndices = np.meshgrid(np.arange(nx), np.arange(ny),
+                                     indexing='ij')
+
+    tris = np.zeros((nx, ny, 2, 3), int)
+    # upper triangles:
+    tris[:, :, 0, 0] = (ny+1)*xIndices + yIndices
+    tris[:, :, 0, 1] = (ny+1)*(xIndices + 1) + yIndices
+    tris[:, :, 0, 2] = (ny+1)*xIndices + yIndices + 1
+    # lower triangle
+    tris[:, :, 1, 0] = (ny+1)*xIndices + yIndices + 1
+    tris[:, :, 1, 1] = (ny+1)*(xIndices + 1) + yIndices
+    tris[:, :, 1, 2] = (ny+1)*(xIndices + 1) + yIndices + 1
+
+    tris = tris.reshape((nTriangles, 3))
+
+    x = x.values.ravel()
+    y = y.values.ravel()
+
+    maskedTriangulation = Triangulation(x=x, y=y, triangles=tris, mask=triMask)
+    unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
+
+    return maskedTriangulation, unmaskedTriangulation
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
