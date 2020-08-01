@@ -528,12 +528,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         fig, axes, suptitle = plot_vertical_section_comparison(
             config,
-            xs,
-            z,
             modelOutput,
             refOutput,
             bias,
             configSectionName,
+            xCoords=xs,
+            zCoord=z,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,

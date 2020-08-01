@@ -769,7 +769,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 diff = regionMOC - refRegionMOC
 
             plot_vertical_section_comparison(
-                config, x, z, regionMOC, refRegionMOC, diff,
+                config, regionMOC, refRegionMOC, diff, xCoords=x, zCoord=z,
                 colorMapSectionName='streamfunctionMOC{}'.format(region),
                 colorbarLabel=colorbarLabel,
                 title=title,

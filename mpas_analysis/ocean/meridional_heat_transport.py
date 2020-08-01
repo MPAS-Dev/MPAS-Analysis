@@ -356,8 +356,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             filePrefix = self.filePrefixes['mhtZ']
             outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
             colorbarLabel = '(PW/m)'
-            plot_vertical_section(config, x, y, z, self.sectionName,
-                                  suffix='', colorbarLabel=colorbarLabel,
+            plot_vertical_section(config, z, self.sectionName, xCoords=x,
+                                  zCoord=y, suffix='',
+                                  colorbarLabel=colorbarLabel,
                                   title=title, xlabels=xLabel, ylabel=yLabel,
                                   xLim=xLimGlobal,
                                   yLim=depthLimGlobal, invertYAxis=False,
