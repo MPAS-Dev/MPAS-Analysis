@@ -40,7 +40,9 @@ def plot_vertical_section_comparison(
         colorMapSectionName,
         xCoords=None,
         zCoord=None,
-        dsTransectTriangles=None,
+        triangulation_args=None,
+        xOutline=None,
+        zOutline=None,
         colorbarLabel=None,
         xlabels=None,
         ylabel=None,
@@ -111,11 +113,19 @@ def plot_vertical_section_comparison(
     zCoord : xarray.DataArray, optional
         The z coordinates for the model, ref and diff arrays
 
-    dsTransectTriangles : xarray.Dataset, optional
-        A dataset defining the transect on triangles rather than as a logically
-        rectangular grid.  If this option is provided, ``xCoords`` is only
-        used for tick marks if more than one x axis is requested, and
-        ``zCoord`` will be ignored.
+    triangulation_args : dict, optional
+        A dict of arguments to create a matplotlib.tri.Triangulation of the
+        transect that does not rely on it being on a logically rectangular grid.
+        The arguments rather than the triangulation itself are passed because
+        multiple triangulations with different masks are needed internally and
+        there is not an obvious mechanism for copying an existing triangulation.
+        If this option is provided, ``xCoords`` is only used for tick marks if
+        more than one x axis is requested, and ``zCoord`` will be ignored.
+
+    xOutline, zOutline : numpy.ndarray, optional
+        pairs of points defining line segments that are used to outline the
+        valid region of the mesh if ``outlineValid = True`` and
+        ``triangulation_args`` is not ``None``
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -372,7 +382,9 @@ def plot_vertical_section_comparison(
         colorMapSectionName,
         xCoords=xCoords,
         zCoord=zCoord,
-        dsTransectTriangles=dsTransectTriangles,
+        triangulation_args=triangulation_args,
+        xOutline=xOutline,
+        zOutline=zOutline,
         suffix=resultSuffix,
         colorbarLabel=colorbarLabel,
         title=title,
@@ -418,7 +430,9 @@ def plot_vertical_section_comparison(
             colorMapSectionName,
             xCoords=xCoords,
             zCoord=zCoord,
-            dsTransectTriangles=dsTransectTriangles,
+            triangulation_args=triangulation_args,
+            xOutline=xOutline,
+            zOutline=zOutline,
             suffix=resultSuffix,
             colorbarLabel=colorbarLabel,
             title=refTitle,
@@ -458,7 +472,9 @@ def plot_vertical_section_comparison(
             colorMapSectionName,
             xCoords=xCoords,
             zCoord=zCoord,
-            dsTransectTriangles=dsTransectTriangles,
+            triangulation_args=triangulation_args,
+            xOutline=xOutline,
+            zOutline=zOutline,
             suffix=diffSuffix,
             colorbarLabel=colorbarLabel,
             title=diffTitle,
@@ -508,7 +524,9 @@ def plot_vertical_section(
         colorMapSectionName,
         xCoords=None,
         zCoord=None,
-        dsTransectTriangles=None,
+        triangulation_args=None,
+        xOutline=None,
+        zOutline=None,
         suffix='',
         colorbarLabel=None,
         title=None,
@@ -585,11 +603,21 @@ def plot_vertical_section(
     zCoord : xarray.DataArray, optional
         The z coordinates for the ``field``
 
-    dsTransectTriangles : xarray.Dataset, optional
-        A dataset defining the transect on triangles rather than as a logically
-        rectangular grid.  If this option is provided, ``xCoords`` is only
-        used for tick marks if more than one x axis is requested, and
-        ``zCoord`` will be ignored.
+    triangulation_args : dict, optional
+        A dict of arguments to create a matplotlib.tri.Triangulation of the
+        transect that does not rely on it being on a logically rectangular grid.
+        The arguments rather than the triangulation itself are passed because
+        multiple triangulations with different masks are needed internally and
+        there is not an obvious mechanism for copying an existing triangulation.
+        If this option is provided, ``xCoords`` is only used for tick marks if
+        more than one x axis is requested, and ``zCoord`` will be ignored.
+
+    xOutline, zOutline : numpy.ndarray, optional
+        pairs of points defining line segments that are used to outline the
+        valid region of the mesh if ``outlineValid = True`` and
+        ``triangulation_args`` is not ``None``
+
+
 
     suffix : str, optional
         the suffix used for colorbar config options
@@ -772,7 +800,7 @@ def plot_vertical_section(
         if len(xCoords) != len(xlabels):
             raise ValueError('Expected the same number of xCoords and xlabels')
 
-    if dsTransectTriangles is None:
+    if triangulation_args is None:
 
         x, y = xr.broadcast(xCoords[0], zCoord)
         dims_in_field = all([dim in field.dims for dim in x.dims])
@@ -810,8 +838,13 @@ def plot_vertical_section(
             x, y, mask)
     else:
         mask = field.notnull()
-        maskedTriangulation, unmaskedTriangulation = _get_ds_triangulation(
-            dsTransectTriangles, mask)
+        triMask = np.logical_not(mask.values)
+        # if any node of a triangle is masked, the triangle is masked
+        triMask = np.amax(triMask, axis=1)
+        unmaskedTriangulation = Triangulation(**triangulation_args)
+        mask_args = dict(triangulation_args)
+        mask_args['mask'] = triMask
+        maskedTriangulation = Triangulation(**mask_args)
 
     # set up figure
     if dpi is None:
@@ -824,6 +857,13 @@ def plot_vertical_section(
     colormapDict = setup_colormap(config, colorMapSectionName,
                                   suffix=suffix)
 
+    if outlineValid and xOutline is not None or zOutline is not None:
+        # we might have some invalid cells that are inside the outline.  Let's
+        # make them white
+        zeroArray = xr.zeros_like(field)
+        plt.tricontourf(unmaskedTriangulation, zeroArray.values.ravel(),
+                        colors='white')
+
     if not plotAsContours:
         # display a heatmap of fieldArray
         fieldMasked = field.where(mask, 0.0).values.ravel()
@@ -833,7 +873,7 @@ def plot_vertical_section(
             plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
                                        cmap=colormapDict['colormap'],
                                        norm=colormapDict['norm'],
-                                       rasterized=True)
+                                       rasterized=True, shading='gouraud')
         else:
             plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
                                          cmap=colormapDict['colormap'],
@@ -853,18 +893,21 @@ def plot_vertical_section(
     else:
         # display a white heatmap to get a white background for non-land
         zeroArray = xr.zeros_like(field)
-        plt.tricontourf(maskedTriangulation, zeroArray.values, colors='white')
+        plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(), colors='white')
 
     ax = plt.gca()
+    ax.set_facecolor(backgroundColor)
     if outlineValid:
-        # set the color for NaN or masked regions, and draw a black
-        # outline around them; technically, the contour level used should
-        # be 1.0, but the contours don't show up when using 1.0, so 0.999
-        # is used instead
-        ax.set_facecolor(backgroundColor)
-        landMask = np.isnan(field.values).ravel()
-        plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
-                       colors='black', linewidths=1)
+        if xOutline is None or zOutline is None:
+            # set the color for NaN or masked regions, and draw a black
+            # outline around them; technically, the contour level used should
+            # be 1.0, but the contours don't show up when using 1.0, so 0.999
+            # is used instead
+            landMask = np.isnan(field.values).ravel()
+            plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
+                           colors='black', linewidths=1)
+        else:
+            plt.plot(xOutline, zOutline, color='black', linewidth=1)
 
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
@@ -982,30 +1025,6 @@ def plot_vertical_section(
                 ax3.spines['top'].set_position(('outward', 36))
 
     return fig, ax  # }}}
-
-
-def _get_ds_triangulation(dsTransectTriangles, mask):
-    """get matplotlib Triangulation from triangulation dataset"""
-
-    triMask = np.logical_not(mask)
-    # if any node of a triangle is masked, the triangle is masked
-    triMask = triMask.max(dim='nTriangleNodes')
-
-    nTransectTriangles = dsTransectTriangles.sizes['nTransectTriangles']
-    dNode = dsTransectTriangles.dNode.isel(
-        nSegments=dsTransectTriangles.segmentIndices,
-        nHorizBounds=dsTransectTriangles.nodeHorizBoundsIndices)
-    x = dNode.values.ravel()
-
-    zTransectNode = dsTransectTriangles.zTransectNode
-    y = zTransectNode.values.ravel()
-
-    tris = np.arange(3 * nTransectTriangles).reshape((nTransectTriangles, 3))
-    maskedTriangulation = Triangulation(x=x, y=y, triangles=tris, mask=triMask)
-    unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
-
-    return maskedTriangulation, unmaskedTriangulation
-
 
 def _get_triangulation(x, y, mask):
     """divide each quad in the x/y mesh into 2 triangles"""
