@@ -4,7 +4,8 @@ from mpas_analysis.shared.climatology.climatology import get_remapper, \
     get_unmasked_mpas_climatology_directory, \
     get_unmasked_mpas_climatology_file_name, \
     get_masked_mpas_climatology_file_name, \
-    get_remapped_mpas_climatology_file_name
+    get_remapped_mpas_climatology_file_name, \
+    get_climatology_op_directory
 
 from mpas_analysis.shared.climatology.mpas_climatology_task import \
     MpasClimatologyTask
