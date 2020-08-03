@@ -708,8 +708,8 @@ def plot_vertical_section(
 
     movingAveragePoints : int, optional
         the number of points over which to perform a moving average
-        NOTE: this option is mostly intended for use when ``xCoordIsTime`` is True,
-        although it will work with other data as well.  Also, the moving
+        NOTE: this option is mostly intended for use when ``xCoordIsTime`` is
+        True, although it will work with other data as well.  Also, the moving
         average calculation is based on number of points, not actual x axis
         values, so for best results, the values in the first entry in
         ``xCoords`` should be equally spaced.
@@ -893,7 +893,8 @@ def plot_vertical_section(
     else:
         # display a white heatmap to get a white background for non-land
         zeroArray = xr.zeros_like(field)
-        plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(), colors='white')
+        plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(),
+                        colors='white')
 
     ax = plt.gca()
     ax.set_facecolor(backgroundColor)
@@ -1025,6 +1026,7 @@ def plot_vertical_section(
                 ax3.spines['top'].set_position(('outward', 36))
 
     return fig, ax  # }}}
+
 
 def _get_triangulation(x, y, mask):
     """divide each quad in the x/y mesh into 2 triangles"""
