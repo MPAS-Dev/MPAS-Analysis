@@ -21,8 +21,11 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy
+from matplotlib.tri import Triangulation
 
 from geometric_features import FeatureCollection
+
+from mpas_tools.ocean.transects import get_outline_segments
 
 from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
     savefig, add_inset
@@ -182,7 +185,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
-                      galleryName, configSectionName,
+                      galleryName, configSectionName, verticalBounds,
                       diffTitleLabel='Model - Observations'):
         # {{{
         '''
@@ -229,8 +232,13 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         configSectionName : str
             the name of the section where the color map and range is defined
 
+        verticalBounds : list
+            the min and max for the vertical axis, or an emtpy list if the
+            range automatically determined by matplotlib should be used
+
         diffTitleLabel : str, optional
             the title of the difference subplot
+
         '''
         # Authors
         # -------
@@ -255,6 +263,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         self.thumbnailDescription = self.season
 
         self.configSectionName = configSectionName
+        if len(verticalBounds) == 0:
+            self.verticalBounds = None
+        else:
+            self.verticalBounds = verticalBounds
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -328,7 +340,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                     verticalComparisonGridName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
 
-            # if Time is an axis, take the appropriate avarage to get the
+            # if Time is an axis, take the appropriate average to get the
             # climatology
             if 'Time' in remappedRefClimatology.dims:
                 monthValues = constants.monthDictionary[season]
@@ -375,18 +387,40 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        x = remappedModelClimatology.x
-        z = remappedModelClimatology.z
+        remap = self.remapMpasClimatologySubtask.remap
 
-        # set lat and lon in case we want to plot versus these quantities
-        lat = remappedModelClimatology.lat
-        lon = remappedModelClimatology.lon
+        if remap:
+            x = 1e-3*remappedModelClimatology.x
+            z = remappedModelClimatology.z
 
-        if len(lat.dims) > 1:
-            lat = lat[:, 0]
+            # set lat and lon in case we want to plot versus these quantities
+            lat = remappedModelClimatology.lat
+            lon = remappedModelClimatology.lon
 
-        if len(lon.dims) > 1:
-            lon = lon[:, 0]
+            if len(lat.dims) > 1:
+                lat = lat[:, 0]
+
+            if len(lon.dims) > 1:
+                lon = lon[:, 0]
+
+            # z is masked out with NaNs in some locations (where there is land)
+            # but this makes pcolormesh unhappy so we'll zero out those
+            # locations
+            z = z.where(z.notnull(), 0.)
+
+        else:
+            x = 1e-3*remappedModelClimatology.dNode
+            z = None
+            lon = remappedModelClimatology.lonNode
+            lat = remappedModelClimatology.latNode
+
+            remappedModelClimatology['dNode'] = x
+
+            # flatten the x, lon and lat arrays because this is what
+            # vertical_section is expecting
+            x = xr.DataArray(data=x.values.ravel(), dims=('nx',))
+            lon = xr.DataArray(data=lon.values.ravel(), dims=('nx',))
+            lat = xr.DataArray(data=lat.values.ravel(), dims=('nx',))
 
         # This will do strange things at the antemeridian but there's little
         # we can do about that.
@@ -394,13 +428,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if self.horizontalBounds is not None:
             mask = numpy.logical_and(
-                remappedModelClimatology.x.values >= self.horizontalBounds[0],
-                remappedModelClimatology.x.values <= self.horizontalBounds[1])
+                x.values >= self.horizontalBounds[0],
+                x.values <= self.horizontalBounds[1])
             inset_lon = lon_pm180.values[mask]
             inset_lat = lat.values[mask]
         else:
             inset_lon = lon_pm180.values
             inset_lat = lat.values
+
         fc = FeatureCollection()
         fc.add_feature(
             {"type": "Feature",
@@ -413,11 +448,16 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                  "type": "LineString",
                  "coordinates": list(map(list, zip(inset_lon, inset_lat)))}})
 
-        # z is masked out with NaNs in some locations (where there is land) but
-        # this makes pcolormesh unhappy so we'll zero out those locations
-        z = z.where(z.notnull(), 0.)
-
         modelOutput = remappedModelClimatology[self.mpasFieldName]
+
+        if remap:
+            triangulation_args = None
+            dOutline = None
+            zOutline = None
+        else:
+            triangulation_args = self._get_ds_triangulation(
+                remappedModelClimatology)
+            dOutline, zOutline = get_outline_segments(remappedModelClimatology)
 
         if remappedRefClimatology is None:
             refOutput = None
@@ -540,6 +580,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             configSectionName,
             xCoords=xs,
             zCoord=z,
+            triangulation_args=triangulation_args,
+            xOutline=dOutline,
+            zOutline=zOutline,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
@@ -552,6 +595,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             invertYAxis=False,
             backgroundColor='#d9bf96',
             xLim=self.horizontalBounds,
+            yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
@@ -566,6 +610,24 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # shift the super-title a little to the left to make room for the inset
         pos = suptitle.get_position()
         suptitle.set_position((pos[0] - 0.05, pos[1]))
+
+        if not remap:
+            # add open air ice shelves
+            d = remappedModelClimatology.dNode.values.ravel()
+            ssh = remappedModelClimatology.ssh.values.ravel()
+            mask = ssh < 0.
+            for ax in axes:
+                ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
+                                interpolate=True, color='white',
+                                edgecolor='black', linewidth=1.)
+            if 'landIceFraction' in remappedModelClimatology:
+                landIceFraction = remappedModelClimatology.landIceFraction
+                landIceMask = landIceFraction.values.ravel() > 0.25
+                mask = numpy.logical_and(landIceMask, ssh < 0.)
+                for ax in axes:
+                    ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
+                                    interpolate=False, color='#e1eaf7',
+                                    edgecolor='black', linewidth=1.)
 
         # make a red start axis and green end axis to correspond to the dots
         # in the inset
@@ -782,6 +844,24 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         else:
             return False
         # }}}
+
+    def _get_ds_triangulation(self, dsTransectTriangles):
+        """get matplotlib Triangulation from triangulation dataset"""
+
+        nTransectTriangles = dsTransectTriangles.sizes['nTransectTriangles']
+        dNode = dsTransectTriangles.dNode.isel(
+            nSegments=dsTransectTriangles.segmentIndices,
+            nHorizBounds=dsTransectTriangles.nodeHorizBoundsIndices)
+        x = dNode.values.ravel()
+
+        zTransectNode = dsTransectTriangles.zTransectNode
+        y = zTransectNode.values.ravel()
+
+        tris = numpy.arange(3 * nTransectTriangles).reshape(
+            (nTransectTriangles, 3))
+        triangulation_args = dict(x=x, y=y, triangles=tris)
+
+        return triangulation_args
 
     # }}}
 

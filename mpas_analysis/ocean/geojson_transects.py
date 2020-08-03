@@ -81,6 +81,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = config.getExpression(
                 sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
+        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+
         fields = config.getExpression(sectionName, 'fields')
 
         obsFileNames = OrderedDict()
@@ -163,7 +165,8 @@ class GeojsonTransects(AnalysisTask):  # {{{
                         groupLink='geojson',
                         galleryName=field['titleName'],
                         configSectionName='geojson{}Transects'.format(
-                            fieldPrefixUpper))
+                            fieldPrefixUpper),
+                        verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
         # }}}

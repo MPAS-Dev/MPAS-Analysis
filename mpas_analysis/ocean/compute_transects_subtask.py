@@ -18,7 +18,17 @@ from collections import OrderedDict
 
 from pyremap import PointCollectionDescriptor
 
-from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
+from mpas_tools.viz import mesh_to_triangles
+from mpas_tools.transects import subdivide_great_circle, \
+    cartesian_to_great_circle_distance
+from mpas_tools.viz.transects import find_transect_cells_and_weights, \
+    make_triangle_tree
+from mpas_tools.ocean.transects import find_transect_levels_and_weights, \
+    interp_mpas_to_transect_triangle_nodes, \
+    interp_transect_grid_to_transect_triangle_nodes
+
+from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
+    get_climatology_op_directory
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
@@ -27,10 +37,6 @@ from mpas_analysis.shared.io import write_netcdf
 from mpas_analysis.ocean.utility import compute_zmid
 
 from mpas_analysis.shared.interpolation import interp_1d
-
-from mpas_analysis.shared.transects import subdivide_great_circle, \
-    cartesian_to_great_circle_distance, find_transect_edges_and_cells, \
-    get_edge_bounds
 
 
 class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
@@ -157,6 +163,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         self.maxLevelCell = None
         self.zMid = None
         self.remap = self.obsDatasets.horizontalResolution != 'mpas'
+        if self.obsDatasets.horizontalResolution == 'mpas' and \
+                self.verticalComparisonGridName != 'mpas':
+            raise ValueError('If the horizontal comparison grid is "mpas", the '
+                             'vertical grid must also be "mpas".')
 
         # }}}
 
@@ -234,12 +244,14 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         dsMesh = dsMesh.isel(Time=0)
 
         self.maxLevelCell = dsMesh.maxLevelCell - 1
-        zMid = compute_zmid(dsMesh.bottomDepth, dsMesh.maxLevelCell-1,
-                            dsMesh.layerThickness)
 
-        self.zMid = \
-            xr.DataArray.from_dict({'dims': ('nCells', 'nVertLevels'),
-                                    'data': zMid})
+        if self.remap:
+            zMid = compute_zmid(dsMesh.bottomDepth, dsMesh.maxLevelCell-1,
+                                dsMesh.layerThickness)
+
+            self.zMid = \
+                xr.DataArray.from_dict({'dims': ('nCells', 'nVertLevels'),
+                                        'data': zMid})
 
         # then, call run from the base class (RemapMpasClimatologySubtask),
         # which will perform masking and possibly horizontal remapping
@@ -269,52 +281,13 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                                           outFileName, outObsFileName)
                 ds.close()
 
+            for transectName in obsDatasets:
+                obsDatasets[transectName].close()
+
         else:
-            edgeBounds = get_edge_bounds(dsMesh)
-
-            for transectName, dsTransect in obsDatasets.items():
-                self.logger.info('  {}'.format(transectName))
-                if 'z' in dsTransect:
-                    transectZ = dsTransect.z
-                else:
-                    transectZ = None
-                edgeIndices, cellIndices, X, Z, mask, lonOut, latOut, \
-                    obsCellIndices, obsLayerIndices = \
-                    find_transect_edges_and_cells(
-                        dsTransect.lon, dsTransect.lat, edgeBounds, dsMesh,
-                        transectZ=transectZ, degrees=True)
-
-                for season in self.seasons:
-                    maskedFileName = self.get_masked_file_name(season)
-                    dsMask = xr.open_dataset(maskedFileName)
-
-                    dsOnMpas = dsMask.isel(nCells=cellIndices)
-                    dsOnMpas = dsOnMpas.where(cellIndices>=0)
-                    dsOnMpas.coords['x'] = X
-                    dsOnMpas.coords['z'] = Z
-                    dsOnMpas.coords['mask'] = mask
-                    dsOnMpas.coords['lon'] = lonOut
-                    dsOnMpas.coords['lat'] = latOut
-
-                    outFileName = self.get_remapped_file_name(
-                        season, comparisonGridName=transectName)
-                    write_netcdf(dsOnMpas, outFileName)
-
-                    if obsCellIndices is not None and \
-                            obsLayerIndices is not None:
-                        dsAtObs = dsMask.isel(nCells=obsCellIndices,
-                                              nVertLevels=obsLayerIndices)
-                        outFileName = self.get_remapped_file_name(
-                            season,
-                            comparisonGridName='{}AtObs'.format(transectName))
-                        write_netcdf(dsAtObs, outFileName)
-
-                    dsMask.close()
+            self._compute_mpas_transects(dsMesh)
 
         dsMesh.close()
-
-        for transectName in obsDatasets:
-            obsDatasets[transectName].close()
 
         # }}}
 
@@ -343,13 +316,14 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             {'dims': ('nVertLevels',),
              'data': numpy.arange(climatology.sizes['nVertLevels'])})
 
-        cellMask = zIndex < self.maxLevelCell
+        cellMask = zIndex <= self.maxLevelCell
 
         for variableName in self.variableList:
             climatology[variableName] = \
                 climatology[variableName].where(cellMask)
 
-        climatology['zMid'] = self.zMid
+        if self.remap:
+            climatology['zMid'] = self.zMid
 
         climatology = climatology.transpose('nVertLevels', 'nCells')
 
@@ -458,6 +432,149 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         ds = ds.drop_vars(['validMask', 'transectNumber'])
         write_netcdf(ds, outFileName)  # }}}
 
+    def get_mpas_transect_file_name(self, transectName):  # {{{
+        """Get the file name for a masked MPAS transect info"""
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        config = self.config
+        mpasMeshName = config.get('input', 'mpasMeshName')
+
+        climatologyOpDirectory = get_climatology_op_directory(config, 'avg')
+
+        comparisonFullMeshName = transectName.replace(' ', '_')
+
+        stageDirectory = '{}/remapped'.format(climatologyOpDirectory)
+
+        directory = '{}/{}_{}_to_{}'.format(
+            stageDirectory, self.climatologyName, mpasMeshName,
+            comparisonFullMeshName)
+
+        make_directories(directory)
+
+        fileName = '{}/mpas_transect_info.nc'.format(directory)
+
+        return fileName  # }}}
+
+    def _compute_mpas_transects(self, dsMesh):  # {{{
+
+        # see if all transects have already been computed
+        allExist = True
+        transectNames = list(self.obsDatasets.obsFileNames.keys())
+        for transectName in transectNames:
+            transectInfoFileName = self.get_mpas_transect_file_name(
+                transectName)
+            if not os.path.exists(transectInfoFileName):
+                allExist = False
+                break
+            obsFileName = self.obsDatasets.get_out_file_name(
+                transectName, self.verticalComparisonGridName)
+            if not os.path.exists(obsFileName):
+                allExist = False
+                break
+
+        if allExist:
+            return
+
+        dsTris = mesh_to_triangles(dsMesh)
+
+        triangleTree = make_triangle_tree(dsTris)
+
+        for transectName in transectNames:
+            obsFileName = self.obsDatasets.get_out_file_name(
+                transectName, self.verticalComparisonGridName)
+            transectInfoFileName = self.get_mpas_transect_file_name(
+                transectName)
+            if not os.path.exists(obsFileName) or  \
+                    not os.path.exists(transectInfoFileName):
+                dsTransect = self.obsDatasets.build_observational_dataset(
+                    self.obsDatasets.obsFileNames[transectName], transectName)
+
+                dsTransect.load()
+                # make sure lat and lon are coordinates
+                for coord in ['lon', 'lat']:
+                    dsTransect.coords[coord] = dsTransect[coord]
+
+                if 'z' in dsTransect:
+                    transectZ = dsTransect.z
+                else:
+                    transectZ = None
+
+                dsMpasTransect = find_transect_cells_and_weights(
+                    dsTransect.lon, dsTransect.lat, dsTris, dsMesh,
+                    triangleTree, degrees=True)
+
+                dsMpasTransect = find_transect_levels_and_weights(
+                    dsMpasTransect, dsMesh.layerThickness,
+                    dsMesh.bottomDepth, dsMesh.maxLevelCell - 1,
+                    transectZ)
+
+                if 'landIceFraction' in dsMesh:
+                    interpCellIndices = dsMpasTransect.interpHorizCellIndices
+                    interpCellWeights = dsMpasTransect.interpHorizCellWeights
+                    landIceFraction = dsMesh.landIceFraction.isel(
+                        nCells=interpCellIndices)
+                    landIceFraction = (landIceFraction * interpCellWeights).sum(
+                        dim='nHorizWeights')
+                    dsMpasTransect['landIceFraction'] = landIceFraction
+
+                # use to_netcdf rather than write_netcdf because integer indices
+                # are getting converted to floats when xarray reads them back
+                # because of _FillValue
+                dsMpasTransect.to_netcdf(transectInfoFileName)
+
+                dsTransectOnMpas = xr.Dataset(dsMpasTransect)
+                dsTransectOnMpas['x'] = dsMpasTransect.dNode.isel(
+                    nSegments=dsMpasTransect.segmentIndices,
+                    nHorizBounds=dsMpasTransect.nodeHorizBoundsIndices)
+
+                dsTransectOnMpas['z'] = dsMpasTransect.zTransectNode
+
+                for var in dsTransect.data_vars:
+                    dims = dsTransect[var].dims
+                    if 'nPoints' in dims and 'nz' in dims:
+                        da = dsTransect[var]
+                        da = self._interp_obs_to_mpas(da, dsMpasTransect)
+                        dsTransectOnMpas[var] = da
+
+                dsTransectOnMpas.to_netcdf(obsFileName)
+
+        for transectName in transectNames:
+            transectInfoFileName = self.get_mpas_transect_file_name(
+                transectName)
+            dsMpasTransect = xr.open_dataset(transectInfoFileName)
+
+            for season in self.seasons:
+                maskedFileName = self.get_masked_file_name(season)
+                with xr.open_dataset(maskedFileName) as dsMask:
+                    dsOnMpas = xr.Dataset(dsMpasTransect)
+                    for var in dsMask.data_vars:
+                        dims = dsMask[var].dims
+                        if 'nCells' in dims and 'nVertLevels' in dims:
+                            dsOnMpas[var] = \
+                                interp_mpas_to_transect_triangle_nodes(
+                                    dsMpasTransect, dsMask[var])
+
+                    outFileName = self.get_remapped_file_name(
+                        season, comparisonGridName=transectName)
+                    dsOnMpas.to_netcdf(outFileName)
+
+        # }}}
+
+    def _interp_obs_to_mpas(self, da, dsMpasTransect, threshold=0.1):  # {{{
+        """
+        Interpolate observations to the native MPAS transect with masking
+        """
+        daMask = da.notnull()
+        da = da.where(daMask, 0.)
+        da = interp_transect_grid_to_transect_triangle_nodes(
+            dsMpasTransect, da)
+        daMask = interp_transect_grid_to_transect_triangle_nodes(
+            dsMpasTransect, daMask)
+        da = (da / daMask).where(daMask > threshold)
+        return da  # }}}
+
     # }}}
 
 
@@ -476,8 +593,8 @@ class TransectsObservations(object):  # {{{
         observations for a transect
 
     horizontalResolution : str
-        'obs' for the obs as they are or a size in km if subdivision is
-        desired.
+        'obs' for the obs as they are, 'mpas' for the native MPAS mesh, or a
+        size in km if subdivision of the observational transect is desired.
 
     transectCollectionName : str
         A name that describes the collection of transects (e.g. the name
@@ -506,8 +623,8 @@ class TransectsObservations(object):  # {{{
             observations for a transect
 
         horizontalResolution : str
-            'obs' for the obs as they are or a size in km if subdivision is
-            desired.
+            'obs' for the obs as they are, 'mpas' for the native MPAS mesh, or a
+            size in km if subdivision of the observational transect is desired.
 
         transectCollectionName : str
             A name that describes the collection of transects (e.g. the name
@@ -539,6 +656,11 @@ class TransectsObservations(object):  # {{{
         # Authors
         # -------
         # Xylar Asay-Davis
+
+        if self.horizontalResolution == 'mpas':
+            # by default, we don't do anything for transects on the native grid
+            # but subclasses might need to do something
+            return None
 
         obsDatasets = OrderedDict()
         for name in self.obsFileNames:
@@ -649,20 +771,22 @@ class TransectsObservations(object):  # {{{
         resolution
         """
 
-        subdivide = self.horizontalResolution not in ['obs', 'mpas']
-
         lat = numpy.deg2rad(dsObs.lat.values)
         lon = numpy.deg2rad(dsObs.lon.values)
 
-        earth_radius = 6371  # Radius of earth in kilometers
+        earth_radius = 6.371e6  # Radius of earth in meters
 
         x = earth_radius * numpy.cos(lat) * numpy.cos(lon)
         y = earth_radius * numpy.cos(lat) * numpy.sin(lon)
         z = earth_radius * numpy.sin(lat)
 
-        if subdivide:
+        if self.horizontalResolution == 'obs':
+            dIn = cartesian_to_great_circle_distance(x, y, z, earth_radius)
+            dsObs['x'] = (('nPoints',), dIn)
+        elif self.horizontalResolution != 'mpas':
+            # subdivide
             xOut, yOut, zOut, dIn, dOut = subdivide_great_circle(
-                x, y, z, self.horizontalResolution, earth_radius)
+                x, y, z, 1e3*self.horizontalResolution, earth_radius)
 
             dsObs['xIn'] = (('nPoints',), dIn)
             dsObs['xOut'] = (('nPointsOut',), dOut)
@@ -673,11 +797,9 @@ class TransectsObservations(object):  # {{{
                               outInterpCoord='xOut')
             dsObs = dsObs.drop_vars(['xIn'])
             dsObs = dsObs.rename({'nPointsOut': 'nPoints', 'xOut': 'x'})
-        else:
-            dIn = cartesian_to_great_circle_distance(x, y, z, earth_radius)
-            dsObs['x'] = (('nPoints',), dIn)
 
         return dsObs  # }}}
+
     # }}}
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
