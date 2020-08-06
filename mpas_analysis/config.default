@@ -1,15 +1,15 @@
 ## This file contains the default values of all possible configuration options
 ## used to run analysis tasks.  Do not modify options in this file direct.
 ## Instead, follow this procedure:
-##  1. Create and empty config file (say config.myrun) or copy one of the
+##  1. Create and empty config file (say myrun.cfg) or copy one of the
 ##     example files in the configs directory.
 ##  2. Copy and modify any config options you want to change from this file into
 ##     into your new config file. Make sure they have the right section name
 ##     (e.g. [run] or [output]). If nothing else, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
-##  3. run: mpas_analysis config.myrun.  This will read the configuraiton
-##     first from this file and then replace that configuraiton with any
-##     changes from from config.myrun
+##  3. run: mpas_analysis myrun.cfg.  This will read the configuration
+##     first from this file and then replace that configuration with any
+##     changes from from myrun.cfg
 ##  4. If you want to run a subset of the analysis, you can either set the
 ##     generate option under [output] in your config file or use the
 ##     --generate flag on the command line.  See the comments for 'generate'
