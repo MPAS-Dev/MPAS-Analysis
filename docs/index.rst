@@ -20,6 +20,7 @@ User's Guide
    :maxdepth: 2
 
    quick_start
+   tutorials
    configuration
    analysis_tasks
    components
