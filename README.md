@@ -257,6 +257,29 @@ If a job script for your machine is not available, try modifying the default
 job script in `configs/job_script.default.bash` or one of the job scripts for
 another machine to fit your needs.
 
+## Customizing plots or creating new ones
+
+There are three main ways to either customize the plots that MPAS-Analysis
+already makes or creating new ones:
+
+1. customize the config file. Some features, such as colormaps and colorbar
+   limits for color shaded plot or depth ranges for ocean region time series,
+   can be customized: look at `mpas_analysis/config.default` for available
+   customization for each analysis task.
+2. read in the analysis data computed by MPAS-Analysis into custom scripts. When
+   running MPAS-Analysis with the purpose of generating both climatologies
+   and time series, the following data sets are generated:
+   * `[baseDirectory]/clim/mpas/avg/unmasked_[mpasMeshName]`: MPAS-Ocean
+     and MPAS-seaice climatologies on the native grid.
+   * `[baseDirectory]/clim/mpas/avg/remapped`: remapped climatologies
+     for each chosen task (climatology files are stored in different
+     subdirectories according to the task name).
+   * `[baseDirectory]/clim/obs`: observational climatologies.
+   * `[baseDirectory]/clim/mpas/avg/mocStreamfunction_years[startYear]-[endYear].nc`.
+   * `[baseDirectory]/clim/mpas/avg/meridionalHeatTransport_years[startYear]-[endYear].nc`.
+   * `[baseDirectory]/timeseries`: various time series data.
+   Custom scripts can then utilize these datasets to generate custom plots.
+3. add a new analysis task to MPAS-Analysis (see below).
 
 ## Instructions for creating a new analysis task
 
