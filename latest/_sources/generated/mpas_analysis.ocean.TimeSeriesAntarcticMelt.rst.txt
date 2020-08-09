@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.TimeSeriesAntarcticMelt
+﻿mpas\_analysis.ocean.TimeSeriesAntarcticMelt
 ============================================
 
 .. currentmodule:: mpas_analysis.ocean

@@ -1,4 +1,4 @@
-mpas\_analysis.sea\_ice.ClimatologyMapSeaIceConc
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceConc
 ================================================
 
 .. currentmodule:: mpas_analysis.sea_ice

@@ -1,4 +1,4 @@
-mpas\_analysis.shared.io.write\_netcdf
+﻿mpas\_analysis.shared.io.write\_netcdf
 ======================================
 
 .. currentmodule:: mpas_analysis.shared.io

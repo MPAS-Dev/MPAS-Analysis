@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.TimeSeriesOceanRegions
+﻿mpas\_analysis.ocean.TimeSeriesOceanRegions
 ===========================================
 
 .. currentmodule:: mpas_analysis.ocean

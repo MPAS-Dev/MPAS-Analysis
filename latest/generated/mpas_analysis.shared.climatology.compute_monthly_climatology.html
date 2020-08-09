@@ -224,10 +224,10 @@ out with NaNs.  If the month coordinate is not present, a data array
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> or <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
 0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p></li>
-<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, optional) – The name of one of the calendars supported by MPAS cores, used to
+<li><p><strong>calendar</strong> (:class:<code class="docutils literal notranslate"><span class="pre">````{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>:class:<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">``</span></a>, <em>optional</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate, so must be supplied if
 <code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p></li>
-<li><p><strong>maskVaries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
+<li><p><strong>maskVaries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <em>optional</em>) – If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
 If not, the weighted average does not need make extra effort to account
 for the mask.  Most MPAS fields will have masks that don’t vary in
 time, whereas observations may sometimes be present only at some
@@ -235,7 +235,7 @@ times and not at others, requiring <code class="docutils literal notranslate"><s
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>climatology</strong> (object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
+<dd class="field-even"><p><strong>climatology</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">same</span> <span class="pre">type</span> <span class="pre">as</span> <span class="pre">``ds``</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
 of ds over all months in monthValues, weighted by the number of days
 in each month.</p>
 </dd>

@@ -95,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#list-of-mpas-output-files-that-are-needed-by-mpas-analysis">List of MPAS output files that are needed by MPAS-Analysis:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#purge-old-analysis">Purge Old Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-in-parallel-via-a-queueing-system">Running in parallel via a queueing system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-plots-or-creating-new-ones">Customizing plots or creating new ones</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#instructions-for-creating-a-new-analysis-task">Instructions for creating a new analysis task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-documentation">Generating Documentation</a></li>
 </ul>
@@ -406,6 +407,34 @@ finished.</p></li>
 <p>If a job script for your machine is not available, try modifying the default
 job script in <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code> or one of the job scripts for
 another machine to fit your needs.</p>
+</div>
+<div class="section" id="customizing-plots-or-creating-new-ones">
+<h2>Customizing plots or creating new ones<a class="headerlink" href="#customizing-plots-or-creating-new-ones" title="Permalink to this headline">¶</a></h2>
+<p>There are three main ways to either customize the plots that MPAS-Analysis
+already makes or creating new ones:</p>
+<ol class="arabic simple">
+<li><p>customize the config file. Some features, such as colormaps and colorbar
+limits for color shaded plot or depth ranges for ocean region time series,
+can be customized: look at <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> for available
+customization for each analysis task.</p></li>
+<li><p>read in the analysis data computed by MPAS-Analysis into custom scripts. When
+running MPAS-Analysis with the purpose of generating both climatologies
+and time series, the following data sets are generated:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/unmasked_[mpasMeshName]</span></code>: MPAS-Ocean
+and MPAS-seaice climatologies on the native grid.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/remapped</span></code>: remapped climatologies
+for each chosen task (climatology files are stored in different
+subdirectories according to the task name).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/obs</span></code>: observational climatologies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/mocStreamfunction_years[startYear]-[endYear].nc</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/meridionalHeatTransport_years[startYear]-[endYear].nc</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/timeseries</span></code>: various time series data.
+Custom scripts can then utilize these datasets to generate custom plots.</p></li>
+</ul>
+</li>
+<li><p>add a new analysis task to MPAS-Analysis (see below).</p></li>
+</ol>
 </div>
 <div class="section" id="instructions-for-creating-a-new-analysis-task">
 <h2>Instructions for creating a new analysis task<a class="headerlink" href="#instructions-for-creating-a-new-analysis-task" title="Permalink to this headline">¶</a></h2>

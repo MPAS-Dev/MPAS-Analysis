@@ -1,4 +1,4 @@
-mpas\_analysis.shared.transects.compute\_transect\_masks\_subtask.ComputeTransectMasksSubtask
+﻿mpas\_analysis.shared.transects.compute\_transect\_masks\_subtask.ComputeTransectMasksSubtask
 =============================================================================================
 
 .. currentmodule:: mpas_analysis.shared.transects.compute_transect_masks_subtask

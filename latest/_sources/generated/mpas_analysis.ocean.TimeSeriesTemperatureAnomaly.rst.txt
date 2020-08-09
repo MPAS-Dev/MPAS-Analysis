@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.TimeSeriesTemperatureAnomaly
+﻿mpas\_analysis.ocean.TimeSeriesTemperatureAnomaly
 =================================================
 
 .. currentmodule:: mpas_analysis.ocean

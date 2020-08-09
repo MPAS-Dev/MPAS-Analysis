@@ -233,7 +233,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options</p></li>
 <li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped and plotted</p></li>
-<li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – Configuration options for a control run (if any)</p></li>
+<li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, <em>optional</em>) – Configuration options for a control run (if any)</p></li>
 </ul>
 </dd>
 </dl>
@@ -277,7 +277,7 @@
 <td><p>Only run this task after the given task has completed.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
-<td><p>Process MHT analysis member data if available.</p></td>
+<td><p>Process MHT analysis member data if available. Plots MHT as:    1D function of latitude    2D function of latitude and depth.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
 <td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>

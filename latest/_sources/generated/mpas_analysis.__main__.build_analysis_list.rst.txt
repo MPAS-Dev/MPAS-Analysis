@@ -1,4 +1,4 @@
-mpas\_analysis.\_\_main\_\_.build\_analysis\_list
+﻿mpas\_analysis.\_\_main\_\_.build\_analysis\_list
 =================================================
 
 .. currentmodule:: mpas_analysis.__main__

@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.plot\_hovmoller\_subtask.PlotHovmollerSubtask
+﻿mpas\_analysis.ocean.plot\_hovmoller\_subtask.PlotHovmollerSubtask
 ==================================================================
 
 .. currentmodule:: mpas_analysis.ocean.plot_hovmoller_subtask

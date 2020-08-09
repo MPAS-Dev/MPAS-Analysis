@@ -1,4 +1,4 @@
-mpas\_analysis.shared.io.utility.make\_directories
+﻿mpas\_analysis.shared.io.utility.make\_directories
 ==================================================
 
 .. currentmodule:: mpas_analysis.shared.io.utility

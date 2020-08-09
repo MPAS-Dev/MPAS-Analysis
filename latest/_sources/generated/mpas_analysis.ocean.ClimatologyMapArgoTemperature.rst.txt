@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.ClimatologyMapArgoTemperature
+﻿mpas\_analysis.ocean.ClimatologyMapArgoTemperature
 ==================================================
 
 .. currentmodule:: mpas_analysis.ocean

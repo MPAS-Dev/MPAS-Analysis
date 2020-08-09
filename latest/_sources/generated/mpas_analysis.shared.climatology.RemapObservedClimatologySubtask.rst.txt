@@ -1,4 +1,4 @@
-mpas\_analysis.shared.climatology.RemapObservedClimatologySubtask
+﻿mpas\_analysis.shared.climatology.RemapObservedClimatologySubtask
 =================================================================
 
 .. currentmodule:: mpas_analysis.shared.climatology

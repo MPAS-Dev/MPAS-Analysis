@@ -225,12 +225,12 @@ accounting correctly for the the calendar.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> or <code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
 0001-01-01</p></li>
-<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores, used to
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, <em>optional</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>ds</strong> (object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code>) – The data set with <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code> and <code class="docutils literal notranslate"><span class="pre">daysInMonth</span></code> data arrays
+<dd class="field-even"><p><strong>ds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">same</span> <span class="pre">type</span> <span class="pre">as</span> <span class="pre">``ds``</span></code>) – The data set with <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code> and <code class="docutils literal notranslate"><span class="pre">daysInMonth</span></code> data arrays
 added (if not already present)</p>
 </dd>
 </dl>

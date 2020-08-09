@@ -1,4 +1,4 @@
-mpas\_analysis.sea\_ice.plot\_climatology\_map\_subtask.PlotClimatologyMapSubtask
+﻿mpas\_analysis.sea\_ice.plot\_climatology\_map\_subtask.PlotClimatologyMapSubtask
 =================================================================================
 
 .. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask

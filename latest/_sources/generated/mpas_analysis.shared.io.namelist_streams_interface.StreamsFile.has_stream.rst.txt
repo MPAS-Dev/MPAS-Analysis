@@ -1,4 +1,4 @@
-mpas\_analysis.shared.io.namelist\_streams\_interface.StreamsFile.has\_stream
+﻿mpas\_analysis.shared.io.namelist\_streams\_interface.StreamsFile.has\_stream
 =============================================================================
 
 .. currentmodule:: mpas_analysis.shared.io.namelist_streams_interface

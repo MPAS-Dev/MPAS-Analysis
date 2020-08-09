@@ -1,4 +1,4 @@
-mpas\_analysis.shared.analysis\_task.AnalysisTask
+﻿mpas\_analysis.shared.analysis\_task.AnalysisTask
 =================================================
 
 .. currentmodule:: mpas_analysis.shared.analysis_task

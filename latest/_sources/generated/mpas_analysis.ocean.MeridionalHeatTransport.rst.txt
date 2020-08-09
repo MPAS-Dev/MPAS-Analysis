@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.MeridionalHeatTransport
+﻿mpas\_analysis.ocean.MeridionalHeatTransport
 ============================================
 
 .. currentmodule:: mpas_analysis.ocean

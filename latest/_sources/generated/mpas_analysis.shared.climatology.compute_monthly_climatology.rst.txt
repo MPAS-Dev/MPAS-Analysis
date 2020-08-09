@@ -1,4 +1,4 @@
-mpas\_analysis.shared.climatology.compute\_monthly\_climatology
+﻿mpas\_analysis.shared.climatology.compute\_monthly\_climatology
 ===============================================================
 
 .. currentmodule:: mpas_analysis.shared.climatology

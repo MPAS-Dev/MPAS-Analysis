@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.compute\_anomaly\_subtask.ComputeAnomalySubtask
+﻿mpas\_analysis.ocean.compute\_anomaly\_subtask.ComputeAnomalySubtask
 ====================================================================
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask

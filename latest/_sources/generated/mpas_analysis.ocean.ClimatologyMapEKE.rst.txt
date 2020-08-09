@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.ClimatologyMapEKE
+﻿mpas\_analysis.ocean.ClimatologyMapEKE
 ======================================
 
 .. currentmodule:: mpas_analysis.ocean
