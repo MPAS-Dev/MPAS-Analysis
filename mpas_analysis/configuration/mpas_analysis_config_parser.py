@@ -50,7 +50,7 @@ class MpasAnalysisConfigParser(ConfigParser):
         option : str
             The option in the config file
 
-        default : one of bool, int, float, list, tuple, dict, str
+        default : {bool, int, float, list, tuple, dict, str}
             The default value if the option and/or section is not found, used
             to determine the type of the option if it *is* found. If
             ``default`` is a list, tuple, or dict, ``getExpression(...)`` is
@@ -83,7 +83,7 @@ class MpasAnalysisConfigParser(ConfigParser):
                       usenumpyfunc=False):
         """
         Get an option as an expression (typically a list, though tuples and
-        dicts are also availabe).  The expression is required to have valid
+        dicts are also available).  The expression is required to have valid
         python syntax, so that string entries are required to be in single or
         double quotes.
 
@@ -95,7 +95,7 @@ class MpasAnalysisConfigParser(ConfigParser):
         option : str
             The option in the config file
 
-        elementType : (bool, int, float, etc.), optional
+        elementType : {bool, int, float, list, tuple, str}, optional
             If supplied, each element in a list or tuple, or
             each value in a dictionary are cast to this type.  This is likely
             most useful for ensuring that all elements in a list of numbers are

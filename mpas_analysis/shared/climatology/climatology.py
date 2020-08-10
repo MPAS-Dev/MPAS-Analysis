@@ -134,11 +134,11 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
 
     Parameters
     ----------
-    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+    ds : xarray.Dataset or xarray.DataArray
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01 or ``month`` coordinate
 
-    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
+    calendar : {'gregorian', 'gregorian_noleap'}, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
@@ -184,14 +184,14 @@ def compute_climatology(ds, monthValues, calendar=None,
 
     Parameters
     ----------
-    ds : ``xarray.Dataset`` or ``xarray.DataArray`` object
+    ds : xarray.Dataset or xarray.DataArray
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01 or ``month`` coordinate
 
     monthValues : int or array-like of ints
         A single month or an array of months to be averaged together
 
-    calendar : ``{'gregorian', 'gregorian_noleap'}``, optional
+    calendar : {'gregorian', 'gregorian_noleap'}, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
