@@ -99,7 +99,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#configuration">Configuration</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="mpas_analysis.configuration.MpasAnalysisConfigParser.html">mpas_analysis.configuration.MpasAnalysisConfigParser</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault.html">mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression</a></li>
 </ul>
@@ -188,7 +187,7 @@
 <dt id="mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression">
 <code class="sig-prename descclassname">MpasAnalysisConfigParser.</code><code class="sig-name descname">getExpression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">section</span></em>, <em class="sig-param"><span class="n">option</span></em>, <em class="sig-param"><span class="n">elementType</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">usenumpyfunc</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/configuration/mpas_analysis_config_parser.html#MpasAnalysisConfigParser.getExpression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an option as an expression (typically a list, though tuples and
-dicts are also availabe).  The expression is required to have valid
+dicts are also available).  The expression is required to have valid
 python syntax, so that string entries are required to be in single or
 double quotes.</p>
 <dl class="field-list simple">
@@ -196,7 +195,7 @@ double quotes.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The section in the config file</p></li>
 <li><p><strong>option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The option in the config file</p></li>
-<li><p><strong>elementType</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">(bool</span></code>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">etc.)</span></code>, <em>optional</em>) – If supplied, each element in a list or tuple, or
+<li><p><strong>elementType</strong> (<code class="docutils literal notranslate"><span class="pre">{bool,</span> <span class="pre">int,</span> <span class="pre">float,</span> <span class="pre">list,</span> <span class="pre">tuple,</span> <span class="pre">str}</span></code>, <em>optional</em>) – If supplied, each element in a list or tuple, or
 each value in a dictionary are cast to this type.  This is likely
 most useful for ensuring that all elements in a list of numbers are
 of type float, rather than int, when the distinction is important.</p></li>

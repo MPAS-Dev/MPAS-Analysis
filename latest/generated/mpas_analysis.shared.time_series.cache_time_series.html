@@ -216,7 +216,7 @@ whether this is the first call to the funciton (useful for printing
 progress information).</p></li>
 <li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The absolute path to the cache file where the times series will be
 stored</p></li>
-<li><p><strong>calendar</strong> (:class:<code class="docutils literal notranslate"><span class="pre">````{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>:class:<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">``</span></a>) – The name of one of the calendars supported by MPAS cores, used to
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
 <li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <em>optional</em>) – The frequency with which the cache file is updated as the computation
 progresses.  If the computation is expensive, it may be useful to
