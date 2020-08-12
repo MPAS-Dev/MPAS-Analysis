@@ -148,7 +148,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
                 mask[depthIndex, :] = self.maxLevelCell.values >= 0
             else:
 
-                verticalIndex = np.argmin(np.abs(zMid - depth), axis=1)
+                verticalIndex = np.abs(zMid - depth).argmin(dim='nVertLevels')
 
                 verticalIndices[depthIndex, :] = verticalIndex.values
                 mask[depthIndex, :] = np.logical_and(depth <= zTop,

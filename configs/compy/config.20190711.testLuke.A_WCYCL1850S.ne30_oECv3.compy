@@ -3,7 +3,7 @@
 ## compared against
 
 # mainRunName is a name that identifies the simulation being analyzed.
-mainRunName = 20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy 
+mainRunName = 20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy
 
 # config file for a control run to which this run will be compared.  The
 # analysis should have already been run to completion once with this config
@@ -17,7 +17,7 @@ mainRunName = 20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy
 # remapped to the comparison grid and time series have been extracted.
 # Leave this option commented out if the analysis for the main run should be
 # performed.
-mainRunConfigFile = config.GM_20190605_GMtest_Kappa3d_vary_c2_intel.compy 
+mainRunConfigFile = config.GM_20190605_GMtest_Kappa3d_vary_c2_intel.compy
 
 [execute]
 ## options related to executing parallel tasks
@@ -45,7 +45,7 @@ baseDirectory = /compyfs/diagnostics
 ## options related to reading in the results to be analyzed
 
 # directory containing model results
-baseDirectory = /compyfs/wolf966/e3sm_scratch/20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy/run 
+baseDirectory = /compyfs/wolf966/e3sm_scratch/20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy/run
 
 # names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
 mpasMeshName = oEC60to30v3
@@ -109,21 +109,26 @@ endYear = 40
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs
 
-# start and end years for timeseries analysis. Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
+# start and end years for timeseries analysis. Use endYear = end to indicate
+# that the full range of the data should be used.  If errorOnMissing = False,
+# the start and end year will be clipped to the valid range.  Otherwise, out
+# of bounds values will lead to an error.  In a "control" config file used in
+# a "main vs. control" analysis run, the range of years must be valid and
+# cannot include "end" because the original data may not be available.
 startYear = 1
 endYear = 40
 
 [index]
 ## options related to producing nino index.
 
-# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
-# For valid statistics, index times should include at least 30 years
+# start and end years for El Nino 3.4 analysis. Use endYear = end to indicate
+# that the full range of the data should be used.  If errorOnMissing = False,
+# the start and end year will be clipped to the valid range.  Otherwise, out
+# of bounds values will lead to an error.  In a "control" config file used in
+# a "main vs. control" analysis run, the range of years must be valid and
+# cannot include "end" because the original data may not be available.
 startYear = 1
-endYear = 9999
+endYear = end
 
 [streamfunctionMOC]
 ## options related to plotting the streamfunction of the meridional overturning

@@ -41,10 +41,11 @@ these data will be read in::
   # with a single time slice.
   maxChunkSize = 10000
 
-  # Directory for mapping files (if they have been generated already). If mapping
-  # files needed by the analysis are not found here, they will be generated and
-  # placed in the output mappingSubdirectory
-  # mappingDirectory = /dir/for/mapping/files
+
+  # Whether missing input data should produce an error.  If not, the user gets
+  # a warning and the time bounds are adjusted to the beginning and end of the
+  # available data
+  errorOnMissing = False
 
 Input Directories
 -----------------
@@ -153,6 +154,15 @@ clearly related to dask (which might be the case, for example, if the error
 occrus in the ``streamfunctionMOC`` task), you may wish to reduce the
 ``maxChunkSize``.  This will make tasks using dask slower but will reduce their
 memory usage.
+
+Errors on Missing Data
+----------------------
+
+if ``errorOnMissing = False``, the time ranges (``startYear`` and ``endYear``)
+in ``climatology``, ``timeSeries``, and ``index`` will be clipped to the range
+of the available data.  If this option is set to ``True``, an error will be
+produced.  A value of ``end`` can be used for ``endYear`` to indicate that the
+full range of the available data should be used.
 
 .. _`E3SM public data repository`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/
 .. _`xarray package`: https://xarray.pydata.org/en/stable/

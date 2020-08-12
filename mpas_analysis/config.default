@@ -1,15 +1,15 @@
 ## This file contains the default values of all possible configuration options
 ## used to run analysis tasks.  Do not modify options in this file direct.
 ## Instead, follow this procedure:
-##  1. Create and empty config file (say config.myrun) or copy one of the
+##  1. Create and empty config file (say myrun.cfg) or copy one of the
 ##     example files in the configs directory.
 ##  2. Copy and modify any config options you want to change from this file into
 ##     into your new config file. Make sure they have the right section name
 ##     (e.g. [run] or [output]). If nothing else, you will need to set
 ##     baseDirectory under [output] to the folder where output should be stored.
-##  3. run: mpas_analysis config.myrun.  This will read the configuraiton
-##     first from this file and then replace that configuraiton with any
-##     changes from from config.myrun
+##  3. run: mpas_analysis myrun.cfg.  This will read the configuration
+##     first from this file and then replace that configuration with any
+##     changes from from myrun.cfg
 ##  4. If you want to run a subset of the analysis, you can either set the
 ##     generate option under [output] in your config file or use the
 ##     --generate flag on the command line.  See the comments for 'generate'
@@ -135,6 +135,11 @@ file_cache_maxsize = 1200
 # with a single time slice.
 maxChunkSize = 10000
 
+# Whether missing input data should produce an error.  If not, the user gets
+# a warning and the time bounds are adjusted to the beginning and end of the
+# available data
+errorOnMissing = False
+
 
 [output]
 ## options related to writing out plots, intermediate cached data sets, logs,
@@ -250,22 +255,27 @@ subprocessCount = 1
 # only the anomaly over a later span of years is of interest.
 # anomalyRefYear = 249
 
-# start and end years for timeseries analysis. Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
+# start and end years for timeseries analysis. Use endYear = end to indicate
+# that the full range of the data should be used.  If errorOnMissing = False,
+# the start and end year will be clipped to the valid range.  Otherwise, out
+# of bounds values will lead to an error.  In a "control" config file used in
+# a "main vs. control" analysis run, the range of years must be valid and
+# cannot include "end" because the original data may not be available.
 startYear = 1
-endYear = 9999
+endYear = end
 
 
 [index]
 ## options related to producing nino index.
 
-# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
-# For valid statistics, index times should include at least 30 years
+# start and end years for El Nino 3.4 analysis. Use endYear = end to indicate
+# that the full range of the data should be used.  If errorOnMissing = False,
+# the start and end year will be clipped to the valid range.  Otherwise, out
+# of bounds values will lead to an error.  In a "control" config file used in
+# a "main vs. control" analysis run, the range of years must be valid and
+# cannot include "end" because the original data may not be available.
 startYear = 1
-endYear = 9999
+endYear = end
 
 
 [regions]
@@ -2969,9 +2979,9 @@ profileGalleryGroup = Ocean Basin Profiles
 ## regions
 
 # Number of points over which to compute moving average(e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 1
+movingAverageMonths = 1
 
 # colormap
 colormapNameResult = RdYlBu_r
@@ -3014,9 +3024,9 @@ contourLevels = 'none'
 ## regions
 
 # Number of points over which to compute moving average(e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 1
+movingAverageMonths = 1
 
 # colormap
 colormapNameResult = haline
@@ -3059,9 +3069,9 @@ contourLevels = 'none'
 ## ocean regions
 
 # Number of points over which to compute moving average(e.g., for monthly
-# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAveragePoints = 1
+movingAverageMonths = 1
 
 # colormap
 colormapNameResult = Spectral_r

@@ -116,19 +116,24 @@ endYear = 27
 ## options related to producing time series plots, often to compare against
 ## observations and previous runs
 
-# start and end years for timeseries analysis. Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
+# start and end years for timeseries analysis. Use endYear = end to indicate
+# that the full range of the data should be used.  If errorOnMissing = False,
+# the start and end year will be clipped to the valid range.  Otherwise, out
+# of bounds values will lead to an error.  In a "control" config file used in
+# a "main vs. control" analysis run, the range of years must be valid and
+# cannot include "end" because the original data may not be available.
 startYear = 25
 endYear = 27
 
 [index]
 ## options related to producing nino index.
 
-# start and end years for the nino 3.4 analysis.  Using out-of-bounds values
-#   like start_year = 1 and end_year = 9999 will be clipped to the valid range
-#   of years, and is a good way of insuring that all values are used.
-# For valid statistics, index times should include at least 30 years
+# start and end years for El Nino 3.4 analysis. Use endYear = end to indicate
+# that the full range of the data should be used.  If errorOnMissing = False,
+# the start and end year will be clipped to the valid range.  Otherwise, out
+# of bounds values will lead to an error.  In a "control" config file used in
+# a "main vs. control" analysis run, the range of years must be valid and
+# cannot include "end" because the original data may not be available.
 startYear = 25
 endYear = 27
 
