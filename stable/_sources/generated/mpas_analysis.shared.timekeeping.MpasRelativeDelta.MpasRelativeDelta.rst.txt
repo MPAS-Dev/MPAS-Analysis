@@ -1,4 +1,4 @@
-mpas\_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta
+﻿mpas\_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta
 =====================================================================
 
 .. currentmodule:: mpas_analysis.shared.timekeeping.MpasRelativeDelta

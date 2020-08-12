@@ -1,4 +1,4 @@
-mpas\_analysis.configuration.MpasAnalysisConfigParser.getWithDefault
+﻿mpas\_analysis.configuration.MpasAnalysisConfigParser.getWithDefault
 ====================================================================
 
 .. currentmodule:: mpas_analysis.configuration

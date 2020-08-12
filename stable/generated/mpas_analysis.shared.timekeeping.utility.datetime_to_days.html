@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -208,10 +209,10 @@ the reference date, either as a single float or an array of floats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>datetime</strong> (<em>instance</em><em> or </em><em>array-like of datetime.datetime</em>) – The date(s) to be converted to days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the
+<li><p><strong>datetime</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">instance</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">array-like</span></code> of <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>) – The date(s) to be converted to days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the
 given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p></li>
-<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object.</p></li>
-<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, <em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object.</p></li>
+<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – <p>A reference date of the form:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
 <span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
 </pre></div>
@@ -220,7 +221,7 @@ given <code class="docutils literal notranslate"><span class="pre">calendar</spa
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>days</strong> (<em>float or array of floats</em>) – The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
+<dd class="field-even"><p><strong>days</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">floats</span></code>) – The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">datetimes</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is

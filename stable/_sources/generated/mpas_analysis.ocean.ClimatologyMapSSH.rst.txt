@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.ClimatologyMapSSH
+﻿mpas\_analysis.ocean.ClimatologyMapSSH
 ======================================
 
 .. currentmodule:: mpas_analysis.ocean

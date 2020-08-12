@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -207,26 +208,26 @@ values) doesn’t vary with time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timesInDataSet</strong> (<em>array-like</em>) – Times at which the time series is to be calculated, typically taken
+<li><p><strong>timesInDataSet</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">array-like</span></code>) – Times at which the time series is to be calculated, typically taken
 from <code class="docutils literal notranslate"><span class="pre">ds.Times.values</span></code> for a data set from which the time series
 will be extracted or computed.</p></li>
-<li><p><strong>timeSeriesCalcFunction</strong> (<em>function</em>) – A function with arguments <code class="docutils literal notranslate"><span class="pre">timeIndices</span></code>, indicating the entries in
+<li><p><strong>timeSeriesCalcFunction</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – A function with arguments <code class="docutils literal notranslate"><span class="pre">timeIndices</span></code>, indicating the entries in
 <code class="docutils literal notranslate"><span class="pre">timesInDataSet</span></code> to be computed, and <code class="docutils literal notranslate"><span class="pre">firstCall</span></code>, indicating
 whether this is the first call to the funciton (useful for printing
 progress information).</p></li>
-<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
+<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The absolute path to the cache file where the times series will be
 stored</p></li>
 <li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
-<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
+<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <em>optional</em>) – The frequency with which the cache file is updated as the computation
 progresses.  If the computation is expensive, it may be useful to
 output the file frequently.  If not, there will be needless overhead
 in caching the file too frequently.</p></li>
-<li><p><strong>logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>, optional) – A logger to which to write output as the time series is computed</p></li>
+<li><p><strong>logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>, <em>optional</em>) – A logger to which to write output as the time series is computed</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>climatology</strong> (object of same type as <code class="docutils literal notranslate"><span class="pre">ds</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
+<dd class="field-even"><p><strong>climatology</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">same</span> <span class="pre">type</span> <span class="pre">as</span> <span class="pre">``ds``</span></code>) – A data set without the <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> coordinate containing the mean
 of ds over all months in monthValues, weighted by the number of days
 in each month.</p>
 </dd>

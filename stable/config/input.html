@@ -88,6 +88,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="runs.html">Runs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="execute.html">Execute</a></li>
@@ -99,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#streams-files">Streams Files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#mesh-name">Mesh Name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#xarray-and-dask">Xarray and Dask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#errors-on-missing-data">Errors on Missing Data</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
@@ -238,10 +240,11 @@ these data will be read in:</p>
 <span class="c1"># with a single time slice.</span>
 <span class="n">maxChunkSize</span> <span class="o">=</span> <span class="mi">10000</span>
 
-<span class="c1"># Directory for mapping files (if they have been generated already). If mapping</span>
-<span class="c1"># files needed by the analysis are not found here, they will be generated and</span>
-<span class="c1"># placed in the output mappingSubdirectory</span>
-<span class="c1"># mappingDirectory = /dir/for/mapping/files</span>
+
+<span class="c1"># Whether missing input data should produce an error.  If not, the user gets</span>
+<span class="c1"># a warning and the time bounds are adjusted to the beginning and end of the</span>
+<span class="c1"># available data</span>
+<span class="n">errorOnMissing</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 <div class="section" id="input-directories">
@@ -348,6 +351,14 @@ clearly related to dask (which might be the case, for example, if the error
 occrus in the <code class="docutils literal notranslate"><span class="pre">streamfunctionMOC</span></code> task), you may wish to reduce the
 <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>.  This will make tasks using dask slower but will reduce their
 memory usage.</p>
+</div>
+<div class="section" id="errors-on-missing-data">
+<h2>Errors on Missing Data<a class="headerlink" href="#errors-on-missing-data" title="Permalink to this headline">¶</a></h2>
+<p>if <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">False</span></code>, the time ranges (<code class="docutils literal notranslate"><span class="pre">startYear</span></code> and <code class="docutils literal notranslate"><span class="pre">endYear</span></code>)
+in <code class="docutils literal notranslate"><span class="pre">climatology</span></code>, <code class="docutils literal notranslate"><span class="pre">timeSeries</span></code>, and <code class="docutils literal notranslate"><span class="pre">index</span></code> will be clipped to the range
+of the available data.  If this option is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, an error will be
+produced.  A value of <code class="docutils literal notranslate"><span class="pre">end</span></code> can be used for <code class="docutils literal notranslate"><span class="pre">endYear</span></code> to indicate that the
+full range of the available data should be used.</p>
 </div>
 </div>
 

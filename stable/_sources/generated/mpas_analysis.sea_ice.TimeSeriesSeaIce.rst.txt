@@ -1,4 +1,4 @@
-mpas\_analysis.sea\_ice.TimeSeriesSeaIce
+﻿mpas\_analysis.sea\_ice.TimeSeriesSeaIce
 ========================================
 
 .. currentmodule:: mpas_analysis.sea_ice

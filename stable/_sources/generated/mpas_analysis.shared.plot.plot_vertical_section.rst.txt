@@ -1,4 +1,4 @@
-mpas\_analysis.shared.plot.plot\_vertical\_section
+﻿mpas\_analysis.shared.plot.plot\_vertical\_section
 ==================================================
 
 .. currentmodule:: mpas_analysis.shared.plot

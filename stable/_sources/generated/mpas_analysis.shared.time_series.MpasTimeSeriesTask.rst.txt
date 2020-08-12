@@ -1,4 +1,4 @@
-mpas\_analysis.shared.time\_series.MpasTimeSeriesTask
+﻿mpas\_analysis.shared.time\_series.MpasTimeSeriesTask
 =====================================================
 
 .. currentmodule:: mpas_analysis.shared.time_series

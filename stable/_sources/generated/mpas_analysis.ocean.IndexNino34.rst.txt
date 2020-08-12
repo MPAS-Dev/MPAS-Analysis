@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.IndexNino34
+﻿mpas\_analysis.ocean.IndexNino34
 ================================
 
 .. currentmodule:: mpas_analysis.ocean

@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -205,9 +206,9 @@ unicode strings</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ds</strong> (<em>xarray.Dataset object</em>) – The xarray data set to be written to a file</p></li>
-<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The fileName to write the data set to</p></li>
-<li><p><strong>fillValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary of fill values for each supported data type.  By default,
+<li><p><strong>ds</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span> <span class="pre">object</span></code>) – The xarray data set to be written to a file</p></li>
+<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The fileName to write the data set to</p></li>
+<li><p><strong>fillValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>) – A dictionary of fill values for each supported data type.  By default,
 this is the dictionary used by the netCDF4 package.  Key entries should
 be of the form ‘f8’ (for float64), ‘i4’ (for int32), etc.</p></li>
 </ul>

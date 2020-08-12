@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.TimeSeriesSalinityAnomaly
+﻿mpas\_analysis.ocean.TimeSeriesSalinityAnomaly
 ==============================================
 
 .. currentmodule:: mpas_analysis.ocean

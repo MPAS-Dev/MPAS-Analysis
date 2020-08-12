@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -200,9 +201,9 @@ tasks to generate.</p>
 <li><p><strong>analysisTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – A task to be added</p></li>
 <li><p><strong>analysesToGenerate</strong> (<code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> of <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The list of analysis tasks to be generated, which this call may
 update to include this task and its subtasks</p></li>
-<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to write out a full stack trace when exceptions occur during
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to write out a full stack trace when exceptions occur during
 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> calls for each task</p></li>
-<li><p><strong>callCheckGenerate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether the <code class="docutils literal notranslate"><span class="pre">check_generate</span></code> method should be call for this task to
+<li><p><strong>callCheckGenerate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether the <code class="docutils literal notranslate"><span class="pre">check_generate</span></code> method should be call for this task to
 see if it has been requested.  We skip this for subtasks and
 prerequisites, since they are needed by another task regardless of
 whether the user specifically requested them.</p></li>

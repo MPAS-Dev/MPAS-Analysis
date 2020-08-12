@@ -1,4 +1,4 @@
-mpas\_analysis.sea\_ice.ClimatologyMapIcebergConc
+﻿mpas\_analysis.sea\_ice.ClimatologyMapIcebergConc
 =================================================
 
 .. currentmodule:: mpas_analysis.sea_ice

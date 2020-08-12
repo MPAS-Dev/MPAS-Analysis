@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -202,16 +203,16 @@ features</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
+<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
 repository, defining the shapes to be masked</p></li>
-<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
-<li><p><strong>featureList</strong> (<em>list of str</em>) – A list of features to include or <code class="docutils literal notranslate"><span class="pre">None</span></code> for all features</p></li>
-<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the output mask file</p></li>
-<li><p><strong>maskExists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether the mask file already exists</p></li>
-<li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of an observations file to create masks for.  But default,
+<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The suffix for the resulting mask file</p></li>
+<li><p><strong>featureList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – A list of features to include or <code class="docutils literal notranslate"><span class="pre">None</span></code> for all features</p></li>
+<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the output mask file</p></li>
+<li><p><strong>maskExists</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether the mask file already exists</p></li>
+<li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of an observations file to create masks for.  But default,
 lon/lat are taken from an MPAS restart file</p></li>
 <li><p><strong>latVar</strong> (<em>lonVar</em><em>,</em>) – The name of the longitude and latitude variables in <code class="docutils literal notranslate"><span class="pre">obsFileName</span></code></p></li>
-<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the mesh or grid, used as part of the mask file name.
+<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the mesh or grid, used as part of the mask file name.
 Default is the MPAS mesh name</p></li>
 </ul>
 </dd>
@@ -226,19 +227,20 @@ Default is the MPAS mesh name</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
+<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
 repository, defining the shapes to be masked</p></li>
-<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
-<li><p><strong>featureList</strong> (<em>list of str</em><em>, </em><em>optional</em>) – A list of features to include.  Default is all features in all
+<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The suffix for the resulting mask file</p></li>
+<li><p><strong>featureList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – A list of features to include.  Default is all features in all
 files</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
-<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask</p></li>
-<li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The name of an observations file to create masks for.  But default,
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – The name of the subtask</p></li>
+<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <em>optional</em>) – The number of processes that can be used to make the mask</p></li>
+<li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – The name of an observations file to create masks for.  But default,
 lon/lat are taken from an MPAS restart file</p></li>
-<li><p><strong>latVar</strong> (<em>lonVar</em><em>,</em>) – The name of the longitude and latitude variables in <code class="docutils literal notranslate"><span class="pre">obsFileName</span></code></p></li>
-<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the mesh or grid, used as part of the mask file name.
+<li><p><strong>lonVar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – The name of the longitude and latitude variables in <code class="docutils literal notranslate"><span class="pre">obsFileName</span></code></p></li>
+<li><p><strong>latVar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – The name of the longitude and latitude variables in <code class="docutils literal notranslate"><span class="pre">obsFileName</span></code></p></li>
+<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – The name of the mesh or grid, used as part of the mask file name.
 Default is the MPAS mesh name</p></li>
-<li><p><strong>useMpasMaskCreator</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the mask creator from <code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> will be used
+<li><p><strong>useMpasMaskCreator</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the mask creator from <code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> will be used
 to create the mask.  Otherwise, python code is used.</p></li>
 </ul>
 </dd>

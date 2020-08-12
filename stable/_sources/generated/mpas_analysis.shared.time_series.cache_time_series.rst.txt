@@ -1,4 +1,4 @@
-mpas\_analysis.shared.time\_series.cache\_time\_series
+﻿mpas\_analysis.shared.time\_series.cache\_time\_series
 ======================================================
 
 .. currentmodule:: mpas_analysis.shared.time_series

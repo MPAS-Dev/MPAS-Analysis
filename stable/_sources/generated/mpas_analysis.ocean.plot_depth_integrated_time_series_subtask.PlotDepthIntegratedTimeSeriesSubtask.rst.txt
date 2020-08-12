@@ -1,4 +1,4 @@
-mpas\_analysis.ocean.plot\_depth\_integrated\_time\_series\_subtask.PlotDepthIntegratedTimeSeriesSubtask
+﻿mpas\_analysis.ocean.plot\_depth\_integrated\_time\_series\_subtask.PlotDepthIntegratedTimeSeriesSubtask
 ========================================================================================================
 
 .. currentmodule:: mpas_analysis.ocean.plot_depth_integrated_time_series_subtask

@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -214,19 +215,25 @@ the stream.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>streamName</strong> (<em>string</em>) – The name of a stream that produced the files</p></li>
-<li><p><strong>endDate</strong> (<em>startDate</em><em>,</em>) – <p>String or datetime.datetime objects identifying the beginning
+<li><p><strong>streamName</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code>) – The name of a stream that produced the files</p></li>
+<li><p><strong>startDate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code> or <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>, <em>optional</em>) – <p>String or datetime.datetime objects identifying the beginning
 and end dates to be found.</p>
 <p>Note: a buffer of one output interval is subtracted from startDate
 and added to endDate because the file date might be the first
 or last date contained in the file (or anything in between).</p>
 </p></li>
-<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores, and is
+<li><p><strong>endDate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code> or <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>, <em>optional</em>) – <p>String or datetime.datetime objects identifying the beginning
+and end dates to be found.</p>
+<p>Note: a buffer of one output interval is subtracted from startDate
+and added to endDate because the file date might be the first
+or last date contained in the file (or anything in between).</p>
+</p></li>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, <em>optional</em>) – The name of one of the calendars supported by MPAS cores, and is
 required if startDate and/or endDate are supplied</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>fileList</strong> (<em>list</em>) – A list of file names produced by the stream that fall between
+<dd class="field-even"><p><strong>fileList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>) – A list of file names produced by the stream that fall between
 the startDate and endDate (if supplied)</p>
 </dd>
 <dt class="field-odd">Raises</dt>

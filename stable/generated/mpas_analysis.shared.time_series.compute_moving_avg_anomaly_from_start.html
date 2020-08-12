@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -204,15 +205,16 @@ of the simulation (such that the rolling mean starts at zero by definition)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timeSeriesFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – a file produced by <code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code> containing variables, the
+<li><p><strong>timeSeriesFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – a file produced by <code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code> containing variables, the
 anomaly and rolling mean of which is to be computed</p></li>
-<li><p><strong>variableList</strong> (<em>list of str</em>) – variable names to include in the resulting data set</p></li>
-<li><p><strong>simulationStartTime</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the start date of the simulation</p></li>
-<li><p><strong>endDate</strong> (<em>startDate</em><em>,</em>) – the start and end dates of the time series</p></li>
-<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregoraian_noleap'}</em>) – The calendar used in the MPAS run</p></li>
-<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The number of points (months) over which to perform the rolling average
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – variable names to include in the resulting data set</p></li>
+<li><p><strong>simulationStartTime</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – the start date of the simulation</p></li>
+<li><p><strong>startDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – the start and end dates of the time series</p></li>
+<li><p><strong>endDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – the start and end dates of the time series</p></li>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregoraian_noleap'}</span></code>) – The calendar used in the MPAS run</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <em>optional</em>) – The number of points (months) over which to perform the rolling average
 of the data set</p></li>
-<li><p><strong>alter_dataset</strong> (<em>function</em>) – A function for manipulating the data set (e.g. computing new
+<li><p><strong>alter_dataset</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">function</span></code>) – A function for manipulating the data set (e.g. computing new
 variables), taking an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> as input argument and
 returning an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></p></li>
 </ul>

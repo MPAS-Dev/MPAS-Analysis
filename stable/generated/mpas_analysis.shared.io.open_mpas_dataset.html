@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -206,14 +207,16 @@ calendar name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – File path to read</p></li>
-<li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>}, optional) – The name of one of the calendars supported by MPAS cores</p></li>
-<li><p><strong>timeVariableNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>list of 2 str</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code>
+<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – File path to read</p></li>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{</span></code>‘gregorian’<code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">``'gregorian_noleap'</span></code>}``, <em>optional</em>) – The name of one of the calendars supported by MPAS cores</p></li>
+<li><p><strong>timeVariableNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">2</span> <span class="pre">str</span></code>, <em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code>
 or <code class="docutils literal notranslate"><span class="pre">['xtime_startMonthly',</span> <span class="pre">'xtime_endMonthly']</span></code>), or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
 time does not need to be parsed (and is already in the <code class="docutils literal notranslate"><span class="pre">Time</span></code>
 variable)</p></li>
-<li><p><strong>variableList</strong> (<em>list of strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
-<li><p><strong>endDate</strong> (<em>startDate</em><em>,</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">strings</span></code>, <em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>startDate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code> or <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>, <em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+time variable is sliced to only include dates within this range.</p></li>
+<li><p><strong>endDate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">string</span></code> or <a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>, <em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
 </ul>
 </dd>

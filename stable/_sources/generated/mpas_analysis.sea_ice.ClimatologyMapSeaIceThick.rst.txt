@@ -1,4 +1,4 @@
-mpas\_analysis.sea\_ice.ClimatologyMapSeaIceThick
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceThick
 =================================================
 
 .. currentmodule:: mpas_analysis.sea_ice

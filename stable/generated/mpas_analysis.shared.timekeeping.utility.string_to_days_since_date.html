@@ -88,6 +88,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
@@ -209,7 +210,7 @@ numpy.array of floats) since the reference date</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dateStrings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>array-like of str</em>) – <p>A date and time (or array of date/times) in one of the following
+<li><p><strong>dateStrings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">array-like</span></code> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – <p>A date and time (or array of date/times) in one of the following
 formats:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">hh</span><span class="p">:</span><span class="n">mm</span><span class="p">:</span><span class="n">ss</span>
 <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">hh</span><span class="o">.</span><span class="n">mm</span><span class="o">.</span><span class="n">ss</span>
@@ -227,8 +228,8 @@ formats:</p>
 <p>Note: either underscores or spaces can be used to separate the date
 from the time portion of the string.</p>
 </p></li>
-<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores</p></li>
-<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
+<li><p><strong>calendar</strong> (<code class="docutils literal notranslate"><span class="pre">{'gregorian',</span> <span class="pre">'gregorian_noleap'}</span></code>, <em>optional</em>) – The name of one of the calendars supported by MPAS cores</p></li>
+<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <em>optional</em>) – <p>A reference date of the form:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
 <span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
 </pre></div>
@@ -237,7 +238,7 @@ from the time portion of the string.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>days</strong> (<em>float or numpy.array of floats</em>) – The number of days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> for each date in
+<dd class="field-even"><p><strong>days</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.array</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">floats</span></code>) – The number of days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> for each date in
 <code class="docutils literal notranslate"><span class="pre">dateString</span></code></p>
 </dd>
 <dt class="field-odd">Raises</dt>
