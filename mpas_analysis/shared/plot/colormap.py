@@ -463,7 +463,7 @@ def _register_colormap_and_reverse(mapName, cmap):
 def _plot_color_gradients():
     '''from https://matplotlib.org/tutorials/colors/colormaps.html'''
 
-    cmap_list = [m for m in plt.cm.cmap_d if not m.endswith("_r")]
+    cmap_list = [m for m in plt.colormaps() if not m.endswith("_r")]
 
     gradient = np.linspace(0, 1, 256)
     gradient = np.vstack((gradient, gradient))
