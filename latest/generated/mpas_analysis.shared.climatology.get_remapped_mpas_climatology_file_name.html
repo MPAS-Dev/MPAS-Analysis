@@ -221,15 +221,15 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options</p></li>
-<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – One of the seasons in <code class="docutils literal notranslate"><span class="pre">constants.monthDictionary</span></code></p></li>
-<li><p><strong>componentName</strong> (<code class="docutils literal notranslate"><span class="pre">{'ocean',</span> <span class="pre">'seaIce'}</span></code>) – The MPAS component for which the climatology is being computed</p></li>
-<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the climatology (typically the name of a field to mask
+<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – One of the seasons in <code class="docutils literal notranslate"><span class="pre">constants.monthDictionary</span></code></p></li>
+<li><p><strong>componentName</strong> (<em>{'ocean'</em><em>, </em><em>'seaIce'}</em>) – The MPAS component for which the climatology is being computed</p></li>
+<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the climatology (typically the name of a field to mask
 and later remap)</p></li>
-<li><p><strong>comparisonGridName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the comparison grid to use for remapping.  If it is one
+<li><p><strong>comparisonGridName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the comparison grid to use for remapping.  If it is one
 of the default comparison grid names <code class="docutils literal notranslate"><span class="pre">{'latlon',</span> <span class="pre">'antarctic',</span>
 <span class="pre">'arctic'}</span></code>, the full grid name is looked up via
 get_comparison_descriptor</p></li>
-<li><p><strong>op</strong> (<code class="docutils literal notranslate"><span class="pre">{'avg',</span> <span class="pre">'min',</span> <span class="pre">'max'}</span></code>) – operator for monthly stats</p></li>
+<li><p><strong>op</strong> (<em>{'avg'</em><em>, </em><em>'min'</em><em>, </em><em>'max'}</em>) – operator for monthly stats</p></li>
 </ul>
 </dd>
 </dl>
