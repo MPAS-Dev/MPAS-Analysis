@@ -145,12 +145,17 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             tags=tags)
 
         ncclimoParallelMode = config.get('execute', 'ncclimoParallelMode')
-        if self.useNcclimo and ncclimoParallelMode in ['bck', 'mpi']:
-            self.subprocessCount = 12
+        if self.useNcclimo:
+            if ncclimoParallelMode in ['bck', 'mpi']:
+                ncclimoThreads = config.getint('execute', 'ncclimoThreads')
+                self.subprocessCount = ncclimoThreads
+            else:
+                # running in serial
+                self.subprocessCount = 1
+
 
         self.seasonSubtasks = {}
 
-        parallelTaskCount = config.getint('execute', 'parallelTaskCount')
         if not self.useNcclimo:
             # this process doesn't do anything on its own, so no need to
             # block other tasks
@@ -503,6 +508,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 '-a', 'sdd',
                 '-m', self.ncclimoModel,
                 '-p', parallelMode,
+                '-j', '{}'.format(self.subprocessCount),
                 '-v', ','.join(variableList),
                 '--seasons={}'.format(','.join(seasons)),
                 '-s', '{:04d}'.format(self.startYear),
