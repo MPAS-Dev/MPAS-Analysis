@@ -1,5 +1,5 @@
 # MPAS-Analysis
-[![Build Status](https://travis-ci.org/MPAS-Dev/MPAS-Analysis.svg?branch=develop)](https://travis-ci.org/MPAS-Dev/MPAS-Analysis)
+[![Build Status](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_apis/build/status/MPAS-Dev.MPAS-Analysis?branchName=refs%2Fpull%2F728%2Fmerge)](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_build/latest?definitionId=2&branchName=refs%2Fpull%2F728%2Fmerge)
 
 Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
