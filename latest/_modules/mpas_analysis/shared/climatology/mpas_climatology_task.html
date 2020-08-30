@@ -313,17 +313,12 @@
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">ncclimoParallelMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;ncclimoParallelMode&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcclimo</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ncclimoParallelMode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bck&#39;</span><span class="p">,</span> <span class="s1">&#39;mpi&#39;</span><span class="p">]:</span>
-                <span class="n">ncclimoThreads</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;ncclimoThreads&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">ncclimoThreads</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># running in serial</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">1</span>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcclimo</span> <span class="ow">and</span> <span class="n">ncclimoParallelMode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bck&#39;</span><span class="p">,</span> <span class="s1">&#39;mpi&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">12</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">seasonSubtasks</span> <span class="o">=</span> <span class="p">{}</span>
 
+        <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcclimo</span><span class="p">:</span>
             <span class="c1"># this process doesn&#39;t do anything on its own, so no need to</span>
             <span class="c1"># block other tasks</span>
@@ -676,7 +671,6 @@
                 <span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;sdd&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncclimoModel</span><span class="p">,</span>
                 <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">parallelMode</span><span class="p">,</span>
-                <span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span><span class="p">),</span>
                 <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variableList</span><span class="p">),</span>
                 <span class="s1">&#39;--seasons=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seasons</span><span class="p">)),</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">),</span>

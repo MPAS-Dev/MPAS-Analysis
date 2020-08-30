@@ -762,8 +762,6 @@
         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">HistorySubdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">),</span>
         <span class="n">defaultPath</span><span class="o">=</span><span class="n">runDirectory</span><span class="p">)</span>
 
-    <span class="n">errorOnMissing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;errorOnMissing&#39;</span><span class="p">)</span>
-
     <span class="n">namelistFileName</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">NamelistFileName&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
@@ -786,18 +784,10 @@
     <span class="n">calendar</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config_calendar_type&#39;</span><span class="p">)</span>
 
     <span class="n">requestedStartYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-    <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">requestedEndYear</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span><span class="p">:</span>
-        <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># get it again as an integer</span>
-        <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+    <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
 
     <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedStartYear</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">requestedEndYear</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedEndYear</span><span class="p">)</span>
+    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedEndYear</span><span class="p">)</span>
 
     <span class="n">streamName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -830,34 +820,22 @@
         <span class="n">lastIndex</span> <span class="o">-=</span> <span class="mi">1</span>
     <span class="n">endYear</span> <span class="o">=</span> <span class="n">years</span><span class="p">[</span><span class="n">lastIndex</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">requestedEndYear</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">endYear</span><span class="p">))</span>
-        <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="n">endYear</span>
-
     <span class="k">if</span> <span class="n">startYear</span> <span class="o">!=</span> <span class="n">requestedStartYear</span> <span class="ow">or</span> <span class="n">endYear</span> <span class="o">!=</span> <span class="n">requestedEndYear</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">errorOnMissing</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> start and/or end year different from requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">section</span><span class="p">,</span> <span class="n">requestedStartYear</span><span class="p">,</span> <span class="n">requestedEndYear</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span>
-                    <span class="n">endYear</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: </span><span class="si">{}</span><span class="s2"> start and/or end year different from &quot;</span>
-                  <span class="s2">&quot;requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-                  <span class="s2">&quot;requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                  <span class="s2">&quot;actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="p">,</span>
-                                                     <span class="n">requestedStartYear</span><span class="p">,</span>
-                                                     <span class="n">requestedEndYear</span><span class="p">,</span>
-                                                     <span class="n">startYear</span><span class="p">,</span>
-                                                     <span class="n">endYear</span><span class="p">))</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">startYear</span><span class="p">))</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">endYear</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: </span><span class="si">{}</span><span class="s2"> start and/or end year different from &quot;</span>
+              <span class="s2">&quot;requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+              <span class="s2">&quot;requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span>
+              <span class="s2">&quot;actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="p">,</span>
+                                                 <span class="n">requestedStartYear</span><span class="p">,</span>
+                                                 <span class="n">requestedEndYear</span><span class="p">,</span>
+                                                 <span class="n">startYear</span><span class="p">,</span>
+                                                 <span class="n">endYear</span><span class="p">))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">startYear</span><span class="p">))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">endYear</span><span class="p">))</span>
 
-    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
-    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">endYear</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">endYear</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
 
     <span class="c1"># }}}</span>
 
