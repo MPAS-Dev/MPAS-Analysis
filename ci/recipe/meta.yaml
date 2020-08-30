@@ -1,0 +1,75 @@
+{% set name = "MPAS-Analysis" %}
+{% set version = "1.2.7" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ../..
+
+build:
+    number: 0
+    script: {{ PYTHON }} -m pip install . --no-deps -vv
+    noarch: python
+    entry_points:
+        - mpas_analysis = mpas_analysis.__main__:main
+        - download_analysis_data = mpas_analysis.download_data:download_analysis_data
+
+requirements:
+  host:
+    - python
+    - pip
+  run:
+    - python
+    - numpy
+    - scipy
+    - matplotlib-base >=3.0.2
+    - netcdf4
+    - xarray >=0.14.1
+    - dask
+    - bottleneck
+    - lxml
+    - nco >=4.8.1
+    - pillow
+    - cmocean
+    - progressbar2
+    - requests
+    - pyproj
+    - setuptools
+    - shapely
+    - cartopy >=0.18.0
+    - cartopy_offlinedata
+    - geometric_features >=0.1.9
+    - gsw
+    - pyremap <0.1.0
+    - mpas_tools >=0.0.8
+
+test:
+  requires:
+    - pytest
+  imports:
+    - mpas_analysis
+    - pytest
+  commands:
+    - pytest --pyargs mpas_analysis
+    - mpas_analysis --help
+    - download_analysis_data --help
+
+about:
+  home: https://github.com/MPAS-Dev/MPAS-Analysis
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Analysis of MPAS-Ocean and MPAS-Seaice simulations results
+  description: |
+    Analysis for simulations produced with Model for Prediction Across Scales
+    (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
+    used those components.
+  doc_url: https://mpas-dev.github.io/MPAS-Analysis/stable/
+  dev_url: https://github.com/MPAS-Dev/MPAS-Analysis
+
+extra:
+  recipe-maintainers:
+    - xylar
+    - jhkennedy
