@@ -182,11 +182,16 @@ class ComputeMOCMasksSubtask(AnalysisTask):  # {{{
 
         mesh_filename = self.runStreams.readpath('restart')[0]
 
+        maskSubdirectory = build_config_full_path(config, 'output',
+                                                  'maskSubdirectory')
+        make_directories(maskSubdirectory)
+
         make_moc_basins_and_transects(gf, mesh_filename,
                                       self.maskAndTransectFileName,
                                       geojson_filename=self.geojsonFileName,
                                       mask_filename=self.maskFileName,
-                                      logger=self.logger)
+                                      logger=self.logger,
+                                      dir=maskSubdirectory)
         # }}}
 # }}}
 

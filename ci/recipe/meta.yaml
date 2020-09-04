@@ -43,7 +43,7 @@ requirements:
     - geometric_features >=0.1.9
     - gsw
     - pyremap <0.1.0
-    - mpas_tools >=0.0.8
+    - mpas_tools >=0.0.13
 
 test:
   requires:
