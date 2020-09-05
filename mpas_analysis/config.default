@@ -53,11 +53,16 @@ preprocessedReferenceRunName = None
 parallelTaskCount = 1
 
 # the parallelism mode in ncclimo ("serial", "bck" or "mpi")
-# Set this to "bck" (background parallelism) if running on a machine that can
-# handle 12 simultaneous processes, one for each monthly climatology.
-# Set to "mpi" to run one MPI task on each node and however many threads per
-# node to reach 12 total threads.
+# Set this to "bck" (background parallelism) in most cases.  The default number
+# of threads (see below) is 12, one for each monthly climatology. Set to "mpi"
+# to run one MPI task on each node and however many threads per node to reach
+# 12 total threads.
 ncclimoParallelMode = serial
+
+# the number of total threads to use when ncclimo runs in "bck" or "mpi" mode.
+# Reduce this number if ncclimo is crashing (maybe because it is out of memory).
+# The number of threads must be a factor of 12 (1, 2, 3, 4, 6 or 12).
+ncclimoThreads = 12
 
 # the number of MPI tasks to use in creating mapping files (1 means tasks run in
 # serial, the default)
@@ -89,11 +94,6 @@ mappingSubdirectory = mpas_analysis/maps
 # Directory for region mask files. The user can supply an absolute path here to
 # point to a path that is not within the baseDirectory above.
 regionMaskSubdirectory = mpas_analysis/region_masks
-
-# A path to a directory for geometric data cached from the geometric_features
-# package.  If none is supplied, a geometric_data subdirectory of the analysis
-# output baseDirectory is used.
-geometricDataDirectory = none
 
 
 [input]

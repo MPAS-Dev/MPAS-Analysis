@@ -25,7 +25,7 @@ from mpas_analysis.shared.io import write_netcdf
 
 
 def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
-                                logger=None):
+                                logger=None, dir=None):
     """
     Build a transect mask file from the given MPAS mesh and geojson file \
     defining a set of transects.
@@ -36,7 +36,7 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
     dsMesh = xr.open_dataset(meshFileName)
     fcMask = read_feature_collection(geojsonFileName)
     dsMask = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
-                                        logger=logger)
+                                        logger=logger, dir=dir)
 
     write_netcdf(dsMask, maskFileName)
 
@@ -137,9 +137,9 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             raise IOError('No MPAS restart file found: need at least one '
                           'restart file to perform region masking.')
 
-        maskSubdirectory = build_config_full_path(self.config, 'output',
-                                                  'maskSubdirectory')
-        make_directories(maskSubdirectory)
+        self.maskSubdirectory = build_config_full_path(self.config, 'output',
+                                                       'maskSubdirectory')
+        make_directories(self.maskSubdirectory)
 
         # first, see if we have cached a mask file name in the region masks
         # directory
@@ -153,9 +153,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             # no cached mask file, so let's see if there's already one in the
             # masks subfolder of the output directory
 
-            maskSubdirectory = build_config_full_path(self.config, 'output',
-                                                      'maskSubdirectory')
-            self.maskFileName = '{}/{}_{}.nc'.format(maskSubdirectory,
+            self.maskFileName = '{}/{}_{}.nc'.format(self.maskSubdirectory,
                                                      meshName,
                                                      self.outFileSuffix)
 
@@ -177,7 +175,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
 
         compute_mpas_transect_masks(
             self.geojsonFileName, self.obsFileName, self.maskFileName,
-            logger=self.logger)
+            logger=self.logger, dir=self.maskSubdirectory)
 
     # }}}
 

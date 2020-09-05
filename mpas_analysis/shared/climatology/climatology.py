@@ -21,6 +21,8 @@ from __future__ import absolute_import, division, print_function, \
 import xarray as xr
 import os
 import numpy
+from tempfile import TemporaryDirectory
+
 from pyremap import Remapper, LatLonGridDescriptor, ProjectionGridDescriptor
 
 from mpas_analysis.shared.constants import constants
@@ -120,7 +122,13 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
     mpiTasks = config.getWithDefault('execute', 'mapMpiTasks', 1)
 
-    remapper.build_mapping_file(method=method, logger=logger, mpiTasks=mpiTasks)
+    mappingSubdirectory = \
+        build_config_full_path(config, 'output',
+                               'mappingSubdirectory')
+    make_directories(mappingSubdirectory)
+    with TemporaryDirectory(dir=mappingSubdirectory) as tempdir:
+        remapper.build_mapping_file(method=method, logger=logger,
+                                    mpiTasks=mpiTasks, tempdir=tempdir)
 
     return remapper  # }}}
 

@@ -218,36 +218,6 @@ def get_region_mask(config, regionMaskFile):  # {{{
     return fullFileName  # }}}
 
 
-def get_geometric_data(config):  # {{{
-    """
-    Get the full path for a region mask with a given file name
-
-    Parameters
-    ----------
-    config : MpasAnalysisConfigParser object
-        configuration from which to read the path
-
-    Returns
-    -------
-    geometricDataDirectory : str
-        A directory where geometric data cached from ``geometric_features`` can
-        be stored
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-
-    geometricDataDirectory = config.get('diagnostics',
-                                        'geometricDataDirectory')
-
-    if geometricDataDirectory == 'none':
-        geometricDataDirectory = '{}/geometric_data'.format(
-            config.get('output', 'baseDirectory'))
-
-    make_directories(geometricDataDirectory)
-
-    return geometricDataDirectory  # }}}
-
 def build_obs_path(config, component, relativePathOption=None,
                    relativePathSection=None, relativePath=None):  # {{{
     """

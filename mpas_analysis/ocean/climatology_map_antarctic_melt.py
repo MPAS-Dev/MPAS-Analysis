@@ -383,6 +383,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
 
         self.run_after(self.masksSubtask)
+        self.run_after(mpasClimatologyTask)
         # }}}
 
     def run_task(self):  # {{{
