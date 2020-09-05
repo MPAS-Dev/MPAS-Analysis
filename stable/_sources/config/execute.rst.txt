@@ -7,17 +7,24 @@ The ``[execute]`` section of a configuration file contains options used to
 control how tasks are executed within an MPAS-Analysis run::
 
   [execute]
-  ## options related to executing parallel tasks
-
   # the number of parallel tasks (1 means tasks run in serial, the default)
   parallelTaskCount = 1
 
   # the parallelism mode in ncclimo ("serial", "bck" or "mpi")
-  # Set this to "bck" (background parallelism) if running on a machine that can
-  # handle 12 simultaneous processes, one for each monthly climatology.
-  # Set to "mpi" to run one MPI task on each node and however many threads per
-  # node to reach 12 total threads.
+  # Set this to "bck" (background parallelism) in most cases.  The default number
+  # of threads (see below) is 12, one for each monthly climatology. Set to "mpi"
+  # to run one MPI task on each node and however many threads per node to reach
+  # 12 total threads.
   ncclimoParallelMode = serial
+
+  # the number of total threads to use when ncclimo runs in "bck" or "mpi" mode.
+  # Reduce this number if ncclimo is crashing (maybe because it is out of memory).
+  # The number of threads must be a factor of 12 (1, 2, 3, 4, 6 or 12).
+  ncclimoThreads = 12
+
+  # the number of MPI tasks to use in creating mapping files (1 means tasks run in
+  # serial, the default)
+  mapMpiTasks = 1
 
 Parallel Tasks
 --------------
@@ -48,18 +55,20 @@ internally in MPAS-Analysis. This command supports three options for
 parallelism: ``serial``, ``bck`` or ``mpi``.  If set to ``serial``, the
 default, any MPAS-Analysis tasks that use ``ncclimo`` will compute
 climatologies one month and then one season at a time.  If ``bck`` mode is
-used, 12 threads are spawned, one for each month, and then separate threads
-are used to compute each season.  Given that computing climatologies takes up
-a significant portion of the runtime in MPAS-Analysis, the speed-up of nearly
-a factor of 12 in these computations can be quite noticeable.  For very big
-data sets, it may be necessary to run ``ncclimo`` on multiple nodes to prevent
-running out of memory.  Spawn a job with between 2 and 12 nodes, and set
-``ncclimoParallelMode = mpi`` to run the 12 ``ncclimo`` threads on multiple
-nodes.
+used, ``ncclimoThreads`` threads are spawned (default is 12, one for each
+month), and then separate threads are used to compute each season.  Given that
+computing climatologies takes up a significant portion of the runtime in
+MPAS-Analysis, the speed-up of nearly a factor of ``ncclimoThreads`` in these
+computations can be quite noticeable.  For very big data sets, it may be
+necessary to run ``ncclimo`` either with fewer threads (reducing
+``ncclimoThreads``, noting that it must be a factor of 12) or on multiple nodes
+to prevent running out of memory.  To run an MPI job, spawn a job with between
+2 and 12 nodes, and set ``ncclimoParallelMode = mpi`` to run the 12 ``ncclimo``
+threads on multiple nodes.
 
 Again, when running MPAS-Analysis on login nodes of supercomputing facilities,
-it is important to be aware of the policies regarding using shared resources,
-and ``bck`` may only be appropriate when running jobs on the compute nodes.
-``mpi`` mode may not work at all on login nodes.
+it is important to be aware of the policies regarding using shared resources.
+On login nodes, ``bck`` may only be appropriate with ``ncclimoThreads`` set to a
+small number and ``mpi`` mode may not work at all.
 
 .. _`NetCDF Operators (NCO) package`: http://nco.sourceforge.net/nco.html

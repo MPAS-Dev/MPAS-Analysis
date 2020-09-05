@@ -188,19 +188,19 @@
 <dt id="mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression">
 <code class="sig-prename descclassname">MpasAnalysisConfigParser.</code><code class="sig-name descname">getExpression</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">section</span></em>, <em class="sig-param"><span class="n">option</span></em>, <em class="sig-param"><span class="n">elementType</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">usenumpyfunc</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/configuration/mpas_analysis_config_parser.html#MpasAnalysisConfigParser.getExpression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an option as an expression (typically a list, though tuples and
-dicts are also available).  The expression is required to have valid
+dicts are also availabe).  The expression is required to have valid
 python syntax, so that string entries are required to be in single or
 double quotes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The section in the config file</p></li>
-<li><p><strong>option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The option in the config file</p></li>
-<li><p><strong>elementType</strong> (<code class="docutils literal notranslate"><span class="pre">{bool,</span> <span class="pre">int,</span> <span class="pre">float,</span> <span class="pre">list,</span> <span class="pre">tuple,</span> <span class="pre">str}</span></code>, <em>optional</em>) – If supplied, each element in a list or tuple, or
+<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The section in the config file</p></li>
+<li><p><strong>option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The option in the config file</p></li>
+<li><p><strong>elementType</strong> (<em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>etc.</em><em>)</em><em>, </em><em>optional</em>) – If supplied, each element in a list or tuple, or
 each value in a dictionary are cast to this type.  This is likely
 most useful for ensuring that all elements in a list of numbers are
 of type float, rather than int, when the distinction is important.</p></li>
-<li><p><strong>usenumpyfunc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the expression is evaluated including functionality
+<li><p><strong>usenumpyfunc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the expression is evaluated including functionality
 from the numpy package (which can be referenced either as <code class="docutils literal notranslate"><span class="pre">numpy</span></code>
 or <code class="docutils literal notranslate"><span class="pre">np</span></code>).</p></li>
 </ul>
