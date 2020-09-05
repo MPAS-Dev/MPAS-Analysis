@@ -15,7 +15,7 @@ import warnings
 
 isrelease = True
 
-version = '1.2.7'
+version = '1.2.8'
 
 if not isrelease:
     import subprocess
