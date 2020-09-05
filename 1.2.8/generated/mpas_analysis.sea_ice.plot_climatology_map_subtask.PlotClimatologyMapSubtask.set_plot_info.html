@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info &mdash; MPAS-Analysis 1.2.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault" href="mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault.html" />
+    <link rel="prev" title="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask" href="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#base-class">Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#ocean-tasks">Ocean tasks</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#sea-ice-tasks">Sea ice tasks</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceConc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceThick</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.TimeSeriesSeaIce.html">mpas_analysis.sea_ice.TimeSeriesSeaIce</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html">mpas_analysis.sea_ice.ClimatologyMapIcebergConc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html">mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API reference</a> &raquo;</li>
+        
+      <li>mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mpas-analysis-sea-ice-plot-climatology-map-subtask-plotclimatologymapsubtask-set-plot-info">
+<h1>mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info<a class="headerlink" href="#mpas-analysis-sea-ice-plot-climatology-map-subtask-plotclimatologymapsubtask-set-plot-info" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt id="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info">
+<code class="sig-prename descclassname">PlotClimatologyMapSubtask.</code><code class="sig-name descname">set_plot_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outFileLabel</span></em>, <em class="sig-param"><span class="n">fieldNameInTitle</span></em>, <em class="sig-param"><span class="n">mpasFieldName</span></em>, <em class="sig-param"><span class="n">refFieldName</span></em>, <em class="sig-param"><span class="n">refTitleLabel</span></em>, <em class="sig-param"><span class="n">diffTitleLabel</span></em>, <em class="sig-param"><span class="n">unitsLabel</span></em>, <em class="sig-param"><span class="n">imageDescription</span></em>, <em class="sig-param"><span class="n">imageCaption</span></em>, <em class="sig-param"><span class="n">galleryGroup</span></em>, <em class="sig-param"><span class="n">groupSubtitle</span></em>, <em class="sig-param"><span class="n">groupLink</span></em>, <em class="sig-param"><span class="n">galleryName</span></em>, <em class="sig-param"><span class="n">maskValue</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/sea_ice/plot_climatology_map_subtask.html#PlotClimatologyMapSubtask.set_plot_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store attributes related to plots, plot file names and HTML output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>refFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the variable to use from the observations or reference
+run file</p></li>
+<li><p><strong>refTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the title of the observations or control run subplot</p></li>
+<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the title of the difference (e.g. bias) subplot</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>imageDescription</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the caption when mousing over the plot</p></li>
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the caption when displaying the plot full screen</p></li>
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
+if none)</p></li>
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
+<li><p><strong>maskValue</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><em>optional</em>) – a value to mask out in plots</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault.html" class="btn btn-neutral float-right" title="mpas_analysis.configuration.MpasAnalysisConfigParser.getWithDefault" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html" class="btn btn-neutral float-left" title="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

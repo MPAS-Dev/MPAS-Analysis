@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpas_analysis.ocean.climatology_map_sose &mdash; MPAS-Analysis 1.2.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.ocean.climatology_map_sose</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpas_analysis.ocean.climatology_map_sose</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Analysis tasks for comparing Antarctic climatology maps against observations</span>
+<span class="sd">and reanalysis data.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_depth_slices_subtask</span> <span class="kn">import</span> \
+    <span class="n">RemapDepthSlicesSubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_sose_climatology</span> <span class="kn">import</span> <span class="n">RemapSoseClimatology</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapSose"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapSose.html#mpas_analysis.ocean.ClimatologyMapSose">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapSose</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of antarctic field against the Southern</span>
+<span class="sd">    Ocean State Estimate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="ClimatologyMapSose.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapSose.html#mpas_analysis.ocean.ClimatologyMapSose.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fields</span> <span class="o">=</span> \
+            <span class="p">[{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;pot_temp&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;theta&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;botTheta&#39;</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;botSalinity&#39;</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;pot_den&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;botPotentialDensity&#39;</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;mixedLayerDepth&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_dThreshMLD&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Mixed Layer Depth&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;mld&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;mld&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Zonal Velocity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;zonal_vel&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;zonalVel&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;botZonalVel&#39;</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Meridional Velocity&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;merid_vel&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;meridVel&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;botMeridVel&#39;</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;velocityMagnitude&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;velMag&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Velocity Magnitude&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;3D&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;vel_mag&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;velMag&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;botVelMag&#39;</span><span class="p">}]</span>
+
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;sose&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;antarctic&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapSose</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapSose&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="n">fileSuffix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;fileSuffix&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fileSuffix</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nc&#39;</span><span class="p">):</span>
+            <span class="n">fileSuffix</span> <span class="o">=</span> <span class="n">fileSuffix</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">fieldList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;fieldList&#39;</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fieldList</span><span class="p">]</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid &#39;</span>
+                             <span class="s1">&#39;list of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid &#39;</span>
+                             <span class="s1">&#39;list of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                 <span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">([</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;3D&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]):</span>
+            <span class="n">depths</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">depths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">depths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid &#39;</span>
+                                 <span class="s1">&#39;list of depths&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span>
+                        <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;velMag&#39;</span><span class="p">]</span>
+
+        <span class="n">shallowVsDeepColormapDepth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;shallowVsDeepColormapDepth&#39;</span><span class="p">)</span>
+
+        <span class="n">shallow</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="n">depths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
+                <span class="n">shallow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">&#39;bot&#39;</span><span class="p">:</span>
+                <span class="n">shallow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shallow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">depth</span> <span class="o">&gt;=</span> <span class="n">shallowVsDeepColormapDepth</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">depths</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">remapMpasSubtask</span> <span class="o">=</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">(</span>
+                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;SOSE&#39;</span><span class="p">,</span>
+                <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remapMpasSubtask</span> <span class="o">=</span> <span class="n">RemapMpasVelMagClimatology</span><span class="p">(</span>
+                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;SOSE&#39;</span><span class="p">,</span>
+                <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+                <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
+            <span class="n">upperFieldPrefix</span> <span class="o">=</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="n">upperFieldPrefix</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;3D&#39;</span><span class="p">]:</span>
+                <span class="n">fieldDepths</span> <span class="o">=</span> <span class="n">depths</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fieldDepths</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;State Estimate (SOSE)&#39;</span>
+
+                <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                    <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;soseSubdirectory&#39;</span><span class="p">)</span>
+
+                <span class="n">obsFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/SOSE_2005-2010_monthly_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">observationsDirectory</span><span class="p">,</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">],</span> <span class="n">fileSuffix</span><span class="p">)</span>
+                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;obsFieldName&#39;</span><span class="p">]</span>
+                <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">SOSE&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldPrefix</span><span class="p">)</span>
+                <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;State Estimate: SOSE&#39;</span>
+                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - State Estimate&#39;</span>
+
+                <span class="n">remapObsSubtask</span> <span class="o">=</span> <span class="n">RemapSoseClimatology</span><span class="p">(</span>
+                    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
+                    <span class="n">outFilePrefix</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">SOSE&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refFieldName</span><span class="p">),</span>
+                    <span class="n">fieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                    <span class="n">botFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;obsBotFieldName&#39;</span><span class="p">],</span>
+                    <span class="n">depths</span><span class="o">=</span><span class="n">fieldDepths</span><span class="p">,</span>
+                    <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                    <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapObservations</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">upperFieldPrefix</span><span class="p">))</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObsSubtask</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">remapObsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+                <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="n">galleryName</span>
+
+                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+                <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">SOSE&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldPrefix</span><span class="p">)</span>
+                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+            <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;3D&#39;</span><span class="p">]:</span>
+                <span class="n">fieldDepths</span> <span class="o">=</span> <span class="n">depths</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fieldDepths</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">depthIndex</span><span class="p">,</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fieldDepths</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+
+                        <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plot</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">upperFieldPrefix</span><span class="p">,</span>
+                                                            <span class="n">season</span><span class="p">,</span>
+                                                            <span class="n">comparisonGridName</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_depth_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subtaskName</span><span class="p">,</span>
+                                                               <span class="n">depth</span><span class="p">)</span>
+
+                        <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
+                            <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
+                            <span class="n">remapMpasClimatologySubtask</span><span class="o">=</span><span class="n">remapMpasSubtask</span><span class="p">,</span>
+                            <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="n">remapObsSubtask</span><span class="p">,</span>
+                            <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                            <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span>
+                            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+                        <span class="n">configSectionName</span> <span class="o">=</span> <span class="s1">&#39;climatologyMapSose</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">upperFieldPrefix</span><span class="p">)</span>
+
+                        <span class="c1"># if available, use a separate color map for shallow</span>
+                        <span class="c1"># and deep</span>
+                        <span class="k">if</span> <span class="n">depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">shallow</span><span class="p">[</span><span class="n">depthIndex</span><span class="p">]:</span>
+                                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;Shallow&#39;</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;Deep&#39;</span>
+                            <span class="n">testSectionName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                                            <span class="n">suffix</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">testSectionName</span><span class="p">):</span>
+                                <span class="n">configSectionName</span> <span class="o">=</span> <span class="n">testSectionName</span>
+
+                        <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                            <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                            <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
+                            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">],</span>
+                            <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                            <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                            <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                            <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">],</span>
+                            <span class="n">imageCaption</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
+                            <span class="n">galleryGroup</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
+                            <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Sose&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldPrefix</span><span class="p">),</span>
+                            <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
+                            <span class="n">configSectionName</span><span class="o">=</span><span class="n">configSectionName</span><span class="p">)</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
+        <span class="c1"># }}}</span>
+
+    <span class="c1"># }}}</span>
+
+
+<span class="k">class</span> <span class="nc">RemapMpasVelMagClimatology</span><span class="p">(</span><span class="n">RemapDepthSlicesSubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of velocity magnitude from zonal</span>
+<span class="sd">    and meridional components</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct velocity magnitude as part of the climatology</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the climatology data set</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call the base class&#39;s version of this function so we extract</span>
+        <span class="c1"># the desired slices.</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasVelMagClimatology</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">customize_masked_climatology</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span>
+                                                               <span class="n">season</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span> <span class="ow">in</span> <span class="n">climatology</span> <span class="ow">and</span> \
+                <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span> <span class="ow">in</span> <span class="n">climatology</span><span class="p">:</span>
+            <span class="n">zonalVel</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityZonal</span>
+            <span class="n">meridVel</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityMeridional</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;velMag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">zonalVel</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">meridVel</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">climatology</span><span class="o">.</span><span class="n">velMag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m s$^{-1}$&#39;</span>
+            <span class="n">climatology</span><span class="o">.</span><span class="n">velMag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;velocity magnitude&#39;</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>  <span class="c1"># }}}</span>
+
+    <span class="c1"># }}}</span>
+
+<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

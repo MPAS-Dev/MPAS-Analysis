@@ -1,0 +1,6 @@
+﻿mpas\_analysis.configuration.MpasAnalysisConfigParser.getExpression
+===================================================================
+
+.. currentmodule:: mpas_analysis.configuration
+
+.. automethod:: MpasAnalysisConfigParser.getExpression
