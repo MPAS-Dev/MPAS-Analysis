@@ -26,7 +26,7 @@ from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
     timeseries_analysis_plot, savefig
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, get_files_year_month, get_region_mask, get_geometric_data
+    make_directories, get_files_year_month, get_region_mask
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
@@ -177,16 +177,20 @@ class ComputeMOCMasksSubtask(AnalysisTask):  # {{{
         config = self.config
 
         # make the geojson file
-        geometricDataDirectory = get_geometric_data(config)
-        gf = GeometricFeatures(cacheLocation=geometricDataDirectory)
+        gf = GeometricFeatures()
 
         mesh_filename = self.runStreams.readpath('restart')[0]
+
+        maskSubdirectory = build_config_full_path(config, 'output',
+                                                  'maskSubdirectory')
+        make_directories(maskSubdirectory)
 
         make_moc_basins_and_transects(gf, mesh_filename,
                                       self.maskAndTransectFileName,
                                       geojson_filename=self.geojsonFileName,
                                       mask_filename=self.maskFileName,
-                                      logger=self.logger)
+                                      logger=self.logger,
+                                      dir=maskSubdirectory)
         # }}}
 # }}}
 

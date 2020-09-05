@@ -31,9 +31,9 @@ from mpas_analysis.shared.io import write_netcdf
 
 
 def get_feature_list(geojsonFileName):
-    '''
+    """
     Builds a list of features found in the geojson file
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -50,20 +50,19 @@ def get_feature_list(geojsonFileName):
 def compute_mpas_region_masks(geojsonFileName, meshFileName, maskFileName,
                               featureList=None, logger=None, processCount=1,
                               chunkSize=1000, showProgress=True,
-                              useMpasMaskCreator=False):
-    '''
+                              useMpasMaskCreator=False, dir=None):
+    """
     Build a region mask file from the given MPAS mesh and geojson file defining
     a set of regions.
-    '''
+    """
     if os.path.exists(maskFileName):
         return
-
 
     if useMpasMaskCreator:
         dsMesh = xr.open_dataset(meshFileName)
         fcMask = read_feature_collection(geojsonFileName)
         dsMasks = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
-                                             logger=logger)
+                                             logger=logger, dir=dir)
 
     else:
         with xr.open_dataset(meshFileName) as dsMesh:
@@ -111,10 +110,10 @@ def compute_lon_lat_region_masks(geojsonFileName, lon, lat, maskFileName,
                                  featureList=None, logger=None, processCount=1,
                                  chunkSize=1000, showProgress=True,
                                  lonDim='lon', latDim='lat'):
-    '''
+    """
     Build a region mask file from the given lon, lat and geojson file defining
     a set of regions.
-    '''
+    """
     if os.path.exists(maskFileName):
         return
 
@@ -172,10 +171,10 @@ def compute_lon_lat_region_masks(geojsonFileName, lon, lat, maskFileName,
 def compute_region_masks(geojsonFileName, cellPoints, maskFileName,
                          featureList=None, logger=None, processCount=1,
                          chunkSize=1000, showProgress=True):
-    '''
+    """
     Build a region mask file from the given mesh and geojson file defining
     a set of regions.
-    '''
+    """
     if os.path.exists(maskFileName):
         return
 
@@ -276,7 +275,7 @@ def _contains(shape, cellPoints):
 
 
 class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
-    '''
+    """
     An analysis tasks for computing cell masks for regions defined by geojson
     features
 
@@ -308,7 +307,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     meshName : str
         The name of the mesh or grid, used as part of the mask file name.
         Default is the MPAS mesh name
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -318,7 +317,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
                  subprocessCount=1, obsFileName=None, lonVar='lon',
                  latVar='lat', meshName=None, useMpasMaskCreator=False):
         # {{{
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -359,7 +358,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         useMpasMaskCreator : bool, optional
             If ``True``, the mask creator from ``mpas_tools`` will be used
             to create the mask.  Otherwise, python code is used.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -393,7 +392,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # }}}
 
     def setup_and_check(self):  # {{{
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -402,7 +401,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -451,9 +450,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # }}}
 
     def run_task(self):  # {{{
-        '''
+        """
         Compute the requested climatologies
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -467,10 +466,16 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             self.featureList = get_feature_list(self.geojsonFileName)
 
         if self.useMpasMesh:
+
+            maskSubdirectory = build_config_full_path(self.config, 'output',
+                                                      'maskSubdirectory')
+            make_directories(maskSubdirectory)
+
             compute_mpas_region_masks(
                 self.geojsonFileName, self.obsFileName, self.maskFileName,
                 self.featureList, self.logger, self.subprocessCount,
-                showProgress=False, useMpasMaskCreator=self.useMpasMaskCreator)
+                showProgress=False, useMpasMaskCreator=self.useMpasMaskCreator,
+                dir=maskSubdirectory)
         else:
 
             dsGrid = xr.open_dataset(self.obsFileName)
