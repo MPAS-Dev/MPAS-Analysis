@@ -193,7 +193,7 @@
 
 
 <div class="viewcode-block" id="compute_mpas_transect_masks"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks">[docs]</a><span class="k">def</span> <span class="nf">compute_mpas_transect_masks</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a transect mask file from the given MPAS mesh and geojson file \</span>
 <span class="sd">    defining a set of transects.</span>
@@ -204,7 +204,7 @@
     <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">)</span>
     <span class="n">fcMask</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">)</span>
     <span class="n">dsMask</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
-                                        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                                        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="nb">dir</span><span class="p">)</span>
 
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMask</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">)</span></div>
 
@@ -305,9 +305,9 @@
             <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS restart file found: need at least one &#39;</span>
                           <span class="s1">&#39;restart file to perform region masking.&#39;</span><span class="p">)</span>
 
-        <span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;maskSubdirectory&#39;</span><span class="p">)</span>
-        <span class="n">make_directories</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                                                       <span class="s1">&#39;maskSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">make_directories</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span><span class="p">)</span>
 
         <span class="c1"># first, see if we have cached a mask file name in the region masks</span>
         <span class="c1"># directory</span>
@@ -321,9 +321,7 @@
             <span class="c1"># no cached mask file, so let&#39;s see if there&#39;s already one in the</span>
             <span class="c1"># masks subfolder of the output directory</span>
 
-            <span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                                      <span class="s1">&#39;maskSubdirectory&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span><span class="p">,</span>
                                                      <span class="n">meshName</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span><span class="p">)</span>
 
@@ -345,7 +343,7 @@
 
         <span class="n">compute_mpas_transect_masks</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">,</span>
-            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span><span class="p">)</span></div>
 
     <span class="c1"># }}}</span>
 

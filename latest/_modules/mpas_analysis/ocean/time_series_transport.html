@@ -239,7 +239,13 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;transport&#39;</span><span class="p">])</span>
 
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">endYear</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span><span class="p">:</span>
+            <span class="c1"># a valid end year wasn&#39;t found, so likely the run was not found,</span>
+            <span class="c1"># perhaps because we&#39;re just listing analysis tasks</span>
+            <span class="n">endYear</span> <span class="o">=</span> <span class="n">startYear</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">endYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">endYear</span><span class="p">)</span>
 
         <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="n">year</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
 
