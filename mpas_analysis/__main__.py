@@ -493,7 +493,7 @@ def run_analysis(config, analyses):  # {{{
     widgets = ['Running tasks: ', progressbar.Percentage(), ' ',
                progressbar.Bar(), ' ', progressbar.ETA()]
     progress = progressbar.ProgressBar(widgets=widgets,
-                                       maxval=totalTaskCount).start()
+                                       max_value=totalTaskCount).start()
 
     runningProcessCount = 0
 
