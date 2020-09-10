@@ -160,7 +160,7 @@ def plot_polar_comparison(
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.1,
                                   axes_class=plt.Axes)
-        cbar = plt.colorbar(plotHandle, cax=cax, boundaries=levels)
+        cbar = plt.colorbar(plotHandle, cax=cax)
         cbar.set_label(cbarlabel)
         if ticks is not None:
             cbar.set_ticks(ticks)
