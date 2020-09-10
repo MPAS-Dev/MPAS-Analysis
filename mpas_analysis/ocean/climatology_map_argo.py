@@ -443,11 +443,11 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         field = dsObs[self.fieldName]
         for depth in self.depths:
             if depth == 'top':
-                slices.append(field.sel(method='nearest', depth=0.).drop(
+                slices.append(field.sel(method='nearest', depth=0.).drop_vars(
                     'depth'))
             else:
-                slices.append(field.sel(method='nearest', depth=depth).drop(
-                    'depth'))
+                slices.append(
+                    field.sel(method='nearest', depth=depth).drop_vars('depth'))
 
         depthNames = [str(depth) for depth in self.depths]
         field = xr.concat(slices, dim='depthSlice')

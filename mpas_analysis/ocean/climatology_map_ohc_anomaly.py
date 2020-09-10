@@ -328,7 +328,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
             'Anomaly from year {} in ocean heat content'.format(
             self.refYearClimatolgyTask.startYear)
 
-        climatology = climatology.drop(self.variableList)
+        climatology = climatology.drop_vars(self.variableList)
 
         return climatology  # }}}
 

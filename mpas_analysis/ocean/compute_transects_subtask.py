@@ -400,7 +400,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             dsObs = dsObs.rename({'nzOut': 'nz'})
             write_netcdf(dsObs, outObsFileName)
 
-        ds = ds.drop(['validMask', 'transectNumber'])
+        ds = ds.drop_vars(['validMask', 'transectNumber'])
         write_netcdf(ds, outFileName)  # }}}
 
     # }}}
@@ -638,7 +638,7 @@ class TransectsObservations(object):  # {{{
         dsObs = interp_1d(dsObs, inInterpDim='nPoints',
                           inInterpCoord='xIn', outInterpDim='nPointsOut',
                           outInterpCoord='xOut')
-        dsObs = dsObs.drop(['xIn'])
+        dsObs = dsObs.drop_vars(['xIn'])
         dsObs = dsObs.rename({'nPointsOut': 'nPoints', 'xOut': 'x'})
         return dsObs  # }}}
 

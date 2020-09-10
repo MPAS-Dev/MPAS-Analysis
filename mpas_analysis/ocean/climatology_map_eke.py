@@ -204,10 +204,10 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
              climatology.timeMonthly_avg_velocityMeridional ** 2)
 
         # drop unnecessary fields before re-mapping
-        climatology.drop(['timeMonthly_avg_velocityZonal',
-                          'timeMonthly_avg_velocityMeridional',
-                          'timeMonthly_avg_velocityZonalSquared',
-                          'timeMonthly_avg_velocityMeridionalSquared'])
+        climatology.drop_vars(['timeMonthly_avg_velocityZonal',
+                               'timeMonthly_avg_velocityMeridional',
+                               'timeMonthly_avg_velocityZonalSquared',
+                               'timeMonthly_avg_velocityMeridionalSquared'])
 
         # this creates a new variable eke in climatology (like netcdf)
         climatology['eke'] = eke
