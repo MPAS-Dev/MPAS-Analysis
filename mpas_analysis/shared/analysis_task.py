@@ -342,6 +342,7 @@ class AnalysisTask(Process):  # {{{
         self.logger.info('Execution time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
         if writeLogFile:
+            handler.close()
             # restore stdout and stderr
             sys.stdout = oldStdout
             sys.stderr = oldStderr
