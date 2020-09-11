@@ -63,9 +63,9 @@ def get_simulation_start_time(streams):
     ds = xarray.open_dataset(restartFile)
     da = ds.simulationStartTime
     if da.dtype.type is numpy.string_:
-        simulationStartTime = bytes.decode(da.values.tostring())
+        simulationStartTime = bytes.decode(da.values.tobytes())
     else:
-        simulationStartTime = da.values.tostring()
+        simulationStartTime = da.values.tobytes()
     # replace underscores so it works as a CF-compliant reference date
     simulationStartTime = simulationStartTime.rstrip('\x00').replace('_', ' ')
 

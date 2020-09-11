@@ -486,6 +486,7 @@ or under csh:
 Then, running MPAS-Analysis is as simple as:
 
 .. code-block:: bash
+
     $ mpas_analysis myrun.cfg
 
 Typical output is the analysis is running correctly looks something like:

@@ -1266,7 +1266,7 @@ regionNames = ['all']
 # a list of variables to plot
 variables = [{'name': 'temperature',
               'title': 'Temperature',
-              'units': '$^\circ$C',
+              'units': r'$^\circ$C',
               'mpas': 'timeMonthly_avg_activeTracers_temperature'},
              {'name': 'salinity',
               'title': 'Salinity',

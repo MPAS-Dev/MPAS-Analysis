@@ -249,7 +249,7 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs = dsObs.rename({'time': 'Time'})
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
-        dsObs = dsObs.drop(['Time', 'time_bnds'])
+        dsObs = dsObs.drop_vars(['Time', 'time_bnds'])
 
         # scale the field to cm from m
         dsObs['zos'] = constants.cm_per_m * dsObs['zos']

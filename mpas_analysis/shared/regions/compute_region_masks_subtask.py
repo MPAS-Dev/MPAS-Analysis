@@ -249,7 +249,7 @@ def compute_region_masks(geojsonFileName, cellPoints, maskFileName,
                 widgets = ['  ', progressbar.Percentage(), ' ',
                            progressbar.Bar(), ' ', progressbar.ETA()]
                 bar = progressbar.ProgressBar(widgets=widgets,
-                                              maxval=nChunks).start()
+                                              max_value=nChunks).start()
 
             mask = numpy.zeros((nCells,), bool)
             for iChunk, maskChunk in \

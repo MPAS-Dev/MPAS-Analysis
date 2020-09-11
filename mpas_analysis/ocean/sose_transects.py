@@ -419,7 +419,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         dsObs['lat'] = dsObs.nPoints
         dsObs['z'] = dsObs.nz
         dsObs['lon'] = ('nPoints', lon * numpy.ones(dsObs.sizes['nPoints']))
-        dsObs = dsObs.drop(['nPoints', 'nz'])
+        dsObs = dsObs.drop_vars(['nPoints', 'nz'])
 
         return dsObs  # }}}
 

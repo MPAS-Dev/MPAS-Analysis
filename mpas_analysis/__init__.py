@@ -1,7 +1,5 @@
 # make sure to set the Agg backend that works even without x-forwarding
 # before any other matplotlib imports
-import sys
-import warnings
 import matplotlib as mpl
 mpl.use('Agg')
 

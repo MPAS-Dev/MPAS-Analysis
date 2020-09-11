@@ -44,7 +44,7 @@ def interp_1d(ds, inInterpDim, inInterpCoord, outInterpDim,
     coords = list(ds.coords)
     ds = ds.reset_coords(coords)
 
-    ds = ds.apply(_interp_1d_array, args=(indices, weight0, inInterpDim))
+    ds = ds.map(_interp_1d_array, args=(indices, weight0, inInterpDim))
 
     # conert back to coords
     ds = ds.set_coords(coords)

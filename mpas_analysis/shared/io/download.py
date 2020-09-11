@@ -102,7 +102,7 @@ def download_files(fileList, urlBase, outDir, verify=True):
             widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),
                        ' ', progressbar.ETA()]
             bar = progressbar.ProgressBar(widgets=widgets,
-                                          maxval=totalSize).start()
+                                          max_value=totalSize).start()
             size = 0
             with open(outFileName, 'wb') as f:
                 try:

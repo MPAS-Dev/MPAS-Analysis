@@ -493,7 +493,7 @@ def run_analysis(config, analyses):  # {{{
     widgets = ['Running tasks: ', progressbar.Percentage(), ' ',
                progressbar.Bar(), ' ', progressbar.ETA()]
     progress = progressbar.ProgressBar(widgets=widgets,
-                                       maxval=totalTaskCount).start()
+                                       max_value=totalTaskCount).start()
 
     runningProcessCount = 0
 
@@ -592,6 +592,7 @@ def run_analysis(config, analyses):  # {{{
     # blank line to make sure remaining output is on a new line
     print('')
 
+    handler.close()
     logger.handlers = []
 
     # raise the last exception so the process exits with an error

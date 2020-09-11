@@ -219,7 +219,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
             climatology[variableName] = \
                 da.sum(dim='nVertLevels').where(self.verticalIndexMask)
 
-        climatology = climatology.drop('verticalIndex')
+        climatology = climatology.drop_vars('verticalIndex')
 
         climatology = climatology.transpose('depthSlice', 'nCells')
 
