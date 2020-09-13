@@ -102,7 +102,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 'SVar': 'salinity',
                 'volVar': 'volume',
                 'zVar': 'z',
-                'tDim': 'Time'},
+                'tDim': 'Time',
+                'legend': 'SOSE 2005-2010 ANN mean'},
             'WOA18': {
                 'suffix': 'WOA18',
                 'gridName': 'Global_0.25x0.25degree',
@@ -116,7 +117,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 'SVar': 's_an',
                 'volVar': 'volume',
                 'zVar': 'depth',
-                'tDim': 'month'}}
+                'tDim': 'month',
+                'legend': 'WOA18 1955-2017 ANN mean'}}
 
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
@@ -1177,25 +1179,27 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             if varName in ['temperature', 'salinity']:
                 obsColors = ['b', 'g', 'm']
+                daysInMonth = constants.daysInMonth
                 for obsName in self.obsSubtasks:
                     obsFileName = self.obsSubtasks[obsName].outFileName
+                    obsDict = self.obsSubtasks[obsName].obsDict
                     dsObs = xarray.open_dataset(obsFileName)
-                    endMonthDays = numpy.cumsum(constants.daysInMonth)
-                    midMonthDays = endMonthDays - 0.5*constants.daysInMonth
+                    endMonthDays = numpy.cumsum(daysInMonth)
+                    midMonthDays = endMonthDays - 0.5*daysInMonth
 
                     obsTime = []
-                    obsField = []
+                    fieldMean = \
+                        numpy.sum(dsObs[varName].values*daysInMonth)/365.
                     for year in range(startYear, endYear+1):
                         obsTime.append(midMonthDays + 365.*(year-1.))
-                        obsField.append(dsObs[varName])
                     obsTime = numpy.array(obsTime).ravel()
-                    obsField = numpy.array(obsField).ravel()
+                    obsField = fieldMean*numpy.ones(obsTime.shape)
                     da = xarray.DataArray(data=obsField, dims='Time',
                                           coords=[('Time', obsTime)])
                     fields.append(da)
                     lineColors.append(obsColors.pop(0))
                     lineWidths.append(1.2)
-                    legendText.append(obsName)
+                    legendText.append(obsDict['legend'])
 
             if is3d:
                 if not plotControl or numpy.all(zbounds == zboundsRef):
