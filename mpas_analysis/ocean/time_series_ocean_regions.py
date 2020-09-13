@@ -26,13 +26,15 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, decode_strings, get_region_mask
+    build_obs_path, get_files_year_month, decode_strings, get_region_mask
 
 from mpas_analysis.shared.html import write_image_xml
 
 from mpas_analysis.shared.regions import get_feature_list
 
 from mpas_analysis.ocean.utility import compute_zmid
+
+from mpas_analysis.shared.constants import constants
 
 
 class TimeSeriesOceanRegions(AnalysisTask):  # {{{
@@ -82,6 +84,40 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
         regionGroups = config.getExpression(self.taskName, 'regionGroups')
 
+        obsDicts = {
+            'SOSE': {
+                'suffix': 'SOSE',
+                'gridName': 'SouthernOcean_0.167x0.167degree',
+                'gridFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
+                                'SouthernOcean_0.167x0.167degree_20180710.nc',
+                'TFileName': 'SOSE/SOSE_2005-2010_monthly_pot_temp_'
+                             'SouthernOcean_0.167x0.167degree_20180710.nc',
+                'SFileName': 'SOSE/SOSE_2005-2010_monthly_salinity_'
+                             'SouthernOcean_0.167x0.167degree_20180710.nc',
+                'volFileName': 'SOSE/SOSE_volume_'
+                               'SouthernOcean_0.167x0.167degree_20190815.nc',
+                'lonVar': 'lon',
+                'latVar': 'lat',
+                'TVar': 'theta',
+                'SVar': 'salinity',
+                'volVar': 'volume',
+                'zVar': 'z',
+                'tDim': 'Time'},
+            'WOA18': {
+                'suffix': 'WOA18',
+                'gridName': 'Global_0.25x0.25degree',
+                'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'volFileName': None,
+                'lonVar': 'lon',
+                'latVar': 'lat',
+                'TVar': 't_an',
+                'SVar': 's_an',
+                'volVar': 'volume',
+                'zVar': 'depth',
+                'tDim': 'month'}}
+
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
@@ -102,6 +138,25 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionMaskFile, outFileSuffix=regionMaskSuffix)
 
             years = list(range(startYear, endYear + 1))
+
+            obsList = config.getExpression(sectionName, 'obs')
+            groupObsDicts = {}
+
+            for obsName in obsList:
+                localObsDict = dict(obsDicts[obsName])
+                obsFileName = build_obs_path(
+                    config, component=self.componentName,
+                    relativePath=localObsDict['gridFileName'])
+                obsMasksSubtask = regionMasksTask.add_mask_subtask(
+                    regionMaskFile, outFileSuffix=regionMaskSuffix,
+                    obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
+                    latVar=localObsDict['latVar'],
+                    meshName=localObsDict['gridName'])
+
+                obsDicts[obsName]['maskTask'] = obsMasksSubtask
+
+                localObsDict['maskTask'] = obsMasksSubtask
+                groupObsDicts[obsName] = localObsDict
 
             # in the end, we'll combine all the time series into one, but we
             # create this task first so it's easier to tell it to run after all
@@ -133,9 +188,18 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 fullSuffix = sectionSuffix + '_' + regionName[0].lower() + \
                     regionName[1:].replace(' ', '')
 
+                obsSubtasks = {}
+                for obsName in obsList:
+                    localObsDict = dict(groupObsDicts[obsName])
+
+                    obsSubtask = ComputeObsRegionalTimeSeriesSubtask(
+                        self, regionGroup, regionName, fullSuffix,
+                        masksSubtask, localObsDict)
+                    obsSubtasks[obsName] = obsSubtask
+
                 plotRegionSubtask = PlotRegionTimeSeriesSubtask(
                     self, regionGroup, regionName, index, controlConfig,
-                    sectionName, fullSuffix)
+                    sectionName, fullSuffix, obsSubtasks)
                 plotRegionSubtask.run_after(combineSubtask)
                 self.add_subtask(plotRegionSubtask)
 
@@ -671,6 +735,232 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     # }}}
 
 
+class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
+    """
+    Compute the regional mean of the obs climatology
+
+    Attributes
+    ----------
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, regionGroup, regionName, fullSuffix,
+                 masksSubtask,  obsDict):
+        # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask :  ``AnalysisTask``
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        regionGroup : str
+            Name of the collection of region to plot
+
+        regionName : str
+            Name of the region to plot
+
+        fullSuffix : str
+            The regionGroup and regionName combined and modified to be
+            appropriate as a task or file suffix
+
+        masksSubtask : ``ComputeRegionMasksSubtask``
+            A task for creating mask files for each region to plot, used
+            to get the mask file name
+
+        obsDict : dict
+            Information on the observations to compare against
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(ComputeObsRegionalTimeSeriesSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName='compute{}_{}'.format(fullSuffix, obsDict['suffix']))
+
+        self.regionGroup = regionGroup
+        self.regionName = regionName
+        self.masksSubtask = masksSubtask
+        self.obsDict = obsDict
+        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+
+        timeSeriesName = regionGroup[0].lower() + \
+            regionGroup[1:].replace(' ', '')
+        outputDirectory = '{}/{}/'.format(
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'),
+            timeSeriesName)
+
+        self.outFileName = '{}/TS_{}_{}.nc'.format(
+            outputDirectory, obsDict['suffix'], self.prefix)
+
+        self.run_after(obsDict['maskTask'])
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Compute time-series output of properties in an ocean region.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        self.logger.info("\nAveraging T and S for {}...".format(
+            self.regionName))
+
+        obsDict = self.obsDict
+        config = self.config
+
+        regionGroup = self.regionGroup
+        timeSeriesName = regionGroup[0].lower() + \
+            regionGroup[1:].replace(' ', '')
+
+        sectionSuffix = regionGroup[0].upper() + \
+            regionGroup[1:].replace(' ', '')
+        sectionName = 'timeSeries{}'.format(sectionSuffix)
+
+        outputDirectory = '{}/{}/'.format(
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'),
+            timeSeriesName)
+
+        outFileName = '{}/TS_{}_{}.nc'.format(
+            outputDirectory, obsDict['suffix'], self.prefix)
+
+        if os.path.exists(outFileName):
+            return
+
+        regionMaskFileName = obsDict['maskTask'].maskFileName
+
+        dsRegionMask = \
+            xarray.open_dataset(regionMaskFileName).stack(
+                    nCells=(obsDict['latVar'], obsDict['lonVar']))
+        dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
+            [obsDict['latVar'], obsDict['lonVar']])
+
+        maskRegionNames = decode_strings(dsRegionMask.regionNames)
+        regionIndex = maskRegionNames.index(self.regionName)
+
+        dsMask = dsRegionMask.isel(nRegions=regionIndex)
+
+        cellMask = dsMask.regionCellMasks == 1
+
+        if config.has_option(sectionName, 'zmin'):
+            zmin = config.getfloat(sectionName, 'zmin')
+        else:
+            zmin = dsMask.zminRegions.values
+
+        if config.has_option(sectionName, 'zmax'):
+            zmax = config.getfloat(sectionName, 'zmax')
+        else:
+            zmax = dsMask.zmaxRegions.values
+
+        TVarName = obsDict['TVar']
+        SVarName = obsDict['SVar']
+        zVarName = obsDict['zVar']
+        lonVarName = obsDict['lonVar']
+        latVarName = obsDict['latVar']
+        volVarName = obsDict['volVar']
+        tDim = obsDict['tDim']
+
+        obsFileName = build_obs_path(
+            config, component=self.componentName,
+            relativePath=obsDict['TFileName'])
+        self.logger.info('  Reading from {}...'.format(obsFileName))
+
+        ds = xarray.open_dataset(obsFileName)
+        if obsDict['SFileName'] != obsDict['TFileName']:
+            obsFileName = build_obs_path(
+                config, component=self.componentName,
+                relativePath=obsDict['SFileName'])
+            self.logger.info('  Reading from {}...'.format(obsFileName))
+            dsS = xarray.open_dataset(obsFileName)
+            ds[SVarName] = dsS[SVarName]
+
+        if obsDict['volFileName'] is None:
+            # compute volume from lat, lon, depth bounds
+            self.logger.info('  Computing volume...'.format(obsFileName))
+            latBndsName = ds[latVarName].attrs['bounds']
+            lonBndsName = ds[lonVarName].attrs['bounds']
+            zBndsName = ds[zVarName].attrs['bounds']
+            latBnds = ds[latBndsName]
+            lonBnds = ds[lonBndsName]
+            zBnds = ds[zBndsName]
+            dLat = numpy.deg2rad(latBnds[:, 1] - latBnds[:, 0])
+            dLon = numpy.deg2rad(lonBnds[:, 1] - lonBnds[:, 0])
+            lat = numpy.deg2rad(ds[latVarName])
+            dz = zBnds[:, 1] - zBnds[:, 0]
+            radius = 6378137.0
+            area = radius**2*numpy.cos(lat)*dLat*dLon
+            volume = dz*area
+            ds[volVarName] = volume
+
+        elif obsDict['volFileName'] != obsDict['TFileName']:
+            obsFileName = build_obs_path(
+                config, component=self.componentName,
+                relativePath=obsDict['volFileName'])
+            self.logger.info('  Reading from {}...'.format(obsFileName))
+            dsVol = xarray.open_dataset(obsFileName)
+            ds[volVarName] = dsVol[volVarName]
+
+        if 'positive' in ds[zVarName].attrs and \
+                ds[zVarName].attrs['positive'] == 'down':
+            attrs = ds[zVarName].attrs
+            ds[zVarName] = -ds[zVarName]
+            ds[zVarName].attrs = attrs
+            ds[zVarName].attrs['positive'] = 'up'
+
+        TMean = numpy.zeros(ds.sizes[tDim])
+        SMean = numpy.zeros(ds.sizes[tDim])
+
+        depthMask = numpy.logical_and(ds[zVarName] >= zmin,
+                                      ds[zVarName] <= zmax)
+
+        for tIndex in range(ds.sizes[tDim]):
+            dsMonth = ds.isel({tDim: tIndex})
+            dsMonth = dsMonth.stack(nCells=(obsDict['latVar'],
+                                            obsDict['lonVar']))
+            dsMonth = dsMonth.reset_index('nCells').drop_vars(
+                [obsDict['latVar'], obsDict['lonVar']])
+
+            dsMonth = dsMonth.where(cellMask, drop=True)
+
+            dsMonth = dsMonth.where(depthMask)
+
+            mask = dsMonth[TVarName].notnull()
+            TSum = (dsMonth[TVarName]*dsMonth[volVarName]).sum(dim=('nCells',
+                                                                    zVarName))
+            volSum = (mask*dsMonth[volVarName]).sum(dim=('nCells', zVarName))
+            TMean[tIndex] = TSum/volSum
+
+            mask = dsMonth[SVarName].notnull()
+            SSum = (dsMonth[SVarName]*dsMonth[volVarName]).sum(dim=('nCells',
+                                                                    zVarName))
+            volSum = (mask*dsMonth[volVarName]).sum(dim=('nCells', zVarName))
+            SMean[tIndex] = SSum/volSum
+
+        dsOut = xarray.Dataset()
+        dsOut['temperature'] = ('Time', TMean)
+        dsOut['salinity'] = ('Time', SMean)
+        dsOut['zbounds'] = ('nBounds', [zmin, zmax])
+        dsOut['month'] = ('Time', numpy.array(ds.month.values, dtype=float))
+        dsOut['year'] = ('Time', numpy.ones(ds.sizes[tDim]))
+        write_netcdf(dsOut, outFileName)
+
+        # }}}
+
+    # }}}
+
+
 class PlotRegionTimeSeriesSubtask(AnalysisTask):
     """
     Plots time-series output of properties in an ocean region.
@@ -698,7 +988,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, regionGroup, regionName, regionIndex,
-                 controlConfig, sectionName, fullSuffix):
+                 controlConfig, sectionName, fullSuffix, obsSubtasks):
         # {{{
         """
         Construct the analysis task.
@@ -727,6 +1017,9 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         fullSuffix : str
             The regionGroup and regionName combined and modified to be
             appropriate as a task or file suffix
+
+        obsSubtasks : dict of ``AnalysisTasks``
+            Subtasks for computing the mean observed T and S in the region
         """
         # Authors
         # -------
@@ -746,6 +1039,10 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         self.sectionName = sectionName
         self.controlConfig = controlConfig
         self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.obsSubtasks = obsSubtasks
+
+        for obsName in obsSubtasks:
+            self.run_after(obsSubtasks[obsName])
 
         # }}}
 
@@ -877,6 +1174,28 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 lineColors.append('r')
                 lineWidths.append(1.2)
                 legendText.append(controlRunName)
+
+            if varName in ['temperature', 'salinity']:
+                obsColors = ['b', 'g', 'm']
+                for obsName in self.obsSubtasks:
+                    obsFileName = self.obsSubtasks[obsName].outFileName
+                    dsObs = xarray.open_dataset(obsFileName)
+                    endMonthDays = numpy.cumsum(constants.daysInMonth)
+                    midMonthDays = endMonthDays - 0.5*constants.daysInMonth
+
+                    obsTime = []
+                    obsField = []
+                    for year in range(startYear, endYear+1):
+                        obsTime.append(midMonthDays + 365.*(year-1.))
+                        obsField.append(dsObs[varName])
+                    obsTime = numpy.array(obsTime).ravel()
+                    obsField = numpy.array(obsField).ravel()
+                    da = xarray.DataArray(data=obsField, dims='Time',
+                                          coords=[('Time', obsTime)])
+                    fields.append(da)
+                    lineColors.append(obsColors.pop(0))
+                    lineWidths.append(1.2)
+                    legendText.append(obsName)
 
             if is3d:
                 if not plotControl or numpy.all(zbounds == zboundsRef):
