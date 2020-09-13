@@ -1102,6 +1102,30 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         inset = add_inset(fig, fc, width=1.5, height=1.5)
 
+        # add an empty plot covering the subplots to give common axis labels
+        pos0 = axarray[0, 0].get_position()
+        pos1 = axarray[-1, -1].get_position()
+        pos_common = [pos0.x0, pos1.y0, pos1.x1-pos0.x0, pos0.y1-pos1.y0]
+        print(pos_common)
+        common_ax = fig.add_axes(pos_common, zorder=-2)
+        common_ax.spines['top'].set_color('none')
+        common_ax.spines['bottom'].set_color('none')
+        common_ax.spines['left'].set_color('none')
+        common_ax.spines['right'].set_color('none')
+        common_ax.tick_params(labelcolor='w', top=False, bottom=False,
+                              left=False, right=False)
+
+        common_ax.set_xlabel('Salinity (PSU)', **axis_font)
+        common_ax.set_ylabel(r'Potential temperature ($^\circ$C)', **axis_font)
+
+        # turn off labels for individual plots (just used for spacing)
+        for index in range(len(axisIndices)):
+            row = nRows-1 - index//nCols
+            col = numpy.mod(index, nCols)
+            ax = axarray[row, col]
+            ax.set_xlabel('')
+            ax.set_ylabel('')
+
         # move the color bar down a little ot avoid the inset
         pos0 = inset.get_position()
         pos1 = axarray[-1, -1].get_position()
