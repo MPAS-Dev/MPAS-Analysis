@@ -98,7 +98,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                                     '{}.geojson'.format(self.regionMaskSuffix))
 
         masksSubtask = regionMasksTask.add_mask_subtask(
-            masksFile, outFileSuffix=self.regionMaskSuffix)
+            masksFile, outFileSuffix=self.regionMaskSuffix,
+            useMpasMaskCreator=False)
 
         if 'all' in self.regionNames:
             self.regionNames = get_feature_list(masksFile)

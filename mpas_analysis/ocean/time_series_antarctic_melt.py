@@ -85,7 +85,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             iceShelvesToPlot = get_feature_list(self.iceShelfMasksFile)
 
         masksSubtask = regionMasksTask.add_mask_subtask(
-            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
+            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621',
+            useMpasMaskCreator=False)
 
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.get('timeSeries', 'endYear')

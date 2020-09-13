@@ -137,7 +137,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionNames = get_feature_list(regionMaskFile)
 
             masksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=regionMaskSuffix)
+                regionMaskFile, outFileSuffix=regionMaskSuffix,
+                useMpasMaskCreator=False)
 
             years = list(range(startYear, endYear + 1))
 

@@ -178,7 +178,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                 regionNames = get_feature_list(regionMaskFile)
 
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=regionMaskSuffix)
+                regionMaskFile, outFileSuffix=regionMaskSuffix,
+                useMpasMaskCreator=False)
 
             obsList = config.getExpression(sectionName, 'obs')
             groupObsDicts = {}
