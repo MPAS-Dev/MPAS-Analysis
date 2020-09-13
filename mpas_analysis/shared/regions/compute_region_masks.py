@@ -106,6 +106,9 @@ class ComputeRegionMasks(AnalysisTask):
             if obsFileName is not None:
                 useMpasMaskCreator = False
 
+            if useMpasMaskCreator:
+                subprocessCount = 1
+
             maskSubtask = ComputeRegionMasksSubtask(
                 self, geojsonFileName, outFileSuffix,
                 featureList=None, subtaskName=subtaskName,
