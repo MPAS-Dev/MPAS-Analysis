@@ -216,6 +216,8 @@ def plot_polar_comparison(
         do_subplot(ax=ax, field=refArray, title=refTitle, **dictModelRef)
 
         ax = plt.subplot(subplots[2], projection=projection)
+        diffTitle = '{} (mean={:5.2f}, rms={:5.2f})'.format(
+                     diffTitle, np.nanmean(diffArray), np.nanstd(diffArray))
         do_subplot(ax=ax, field=diffArray, title=diffTitle, **dictDiff)
 
     fig.canvas.draw()
@@ -386,6 +388,8 @@ def plot_global_comparison(
         plot_panel(ax, refTitle, refArray, **dictModelRef)
 
         ax = plt.subplot(subplots[2], projection=projection)
+        diffTitle = '{} (mean={:5.2f}, rms={:5.2f})'.format(
+                     diffTitle, np.nanmean(diffArray), np.nanstd(diffArray))
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
     if (fileout is not None):
