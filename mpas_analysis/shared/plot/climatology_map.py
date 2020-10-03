@@ -385,6 +385,11 @@ def plot_global_comparison(
         ax = plt.subplot(subplots[1], projection=projection)
         plot_panel(ax, refTitle, refArray, **dictModelRef)
 
+        weights = np.cos(np.deg2rad(Lats))
+        mean = np.average(diffArray, weights=weights)
+        std = np.sqrt(np.average((diffArray - mean)**2, weights=weights))
+        diffTitle = '{} (mean={:5.2f}, std={:5.2f})'.format(
+                     diffTitle, mean, std)
         ax = plt.subplot(subplots[2], projection=projection)
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
