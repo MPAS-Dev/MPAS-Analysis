@@ -514,6 +514,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                 variableList=variableList,
                 startDate=startDate,
                 endDate=endDate).isel(Time=0)
+            dsIn.load()
 
             layerThickness = dsIn.timeMonthly_avg_layerThickness
 
@@ -522,6 +523,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                 self.logger.info('    region: {}'.format(
                     self.regionNames[regionIndex]))
                 dsRegion = dsRegionMask.isel(nRegions=regionIndex)
+                dsRegion.load()
                 cellMask = dsRegion.cellMask
                 totalArea = dsRegion.totalArea
                 depthMask = dsRegion.depthMask.where(cellMask, drop=True)

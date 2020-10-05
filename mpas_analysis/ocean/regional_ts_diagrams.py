@@ -672,6 +672,8 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds['volume'] = (dsRestart.areaCell *
                             ds['timeMonthly_avg_layerThickness'])
 
+            ds.load()
+
             ds = ds.where(cellMask, drop=True)
 
             self.logger.info("Don't worry about the following dask "
