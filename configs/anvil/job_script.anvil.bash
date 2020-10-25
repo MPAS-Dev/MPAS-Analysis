@@ -10,9 +10,8 @@
 cd $SLURM_SUBMIT_DIR
 export OMP_NUM_THREADS=1
 
-source /home/xylar/miniconda3/etc/profile.d/conda.sh
-conda activate mpas-analysis
+source /lcrc/soft/climate/e3sm-unified/load_latest_e3sm_unified.sh
 export HDF5_USE_FILE_LOCKING=FALSE
 
-srun -N 1 -n 1 python -m mpas_analysis configs/polarRegions.conf config.SO60to10ISC.20200108
+srun -N 1 -n 1 python -m mpas_analysis configs/polarRegions.conf 20201024.GMPAS-IAF.T62_oQU240wLIC.anvil.cg
 
