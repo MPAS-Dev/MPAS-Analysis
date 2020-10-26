@@ -228,7 +228,7 @@ out with NaNs.  If the month coordinate is not present, a data array
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate, so must be supplied if
 <code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p></li>
-<li><p><strong>maskVaries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
+<li><p><strong>maskVaries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – If the mask (where variables in <code class="docutils literal notranslate"><span class="pre">ds</span></code> are <code class="docutils literal notranslate"><span class="pre">NaN</span></code>) varies with time.
 If not, the weighted average does not need make extra effort to account
 for the mask.  Most MPAS fields will have masks that don’t vary in
 time, whereas observations may sometimes be present only at some
