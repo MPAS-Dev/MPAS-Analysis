@@ -682,6 +682,7 @@
                 <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
                 <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                 <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">dsIn</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
             <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span>
 
@@ -690,6 +691,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    region: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]))</span>
                 <span class="n">dsRegion</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+                <span class="n">dsRegion</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
                 <span class="n">cellMask</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">cellMask</span>
                 <span class="n">totalArea</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">totalArea</span>
                 <span class="n">depthMask</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">depthMask</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

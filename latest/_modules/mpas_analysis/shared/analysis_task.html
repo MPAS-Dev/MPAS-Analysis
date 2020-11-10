@@ -510,6 +510,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Execution time: </span><span class="si">{}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:05.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">writeLogFile</span><span class="p">:</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="c1"># restore stdout and stderr</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">oldStdout</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">oldStderr</span>

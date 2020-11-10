@@ -496,7 +496,7 @@
             <span class="s1">&#39;Anomaly from year </span><span class="si">{}</span><span class="s1"> in ocean heat content&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span><span class="o">.</span><span class="n">startYear</span><span class="p">)</span>
 
-        <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">climatology</span>  <span class="c1"># }}}</span>
 
