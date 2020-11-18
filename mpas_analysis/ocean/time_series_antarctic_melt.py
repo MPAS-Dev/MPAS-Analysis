@@ -564,9 +564,9 @@ class PlotMeltSubtask(AnalysisTask):
         observationsDirectory = build_obs_path(config, 'ocean',
                                                'meltSubdirectory')
         obsFileNameDict = {'Rignot et al. (2013)':
-                           'Rignot_2013_melt_rates_20200623.csv',
+                           'Rignot_2013_melt_rates_20201117.csv',
                            'Rignot et al. (2013) SS':
-                           'Rignot_2013_melt_rates_SS_20200623.csv'}
+                           'Rignot_2013_melt_rates_SS_20201117.csv'}
 
         obsDict = {}  # dict for storing dict of obs data
         for obsName in obsFileNameDict:
