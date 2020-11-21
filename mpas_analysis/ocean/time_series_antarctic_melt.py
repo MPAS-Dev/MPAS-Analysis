@@ -314,6 +314,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         # select only those regions we want to plot
         dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
 
+        regionNames = decode_strings(dsRegionMask.regionNames)
+
         datasets = []
         nTime = dsIn.sizes['Time']
         for tIndex in range(nTime):
@@ -327,6 +329,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             totalMeltFluxes = numpy.zeros((nRegions,))
 
             for regionIndex in range(nRegions):
+                self.logger.info('    {}'.format(regionNames[regionIndex]))
                 cellMask = \
                     dsRegionMask.regionCellMasks.isel(nRegions=regionIndex)
 
@@ -346,8 +349,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
             dsOut = xarray.Dataset()
             dsOut.coords['Time'] = dsIn.Time.isel(Time=tIndex)
-            dsOut['totalMeltFlux'] = (('nRegions'), totalMeltFluxes)
-            dsOut['meltRates'] = (('nRegions'), meltRates)
+            dsOut['totalMeltFlux'] = (('nRegions',), totalMeltFluxes)
+            dsOut['meltRates'] = (('nRegions',), meltRates)
             datasets.append(dsOut)
 
         dsOut = xarray.concat(objs=datasets, dim='Time')
