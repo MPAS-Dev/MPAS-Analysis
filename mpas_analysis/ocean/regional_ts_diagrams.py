@@ -1025,8 +1025,14 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             raise ValueError('Unexpected diagramType {}'.format(diagramType))
 
         lastPanel = None
-        volMinMpas = None
-        volMaxMpas = None
+        if config.has_option(sectionName, 'volMin'):
+            volMinMpas = config.getfloat(sectionName, 'volMin')
+        else:
+            volMinMpas = None
+        if config.has_option(sectionName, 'volMax'):
+            volMaxMpas = config.getfloat(sectionName, 'volMax')
+        else:
+            volMaxMpas = None
         for index in range(len(axisIndices)):
             panelIndex = axisIndices[index]
 
@@ -1052,8 +1058,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                 lastPanel, volMin, volMax = \
                     self._plot_volumetric_panel(T, S, volume)
 
-                if index == 0:
+                if volMinMpas is None:
                     volMinMpas = volMin
+                if volMaxMpas is None:
                     volMaxMpas = volMax
                 if normType == 'linear':
                     norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
