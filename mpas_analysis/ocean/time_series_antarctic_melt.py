@@ -87,14 +87,40 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         masksSubtask = regionMasksTask.add_mask_subtask(
             self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
 
-        computeMeltSubtask = ComputeMeltSubtask(self, mpasTimeSeriesTask,
-                                                masksSubtask, iceShelvesToPlot)
-        self.add_subtask(computeMeltSubtask)
+        startYear = config.getint('timeSeries', 'startYear')
+        endYear = config.get('timeSeries', 'endYear')
+        if endYear == 'end':
+            # a valid end year wasn't found, so likely the run was not found,
+            # perhaps because we're just listing analysis tasks
+            endYear = startYear
+        else:
+            endYear = int(endYear)
+
+        years = list(range(startYear, endYear + 1))
+
+        # in the end, we'll combine all the time series into one, but we
+        # create this task first so it's easier to tell it to run after all
+        # the compute tasks
+        combineSubtask = CombineMeltSubtask(
+            self, startYears=years, endYears=years)
+
+        # run one subtask per year
+        for year in years:
+            computeSubtask = ComputeMeltSubtask(
+                self, startYear=year, endYear=year,
+                mpasTimeSeriesTask=mpasTimeSeriesTask,
+                masksSubtask=masksSubtask,
+                iceShelvesToPlot=iceShelvesToPlot)
+            self.add_subtask(computeSubtask)
+            computeSubtask.run_after(masksSubtask)
+            combineSubtask.run_after(computeSubtask)
+
+        self.add_subtask(combineSubtask)
 
         for index, iceShelf in enumerate(iceShelvesToPlot):
             plotMeltSubtask = PlotMeltSubtask(self, iceShelf, index,
                                               controlConfig)
-            plotMeltSubtask.run_after(computeMeltSubtask)
+            plotMeltSubtask.run_after(combineSubtask)
             self.add_subtask(plotMeltSubtask)
 
         # }}}
@@ -121,8 +147,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis, Stephen Price
 
-    def __init__(self, parentTask, mpasTimeSeriesTask, masksSubtask,
-                 iceShelvesToPlot):  # {{{
+    def __init__(self, parentTask, startYear, endYear, mpasTimeSeriesTask,
+                 masksSubtask, iceShelvesToPlot):  # {{{
         """
         Construct the analysis task.
 
@@ -151,7 +177,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='computeMeltRates')
+            subtaskName='computeMeltRates_{:04d}-{:04d}'.format(startYear,
+                                                                endYear))
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
         self.run_after(mpasTimeSeriesTask)
@@ -160,6 +187,13 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         self.run_after(masksSubtask)
 
         self.iceShelvesToPlot = iceShelvesToPlot
+        self.restartFileName = None
+        self.startYear = startYear
+        self.endYear = endYear
+        self.startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
+        self.endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
+        self.variableList = \
+            ['timeMonthly_avg_landIceFreshwaterFlux']
         # }}}
 
     def setup_and_check(self):  # {{{
@@ -189,8 +223,6 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        config = self.config
-
         landIceFluxMode = self.namelist.get('config_land_ice_flux_mode')
         if landIceFluxMode not in ['standalone', 'coupled']:
             raise ValueError('*** timeSeriesAntarcticMelt requires '
@@ -206,13 +238,6 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for Antarctic melt calculations')
 
-        # get a list of timeSeriesStats output files from the streams file,
-        # reading only those that are between the start and end dates
-        self.startDate = config.get('timeSeries', 'startDate')
-        self.endDate = config.get('timeSeries', 'endDate')
-
-        self.variableList = \
-            ['timeMonthly_avg_landIceFreshwaterFlux']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
         return  # }}}
@@ -230,10 +255,16 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
 
-        baseDirectory = build_config_full_path(
-            config, 'output', 'timeSeriesSubdirectory')
+        outputDirectory = '{}/iceShelfFluxes/'.format(
+            build_config_full_path(config, 'output', 'timeseriesSubdirectory'))
 
-        outFileName = '{}/iceShelfAggregatedFluxes.nc'.format(baseDirectory)
+        try:
+            os.makedirs(outputDirectory)
+        except OSError:
+            pass
+
+        outFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
+            outputDirectory, self.startYear, self.endYear)
 
         # Load data:
         inputFile = mpasTimeSeriesTask.outputFile
@@ -253,7 +284,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
                                         'it.'.format(outFileName))
                     os.remove(outFileName)
         except OSError:
-            # something is potentailly wrong with the file, so let's delete
+            # something is potentially wrong with the file, so let's delete
             # it and try again
             self.logger.warning('Problems reading file {}. Deleting '
                                 'it.'.format(outFileName))
@@ -283,6 +314,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         # select only those regions we want to plot
         dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
 
+        regionNames = decode_strings(dsRegionMask.regionNames)
+
         datasets = []
         nTime = dsIn.sizes['Time']
         for tIndex in range(nTime):
@@ -296,6 +329,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             totalMeltFluxes = numpy.zeros((nRegions,))
 
             for regionIndex in range(nRegions):
+                self.logger.info('    {}'.format(regionNames[regionIndex]))
                 cellMask = \
                     dsRegionMask.regionCellMasks.isel(nRegions=regionIndex)
 
@@ -315,8 +349,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
             dsOut = xarray.Dataset()
             dsOut.coords['Time'] = dsIn.Time.isel(Time=tIndex)
-            dsOut['totalMeltFlux'] = (('nRegions'), totalMeltFluxes)
-            dsOut['meltRates'] = (('nRegions'), meltRates)
+            dsOut['totalMeltFlux'] = (('nRegions',), totalMeltFluxes)
+            dsOut['meltRates'] = (('nRegions',), meltRates)
             datasets.append(dsOut)
 
         dsOut = xarray.concat(objs=datasets, dim='Time')
@@ -331,7 +365,76 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         write_netcdf(dsOut, outFileName)
 
         # }}}
+    # }}}
 
+
+class CombineMeltSubtask(AnalysisTask):  # {{{
+    """
+    Combine individual time series into a single data set
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def __init__(self, parentTask, startYears, endYears):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask : ``TimeSeriesOceanRegions``
+            The main task of which this is a subtask
+
+        startYears, endYears : list
+            The beginning and end of each time series to combine
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        subtaskName = 'combineAntarcticMeltTimeSeries'
+
+        # first, call the constructor from the base class (AnalysisTask)
+        super(CombineMeltSubtask, self).__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            componentName=parentTask.componentName,
+            tags=parentTask.tags,
+            subtaskName=subtaskName)
+
+        self.startYears = startYears
+        self.endYears = endYears
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Combine the time series
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        outputDirectory = '{}/iceShelfFluxes/'.format(
+            build_config_full_path(self.config, 'output',
+                                   'timeseriesSubdirectory'))
+
+        outFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
+            outputDirectory, self.startYears[0], self.endYears[-1])
+
+        if not os.path.exists(outFileName):
+            inFileNames = []
+            for startYear, endYear in zip(self.startYears, self.endYears):
+                inFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
+                    outputDirectory, startYear, endYear)
+                inFileNames.append(inFileName)
+
+            ds = xarray.open_mfdataset(inFileNames, combine='nested',
+                                       concat_dim='Time', decode_times=False)
+
+            ds.load()
+
+            write_netcdf(ds, outFileName)
+        # }}}
     # }}}
 
 
@@ -457,7 +560,7 @@ class PlotMeltSubtask(AnalysisTask):
                 self._load_ice_shelf_fluxes(self.controlConfig)
 
         # Load observations from multiple files and put in dictionary based
-        # on shelf keyname
+        # on shelf key name
         observationsDirectory = build_obs_path(config, 'ocean',
                                                'meltSubdirectory')
         obsFileNameDict = {'Rignot et al. (2013)':
@@ -658,10 +761,14 @@ class PlotMeltSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        baseDirectory = build_config_full_path(
-            config, 'output', 'timeSeriesSubdirectory')
+        outputDirectory = '{}/iceShelfFluxes/'.format(
+            build_config_full_path(config, 'output', 'timeseriesSubdirectory'))
 
-        outFileName = '{}/iceShelfAggregatedFluxes.nc'.format(baseDirectory)
+        startYear = config.getint('timeSeries', 'startYear')
+        endYear = config.getint('timeSeries', 'endYear')
+
+        outFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
+            outputDirectory, startYear, endYear)
 
         dsOut = xarray.open_dataset(outFileName)
         return dsOut.totalMeltFlux, dsOut.meltRates
