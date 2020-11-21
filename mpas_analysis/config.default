@@ -1287,6 +1287,9 @@ variables = [{'name': 'temperature',
 # zmin = -1000
 # zmax = -400
 
+# Obserational data sets to compare against
+obs = ['SOSE', 'WOA18']
+
 
 [timeSeriesTransport]
 ## options related to plotting time series of transport through transects
