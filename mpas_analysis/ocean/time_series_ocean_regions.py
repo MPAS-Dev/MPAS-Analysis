@@ -295,8 +295,8 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         except OSError:
             pass
 
-        outFileName = '{}/depthMasks{}.nc'.format(outputDirectory,
-                                                  timeSeriesName)
+        outFileName = '{}/depthMasks_{}.nc'.format(outputDirectory,
+                                                   timeSeriesName)
 
         if os.path.exists(outFileName):
             self.logger.info('  Mask file exists -- Done.')
@@ -563,8 +563,8 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             self.logger.info('  Time series exists -- Done.')
             return
 
-        regionMaskFileName = '{}/depthMasks{}.nc'.format(outputDirectory,
-                                                         timeSeriesName)
+        regionMaskFileName = '{}/depthMasks_{}.nc'.format(outputDirectory,
+                                                          timeSeriesName)
         dsRegionMask = xarray.open_dataset(regionMaskFileName)
         nRegions = dsRegionMask.sizes['nRegions']
         areaCell = dsRegionMask.areaCell
@@ -834,6 +834,11 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             build_config_full_path(self.config, 'output',
                                    'timeseriesSubdirectory'),
             timeSeriesName)
+
+        try:
+            os.makedirs(outputDirectory)
+        except OSError:
+            pass
 
         outFileName = '{}/TS_{}_{}.nc'.format(
             outputDirectory, obsDict['suffix'], self.prefix)
