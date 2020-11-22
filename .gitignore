@@ -93,3 +93,6 @@ ENV/
 .ropeproject
  
 .DS_Store
+
+# Anvil test suite
+/anvil_test_suite/
