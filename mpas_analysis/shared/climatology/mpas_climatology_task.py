@@ -698,7 +698,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
             fileNames = sorted(parentTask.inputFiles)
             years, months = get_files_year_month(
                 fileNames,  self.historyStreams,
-                'timeSeriesStatsMonthlyOutput')
+                parentTask.streamName)
 
             with xarray.open_mfdataset(parentTask.inputFiles,
                                        combine='nested',
