@@ -32,12 +32,10 @@ from mpas_analysis.shared.plot import savefig, add_inset
 
 from mpas_analysis.shared.io import write_netcdf
 
-from mpas_analysis.shared.io.utility import decode_strings, get_region_mask, \
+from mpas_analysis.shared.io.utility import decode_strings, \
     build_obs_path, build_config_full_path, make_directories
 
 from mpas_analysis.shared.html import write_image_xml
-
-from mpas_analysis.shared.regions import get_feature_list
 
 from mpas_analysis.ocean.utility import compute_zmid
 
@@ -166,19 +164,12 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
 
-            regionMaskSuffix = config.getExpression(sectionName,
-                                                    'regionMaskSuffix')
-
-            regionMaskFile = get_region_mask(
-                config, '{}.geojson'.format(regionMaskSuffix))
-
             regionNames = config.getExpression(sectionName, 'regionNames')
 
-            if 'all' in regionNames and os.path.exists(regionMaskFile):
-                regionNames = get_feature_list(regionMaskFile)
-
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=regionMaskSuffix)
+                regionGroup=regionGroup)
+
+            regionNames = mpasMasksSubtask.expand_region_names(regionNames)
 
             obsList = config.getExpression(sectionName, 'obs')
             groupObsDicts = {}
@@ -189,8 +180,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
                 obsMasksSubtask = regionMasksTask.add_mask_subtask(
-                    regionMaskFile, outFileSuffix=regionMaskSuffix,
-                    obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
+                    regionGroup, obsFileName=obsFileName,
+                    lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
 
@@ -938,10 +929,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         startYear = self.mpasClimatologyTask.startYear
         endYear = self.mpasClimatologyTask.endYear
 
-        regionMaskSuffix = config.getExpression(sectionName, 'regionMaskSuffix')
-
-        regionMaskFile = get_region_mask(config,
-                                         '{}.geojson'.format(regionMaskSuffix))
+        regionMaskFile = self.mpasMasksSubtask.geojsonFileName
 
         fcAll = read_feature_collection(regionMaskFile)
 
