@@ -9,9 +9,6 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import os
 import xarray as xr
 import numpy
@@ -20,14 +17,71 @@ import json
 from multiprocessing import Pool
 import progressbar
 from functools import partial
-from geometric_features import read_feature_collection
 import mpas_tools.conversion
+
+from geometric_features import read_feature_collection, GeometricFeatures
+from geometric_features.aggregation.ocean import basins, subbasins, antarctic, \
+    ice_shelves
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_region_mask
 from mpas_analysis.shared.io import write_netcdf
+
+
+def get_region_info(regionGroup, config):
+    """
+    Get a geojson mask file and the appropriate file suffix for the given
+    region group.
+
+    Parameters
+    ----------
+    regionGroup : str
+        The name of a region group to get mask features for, one of
+        'Antarctic Regions', 'Ocean Basins', 'Ice Shelves', or 'Ocean Subbasins'
+
+    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+        Configuration options
+
+    Returns
+    -------
+    region : dict
+        A dictionary of information about the region
+
+    filename : str
+        The name of a geojson file with mask features
+
+    suffix : str
+        A suffix to use for mask files created with these features
+
+    """
+
+    regions = {'Antarctic Regions': {'prefix': 'antarcticRegions',
+                                     'date': '20200621',
+                                     'function': antarctic},
+               'Ocean Basins': {'prefix': 'oceanBasins',
+                                'date': '20200621',
+                                'function': basins},
+               'Ice Shelves': {'prefix': 'iceShelves',
+                               'date': '20200621',
+                               'function': ice_shelves},
+               'Ocean Subbasins': {'prefix': 'oceanSubbasins',
+                                   'date': '20201123',
+                                   'function': subbasins}}
+
+    if regionGroup not in regions:
+        raise ValueError('Unknown region group {}'.format(regionGroup))
+
+    region = regions[regionGroup]
+
+    prefix = region['prefix']
+    date = region['date']
+
+    suffix = '{}{}'.format(prefix, date)
+    filename = get_region_mask(config, '{}.geojson'.format(suffix))
+
+    return region, filename, suffix
 
 
 def get_feature_list(geojsonFileName):
@@ -250,6 +304,8 @@ def compute_region_masks(geojsonFileName, cellPoints, maskFileName,
                            progressbar.Bar(), ' ', progressbar.ETA()]
                 bar = progressbar.ProgressBar(widgets=widgets,
                                               max_value=nChunks).start()
+            else:
+                bar = None
 
             mask = numpy.zeros((nCells,), bool)
             for iChunk, maskChunk in \
@@ -281,6 +337,14 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
     Attributes
     ----------
+    regionGroup : str
+        The name of one of the supported region groups (see
+        :py:func:`mpas_analysis.shared.regions.get_region_info()`)
+
+    region : dict
+        A dictionary of information about the region from
+        :py:func:`mpas_analysis.shared.regions.get_region_info()`
+
     geojsonFileName : str
         A geojson file, typically from the MPAS ``geometric_features``
         repository, defining the shapes to be masked
@@ -293,9 +357,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
     maskFileName : str
         The name of the output mask file
-
-    maskExists : bool
-        Whether the mask file already exists
 
     obsFileName : str
         The name of an observations file to create masks for.  But default,
@@ -312,10 +373,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, geojsonFileName, outFileSuffix,
-                 featureList=None, subtaskName='computeRegionMasks',
-                 subprocessCount=1, obsFileName=None, lonVar='lon',
-                 latVar='lat', meshName=None, useMpasMaskCreator=False):
+    def __init__(self, parentTask, regionGroup, meshName, subprocessCount=1,
+                 obsFileName=None, lonVar='lon', latVar='lat',
+                 useMpasMaskCreator=False):
         # {{{
         """
         Construct the analysis task and adds it as a subtask of the
@@ -327,19 +387,14 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 
-        geojsonFileName : str
-            A geojson file, typically from the MPAS ``geometric_features``
-            repository, defining the shapes to be masked
+        regionGroup : str
+            The name of one of the supported region groups (see
+            :py:func:`mpas_analysis.shared.regions.get_region_info()`)
 
-        outFileSuffix : str
-            The suffix for the resulting mask file
+        meshName : str
+            The name of the mesh or grid, used as part of the mask file name.
+            Default is the MPAS mesh name
 
-        featureList : list of str, optional
-            A list of features to include.  Default is all features in all
-            files
-
-        subtaskName : str, optional
-            The name of the subtask
 
         subprocessCount : int, optional
             The number of processes that can be used to make the mask
@@ -351,10 +406,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         lonVar, latVar : str, optional
             The name of the longitude and latitude variables in ``obsFileName``
 
-        meshName : str, optional
-            The name of the mesh or grid, used as part of the mask file name.
-            Default is the MPAS mesh name
-
         useMpasMaskCreator : bool, optional
             If ``True``, the mask creator from ``mpas_tools`` will be used
             to create the mask.  Otherwise, python code is used.
@@ -362,6 +413,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         # Authors
         # -------
         # Xylar Asay-Davis
+
+        suffix = regionGroup.replace(' ', '')
+        subtaskName = '{}_{}'.format(meshName, suffix)
 
         # call the constructor from the base class (AnalysisTask)
         super(ComputeRegionMasksSubtask, self).__init__(
@@ -371,9 +425,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             componentName=parentTask.componentName,
             tags=[])
 
-        self.geojsonFileName = geojsonFileName
-        self.outFileSuffix = outFileSuffix
-        self.featureList = featureList
+        self.regionGroup = regionGroup
+        self.featureList = None
         self.subprocessCount = subprocessCount
 
         self.obsFileName = obsFileName
@@ -381,6 +434,11 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.latVar = latVar
         self.meshName = meshName
         self.useMpasMaskCreator = useMpasMaskCreator
+        self.useMpasMesh = self.obsFileName is None
+        self.maskFileName = None
+
+        self.region, self.geojsonFileName, self.outFileSuffix = get_region_info(
+            self.regionGroup, self.config)
 
         if not self.useMpasMaskCreator:
             # because this uses a Pool, it cannot be launched as a separate
@@ -390,6 +448,39 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         parentTask.add_subtask(self)
 
         # }}}
+
+    def make_region_mask(self):
+        """
+        If the geojson mask file has not already been cached in the diagnostics
+        or custom diagnostic directories, it will be created in the analysis
+        output's masks directory.
+        """
+        function = self.region['function']
+        filename = self.geojsonFileName
+        if not os.path.exists(filename):
+            gf = GeometricFeatures()
+            fc = function(gf)
+            fc.to_geojson(filename)
+
+    def expand_region_names(self, regionNames):
+        """
+        If ``regionNames`` contains ``'all'``, make sure the geojson file exists
+        and then return all the region names found in the file.
+
+        Parameters
+        ----------
+        regionNames : list
+            A list of region names
+
+        Returns
+        -------
+        regionNames : list
+            A list of region names
+        """
+        if 'all' in regionNames:
+            self.make_region_mask()
+            regionNames = get_feature_list(self.geojsonFileName)
+        return regionNames
 
     def setup_and_check(self):  # {{{
         """
@@ -413,7 +504,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         #     self.calendar
         super(ComputeRegionMasksSubtask, self).setup_and_check()
 
-        self.useMpasMesh = self.obsFileName is None
         if self.useMpasMesh:
             try:
                 self.obsFileName = self.runStreams.readpath('restart')[0]
@@ -424,12 +514,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         maskSubdirectory = build_config_full_path(self.config, 'output',
                                                   'maskSubdirectory')
         make_directories(maskSubdirectory)
-
-        if self.meshName is None:
-            self.meshName = self.config.get('input', 'mpasMeshName')
-
-        # first, see if we have cached a mask file name in the region masks
-        # directory
 
         self.maskFileName = get_region_mask(
             self.config, '{}_{}.nc'.format(self.meshName, self.outFileSuffix))
@@ -459,6 +543,9 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
         if os.path.exists(self.maskFileName):
             return
+
+        # make the geojson file if it doesn't exist
+        self.make_region_mask()
 
         if self.featureList is None:
             # get a list of features for use by other tasks (e.g. to determine
