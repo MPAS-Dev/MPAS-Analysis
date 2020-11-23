@@ -26,7 +26,6 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings, get_region_mask
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
-from mpas_analysis.shared.regions import get_feature_list
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
@@ -79,8 +78,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
         self.seasons = config.getExpression('oceanRegionalProfiles', 'seasons')
 
-        self.regionMaskSuffix = config.get('oceanRegionalProfiles',
-                                           'regionMaskSuffix')
+        regionGroup = config.get('oceanRegionalProfiles', 'regionGroup')
 
         self.regionNames = config.getExpression('oceanRegionalProfiles',
                                                 'regionNames')
@@ -88,20 +86,14 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         plotHovmoller = config.getboolean('oceanRegionalProfiles',
                                           'plotHovmoller')
 
-        self.regionMaskSuffix = config.get('oceanRegionalProfiles',
-                                           'regionMaskSuffix')
-
         hovmollerGalleryGroup = config.get('oceanRegionalProfiles',
                                            'hovmollerGalleryGroup')
 
-        masksFile = get_region_mask(config,
-                                    '{}.geojson'.format(self.regionMaskSuffix))
+        masksSubtask = regionMasksTask.add_mask_subtask(regionGroup)
+        masksFile = masksSubtask.geojsonFileName
+        self.regionMaskSuffix = masksSubtask.outFileSuffix
 
-        masksSubtask = regionMasksTask.add_mask_subtask(
-            masksFile, outFileSuffix=self.regionMaskSuffix)
-
-        if 'all' in self.regionNames:
-            self.regionNames = get_feature_list(masksFile)
+        self.regionNames = masksSubtask.expand_region_names(self.regionNames)
 
         self.masksSubtask = masksSubtask
 
@@ -566,7 +558,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask : ``AnalysisTask``
+        parentTask : OceanRegionalProfiles
             The parent task of which this is a subtask
 
         season : str
@@ -643,10 +635,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startYear = self.parentTask.startYear
         endYear = self.parentTask.endYear
 
-        regionMaskSuffix = config.get('oceanRegionalProfiles',
-                                      'regionMaskSuffix')
-        regionMaskFile = get_region_mask(config,
-                                         '{}.geojson'.format(regionMaskSuffix))
+        regionMaskFile = self.parentTask.masksSubtask.geojsonFileName
 
         fcAll = read_feature_collection(regionMaskFile)
 
