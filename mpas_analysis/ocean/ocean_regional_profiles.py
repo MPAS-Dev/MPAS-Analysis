@@ -851,7 +851,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                   facecolor=color, alpha=0.2)
 
         if plotLegend and len(zArrays) > 1:
-            plt.legend()
+            plt.legend(loc='lower left')
 
         axis_font = {'size': config.get('plot', 'axisFontSize')}
         title_font = {'size': config.get('plot', 'titleFontSize'),
