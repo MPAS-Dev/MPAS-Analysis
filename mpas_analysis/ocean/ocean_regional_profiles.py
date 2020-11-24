@@ -82,6 +82,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
         self.regionNames = config.getExpression('oceanRegionalProfiles',
                                                 'regionNames')
+        if len(self.regionNames) == 0:
+            return
 
         plotHovmoller = config.getboolean('oceanRegionalProfiles',
                                           'plotHovmoller')

@@ -124,6 +124,9 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
             sectionName = 'timeSeries{}'.format(sectionSuffix)
 
             regionNames = config.getExpression(sectionName, 'regionNames')
+            if len(regionNames) == 0:
+                # no regions in this group were requested
+                continue
 
             masksSubtask = regionMasksTask.add_mask_subtask(
                 regionGroup=regionGroup)

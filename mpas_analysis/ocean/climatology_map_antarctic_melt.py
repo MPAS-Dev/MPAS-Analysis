@@ -396,6 +396,9 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         sectionName = self.taskName
         iceShelvesInTable = config.getExpression(sectionName,
                                                  'iceShelvesInTable')
+        if len(iceShelvesInTable) == 0:
+            return
+
         iceShelvesInTable = self.masksSubtask.expand_region_names(
             iceShelvesInTable)
 

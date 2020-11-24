@@ -75,9 +75,13 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
         regionGroup = 'Ice Shelves'
-        masksSubtask = regionMasksTask.add_mask_subtask(regionGroup=regionGroup)
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
+        if len(iceShelvesToPlot) == 0:
+            # nothing else to do
+            return
+
+        masksSubtask = regionMasksTask.add_mask_subtask(regionGroup=regionGroup)
         self.iceShelfMasksFile = masksSubtask.geojsonFileName
 
         iceShelvesToPlot = masksSubtask.expand_region_names(iceShelvesToPlot)

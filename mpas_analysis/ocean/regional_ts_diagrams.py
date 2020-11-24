@@ -165,6 +165,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
 
             regionNames = config.getExpression(sectionName, 'regionNames')
+            if len(regionNames) == 0:
+                continue
 
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
                 regionGroup=regionGroup)

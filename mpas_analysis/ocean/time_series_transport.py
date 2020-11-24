@@ -81,6 +81,8 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         transectsToPlot = config.getExpression('timeSeriesTransport',
                                                'transectsToPlot')
+        if len(transectsToPlot) == 0:
+            return
 
         masksSubtask = ComputeTransectMasksSubtask(
             parentTask=self, transectGroup='Transport Transects')
