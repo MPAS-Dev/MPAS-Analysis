@@ -343,8 +343,8 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         for regionIndex in range(nRegions):
             self.logger.info('    region: {}'.format(
                 self.regionNames[regionIndex]))
-            dsRregion = dsRegionMask.isel(nRegions=regionIndex)
-            cellMask = dsRregion.regionCellMasks == 1
+            dsRegion = dsRegionMask.isel(nRegions=regionIndex)
+            cellMask = dsRegion.regionCellMasks == 1
 
             if openOceanMask is not None:
                 cellMask = numpy.logical_and(cellMask, openOceanMask)
@@ -354,29 +354,28 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
                 1e-12 * totalArea.values))
 
             if config_zmin is None:
-                if 'zminRegions' in dsRregion:
-                    zmin = dsRregion.zminRegions
+                if 'zminRegions' in dsRegion:
+                    zmin = dsRegion.zminRegions.values
                 else:
                     # the old naming convention, used in some pre-generated
                     # mask files
-                    zmin = dsRregion.zmin
+                    zmin = dsRegion.zmin.values
             else:
-                zmin = (('nRegions',), config_zmin)
+                zmin = config_zmin
 
             if config_zmax is None:
-                if 'zmaxRegions' in dsRregion:
-                    zmax = dsRregion.zmaxRegions
+                if 'zmaxRegions' in dsRegion:
+                    zmax = dsRegion.zmaxRegions.values
                 else:
                     # the old naming convention, used in some pre-generated
                     # mask files
-                    zmax = dsRregion.zmax
+                    zmax = dsRegion.zmax.values
             else:
-                zmax = (('nRegions',), config_zmax)
-
+                zmax = config_zmax
             depthMask = numpy.logical_and(zMid >= zmin, zMid <= zmax)
             dsOut = xarray.Dataset()
-            dsOut['zmin'] = zmin
-            dsOut['zmax'] = zmax
+            dsOut['zmin'] = ('nRegions', [zmin])
+            dsOut['zmax'] = ('nRegions', [zmax])
             dsOut['totalArea'] = totalArea
             dsOut['cellMask'] = cellMask
             dsOut['depthMask'] = depthMask
