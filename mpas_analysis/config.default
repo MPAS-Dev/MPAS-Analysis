@@ -160,6 +160,7 @@ maskSubdirectory = masks
 # provide an absolute path to put HTML in an alternative location (e.g. a web
 # portal)
 htmlSubdirectory = html
+tablesSubdirectory = tables
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list

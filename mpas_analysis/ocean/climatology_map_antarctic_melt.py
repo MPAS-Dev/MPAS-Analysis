@@ -21,7 +21,7 @@ from pyremap import ProjectionGridDescriptor
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_obs_path, get_region_mask, \
-    decode_strings
+    decode_strings, build_config_full_path
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
@@ -417,7 +417,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 dsIn = xr.open_dataset(inFileName)
                 freshwaterFlux = dsIn[mpasFieldName]
                 if 'Time' in freshwaterFlux.dims:
-                    freshwaterFlux.isel(Time=0)
+                    freshwaterFlux = freshwaterFlux.isel(Time=0)
 
                 regionMaskFileName = self.masksSubtask.maskFileName
 
@@ -497,10 +497,16 @@ class AntarcticMeltTableSubtask(AnalysisTask):
 
         regionNames = decode_strings(ds.regionNames)
 
-        tableFileName = get_masked_mpas_climatology_file_name(
-            config, self.season, self.componentName,
-            climatologyName='antarcticMeltRateTable')
-        tableFileName = tableFileName.replace('.nc', '.csv')
+        outDirectory = '{}/antarcticMelt/'.format(
+            build_config_full_path(config, 'output', 'tablesSubdirectory'))
+
+        try:
+            os.makedirs(outDirectory)
+        except OSError:
+            pass
+
+        tableFileName = '{}/antarcticMeltRateTable_{}.csv'.format(outDirectory,
+                                                                  self.season)
 
         with open(tableFileName, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
@@ -515,10 +521,8 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                         '{}'.format(dsControl.meltRates[index].values)
                 writer.writerow(row)
 
-        tableFileName = get_masked_mpas_climatology_file_name(
-            config, self.season, self.componentName,
-            climatologyName='antarcticMeltFluxTable')
-        tableFileName = tableFileName.replace('.nc', '.csv')
+        tableFileName = '{}/antarcticMeltFluxTable_{}.csv'.format(outDirectory,
+                                                                  self.season)
 
         with open(tableFileName, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
