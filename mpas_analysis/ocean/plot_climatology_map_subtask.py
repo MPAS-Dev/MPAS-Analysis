@@ -30,9 +30,10 @@ from mpas_analysis.shared.plot import plot_global_comparison, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-
 from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
+from mpas_analysis.shared.climatology.comparison_descriptors import \
+    get_comparison_descriptor
 
 from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
@@ -548,14 +549,22 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
             bias = modelOutput - refOutput
 
-        x = interp_extrap_corner(remappedModelClimatology['x'].values)
-        y = interp_extrap_corner(remappedModelClimatology['y'].values)
+        comparisonDescriptor = get_comparison_descriptor(
+            config, comparisonGridName)
+        x = comparisonDescriptor.xCorner
+        y = comparisonDescriptor.yCorner
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         title = '{} ({}, years {:04d}-{:04d})'.format(
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
+
+        if self.comparisonGridName == 'antarctic':
+            hemisphere = 'south'
+        else:
+            # arctic
+            hemisphere = 'north'
 
         plot_polar_projection_comparison(
             config,
@@ -571,7 +580,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             modelTitle='{}'.format(mainRunName),
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
-            cbarlabel=self.unitsLabel)
+            cbarlabel=self.unitsLabel,
+            hemisphere=hemisphere)
 
         upperGridName = comparisonGridName[0].upper() + comparisonGridName[1:]
         caption = '{} {}'.format(season, self.imageCaption)

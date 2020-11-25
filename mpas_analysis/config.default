@@ -311,6 +311,13 @@ threePanelAxisFontSize = 12
 dpi = 200
 
 
+[polarProjection]
+## options related to polar-projection plots
+
+# whether to use the cartopy coastline (as opposed to the model coastline)
+useCartopyCoastline = True
+
+
 [html]
 ## options related to generating a webpage to display the analysis
 

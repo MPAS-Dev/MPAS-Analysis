@@ -419,7 +419,8 @@ def plot_polar_projection_comparison(
         dpi=None,
         lineWidth=0.5,
         lineColor='black',
-        vertical=False):
+        vertical=False,
+        hemisphere='north'):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -490,27 +491,43 @@ def plot_polar_projection_comparison(
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
 
-        plt.title(title, y=1.06, **plottitle_font)
+        ax.set_title(title, y=1.06, **plottitle_font)
+
+        ax.set_extent(extent, crs=projection)
+
+        gl = ax.gridlines(crs=cartopy.crs.PlateCarree(), color='k',
+                          linestyle=':', zorder=5, draw_labels=True)
+        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 60.))
+        gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
+        gl.n_steps = 100
+        gl.right_labels = False
+        gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
+        gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
 
         if levels is None:
-            plotHandle = plt.pcolormesh(x, y, array, cmap=colormap, norm=norm)
+            plotHandle = ax.pcolormesh(x, y, array, cmap=colormap, norm=norm)
         else:
-            plotHandle = plt.contourf(xCenter, yCenter, array, cmap=colormap,
-                                      norm=norm, levels=levels, extend='both')
+            plotHandle = ax.contourf(xCenter, yCenter, array, cmap=colormap,
+                                     norm=norm, levels=levels, extend='both')
 
-        plt.pcolormesh(x, y, landMask, cmap=landColorMap)
-        plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
-                    linewidths=0.5)
+        if useCartopyCoastline:
+            _add_land_lakes_coastline(ax, ice_shelves=False)
+        else:
+            # add the model coastline
+            plt.pcolormesh(x, y, landMask, cmap=landColorMap)
+            plt.contour(xCenter, yCenter, landMask.mask, (0.5,), colors='k',
+                        linewidths=0.5)
 
         if contours is not None:
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
-            plt.contour(x, y, array, levels=contours, colors=lineColor,
-                        linewidths=lineWidth)
+            ax.contour(x, y, array, levels=contours, colors=lineColor,
+                       linewidths=lineWidth)
 
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="5%", pad=0.05)
+        cax = divider.append_axes("right", size="5%", pad=0.05,
+                                  axes_class=plt.Axes)
 
         cbar = plt.colorbar(plotHandle, cax=cax)
         cbar.set_label(cbarlabel)
@@ -518,10 +535,8 @@ def plot_polar_projection_comparison(
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
 
-        ax.axis('off')
-        ax.set_aspect('equal')
-        ax.autoscale(tight=True)
-
+    useCartopyCoastline = config.getboolean('polarProjection',
+                                            'useCartopyCoastline')
     # set up figure
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
@@ -544,7 +559,7 @@ def plot_polar_projection_comparison(
 
     fig = plt.figure(figsize=figsize, dpi=dpi)
 
-    if (title is not None):
+    if title is not None:
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
         title_font = {'size': titleFontSize,
@@ -556,42 +571,57 @@ def plot_polar_projection_comparison(
                                          'threePanelPlotTitleFontSize')}
 
     # set up land colormap
-    colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
-    landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
+    if not useCartopyCoastline:
+        colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
+        landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
 
     # locations of centers for contour plots
     xCenter = 0.5 * (x[1:] + x[0:-1])
     yCenter = 0.5 * (y[1:] + y[0:-1])
 
-    ax = plt.subplot(subplots[0])
+    if hemisphere == 'north':
+        projection = cartopy.crs.Stereographic(
+            central_latitude=90., central_longitude=0.0,
+            true_scale_latitude=75.0)
+    elif hemisphere == 'south':
+        projection = cartopy.crs.Stereographic(
+            central_latitude=-90., central_longitude=0.0,
+            true_scale_latitude=-71.0)
+    else:
+        raise ValueError('Unexpected hemisphere {}'.format(
+                hemisphere))
+    extent = [x[0], x[-1], y[0], y[-1]]
+
+    ax = plt.subplot(subplots[0], projection=projection)
     plot_panel(ax, modelTitle, modelArray, **dictModelRef)
 
     if refArray is not None:
-        ax = plt.subplot(subplots[1])
+        ax = plt.subplot(subplots[1], projection=projection)
         plot_panel(ax, refTitle, refArray, **dictModelRef)
 
-        ax = plt.subplot(subplots[2])
+        ax = plt.subplot(subplots[2], projection=projection)
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
-    if (fileout is not None):
+    if fileout is not None:
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
     plt.close()
 
 
-def _add_land_lakes_coastline(ax):
+def _add_land_lakes_coastline(ax, ice_shelves=True):
     land_50m = cartopy.feature.NaturalEarthFeature(
             'physical', 'land', '50m', edgecolor='k',
-            facecolor='gray', linewidth=0.5)
-    ice_50m = cartopy.feature.NaturalEarthFeature(
-            'physical', 'antarctic_ice_shelves_polys', '50m', edgecolor='k',
-            facecolor='lightgray', linewidth=0.5)
+            facecolor='#cccccc', linewidth=0.5)
     lakes_50m = cartopy.feature.NaturalEarthFeature(
             'physical', 'lakes', '50m', edgecolor='k',
             facecolor='white',
             linewidth=0.5)
     ax.add_feature(land_50m, zorder=2)
-    ax.add_feature(ice_50m, zorder=3)
+    if ice_shelves:
+        ice_50m = cartopy.feature.NaturalEarthFeature(
+                'physical', 'antarctic_ice_shelves_polys', '50m', edgecolor='k',
+                facecolor='lightgray', linewidth=0.5)
+        ax.add_feature(ice_50m, zorder=3)
     ax.add_feature(lakes_50m, zorder=4)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
