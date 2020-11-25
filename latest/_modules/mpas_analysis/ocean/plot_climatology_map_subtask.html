@@ -198,9 +198,10 @@
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
-
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> \
     <span class="n">get_remapped_mpas_climatology_file_name</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.comparison_descriptors</span> <span class="kn">import</span> \
+    <span class="n">get_comparison_descriptor</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">nans_to_numpy_mask</span>
 
@@ -716,14 +717,22 @@
 
             <span class="n">bias</span> <span class="o">=</span> <span class="n">modelOutput</span> <span class="o">-</span> <span class="n">refOutput</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">interp_extrap_corner</span><span class="p">(</span><span class="n">remappedModelClimatology</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">interp_extrap_corner</span><span class="p">(</span><span class="n">remappedModelClimatology</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">comparisonDescriptor</span> <span class="o">=</span> <span class="n">get_comparison_descriptor</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">xCorner</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">yCorner</span>
 
         <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span>
         <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">==</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">:</span>
+            <span class="n">hemisphere</span> <span class="o">=</span> <span class="s1">&#39;south&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># arctic</span>
+            <span class="n">hemisphere</span> <span class="o">=</span> <span class="s1">&#39;north&#39;</span>
 
         <span class="n">plot_polar_projection_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
@@ -739,7 +748,8 @@
             <span class="n">modelTitle</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">),</span>
             <span class="n">refTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span><span class="p">,</span>
             <span class="n">diffTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-            <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">)</span>
+            <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span>
+            <span class="n">hemisphere</span><span class="o">=</span><span class="n">hemisphere</span><span class="p">)</span>
 
         <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
