@@ -11,9 +11,6 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 import numpy as np
 import os
@@ -23,30 +20,29 @@ from geometric_features import FeatureCollection, read_feature_collection
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, make_directories, decode_strings, get_region_mask
+    get_files_year_month, make_directories, decode_strings
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
-from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.plot import savefig, add_inset
 
 
 class OceanRegionalProfiles(AnalysisTask):  # {{{
-    '''
+    """
     Compute and plot vertical profiles of regionally analyzed data.  The
     mean and standard deviation of the data are computed over each region.
-    The mean isdisplayed as a Hovmoller plot.  The mean and std. dev. are
-    further computed in time (within the requested seasons) and this result
-    is plotted as a vertical profile with shading showing variability.
-    '''
+    The mean and std. dev. are computed in time (within the requested seasons)
+    and this result is plotted as a vertical profile with shading showing
+    variability.
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, regionMasksTask, controlConfig=None):  # {{{
-        '''
+        """
         Construct the analysis task.
 
         Parameters
@@ -59,7 +55,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -71,99 +67,112 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['profiles', 'climatology'])
 
-        self.startYear = config.getint('climatology', 'startYear')
-        self.endYear = config.getint('climatology', 'endYear')
+        self.combineSubtasks = dict()
+        self.computeSubtasks = dict()
+        self.masksSubtasks = dict()
 
-        self.fields = config.getExpression('oceanRegionalProfiles', 'fields')
+        startYear = config.getint('climatology', 'startYear')
+        endYear = config.getint('climatology', 'endYear')
 
-        self.seasons = config.getExpression('oceanRegionalProfiles', 'seasons')
+        regionGroups = config.getExpression('oceanRegionalProfiles',
+                                            'regionGroups')
 
-        regionGroup = config.get('oceanRegionalProfiles', 'regionGroup')
+        for regionGroup in regionGroups:
+            regionGroupSection = 'profiles{}'.format(
+                regionGroup.replace(' ', ''))
 
-        self.regionNames = config.getExpression('oceanRegionalProfiles',
-                                                'regionNames')
-        if len(self.regionNames) == 0:
-            return
+            fields = config.getExpression(regionGroupSection, 'fields')
 
-        plotHovmoller = config.getboolean('oceanRegionalProfiles',
-                                          'plotHovmoller')
+            seasons = config.getExpression(regionGroupSection, 'seasons')
 
-        hovmollerGalleryGroup = config.get('oceanRegionalProfiles',
-                                           'hovmollerGalleryGroup')
+            regionNames = config.getExpression(regionGroupSection,
+                                               'regionNames')
+            if len(regionNames) == 0:
+                return
 
-        masksSubtask = regionMasksTask.add_mask_subtask(regionGroup)
-        masksFile = masksSubtask.geojsonFileName
-        self.regionMaskSuffix = masksSubtask.outFileSuffix
+            self.add_region_group(regionMasksTask, regionGroup, regionNames,
+                                  fields, startYear, endYear, seasons)
 
-        self.regionNames = masksSubtask.expand_region_names(self.regionNames)
+            combineSubtask = \
+                self.combineSubtasks[regionGroup][(startYear, endYear)]
 
-        self.masksSubtask = masksSubtask
+            masksSubtask = self.masksSubtasks[regionGroup]
 
-        years = range(self.startYear, self.endYear + 1)
+            timeSeriesName = masksSubtask.outFileSuffix
 
-        # in the end, we'll combine all the time series into one, but we create
-        # this task first so it's easier to tell it to run after all the
-        # compute tasks
-        combineSubtask = CombineRegionalProfileTimeSeriesSubtask(
-            self, startYears=years, endYears=years)
+            for field in fields:
+                for regionName in regionNames:
+                    for season in seasons:
+                        plotSubtask = PlotRegionalProfileTimeSeriesSubtask(
+                            self, masksSubtask, season, regionName, field,
+                            timeSeriesName, startYear, endYear, controlConfig)
+                        plotSubtask.run_after(combineSubtask)
+                        self.add_subtask(plotSubtask)
+
+        # }}}
+
+    def add_region_group(self, regionMasksTask, regionGroup, regionNames,
+                         fields, startYear, endYear, seasons=None):
+        """
+        Add years to the profiles to compute
+
+        Parameters
+        ----------
+        startYear : int
+            The start year of the time series
+
+        endYear : int
+            The end year
+
+        """
+        if regionGroup in self.masksSubtasks:
+            masksSubtask = self.masksSubtasks[regionGroup]
+        else:
+            masksSubtask = regionMasksTask.add_mask_subtask(regionGroup)
+            self.masksSubtasks[regionGroup] = masksSubtask
+
+        if regionGroup not in self.computeSubtasks:
+            self.computeSubtasks[regionGroup] = dict()
+        if regionGroup not in self.combineSubtasks:
+            self.combineSubtasks[regionGroup] = dict()
+
+        timeSeriesName = masksSubtask.outFileSuffix
+
+        if seasons is None:
+            seasons = []
+
+        key = (startYear, endYear)
+        years = range(startYear, endYear + 1)
+        if key in self.combineSubtasks[regionGroup]:
+            combineSubtask = self.combineSubtasks[regionGroup][key]
+            # add any missing fields and seasons
+            _update_fields(combineSubtask.fields, fields)
+            combineSubtask.seasons = list(set(seasons + combineSubtask.seasons))
+        else:
+            combineSubtask = CombineRegionalProfileTimeSeriesSubtask(
+                self, regionGroup, timeSeriesName, seasons, fields,
+                startYears=years, endYears=years)
+            self.combineSubtasks[regionGroup][key] = combineSubtask
 
         # run one subtask per year
         for year in years:
-            computeSubtask = ComputeRegionalProfileTimeSeriesSubtask(
-                self, startYear=year, endYear=year)
-            computeSubtask.run_after(masksSubtask)
-            combineSubtask.run_after(computeSubtask)
+            key = (year, year)
+            if key in self.computeSubtasks[regionGroup]:
+                computeSubtask = self.computeSubtasks[regionGroup][key]
+                _update_fields(computeSubtask.fields, fields)
+            else:
+                computeSubtask = ComputeRegionalProfileTimeSeriesSubtask(
+                    self, masksSubtask, regionGroup, regionNames, fields,
+                    startYear=year, endYear=year)
+                computeSubtask.run_after(masksSubtask)
+                combineSubtask.run_after(computeSubtask)
+                self.computeSubtasks[regionGroup][key] = computeSubtask
 
-        if plotHovmoller:
-            for field in self.fields:
-                prefix = field['prefix']
-                for regionName in self.regionNames:
-                    subtaskName = 'plotHovmoller_{}_{}'.format(
-                        prefix, regionName.replace(' ', '_'))
-                    inFileName = \
-                        '{}/regionalProfiles_{}_{:04d}-{:04d}.nc'.format(
-                            self.regionMaskSuffix, self.regionMaskSuffix,
-                            self.startYear, self.endYear)
-                    titleName = field['titleName']
-                    caption = 'Time series of {} {} vs ' \
-                              'depth'.format(regionName.replace('_', ' '),
-                                             titleName)
-                    hovmollerSubtask = PlotHovmollerSubtask(
-                        parentTask=self,
-                        regionName=regionName,
-                        inFileName=inFileName,
-                        outFileLabel='{}_hovmoller'.format(prefix),
-                        fieldNameInTitle=titleName,
-                        mpasFieldName='{}_mean'.format(prefix),
-                        unitsLabel=field['units'],
-                        sectionName='{}OceanRegionalHovmoller'.format(prefix),
-                        thumbnailSuffix='',
-                        imageCaption=caption,
-                        galleryGroup=hovmollerGalleryGroup,
-                        groupSubtitle=None,
-                        groupLink='ocnreghovs',
-                        galleryName=titleName,
-                        subtaskName=subtaskName,
-                        controlConfig=controlConfig,
-                        regionMaskFile=masksFile)
-                    hovmollerSubtask.run_after(combineSubtask)
-                    self.add_subtask(hovmollerSubtask)
-
-        for field in self.fields:
-            prefix = field['prefix']
-            for regionName in self.regionNames:
-                for season in self.seasons:
-                    plotSubtask = PlotRegionalProfileTimeSeriesSubtask(
-                        self, season, regionName, field, controlConfig)
-                    plotSubtask.run_after(combineSubtask)
-                    self.add_subtask(plotSubtask)
-
-        # }}}
     # }}}
 
 
 class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
-    '''
+    """
     Compute regional statistics on each layer and time point of a set of
     MPAS fields
 
@@ -174,51 +183,68 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The beginning and end of the time series to compute
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYear, endYear):  # {{{
-        '''
+    def __init__(self, parentTask, masksSubtask, regionGroup, regionNames,
+                 fields, startYear, endYear):  # {{{
+        """
         Construct the analysis task.
 
         Parameters
         ----------
-        parentTask : ``OceanRegionalProfiles``
+        parentTask : mpas_analysis.ocean.OceanRegionalProfiles
             The main task of which this is a subtask
+
+        masksSubtask : mpas_analysis.shared.regions.ComputeRegionMasksSubtask
+            A task for computing region masks
+
+        regionGroup : str
+            The name of the region group for which the region masks are defined
+
+        regionNames : list
+            The list of region names to compute and plot
+
+        fields : list
+            A list of dictionaries defining the fields to compute profile
+            time series for
 
         startYear, endYear : int
             The beginning and end of the time series to compute
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
+        subtaskName = 'compute{}Profiles_{:04d}-{:04d}'.format(
+            regionGroup.replace(' ', ''), startYear, endYear)
         # first, call the constructor from the base class (AnalysisTask)
         super(ComputeRegionalProfileTimeSeriesSubtask, self).__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='computeRegionalProfileTimeSeries_{:04d}-{:04d}'
-                        ''.format(startYear, endYear))
+            subtaskName=subtaskName)
 
         parentTask.add_subtask(self)
-        self.parentTask = parentTask
+        self.masksSubtask = masksSubtask
+        self.regionNames = regionNames
+        self.fields = fields
         self.startYear = startYear
         self.endYear = endYear
         # }}}
 
     def setup_and_check(self):  # {{{
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
         ------
         ValueError
             if timeSeriesStatsMonthly is not enabled in the MPAS run
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -237,9 +263,9 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # }}}
 
     def run_task(self):  # {{{
-        '''
+        """
         Compute time series of regional profiles
-        '''
+        """
         # Authors
         # -------
         # Milena Veneziani, Mark Petersen, Phillip J. Wolfram, Xylar Asay-Davis
@@ -249,7 +275,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
 
-        timeSeriesName = self.parentTask.regionMaskSuffix
+        timeSeriesName = self.masksSubtask.outFileSuffix
 
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',
@@ -271,7 +297,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variableList = [field['mpas'] for field in self.parentTask.fields]
+        variableList = [field['mpas'] for field in self.fields]
 
         outputExists = os.path.exists(outputFileName)
         outputValid = outputExists
@@ -313,14 +339,14 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         vertMask = vertIndex < dsRestart.maxLevelCell
 
         # get region masks
-        regionMaskFileName = self.parentTask.masksSubtask.maskFileName
+        regionMaskFileName = self.masksSubtask.maskFileName
         dsRegionMask = xr.open_dataset(regionMaskFileName)
 
         # figure out the indices of the regions to plot
         regionNames = decode_strings(dsRegionMask.regionNames)
 
         regionIndices = []
-        for regionToPlot in self.parentTask.regionNames:
+        for regionToPlot in self.regionNames:
             for index, regionName in enumerate(regionNames):
                 if regionToPlot == regionName:
                     regionIndices.append(index)
@@ -351,7 +377,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
             # for each region and variable, compute area-weighted sum and
             # squared sum
-            for field in self.parentTask.fields:
+            for field in self.fields:
                 variableName = field['mpas']
                 prefix = field['prefix']
                 self.logger.info('      {}'.format(field['titleName']))
@@ -376,9 +402,9 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         dsOut.coords['regionNames'] = regionNamesVar
         dsOut['totalArea'] = totalArea
-        dsOut.coords['year'] = (('Time'), years)
+        dsOut.coords['year'] = (('Time',), years)
         dsOut['year'].attrs['units'] = 'years'
-        dsOut.coords['month'] = (('Time'), months)
+        dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
 
         # Note: restart file, not a mesh file because we need refBottomDepth,
@@ -395,7 +421,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             z[0] = -0.5 * depths[0]
             z[1:] = -0.5 * (depths[0:-1] + depths[1:])
 
-        dsOut.coords['z'] = (('nVertLevels'), z)
+        dsOut.coords['z'] = (('nVertLevels',), z)
         dsOut['z'].attrs['units'] = 'meters'
 
         write_netcdf(dsOut, outputFileName)
@@ -404,15 +430,16 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
 
 class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
-    '''
+    """
     Combine individual time series into a single data set
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears):  # {{{
-        '''
+    def __init__(self, parentTask, regionGroup, timeSeriesName, seasons, fields,
+                 startYears, endYears):  # {{{
+        """
         Construct the analysis task.
 
         Parameters
@@ -420,36 +447,50 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``OceanRegionalProfiles``
             The main task of which this is a subtask
 
-        startYear, endYear : list of int
+        regionGroup : str
+            The name of the region group for which the region masks are defined
+
+        seasons : list
+            A list of seasons to compute statistic on
+
+        fields : list
+            A list of dictionaries defining the fields to compute profile
+            time series for
+
+        startYears, endYears : list
             The beginning and end of each time series to combine
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
+        subtaskName = 'combine{}Profiles_{:04d}-{:04d}'.format(
+            regionGroup.replace(' ', ''), startYears[0], endYears[-1])
         # first, call the constructor from the base class (AnalysisTask)
         super(CombineRegionalProfileTimeSeriesSubtask, self).__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='combineRegionalProfileTimeSeries')
+            subtaskName=subtaskName)
 
         parentTask.add_subtask(self)
-        self.parentTask = parentTask
         self.startYears = startYears
         self.endYears = endYears
+        self.timeSeriesName = timeSeriesName
+        self.seasons = seasons
+        self.fields = fields
         # }}}
 
     def run_task(self):  # {{{
-        '''
+        """
         Combine the time series
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
-        timeSeriesName = self.parentTask.regionMaskSuffix
+        timeSeriesName = self.timeSeriesName
 
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',
@@ -461,6 +502,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             self.endYears[-1])
 
         useExisting = False
+        ds = None
         if os.path.exists(outputFileName):
             ds = xr.open_dataset(outputFileName, decode_times=False)
             if ds.sizes['Time'] > 0:
@@ -495,7 +537,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         make_directories(outputDirectory)
 
-        for season in self.parentTask.seasons:
+        for season in self.seasons:
             outputFileName = \
                 '{}/{}_{}_{:04d}-{:04d}.nc'.format(
                     outputDirectory, timeSeriesName, season,
@@ -506,7 +548,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                                                calendar=self.calendar,
                                                maskVaries=False)
 
-                for field in self.parentTask.fields:
+                for field in self.fields:
                     prefix = field['prefix']
 
                     mean = dsSeason['{}_mean'.format(prefix)].where(
@@ -528,7 +570,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
 
 class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
-    '''
+    """
     Plot a profile averaged over an ocean region and in time, along with
     variability in both space and time.
 
@@ -548,20 +590,24 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
     controlConfig :  ``MpasAnalysisConfigParser``
         Configuration options for a control run (if any)
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, season, regionName, field, controlConfig):
+    def __init__(self, parentTask, masksSubtask, season, regionName, field,
+                 timeSeriesName, startYear, endYear, controlConfig):
         # {{{
-        '''
+        """
         Construct the analysis task.
 
         Parameters
         ----------
         parentTask : OceanRegionalProfiles
             The parent task of which this is a subtask
+
+        masksSubtask : mpas_analysis.shared.regions.ComputeRegionMasksSubtask
+            A task for computing region masks
 
         season : str
             The season being plotted
@@ -572,9 +618,16 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         field : dict
             Information about the field (e.g. temperature) being plotted
 
+        timeSeriesName : str
+            The name of the time series, related to the name of the region
+            group but appropriate for a file prefix or suffix
+
+        startYear, endYear : int
+            The beginning and end of the time series to compute
+
         controlConfig :  ``MpasAnalysisConfigParser``, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -590,19 +643,23 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             tags=parentTask.tags,
             subtaskName=subtaskName)
 
-        self.parentTask = parentTask
         self.controlConfig = controlConfig
 
+        self.masksSubtask = masksSubtask
+        self.timeSeriesName = timeSeriesName
+        self.startYear = startYear
+        self.endYear = endYear
         self.season = season
         self.regionName = regionName
         self.field = field
-
+        self.filePrefix = None
+        self.xmlFileNames = []
         # }}}
 
     def setup_and_check(self):  # {{{
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -614,13 +671,10 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         #     self.calendar
         super(PlotRegionalProfileTimeSeriesSubtask, self).setup_and_check()
 
-        self.xmlFileNames = []
-        self.filePrefixes = {}
-
         self.filePrefix = 'regionalProfile_{}_{}_{}_years{:04d}-{:04d}'.format(
             self.field['prefix'], self.regionName.replace(' ', '_'),
-            self.season, self.parentTask.startYear,
-            self.parentTask.endYear)
+            self.season, self.startYear,
+            self.endYear)
         self.xmlFileNames = ['{}/{}.xml'.format(self.plotsDirectory,
                                                 self.filePrefix)]
         # }}}
@@ -634,10 +688,10 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         config = self.config
-        startYear = self.parentTask.startYear
-        endYear = self.parentTask.endYear
+        startYear = self.startYear
+        endYear = self.endYear
 
-        regionMaskFile = self.parentTask.masksSubtask.geojsonFileName
+        regionMaskFile = self.masksSubtask.geojsonFileName
 
         fcAll = read_feature_collection(regionMaskFile)
 
@@ -649,10 +703,14 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         inDirectory = build_config_full_path(config, 'output',
                                              'profilesSubdirectory')
-        timeSeriesName = self.parentTask.regionMaskSuffix
+        timeSeriesName = self.timeSeriesName
         inFileName = '{}/{}_{}_{:04d}-{:04d}.nc'.format(
             inDirectory, timeSeriesName, self.season,
-            self.parentTask.startYear, self.parentTask.endYear)
+            self.startYear, self.endYear)
+
+        regionGroup = self.masksSubtask.regionGroup
+        regionGroupSection = 'profiles{}'.format(
+            regionGroup.replace(' ', ''))
 
         ds = xr.open_dataset(inFileName)
         allRegionNames = decode_strings(ds.regionNames)
@@ -663,7 +721,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         stdFieldName = '{}_std'.format(self.field['prefix'])
 
         mainRunName = config.get('runs', 'mainRunName')
-        profileGalleryGroup = config.get('oceanRegionalProfiles',
+        profileGalleryGroup = config.get(regionGroupSection,
                                          'profileGalleryGroup')
 
         titleFieldName = self.field['titleName']
@@ -726,8 +784,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             fieldArrays.append(dsControl[meanFieldName].values)
             errArrays.append(dsControl[stdFieldName].values)
 
-        depthRange = config.getExpression('oceanRegionalProfiles',
-                                          'depthRange')
+        depthRange = config.getExpression(regionGroupSection, 'depthRange')
         if len(depthRange) == 0:
             depthRange = None
 
@@ -862,5 +919,22 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         return fig  # }}}
 
     # }}}
+
+
+def _update_fields(fields, newFields):
+    for outer in range(len(newFields)):
+        found = False
+        for inner in range(len(fields)):
+            if fields[inner]['prefix'] == newFields[outer]['prefix']:
+                for item in ['mpas', 'units', 'titleName']:
+                    if fields[inner][item] != newFields[outer][item]:
+                        raise ValueError(
+                            'item {} in fields is not consistent between '
+                            'profiles and Hovmoller tasks, which will have '
+                            'unexpected consequences')
+                found = True
+                break
+        if not found:
+            fields.append(newFields[outer])
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

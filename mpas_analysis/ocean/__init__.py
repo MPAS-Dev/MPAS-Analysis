@@ -50,3 +50,6 @@ from mpas_analysis.ocean.geojson_transects import GeojsonTransects
 
 from mpas_analysis.ocean.ocean_regional_profiles import \
     OceanRegionalProfiles
+
+from mpas_analysis.ocean.hovmoller_ocean_regions import \
+    HovmollerOceanRegions
