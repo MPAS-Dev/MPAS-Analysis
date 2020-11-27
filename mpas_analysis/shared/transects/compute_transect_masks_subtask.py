@@ -17,11 +17,61 @@ import xarray as xr
 from geometric_features import read_feature_collection
 import mpas_tools.conversion
 
+from geometric_features import GeometricFeatures
+from geometric_features.aggregation.ocean import transport
+
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_region_mask
 from mpas_analysis.shared.io import write_netcdf
+
+from mpas_analysis.shared.regions import get_feature_list
+
+
+def get_transect_info(transectGroup, config):
+    """
+    Get a geojson mask file and the appropriate file suffix for the given
+    region group.
+
+    Parameters
+    ----------
+    transectGroup : str
+        The name of a region group to get mask features for, one of
+        'Transport Transects'
+
+    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+        Configuration options
+
+    Returns
+    -------
+    transect : dict
+        A dictionary of information about the region
+
+    filename : str
+        The name of a geojson file with mask features
+
+    suffix : str
+        A suffix to use for mask files created with these features
+
+    """
+
+    transects = {'Transport Transects': {'prefix': 'transportTransects',
+                                         'date': '20200621',
+                                         'function': transport}}
+
+    if transectGroup not in transects:
+        raise ValueError('Unknown transect group {}'.format(transectGroup))
+
+    transect = transects[transectGroup]
+
+    prefix = transect['prefix']
+    date = transect['date']
+
+    suffix = '{}{}'.format(prefix, date)
+    filename = get_region_mask(config, '{}.geojson'.format(suffix))
+
+    return transect, filename, suffix
 
 
 def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
@@ -57,16 +107,12 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
 
     maskFileName : str
         The name of the output mask file
-
-    meshFileName : str
-        A mesh file used to create the masks
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, geojsonFileName, outFileSuffix,
-                 subtaskName='computeTransectMasks', subprocessCount=1):
+    def __init__(self, parentTask, transectGroup, subprocessCount=1):
         # {{{
         """
         Construct the analysis task and adds it as a subtask of the
@@ -78,15 +124,9 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 
-        geojsonFileName : str
-            A geojson file, typically from the MPAS ``geometric_features``
-            repository, defining the shapes to be masked
-
-        outFileSuffix : str
-            The suffix for the resulting mask file
-
-        subtaskName : str, optional
-            The name of the subtask
+        transectGroup : str
+            The name of a transect group, see
+            :py:func:`mpas_analysis.shared.transects.get_transect_info()`
 
         subprocessCount : int, optional
             The number of processes that can be used to make the mask
@@ -94,6 +134,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         # Authors
         # -------
         # Xylar Asay-Davis
+
+        subtaskName = transectGroup.replace(' ', '')
 
         # call the constructor from the base class (AnalysisTask)
         super(ComputeTransectMasksSubtask, self).__init__(
@@ -103,11 +145,48 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             componentName=parentTask.componentName,
             tags=[])
 
-        self.geojsonFileName = geojsonFileName
-        self.outFileSuffix = outFileSuffix
         self.subprocessCount = subprocessCount
+        self.obsFileName = None
+        self.maskSubdirectory = None
+        self.maskFileName = None
+        self.transectGroup = transectGroup
 
+        self.region, self.geojsonFileName, self.outFileSuffix = \
+            get_transect_info(self.transectGroup, self.config)
         # }}}
+
+    def make_transect_mask(self):
+        """
+        If the geojson mask file has not already been cached in the diagnostics
+        or custom diagnostic directories, it will be created in the analysis
+        output's masks directory.
+        """
+        function = self.region['function']
+        filename = self.geojsonFileName
+        if not os.path.exists(filename):
+            gf = GeometricFeatures()
+            fc = function(gf)
+            fc.to_geojson(filename)
+
+    def expand_transect_names(self, transectNames):
+        """
+        If ``transectNames`` contains ``'all'``, make sure the geojson file
+        exists and then return all the transect names found in the file.
+
+        Parameters
+        ----------
+        transectNames : list
+            A list of transect names
+
+        Returns
+        -------
+        transectNames : list
+            A list of transect names
+        """
+        if 'all' in transectNames:
+            self.make_transect_mask()
+            transectNames = get_feature_list(self.geojsonFileName)
+        return transectNames
 
     def setup_and_check(self):  # {{{
         """
@@ -172,6 +251,9 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
 
         if os.path.exists(self.maskFileName):
             return
+
+        # make the geojson file if it doesn't exist
+        self.make_transect_mask()
 
         compute_mpas_transect_masks(
             self.geojsonFileName, self.obsFileName, self.maskFileName,

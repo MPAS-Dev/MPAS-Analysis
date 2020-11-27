@@ -40,10 +40,10 @@ requirements:
     - shapely
     - cartopy >=0.18.0
     - cartopy_offlinedata
-    - geometric_features >=0.1.9
+    - geometric_features >=0.1.12
     - gsw
     - pyremap <0.1.0
-    - mpas_tools >=0.0.13
+    - mpas_tools >=0.0.15
 
 test:
   requires:

@@ -29,11 +29,9 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories, build_obs_path, decode_strings, get_region_mask
+    make_directories, build_obs_path, decode_strings
 
 from mpas_analysis.shared.html import write_image_xml
-
-from mpas_analysis.shared.regions import get_feature_list
 
 
 class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
@@ -76,16 +74,17 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             componentName='ocean',
             tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
-        self.iceShelfMasksFile = get_region_mask(config,
-                                                 'iceShelves20200621.geojson')
-
+        regionGroup = 'Ice Shelves'
         iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
-        if 'all' in iceShelvesToPlot:
-            iceShelvesToPlot = get_feature_list(self.iceShelfMasksFile)
+        if len(iceShelvesToPlot) == 0:
+            # nothing else to do
+            return
 
-        masksSubtask = regionMasksTask.add_mask_subtask(
-            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
+        masksSubtask = regionMasksTask.add_mask_subtask(regionGroup=regionGroup)
+        self.iceShelfMasksFile = masksSubtask.geojsonFileName
+
+        iceShelvesToPlot = masksSubtask.expand_region_names(iceShelvesToPlot)
 
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.get('timeSeries', 'endYear')
@@ -154,7 +153,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask :  ``AnalysisTask``
+        parentTask :  TimeSeriesAntarcticMelt
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 
@@ -382,7 +381,7 @@ class CombineMeltSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask : ``TimeSeriesOceanRegions``
+        parentTask : TimeSeriesAntarcticMelt
             The main task of which this is a subtask
 
         startYears, endYears : list
@@ -465,7 +464,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         Parameters
         ----------
-        parentTask :  ``AnalysisTask``
+        parentTask :  TimeSeriesAntarcticMelt
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 

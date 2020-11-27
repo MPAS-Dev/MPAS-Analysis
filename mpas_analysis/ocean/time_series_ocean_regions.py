@@ -30,8 +30,6 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 from mpas_analysis.shared.html import write_image_xml
 
-from mpas_analysis.shared.regions import get_feature_list
-
 from mpas_analysis.ocean.utility import compute_zmid
 
 from mpas_analysis.shared.constants import constants
@@ -125,19 +123,15 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'timeSeries{}'.format(sectionSuffix)
 
-            regionMaskSuffix = config.getExpression(sectionName,
-                                                    'regionMaskSuffix')
-
-            regionMaskFile = get_region_mask(
-                config, '{}.geojson'.format(regionMaskSuffix))
-
             regionNames = config.getExpression(sectionName, 'regionNames')
-
-            if 'all' in regionNames and os.path.exists(regionMaskFile):
-                regionNames = get_feature_list(regionMaskFile)
+            if len(regionNames) == 0:
+                # no regions in this group were requested
+                continue
 
             masksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=regionMaskSuffix)
+                regionGroup=regionGroup)
+
+            regionNames = masksSubtask.expand_region_names(regionNames)
 
             years = list(range(startYear, endYear + 1))
 
@@ -150,8 +144,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
                 obsMasksSubtask = regionMasksTask.add_mask_subtask(
-                    regionMaskFile, outFileSuffix=regionMaskSuffix,
-                    obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
+                    regionGroup=regionGroup, obsFileName=obsFileName,
+                    lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
 
@@ -195,13 +189,13 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                     localObsDict = dict(groupObsDicts[obsName])
 
                     obsSubtask = ComputeObsRegionalTimeSeriesSubtask(
-                        self, regionGroup, regionName, fullSuffix,
-                        masksSubtask, localObsDict)
+                        self, regionGroup, regionName, fullSuffix, localObsDict)
                     obsSubtasks[obsName] = obsSubtask
 
                 plotRegionSubtask = PlotRegionTimeSeriesSubtask(
                     self, regionGroup, regionName, index, controlConfig,
-                    sectionName, fullSuffix, obsSubtasks)
+                    sectionName, fullSuffix, obsSubtasks,
+                    masksSubtask.geojsonFileName)
                 plotRegionSubtask.run_after(combineSubtask)
                 self.add_subtask(plotRegionSubtask)
 
@@ -349,8 +343,8 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         for regionIndex in range(nRegions):
             self.logger.info('    region: {}'.format(
                 self.regionNames[regionIndex]))
-            dsRregion = dsRegionMask.isel(nRegions=regionIndex)
-            cellMask = dsRregion.regionCellMasks == 1
+            dsRegion = dsRegionMask.isel(nRegions=regionIndex)
+            cellMask = dsRegion.regionCellMasks == 1
 
             if openOceanMask is not None:
                 cellMask = numpy.logical_and(cellMask, openOceanMask)
@@ -360,29 +354,28 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
                 1e-12 * totalArea.values))
 
             if config_zmin is None:
-                if 'zminRegions' in dsRregion:
-                    zmin = dsRregion.zminRegions
+                if 'zminRegions' in dsRegion:
+                    zmin = dsRegion.zminRegions.values
                 else:
                     # the old naming convention, used in some pre-generated
                     # mask files
-                    zmin = dsRregion.zmin
+                    zmin = dsRegion.zmin.values
             else:
-                zmin = (('nRegions',), config_zmin)
+                zmin = config_zmin
 
             if config_zmax is None:
-                if 'zmaxRegions' in dsRregion:
-                    zmax = dsRregion.zmaxRegions
+                if 'zmaxRegions' in dsRegion:
+                    zmax = dsRegion.zmaxRegions.values
                 else:
                     # the old naming convention, used in some pre-generated
                     # mask files
-                    zmax = dsRregion.zmax
+                    zmax = dsRegion.zmax.values
             else:
-                zmax = (('nRegions',), config_zmax)
-
+                zmax = config_zmax
             depthMask = numpy.logical_and(zMid >= zmin, zMid <= zmax)
             dsOut = xarray.Dataset()
-            dsOut['zmin'] = zmin
-            dsOut['zmax'] = zmax
+            dsOut['zmin'] = ('nRegions', [zmin])
+            dsOut['zmax'] = ('nRegions', [zmax])
             dsOut['totalArea'] = totalArea
             dsOut['cellMask'] = cellMask
             dsOut['depthMask'] = depthMask
@@ -430,7 +423,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask : ``TimeSeriesOceanRegions``
+        parentTask : TimeSeriesOceanRegions
             The main task of which this is a subtask
 
         startYear, endYear : int
@@ -664,7 +657,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        parentTask : ``TimeSeriesOceanRegions``
+        parentTask : TimeSeriesOceanRegions
             The main task of which this is a subtask
 
         startYears, endYears : list of int
@@ -749,7 +742,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, regionGroup, regionName, fullSuffix,
-                 masksSubtask,  obsDict):
+                 obsDict):
         # {{{
         """
         Construct the analysis task.
@@ -770,10 +763,6 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             The regionGroup and regionName combined and modified to be
             appropriate as a task or file suffix
 
-        masksSubtask : ``ComputeRegionMasksSubtask``
-            A task for creating mask files for each region to plot, used
-            to get the mask file name
-
         obsDict : dict
             Information on the observations to compare against
         """
@@ -791,7 +780,6 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
         self.regionGroup = regionGroup
         self.regionName = regionName
-        self.masksSubtask = masksSubtask
         self.obsDict = obsDict
         self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
 
@@ -847,6 +835,9 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             return
 
         regionMaskFileName = obsDict['maskTask'].maskFileName
+
+        print(regionMaskFileName)
+        print(xarray.open_dataset(regionMaskFileName))
 
         dsRegionMask = \
             xarray.open_dataset(regionMaskFileName).stack(
@@ -995,14 +986,15 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, regionGroup, regionName, regionIndex,
-                 controlConfig, sectionName, fullSuffix, obsSubtasks):
+                 controlConfig, sectionName, fullSuffix, obsSubtasks,
+                 geojsonFileName):
         # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        parentTask :  ``AnalysisTask``
+        parentTask :  TimeSeriesOceanRegions
             The parent task, used to get the ``taskName``, ``config`` and
             ``componentName``
 
@@ -1027,6 +1019,9 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         obsSubtasks : dict of ``AnalysisTasks``
             Subtasks for computing the mean observed T and S in the region
+
+        geojsonFileName : str
+            The geojson file including the feature to plot
         """
         # Authors
         # -------
@@ -1047,6 +1042,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         self.controlConfig = controlConfig
         self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
         self.obsSubtasks = obsSubtasks
+        self.geojsonFileName = geojsonFileName
 
         for obsName in obsSubtasks:
             self.run_after(obsSubtasks[obsName])
@@ -1097,13 +1093,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         config = self.config
         calendar = self.calendar
 
-        regionMaskSuffix = config.getExpression(self.sectionName,
-                                                'regionMaskSuffix')
-
-        regionMaskFile = get_region_mask(config,
-                                         '{}.geojson'.format(regionMaskSuffix))
-
-        fcAll = read_feature_collection(regionMaskFile)
+        fcAll = read_feature_collection(self.geojsonFileName)
 
         fc = FeatureCollection()
         for feature in fcAll.features:

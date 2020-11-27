@@ -20,8 +20,8 @@ from pyremap import ProjectionGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_obs_path, get_region_mask, \
-    decode_strings, build_config_full_path
+from mpas_analysis.shared.io.utility import build_obs_path, decode_strings, \
+    build_config_full_path
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
@@ -33,8 +33,6 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.constants import constants
-
-from mpas_analysis.shared.regions import get_feature_list
 
 
 class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
@@ -376,11 +374,9 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         self.mpasClimatologyTask = mpasClimatologyTask
         self.controlConfig = controlConfig
 
-        self.iceShelfMasksFile = get_region_mask(config,
-                                                 'iceShelves20200621.geojson')
-
         self.masksSubtask = regionMasksTask.add_mask_subtask(
-            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
+            regionGroup='Ice Shelves')
+        self.iceShelfMasksFile = self.masksSubtask.geojsonFileName
 
         self.run_after(self.masksSubtask)
         self.run_after(mpasClimatologyTask)
@@ -400,8 +396,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         sectionName = self.taskName
         iceShelvesInTable = config.getExpression(sectionName,
                                                  'iceShelvesInTable')
-        if 'all' in iceShelvesInTable:
-            iceShelvesInTable = get_feature_list(self.iceShelfMasksFile)
+        if len(iceShelvesInTable) == 0:
+            return
+
+        iceShelvesInTable = self.masksSubtask.expand_region_names(
+            iceShelvesInTable)
 
         meltRateFileName = get_masked_mpas_climatology_file_name(
             config, self.season, self.componentName,
