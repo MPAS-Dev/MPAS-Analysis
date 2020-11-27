@@ -18,9 +18,11 @@
       ~ComputeTransectMasksSubtask.check_analysis_enabled
       ~ComputeTransectMasksSubtask.check_generate
       ~ComputeTransectMasksSubtask.close
+      ~ComputeTransectMasksSubtask.expand_transect_names
       ~ComputeTransectMasksSubtask.is_alive
       ~ComputeTransectMasksSubtask.join
       ~ComputeTransectMasksSubtask.kill
+      ~ComputeTransectMasksSubtask.make_transect_mask
       ~ComputeTransectMasksSubtask.run
       ~ComputeTransectMasksSubtask.run_after
       ~ComputeTransectMasksSubtask.run_task

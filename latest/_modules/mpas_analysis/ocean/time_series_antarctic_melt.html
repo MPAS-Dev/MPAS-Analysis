@@ -197,11 +197,9 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
-    <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> <span class="n">get_region_mask</span>
+    <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">decode_strings</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
 
 
 <div class="viewcode-block" id="TimeSeriesAntarcticMelt"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -244,16 +242,17 @@
             <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;melt&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceCavities&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
-                                                 <span class="s1">&#39;iceShelves20200621.geojson&#39;</span><span class="p">)</span>
-
+        <span class="n">regionGroup</span> <span class="o">=</span> <span class="s1">&#39;Ice Shelves&#39;</span>
         <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
                                                 <span class="s1">&#39;iceShelvesToPlot&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">iceShelvesToPlot</span><span class="p">:</span>
-            <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iceShelvesToPlot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># nothing else to do</span>
+            <span class="k">return</span>
 
-        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelves20200621&#39;</span><span class="p">)</span>
+        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span><span class="n">regionGroup</span><span class="o">=</span><span class="n">regionGroup</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">geojsonFileName</span>
+
+        <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_region_names</span><span class="p">(</span><span class="n">iceShelvesToPlot</span><span class="p">)</span>
 
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
         <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
@@ -322,7 +321,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">        parentTask :  TimeSeriesAntarcticMelt</span>
 <span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
 <span class="sd">            ``componentName``</span>
 
@@ -550,7 +549,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        parentTask : ``TimeSeriesOceanRegions``</span>
+<span class="sd">        parentTask : TimeSeriesAntarcticMelt</span>
 <span class="sd">            The main task of which this is a subtask</span>
 
 <span class="sd">        startYears, endYears : list</span>
@@ -633,7 +632,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">        parentTask :  TimeSeriesAntarcticMelt</span>
 <span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
 <span class="sd">            ``componentName``</span>
 

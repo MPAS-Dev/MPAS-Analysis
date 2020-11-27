@@ -197,7 +197,7 @@
 <h1>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask<a class="headerlink" href="#mpas-analysis-shared-transects-compute-transect-masks-subtask-computetransectmaskssubtask" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask">
-<em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.shared.transects.compute_transect_masks_subtask.</code><code class="sig-name descname">ComputeTransectMasksSubtask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parentTask</span></em>, <em class="sig-param"><span class="n">geojsonFileName</span></em>, <em class="sig-param"><span class="n">outFileSuffix</span></em>, <em class="sig-param"><span class="n">subtaskName</span><span class="o">=</span><span class="default_value">'computeTransectMasks'</span></em>, <em class="sig-param"><span class="n">subprocessCount</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/transects/compute_transect_masks_subtask.html#ComputeTransectMasksSubtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">mpas_analysis.shared.transects.compute_transect_masks_subtask.</code><code class="sig-name descname">ComputeTransectMasksSubtask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parentTask</span></em>, <em class="sig-param"><span class="n">transectGroup</span></em>, <em class="sig-param"><span class="n">subprocessCount</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/transects/compute_transect_masks_subtask.html#ComputeTransectMasksSubtask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask" title="Permalink to this definition">¶</a></dt>
 <dd><p>An analysis tasks for computing cell masks for transects defined by geojson
 features</p>
 <dl class="field-list simple">
@@ -207,13 +207,12 @@ features</p>
 repository, defining the shapes to be masked</p></li>
 <li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
 <li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the output mask file</p></li>
-<li><p><strong>meshFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A mesh file used to create the masks</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parentTask</span></em>, <em class="sig-param"><span class="n">geojsonFileName</span></em>, <em class="sig-param"><span class="n">outFileSuffix</span></em>, <em class="sig-param"><span class="n">subtaskName</span><span class="o">=</span><span class="default_value">'computeTransectMasks'</span></em>, <em class="sig-param"><span class="n">subprocessCount</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/transects/compute_transect_masks_subtask.html#ComputeTransectMasksSubtask.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parentTask</span></em>, <em class="sig-param"><span class="n">transectGroup</span></em>, <em class="sig-param"><span class="n">subprocessCount</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/transects/compute_transect_masks_subtask.html#ComputeTransectMasksSubtask.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the analysis task and adds it as a subtask of the
 <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p>
 <dl class="field-list simple">
@@ -221,10 +220,8 @@ repository, defining the shapes to be masked</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
-repository, defining the shapes to be masked</p></li>
-<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
+<li><p><strong>transectGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of a transect group, see
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.transects.get_transect_info()</span></code></p></li>
 <li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask</p></li>
 </ul>
 </dd>
@@ -238,7 +235,7 @@ repository, defining the shapes to be masked</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, geojsonFileName, …[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, transectGroup[, …])</p></td>
 <td><p>Construct the analysis task and adds it as a subtask of the <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
@@ -253,14 +250,20 @@ repository, defining the shapes to be masked</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
 <td><p>Close the Process object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_transect_names</span></code>(transectNames)</p></td>
+<td><p>If <code class="docutils literal notranslate"><span class="pre">transectNames</span></code> contains <code class="docutils literal notranslate"><span class="pre">'all'</span></code>, make sure the geojson file exists and then return all the transect names found in the file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
 <td><p>Return whether process is alive</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
 <td><p>Wait until child process terminates</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
 <td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_transect_mask</span></code>()</p></td>
+<td><p>If the geojson mask file has not already been cached in the diagnostics or custom diagnostic directories, it will be created in the analysis output’s masks directory.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
 <td><p>Sets up logging and then runs the analysis task.</p></td>

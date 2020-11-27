@@ -188,8 +188,8 @@
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">get_region_mask</span><span class="p">,</span> \
-    <span class="n">decode_strings</span><span class="p">,</span> <span class="n">build_config_full_path</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> \
+    <span class="n">build_config_full_path</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
@@ -201,8 +201,6 @@
     <span class="n">PlotClimatologyMapSubtask</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapAntarcticMelt"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html#mpas_analysis.ocean.ClimatologyMapAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -544,11 +542,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
-                                                 <span class="s1">&#39;iceShelves20200621.geojson&#39;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">,</span> <span class="n">outFileSuffix</span><span class="o">=</span><span class="s1">&#39;iceShelves20200621&#39;</span><span class="p">)</span>
+            <span class="n">regionGroup</span><span class="o">=</span><span class="s1">&#39;Ice Shelves&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">geojsonFileName</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
@@ -568,8 +564,11 @@
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
         <span class="n">iceShelvesInTable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
                                                  <span class="s1">&#39;iceShelvesInTable&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">iceShelvesInTable</span><span class="p">:</span>
-            <span class="n">iceShelvesInTable</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iceShelvesInTable</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">iceShelvesInTable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_region_names</span><span class="p">(</span>
+            <span class="n">iceShelvesInTable</span><span class="p">)</span>
 
         <span class="n">meltRateFileName</span> <span class="o">=</span> <span class="n">get_masked_mpas_climatology_file_name</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
