@@ -210,8 +210,12 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTasks['avg'],
                                            controlConfig))
 
-    analyses.append(ocean.OceanRegionalProfiles(config, oceanRegionMasksTask,
-                                                controlConfig))
+    oceanRegionalProfiles = ocean.OceanRegionalProfiles(
+        config, oceanRegionMasksTask, controlConfig)
+    analyses.append(oceanRegionalProfiles)
+
+    analyses.append(ocean.HovmollerOceanRegions(
+        config, oceanRegionMasksTask, oceanRegionalProfiles, controlConfig))
 
     # Sea Ice Analyses
     seaIceClimatolgyTask = MpasClimatologyTask(config=config,
