@@ -20,8 +20,8 @@ from pyremap import ProjectionGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io.utility import build_obs_path, get_region_mask, \
-    decode_strings
+from mpas_analysis.shared.io.utility import build_obs_path, decode_strings, \
+    build_config_full_path
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
@@ -33,8 +33,6 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.constants import constants
-
-from mpas_analysis.shared.regions import get_feature_list
 
 
 class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
@@ -376,11 +374,9 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         self.mpasClimatologyTask = mpasClimatologyTask
         self.controlConfig = controlConfig
 
-        self.iceShelfMasksFile = get_region_mask(config,
-                                                 'iceShelves20200621.geojson')
-
         self.masksSubtask = regionMasksTask.add_mask_subtask(
-            self.iceShelfMasksFile, outFileSuffix='iceShelves20200621')
+            regionGroup='Ice Shelves')
+        self.iceShelfMasksFile = self.masksSubtask.geojsonFileName
 
         self.run_after(self.masksSubtask)
         self.run_after(mpasClimatologyTask)
@@ -400,8 +396,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         sectionName = self.taskName
         iceShelvesInTable = config.getExpression(sectionName,
                                                  'iceShelvesInTable')
-        if 'all' in iceShelvesInTable:
-            iceShelvesInTable = get_feature_list(self.iceShelfMasksFile)
+        if len(iceShelvesInTable) == 0:
+            return
+
+        iceShelvesInTable = self.masksSubtask.expand_region_names(
+            iceShelvesInTable)
 
         meltRateFileName = get_masked_mpas_climatology_file_name(
             config, self.season, self.componentName,
@@ -417,7 +416,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 dsIn = xr.open_dataset(inFileName)
                 freshwaterFlux = dsIn[mpasFieldName]
                 if 'Time' in freshwaterFlux.dims:
-                    freshwaterFlux.isel(Time=0)
+                    freshwaterFlux = freshwaterFlux.isel(Time=0)
 
                 regionMaskFileName = self.masksSubtask.maskFileName
 
@@ -497,10 +496,16 @@ class AntarcticMeltTableSubtask(AnalysisTask):
 
         regionNames = decode_strings(ds.regionNames)
 
-        tableFileName = get_masked_mpas_climatology_file_name(
-            config, self.season, self.componentName,
-            climatologyName='antarcticMeltRateTable')
-        tableFileName = tableFileName.replace('.nc', '.csv')
+        outDirectory = '{}/antarcticMelt/'.format(
+            build_config_full_path(config, 'output', 'tablesSubdirectory'))
+
+        try:
+            os.makedirs(outDirectory)
+        except OSError:
+            pass
+
+        tableFileName = '{}/antarcticMeltRateTable_{}.csv'.format(outDirectory,
+                                                                  self.season)
 
         with open(tableFileName, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
@@ -515,10 +520,8 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                         '{}'.format(dsControl.meltRates[index].values)
                 writer.writerow(row)
 
-        tableFileName = get_masked_mpas_climatology_file_name(
-            config, self.season, self.componentName,
-            climatologyName='antarcticMeltFluxTable')
-        tableFileName = tableFileName.replace('.nc', '.csv')
+        tableFileName = '{}/antarcticMeltFluxTable_{}.csv'.format(outDirectory,
+                                                                  self.season)
 
         with open(tableFileName, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)

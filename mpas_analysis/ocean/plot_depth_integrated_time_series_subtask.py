@@ -382,7 +382,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             # rolling mean seems to have trouble with dask data sets so we
             # write out the data set and read it back as a single-file data set
             # (without dask)
-            dsPreprocessed = dsPreprocessed.drop('xtime')
+            dsPreprocessed = dsPreprocessed.drop_vars('xtime')
             write_netcdf(dsPreprocessed, self.preprocessedFileName)
             dsPreprocessed = xarray.open_dataset(self.preprocessedFileName)
 

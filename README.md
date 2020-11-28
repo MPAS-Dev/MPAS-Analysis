@@ -1,5 +1,5 @@
 # MPAS-Analysis
-[![Build Status](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_apis/build/status/MPAS-Dev.MPAS-Analysis?branchName=refs%2Fpull%2F728%2Fmerge)](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_build/latest?definitionId=2&branchName=refs%2Fpull%2F728%2Fmerge)
+[![Build Status](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_apis/build/status/MPAS-Dev.MPAS-Analysis?branchName=develop)](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_build/latest?definitionId=2&branchName=develop)
 
 Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
@@ -46,7 +46,7 @@ environment with the following packages:
  * python >= 3.6
  * numpy
  * scipy
- * matplotlib-base >= 3.0.2
+ * matplotlib >= 3.0.2
  * netCDF4
  * xarray >= 0.14.1
  * dask
@@ -62,20 +62,20 @@ environment with the following packages:
  * shapely
  * cartopy >= 0.18.0
  * cartopy\_offlinedata
- * geometric\_features >= 0.1.9
+ * geometric\_features >= 0.1.12
  * gsw
  * pyremap < 0.1.0
- * mpas\_tools >= 0.0.13
+ * mpas\_tools >= 0.0.15
 
 These can be installed via the conda command:
 ```
 conda config --add channels conda-forge
 conda config --set channel_priority strict
-conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib-base>=3.0.2" \
+conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib>=3.0.2" \
     netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
     pillow cmocean progressbar2 requests setuptools shapely "cartopy>=0.18.0" \
-    cartopy_offlinedata "geometric_features>=0.1.9" gsw "pyremap<0.1.0" \
-    "mpas_tools>=0.0.13"
+    cartopy_offlinedata "geometric_features>=0.1.12" gsw "pyremap<0.1.0" \
+    "mpas_tools>=0.0.15"
 conda activate mpas-analysis
 ```
 

@@ -160,6 +160,7 @@ maskSubdirectory = masks
 # provide an absolute path to put HTML in an alternative location (e.g. a web
 # portal)
 htmlSubdirectory = html
+tablesSubdirectory = tables
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list
@@ -309,6 +310,13 @@ threePanelAxisFontSize = 12
 
 # the dots per inch of output figures
 dpi = 200
+
+
+[polarProjection]
+## options related to polar-projection plots
+
+# whether to use the cartopy coastline (as opposed to the model coastline)
+useCartopyCoastline = True
 
 
 [html]
@@ -1209,11 +1217,11 @@ colorbarTicksDifference = [-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,
                            5., 10., 20., 50., 100.]
 
 # make a tables of mean melt rates and melt fluxes for individual ice shelves?
-makeTables = True
+makeTables = False
 
 # If making tables, which ice shelves?  This is a list of ice shelves or
 # ['all'] for all 106 ice shelves and regions.
-iceShelvesInTable = ['all']
+iceShelvesInTable = []
 
 
 [timeSeriesAntarcticMelt]
@@ -1252,21 +1260,15 @@ regionGroups = ['Antarctic Regions']
 [timeSeriesAntarcticRegions]
 ## options related to plotting time series of Antarctic regions
 
-# An identifying string that is the prefix for a geojson file containing
-# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
-# in addition to the usual properties for a region in geometric_features.  The
-# string is also used as the suffix for mask files generated from the geojson
-regionMaskSuffix = 'antarcticRegions20200621'
-
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
 # regionMaskSubdirectory for details.
-regionNames = ['all']
+regionNames = []
 
 # a list of variables to plot
 variables = [{'name': 'temperature',
               'title': 'Temperature',
-              'units': '$^\circ$C',
+              'units': r'$^\circ$C',
               'mpas': 'timeMonthly_avg_activeTracers_temperature'},
              {'name': 'salinity',
               'title': 'Salinity',
@@ -1286,6 +1288,9 @@ variables = [{'name': 'temperature',
 # Add these to a custom config file to override the defaults.
 # zmin = -1000
 # zmax = -400
+
+# Observational data sets to compare against
+obs = ['SOSE', 'WOA18']
 
 
 [timeSeriesTransport]
@@ -1336,16 +1341,10 @@ subprocessCount = 4
 [TSDiagramsForAntarcticRegions]
 ## options related to plotting T/S diagrams of Antarctic regions
 
-# An identifying string that is the prefix for a geojson file containing
-# Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
-# in addition to the usual properties for a region in geometric_features.  The
-# string is also used as the suffix for mask files generated from the geojson
-regionMaskSuffix = 'antarcticRegions20200621'
-
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the antarcticRegions masks file in
 # regionMaskSubdirectory for details.
-regionNames = ['all']
+regionNames = []
 
 # diagram type, either 'volumetric' or 'scatter', depending on if the points
 # should be binned the plot should show the volume fraction in each bin or
@@ -1355,14 +1354,14 @@ diagramType = volumetric
 # if diagramType == 'volumetric', the bin boundaries for T and S
 # if diagramType == 'scatter', only the min and max are important (and the
 #   bins are only used for computing neutral density contours)
-Tbins = numpy.linspace(-2.5, 4, 651)
-Sbins = numpy.linspace(33.8, 34.8, 1001)
+Tbins = numpy.linspace(-2.5, 4, 131)
+Sbins = numpy.linspace(33.8, 34.8, 201)
 
 # density contour interval
 rhoInterval = 0.1
 
 # The color map for depth or volume
-colormap = white_cmo_deep
+colormap = cmo.deep
 # The following is more appropriate if diagramType == 'scatter'
 # colormap = cmo.deep_r
 # the type of norm used in the colormap {'linear', 'log'}
@@ -1374,22 +1373,24 @@ normType = log
 # zmin = -1000
 # zmax = -400
 
+# the minimum and maximum volume for the colorbar, default is the minimum and
+# maximum over the mode output
+# volMin = 3e9
+# volMax = 1e12
+
 # Obserational data sets to compare against
 obs = ['SOSE', 'WOA18']
 
 [TSDiagramsForOceanBasins]
 ## options related to plotting T/S diagrams of major ocean basins
 
-# An identifying string that is the prefix for a geojson file containing
-# ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
-# to the usual properties for a region in geometric_features.  The string is
-# also used as the suffix for mask files generated from the geojson file
-regionMaskSuffix = 'oceanBasins20200621'
-
 # list of regions to plot or ['all'] for all regions in the masks file.
 # See "regionNames" in the oceanBasins masks file in
 # regionMaskSubdirectory for details.
-regionNames = ['all']
+regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
+               "Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",
+               "Global Ocean", "Global Ocean 65N to 65S",
+               "Global Ocean 15S to 15N"]
 
 # diagram type, either 'volumetric' or 'scatter', depending on if the points
 # should be binned the plot should show the volume fraction in each bin or
@@ -2928,12 +2929,19 @@ galleryLabel = Chlorophyll
 ## options related to plotting vertical profiles of regional means (and
 ## variability) of 3D MPAS fields
 
+# The name of a region group defining the region for each profile
+regionGroups = ['Ocean Basins']
+
+
+[profilesOceanBasins]
+## options related to plotting vertical profiles ocean basins
+
 # a list of dictionaries for each field to plot.  The dictionary includes
 # prefix (used for file names, task names and sections) as well as the mpas
 # name of the field, units for colorbars and a the name as it should appear
 # in figure titles and captions.
 fields =
-    [{'prefix': 'temperature',
+    [{'prefix': 'potentialTemperature',
       'mpas': 'timeMonthly_avg_activeTracers_temperature',
       'units': r'$\degree$C',
       'titleName': 'Potential Temperature'},
@@ -2953,10 +2961,44 @@ seasons =  ['JFM', 'JAS', 'ANN']
 # minimum and maximum depth of profile plots, or empty for the full depth range
 depthRange = []
 
-# The suffix on the regional mask file to be used to determine the regions to
-# plot.  A region mask file should be in the regionMaskDirectory and should
-# be named <mpasMeshName>_<regionMaskSuffix>.nc
-regionMaskSuffix = oceanBasins20200621
+# a list of region names from the region masks file to plot
+regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
+               "Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",
+               "Global Ocean", "Global Ocean 65N to 65S",
+               "Global Ocean 15S to 15N"]
+
+# web gallery options
+profileGalleryGroup = Ocean Basin Profiles
+
+
+[hovmollerOceanRegions]
+## options related to plotting Hovmoller diagrams (depth vs. time plots) of
+## regional means of 3D MPAS fields
+
+# the names of region groups to plot, each with its own section below
+regionGroups = ['Ocean Basins']
+
+
+[hovmollerOceanBasins]
+## options related to plotting Hovmoller diagrams of ocean basins
+
+# a list of dictionaries for each field to plot.  The dictionary includes
+# prefix (used for file names, task names and sections) as well as the MPAS
+# name of the field, units for colorbars and a the name as it should appear
+# in figure titles and captions.
+fields =
+    [{'prefix': 'potentialTemperature',
+      'mpas': 'timeMonthly_avg_activeTracers_temperature',
+      'units': r'$\degree$C',
+      'titleName': 'Potential Temperature'},
+     {'prefix': 'salinity',
+      'mpas': 'timeMonthly_avg_activeTracers_salinity',
+      'units': r'PSU',
+      'titleName': 'Salinity'},
+     {'prefix': 'potentialDensity',
+      'mpas': 'timeMonthly_avg_potentialDensity',
+      'units': r'kg m$^{-3}$',
+      'titleName': 'Potential Density'}]
 
 # a list of region names from the region masks file to plot
 regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
@@ -2964,24 +3006,18 @@ regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
                "Global Ocean", "Global Ocean 65N to 65S",
                "Global Ocean 15S to 15N"]
 
-# Make Hovmoller plots of fields vs time and depth?
-plotHovmoller = False
-
-# web gallery options
-hovmollerGalleryGroup = Ocean Basin Time Series vs Depths
-
-# web gallery options
-profileGalleryGroup = Ocean Basin Profiles
-
-
-[temperatureOceanRegionalHovmoller]
-## options related to plotting time series of temperature vs. depth in ocean
-## regions
+# whether to compute an anomaly with respect to the start of the time series
+computeAnomaly = False
 
 # Number of points over which to compute moving average(e.g., for monthly
 # output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
-movingAverageMonths = 1
+movingAverageMonths = 12
+
+
+[hovmollerOceanRegionsPotentialTemperature]
+## options related to plotting time series of temperature vs. depth in ocean
+## regions
 
 # colormap
 colormapNameResult = RdYlBu_r
@@ -3019,14 +3055,9 @@ contourLevels = 'none'
 # yLim = [-6000., 0.]
 
 
-[salinityOceanRegionalHovmoller]
+[hovmollerOceanRegionsSalinity]
 ## options related to plotting time series of salinity vs. depth in ocean
 ## regions
-
-# Number of points over which to compute moving average(e.g., for monthly
-# output, movingAverageMonths=12 corresponds to a 12-month moving average
-# window)
-movingAverageMonths = 1
 
 # colormap
 colormapNameResult = haline
@@ -3064,14 +3095,9 @@ contourLevels = 'none'
 # yLim = [-6000., 0.]
 
 
-[potentialDensityOceanRegionalHovmoller]
+[hovmollerOceanRegionsPotentialDensity]
 ## options related to plotting time series of potential density vs. depth in
 ## ocean regions
-
-# Number of points over which to compute moving average(e.g., for monthly
-# output, movingAverageMonths=12 corresponds to a 12-month moving average
-# window)
-movingAverageMonths = 1
 
 # colormap
 colormapNameResult = Spectral_r

@@ -28,13 +28,11 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    get_files_year_month, decode_strings, get_region_mask
+    get_files_year_month, decode_strings
 
 from mpas_analysis.shared.html import write_image_xml
 
 from mpas_analysis.shared.transects import ComputeTransectMasksSubtask
-
-from mpas_analysis.shared.regions import get_feature_list
 
 
 class TimeSeriesTransport(AnalysisTask):  # {{{
@@ -81,17 +79,16 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         years = [year for year in range(startYear, endYear + 1)]
 
-        transportTransectFileName = \
-            get_region_mask(config, 'transportTransects20200621.geojson')
-
         transectsToPlot = config.getExpression('timeSeriesTransport',
                                                'transectsToPlot')
-        if 'all' in transectsToPlot:
-            transectsToPlot = get_feature_list(transportTransectFileName)
+        if len(transectsToPlot) == 0:
+            return
 
         masksSubtask = ComputeTransectMasksSubtask(
-            self, transportTransectFileName,
-            outFileSuffix='transportTransects20200621')
+            parentTask=self, transectGroup='Transport Transects')
+
+        transectsToPlot = masksSubtask.expand_transect_names(transectsToPlot)
+        transportTransectFileName = masksSubtask.geojsonFileName
 
         self.add_subtask(masksSubtask)
 

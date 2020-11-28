@@ -32,12 +32,10 @@ from mpas_analysis.shared.plot import savefig, add_inset
 
 from mpas_analysis.shared.io import write_netcdf
 
-from mpas_analysis.shared.io.utility import decode_strings, get_region_mask, \
+from mpas_analysis.shared.io.utility import decode_strings, \
     build_obs_path, build_config_full_path, make_directories
 
 from mpas_analysis.shared.html import write_image_xml
-
-from mpas_analysis.shared.regions import get_feature_list
 
 from mpas_analysis.ocean.utility import compute_zmid
 
@@ -166,19 +164,14 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
 
-            regionMaskSuffix = config.getExpression(sectionName,
-                                                    'regionMaskSuffix')
-
-            regionMaskFile = get_region_mask(
-                config, '{}.geojson'.format(regionMaskSuffix))
-
             regionNames = config.getExpression(sectionName, 'regionNames')
-
-            if 'all' in regionNames and os.path.exists(regionMaskFile):
-                regionNames = get_feature_list(regionMaskFile)
+            if len(regionNames) == 0:
+                continue
 
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
-                regionMaskFile, outFileSuffix=regionMaskSuffix)
+                regionGroup=regionGroup)
+
+            regionNames = mpasMasksSubtask.expand_region_names(regionNames)
 
             obsList = config.getExpression(sectionName, 'obs')
             groupObsDicts = {}
@@ -189,8 +182,8 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
                 obsMasksSubtask = regionMasksTask.add_mask_subtask(
-                    regionMaskFile, outFileSuffix=regionMaskSuffix,
-                    obsFileName=obsFileName, lonVar=localObsDict['lonVar'],
+                    regionGroup, obsFileName=obsFileName,
+                    lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
 
@@ -672,6 +665,8 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds['volume'] = (dsRestart.areaCell *
                             ds['timeMonthly_avg_layerThickness'])
 
+            ds.load()
+
             ds = ds.where(cellMask, drop=True)
 
             self.logger.info("Don't worry about the following dask "
@@ -936,10 +931,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         startYear = self.mpasClimatologyTask.startYear
         endYear = self.mpasClimatologyTask.endYear
 
-        regionMaskSuffix = config.getExpression(sectionName, 'regionMaskSuffix')
-
-        regionMaskFile = get_region_mask(config,
-                                         '{}.geojson'.format(regionMaskSuffix))
+        regionMaskFile = self.mpasMasksSubtask.geojsonFileName
 
         fcAll = read_feature_collection(regionMaskFile)
 
@@ -1023,8 +1015,14 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             raise ValueError('Unexpected diagramType {}'.format(diagramType))
 
         lastPanel = None
-        volMinMpas = None
-        volMaxMpas = None
+        if config.has_option(sectionName, 'volMin'):
+            volMinMpas = config.getfloat(sectionName, 'volMin')
+        else:
+            volMinMpas = None
+        if config.has_option(sectionName, 'volMax'):
+            volMaxMpas = config.getfloat(sectionName, 'volMax')
+        else:
+            volMaxMpas = None
         for index in range(len(axisIndices)):
             panelIndex = axisIndices[index]
 
@@ -1050,8 +1048,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                 lastPanel, volMin, volMax = \
                     self._plot_volumetric_panel(T, S, volume)
 
-                if index == 0:
+                if volMinMpas is None:
                     volMinMpas = volMin
+                if volMaxMpas is None:
                     volMaxMpas = volMax
                 if normType == 'linear':
                     norm = colors.Normalize(vmin=0., vmax=volMaxMpas)
@@ -1099,6 +1098,30 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                  **title_font)
 
         inset = add_inset(fig, fc, width=1.5, height=1.5)
+
+        # add an empty plot covering the subplots to give common axis labels
+        pos0 = axarray[0, 0].get_position()
+        pos1 = axarray[-1, -1].get_position()
+        pos_common = [pos0.x0, pos1.y0, pos1.x1-pos0.x0, pos0.y1-pos1.y0]
+        print(pos_common)
+        common_ax = fig.add_axes(pos_common, zorder=-2)
+        common_ax.spines['top'].set_color('none')
+        common_ax.spines['bottom'].set_color('none')
+        common_ax.spines['left'].set_color('none')
+        common_ax.spines['right'].set_color('none')
+        common_ax.tick_params(labelcolor='w', top=False, bottom=False,
+                              left=False, right=False)
+
+        common_ax.set_xlabel('Salinity (PSU)', **axis_font)
+        common_ax.set_ylabel(r'Potential temperature ($^\circ$C)', **axis_font)
+
+        # turn off labels for individual plots (just used for spacing)
+        for index in range(len(axisIndices)):
+            row = nRows-1 - index//nCols
+            col = numpy.mod(index, nCols)
+            ax = axarray[row, col]
+            ax.set_xlabel('')
+            ax.set_ylabel('')
 
         # move the color bar down a little ot avoid the inset
         pos0 = inset.get_position()

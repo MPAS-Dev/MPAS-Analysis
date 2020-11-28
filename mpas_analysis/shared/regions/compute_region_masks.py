@@ -13,8 +13,6 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 from mpas_analysis.shared.regions.compute_region_masks_subtask \
     import ComputeRegionMasksSubtask
 
-from mpas_analysis.shared.io.utility import get_region_mask
-
 
 class ComputeRegionMasks(AnalysisTask):
     """
@@ -52,21 +50,17 @@ class ComputeRegionMasks(AnalysisTask):
 
         self.regionMaskSubtasks = {}
 
-    def add_mask_subtask(self, geojsonFileName, outFileSuffix, obsFileName=None,
-                         lonVar='lon', latVar='lat', meshName=None,
-                         useMpasMaskCreator=True):
+    def add_mask_subtask(self, regionGroup, obsFileName=None, lonVar='lon',
+                         latVar='lat', meshName=None, useMpasMaskCreator=True):
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
         Parameters
         ----------
-        geojsonFileName : str
-            A geojson file, typically from the MPAS ``geometric_features``
-            repository, defining the shapes to be masked
-
-        outFileSuffix : str
-            The suffix for the resulting mask file
+        regionGroup : str
+            The name of one of the supported region groups (see
+            :py:func:`mpas_analysis.shared.regions.get_region_mask()`)
 
         obsFileName : str, optional
             The name of an observations file to create masks for.  But default,
@@ -94,11 +88,10 @@ class ComputeRegionMasks(AnalysisTask):
         if meshName is None:
             meshName = config.get('input', 'mpasMeshName')
 
-        maskFileName = get_region_mask(
-            config, '{}_{}.nc'.format(meshName, outFileSuffix))
+        key = '{} {}'.format(meshName, regionGroup)
 
-        if maskFileName not in self.regionMaskSubtasks:
-            subtaskName = '{}_{}'.format(meshName, outFileSuffix)
+        if key not in self.regionMaskSubtasks:
+
             subprocessCount = config.getWithDefault('execute',
                                                     'parallelTaskCount',
                                                     default=1)
@@ -106,15 +99,17 @@ class ComputeRegionMasks(AnalysisTask):
             if obsFileName is not None:
                 useMpasMaskCreator = False
 
+            if useMpasMaskCreator:
+                subprocessCount = 1
+
             maskSubtask = ComputeRegionMasksSubtask(
-                self, geojsonFileName, outFileSuffix,
-                featureList=None, subtaskName=subtaskName,
+                self, regionGroup=regionGroup, meshName=meshName,
                 subprocessCount=subprocessCount, obsFileName=obsFileName,
-                lonVar=lonVar, latVar=latVar, meshName=meshName,
+                lonVar=lonVar, latVar=latVar,
                 useMpasMaskCreator=useMpasMaskCreator)
 
             self.add_subtask(maskSubtask)
 
-            self.regionMaskSubtasks[maskFileName] = maskSubtask
+            self.regionMaskSubtasks[key] = maskSubtask
 
-        return self.regionMaskSubtasks[maskFileName]
+        return self.regionMaskSubtasks[key]

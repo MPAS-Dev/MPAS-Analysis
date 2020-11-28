@@ -467,7 +467,23 @@ years (3 to 5) and displaying time series and the El Niño index over the full
 5 Running MPAS-Analysis
 -----------------------
 
-The hard work is done.  Now that we have a config file, we are ready to run:
+The hard work is done.  Now that we have a config file, we are ready to run.
+
+On many file systems, MPAS-Analysis and other python-based software that used
+NetCDF files based on the HDF5 file structure can experience file access errors
+unless the following environment variable is set as follows in bash:
+
+.. code-block:: bash
+
+    $ export HDF5_USE_FILE_LOCKING=FALSE
+
+or under csh:
+
+.. code-block:: csh
+
+    > setenv HDF5_USE_FILE_LOCKING FALSE
+
+Then, running MPAS-Analysis is as simple as:
 
 .. code-block:: bash
 

@@ -276,10 +276,10 @@ class RemapBGCClimatology(RemapMpasClimatologySubtask):  # {{{
             climatology['Chl'] = spChl + diatChl + diazChl + phaeoChl
             climatology.Chl.attrs['units'] = 'mg m$^{-3}$'
             climatology.Chl.attrs['description'] = 'Sum of all PFT chlorophyll'
-            climatology.drop(['timeMonthly_avg_ecosysTracers_spChl',
-                              'timeMonthly_avg_ecosysTracers_diatChl',
-                              'timeMonthly_avg_ecosysTracers_diazChl',
-                              'timeMonthly_avg_ecosysTracers_phaeoChl'])
+            climatology.drop_vars(['timeMonthly_avg_ecosysTracers_spChl',
+                                   'timeMonthly_avg_ecosysTracers_diatChl',
+                                   'timeMonthly_avg_ecosysTracers_diazChl',
+                                   'timeMonthly_avg_ecosysTracers_phaeoChl'])
 
         return climatology  # }}}
 

@@ -68,7 +68,7 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
         # We must reset the buffer to make it ready for reading.
         config_string.seek(0)
         new_config = MpasAnalysisConfigParser()
-        new_config.readfp(config_string)
+        new_config.read_file(config_string)
 
         # call the constructor from the base class (AnalysisTask)
         super(RefYearMpasClimatologyTask, self).__init__(

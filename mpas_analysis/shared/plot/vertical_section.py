@@ -482,9 +482,9 @@ def plot_vertical_section_comparison(
         if thirdXAxisData is not None and refArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
-            plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.9])
+            plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.95])
     else:
-        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.01, 0.0, 1.0, 0.93])
+        plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.01, 0.0, 1.0, 0.97])
 
     return fig, axes, suptitle
 

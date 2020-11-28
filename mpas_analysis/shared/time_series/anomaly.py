@@ -36,8 +36,8 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
     variableList :  list of str
         variable names to include in the resulting data set
 
-    simulationStartTime :  str
-        the start date of the simulation
+    anomalyStartTime, anomalyEndTime :  str
+        the start and end times of the reference point for the anomaly
 
     startDate, endDate :  str
         the start and end dates of the time series
