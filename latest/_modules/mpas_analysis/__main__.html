@@ -378,8 +378,12 @@
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">GeojsonTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                            <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
-                                                <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">oceanRegionalProfiles</span> <span class="o">=</span> <span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">)</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">oceanRegionalProfiles</span><span class="p">)</span>
+
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">HovmollerOceanRegions</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span> <span class="n">oceanRegionalProfiles</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="c1"># Sea Ice Analyses</span>
     <span class="n">seaIceClimatolgyTask</span> <span class="o">=</span> <span class="n">MpasClimatologyTask</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
