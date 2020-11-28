@@ -550,7 +550,7 @@
             <span class="c1"># rolling mean seems to have trouble with dask data sets so we</span>
             <span class="c1"># write out the data set and read it back as a single-file data set</span>
             <span class="c1"># (without dask)</span>
-            <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+            <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessedFileName</span><span class="p">)</span>
             <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preprocessedFileName</span><span class="p">)</span>
 

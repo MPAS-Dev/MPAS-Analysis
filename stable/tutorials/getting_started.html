@@ -607,7 +607,18 @@ years (3 to 5) and displaying time series and the El Niño index over the full
 </div>
 <div class="section" id="running-mpas-analysis">
 <h2>5 Running MPAS-Analysis<a class="headerlink" href="#running-mpas-analysis" title="Permalink to this headline">¶</a></h2>
-<p>The hard work is done.  Now that we have a config file, we are ready to run:</p>
+<p>The hard work is done.  Now that we have a config file, we are ready to run.</p>
+<p>On many file systems, MPAS-Analysis and other python-based software that used
+NetCDF files based on the HDF5 file structure can experience file access errors
+unless the following environment variable is set as follows in bash:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+</pre></div>
+</div>
+<p>or under csh:</p>
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">setenv </span>HDF5_USE_FILE_LOCKING FALSE
+</pre></div>
+</div>
+<p>Then, running MPAS-Analysis is as simple as:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mpas_analysis myrun.cfg
 </pre></div>
 </div>

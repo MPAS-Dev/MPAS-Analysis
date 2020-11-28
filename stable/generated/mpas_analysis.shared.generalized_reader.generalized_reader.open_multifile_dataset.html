@@ -225,7 +225,7 @@ start of the simulation.</p>
 <li><p><strong>timeVariableName</strong> (<em>string</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> if using a
 <code class="docutils literal notranslate"><span class="pre">variableMap</span></code> or <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> if not using a <code class="docutils literal notranslate"><span class="pre">variableMap</span></code>)</p></li>
 <li><p><strong>variableList</strong> (<em>list of strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
-<li><p><strong>selValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
+<li><p><strong>selValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
 values used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.sel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -233,7 +233,7 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
 arrays of indices used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.isel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -242,15 +242,15 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>variableMap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary with keys that are variable names used by
+<li><p><strong>variableMap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary with keys that are variable names used by
 MPAS-Analysis and values that are lists of possible names for the same
 variable in the MPAS dycore that produced the data set (which may
 differ between versions).</p></li>
-<li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
-<li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
-<li><p><strong>chunking</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>True</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) – If integer is present, applies maximum chunk size from config file
+<li><p><strong>chunking</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>True</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – If integer is present, applies maximum chunk size from config file
 value <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>, otherwise if None do not perform chunking.  If
 True, use automated chunking using default config value
 <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>. If chunking is a dict use dictionary values for
@@ -262,10 +262,10 @@ chunking.</p></li>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.8)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string,
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string,
     a floating-pont number of days since the start of the simulation
     or a <code class="docutils literal notranslate"><span class="pre">numpy.datatime64</span></code> object).</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
     variable is a number of days since the start of the simulation but
     simulationStartTime is None.</p></li>
 </ul>

@@ -372,10 +372,10 @@
              <span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityMeridional</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># drop unnecessary fields before re-mapping</span>
-        <span class="n">climatology</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;timeMonthly_avg_velocityZonalSquared&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;timeMonthly_avg_velocityMeridionalSquared&#39;</span><span class="p">])</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;timeMonthly_avg_velocityZonalSquared&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;timeMonthly_avg_velocityMeridionalSquared&#39;</span><span class="p">])</span>
 
         <span class="c1"># this creates a new variable eke in climatology (like netcdf)</span>
         <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;eke&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eke</span>

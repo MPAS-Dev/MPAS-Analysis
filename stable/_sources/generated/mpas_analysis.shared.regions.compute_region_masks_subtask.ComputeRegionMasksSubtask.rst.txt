@@ -18,9 +18,11 @@
       ~ComputeRegionMasksSubtask.check_analysis_enabled
       ~ComputeRegionMasksSubtask.check_generate
       ~ComputeRegionMasksSubtask.close
+      ~ComputeRegionMasksSubtask.expand_region_names
       ~ComputeRegionMasksSubtask.is_alive
       ~ComputeRegionMasksSubtask.join
       ~ComputeRegionMasksSubtask.kill
+      ~ComputeRegionMasksSubtask.make_region_mask
       ~ComputeRegionMasksSubtask.run
       ~ComputeRegionMasksSubtask.run_after
       ~ComputeRegionMasksSubtask.run_task

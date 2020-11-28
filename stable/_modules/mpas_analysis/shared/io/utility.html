@@ -386,36 +386,6 @@
     <span class="k">return</span> <span class="n">fullFileName</span>  <span class="c1"># }}}</span>
 
 
-<span class="k">def</span> <span class="nf">get_geometric_data</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the full path for a region mask with a given file name</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    config : MpasAnalysisConfigParser object</span>
-<span class="sd">        configuration from which to read the path</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    geometricDataDirectory : str</span>
-<span class="sd">        A directory where geometric data cached from ``geometric_features`` can</span>
-<span class="sd">        be stored</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Authors</span>
-    <span class="c1"># -------</span>
-    <span class="c1"># Xylar Asay-Davis</span>
-
-    <span class="n">geometricDataDirectory</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span>
-                                        <span class="s1">&#39;geometricDataDirectory&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">geometricDataDirectory</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-        <span class="n">geometricDataDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/geometric_data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;baseDirectory&#39;</span><span class="p">))</span>
-
-    <span class="n">make_directories</span><span class="p">(</span><span class="n">geometricDataDirectory</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">geometricDataDirectory</span>  <span class="c1"># }}}</span>
-
 <span class="k">def</span> <span class="nf">build_obs_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativePath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
