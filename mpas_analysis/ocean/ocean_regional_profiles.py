@@ -98,7 +98,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
 
             masksSubtask = self.masksSubtasks[regionGroup]
 
-            timeSeriesName = masksSubtask.outFileSuffix
+            timeSeriesName = regionGroup.replace(' ', '')
 
             for field in fields:
                 for regionName in regionNames:
@@ -136,7 +136,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         if regionGroup not in self.combineSubtasks:
             self.combineSubtasks[regionGroup] = dict()
 
-        timeSeriesName = masksSubtask.outFileSuffix
+        timeSeriesName = regionGroup.replace(' ', '')
 
         if seasons is None:
             seasons = []
@@ -275,7 +275,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
 
-        timeSeriesName = self.masksSubtask.outFileSuffix
+        timeSeriesName = self.masksSubtask.regionGroup.replace(' ', '')
 
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',

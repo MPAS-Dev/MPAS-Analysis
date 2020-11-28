@@ -3006,15 +3006,18 @@ regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
                "Global Ocean", "Global Ocean 65N to 65S",
                "Global Ocean 15S to 15N"]
 
-
-[hovmollerOceanRegionsPotentialTemperature]
-## options related to plotting time series of temperature vs. depth in ocean
-## regions
+# whether to compute an anomaly with respect to the start of the time series
+computeAnomaly = False
 
 # Number of points over which to compute moving average(e.g., for monthly
 # output, movingAverageMonths=12 corresponds to a 12-month moving average
 # window)
 movingAverageMonths = 12
+
+
+[hovmollerOceanRegionsPotentialTemperature]
+## options related to plotting time series of temperature vs. depth in ocean
+## regions
 
 # colormap
 colormapNameResult = RdYlBu_r
@@ -3056,11 +3059,6 @@ contourLevels = 'none'
 ## options related to plotting time series of salinity vs. depth in ocean
 ## regions
 
-# Number of points over which to compute moving average(e.g., for monthly
-# output, movingAverageMonths=12 corresponds to a 12-month moving average
-# window)
-movingAverageMonths = 12
-
 # colormap
 colormapNameResult = haline
 # whether the colormap is indexed or continuous
@@ -3100,11 +3098,6 @@ contourLevels = 'none'
 [hovmollerOceanRegionsPotentialDensity]
 ## options related to plotting time series of potential density vs. depth in
 ## ocean regions
-
-# Number of points over which to compute moving average(e.g., for monthly
-# output, movingAverageMonths=12 corresponds to a 12-month moving average
-# window)
-movingAverageMonths = 12
 
 # colormap
 colormapNameResult = Spectral_r

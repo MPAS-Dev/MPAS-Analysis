@@ -295,7 +295,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         xLabel = 'Time (years)'
         yLabel = 'Depth (m)'
 
-        title = '{}, {}'.format(self.fieldNameInTitle, regionNameInTitle)
+        title = '{}\n{}'.format(self.fieldNameInTitle, regionNameInTitle)
 
         outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
