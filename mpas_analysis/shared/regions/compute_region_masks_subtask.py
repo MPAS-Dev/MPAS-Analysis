@@ -22,6 +22,8 @@ import mpas_tools.conversion
 from geometric_features import read_feature_collection, GeometricFeatures
 from geometric_features.aggregation.ocean import basins, subbasins, antarctic, \
     ice_shelves
+from geometric_features.aggregation.ocean import arctic as arctic_ocean
+from geometric_features.aggregation.seaice import arctic as arctic_seaice
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -39,7 +41,8 @@ def get_region_info(regionGroup, config):
     ----------
     regionGroup : str
         The name of a region group to get mask features for, one of
-        'Antarctic Regions', 'Ocean Basins', 'Ice Shelves', or 'Ocean Subbasins'
+        'Antarctic Regions', 'Arctic Ocean Regions', 'Arctic Sea Ice Regions',
+        'Ocean Basins', 'Ice Shelves', or 'Ocean Subbasins'
 
     config :  mpas_analysis.configuration.MpasAnalysisConfigParser
         Configuration options
@@ -60,6 +63,12 @@ def get_region_info(regionGroup, config):
     regions = {'Antarctic Regions': {'prefix': 'antarcticRegions',
                                      'date': '20200621',
                                      'function': antarctic},
+               'Arctic Ocean Regions': {'prefix': 'arcticOceanRegions',
+                                        'date': '20201130',
+                                        'function': arctic_ocean},
+               'Arctic Sea Ice Regions': {'prefix': 'arcticSeaIceRegions',
+                                          'date': '20201130',
+                                          'function': arctic_seaice},
                'Ocean Basins': {'prefix': 'oceanBasins',
                                 'date': '20200621',
                                 'function': basins},
