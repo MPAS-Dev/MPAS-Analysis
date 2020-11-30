@@ -3,6 +3,9 @@
 Regions
 =======
 
+Region Config Section
+---------------------
+
 The ``[regions]`` section of a configuration file contains options related
 to regions either defined in MPAS components' online analysis or determined
 within MPAS-Analysis using region mask files::
@@ -18,8 +21,6 @@ within MPAS-Analysis using region mask files::
   plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
                 'Nino 4', 'Nino 3.4', 'Global Ocean']
 
-Region Names
-------------
 
 MPAS-Ocean currently has hard coded into its online analysis 7 regions in a
 fixed order, as given in the ``regions`` option.  This should not be altered
@@ -29,27 +30,36 @@ The corresponding ``plotTitles`` can be modified as desired to update how
 these regions are named in plot titles and in gallery names on the resulting
 web page.
 
+.. _config_region_groups:
 
-.. _config_region_mask_files:
+Region Groups
+-------------
 
-Region Mask Files
------------------
+Currently, seven analysis tasks (``climatologyMapAntarcticMelt``,
+``hovmollerOceanRegions``, ``oceanRegionalProfiles``, ``regionalTSDiagrams``,
+``streamfunctionMOC``, ``timeSeriesAntarcticMelt``, and
+``timeSeriesOceanRegions``) use masks that define regions in an MPAS mesh as
+part of their analysis.  Most of these region group are defined in
+:py:func:`mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()`.
+Several tasks (``hovmollerOceanRegions``, ``oceanRegionalProfiles``,
+``regionalTSDiagrams``, and ``timeSeriesOceanRegions``) can use any of the
+defined region groups.  Currently, available region groups are:
+``Antarctic Regions``, ``Ocean Basins``, ``Ice Shelves``, and
+``Ocean Subbasins``.
 
-Currently, three analysis tasks (``streamfunctionMOC``,
-``timeSeriesAntarcticMelt`` and ``oceanRegionalProfiles``) use masks that
-define regions in an MPAS mesh as part of their analysis.  The option
-``regionMaskSubdirectory`` specifies the path to these mask files, typically
-``diagnostics/mpas_analysis/region_masks``.  Region  masks for common MPAS
-Ocean and Seaice grids are supplied as part of the data from the
-`E3SM public data repository`_ (see the :ref:`quick_start`).
+The option ``regionMaskSubdirectory`` in the ``[diagnostics]`` section specifies
+the path to cached mask files for these region groups, typically
+``diagnostics/mpas_analysis/region_masks``. Region masks for common MPAS Ocean
+and Seaice meshes are supplied as part of the data from the
+`E3SM public data repository <https://web.lcrc.anl.gov/public/e3sm/diagnostics/>`_ (see the :ref:`quick_start`).
 
-If ice shelf, ocean basin, Antarctic or Arctic masks for a given grid don't
-already exist in the cached mask location, they will be generated
-automatically from the associated geojson files (``iceShelves20200621.geojson``
-``oceanBasins20200621.geojson``, ``antarcticRegions20200621.geojson``, or
-``arcticRegions.geojson``), a process that can be time consuming for
-large meshes.  To generate them in advance (using threading to speed up the
-process), see the example utility script
-``utility_scripts/make_region_mask.py``
+If masks for for a given grid don't already exist in the cached mask location,
+they will be generated automatically from the aggregation function from the
+``geometric_features`` package, see
+`Aggregate Existing Features <http://mpas-dev.github.io/geometric_features/stable/aggregation.html>`_.
+The mask data will be stored in a geojson file with the region group's prefix
+and date stamp (e.g. ``iceShelves20200621.geojson``).  Then, masks on the MPAS
+Ocean and Seaice mesh will be computed, a process that can be time consuming for
+large meshes.  To generate the masks in advance (using threading to speed up the
+process), see the example utility script ``utility_scripts/make_region_mask.py``.
 
-.. _`E3SM public data repository`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/
