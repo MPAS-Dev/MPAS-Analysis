@@ -44,6 +44,9 @@ requirements:
     - gsw
     - pyremap <0.1.0
     - mpas_tools >=0.0.15
+    - pandas
+    - python-dateutil
+    - six
 
 test:
   requires:

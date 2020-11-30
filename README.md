@@ -66,6 +66,10 @@ environment with the following packages:
  * gsw
  * pyremap < 0.1.0
  * mpas\_tools >= 0.0.15
+ * pandas
+ * python-dateutil
+ * six
+
 
 These can be installed via the conda command:
 ```
@@ -75,7 +79,7 @@ conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib>=3.0.2" \
     netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
     pillow cmocean progressbar2 requests setuptools shapely "cartopy>=0.18.0" \
     cartopy_offlinedata "geometric_features>=0.1.12" gsw "pyremap<0.1.0" \
-    "mpas_tools>=0.0.15"
+    "mpas_tools>=0.0.15" pandas python-dateutil six
 conda activate mpas-analysis
 ```
 
