@@ -40,6 +40,9 @@ conda activate test_mpas_analysis_py${py}
 cd docs
 make clean
 make html
+rm -rf /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${branch}/docs
+mkdir -p /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${branch}/
+cp -r _build/html /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${branch}/docs
 cd ..
 conda deactivate
 
