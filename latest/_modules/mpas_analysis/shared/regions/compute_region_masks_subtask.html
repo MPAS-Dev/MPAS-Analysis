@@ -198,7 +198,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
 
-<span class="k">def</span> <span class="nf">get_region_info</span><span class="p">(</span><span class="n">regionGroup</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="get_region_info"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info">[docs]</a><span class="k">def</span> <span class="nf">get_region_info</span><span class="p">(</span><span class="n">regionGroup</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a geojson mask file and the appropriate file suffix for the given</span>
 <span class="sd">    region group.</span>
@@ -249,7 +249,7 @@
     <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">region</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span>
+    <span class="k">return</span> <span class="n">region</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span></div>
 
 
 <div class="viewcode-block" id="get_feature_list"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list">[docs]</a><span class="k">def</span> <span class="nf">get_feature_list</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">):</span>

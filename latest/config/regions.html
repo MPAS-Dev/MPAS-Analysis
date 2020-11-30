@@ -100,8 +100,8 @@
 <li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Regions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#region-names">Region Names</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#region-mask-files">Region Mask Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#region-config-section">Region Config Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#region-groups">Region Groups</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
@@ -199,6 +199,8 @@
             
   <div class="section" id="regions">
 <span id="config-regions"></span><h1>Regions<a class="headerlink" href="#regions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="region-config-section">
+<h2>Region Config Section<a class="headerlink" href="#region-config-section" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">[regions]</span></code> section of a configuration file contains options related
 to regions either defined in MPAS components’ online analysis or determined
 within MPAS-Analysis using region mask files:</p>
@@ -214,8 +216,6 @@ within MPAS-Analysis using region mask files:</p>
               <span class="s1">&#39;Nino 4&#39;</span><span class="p">,</span> <span class="s1">&#39;Nino 3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;Global Ocean&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="region-names">
-<h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
 <p>MPAS-Ocean currently has hard coded into its online analysis 7 regions in a
 fixed order, as given in the <code class="docutils literal notranslate"><span class="pre">regions</span></code> option.  This should not be altered
 unless corresponding changes to the MPAS-Ocean code have been made.</p>
@@ -223,23 +223,33 @@ unless corresponding changes to the MPAS-Ocean code have been made.</p>
 these regions are named in plot titles and in gallery names on the resulting
 web page.</p>
 </div>
-<div class="section" id="region-mask-files">
-<span id="config-region-mask-files"></span><h2>Region Mask Files<a class="headerlink" href="#region-mask-files" title="Permalink to this headline">¶</a></h2>
-<p>Currently, three analysis tasks (<code class="docutils literal notranslate"><span class="pre">streamfunctionMOC</span></code>,
-<code class="docutils literal notranslate"><span class="pre">timeSeriesAntarcticMelt</span></code> and <code class="docutils literal notranslate"><span class="pre">oceanRegionalProfiles</span></code>) use masks that
-define regions in an MPAS mesh as part of their analysis.  The option
-<code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code> specifies the path to these mask files, typically
-<code class="docutils literal notranslate"><span class="pre">diagnostics/mpas_analysis/region_masks</span></code>.  Region  masks for common MPAS
-Ocean and Seaice grids are supplied as part of the data from the
+<div class="section" id="region-groups">
+<span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
+<p>Currently, seven analysis tasks (<code class="docutils literal notranslate"><span class="pre">climatologyMapAntarcticMelt</span></code>,
+<code class="docutils literal notranslate"><span class="pre">hovmollerOceanRegions</span></code>, <code class="docutils literal notranslate"><span class="pre">oceanRegionalProfiles</span></code>, <code class="docutils literal notranslate"><span class="pre">regionalTSDiagrams</span></code>,
+<code class="docutils literal notranslate"><span class="pre">streamfunctionMOC</span></code>, <code class="docutils literal notranslate"><span class="pre">timeSeriesAntarcticMelt</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">timeSeriesOceanRegions</span></code>) use masks that define regions in an MPAS mesh as
+part of their analysis.  Most of these region group are defined in
+<a class="reference internal" href="../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()</span></code></a>.
+Several tasks (<code class="docutils literal notranslate"><span class="pre">hovmollerOceanRegions</span></code>, <code class="docutils literal notranslate"><span class="pre">oceanRegionalProfiles</span></code>,
+<code class="docutils literal notranslate"><span class="pre">regionalTSDiagrams</span></code>, and <code class="docutils literal notranslate"><span class="pre">timeSeriesOceanRegions</span></code>) can use any of the
+defined region groups.  Currently, available region groups are:
+<code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Subbasins</span></code>.</p>
+<p>The option <code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section specifies
+the path to cached mask files for these region groups, typically
+<code class="docutils literal notranslate"><span class="pre">diagnostics/mpas_analysis/region_masks</span></code>. Region masks for common MPAS Ocean
+and Seaice meshes are supplied as part of the data from the
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a> (see the <a class="reference internal" href="../quick_start.html#quick-start"><span class="std std-ref">Quick Start Guide</span></a>).</p>
-<p>If ice shelf, ocean basin, Antarctic or Arctic masks for a given grid don’t
-already exist in the cached mask location, they will be generated
-automatically from the associated geojson files (<code class="docutils literal notranslate"><span class="pre">iceShelves20200621.geojson</span></code>
-<code class="docutils literal notranslate"><span class="pre">oceanBasins20200621.geojson</span></code>, <code class="docutils literal notranslate"><span class="pre">antarcticRegions20200621.geojson</span></code>, or
-<code class="docutils literal notranslate"><span class="pre">arcticRegions.geojson</span></code>), a process that can be time consuming for
-large meshes.  To generate them in advance (using threading to speed up the
-process), see the example utility script
-<code class="docutils literal notranslate"><span class="pre">utility_scripts/make_region_mask.py</span></code></p>
+<p>If masks for for a given grid don’t already exist in the cached mask location,
+they will be generated automatically from the aggregation function from the
+<code class="docutils literal notranslate"><span class="pre">geometric_features</span></code> package, see
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/aggregation.html">Aggregate Existing Features</a>.
+The mask data will be stored in a geojson file with the region group’s prefix
+and date stamp (e.g. <code class="docutils literal notranslate"><span class="pre">iceShelves20200621.geojson</span></code>).  Then, masks on the MPAS
+Ocean and Seaice mesh will be computed, a process that can be time consuming for
+large meshes.  To generate the masks in advance (using threading to speed up the
+process), see the example utility script <code class="docutils literal notranslate"><span class="pre">utility_scripts/make_region_mask.py</span></code>.</p>
 </div>
 </div>
 

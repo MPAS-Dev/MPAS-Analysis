@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list &mdash; MPAS-Analysis latest documentation</title>
+  <title>mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info &mdash; MPAS-Analysis latest documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html" />
-    <link rel="prev" title="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" href="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html" /> 
+    <link rel="next" title="mpas_analysis.shared.timekeeping.utility.get_simulation_start_time" href="mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html" />
+    <link rel="prev" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list" href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -110,8 +110,8 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#regions">Regions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.html">mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html">mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html">mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
@@ -176,13 +176,13 @@
         
           <li><a href="../api.html">API reference</a> &raquo;</li>
         
-      <li>mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list</li>
+      <li>mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -195,12 +195,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="mpas-analysis-shared-regions-compute-region-masks-subtask-get-feature-list">
-<h1>mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list<a class="headerlink" href="#mpas-analysis-shared-regions-compute-region-masks-subtask-get-feature-list" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="mpas-analysis-shared-regions-compute-region-masks-subtask-get-region-info">
+<h1>mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info<a class="headerlink" href="#mpas-analysis-shared-regions-compute-region-masks-subtask-get-region-info" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list">
-<code class="sig-prename descclassname">mpas_analysis.shared.regions.compute_region_masks_subtask.</code><code class="sig-name descname">get_feature_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">geojsonFileName</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#get_feature_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Builds a list of features found in the geojson file</p>
+<dt id="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info">
+<code class="sig-prename descclassname">mpas_analysis.shared.regions.compute_region_masks_subtask.</code><code class="sig-name descname">get_region_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">regionGroup</span></em>, <em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#get_region_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a geojson mask file and the appropriate file suffix for the given
+region group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of a region group to get mask features for, one of
+‘Antarctic Regions’, ‘Ocean Basins’, ‘Ice Shelves’, or ‘Ocean Subbasins’</p></li>
+<li><p><strong>config</strong> (<em>mpas_analysis.configuration.MpasAnalysisConfigParser</em>) – Configuration options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>region</strong> (<em>dict</em>) – A dictionary of information about the region</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The name of a geojson file with mask features</p></li>
+<li><p><strong>suffix</strong> (<em>str</em>) – A suffix to use for mask files created with these features</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -213,10 +231,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.timekeeping.utility.get_simulation_start_time" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

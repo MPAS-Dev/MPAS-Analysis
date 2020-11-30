@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>oceanRegionalProfiles &mdash; MPAS-Analysis latest documentation</title>
+  <title>hovmollerOceanRegions &mdash; MPAS-Analysis latest documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="regionalTSDiagrams" href="regionalTSDiagrams.html" />
-    <link rel="prev" title="geojsonTransects" href="geojsonTransects.html" /> 
+    <link rel="next" title="timeSeriesAntarcticMelt" href="timeSeriesAntarcticMelt.html" />
+    <link rel="prev" title="climatologyMapAntarcticMelt" href="climatologyMapAntarcticMelt.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,7 +105,11 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hovmollerOceanRegions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
@@ -119,11 +123,7 @@
 <li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">oceanRegionalProfiles</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
@@ -194,13 +194,13 @@
         
           <li><a href="../analysis_tasks.html">Analysis Tasks</a> &raquo;</li>
         
-      <li>oceanRegionalProfiles</li>
+      <li>hovmollerOceanRegions</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/tasks/oceanRegionalProfiles.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/tasks/hovmollerOceanRegions.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -213,32 +213,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="oceanregionalprofiles">
-<span id="task-oceanregionalprofiles"></span><h1>oceanRegionalProfiles<a class="headerlink" href="#oceanregionalprofiles" title="Permalink to this headline">¶</a></h1>
-<p>An analysis task for plotting depth profiles of temperature, salinity,
-potential density, etc. averaged over regions and in time. The plots also
-include a measure of variability (the standard deviation in space and time).</p>
+  <div class="section" id="hovmolleroceanregions">
+<span id="task-oceanregionalprofiles"></span><h1>hovmollerOceanRegions<a class="headerlink" href="#hovmolleroceanregions" title="Permalink to this headline">¶</a></h1>
+<p>An analysis task for plotting depth profiles vs. time of temperature, salinity,
+potential density, etc. averaged over regions.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
-<span class="n">tags</span><span class="p">:</span> <span class="n">profiles</span><span class="p">,</span> <span class="n">climatology</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">profiles</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">hovmoller</span>
 </pre></div>
 </div>
 <div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[oceanRegionalProfiles]</span>
-<span class="c1">## options related to plotting vertical profiles of regional means (and</span>
-<span class="c1">## variability) of 3D MPAS fields</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[hovmollerOceanRegions]</span>
+<span class="c1">## options related to plotting Hovmoller diagrams (depth vs. time plots) of</span>
+<span class="c1">## regional means of 3D MPAS fields</span>
 
-<span class="c1"># The name of a region group defining the region for each profile</span>
+<span class="c1"># the names of region groups to plot, each with its own section below</span>
 <span class="na">regionGroups</span> <span class="o">=</span> <span class="s">[&#39;Ocean Basins&#39;]</span>
 
 
-<span class="k">[profilesOceanBasins]</span>
-<span class="c1">## options related to plotting vertical profiles ocean basins</span>
+<span class="k">[hovmollerOceanBasins]</span>
+<span class="c1">## options related to plotting Hovmoller diagrams of ocean basins</span>
 
 <span class="c1"># a list of dictionaries for each field to plot.  The dictionary includes</span>
-<span class="c1"># prefix (used for file names, task names and sections) as well as the mpas</span>
+<span class="c1"># prefix (used for file names, task names and sections) as well as the MPAS</span>
 <span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
 <span class="c1"># in figure titles and captions.</span>
 <span class="na">fields</span> <span class="o">=</span><span class="s"></span>
@@ -255,54 +254,177 @@ include a measure of variability (the standard deviation in space and time).</p>
 <span class="s">      &#39;units&#39;: r&#39;kg m$^{-3}$&#39;,</span>
 <span class="s">      &#39;titleName&#39;: &#39;Potential Density&#39;}]</span>
 
-<span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
-<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="na">seasons</span> <span class="o">=</span>  <span class="s">[&#39;JFM&#39;, &#39;JAS&#39;, &#39;ANN&#39;]</span>
-
-<span class="c1"># minimum and maximum depth of profile plots, or empty for the full depth range</span>
-<span class="na">depthRange</span> <span class="o">=</span> <span class="s">[]</span>
-
 <span class="c1"># a list of region names from the region masks file to plot</span>
 <span class="na">regionNames</span> <span class="o">=</span> <span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
 <span class="s">               &quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
 <span class="s">               &quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
 <span class="s">               &quot;Global Ocean 15S to 15N&quot;]</span>
 
-<span class="c1"># web gallery options</span>
-<span class="na">profileGalleryGroup</span> <span class="o">=</span> <span class="s">Ocean Basin Profiles</span>
+<span class="c1"># whether to compute an anomaly with respect to the start of the time series</span>
+<span class="na">computeAnomaly</span> <span class="o">=</span> <span class="s">False</span>
+
+<span class="c1"># Number of points over which to compute moving average(e.g., for monthly</span>
+<span class="c1"># output, movingAverageMonths=12 corresponds to a 12-month moving average</span>
+<span class="c1"># window)</span>
+<span class="na">movingAverageMonths</span> <span class="o">=</span> <span class="s">12</span>
+
+
+<span class="k">[hovmollerOceanRegionsPotentialTemperature]</span>
+<span class="c1">## options related to plotting time series of temperature vs. depth in ocean</span>
+<span class="c1">## regions</span>
+
+<span class="c1"># colormap</span>
+<span class="na">colormapNameResult</span> <span class="o">=</span> <span class="s">RdYlBu_r</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeResult</span> <span class="o">=</span> <span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeResult</span> <span class="o">=</span> <span class="s">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsResult</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -2., &#39;vmax&#39;: 30.}</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="na">colormapNameDifference</span> <span class="o">=</span> <span class="s">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeDifference</span> <span class="o">=</span> <span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeDifference</span> <span class="o">=</span> <span class="s">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsDifference</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -5., &#39;vmax&#39;: 5.}</span>
+
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="na">contourLevels</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
+<span class="c1"># to start at the beginning of the time series.</span>
+
+<span class="c1"># firstYearXTicks = 1</span>
+
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+
+<span class="c1"># yearStrideXTicks = 1</span>
+
+<span class="c1"># limits on depth, the full range by default</span>
+<span class="c1"># yLim = [-6000., 0.]</span>
+
+
+<span class="k">[hovmollerOceanRegionsSalinity]</span>
+<span class="c1">## options related to plotting time series of salinity vs. depth in ocean</span>
+<span class="c1">## regions</span>
+
+<span class="c1"># colormap</span>
+<span class="na">colormapNameResult</span> <span class="o">=</span> <span class="s">haline</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeResult</span> <span class="o">=</span> <span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeResult</span> <span class="o">=</span> <span class="s">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsResult</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: 30, &#39;vmax&#39;: 39.0}</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="na">colormapNameDifference</span> <span class="o">=</span> <span class="s">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeDifference</span> <span class="o">=</span> <span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeDifference</span> <span class="o">=</span> <span class="s">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsDifference</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -0.5, &#39;vmax&#39;: 0.5}</span>
+
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="na">contourLevels</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
+<span class="c1"># to start at the beginning of the time series.</span>
+
+<span class="c1"># firstYearXTicks = 1</span>
+
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+
+<span class="c1"># yearStrideXTicks = 1</span>
+
+<span class="c1"># limits on depth, the full range by default</span>
+<span class="c1"># yLim = [-6000., 0.]</span>
+
+
+<span class="k">[hovmollerOceanRegionsPotentialDensity]</span>
+<span class="c1">## options related to plotting time series of potential density vs. depth in</span>
+<span class="c1">## ocean regions</span>
+
+<span class="c1"># colormap</span>
+<span class="na">colormapNameResult</span> <span class="o">=</span> <span class="s">Spectral_r</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeResult</span> <span class="o">=</span> <span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeResult</span> <span class="o">=</span> <span class="s">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsResult</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: 1026.5, &#39;vmax&#39;: 1028.}</span>
+
+
+<span class="c1"># colormap for differences</span>
+<span class="na">colormapNameDifference</span> <span class="o">=</span> <span class="s">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeDifference</span> <span class="o">=</span> <span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeDifference</span> <span class="o">=</span> <span class="s">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsDifference</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -0.3, &#39;vmax&#39;: 0.3}</span>
+
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="na">contourLevels</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
+<span class="c1"># to start at the beginning of the time series.</span>
+
+<span class="c1"># firstYearXTicks = 1</span>
+
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+
+<span class="c1"># yearStrideXTicks = 1</span>
+
+<span class="c1"># limits on depth, the full range by default</span>
+<span class="c1"># yLim = [-6000., 0.]</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">[oceanRegionalProfiles]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,
+<p>The <code class="docutils literal notranslate"><span class="pre">[hovmollerOceanRegions]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,
 one or more of the <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> defined in
 <a class="reference internal" href="../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()</span></code></a>.</p>
 <p>For each region group, there is a corresponding section
-<code class="docutils literal notranslate"><span class="pre">[profiles&lt;RegionGroup&gt;]</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;RegionGroup&gt;</span></code> is the name of the region
-group with spaces removed.  In this section, the <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used
+<code class="docutils literal notranslate"><span class="pre">[hovmoller&lt;RegionGroup&gt;]</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;RegionGroup&gt;</span></code> is the name of the region
+group with spaces removed.  In this section, the  <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used
 to specify a list of 3D MPAS fields to average and plot.  The key <code class="docutils literal notranslate"><span class="pre">prefix</span></code> is
 a convenient name appended to tasks and file names to describe the field.
 <code class="docutils literal notranslate"><span class="pre">mpas</span></code> is the name of the field in MPAS <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> output
-files.  The <code class="docutils literal notranslate"><span class="pre">units</span></code> are the SI units of the field to include on the plot’s x
-axis and <code class="docutils literal notranslate"><span class="pre">titleName</span></code> is the name of the field to use in its gallery name and
-on the x axis of the profile.</p>
+files.  The <code class="docutils literal notranslate"><span class="pre">units</span></code> are the SI units of the field to include on the plot’s
+color bar  and <code class="docutils literal notranslate"><span class="pre">titleName</span></code> is the name of the field to use in its gallery name
+and on the title of the plot.</p>
 <p><code class="docutils literal notranslate"><span class="pre">regionNames</span></code> is a list of regions from the full the region group or
 <code class="docutils literal notranslate"><span class="pre">regionNames</span> <span class="pre">=</span> <span class="pre">['all']</span></code> to indicate that all regions should be used.  For
 the available regions, see
 <a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/aggregation.html">Aggregate Existing Features</a>.</p>
-<p>A config option is available to specify the names of the gallery group for the
-profiles (<code class="docutils literal notranslate"><span class="pre">profileGalleryGroup</span></code>).</p>
-<p>A minimum and maximum depth for profiles can be specified with <code class="docutils literal notranslate"><span class="pre">depthRange</span></code>.
-The default is the full range.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">computeAnomaly</span> <span class="pre">=</span> <span class="pre">True</span></code>, the plots will be the anomaly with respect to the
+beginning of the time series (averaged over <code class="docutils literal notranslate"><span class="pre">movingAverageMonths</span></code> months).</p>
+<p>Each field has a <code class="docutils literal notranslate"><span class="pre">[hovmollerOceanRegions&lt;FieldName&gt;]</span></code> section, where
+<code class="docutils literal notranslate"><span class="pre">&lt;FieldName&gt;</span></code> is the associated <code class="docutils literal notranslate"><span class="pre">prefix</span></code> but starting with a capital letter.
+Each of these sections has a <code class="docutils literal notranslate"><span class="pre">yLim</span></code> option that can specify the desired depth
+range.  The default is the full range.</p>
 <dl class="simple">
 <dt>For more details on the remaining config options, see</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a></p></li>
-<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
+<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
+<li><p><a class="reference internal" href="../config/moving_average.html#config-moving-average"><span class="std std-ref">Moving Average</span></a></p></li>
+<li><p><a class="reference internal" href="../config/time_axis_ticks.html#config-time-axis-ticks"><span class="std std-ref">Time-Axis Tick Marks</span></a></p></li>
 </ul>
 </dd>
 </dl>
 </div>
 <div class="section" id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
-<a class="reference internal image-reference" href="../_images/ocean_profile.png"><img alt="../_images/ocean_profile.png" class="align-center" src="../_images/ocean_profile.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../_images/hovmoller_weddell.png"><img alt="../_images/hovmoller_weddell.png" class="align-center" src="../_images/hovmoller_weddell.png" style="width: 500px;" /></a>
 </div>
 </div>
 
@@ -314,10 +436,10 @@ The default is the full range.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="regionalTSDiagrams.html" class="btn btn-neutral float-right" title="regionalTSDiagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="timeSeriesAntarcticMelt.html" class="btn btn-neutral float-right" title="timeSeriesAntarcticMelt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="geojsonTransects.html" class="btn btn-neutral float-left" title="geojsonTransects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="climatologyMapAntarcticMelt.html" class="btn btn-neutral float-left" title="climatologyMapAntarcticMelt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
