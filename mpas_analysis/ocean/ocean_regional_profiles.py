@@ -160,6 +160,7 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
             if key in self.computeSubtasks[regionGroup]:
                 computeSubtask = self.computeSubtasks[regionGroup][key]
                 _update_fields(computeSubtask.fields, fields)
+                combineSubtask.run_after(computeSubtask)
             else:
                 computeSubtask = ComputeRegionalProfileTimeSeriesSubtask(
                     self, masksSubtask, regionGroup, regionNames, fields,
