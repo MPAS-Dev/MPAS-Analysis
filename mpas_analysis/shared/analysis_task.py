@@ -265,7 +265,8 @@ class AnalysisTask(Process):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        self.runAfterTasks.append(task)
+        if task not in self.runAfterTasks:
+            self.runAfterTasks.append(task)
         # }}}
 
     def add_subtask(self, subtask):  # {{{
