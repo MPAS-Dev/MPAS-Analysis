@@ -254,7 +254,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
     def run_task(self):  # {{{
         """
-        Compute vertical agregates of the data and plot the time series
+        Compute vertical aggregates of the data and plot the time series
         """
         # Authors
         # -------
@@ -471,14 +471,14 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        timeseries_analysis_plot(config=config, dsvalues=timeSeries,
-                                 calendar=calendar, title=title, xlabel=xLabel,
-                                 ylabel=yLabel, movingAveragePoints=None,
-                                 lineColors=lineColors, lineStyles=lineStyles,
-                                 markers=lineMarkers, lineWidths=lineWidths,
-                                 legendText=legendText, maxPoints=maxPoints,
-                                 firstYearXTicks=firstYearXTicks,
-                                 yearStrideXTicks=yearStrideXTicks)
+        fig = timeseries_analysis_plot(
+            config=config, dsvalues=timeSeries, calendar=calendar,
+            title=title, xlabel=xLabel, ylabel=yLabel, movingAveragePoints=None,
+            lineColors=lineColors, lineStyles=lineStyles, markers=lineMarkers,
+            lineWidths=lineWidths, legendText=legendText, maxPoints=maxPoints,
+            firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks)
+
+        self.customize_fig(fig)
 
         savefig(outFileName)
 
@@ -496,6 +496,15 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             imageCaption=self.imageCaption)
 
         # }}}
+
+    def customize_fig(self, fig):
+        """
+        A function to override to customize the figure.
+
+        fig : matplotlib.pyplot.Figure
+            The figure
+        """
+        pass
 
     # }}}
 
