@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+
+set -e
+
+branch=$(git symbolic-ref --short HEAD)
+
+export HDF5_USE_FILE_LOCKING=FALSE
+
+source ${HOME}/miniconda3/etc/profile.d/conda.sh
+
+conda activate base
+conda update -y conda conda-build
+rm -rf ${HOME}/miniconda3/conda-bld
+
+# create the test conda envs
+for py in 3.7 3.8
+do
+    env=test_mpas_analysis_py${py}
+    conda build -m ci/python${py}.yaml ci/recipe
+    conda remove -y --all -n ${env}
+    conda create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
+        mock sphinx_rtd_theme "tabulate>=0.8.2" m2r pytest
+    conda activate ${env}
+    pytest
+    conda deactivate
+done
+
+# create another env for testing xarray master branch
+env=test_mpas_analysis_xarray_master
+conda create --yes --quiet --name ${env} --use-local python=${py} \
+    mpas-analysis pytest
+conda activate ${env}
+pip install git+https://github.com/pydata/xarray.git
+pytest
+conda deactivate
+
+# test building the docs
+py=3.8
+conda activate test_mpas_analysis_py${py}
+cd docs
+make clean
+make html
+cd ..
+conda deactivate
+
+# move to a subdirectory so we use the conda package, not the local package
+rm -rf chrysalis_test_suite
+mkdir chrysalis_test_suite
+
+cd chrysalis_test_suite
+
+template_path=../configs/chrysalis/test_suite
+
+for py in 3.7 3.8
+do
+    env=test_mpas_analysis_py${py}
+    run=main_py${py}
+    config=${run}.cfg
+    job=job_script_${run}.bash
+    sed "s/baseline/${branch}\/py${py}/g" ${template_path}/main.cfg > ${config}
+    sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+         ${template_path}/job_script.bash > ${job}
+done
+
+
+py=3.8
+env=test_mpas_analysis_py${py}
+
+run=no_ncclimo
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script.bash > ${job}
+
+run=ctrl
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/py${py}/g" ${template_path}/${config} > ${config}
+
+run=main_vs_ctrl
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script.bash > ${job}
+
+run=no_polar_regions
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
+sed -e "s/test_env/${env}/g" ${template_path}/${job} > ${job}
+
+run=QU480
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script.bash > ${job}
+
+env=test_mpas_analysis_xarray_master
+run=xarray_master
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
+sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script.bash > ${job}
+
+
+# submit the jobs
+sbatch job_script_main_py3.7.bash
+
+RES=$(sbatch job_script_main_py3.8.bash)
+
+sbatch --dependency=afterok:${RES##* } job_script_main_vs_ctrl.bash
+
+sbatch job_script_no_ncclimo.bash
+
+sbatch job_script_no_polar_regions.bash
+
+sbatch job_script_QU480.bash
+
+sbatch job_script_xarray_master.bash
+
+cd ..
+
