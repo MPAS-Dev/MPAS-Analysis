@@ -1,8 +1,6 @@
 #!/bin/bash -l
 #SBATCH --nodes=1
 #SBATCH --time=2:00:00
-#SBATCH -A condo
-#SBATCH -p acme-small
 #SBATCH --job-name=mpas_analysis
 #SBATCH --output=mpas_analysis.o%j
 #SBATCH --error=mpas_analysis.e%j
