@@ -51,11 +51,14 @@ rad_to_deg = 180. / np.pi
 # conversion factor from degrees to radians
 deg_to_rad = np.pi / 180.
 
+# seconds per day
+sec_per_day = 86400.
+
 # seconds in a year
-sec_per_year = 86400. * 365.
+sec_per_year = sec_per_day * 365.
 
 # seconds per month (approximate)
-sec_per_month = 86400. * 30.
+sec_per_month = sec_per_day * 30.
 
 # Tapering coefficient for calculating spectral degrees of freedom
 tapcoef = 1.055111111111111
