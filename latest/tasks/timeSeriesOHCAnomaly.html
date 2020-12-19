@@ -30,6 +30,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -217,7 +218,7 @@
 <span id="task-timeseriesohcanomaly"></span><h1>timeSeriesOHCAnomaly<a class="headerlink" href="#timeseriesohcanomaly" title="Permalink to this headline">¶</a></h1>
 <p>An analysis task for plotting a Hovmoller plot (time and depth axes) and
 depth-integrated time series of the anomaly in ocean heat content (OHC)
-from a reference year (usully the first year of the simulation).</p>
+from a reference year (usually the first year of the simulation).</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
 <span class="n">tags</span><span class="p">:</span> <span class="n">timeSeries</span><span class="p">,</span> <span class="n">ohc</span><span class="p">,</span> <span class="n">publicObs</span>
@@ -287,7 +288,7 @@ meters) that separate the upper, middle and lower regions of the ocean, e.g.:</p
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>indictes that OHC will be integrated from 0 to 700 m, 700 to 2000 m,
+<p>indicates that OHC will be integrated from 0 to 700 m, 700 to 2000 m,
 and 2000 m to the ocean floor (as well as from 0 to the ocean floor).</p>
 <p>The OHC can be compared with results from a reference v0 simulation.  If
 <code class="docutils literal notranslate"><span class="pre">preprocessedRunName</span></code> in the <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the
@@ -295,6 +296,10 @@ depth integrated time series will be read in with a file prefix given by
 <code class="docutils literal notranslate"><span class="pre">preprocessedFilePrefix</span></code> and a field prefix given by
 <code class="docutils literal notranslate"><span class="pre">preprocessedFieldPrefix</span></code>.  Generally, these options should not be altered
 except of debugging purposes.</p>
+<p>Recently, a right-hand axis and an associated set of lines has been added to the
+OHC anomaly time series.  This axis and these lines shows the equivalent
+top-of-atmosphere energy flux (<span class="math notranslate nohighlight">\(W/m^2\)</span>) that the ocean heat anomaly would
+induce.</p>
 <dl class="simple">
 <dt>For more details on other config options, see:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
