@@ -5,7 +5,7 @@ timeSeriesOHCAnomaly
 
 An analysis task for plotting a Hovmoller plot (time and depth axes) and
 depth-integrated time series of the anomaly in ocean heat content (OHC)
-from a reference year (usully the first year of the simulation).
+from a reference year (usually the first year of the simulation).
 
 Component and Tags::
 
@@ -77,7 +77,7 @@ meters) that separate the upper, middle and lower regions of the ocean, e.g.::
 
   depths = [700, 2000]
 
-indictes that OHC will be integrated from 0 to 700 m, 700 to 2000 m,
+indicates that OHC will be integrated from 0 to 700 m, 700 to 2000 m,
 and 2000 m to the ocean floor (as well as from 0 to the ocean floor).
 
 The OHC can be compared with results from a reference v0 simulation.  If
@@ -86,6 +86,11 @@ depth integrated time series will be read in with a file prefix given by
 ``preprocessedFilePrefix`` and a field prefix given by
 ``preprocessedFieldPrefix``.  Generally, these options should not be altered
 except of debugging purposes.
+
+Recently, a right-hand axis and an associated set of lines has been added to the
+OHC anomaly time series.  This axis and these lines shows the equivalent
+top-of-atmosphere energy flux (:math:`W/m^2`) that the ocean heat anomaly would
+induce.
 
 For more details on other config options, see:
  * :ref:`config_regions`
