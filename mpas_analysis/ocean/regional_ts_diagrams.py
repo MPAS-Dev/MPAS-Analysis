@@ -46,6 +46,7 @@ from mpas_analysis.shared.climatology import compute_climatology, \
     get_masked_mpas_climatology_file_name
 
 from mpas_analysis.shared.plot.colormap import register_custom_colormaps
+from mpas_analysis.shared.plot.title import limit_title
 
 
 class RegionalTSDiagrams(AnalysisTask):  # {{{
@@ -1039,6 +1040,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             z = plotFields[index]['z']
             volume = plotFields[index]['vol']
             title = plotFields[index]['title']
+            title = limit_title(title, max_title_length=60)
 
             CS = plt.contour(SP, PT, neutralDensity, contours, linewidths=1.,
                              colors='k', zorder=2)

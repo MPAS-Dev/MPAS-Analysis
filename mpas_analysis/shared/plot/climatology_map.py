@@ -29,6 +29,7 @@ import cartopy
 from cartopy.util import add_cyclic_point
 
 from mpas_analysis.shared.plot.colormap import setup_colormap
+from mpas_analysis.shared.plot.title import limit_title
 
 
 def plot_polar_comparison(
@@ -51,7 +52,8 @@ def plot_polar_comparison(
         titleFontSize=None,
         figsize=None,
         dpi=None,
-        vertical=False):
+        vertical=False,
+        maxTitleLength=60):
     """
     Plots a data set around either the north or south pole.
 
@@ -108,6 +110,10 @@ def plot_polar_comparison(
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
         horizontally
+
+    maxTitleLength : int, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis
     """
     # Authors
     # -------
@@ -122,6 +128,7 @@ def plot_polar_comparison(
         data_crs = cartopy.crs.PlateCarree()
         ax.set_extent(extent, crs=data_crs)
 
+        title = limit_title(title, maxTitleLength)
         ax.set_title(title, y=1.06, **plottitle_font)
 
         gl = ax.gridlines(crs=data_crs, color='k', linestyle=':', zorder=5,
@@ -182,7 +189,7 @@ def plot_polar_comparison(
         subplots = [311, 312, 313]
     else:
         if figsize is None:
-            figsize = (22, 8.5)
+            figsize = (22, 7.5)
         subplots = [131, 132, 133]
 
     fig = plt.figure(figsize=figsize, dpi=dpi)
@@ -247,7 +254,8 @@ def plot_global_comparison(
         figsize=None,
         dpi=None,
         lineWidth=1,
-        lineColor='black'):
+        lineColor='black',
+        maxTitleLength=70):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -302,6 +310,10 @@ def plot_global_comparison(
 
     lineColor : str, optional
         the color of contour lines (if specified)
+
+    maxTitleLength : int, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis
     """
     # Authors
     # -------
@@ -312,6 +324,7 @@ def plot_global_comparison(
 
         ax.set_extent(extent, crs=projection)
 
+        title = limit_title(title, maxTitleLength)
         ax.set_title(title, y=1.06, **plottitle_font)
 
         gl = ax.gridlines(crs=projection, color='k', linestyle=':', zorder=5,
@@ -420,7 +433,8 @@ def plot_polar_projection_comparison(
         lineWidth=0.5,
         lineColor='black',
         vertical=False,
-        hemisphere='north'):
+        hemisphere='north',
+        maxTitleLength=55):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -483,6 +497,13 @@ def plot_polar_projection_comparison(
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
         horizontally
+
+    hemisphere : {'north', 'south'}, optional
+        the hemisphere to plot
+
+    maxTitleLength : int, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis
     """
     # Authors
     # -------
@@ -491,6 +512,7 @@ def plot_polar_projection_comparison(
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
                    lineWidth, lineColor):
 
+        title = limit_title(title, maxTitleLength)
         ax.set_title(title, y=1.06, **plottitle_font)
 
         ax.set_extent(extent, crs=projection)

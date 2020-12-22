@@ -88,7 +88,7 @@ depth integrated time series will be read in with a file prefix given by
 except of debugging purposes.
 
 Recently, a right-hand axis and an associated set of lines has been added to the
-OHC anomaly time series.  This axis and these lines shows the equivalent
+OHC anomaly time series.  This axis and these lines show the equivalent
 top-of-atmosphere energy flux (:math:`W/m^2`) that the ocean heat anomaly would
 induce.
 
