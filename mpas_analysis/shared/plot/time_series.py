@@ -153,7 +153,9 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         if legendText is None:
             label = None
         else:
-            label = limit_title(legendText[dsIndex], maxTitleLength)
+            label = legendText[dsIndex]
+            if label is not None:
+                label = limit_title(label, maxTitleLength)
             labelCount += 1
         if lineColors is None:
             color = 'k'
@@ -319,7 +321,9 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
         if legendText is None:
             label = None
         else:
-            label = limit_title(legendText[dsIndex], maxTitleLength)
+            label = legendText[dsIndex]
+            if label is not None:
+                label = limit_title(label, maxTitleLength)
             labelCount += 1
         if lineColors is None:
             color = 'k'

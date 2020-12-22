@@ -110,7 +110,9 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
         if legendText is None:
             label = None
         else:
-            label = limit_title(legendText[dsIndex], maxTitleLength)
+            label = legendText[dsIndex]
+            if label is not None:
+                label = limit_title(label, maxTitleLength)
             plotLegend = True
         if lineColors is None:
             color = 'k'
