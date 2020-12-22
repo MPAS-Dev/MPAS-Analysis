@@ -112,8 +112,8 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         The location of the legend (see ``pyplot.legend()`` for details)
 
     maxTitleLength : int, optional
-        the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        the maximum number of characters in the title and legend, beyond which
+        they are truncated with a trailing ellipsis
 
     Returns
     -------
@@ -153,7 +153,7 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         if legendText is None:
             label = None
         else:
-            label = legendText[dsIndex]
+            label = limit_title(legendText[dsIndex], maxTitleLength)
             labelCount += 1
         if lineColors is None:
             color = 'k'
@@ -287,8 +287,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
         option ``dpi`` in the config file by default
 
     maxTitleLength : int, optional
-        the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        the maximum number of characters in the title and legend, beyond which
+        they are truncated with a trailing ellipsis
 
     Returns
     -------
@@ -319,7 +319,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
         if legendText is None:
             label = None
         else:
-            label = legendText[dsIndex]
+            label = limit_title(legendText[dsIndex], maxTitleLength)
             labelCount += 1
         if lineColors is None:
             color = 'k'

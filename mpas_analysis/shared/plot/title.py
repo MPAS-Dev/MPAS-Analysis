@@ -9,7 +9,7 @@ def limit_title(title, max_title_length):
     title : str
         The title to limit
 
-    max_title_length : str
+    max_title_length : int
         The maximum length of each line of the title
 
     Returns
