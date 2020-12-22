@@ -261,7 +261,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             write_netcdf(annualClimatology, outFileName)
 
         # **** Plot MHT ****
-        maxTitleLength = 80
+        maxTitleLength = 70
         self.logger.info('   Plot global MHT...')
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
