@@ -29,7 +29,7 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -924,7 +924,8 @@
                 <span class="n">diffTitle</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span>
                 <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
                 <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
-                <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePointsClimatological</span><span class="p">)</span>
+                <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePointsClimatological</span><span class="p">,</span>
+                <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
 
             <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
 
@@ -1546,7 +1547,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;   Plot time series of max Atlantic MOC at 26.5N...&#39;</span><span class="p">)</span>
         <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time [years]&#39;</span>
         <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;[Sv]&#39;</span>
-        <span class="n">title</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;Max Atlantic MOC at $26.5\degree$N\n </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Max Atlantic MOC at $26.5\degree$N&#39;</span><span class="p">,</span>
+                                <span class="n">mainRunName</span><span class="p">)</span>
         <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span>
 
         <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
@@ -1583,7 +1585,8 @@
                                  <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span> <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                  <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
                                  <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
-                                 <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">)</span>
+                                 <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
+                                 <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
 
         <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
 

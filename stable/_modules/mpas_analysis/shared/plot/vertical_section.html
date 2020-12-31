@@ -29,7 +29,7 @@
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -196,6 +196,7 @@
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">setup_colormap</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="kn">import</span> <span class="n">plot_xtick_format</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
 
 
 <span class="k">def</span> <span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
@@ -243,7 +244,8 @@
         <span class="n">labelContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">resultSuffix</span><span class="o">=</span><span class="s1">&#39;Result&#39;</span><span class="p">,</span>
-        <span class="n">diffSuffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">):</span>
+        <span class="n">diffSuffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">,</span>
+        <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots vertical section plots in a three-panel format, comparing model data</span>
 <span class="sd">    (in modelArray) to some reference dataset (in refArray), which can be</span>
@@ -437,6 +439,10 @@
 <span class="sd">        a suffix added to the config options related to colormap information</span>
 <span class="sd">        for the difference field</span>
 
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    fig : ``matplotlib.figure.Figure``</span>
@@ -561,7 +567,8 @@
         <span class="n">comparisonContourLineStyle</span><span class="o">=</span><span class="n">comparisonContourLineStyle</span><span class="p">,</span>
         <span class="n">comparisonContourLineColor</span><span class="o">=</span><span class="n">comparisonContourLineColor</span><span class="p">,</span>
         <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
-        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">)</span>
+        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
+        <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
 
     <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
@@ -602,7 +609,8 @@
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
             <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
-            <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">)</span>
+            <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
 
         <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
@@ -642,7 +650,8 @@
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
             <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
-            <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">)</span>
+            <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
 
         <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
@@ -699,7 +708,8 @@
         <span class="n">comparisonContourLineStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">comparisonContourLineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">labelContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a data set as a x distance (latitude, longitude,</span>
 <span class="sd">    or spherical distance) vs depth map (vertical section).</span>
@@ -893,6 +903,10 @@
 <span class="sd">    contourLabelPrecision : int, optional</span>
 <span class="sd">        the precision (in terms of number of figures to the right of the</span>
 <span class="sd">        decimal point) of contour labels</span>
+
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1130,10 +1144,13 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">h1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h2</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">originalFieldName</span><span class="p">,</span> <span class="n">comparisonFieldName</span><span class="p">],</span>
                   <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">plotAsContours</span> <span class="ow">and</span> <span class="n">labelContours</span> \
            <span class="ow">and</span> <span class="n">contourComparisonFieldArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="o">-</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">colorbarLabel</span><span class="p">)))</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">colorbarLabel</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
         <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>

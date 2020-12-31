@@ -29,7 +29,7 @@
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -196,6 +196,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="kn">import</span> <span class="n">plot_xtick_format</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
 
 
 <div class="viewcode-block" id="timeseries_analysis_plot"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.plot.timeseries_analysis_plot.html#mpas_analysis.shared.plot.timeseries_analysis_plot">[docs]</a><span class="k">def</span> <span class="nf">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dsvalues</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
@@ -205,7 +206,8 @@
                              <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">obsMean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obsUncertainty</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                             <span class="n">obsLegend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendLocation</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">):</span>
+                             <span class="n">obsLegend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendLocation</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">,</span>
+                             <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the list of time series data sets.</span>
 
@@ -277,6 +279,10 @@
 <span class="sd">    legendLocation : str, optional</span>
 <span class="sd">        The location of the legend (see ``pyplot.legend()`` for details)</span>
 
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
+<span class="sd">        they are truncated with a trailing ellipsis</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    fig : ``matplotlib.figure.Figure``</span>
@@ -316,6 +322,8 @@
             <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">=</span> <span class="n">legendText</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
             <span class="n">labelCount</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">lineColors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
@@ -397,6 +405,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
@@ -411,7 +420,7 @@
                                    <span class="n">lineStyles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">lineWidths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-                                   <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                   <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the list of time series data sets on a polar plot.</span>
 
@@ -447,6 +456,10 @@
 <span class="sd">        the number of dots per inch of the figure, taken from section ``plot``</span>
 <span class="sd">        option ``dpi`` in the config file by default</span>
 
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
+<span class="sd">        they are truncated with a trailing ellipsis</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    fig : ``matplotlib.figure.Figure``</span>
@@ -477,6 +490,8 @@
             <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">=</span> <span class="n">legendText</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
             <span class="n">labelCount</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">lineColors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
@@ -523,6 +538,7 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">abrevMonthNames</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
         <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
 
     <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>

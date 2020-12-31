@@ -19,6 +19,7 @@ Analysis Tasks
    tasks/climatologyMapSchmidtko
    tasks/climatologyMapAntarcticMelt
 
+   tasks/hovmollerOceanRegions
    tasks/timeSeriesAntarcticMelt
    tasks/timeSeriesOceanRegions
    tasks/timeSeriesTemperatureAnomaly

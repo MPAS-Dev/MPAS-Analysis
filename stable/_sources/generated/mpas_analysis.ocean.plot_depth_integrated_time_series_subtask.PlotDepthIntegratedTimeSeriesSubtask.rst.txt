@@ -18,6 +18,7 @@
       ~PlotDepthIntegratedTimeSeriesSubtask.check_analysis_enabled
       ~PlotDepthIntegratedTimeSeriesSubtask.check_generate
       ~PlotDepthIntegratedTimeSeriesSubtask.close
+      ~PlotDepthIntegratedTimeSeriesSubtask.customize_fig
       ~PlotDepthIntegratedTimeSeriesSubtask.is_alive
       ~PlotDepthIntegratedTimeSeriesSubtask.join
       ~PlotDepthIntegratedTimeSeriesSubtask.kill

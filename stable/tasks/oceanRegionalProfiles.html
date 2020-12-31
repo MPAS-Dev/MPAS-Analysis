@@ -29,7 +29,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -105,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
@@ -225,194 +226,76 @@ include a measure of variability (the standard deviation in space and time).</p>
 <div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">oceanRegionalProfiles</span><span class="p">]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[oceanRegionalProfiles]</span>
 <span class="c1">## options related to plotting vertical profiles of regional means (and</span>
 <span class="c1">## variability) of 3D MPAS fields</span>
+
+<span class="c1"># The name of a region group defining the region for each profile</span>
+<span class="na">regionGroups</span> <span class="o">=</span> <span class="s">[&#39;Ocean Basins&#39;]</span>
+
+
+<span class="k">[profilesOceanBasins]</span>
+<span class="c1">## options related to plotting vertical profiles ocean basins</span>
 
 <span class="c1"># a list of dictionaries for each field to plot.  The dictionary includes</span>
 <span class="c1"># prefix (used for file names, task names and sections) as well as the mpas</span>
 <span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
 <span class="c1"># in figure titles and captions.</span>
-<span class="n">fields</span> <span class="o">=</span>
-    <span class="p">[{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">},</span>
-     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">},</span>
-     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">}]</span>
+<span class="na">fields</span> <span class="o">=</span><span class="s"></span>
+<span class="s">    [{&#39;prefix&#39;: &#39;potentialTemperature&#39;,</span>
+<span class="s">      &#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
+<span class="s">      &#39;units&#39;: r&#39;$\degree$C&#39;,</span>
+<span class="s">      &#39;titleName&#39;: &#39;Potential Temperature&#39;},</span>
+<span class="s">     {&#39;prefix&#39;: &#39;salinity&#39;,</span>
+<span class="s">      &#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
+<span class="s">      &#39;units&#39;: r&#39;PSU&#39;,</span>
+<span class="s">      &#39;titleName&#39;: &#39;Salinity&#39;},</span>
+<span class="s">     {&#39;prefix&#39;: &#39;potentialDensity&#39;,</span>
+<span class="s">      &#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;,</span>
+<span class="s">      &#39;units&#39;: r&#39;kg m$^{-3}$&#39;,</span>
+<span class="s">      &#39;titleName&#39;: &#39;Potential Density&#39;}]</span>
 
 <span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span> <span class="s1">&#39;JAS&#39;</span><span class="p">,</span> <span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="na">seasons</span> <span class="o">=</span>  <span class="s">[&#39;JFM&#39;, &#39;JAS&#39;, &#39;ANN&#39;]</span>
 
 <span class="c1"># minimum and maximum depth of profile plots, or empty for the full depth range</span>
-<span class="n">depthRange</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="c1"># The suffix on the regional mask file to be used to determine the regions to</span>
-<span class="c1"># plot.  A region mask file should be in the regionMaskDirectory and should</span>
-<span class="c1"># be named &lt;mpasMeshName&gt;_&lt;regionMaskSuffix&gt;.nc</span>
-<span class="n">regionMaskSuffix</span> <span class="o">=</span> <span class="n">oceanBasins20200621</span>
+<span class="na">depthRange</span> <span class="o">=</span> <span class="s">[]</span>
 
 <span class="c1"># a list of region names from the region masks file to plot</span>
-<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Atlantic_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Pacific_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Indian_Basin&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;Arctic_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Southern_Ocean_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Mediterranean_Basin&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;Global Ocean&quot;</span><span class="p">,</span> <span class="s2">&quot;Global Ocean 65N to 65S&quot;</span><span class="p">,</span>
-               <span class="s2">&quot;Global Ocean 15S to 15N&quot;</span><span class="p">]</span>
-
-<span class="c1"># Make Hovmoller plots of fields vs time and depth?</span>
-<span class="n">plotHovmoller</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="na">regionNames</span> <span class="o">=</span> <span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
+<span class="s">               &quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
+<span class="s">               &quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
+<span class="s">               &quot;Global Ocean 15S to 15N&quot;]</span>
 
 <span class="c1"># web gallery options</span>
-<span class="n">hovmollerGalleryGroup</span> <span class="o">=</span> <span class="n">Ocean</span> <span class="n">Basin</span> <span class="n">Time</span> <span class="n">Series</span> <span class="n">vs</span> <span class="n">Depths</span>
-
-<span class="c1"># web gallery options</span>
-<span class="n">profileGalleryGroup</span> <span class="o">=</span> <span class="n">Ocean</span> <span class="n">Basin</span> <span class="n">Profiles</span>
-
-
-<span class="p">[</span><span class="n">temperatureOceanRegionalHovmoller</span><span class="p">]</span>
-<span class="c1">## options related to plotting time series of temperature vs. depth in ocean</span>
-<span class="c1">## regions</span>
-
-<span class="c1"># Number of points over which to compute moving average(e.g., for monthly</span>
-<span class="c1"># output, movingAveragePoints=12 corresponds to a 12-month moving average</span>
-<span class="c1"># window)</span>
-<span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="c1"># colormap</span>
-<span class="n">colormapName</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="n">colormapType</span> <span class="o">=</span> <span class="n">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normType</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">30.</span><span class="p">}</span>
-
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
-<span class="c1"># contour lines)</span>
-<span class="n">contourLevels</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
-
-<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
-<span class="c1"># to start at the beginning of the time series.</span>
-
-<span class="c1"># firstYearXTicks = 1</span>
-
-<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
-<span class="c1"># commented out to determine the distance between ticks automatically.</span>
-
-<span class="c1"># yearStrideXTicks = 1</span>
-
-<span class="c1"># limits on depth, the full range by default</span>
-<span class="c1"># yLim = [-6000., 0.]</span>
-
-
-<span class="p">[</span><span class="n">salinityOceanRegionalHovmoller</span><span class="p">]</span>
-<span class="c1">## options related to plotting time series of salinity vs. depth in ocean</span>
-<span class="c1">## regions</span>
-
-<span class="c1"># Number of points over which to compute moving average(e.g., for monthly</span>
-<span class="c1"># output, movingAveragePoints=12 corresponds to a 12-month moving average</span>
-<span class="c1"># window)</span>
-<span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="c1"># colormap</span>
-<span class="n">colormapName</span> <span class="o">=</span> <span class="n">haline</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="n">colormapType</span> <span class="o">=</span> <span class="n">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normType</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">39.0</span><span class="p">}</span>
-
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
-<span class="c1"># contour lines)</span>
-<span class="n">contourLevels</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
-
-<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
-<span class="c1"># to start at the beginning of the time series.</span>
-
-<span class="c1"># firstYearXTicks = 1</span>
-
-<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
-<span class="c1"># commented out to determine the distance between ticks automatically.</span>
-
-<span class="c1"># yearStrideXTicks = 1</span>
-
-<span class="c1"># limits on depth, the full range by default</span>
-<span class="c1"># yLim = [-6000., 0.]</span>
-
-
-<span class="p">[</span><span class="n">potentialDensityOceanRegionalHovmoller</span><span class="p">]</span>
-<span class="c1">## options related to plotting time series of potential density vs. depth in</span>
-<span class="c1">## ocean regions</span>
-
-<span class="c1"># Number of points over which to compute moving average(e.g., for monthly</span>
-<span class="c1"># output, movingAveragePoints=12 corresponds to a 12-month moving average</span>
-<span class="c1"># window)</span>
-<span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="c1"># colormap</span>
-<span class="n">colormapName</span> <span class="o">=</span> <span class="n">Spectral_r</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="n">colormapType</span> <span class="o">=</span> <span class="n">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normType</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
-
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
-<span class="c1"># contour lines)</span>
-<span class="n">contourLevels</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
-
-<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
-<span class="c1"># to start at the beginning of the time series.</span>
-
-<span class="c1"># firstYearXTicks = 1</span>
-
-<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
-<span class="c1"># commented out to determine the distance between ticks automatically.</span>
-
-<span class="c1"># yearStrideXTicks = 1</span>
-
-<span class="c1"># limits on depth, the full range by default</span>
-<span class="c1"># yLim = [-6000., 0.]</span>
+<span class="na">profileGalleryGroup</span> <span class="o">=</span> <span class="s">Ocean Basin Profiles</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used to specify a list of 3D MPAS fields to
-average and plot.  The key <code class="docutils literal notranslate"><span class="pre">prefix</span></code> is a convenient name appended to tasks
-and file names to describe the field.  <code class="docutils literal notranslate"><span class="pre">mpas</span></code> is the name of the field in
-MPAS <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> output files.  The <code class="docutils literal notranslate"><span class="pre">units</span></code> are the SI units
-of the field to include on the plot’s x axis and <code class="docutils literal notranslate"><span class="pre">titleName</span></code> is the name of
-the field to use in its gallery name and on the x axis of the profile.</p>
-<p>The option <code class="docutils literal notranslate"><span class="pre">regionMaskSuffix</span></code> is a suffix for files and tasks describing
-the set of regions being plotted.  The file <code class="docutils literal notranslate"><span class="pre">&lt;regionMaskSuffix&gt;.geojson</span></code>
-should exist in <code class="docutils literal notranslate"><span class="pre">regionMasksSubdirectory</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">regionNames</span></code> is a list of regions from the full list of regions in
-<code class="docutils literal notranslate"><span class="pre">&lt;regionMaskSuffix&gt;.geojson</span></code> or <code class="docutils literal notranslate"><span class="pre">regionNames</span> <span class="pre">=</span> <span class="pre">['all']</span></code> to indicate that
-all regions should be used.</p>
-<p>The task can be used to produce Hovmoller plots of each field averaged over
-each region.  By default, these plots are disabled by can be enabled by
-setting <code class="docutils literal notranslate"><span class="pre">plotHovmoller</span> <span class="pre">=</span> <span class="pre">True</span></code>.  The sections
-<code class="docutils literal notranslate"><span class="pre">[&lt;prefix&gt;OceanRegionalHovmoller]</span></code> give options for these Hovmoller plots.</p>
-<p>Config options are availabe to specify the names of the gallery group for the
-profiles (<code class="docutils literal notranslate"><span class="pre">profileGalleryGroup</span></code>) and Hovmoller plots
-(<code class="docutils literal notranslate"><span class="pre">hovmollerGalleryGroup</span></code>) if the latter are plotted.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">[oceanRegionalProfiles]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,
+one or more of the <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> defined in
+<a class="reference internal" href="../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()</span></code></a>.</p>
+<p>For each region group, there is a corresponding section
+<code class="docutils literal notranslate"><span class="pre">[profiles&lt;RegionGroup&gt;]</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;RegionGroup&gt;</span></code> is the name of the region
+group with spaces removed.  In this section, the <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used
+to specify a list of 3D MPAS fields to average and plot.  The key <code class="docutils literal notranslate"><span class="pre">prefix</span></code> is
+a convenient name appended to tasks and file names to describe the field.
+<code class="docutils literal notranslate"><span class="pre">mpas</span></code> is the name of the field in MPAS <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> output
+files.  The <code class="docutils literal notranslate"><span class="pre">units</span></code> are the SI units of the field to include on the plot’s x
+axis and <code class="docutils literal notranslate"><span class="pre">titleName</span></code> is the name of the field to use in its gallery name and
+on the x axis of the profile.</p>
+<p><code class="docutils literal notranslate"><span class="pre">regionNames</span></code> is a list of regions from the full the region group or
+<code class="docutils literal notranslate"><span class="pre">regionNames</span> <span class="pre">=</span> <span class="pre">['all']</span></code> to indicate that all regions should be used.  For
+the available regions, see
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/aggregation.html">Aggregate Existing Features</a>.</p>
+<p>A config option is available to specify the names of the gallery group for the
+profiles (<code class="docutils literal notranslate"><span class="pre">profileGalleryGroup</span></code>).</p>
 <p>A minimum and maximum depth for profiles can be specified with <code class="docutils literal notranslate"><span class="pre">depthRange</span></code>.
-Similarly, each section for displaying Hovmoller plots of each field has a
-<code class="docutils literal notranslate"><span class="pre">yLim</span></code> option that can specify the desired depth range.  In all cases, the
-default is the full range.</p>
+The default is the full range.</p>
 <dl class="simple">
 <dt>For more details on the remaining config options, see</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
+<li><p><a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a></p></li>
 <li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
-<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
-<li><p><a class="reference internal" href="../config/moving_average.html#config-moving-average"><span class="std std-ref">Moving Average</span></a></p></li>
-<li><p><a class="reference internal" href="../config/time_axis_ticks.html#config-time-axis-ticks"><span class="std std-ref">Time-Axis Tick Marks</span></a></p></li>
 </ul>
 </dd>
 </dl>
