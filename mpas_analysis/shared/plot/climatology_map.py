@@ -25,6 +25,7 @@ import matplotlib.colors as cols
 import matplotlib.ticker as mticker
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import cartopy
 from cartopy.util import add_cyclic_point
 
@@ -255,7 +256,7 @@ def plot_global_comparison(
         dpi=None,
         lineWidth=1,
         lineColor='black',
-        maxTitleLength=70):
+        maxTitleLength=60):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -325,7 +326,7 @@ def plot_global_comparison(
         ax.set_extent(extent, crs=projection)
 
         title = limit_title(title, maxTitleLength)
-        ax.set_title(title, y=1.06, **plottitle_font)
+        ax.set_title(title, y=1.02, **plottitle_font)
 
         gl = ax.gridlines(crs=projection, color='k', linestyle=':', zorder=5,
                           draw_labels=True)
@@ -352,9 +353,10 @@ def plot_global_comparison(
             ax.contour(Lons, Lats, array, levels=contours, colors=lineColor,
                        linewidths=lineWidth, transform=projection)
 
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="5%", pad=0.1,
-                                  axes_class=plt.Axes)
+        cax = inset_axes(ax, width='5%', height='60%', loc='center right',
+                         bbox_to_anchor=(0.08, 0., 1, 1),
+                         bbox_transform=ax.transAxes, borderpad=0)
+
         cbar = plt.colorbar(plotHandle, cax=cax, ticks=ticks, boundaries=ticks)
         cbar.set_label(cbarlabel)
 
@@ -374,7 +376,7 @@ def plot_global_comparison(
         title_font = {'size': titleFontSize,
                       'color': config.get('plot', 'titleFontColor'),
                       'weight': config.get('plot', 'titleFontWeight')}
-        fig.suptitle(title, y=0.95, **title_font)
+        fig.suptitle(title, y=0.935, **title_font)
 
     plottitle_font = {'size': config.get('plot',
                                          'threePanelPlotTitleFontSize')}
@@ -391,23 +393,24 @@ def plot_global_comparison(
     dictModelRef = setup_colormap(config, colorMapSectionName, suffix='Result')
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
 
+    axes = []
     ax = plt.subplot(subplots[0], projection=projection)
     plot_panel(ax, modelTitle, modelArray, **dictModelRef)
+    axes.append(ax)
 
     if refArray is not None:
         ax = plt.subplot(subplots[1], projection=projection)
         plot_panel(ax, refTitle, refArray, **dictModelRef)
+        axes.append(ax)
 
-        weights = np.cos(np.deg2rad(Lats))
-        mean = np.average(diffArray, weights=weights)
-        std = np.sqrt(np.average((diffArray - mean)**2, weights=weights))
-        diffTitle = '{} (mean={:5.2f}, std={:5.2f})'.format(
-                     diffTitle, mean, std)
         ax = plt.subplot(subplots[2], projection=projection)
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
+        axes.append(ax)
+
+    _add_stats(modelArray, refArray, diffArray, Lats, axes)
 
     if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.2)
 
     plt.close()
 
@@ -628,6 +631,66 @@ def plot_polar_projection_comparison(
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
     plt.close()
+
+
+def _add_stats(modelArray, refArray, diffArray, Lats, axes):
+    """ compute the means, std devs. and Pearson correlation """
+    weights = np.cos(np.deg2rad(Lats))
+    modelMean = np.average(modelArray, weights=weights)
+
+    _add_stats_text(
+        names=['Min', 'Mean', 'Max'],
+        values=[np.amin(modelArray), modelMean, np.amax(modelArray)],
+        ax=axes[0], loc='upper')
+
+    if refArray is not None:
+        modelAnom = modelArray - modelMean
+        modelVar = np.average(modelAnom ** 2, weights=weights)
+        refMean = np.average(refArray, weights=weights)
+        refAnom = refArray - refMean
+        refVar = np.average(refAnom**2, weights=weights)
+
+        _add_stats_text(
+            names=['Min', 'Mean', 'Max'],
+            values=[np.amin(refArray), refMean, np.amax(refArray)],
+            ax=axes[1], loc='upper')
+
+        diffMean = np.average(diffArray, weights=weights)
+        diffVar = np.average((diffArray - diffMean)**2, weights=weights)
+        diffRMSE = np.sqrt(diffVar)
+
+        _add_stats_text(
+            names=['Min', 'Mean', 'Max'],
+            values=[np.amin(diffArray), diffMean, np.amax(diffArray)],
+            ax=axes[2], loc='upper')
+
+        covar = np.average(modelAnom*refAnom, weights=weights)
+
+        corr = covar/np.sqrt(modelVar*refVar)
+
+        _add_stats_text(
+            names=['RMSE', 'Corr'],
+            values=[diffRMSE, corr],
+            ax=axes[2], loc='lower')
+
+
+def _add_stats_text(names, values, ax, loc):
+    if loc == 'upper':
+        text_ax = inset_axes(ax, width='17%', height='20%', loc='upper right',
+                             bbox_to_anchor=(0.2, 0.1, 1., 1.),
+                             bbox_transform=ax.transAxes, borderpad=0)
+    else:
+        text_ax = inset_axes(ax, width='17%', height='20%', loc='lower right',
+                             bbox_to_anchor=(0.2, 0.03, 1., 1.),
+                             bbox_transform=ax.transAxes, borderpad=0)
+
+    text = '\n'.join(names)
+    text_ax.text(0., 0., text, fontsize=10, horizontalalignment='left')
+
+    text = '\n'.join(['{:6.4g}'.format(val) for val in values])
+
+    text_ax.text(1., 0., text, fontsize=10, horizontalalignment='right')
+    text_ax.axis('off')
 
 
 def _add_land_lakes_coastline(ax, ice_shelves=True):
