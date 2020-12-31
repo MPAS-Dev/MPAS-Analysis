@@ -28,6 +28,7 @@ from mpas_analysis.shared.timekeeping.utility import date_to_days
 
 from mpas_analysis.shared.plot.colormap import setup_colormap
 from mpas_analysis.shared.plot.ticks import plot_xtick_format
+from mpas_analysis.shared.plot.title import limit_title
 
 
 def plot_vertical_section_comparison(
@@ -75,7 +76,8 @@ def plot_vertical_section_comparison(
         labelContours=False,
         contourLabelPrecision=1,
         resultSuffix='Result',
-        diffSuffix='Difference'):
+        diffSuffix='Difference',
+        maxTitleLength=70):
     """
     Plots vertical section plots in a three-panel format, comparing model data
     (in modelArray) to some reference dataset (in refArray), which can be
@@ -269,6 +271,10 @@ def plot_vertical_section_comparison(
         a suffix added to the config options related to colormap information
         for the difference field
 
+    maxTitleLength : int, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis
+
     Returns
     -------
     fig : ``matplotlib.figure.Figure``
@@ -393,7 +399,8 @@ def plot_vertical_section_comparison(
         comparisonContourLineStyle=comparisonContourLineStyle,
         comparisonContourLineColor=comparisonContourLineColor,
         labelContours=labelContours,
-        contourLabelPrecision=contourLabelPrecision)
+        contourLabelPrecision=contourLabelPrecision,
+        maxTitleLength=maxTitleLength)
 
     axes.append(ax)
 
@@ -434,7 +441,8 @@ def plot_vertical_section_comparison(
             calendar=calendar,
             backgroundColor=backgroundColor,
             labelContours=labelContours,
-            contourLabelPrecision=contourLabelPrecision)
+            contourLabelPrecision=contourLabelPrecision,
+            maxTitleLength=maxTitleLength)
 
         axes.append(ax)
 
@@ -474,7 +482,8 @@ def plot_vertical_section_comparison(
             calendar=calendar,
             backgroundColor=backgroundColor,
             labelContours=labelContours,
-            contourLabelPrecision=contourLabelPrecision)
+            contourLabelPrecision=contourLabelPrecision,
+            maxTitleLength=maxTitleLength)
 
         axes.append(ax)
 
@@ -531,7 +540,8 @@ def plot_vertical_section(
         comparisonContourLineStyle=None,
         comparisonContourLineColor=None,
         labelContours=False,
-        contourLabelPrecision=1):  # {{{
+        contourLabelPrecision=1,
+        maxTitleLength=70):  # {{{
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
@@ -725,6 +735,10 @@ def plot_vertical_section(
     contourLabelPrecision : int, optional
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
+
+    maxTitleLength : int, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis
 
     Returns
     -------
@@ -962,10 +976,13 @@ def plot_vertical_section(
         ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
                   loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
 
-    if (title is not None):
+    if title is not None:
         if plotAsContours and labelContours \
            and contourComparisonFieldArray is None:
+            title = limit_title(title, maxTitleLength-(3+len(colorbarLabel)))
             title = title + " (" + colorbarLabel + ")"
+        else:
+            title = limit_title(title, maxTitleLength)
         if titleFontSize is None:
             titleFontSize = config.get('plot', 'titleFontSize')
         title_font = {'size': titleFontSize,

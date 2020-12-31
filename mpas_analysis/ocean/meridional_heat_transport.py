@@ -18,6 +18,7 @@ import os
 
 from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
 
+
 from mpas_analysis.shared.io.utility import make_directories, build_obs_path
 from mpas_analysis.shared.io import write_netcdf
 
@@ -260,6 +261,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             write_netcdf(annualClimatology, outFileName)
 
         # **** Plot MHT ****
+        maxTitleLength = 70
         self.logger.info('   Plot global MHT...')
         # Plot 1D MHT (zonally averaged, depth integrated)
         x = binBoundaryMerHeatTrans
@@ -323,7 +325,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
         plot_1D(config, xArrays, fieldArrays, errArrays,
                 lineColors=lineColors, lineWidths=lineWidths,
                 legendText=legendText, title=title, xlabel=xLabel,
-                ylabel=yLabel, fileout=figureName, xLim=xLimGlobal)
+                ylabel=yLabel, fileout=figureName, xLim=xLimGlobal,
+                maxTitleLength=maxTitleLength)
 
         self._write_xml(filePrefix)
 
@@ -352,7 +355,8 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                   title=title, xlabel=xLabel, ylabel=yLabel,
                                   xLim=xLimGlobal,
                                   yLim=depthLimGlobal, invertYAxis=False,
-                                  movingAveragePoints=movingAveragePoints)
+                                  movingAveragePoints=movingAveragePoints,
+                                  maxTitleLength=maxTitleLength)
 
             savefig(outFileName)
 

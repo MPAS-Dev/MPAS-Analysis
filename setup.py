@@ -11,22 +11,16 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 from setuptools import setup, find_packages
-import warnings
+import os
+import re
 
-isrelease = True
 
-version = '1.2.9'
+here = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(here, 'mpas_analysis', '__init__.py')) as f:
+    init_file = f.read()
 
-if not isrelease:
-    import subprocess
-    try:
-        pipe = subprocess.Popen(
-            ["git", "describe", "--always", "--match", "v[0-9]*"],
-            stdout=subprocess.PIPE)
-        (version, stderr) = pipe.communicate()
-    except BaseException:
-        warnings.warn("WARNING: Couldn't get git revision, using generic "
-                      "version string")
+version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
+                    init_file).group(1).replace(', ', '.')
 
 setup(name='mpas_analysis',
       version=version,

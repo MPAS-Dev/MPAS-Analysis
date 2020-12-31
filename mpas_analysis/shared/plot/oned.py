@@ -24,6 +24,8 @@ from __future__ import absolute_import, division, print_function, \
 
 import matplotlib.pyplot as plt
 
+from mpas_analysis.shared.plot.title import limit_title
+
 
 def plot_1D(config, xArrays, fieldArrays, errArrays,
             lineColors=None, lineStyles=None, markers=None, lineWidths=None,
@@ -32,7 +34,8 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             figsize=(10, 4), dpi=None,
             xLim=None,
             yLim=None,
-            invertYAxis=False):  # {{{
+            invertYAxis=False,
+            maxTitleLength=80):  # {{{
     """
     Plots a 1D line plot with error bars if available.
 
@@ -82,6 +85,10 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
 
     invertYAxis : logical, optional
         if True, invert Y axis
+
+    maxTitleLength : int, optional
+        the maximum number of characters in the title and legend, beyond which
+        they are truncated with a trailing ellipsis
     """
     # Authors
     # -------
@@ -104,6 +111,8 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             label = None
         else:
             label = legendText[dsIndex]
+            if label is not None:
+                label = limit_title(label, maxTitleLength)
             plotLegend = True
         if lineColors is None:
             color = 'k'
@@ -139,6 +148,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
                   'color': config.get('plot', 'titleFontColor'),
                   'weight': config.get('plot', 'titleFontWeight')}
     if title is not None:
+        title = limit_title(title, max_title_length=maxTitleLength)
         plt.title(title, **title_font)
     if xlabel is not None:
         plt.xlabel(xlabel, **axis_font)
@@ -153,12 +163,10 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     if yLim:
         plt.ylim(yLim)
 
-    if (fileout is not None):
+    if fileout is not None:
         plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
 
-    plt.close()
-
-    return  # }}}
+    plt.close()  # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -28,6 +28,7 @@ from mpas_analysis.shared.timekeeping.utility import date_to_days
 from mpas_analysis.shared.constants import constants
 
 from mpas_analysis.shared.plot.ticks import plot_xtick_format
+from mpas_analysis.shared.plot.title import limit_title
 
 
 def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
@@ -37,7 +38,8 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
                              titleFontSize=None, figsize=(15, 6), dpi=None,
                              firstYearXTicks=None, yearStrideXTicks=None,
                              maxXTicks=20, obsMean=None, obsUncertainty=None,
-                             obsLegend=None, legendLocation='lower left'):
+                             obsLegend=None, legendLocation='lower left',
+                             maxTitleLength=90):
     """
     Plots the list of time series data sets.
 
@@ -109,6 +111,10 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     legendLocation : str, optional
         The location of the legend (see ``pyplot.legend()`` for details)
 
+    maxTitleLength : int, optional
+        the maximum number of characters in the title and legend, beyond which
+        they are truncated with a trailing ellipsis
+
     Returns
     -------
     fig : ``matplotlib.figure.Figure``
@@ -148,6 +154,8 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
             label = None
         else:
             label = legendText[dsIndex]
+            if label is not None:
+                label = limit_title(label, maxTitleLength)
             labelCount += 1
         if lineColors is None:
             color = 'k'
@@ -229,6 +237,7 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         plt.plot(x, np.zeros(np.size(x)), 'k-', linewidth=1.2, zorder=1)
 
     if title is not None:
+        title = limit_title(title, maxTitleLength)
         plt.title(title, **title_font)
     if xlabel is not None:
         plt.xlabel(xlabel, **axis_font)
@@ -243,7 +252,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
                                    lineStyles=None, markers=None,
                                    lineWidths=None, legendText=None,
                                    titleFontSize=None, figsize=(15, 6),
-                                   dpi=None):
+                                   dpi=None, maxTitleLength=90):
     """
     Plots the list of time series data sets on a polar plot.
 
@@ -279,6 +288,10 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
 
+    maxTitleLength : int, optional
+        the maximum number of characters in the title and legend, beyond which
+        they are truncated with a trailing ellipsis
+
     Returns
     -------
     fig : ``matplotlib.figure.Figure``
@@ -309,6 +322,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
             label = None
         else:
             label = legendText[dsIndex]
+            if label is not None:
+                label = limit_title(label, maxTitleLength)
             labelCount += 1
         if lineColors is None:
             color = 'k'
@@ -355,6 +370,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
     ax.set_xticklabels(constants.abrevMonthNames, minor=True)
 
     if titleFontSize is None:
+        title = limit_title(title, maxTitleLength)
         titleFontSize = config.get('plot', 'titleFontSize')
 
     title_font = {'size': titleFontSize,

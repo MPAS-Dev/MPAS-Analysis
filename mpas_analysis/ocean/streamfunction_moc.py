@@ -756,7 +756,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 diffTitle=diffTitle,
                 xlabel=xLabel,
                 ylabel=yLabel,
-                movingAveragePoints=movingAveragePointsClimatological)
+                movingAveragePoints=movingAveragePointsClimatological,
+                maxTitleLength=70)
 
             savefig(outFileName)
 
@@ -1378,7 +1379,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         self.logger.info('   Plot time series of max Atlantic MOC at 26.5N...')
         xLabel = 'Time [years]'
         yLabel = '[Sv]'
-        title = r'Max Atlantic MOC at $26.5\degree$N\n {}'.format(mainRunName)
+        title = '{}\n{}'.format(r'Max Atlantic MOC at $26.5\degree$N',
+                                mainRunName)
         filePrefix = self.filePrefix
 
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -1415,7 +1417,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                  lineColors=lineColors, lineWidths=lineWidths,
                                  legendText=legendText,
                                  firstYearXTicks=firstYearXTicks,
-                                 yearStrideXTicks=yearStrideXTicks)
+                                 yearStrideXTicks=yearStrideXTicks,
+                                 maxTitleLength=90)
 
         savefig(outFileName)
 

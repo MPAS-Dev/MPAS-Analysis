@@ -296,14 +296,14 @@ plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
 ## modules
 
 # title and axis font properties for single-panel plots
-titleFontSize = 20
+titleFontSize = 16
 titleFontColor = black
 titleFontWeight = normal
-axisFontSize = 16
+axisFontSize = 12
 
 # title and axis font properties for three-panel plots
-threePanelTitleFontSize = 20
-threePanelPlotTitleFontSize = 16
+threePanelTitleFontSize = 16
+threePanelPlotTitleFontSize = 14
 threePanelTitleFontColor = black
 threePanelTitleFontWeight = normal
 threePanelAxisFontSize = 12

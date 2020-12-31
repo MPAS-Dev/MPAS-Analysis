@@ -15,6 +15,10 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import numpy
+import matplotlib.pyplot as plt
+
+from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -22,6 +26,8 @@ from mpas_analysis.ocean.compute_anomaly_subtask import ComputeAnomalySubtask
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 from mpas_analysis.ocean.plot_depth_integrated_time_series_subtask import \
     PlotDepthIntegratedTimeSeriesSubtask
+
+from mpas_analysis.shared.constants import constants as mpas_constants
 
 
 class TimeSeriesOHCAnomaly(AnalysisTask):
@@ -106,7 +112,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
 
             caption = 'Running Mean of the Anomaly in {} Ocean Heat ' \
                 'Content'.format(regionName)
-            plotTask = PlotDepthIntegratedTimeSeriesSubtask(
+            plotTask = PlotOHCAnomaly(
                 parentTask=self,
                 regionName=regionName,
                 inFileName=timeSeriesFileName,
@@ -170,5 +176,46 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         return ds  # }}}
 
     # }}}
+
+
+class PlotOHCAnomaly(PlotDepthIntegratedTimeSeriesSubtask):
+    def customize_fig(self, fig):
+        """
+        A function to override to customize the figure.
+
+        fig : matplotlib.pyplot.Figure
+            The figure
+        """
+        def joules_to_watts_m2(joules):
+            watts_m2 = joules/factor
+            return watts_m2
+
+        def watts_m2_to_joules(watts_m2):
+            joules = factor*watts_m2
+            return joules
+
+        # add an axis on the right-hand side
+        color = 'tab:blue'
+        ax = plt.gca()
+        xlim = ax.get_xlim()
+
+        earth_surface_area = (4. * numpy.pi *
+                              cime_constants['SHR_CONST_REARTH']**2)
+
+        max_time = xlim[-1]*mpas_constants.sec_per_day
+
+        factor = earth_surface_area*max_time/10**22
+
+        secaxy = ax.secondary_yaxis(
+            'right', functions=(joules_to_watts_m2, watts_m2_to_joules))
+        secaxy.set_ylabel(r'W/m$^2$', color=color)
+        secaxy.tick_params(axis='y', colors=color)
+        ax.spines['right'].set_color(color)
+        plt.draw()
+        yticks = secaxy.get_yticks()
+        for ytick in yticks:
+            plt.plot(xlim, [0, watts_m2_to_joules(ytick)], color=color,
+                     linewidth=0.5)
+
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
