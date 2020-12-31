@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MPAS-Seaice &mdash; MPAS-Analysis 1.3.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>MPAS-Seaice</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/mpasseaice.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mpas-seaice">
+<h1>MPAS-Seaice<a class="headerlink" href="#mpas-seaice" title="Permalink to this headline">¶</a></h1>
+<p>The Model for Prediction Across Scales Sea Ice (MPAS-Seaice)
+is designed for the simulations of sea ice on unstructured grids supported by
+the MPAS framework.  The model has not yet been publicly released and does not
+have public documentation.</p>
+<div class="section" id="setting-up-standalone-mpas-sea-ice-runs">
+<h2>Setting up Standalone MPAS Sea Ice Runs<a class="headerlink" href="#setting-up-standalone-mpas-sea-ice-runs" title="Permalink to this headline">¶</a></h2>
+<p>In order to support all sea=ice analysis tasks from MPAS-Analysis, certain
+“analysis members”, Fortran modules that perform analysis during the
+simulation, need to be enabled.</p>
+<p>The following is a list of suggested values for namelist options, typically
+found in <code class="docutils literal notranslate"><span class="pre">namelist.seaice</span></code> or <code class="docutils literal notranslate"><span class="pre">mpassi_in</span></code> (or <code class="docutils literal notranslate"><span class="pre">mpas-cice_in</span></code> in
+older E3SM runs):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_AM_timeSeriesStatsMonthly_enable</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Additionally, the duration of the run should be set to at least two years and
+typically longer before most analysis is useful:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">&#39;0002-00-00_00:00:00&#39;</span>
+</pre></div>
+</div>
+<p>Several streams must be defined in the streams file, typically
+<code class="docutils literal notranslate"><span class="pre">streams.seaice</span></code> or <code class="docutils literal notranslate"><span class="pre">streams.cice</span></code> in older E3SM runs, (even if they will
+not be written out – <code class="docutils literal notranslate"><span class="pre">output_interval=&quot;none&quot;</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyRestart&quot;</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;input;output&quot;</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpasseaice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc&quot;</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;output_interval&quot;</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span>
+        <span class="n">input_interval</span><span class="o">=</span><span class="s2">&quot;initial_only&quot;</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;stream:restart:output_interval&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyOutput&quot;</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpasseaice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc&quot;</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span><span class="o">&gt;</span>
+
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;icePresent&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;iceAreaCell&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;iceVolumeCell&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">filename_tempalate</span></code> can be modified as desired (these are the defalult
+values from E3SM).  For the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code> stream, both the
+filename_interval and the output_interval must currently be monthly
+(<code class="docutils literal notranslate"><span class="pre">&quot;0000-01-00_00:00:00&quot;</span></code>).</p>
+<p>Additional fields can be included in the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code>
+streams.  These are the minimum that allow the analysis to run successfully.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

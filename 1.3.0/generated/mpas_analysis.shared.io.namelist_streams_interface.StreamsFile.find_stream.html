@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream &mdash; MPAS-Analysis 1.3.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mpas_analysis.shared.io.utility.paths" href="mpas_analysis.shared.io.utility.paths.html" />
+    <link rel="prev" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream" href="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#climatology">Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#time-series">Time Series</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#namelist-and-streams-files">Namelist and Streams Files</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html">mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.get</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.getint.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.getint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#i-o-utilities">I/O Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API reference</a> &raquo;</li>
+        
+      <li>mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mpas-analysis-shared-io-namelist-streams-interface-streamsfile-find-stream">
+<h1>mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream<a class="headerlink" href="#mpas-analysis-shared-io-namelist-streams-interface-streamsfile-find-stream" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt id="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream">
+<code class="sig-prename descclassname">StreamsFile.</code><code class="sig-name descname">find_stream</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">possibleStreams</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/namelist_streams_interface.html#StreamsFile.find_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>If one (or more) of the names in <code class="docutils literal notranslate"><span class="pre">possibleStreams</span></code> is an stream in
+this streams file, returns the first match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>possibleStreams</strong> (<em>list of str</em>) – A list of streams to search for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>streamName</strong> (<em>str</em>) – The name of an stream from possibleOptions occurring in the
+streams file</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If no match is found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mpas_analysis.shared.io.utility.paths.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.io.utility.paths" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
