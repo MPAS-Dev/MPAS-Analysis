@@ -42,8 +42,8 @@ The following configuration options are available for this task::
 Transect Names
 --------------
 
-The ``transectsToPlot`` can be set to ``['all']`` (the default) to plot all of the
-transects defined in ``transportTransects20200621.geojson``.  These are::
+The ``transectsToPlot`` can be set to ``['all']`` to plot all of the transects
+defined in the ``transportTransects`` transect group.  These are::
 
   ["Africa-Ant",  "Agulhas", "Antarctic Peninsula", "Antilles Inflow",
    "Baja CA blockage", "Baltic Sea Deepen", "Barents Sea Opening",
@@ -72,5 +72,3 @@ Example Result
 .. image:: examples/drake_passage_transport.png
    :width: 500 px
    :align: center
-
-.. _`antarctic_ocean_regions`: https://github.com/MPAS-Dev/geometric_features/tree/master/feature_creation_scripts/antarctic_ocean_regions

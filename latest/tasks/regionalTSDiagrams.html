@@ -126,7 +126,6 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">regionalTSDiagrams</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#region-groups">Region Groups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#region-mask">Region Mask</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#region-names">Region Names</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#diagram-type">Diagram Type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bins-and-contour-intervals">Bins and Contour Intervals</a></li>
@@ -237,61 +236,55 @@ diagrams of climatologies in ocean regions.</p>
 <div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">regionalTSDiagrams</span><span class="p">]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[regionalTSDiagrams]</span>
 <span class="c1">## options related to plotting T/S diagrams of ocean regions</span>
 
 <span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="n">regionGroups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Ocean Basins&#39;</span><span class="p">]</span>
+<span class="na">regionGroups</span> <span class="o">=</span> <span class="s">[&#39;Ocean Basins&#39;]</span>
 
 <span class="c1"># a list of seasons to compute climatologies over</span>
-<span class="n">seasons</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="na">seasons</span> <span class="o">=</span> <span class="s">[&#39;ANN&#39;]</span>
 
 <span class="c1"># the number of threads dask is allowed to spawn for each process computing</span>
 <span class="c1"># the observational climatologies</span>
 <span class="c1"># Decrease this number if regionalTSDiagrams subtasks are running</span>
 <span class="c1"># out of available threads</span>
-<span class="n">daskThreads</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="na">daskThreads</span> <span class="o">=</span> <span class="s">8</span>
 
 <span class="c1"># the number of subprocesses that each observational climatology subtask gets</span>
 <span class="c1"># counted as occupying</span>
 <span class="c1"># Increase this number if regionalTSDiagrams subtasks are running</span>
 <span class="c1"># out of memory, and fewer tasks will be allowed to run at once</span>
-<span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="na">subprocessCount</span> <span class="o">=</span> <span class="s">4</span>
 
-<span class="p">[</span><span class="n">TSDiagramsForAntarcticRegions</span><span class="p">]</span>
+<span class="k">[TSDiagramsForAntarcticRegions]</span>
 <span class="c1">## options related to plotting T/S diagrams of Antarctic regions</span>
-
-<span class="c1"># An identifying string that is the prefix for a geojson file containing</span>
-<span class="c1"># Antarctic ocean regions.  Each region must have &#39;zmin&#39; and &#39;zmax&#39; properties</span>
-<span class="c1"># in addition to the usual properties for a region in geometric_features.  The</span>
-<span class="c1"># string is also used as the suffix for mask files generated from the geojson</span>
-<span class="n">regionMaskSuffix</span> <span class="o">=</span> <span class="s1">&#39;antarcticRegions20200621&#39;</span>
 
 <span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
 <span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span>
 <span class="c1"># regionMaskSubdirectory for details.</span>
-<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
+<span class="na">regionNames</span> <span class="o">=</span> <span class="s">[]</span>
 
 <span class="c1"># diagram type, either &#39;volumetric&#39; or &#39;scatter&#39;, depending on if the points</span>
 <span class="c1"># should be binned the plot should show the volume fraction in each bin or</span>
 <span class="c1"># scattered points colored by their depth</span>
-<span class="n">diagramType</span> <span class="o">=</span> <span class="n">volumetric</span>
+<span class="na">diagramType</span> <span class="o">=</span> <span class="s">volumetric</span>
 
 <span class="c1"># if diagramType == &#39;volumetric&#39;, the bin boundaries for T and S</span>
 <span class="c1"># if diagramType == &#39;scatter&#39;, only the min and max are important (and the</span>
 <span class="c1">#   bins are only used for computing neutral density contours)</span>
-<span class="n">Tbins</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">66</span><span class="p">)</span>
-<span class="n">Sbins</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">33.8</span><span class="p">,</span> <span class="mf">34.8</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+<span class="na">Tbins</span> <span class="o">=</span> <span class="s">numpy.linspace(-2.5, 4, 131)</span>
+<span class="na">Sbins</span> <span class="o">=</span> <span class="s">numpy.linspace(33.8, 34.8, 201)</span>
 
 <span class="c1"># density contour interval</span>
-<span class="n">rhoInterval</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="na">rhoInterval</span> <span class="o">=</span> <span class="s">0.1</span>
 
 <span class="c1"># The color map for depth or volume</span>
-<span class="n">colormap</span> <span class="o">=</span> <span class="n">white_cmo_deep</span>
+<span class="na">colormap</span> <span class="o">=</span> <span class="s">cmo.deep</span>
 <span class="c1"># The following is more appropriate if diagramType == &#39;scatter&#39;</span>
 <span class="c1"># colormap = cmo.deep_r</span>
 <span class="c1"># the type of norm used in the colormap {&#39;linear&#39;, &#39;log&#39;}</span>
-<span class="n">normType</span> <span class="o">=</span> <span class="n">log</span>
+<span class="na">normType</span> <span class="o">=</span> <span class="s">log</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are plotted, default is</span>
 <span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
@@ -299,88 +292,82 @@ diagrams of climatologies in ocean regions.</p>
 <span class="c1"># zmin = -1000</span>
 <span class="c1"># zmax = -400</span>
 
+<span class="c1"># the minimum and maximum volume for the colorbar, default is the minimum and</span>
+<span class="c1"># maximum over the mode output</span>
+<span class="c1"># volMin = 3e9</span>
+<span class="c1"># volMax = 1e12</span>
+
 <span class="c1"># Obserational data sets to compare against</span>
-<span class="n">obs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SOSE&#39;</span><span class="p">,</span> <span class="s1">&#39;WOA18&#39;</span><span class="p">]</span>
+<span class="na">obs</span> <span class="o">=</span> <span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span>
 
-<span class="p">[</span><span class="n">TSDiagramsForOceanBasins</span><span class="p">]</span>
+<span class="k">[TSDiagramsForOceanBasins]</span>
 <span class="c1">## options related to plotting T/S diagrams of major ocean basins</span>
-
-<span class="c1"># An identifying string that is the prefix for a geojson file containing</span>
-<span class="c1"># ocean basins.  Each region must have &#39;zmin&#39; and &#39;zmax&#39; properties in addition</span>
-<span class="c1"># to the usual properties for a region in geometric_features.  The string is</span>
-<span class="c1"># also used as the suffix for mask files generated from the geojson file</span>
-<span class="n">regionMaskSuffix</span> <span class="o">=</span> <span class="s1">&#39;oceanBasins20200621&#39;</span>
 
 <span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
 <span class="c1"># See &quot;regionNames&quot; in the oceanBasins masks file in</span>
 <span class="c1"># regionMaskSubdirectory for details.</span>
-<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
+<span class="na">regionNames</span> <span class="o">=</span> <span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
+<span class="s">               &quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
+<span class="s">               &quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
+<span class="s">               &quot;Global Ocean 15S to 15N&quot;]</span>
 
 <span class="c1"># diagram type, either &#39;volumetric&#39; or &#39;scatter&#39;, depending on if the points</span>
 <span class="c1"># should be binned the plot should show the volume fraction in each bin or</span>
 <span class="c1"># scattered points colored by their depth</span>
-<span class="n">diagramType</span> <span class="o">=</span> <span class="n">volumetric</span>
+<span class="na">diagramType</span> <span class="o">=</span> <span class="s">volumetric</span>
 
 <span class="c1"># if diagramType == &#39;volumetric&#39;, the bin boundaries for T and S</span>
 <span class="c1"># if diagramType == &#39;scatter&#39;, only the min and max are important (and the</span>
 <span class="c1">#   bins are only used for computing neutral density contours)</span>
-<span class="n">Tbins</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
-<span class="n">Sbins</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">33.8</span><span class="p">,</span> <span class="mf">35.8</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="na">Tbins</span> <span class="o">=</span> <span class="s">numpy.linspace(-2.5, 16, 926)</span>
+<span class="na">Sbins</span> <span class="o">=</span> <span class="s">numpy.linspace(33.8, 35.8, 1001)</span>
 
 <span class="c1"># density contour interval</span>
-<span class="n">rhoInterval</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="na">rhoInterval</span> <span class="o">=</span> <span class="s">0.2</span>
 
 <span class="c1"># The color map for depth or volume</span>
-<span class="n">colormap</span> <span class="o">=</span> <span class="n">white_cmo_deep</span>
+<span class="na">colormap</span> <span class="o">=</span> <span class="s">white_cmo_deep</span>
 <span class="c1"># The following is more appropriate if diagramType == &#39;scatter&#39;</span>
 <span class="c1"># colormap = cmo.deep_r</span>
 <span class="c1"># the type of norm used in the colormap {&#39;linear&#39;, &#39;log&#39;}</span>
-<span class="n">normType</span> <span class="o">=</span> <span class="n">log</span>
+<span class="na">normType</span> <span class="o">=</span> <span class="s">log</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are plotted.</span>
-<span class="n">zmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>
-<span class="n">zmax</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="na">zmin</span> <span class="o">=</span> <span class="s">-1000</span>
+<span class="na">zmax</span> <span class="o">=</span> <span class="s">0</span>
 
 <span class="c1"># Obserational data sets to compare against</span>
-<span class="n">obs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;WOA18&#39;</span><span class="p">]</span>
+<span class="na">obs</span> <span class="o">=</span> <span class="s">[&#39;WOA18&#39;]</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="region-groups">
 <h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
 <p>A list of groups of regions, each of which will get its own gallery on
-the resulting analysis web page.  These can be any name without punctuation.
-For each region group, there should be a corresponding
-<code class="docutils literal notranslate"><span class="pre">TSDiagramsFor&lt;RegionGroup&gt;</span></code> section of the config file, with any spaces
-removed from the name of the region group.  By default, the only region group
-is “Ocean Basins”.</p>
-</div>
-<div class="section" id="region-mask">
-<h2>Region Mask<a class="headerlink" href="#region-mask" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">regionMaskSuffix</span></code> is a prefix for a geojson file produce from the
-<code class="docutils literal notranslate"><span class="pre">geometric_features</span></code> package and documented in the <code class="docutils literal notranslate"><span class="pre">preprocess_masks</span></code>
-directory of the GitHub repo.  It should include any number of ocean regions,
-each of which includes properties <code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>.  Examples of how to
-create such a set of features can be found in <a class="reference external" href="https://github.com/MPAS-Dev/geometric_features/tree/master/feature_creation_scripts/antarctic_ocean_regions">antarctic_ocean_regions</a>.</p>
+the resulting analysis web page.  See <span class="xref std std-ref">config_config_region_groups</span> for
+more information on the available region groups.  For each region group, there
+should be a corresponding <code class="docutils literal notranslate"><span class="pre">TSDiagramsFor&lt;RegionGroup&gt;</span></code> section of the config
+file, with any spaces removed from the name of the region group.  By default,
+the only region group is <code class="docutils literal notranslate"><span class="pre">'Ocean</span> <span class="pre">Basins'</span></code>.</p>
 </div>
 <div class="section" id="region-names">
 <h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> (the default) to plot all of the
-regions in the geojson file.  In the case of “Antarctic Regions”, these
+<p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the
+regions in the geojson file.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these
 are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Southern Ocean&quot;</span><span class="p">,</span> <span class="s2">&quot;Southern Ocean 60S&quot;</span><span class="p">,</span> <span class="s2">&quot;Eastern Weddell Sea Shelf&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Eastern Weddell Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Western Weddell Sea Shelf&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Western Weddell Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Weddell Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Weddell Sea Deep&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Bellingshausen Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Bellingshausen Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Amundsen Sea Shelf&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Amundsen Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Eastern Ross Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Eastern Ross Sea Deep&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Western Ross Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Western Ross Sea Deep&quot;</span><span class="p">,</span>
- <span class="s2">&quot;East Antarctic Seas Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;East Antarctic Seas Deep&quot;</span><span class="p">]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span>
+ <span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span>
+ <span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span>
+ <span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span>
+ <span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span>
+ <span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span>
+ <span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
 </pre></div>
 </div>
-<p>For “Ocean Basins”, they are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Atlantic_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Pacific_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Indian_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Arctic_Basin&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Southern_Ocean_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Mediterranean_Basin&quot;</span><span class="p">,</span> <span class="s2">&quot;Global Ocean&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Global Ocean 65N to 65S&quot;</span><span class="p">,</span> <span class="s2">&quot;Global Ocean 15S to 15N&quot;</span><span class="p">]</span>
+<p>For <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, they are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;, &quot;Arctic_Basin&quot;,</span>
+ <span class="na">&quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;, &quot;Global Ocean&quot;,</span>
+ <span class="na">&quot;Global Ocean 65N to 65S&quot;, &quot;Global Ocean 15S to 15N&quot;]</span>
 </pre></div>
 </div>
 </div>
