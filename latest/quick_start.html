@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Quick Start Guide &mdash; MPAS-Analysis latest documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -51,7 +54,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -156,6 +159,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -167,7 +172,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/quick_start.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -198,7 +203,7 @@ used those components.</p>
 <p>To use the latest version for developers, you will need to set up a conda
 environment with the following packages:</p>
 <ul class="simple">
-<li><p>python &gt;= 3.6</p></li>
+<li><p>python &gt;= 3.7</p></li>
 <li><p>numpy</p></li>
 <li><p>scipy</p></li>
 <li><p>matplotlib &gt;= 3.0.2</p></li>
@@ -290,10 +295,10 @@ git repo) or download one from the
 <li><p>Either modify config options in your new file or copy and modify config
 options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> (in a git repo) or directly
 from GitHub:
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_anlysis/config.default">config.default</a>.</p></li>
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default">config.default</a>.</p></li>
 <li><p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, run:
 <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  If using a git checkout, run:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuraiton
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuration
 first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> and then replace that
 configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code></p></li>
 <li><p>If you want to run a subset of the analysis, you can either set the
@@ -395,7 +400,7 @@ bounds on climatologies, see above).</p>
 <ol class="arabic simple">
 <li><p>If you are running from a git repo, copy the appropriate job script file
 from <code class="docutils literal notranslate"><span class="pre">configs/&lt;machine_name&gt;</span></code> to the root directory (or another directory
-if preferred). The default cript, <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code>, is
+if preferred). The default script, <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code>, is
 appropriate for a laptop or desktop computer with multiple cores.</p></li>
 <li><p>If using the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> conda package, download the job script and/or
 sample config file from the
@@ -492,37 +497,29 @@ to be generated and is set up properly.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
