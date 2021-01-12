@@ -35,23 +35,25 @@ web page.
 Region Groups
 -------------
 
-Currently, seven analysis tasks (``climatologyMapAntarcticMelt``,
-``hovmollerOceanRegions``, ``oceanRegionalProfiles``, ``regionalTSDiagrams``,
-``streamfunctionMOC``, ``timeSeriesAntarcticMelt``, and
-``timeSeriesOceanRegions``) use masks that define regions in an MPAS mesh as
-part of their analysis.  Most of these region group are defined in
+Currently, seven analysis tasks (:ref:`task_climatologyMapAntarcticMelt`,
+:ref:`task_hovmollerOceanRegions`, :ref:`task_oceanRegionalProfiles`,
+:ref:`task_regionalTSDiagrams`, :ref:`task_streamfunctionMOC`,
+:ref:`task_timeSeriesAntarcticMelt`, and :ref:`task_timeSeriesOceanRegions`)
+use masks that define regions in an MPAS mesh as part of their analysis.  Most
+of these region group are defined in
 :py:func:`mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()`.
-Several tasks (``hovmollerOceanRegions``, ``oceanRegionalProfiles``,
-``regionalTSDiagrams``, and ``timeSeriesOceanRegions``) can use any of the
-defined region groups.  Currently, available region groups are:
-``Antarctic Regions``, ``Ocean Basins``, ``Ice Shelves``, and
-``Ocean Subbasins``.
+Several tasks (:ref:`task_hovmollerOceanRegions`,
+:ref:`task_oceanRegionalProfiles`, :ref:`task_regionalTSDiagrams`, and
+:ref:`task_timeSeriesOceanRegions`) can use any of the defined region groups.
+Currently, available region groups are: ``Antarctic Regions``,
+``Ocean Basins``, ``Ice Shelves``, and ``Ocean Subbasins``.
 
 The option ``regionMaskSubdirectory`` in the ``[diagnostics]`` section specifies
 the path to cached mask files for these region groups, typically
 ``diagnostics/mpas_analysis/region_masks``. Region masks for common MPAS Ocean
 and Seaice meshes are supplied as part of the data from the
-`E3SM public data repository <https://web.lcrc.anl.gov/public/e3sm/diagnostics/>`_ (see the :ref:`quick_start`).
+`E3SM public data repository <https://web.lcrc.anl.gov/public/e3sm/diagnostics/>`_
+(see the :ref:`quick_start`).
 
 If masks for for a given grid don't already exist in the cached mask location,
 they will be generated automatically from the aggregation function from the
