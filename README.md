@@ -43,7 +43,7 @@ conda activate mpas-analysis
 To use the latest version for developers, you will need to set up a conda
 environment with the following packages:
 
- * python >= 3.6
+ * python >= 3.7
  * numpy
  * scipy
  * matplotlib >= 3.0.2
@@ -142,10 +142,10 @@ for more details.
   2. Either modify config options in your new file or copy and modify config
      options from `mpas_analysis/config.default` (in a git repo) or directly
      from GitHub:
-     [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_anlysis/config.default).
+     [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default).
   3. If you installed the `mpas-analysis` package, run:
      `mpas_analysis config.myrun`.  If using a git checkout, run:
-     `python -m mpas_analysis config.myrun`.  This will read the configuraiton
+     `python -m mpas_analysis config.myrun`.  This will read the configuration
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
   4. If you want to run a subset of the analysis, you can either set the
@@ -242,7 +242,7 @@ If you are running from a git repo:
 
   1. If you are running from a git repo, copy the appropriate job script file
      from `configs/<machine_name>` to the root directory (or another directory
-     if preferred). The default cript, `configs/job_script.default.bash`, is
+     if preferred). The default script, `configs/job_script.default.bash`, is
      appropriate for a laptop or desktop computer with multiple cores.
   2. If using the `mpas-analysis` conda package, download the job script and/or
      sample config file from the
