@@ -66,6 +66,13 @@ done
 py=3.8
 env=test_mpas_analysis_py${py}
 
+run=wc_defaults
+config=${run}.cfg
+job=job_script_${run}.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed -e "s/no_polar_regions.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script_no_polar_regions.bash > ${job}
+
 run=no_ncclimo
 config=${run}.cfg
 job=job_script_${run}.bash
@@ -113,6 +120,8 @@ sbatch job_script_main_py3.7.bash
 RES=$(sbatch job_script_main_py3.8.bash)
 
 sbatch --dependency=afterok:${RES##* } job_script_main_vs_ctrl.bash
+
+sbatch job_script_wc_defaults.bash
 
 sbatch job_script_no_ncclimo.bash
 

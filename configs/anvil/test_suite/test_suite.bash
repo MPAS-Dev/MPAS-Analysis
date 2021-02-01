@@ -73,7 +73,7 @@ run=wc_defaults
 config=${run}.cfg
 job=job_script_${run}.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
-sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+sed -e "s/no_polar_regions.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script_no_polar_regions.bash > ${job}
 
 run=no_ncclimo
