@@ -632,7 +632,7 @@ usePostprocessingScript = False
 
 # Region names for basin MOC calculation.
 # Supported options are Atlantic and IndoPacific
-regionNames = ['Atlantic']
+regionNames = ['Atlantic', 'IndoPacific']
 
 # Number of points over which to compute moving average for
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
@@ -671,10 +671,10 @@ colormapTypeResult = indexed
 # colormap indices for contour color
 colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsResult = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
+colorbarLevelsResult = [-20, -15, -10, -5, 0, 5, 10, 15, 20, 40]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevelsResult = np.arange(-25.1, 35.1, 10)
+contourLevelsResult = np.arange(-30.1, 50.1, 10)
 
 # colormap for differences
 colormapNameDifference = balance
@@ -743,7 +743,7 @@ colormapTypeResult = indexed
 # colormap indices for contour color
 colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsResult = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
 contourLevelsResult = np.arange(-8, 20.1, 2)
