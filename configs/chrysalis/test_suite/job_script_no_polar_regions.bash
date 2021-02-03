@@ -13,7 +13,7 @@ conda activate test_env
 export HDF5_USE_FILE_LOCKING=FALSE
 
 echo env: test_env
-echo configs: no_polar_regions.cfg
+echo configs: ../no_polar_regions.cfg
 
-srun -N 1 -n 1 python -m mpas_analysis no_polar_regions.cfg --verbose
+srun -N 1 -n 1 python -m mpas_analysis ../no_polar_regions.cfg --verbose
 
