@@ -125,7 +125,7 @@ Region Groups
 -------------
 
 A list of groups of regions, each of which will get its own gallery on
-the resulting analysis web page.  See :ref:`config_config_region_groups` for
+the resulting analysis web page.  See :ref:`config_region_groups` for
 more information on the available region groups.  For each region group, there
 should be a corresponding ``TSDiagramsFor<RegionGroup>`` section of the config
 file, with any spaces removed from the name of the region group.  By default,

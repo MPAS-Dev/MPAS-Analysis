@@ -59,7 +59,8 @@ do
     env=test_mpas_analysis_py${py}
     run=main_py${py}
     config=${run}.cfg
-    job=job_script_${run}.bash
+    mkdir ${run}
+    job=${run}/job_script.bash
     sed "s/baseline/${branch}\/py${py}/g" ${template_path}/main.cfg > ${config}
     sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
          ${template_path}/job_script.bash > ${job}
@@ -71,39 +72,44 @@ env=test_mpas_analysis_py${py}
 
 run=wc_defaults
 config=${run}.cfg
-job=job_script_${run}.bash
+mkdir ${run}
+job=${run}/job_script.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
-sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+sed -e "s/no_polar_regions.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script_no_polar_regions.bash > ${job}
 
 run=no_ncclimo
 config=${run}.cfg
-job=job_script_${run}.bash
+mkdir ${run}
+job=${run}/job_script.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script.bash > ${job}
 
 run=ctrl
 config=${run}.cfg
-job=job_script_${run}.bash
 sed "s/baseline/${branch}\/py${py}/g" ${template_path}/${config} > ${config}
 
 run=main_vs_ctrl
 config=${run}.cfg
-job=job_script_${run}.bash
+mkdir ${run}
+job=${run}/job_script.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script.bash > ${job}
 
 run=no_polar_regions
 config=${run}.cfg
-job=job_script_${run}.bash
+mkdir ${run}
+job=${run}/job_script.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
-sed -e "s/test_env/${env}/g" ${template_path}/${job} > ${job}
+sed -e "s/test_env/${env}/g" \
+     ${template_path}/job_script_no_polar_regions.bash > ${job}
 
 run=QU480
 config=${run}.cfg
-job=job_script_${run}.bash
+mkdir ${run}
+job=${run}/job_script.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script.bash > ${job}
@@ -111,28 +117,29 @@ sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
 env=test_mpas_analysis_xarray_master
 run=xarray_master
 config=${run}.cfg
-job=job_script_${run}.bash
+mkdir ${run}
+job=${run}/job_script.bash
 sed "s/baseline/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script.bash > ${job}
 
 
 # submit the jobs
-sbatch job_script_main_py3.7.bash
+for run in main_py3.7 wc_defaults no_ncclimo no_polar_regions QU480 \
+    xarray_master
+do
+    cd ${run}
+    sbatch job_script.bash
+    cd ..
+done
 
-RES=$(sbatch job_script_main_py3.8.bash)
+cd main_py3.8
+RES=$(sbatch job_script.bash)
+cd ..
 
-sbatch --dependency=afterok:${RES##* } job_script_main_vs_ctrl.bash
-
-sbatch job_script_wc_defaults.bash
-
-sbatch job_script_no_ncclimo.bash
-
-sbatch job_script_no_polar_regions.bash
-
-sbatch job_script_QU480.bash
-
-sbatch job_script_xarray_master.bash
+cd main_vs_ctrl
+sbatch --dependency=afterok:${RES##* } job_script.bash
+cd ..
 
 cd ..
 

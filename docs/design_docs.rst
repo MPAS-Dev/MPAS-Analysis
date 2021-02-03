@@ -10,7 +10,6 @@ Design Documents
     design_docs/generalize_calendar
     design_docs/variable_mapping_reorg
     design_docs/parallel_tasks
-    design_docs/analysis_task_template
     design_docs/remapper
     design_docs/prerequisite_tasks
     design_docs/eddykineticenergy
