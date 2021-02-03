@@ -65,7 +65,7 @@ Region Groups
 
 ``regionGroup`` is a list of region groups,each of which will get its own
 gallery group on the resulting analysis webpage.  See
-:ref:`config_config_region_groups` for more information on the available region
+:ref:`config_region_groups` for more information on the available region
 groups. For each region group, there should be a corresponding
 ``timeSeries<RegionGroup>`` section of the config file, with any spaces removed
 from the name of the region group.  By default, the only region group for this
