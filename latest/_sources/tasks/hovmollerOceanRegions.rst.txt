@@ -1,4 +1,4 @@
-.. _task_oceanRegionalProfiles:
+.. _task_hovmollerOceanRegions:
 
 hovmollerOceanRegions
 =====================

@@ -253,21 +253,21 @@ potential density and other fields of interest averaged over ocean regions.</p>
 
 <span class="c1"># a list of variables to plot</span>
 <span class="na">variables</span> <span class="o">=</span> <span class="s">[{&#39;name&#39;: &#39;temperature&#39;,</span>
-<span class="s">              &#39;title&#39;: &#39;Temperature&#39;,</span>
-<span class="s">              &#39;units&#39;: r&#39;$^\circ$C&#39;,</span>
-<span class="s">              &#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;},</span>
-<span class="s">             {&#39;name&#39;: &#39;salinity&#39;,</span>
-<span class="s">              &#39;title&#39;: &#39;Salinity&#39;,</span>
-<span class="s">              &#39;units&#39;: &#39;PSU&#39;,</span>
-<span class="s">              &#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;},</span>
-<span class="s">             {&#39;name&#39;: &#39;potentialDensity&#39;,</span>
-<span class="s">              &#39;title&#39;: &#39;Potential Density&#39;,</span>
-<span class="s">              &#39;units&#39;: &#39;kg m$^{-3}$&#39;,</span>
-<span class="s">              &#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;},</span>
-<span class="s">             {&#39;name&#39;: &#39;mixedLayerDepth&#39;,</span>
-<span class="s">              &#39;title&#39;: &#39;Mixed Layer Depth&#39;,</span>
-<span class="s">              &#39;units&#39;: &#39;m&#39;,</span>
-<span class="s">              &#39;mpas&#39;: &#39;timeMonthly_avg_dThreshMLD&#39;}]</span>
+              <span class="na">&#39;title&#39;: &#39;Temperature&#39;,</span>
+              <span class="na">&#39;units&#39;: r&#39;$^\circ$C&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;},</span>
+             <span class="na">{&#39;name&#39;: &#39;salinity&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Salinity&#39;,</span>
+              <span class="na">&#39;units&#39;: &#39;PSU&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;},</span>
+             <span class="na">{&#39;name&#39;: &#39;potentialDensity&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Potential Density&#39;,</span>
+              <span class="na">&#39;units&#39;: &#39;kg m$^{-3}$&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;},</span>
+             <span class="na">{&#39;name&#39;: &#39;mixedLayerDepth&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Mixed Layer Depth&#39;,</span>
+              <span class="na">&#39;units&#39;: &#39;m&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_dThreshMLD&#39;}]</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span>
 <span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
@@ -284,7 +284,7 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">regionGroup</span></code> is a list of region groups,each of which will get its own
 gallery group on the resulting analysis webpage.  See
-<span class="xref std std-ref">config_config_region_groups</span> for more information on the available region
+<a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for more information on the available region
 groups. For each region group, there should be a corresponding
 <code class="docutils literal notranslate"><span class="pre">timeSeries&lt;RegionGroup&gt;</span></code> section of the config file, with any spaces removed
 from the name of the region group.  By default, the only region group for this

@@ -132,7 +132,7 @@ currently supported by the public release of MPAS-Analysis include:
     resolution at the equator.
 
 Mapping files (see :ref:`config_mapping_files` below) and region mask files
-(see :ref:`config_region_mask_files`) are provided from the
+(see :ref:`config_region_groups`) are provided from the
 `E3SM public data repository`_ for these meshes.  For assistance with other
 mesh resolutions, please contact the MPAS-Analysis developers.
 
