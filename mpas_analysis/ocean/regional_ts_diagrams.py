@@ -196,8 +196,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             for regionName in regionNames:
 
                 fullSuffix = sectionSuffix + '_' + \
-                    regionName[0].lower() + \
-                    regionName[1:].replace(' ', '')
+                    regionName.replace(' ', '')
 
                 for season in self.seasons:
                     computeRegionSubtask = ComputeRegionTSSubtask(
@@ -559,7 +558,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
         self.mpasMasksSubtask = mpasMasksSubtask
         self.obsDicts = obsDicts
         self.season = season
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
 
         parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
         self.subprocessCount = min(parallelTaskCount,
@@ -879,7 +878,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         self.mpasMasksSubtask = mpasMasksSubtask
         self.obsDicts = obsDicts
         self.season = season
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
 
         parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
         self.subprocessCount = min(parallelTaskCount,
@@ -944,8 +943,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         self.logger.info('  Make plots...')
 
-        groupLink = 'tsDiag' + self.regionGroup[0].lower() + \
-            self.regionGroup[1:].replace(' ', '')
+        groupLink = 'tsDiag' + self.regionGroup.replace(' ', '')
 
         nSubplots = 1 + len(self.obsDicts)
         if self.controlConfig is not None:
