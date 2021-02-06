@@ -20,77 +20,13 @@ from functools import partial
 import mpas_tools.conversion
 
 from geometric_features import read_feature_collection, GeometricFeatures
-from geometric_features.aggregation.ocean import basins, subbasins, antarctic, \
-    ice_shelves
-from geometric_features.aggregation.ocean import arctic as arctic_ocean
-from geometric_features.aggregation.seaice import arctic as arctic_seaice
+from geometric_features.aggregation import get_aggregator_by_name
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_region_mask
 from mpas_analysis.shared.io import write_netcdf
-
-
-def get_region_info(regionGroup, config):
-    """
-    Get a geojson mask file and the appropriate file suffix for the given
-    region group.
-
-    Parameters
-    ----------
-    regionGroup : str
-        The name of a region group to get mask features for, one of
-        'Antarctic Regions', 'Arctic Ocean Regions', 'Arctic Sea Ice Regions',
-        'Ocean Basins', 'Ice Shelves', or 'Ocean Subbasins'
-
-    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
-        Configuration options
-
-    Returns
-    -------
-    region : dict
-        A dictionary of information about the region
-
-    filename : str
-        The name of a geojson file with mask features
-
-    suffix : str
-        A suffix to use for mask files created with these features
-
-    """
-
-    regions = {'Antarctic Regions': {'prefix': 'antarcticRegions',
-                                     'date': '20200621',
-                                     'function': antarctic},
-               'Arctic Ocean Regions': {'prefix': 'arcticOceanRegions',
-                                        'date': '20201130',
-                                        'function': arctic_ocean},
-               'Arctic Sea Ice Regions': {'prefix': 'arcticSeaIceRegions',
-                                          'date': '20201130',
-                                          'function': arctic_seaice},
-               'Ocean Basins': {'prefix': 'oceanBasins',
-                                'date': '20200621',
-                                'function': basins},
-               'Ice Shelves': {'prefix': 'iceShelves',
-                               'date': '20200621',
-                               'function': ice_shelves},
-               'Ocean Subbasins': {'prefix': 'oceanSubbasins',
-                                   'date': '20201123',
-                                   'function': subbasins}}
-
-    if regionGroup not in regions:
-        raise ValueError('Unknown region group {}'.format(regionGroup))
-
-    region = regions[regionGroup]
-
-    prefix = region['prefix']
-    date = region['date']
-
-    suffix = '{}{}'.format(prefix, date)
-    filename = get_region_mask(config, '{}.geojson'.format(suffix))
-
-    return region, filename, suffix
 
 
 def get_feature_list(geojsonFileName):
@@ -348,11 +284,11 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     ----------
     regionGroup : str
         The name of one of the supported region groups (see
-        :py:func:`mpas_analysis.shared.regions.get_region_info()`)
+        :py:func:`geometric_features.aggregation.get_region_by_name()`)
 
-    region : dict
-        A dictionary of information about the region from
-        :py:func:`mpas_analysis.shared.regions.get_region_info()`
+    aggregationFunction : callable
+        An aggregation function returned by
+        :py:func:`geometric_features.aggregation.get_region_by_name()`
 
     geojsonFileName : str
         A geojson file, typically from the MPAS ``geometric_features``
@@ -398,7 +334,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
         regionGroup : str
             The name of one of the supported region groups (see
-            :py:func:`mpas_analysis.shared.regions.get_region_info()`)
+            :py:func:`geometric_features.aggregation.get_region_by_name()`)
 
         meshName : str
             The name of the mesh or grid, used as part of the mask file name.
@@ -446,8 +382,12 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         self.useMpasMesh = self.obsFileName is None
         self.maskFileName = None
 
-        self.region, self.geojsonFileName, self.outFileSuffix = get_region_info(
-            self.regionGroup, self.config)
+        self.aggregationFunction, prefix, date = get_aggregator_by_name(
+            self.regionGroup)
+        self.outFileSuffix = '{}{}'.format(prefix, date)
+        self.geojsonFileName = \
+            get_region_mask(self.config,
+                            '{}.geojson'.format(self.outFileSuffix))
 
         if not self.useMpasMaskCreator:
             # because this uses a Pool, it cannot be launched as a separate
@@ -464,7 +404,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         or custom diagnostic directories, it will be created in the analysis
         output's masks directory.
         """
-        function = self.region['function']
+        function = self.aggregationFunction
         filename = self.geojsonFileName
         if not os.path.exists(filename):
             gf = GeometricFeatures()

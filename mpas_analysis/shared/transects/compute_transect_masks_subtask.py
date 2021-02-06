@@ -18,7 +18,7 @@ from geometric_features import read_feature_collection
 import mpas_tools.conversion
 
 from geometric_features import GeometricFeatures
-from geometric_features.aggregation.ocean import transport
+from geometric_features.aggregation import get_aggregator_by_name
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -27,51 +27,6 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.regions import get_feature_list
-
-
-def get_transect_info(transectGroup, config):
-    """
-    Get a geojson mask file and the appropriate file suffix for the given
-    region group.
-
-    Parameters
-    ----------
-    transectGroup : str
-        The name of a region group to get mask features for, one of
-        'Transport Transects'
-
-    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
-        Configuration options
-
-    Returns
-    -------
-    transect : dict
-        A dictionary of information about the region
-
-    filename : str
-        The name of a geojson file with mask features
-
-    suffix : str
-        A suffix to use for mask files created with these features
-
-    """
-
-    transects = {'Transport Transects': {'prefix': 'transportTransects',
-                                         'date': '20200621',
-                                         'function': transport}}
-
-    if transectGroup not in transects:
-        raise ValueError('Unknown transect group {}'.format(transectGroup))
-
-    transect = transects[transectGroup]
-
-    prefix = transect['prefix']
-    date = transect['date']
-
-    suffix = '{}{}'.format(prefix, date)
-    filename = get_region_mask(config, '{}.geojson'.format(suffix))
-
-    return transect, filename, suffix
 
 
 def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
@@ -98,6 +53,10 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
 
     Attributes
     ----------
+    aggregationFunction : callable
+        An aggregation function returned by
+        :py:func:`geometric_features.aggregation.get_region_by_name()`
+
     geojsonFileName : str
         A geojson file, typically from the MPAS ``geometric_features``
         repository, defining the shapes to be masked
@@ -151,8 +110,12 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         self.maskFileName = None
         self.transectGroup = transectGroup
 
-        self.region, self.geojsonFileName, self.outFileSuffix = \
-            get_transect_info(self.transectGroup, self.config)
+        self.aggregationFunction, prefix, date = \
+            get_aggregator_by_name(self.transectGroup)
+        self.outFileSuffix = '{}{}'.format(prefix, date)
+        self.geojsonFileName = \
+            get_region_mask(self.config,
+                            '{}.geojson'.format(self.outFileSuffix))
         # }}}
 
     def make_transect_mask(self):
@@ -161,7 +124,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         or custom diagnostic directories, it will be created in the analysis
         output's masks directory.
         """
-        function = self.region['function']
+        function = self.aggregationFunction
         filename = self.geojsonFileName
         if not os.path.exists(filename):
             gf = GeometricFeatures()
