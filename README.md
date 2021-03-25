@@ -79,7 +79,7 @@ conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib>=3.0.2" \
     netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
     pillow cmocean progressbar2 requests setuptools shapely "cartopy>=0.18.0" \
     cartopy_offlinedata "geometric_features>=0.1.13" gsw "pyremap<0.1.0" \
-    "mpas_tools>=0.0.15" pandas python-dateutil six
+    "mpas_tools>=0.3.0" pandas python-dateutil six
 conda activate mpas-analysis
 ```
 

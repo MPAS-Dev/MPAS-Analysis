@@ -43,7 +43,7 @@ requirements:
     - geometric_features >=0.3.0
     - gsw
     - pyremap <0.1.0
-    - mpas_tools >=0.0.15
+    - mpas_tools >=0.3.0
     - pandas
     - python-dateutil
     - six
