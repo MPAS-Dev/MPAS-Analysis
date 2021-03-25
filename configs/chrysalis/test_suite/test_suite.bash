@@ -2,21 +2,23 @@
 
 set -e
 
-branch=$(git symbolic-ref --short HEAD)
+machine=chrysalis
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
 source ${HOME}/miniconda3/etc/profile.d/conda.sh
-
 conda activate base
+
+branch=$(git symbolic-ref --short HEAD)
+
 conda update -y conda conda-build
 rm -rf ${HOME}/miniconda3/conda-bld
+conda build ci/recipe
 
 # create the test conda envs
 for py in 3.7 3.8
 do
     env=test_mpas_analysis_py${py}
-    conda build -m ci/python${py}.yaml ci/recipe
     conda remove -y --all -n ${env}
     conda create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
         mock sphinx_rtd_theme "tabulate>=0.8.2" m2r pytest
@@ -26,6 +28,7 @@ do
 done
 
 # create another env for testing xarray master branch
+py=3.8
 env=test_mpas_analysis_xarray_master
 conda create --yes --quiet --name ${env} --use-local python=${py} \
     mpas-analysis pytest
@@ -47,12 +50,12 @@ cd ..
 conda deactivate
 
 # move to a subdirectory so we use the conda package, not the local package
-rm -rf chrysalis_test_suite
-mkdir chrysalis_test_suite
+rm -rf ${machine}_test_suite
+mkdir ${machine}_test_suite
 
-cd chrysalis_test_suite
+cd ${machine}_test_suite
 
-template_path=../configs/chrysalis/test_suite
+template_path=../configs/${machine}/test_suite
 
 for py in 3.7 3.8
 do
@@ -114,6 +117,14 @@ sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script.bash > ${job}
 
+run=mesh_rename
+config=${run}.cfg
+mkdir ${run}
+job=${run}/job_script.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script.bash > ${job}
+
 env=test_mpas_analysis_xarray_master
 run=xarray_master
 config=${run}.cfg
@@ -126,7 +137,7 @@ sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
 
 # submit the jobs
 for run in main_py3.7 wc_defaults no_ncclimo no_polar_regions QU480 \
-    xarray_master
+    mesh_rename xarray_master
 do
     cd ${run}
     sbatch job_script.bash

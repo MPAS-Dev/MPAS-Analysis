@@ -2,21 +2,23 @@
 
 set -e
 
-branch=$(git symbolic-ref --short HEAD)
+machine=anvil
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
 source ${HOME}/miniconda3/etc/profile.d/conda.sh
-
 conda activate base
+
+branch=$(git symbolic-ref --short HEAD)
+
 conda update -y conda conda-build
 rm -rf ${HOME}/miniconda3/conda-bld
+conda build ci/recipe
 
 # create the test conda envs
 for py in 3.7 3.8
 do
     env=test_mpas_analysis_py${py}
-    conda build -m ci/python${py}.yaml ci/recipe
     conda remove -y --all -n ${env}
     conda create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
         mock sphinx_rtd_theme "tabulate>=0.8.2" m2r pytest
@@ -26,6 +28,7 @@ do
 done
 
 # create another env for testing xarray master branch
+py=3.8
 env=test_mpas_analysis_xarray_master
 conda create --yes --quiet --name ${env} --use-local python=${py} \
     mpas-analysis pytest
@@ -47,12 +50,12 @@ cd ..
 conda deactivate
 
 # move to a subdirectory so we use the conda package, not the local package
-rm -rf anvil_test_suite
-mkdir anvil_test_suite
+rm -rf ${machine}_test_suite
+mkdir ${machine}_test_suite
 
-cd anvil_test_suite
+cd ${machine}_test_suite
 
-template_path=../configs/anvil/test_suite
+template_path=../configs/${machine}/test_suite
 
 for py in 3.7 3.8
 do
