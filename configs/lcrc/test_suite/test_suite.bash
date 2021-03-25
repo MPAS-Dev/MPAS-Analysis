@@ -2,7 +2,7 @@
 
 set -e
 
-machine=chrysalis
+machine=$1
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
@@ -43,9 +43,9 @@ conda activate test_mpas_analysis_py${py}
 cd docs
 make clean
 make html
-rm -rf /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${branch}/docs
-mkdir -p /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${branch}/
-cp -r _build/html /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${branch}/docs
+rm -rf /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/docs
+mkdir -p /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/
+cp -r _build/html /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/docs
 cd ..
 conda deactivate
 
@@ -55,7 +55,8 @@ mkdir ${machine}_test_suite
 
 cd ${machine}_test_suite
 
-template_path=../configs/${machine}/test_suite
+template_path=../configs/lcrc/test_suite
+job_template_path=${template_path}/${machine}
 
 for py in 3.7 3.8
 do
@@ -64,9 +65,9 @@ do
     config=${run}.cfg
     mkdir ${run}
     job=${run}/job_script.bash
-    sed "s/baseline/${branch}\/py${py}/g" ${template_path}/main.cfg > ${config}
+    sed "s/baseline/${machine}\/${branch}\/py${py}/g" ${template_path}/main.cfg > ${config}
     sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
-         ${template_path}/job_script.bash > ${job}
+         ${job_template_path}/job_script.bash > ${job}
 done
 
 
@@ -77,62 +78,62 @@ run=wc_defaults
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/no_polar_regions.cfg/${config}/g" -e "s/test_env/${env}/g" \
-     ${template_path}/job_script_no_polar_regions.bash > ${job}
+     ${job_template_path}/job_script_no_polar_regions.bash > ${job}
 
 run=no_ncclimo
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
-     ${template_path}/job_script.bash > ${job}
+     ${job_template_path}/job_script.bash > ${job}
 
 run=ctrl
 config=${run}.cfg
-sed "s/baseline/${branch}\/py${py}/g" ${template_path}/${config} > ${config}
+sed "s/baseline/${machine}\/${branch}\/py${py}/g" ${template_path}/${config} > ${config}
 
 run=main_vs_ctrl
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
-     ${template_path}/job_script.bash > ${job}
+     ${job_template_path}/job_script.bash > ${job}
 
 run=no_polar_regions
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
 sed -e "s/test_env/${env}/g" \
-     ${template_path}/job_script_no_polar_regions.bash > ${job}
+     ${job_template_path}/job_script_no_polar_regions.bash > ${job}
 
 run=QU480
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
-     ${template_path}/job_script.bash > ${job}
+     ${job_template_path}/job_script.bash > ${job}
 
 run=mesh_rename
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
-     ${template_path}/job_script.bash > ${job}
+     ${job_template_path}/job_script.bash > ${job}
 
 env=test_mpas_analysis_xarray_master
 run=xarray_master
 config=${run}.cfg
 mkdir ${run}
 job=${run}/job_script.bash
-sed "s/baseline/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
+sed "s/baseline/${machine}\/${branch}\/${run}/g" ${template_path}/main.cfg > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
-     ${template_path}/job_script.bash > ${job}
+     ${job_template_path}/job_script.bash > ${job}
 
 
 # submit the jobs

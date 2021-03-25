@@ -94,5 +94,6 @@ ENV/
  
 .DS_Store
 
-# Anvil test suite
+# LCRC test suites
 /anvil_test_suite/
+/chrysalis_test_suite/
