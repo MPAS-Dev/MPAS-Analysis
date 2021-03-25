@@ -15,6 +15,28 @@ import os
 import re
 
 
+install_requires = \
+    ['bottleneck',
+     'cartopy>=0.18.0',
+     'cmocean',
+     'dask',
+     'gsw',
+     'lxml',
+     'matplotlib >=3.0.2',
+     'netcdf4',
+     'numpy',
+     'pandas',
+     'pillow',
+     'progressbar2',
+     'pyproj',
+     'python-dateutil',
+     'requests',
+     'scipy',
+     'setuptools',
+     'shapely',
+     'six',
+     'xarray>=0.14.1']
+
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'mpas_analysis', '__init__.py')) as f:
     init_file = f.read()
@@ -31,7 +53,7 @@ setup(name='mpas_analysis',
       author_email='mpas-developers@googlegroups.com',
       license='BSD',
       classifiers=[
-          'Development Status :: 3 - Alpha',
+          'Development Status :: 5 - Production/Stable',
           'License :: OSI Approved :: BSD License',
           'Operating System :: OS Independent',
           'Intended Audience :: Science/Research',
@@ -40,6 +62,7 @@ setup(name='mpas_analysis',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
           'Topic :: Scientific/Engineering',
       ],
       packages=find_packages(),
@@ -52,10 +75,7 @@ setup(name='mpas_analysis',
                     'mpas_analysis.shared.plot':
                         ['ScientificColourMaps5/*/*.txt',
                          'SciVisColorColormaps/*.xml']},
-      install_requires=['numpy', 'scipy', 'matplotlib', 'netCDF4', 'xarray',
-                        'dask', 'lxml',
-                        'pyproj', 'pillow', 'cmocean', 'progressbar2',
-                        'requests', 'shapely', 'cartopy', 'geometric_features'],
+      install_requires=install_requires,
       entry_points={'console_scripts':
                     ['mpas_analysis = mpas_analysis.__main__:main',
                      'download_analysis_data = '
