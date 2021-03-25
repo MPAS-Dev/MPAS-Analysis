@@ -114,6 +114,14 @@ sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
 sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
      ${template_path}/job_script.bash > ${job}
 
+run=mesh_rename
+config=${run}.cfg
+mkdir ${run}
+job=${run}/job_script.bash
+sed "s/baseline/${branch}\/${run}/g" ${template_path}/${config} > ${config}
+sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
+     ${template_path}/job_script.bash > ${job}
+
 env=test_mpas_analysis_xarray_master
 run=xarray_master
 config=${run}.cfg
@@ -126,7 +134,7 @@ sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
 
 # submit the jobs
 for run in main_py3.7 wc_defaults no_ncclimo no_polar_regions QU480 \
-    xarray_master
+    mesh_rename xarray_master
 do
     cd ${run}
     sbatch job_script.bash
