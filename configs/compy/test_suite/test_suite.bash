@@ -2,7 +2,7 @@
 
 set -e
 
-machine=cori
+machine=compy
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
@@ -35,18 +35,6 @@ conda create --yes --quiet --name ${env} --use-local python=${py} \
 conda activate ${env}
 pip install git+https://github.com/pydata/xarray.git
 pytest
-conda deactivate
-
-# test building the docs
-py=3.8
-conda activate test_mpas_analysis_py${py}
-cd docs
-make clean
-make html
-rm -rf /global/cfs/cdirs/e3sm/www/xylar/analysis_testing/${machine}/${branch}/docs
-mkdir -p /global/cfs/cdirs/e3sm/www/xylar/analysis_testing/${machine}/${branch}/
-cp -r _build/html /global/cfs/cdirs/e3sm/www/xylar/analysis_testing/${machine}/${branch}/docs
-cd ..
 conda deactivate
 
 # move to a subdirectory so we use the conda package, not the local package
