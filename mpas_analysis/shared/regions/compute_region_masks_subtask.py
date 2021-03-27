@@ -42,7 +42,7 @@ def get_feature_list(geojsonFileName):
 
 
 def compute_mpas_region_masks(geojsonFileName, meshFileName, maskFileName,
-                              logger=None, processCount=1, 
+                              logger=None, processCount=1,
                               multiprocessingMethod='spawn', chunkSize=1000,
                               useMpasMaskCreator=False, dir=None):
     """
