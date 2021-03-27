@@ -91,8 +91,11 @@ ENV/
 
 # Rope project settings
 .ropeproject
- 
+
 .DS_Store
 
-# Anvil test suite
+# test suites
 /anvil_test_suite/
+/chrysalis_test_suite/
+/cori_test_suite/
+/compy_test_suite/
