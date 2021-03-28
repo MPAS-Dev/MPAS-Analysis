@@ -6,13 +6,13 @@ machine=$1
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
-source ${HOME}/miniconda3/etc/profile.d/conda.sh
+source ${HOME}/${machine}/miniconda3/etc/profile.d/conda.sh
 conda activate base
 
 branch=$(git symbolic-ref --short HEAD)
 
 conda update -y conda conda-build
-rm -rf ${HOME}/miniconda3/conda-bld
+rm -rf ${HOME}/${machine}/miniconda3/conda-bld
 conda build ci/recipe
 
 # create the test conda envs
