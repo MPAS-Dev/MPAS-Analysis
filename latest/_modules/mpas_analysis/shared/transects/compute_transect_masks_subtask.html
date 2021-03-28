@@ -190,7 +190,7 @@
 <span class="kn">import</span> <span class="nn">mpas_tools.conversion</span>
 
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">GeometricFeatures</span>
-<span class="kn">from</span> <span class="nn">geometric_features.aggregation.ocean</span> <span class="kn">import</span> <span class="n">transport</span>
+<span class="kn">from</span> <span class="nn">geometric_features.aggregation</span> <span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -199,51 +199,6 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
-
-
-<span class="k">def</span> <span class="nf">get_transect_info</span><span class="p">(</span><span class="n">transectGroup</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get a geojson mask file and the appropriate file suffix for the given</span>
-<span class="sd">    region group.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    transectGroup : str</span>
-<span class="sd">        The name of a region group to get mask features for, one of</span>
-<span class="sd">        &#39;Transport Transects&#39;</span>
-
-<span class="sd">    config :  mpas_analysis.configuration.MpasAnalysisConfigParser</span>
-<span class="sd">        Configuration options</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    transect : dict</span>
-<span class="sd">        A dictionary of information about the region</span>
-
-<span class="sd">    filename : str</span>
-<span class="sd">        The name of a geojson file with mask features</span>
-
-<span class="sd">    suffix : str</span>
-<span class="sd">        A suffix to use for mask files created with these features</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">transects</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;transportTransects&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;20200621&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">transport</span><span class="p">}}</span>
-
-    <span class="k">if</span> <span class="n">transectGroup</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">transects</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown transect group </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transectGroup</span><span class="p">))</span>
-
-    <span class="n">transect</span> <span class="o">=</span> <span class="n">transects</span><span class="p">[</span><span class="n">transectGroup</span><span class="p">]</span>
-
-    <span class="n">prefix</span> <span class="o">=</span> <span class="n">transect</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
-    <span class="n">date</span> <span class="o">=</span> <span class="n">transect</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
-
-    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">transect</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span>
 
 
 <div class="viewcode-block" id="compute_mpas_transect_masks"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks">[docs]</a><span class="k">def</span> <span class="nf">compute_mpas_transect_masks</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
@@ -270,6 +225,10 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    aggregationFunction : callable</span>
+<span class="sd">        An aggregation function returned by</span>
+<span class="sd">        :py:func:`geometric_features.aggregation.get_region_by_name()`</span>
+
 <span class="sd">    geojsonFileName : str</span>
 <span class="sd">        A geojson file, typically from the MPAS ``geometric_features``</span>
 <span class="sd">        repository, defining the shapes to be masked</span>
@@ -323,8 +282,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transectGroup</span> <span class="o">=</span> <span class="n">transectGroup</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span> <span class="o">=</span> \
-            <span class="n">get_transect_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transectGroup</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aggregationFunction</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> \
+            <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transectGroup</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span> <span class="o">=</span> \
+            <span class="n">get_region_mask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span><span class="p">))</span></div>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">make_transect_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -333,7 +296,7 @@
 <span class="sd">        or custom diagnostic directories, it will be created in the analysis</span>
 <span class="sd">        output&#39;s masks directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregationFunction</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
             <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>

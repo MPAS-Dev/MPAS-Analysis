@@ -41,7 +41,7 @@ Currently, seven analysis tasks (:ref:`task_climatologyMapAntarcticMelt`,
 :ref:`task_timeSeriesAntarcticMelt`, and :ref:`task_timeSeriesOceanRegions`)
 use masks that define regions in an MPAS mesh as part of their analysis.  Most
 of these region group are defined in
-:py:func:`mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()`.
+:py:func:`geometric_features.aggregation.get_aggregator_by_name()`.
 Several tasks (:ref:`task_hovmollerOceanRegions`,
 :ref:`task_oceanRegionalProfiles`, :ref:`task_regionalTSDiagrams`, and
 :ref:`task_timeSeriesOceanRegions`) can use any of the defined region groups.

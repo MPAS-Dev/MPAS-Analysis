@@ -113,7 +113,6 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.html">mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html">mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
@@ -210,9 +209,9 @@ features</p>
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of one of the supported region groups (see
-<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.get_region_info()</span></code>)</p></li>
-<li><p><strong>region</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of information about the region from
-<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.get_region_info()</span></code></p></li>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code>)</p></li>
+<li><p><strong>aggregationFunction</strong> (<em>callable</em>) – An aggregation function returned by
+<code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code></p></li>
 <li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
 repository, defining the shapes to be masked</p></li>
 <li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
@@ -237,7 +236,7 @@ Default is the MPAS mesh name</p></li>
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
 <li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of one of the supported region groups (see
-<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.get_region_info()</span></code>)</p></li>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code>)</p></li>
 <li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the mesh or grid, used as part of the mask file name.
 Default is the MPAS mesh name</p></li>
 </ul>

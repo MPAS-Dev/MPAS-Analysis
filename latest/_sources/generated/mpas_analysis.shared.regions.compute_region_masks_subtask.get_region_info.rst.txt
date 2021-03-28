@@ -1,6 +1,0 @@
-﻿mpas\_analysis.shared.regions.compute\_region\_masks\_subtask.get\_region\_info
-===============================================================================
-
-.. currentmodule:: mpas_analysis.shared.regions.compute_region_masks_subtask
-
-.. autofunction:: get_region_info
