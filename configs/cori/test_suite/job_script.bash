@@ -25,3 +25,4 @@ mpas_analysis --setup_only ../../configs/polarRegions.conf ../main.cfg
 mpas_analysis --purge ../../configs/polarRegions.conf ../main.cfg --verbose
 mpas_analysis --html_only ../../configs/polarRegions.conf ../main.cfg
 
+chmod -R ugo+rX /global/cfs/cdirs/e3sm/www/xylar/analysis_testing/
