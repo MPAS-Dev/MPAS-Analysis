@@ -64,9 +64,9 @@ mpasMeshName = oEC60to30v3
 # directory where analysis should be written
 baseDirectory = /path/to/output/directory
 
-# Anvil doesn't have direct access to a web portal, so output will need
-# to be copied elsewhere (e.g. NERSC web portal)
-htmlSubdirectory = html
+# Modify this path so your output ends up at the Compy web portal:
+# https://compy-dtn.pnl.gov/<username>/output/directory
+htmlSubdirectory = /compyfs/www/<username>/output/directory
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list
