@@ -342,6 +342,8 @@
             <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeTransport_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span>
                                                                 <span class="n">endYear</span><span class="p">))</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;subprocessCount&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">=</span> <span class="n">startYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">=</span> <span class="n">endYear</span>
 
@@ -469,8 +471,39 @@
         <span class="n">maskTransectNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">]]</span>
+        <span class="n">dsMesh</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
         <span class="n">dvEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">dvEdge</span>
         <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="n">transectIndices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">transectData</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Caching transect data...&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">transect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">transectIndex</span> <span class="o">=</span> <span class="n">maskTransectNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">transect</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;      Not found in masks. Skipping.&#39;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">transectIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transectIndex</span><span class="p">)</span>
+
+            <span class="c1"># select the current transect</span>
+            <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="p">[</span><span class="n">transectIndex</span><span class="p">])</span>
+            <span class="n">dsMask</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeGlobalIDs</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgeIndices</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">edgeIndices</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMaskSigns</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+
+            <span class="n">dv</span> <span class="o">=</span> <span class="n">dvEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+            <span class="n">coe</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+            <span class="n">transectData</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;edgeIndices&#39;</span><span class="p">:</span> <span class="n">edgeIndices</span><span class="p">,</span>
+                                 <span class="s1">&#39;edgeSign&#39;</span><span class="p">:</span> <span class="n">edgeSign</span><span class="p">,</span>
+                                 <span class="s1">&#39;dv&#39;</span><span class="p">:</span> <span class="n">dv</span><span class="p">,</span>
+                                 <span class="s1">&#39;coe&#39;</span><span class="p">:</span> <span class="n">coe</span><span class="p">,</span>
+                                 <span class="s1">&#39;transect&#39;</span><span class="p">:</span> <span class="n">transect</span><span class="p">})</span>
 
         <span class="n">timeDatasets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing transport...&#39;</span><span class="p">)</span>
@@ -482,31 +515,17 @@
                 <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
                 <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                 <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+            <span class="n">dsTimeSlice</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
             <span class="n">transectDatasets</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">transectIndices</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">transect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="p">))</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">transectIndex</span> <span class="o">=</span> <span class="n">maskTransectNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">transect</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;      Not found in masks. &#39;</span>
-                                        <span class="s1">&#39;Skipping.&#39;</span><span class="p">)</span>
-                    <span class="k">continue</span>
-                <span class="n">transectIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transectIndex</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">transectData</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;transect&#39;</span><span class="p">]))</span>
 
-                <span class="c1"># select the current transect</span>
-                <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="p">[</span><span class="n">transectIndex</span><span class="p">])</span>
-                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeGlobalIDs</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgeIndices</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">edgeIndices</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
-                                                <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-                <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMaskSigns</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
-                    <span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
-
+                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;edgeIndices&#39;</span><span class="p">]</span>
+                <span class="n">coe</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;coe&#39;</span><span class="p">]</span>
+                <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;edgeSign&#39;</span><span class="p">]</span>
+                <span class="n">dv</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dv&#39;</span><span class="p">]</span>
                 <span class="n">dsIn</span> <span class="o">=</span> <span class="n">dsTimeSlice</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
-
-                <span class="n">dv</span> <span class="o">=</span> <span class="n">dvEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
-                <span class="n">coe</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
 
                 <span class="c1"># work on data from simulations</span>
                 <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_normalTransportVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
@@ -541,9 +560,9 @@
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">timeDatasets</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
         <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;transectNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
             <span class="n">nTransects</span><span class="o">=</span><span class="n">transectIndices</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span> <span class="n">years</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span> <span class="n">years</span><span class="p">)</span>
         <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;years&#39;</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span> <span class="n">months</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span> <span class="n">months</span><span class="p">)</span>
         <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;months&#39;</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
