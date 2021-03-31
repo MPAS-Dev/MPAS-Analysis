@@ -96,6 +96,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Execute</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#parallel-tasks">Parallel Tasks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parallelism-in-nco">Parallelism in NCO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-mask-creation">Parallel Mask Creation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
@@ -224,6 +225,11 @@ control how tasks are executed within an MPAS-Analysis run:</p>
 <span class="c1"># the number of MPI tasks to use in creating mapping files (1 means tasks run in</span>
 <span class="c1"># serial, the default)</span>
 <span class="n">mapMpiTasks</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
+<span class="c1"># &quot;spawn&quot;).  We have found that &quot;spawn&quot; is the only one that works in python</span>
+<span class="c1"># 3.7 on Anvil so this is the default</span>
+<span class="n">multiprocessingMethod</span> <span class="o">=</span> <span class="n">spawn</span>
 </pre></div>
 </div>
 <div class="section" id="parallel-tasks">
@@ -266,6 +272,22 @@ threads on multiple nodes.</p>
 it is important to be aware of the policies regarding using shared resources.
 On login nodes, <code class="docutils literal notranslate"><span class="pre">bck</span></code> may only be appropriate with <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> set to a
 small number and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> mode may not work at all.</p>
+</div>
+<div class="section" id="parallel-mask-creation">
+<h2>Parallel Mask Creation<a class="headerlink" href="#parallel-mask-creation" title="Permalink to this headline">¶</a></h2>
+<p>Tasks that involve <a class="reference internal" href="regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> can generate the masks for each
+region in the group on the fly.  This is done with the mask generation
+command-line tools form MPAS-Tools (see
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#mask-creation-with-pthon-multiprocessing">Mask Creation with Python Multiprocessing</a>),
+which support 3 modes of parallelism: “spawn”, “fork” and “forkserver”. For
+technical details on these modes, see
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods">Contexts and start methods</a>.
+We have found that “spawn” seems to be the most reliable option on Anvil under
+python 3.7 and 3.8.  Any of these methods works well under python 3.8 but only
+“spawn” was reliable under python 3.7.  Therefore, we use “spawn” as the
+default.</p>
+<p>As we gain more experience with this setting, we may update config files for
+specific machines to have different defaults.</p>
 </div>
 </div>
 
