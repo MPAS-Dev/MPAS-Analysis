@@ -68,6 +68,11 @@ ncclimoThreads = 12
 # serial, the default)
 mapMpiTasks = 1
 
+# Multiprocessing method used in python mask creation ("forkserver", "fork" or
+# "spawn").  We have found that "spawn" is the only one that works in python
+# 3.7 on Anvil so this is the default
+multiprocessingMethod = spawn
+
 
 [diagnostics]
 ## config options related to observations, mapping files and region files used

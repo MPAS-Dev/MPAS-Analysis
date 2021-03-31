@@ -26,6 +26,11 @@ control how tasks are executed within an MPAS-Analysis run::
   # serial, the default)
   mapMpiTasks = 1
 
+  # Multiprocessing method used in python mask creation ("forkserver", "fork" or
+  # "spawn").  We have found that "spawn" is the only one that works in python
+  # 3.7 on Anvil so this is the default
+  multiprocessingMethod = spawn
+
 Parallel Tasks
 --------------
 
@@ -70,5 +75,25 @@ Again, when running MPAS-Analysis on login nodes of supercomputing facilities,
 it is important to be aware of the policies regarding using shared resources.
 On login nodes, ``bck`` may only be appropriate with ``ncclimoThreads`` set to a
 small number and ``mpi`` mode may not work at all.
+
+Parallel Mask Creation
+----------------------
+
+Tasks that involve :ref:`config_region_groups` can generate the masks for each
+region in the group on the fly.  This is done with the mask generation
+command-line tools form MPAS-Tools (see 
+`Mask Creation with Python Multiprocessing <http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#mask-creation-with-pthon-multiprocessing>`_),
+which support 3 modes of parallelism: "spawn", "fork" and "forkserver". For
+technical details on these modes, see
+`Contexts and start methods <https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods>`_.
+We have found that "spawn" seems to be the most reliable option on Anvil under
+python 3.7 and 3.8.  Any of these methods works well under python 3.8 but only
+"spawn" was reliable under python 3.7.  Therefore, we use "spawn" as the
+default.
+
+As we gain more experience with this setting, we may update config files for
+specific machines to have different defaults.
+
+
 
 .. _`NetCDF Operators (NCO) package`: http://nco.sourceforge.net/nco.html

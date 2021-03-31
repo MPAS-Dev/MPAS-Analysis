@@ -194,7 +194,11 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-    'xarray': ('http://xarray.pydata.org/en/stable/', None)}
+    'xarray': ('http://xarray.pydata.org/en/stable/', None),
+    'geometric_features':
+        ('http://mpas-dev.github.io/geometric_features/stable/', None),
+    'mpas_tools':
+        ('http://mpas-dev.github.io/MPAS-Tools/stable/', None)}
 
 
 # Build some custom rst files

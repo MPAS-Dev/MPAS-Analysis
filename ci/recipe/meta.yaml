@@ -22,39 +22,41 @@ requirements:
     - pip
   run:
     - python >=3.7
-    - numpy
-    - scipy
-    - matplotlib-base >=3.0.2
-    - netcdf4
-    - xarray >=0.14.1
-    - dask
     - bottleneck
-    - lxml
-    - nco >=4.8.1
-    - pillow
-    - cmocean
-    - progressbar2
-    - requests
-    - pyproj
-    - setuptools
-    - shapely
     - cartopy >=0.18.0
     - cartopy_offlinedata
+    - cmocean
+    - dask
     - geometric_features >=0.3.0
     - gsw
-    - pyremap <0.1.0
-    - mpas_tools >=0.0.15
+    - lxml
+    - matplotlib-base >=3.0.2
+    - mpas_tools >=0.3.0
+    - nco >=4.8.1
+    - netcdf4
+    - numpy
     - pandas
+    - pillow
+    - progressbar2
+    - pyproj
+    - pyremap <0.1.0
     - python-dateutil
+    - requests
+    - scipy
+    - setuptools
+    - shapely
     - six
+    - xarray >=0.14.1
 
 test:
   requires:
     - pytest
+    - pip
   imports:
     - mpas_analysis
     - pytest
   commands:
+    - pip check
     - pytest --pyargs mpas_analysis
     - mpas_analysis --help
     - download_analysis_data --help

@@ -14,11 +14,11 @@ from __future__ import absolute_import, division, print_function, \
 
 import os
 import xarray as xr
-from geometric_features import read_feature_collection
-import mpas_tools.conversion
 
-from geometric_features import GeometricFeatures
+from geometric_features import read_feature_collection, GeometricFeatures
 from geometric_features.aggregation import get_aggregator_by_name
+import mpas_tools.conversion
+from mpas_tools.logging import check_call
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -30,7 +30,10 @@ from mpas_analysis.shared.regions import get_feature_list
 
 
 def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
-                                logger=None, dir=None):
+                                logger=None, processCount=1, chunkSize=1000,
+                                subdivisionThreshold=10e3,
+                                useMpasMaskCreator=True,
+                                dir=None):
     """
     Build a transect mask file from the given MPAS mesh and geojson file \
     defining a set of transects.
@@ -38,12 +41,26 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
     if os.path.exists(maskFileName):
         return
 
-    dsMesh = xr.open_dataset(meshFileName)
-    fcMask = read_feature_collection(geojsonFileName)
-    dsMask = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
-                                        logger=logger, dir=dir)
+    # For now, we need to use mpas_tools.conversion.mask() because
+    # compute_mpas_transect_masks doesn't produce edge sign, needed for
+    # transport transects
+    if useMpasMaskCreator:
+        dsMesh = xr.open_dataset(meshFileName)
+        fcMask = read_feature_collection(geojsonFileName)
+        dsMask = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
+                                            logger=logger, dir=dir)
 
-    write_netcdf(dsMask, maskFileName)
+        write_netcdf(dsMask, maskFileName)
+    else:
+        args = ['compute_mpas_transect_masks',
+                '-m', meshFileName,
+                '-g', geojsonFileName,
+                '-o', maskFileName,
+                '-t', 'cell',
+                '-s', '{}'.format(subdivisionThreshold),
+                '--chunk_size', '{}'.format(chunkSize),
+                '--process_count', '{}'.format(processCount)]
+        check_call(args, logger=logger)
 
 
 class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
@@ -71,7 +88,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, transectGroup, subprocessCount=1):
+    def __init__(self, parentTask, transectGroup, subprocessCount=None):
         # {{{
         """
         Construct the analysis task and adds it as a subtask of the
@@ -88,7 +105,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             :py:func:`mpas_analysis.shared.transects.get_transect_info()`
 
         subprocessCount : int, optional
-            The number of processes that can be used to make the mask
+            The number of processes that can be used to make the mask, default
+            is as many processes as allowed
         """
         # Authors
         # -------
@@ -104,7 +122,12 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             componentName=parentTask.componentName,
             tags=[])
 
-        self.subprocessCount = subprocessCount
+        if subprocessCount is None:
+            self.subprocessCount = self.config.getWithDefault(
+                'execute', 'parallelTaskCount', default=1)
+        else:
+            self.subprocessCount = subprocessCount
+
         self.obsFileName = None
         self.maskSubdirectory = None
         self.maskFileName = None
@@ -220,7 +243,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
 
         compute_mpas_transect_masks(
             self.geojsonFileName, self.obsFileName, self.maskFileName,
-            logger=self.logger, dir=self.maskSubdirectory)
+            logger=self.logger, processCount=self.subprocessCount,
+            dir=self.maskSubdirectory)
 
     # }}}
 
