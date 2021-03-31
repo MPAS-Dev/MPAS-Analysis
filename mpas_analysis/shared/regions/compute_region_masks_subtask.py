@@ -199,6 +199,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
         self.aggregationFunction, prefix, date = get_aggregator_by_name(
             self.regionGroup)
+        self.date = date
         self.outFileSuffix = '{}{}'.format(prefix, date)
         self.geojsonFileName = \
             get_region_mask(self.config,

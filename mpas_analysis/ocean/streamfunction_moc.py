@@ -18,8 +18,8 @@ import xarray as xr
 import numpy as np
 import netCDF4
 import os
-from geometric_features import GeometricFeatures
-from mpas_tools.ocean.moc import make_moc_basins_and_transects
+from mpas_tools.ocean.moc import add_moc_southern_boundary_transects
+from mpas_tools.io import write_netcdf
 
 from mpas_analysis.shared.constants.constants import m3ps_to_Sv
 from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
@@ -28,7 +28,7 @@ from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month, get_region_mask
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset\
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
@@ -37,6 +37,8 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.climatology.climatology import \
     get_climatology_op_directory
+
+from mpas_analysis.shared.regions import ComputeRegionMasksSubtask
 
 
 class StreamfunctionMOC(AnalysisTask):  # {{{
@@ -84,8 +86,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         self.add_subtask(maskSubtask)
 
         computeClimSubtask = ComputeMOCClimatologySubtask(
-            self, mpasClimatologyTask)
-        computeClimSubtask.run_after(maskSubtask)
+            self, mpasClimatologyTask, maskSubtask)
         plotClimSubtask = PlotMOCClimatologySubtask(self, controlConfig)
         plotClimSubtask.run_after(computeClimSubtask)
 
@@ -109,10 +110,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         # run one subtask per year
         for year in years:
             computeTimeSeriesSubtask = ComputeMOCTimeSeriesSubtask(
-                self, startYear=year, endYear=year)
-            computeTimeSeriesSubtask.run_after(maskSubtask)
+                self, startYear=year, endYear=year, maskSubtask=maskSubtask)
             combineTimeSeriesSubtask.run_after(computeTimeSeriesSubtask)
-
 
         plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, controlConfig)
         plotTimeSeriesSubtask.run_after(combineTimeSeriesSubtask)
@@ -121,7 +120,7 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     # }}}
 
 
-class ComputeMOCMasksSubtask(AnalysisTask):  # {{{
+class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
     """
     An analysis subtasks for computing cell masks and southern transects for
     MOC regions
@@ -146,21 +145,45 @@ class ComputeMOCMasksSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        # call the constructor from the base class (AnalysisTask)
-        super(ComputeMOCMasksSubtask, self).__init__(
-            config=parentTask.config, taskName=parentTask.taskName,
-            subtaskName='computeRegionMasks',
-            componentName=parentTask.componentName, tags=[])
+        config = parentTask.config
+        meshName = config.get('input', 'mpasMeshName')
+        regionGroup = 'MOC Basins'
 
-        meshName = self.config.get('input', 'mpasMeshName')
+        subprocessCount = config.getWithDefault('execute',
+                                                'parallelTaskCount',
+                                                default=1)
 
-        self.geojsonFileName = get_region_mask(parentTask.config,
-                                               'moc_basins.geojson')
-        self.maskFileName = get_region_mask(
-            self.config, '{}_moc_masks.nc'.format(meshName))
+        # call the constructor from the base class (ComputeRegionMasksSubtask)
+        super().__init__(
+            parentTask, regionGroup=regionGroup, meshName=meshName,
+            subprocessCount=subprocessCount,
+            useMpasMaskCreator=False)
+
+        self.maskAndTransectFileName = None
+
+        # }}}
+
+    def setup_and_check(self):  # {{{
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+
+        Raises
+        ------
+        IOError :
+            If a restart file is not available from which to read mesh
+            information or if no history files are available from which to
+            compute the climatology in the desired time range.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        # first, call setup_and_check from the parent class
+        super().setup_and_check()
+
         self.maskAndTransectFileName = get_region_mask(
-            self.config, '{}_moc_masks_and_transects.nc'.format(meshName))
-
+            self.config, '{}_mocBasinsAndTransects{}.nc'.format(
+                self.meshName, self.date))
         # }}}
 
     def run_task(self):  # {{{
@@ -171,26 +194,22 @@ class ComputeMOCMasksSubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        if os.path.exists(self.maskAndTransectFileName):
-            return
+        # call ComputeRegionMasksSubtask.run_task() first
+        super().run_task()
 
         config = self.config
 
-        # make the geojson file
-        gf = GeometricFeatures()
+        if os.path.exists(self.maskAndTransectFileName):
+            return
 
-        mesh_filename = self.runStreams.readpath('restart')[0]
+        dsMesh = xr.open_dataset(self.obsFileName)
+        dsMask = xr.open_dataset(self.maskFileName)
 
-        maskSubdirectory = build_config_full_path(config, 'output',
-                                                  'maskSubdirectory')
-        make_directories(maskSubdirectory)
+        dsMasksAndTransects = add_moc_southern_boundary_transects(
+            dsMask, dsMesh, logger=self.logger)
 
-        make_moc_basins_and_transects(gf, mesh_filename,
-                                      self.maskAndTransectFileName,
-                                      geojson_filename=self.geojsonFileName,
-                                      mask_filename=self.maskFileName,
-                                      logger=self.logger,
-                                      dir=maskSubdirectory)
+        write_netcdf(dsMasksAndTransects, self.maskAndTransectFileName,
+                     char_dim_name='StrLen')
         # }}}
 # }}}
 
@@ -211,7 +230,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, mpasClimatologyTask):  # {{{
+    def __init__(self, parentTask, mpasClimatologyTask, maskSubtask):  # {{{
         """
         Construct the analysis task.
 
@@ -222,6 +241,10 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
+
+        maskSubtask : mpas_analysis.ocean.streamfunction_moc.ComputeMOCMasksSubtask
+            The subtask for computing MOC region masks that runs before this
+            subtask
         """
         # Authors
         # -------
@@ -237,6 +260,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.run_after(mpasClimatologyTask)
+        self.maskSubtask = maskSubtask
+        self.run_after(maskSubtask)
 
         parentTask.add_subtask(self)
         # }}}
@@ -472,8 +497,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         # Load basin region related variables and save them to dictionary
         mpasMeshName = config.get('input', 'mpasMeshName')
 
-        dictRegion = _build_region_mask_dict(config, regionNames, mpasMeshName,
-                                             self.logger)
+        masksFileName = self.maskSubtask.maskAndTransectFileName
+        dictRegion = _build_region_mask_dict(
+            masksFileName, regionNames, mpasMeshName, self.logger)
 
         # Add Global regionCellMask=1 everywhere to make the algorithm
         # for the global moc similar to that of the regional moc
@@ -810,14 +836,24 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYear, endYear):  # {{{
+    def __init__(self, parentTask, startYear, endYear, maskSubtask):  # {{{
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        parentTask : ``StreamfunctionMOC``
+        parentTask : mpas_analysis.ocean.streamfunction_moc.StreamfunctionMOC
             The main task of which this is a subtask
+
+        startYear : int
+            The start year of the time series
+
+        endYear : int
+            The end year of the time series
+
+        maskSubtask : mpas_analysis.ocean.streamfunction_moc.ComputeMOCMasksSubtask
+            The subtask for computing MOC region masks that runs before this
+            subtask
         """
         # Authors
         # -------
@@ -831,6 +867,9 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             tags=parentTask.tags,
             subtaskName='computeMOCTimeSeries_{:04d}-{:04d}'.format(
                 startYear, endYear))
+
+        self.maskSubtask = maskSubtask
+        self.run_after(maskSubtask)
 
         parentTask.add_subtask(self)
         self.startYear = startYear
@@ -1075,8 +1114,10 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
-        dictRegion = _build_region_mask_dict(config, ['Atlantic'],
-                                             mpasMeshName, self.logger)
+
+        masksFileName = self.maskSubtask.maskAndTransectFileName
+        dictRegion = _build_region_mask_dict(
+            masksFileName, ['Atlantic'], mpasMeshName, self.logger)
         dictRegion = dictRegion['Atlantic']
 
         latBinSize = config.getfloat('streamfunctionMOCAtlantic',
@@ -1482,10 +1523,7 @@ def _load_mesh(runStreams):  # {{{
     # }}}
 
 
-def _build_region_mask_dict(config, regionNames, mpasMeshName, logger):  # {{{
-
-    regionMaskFile = get_region_mask(
-        config, '{}_moc_masks_and_transects.nc'.format(mpasMeshName))
+def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):  # {{{
 
     if not os.path.exists(regionMaskFile):
         raise IOError('Regional masking file {} for MOC calculation '
