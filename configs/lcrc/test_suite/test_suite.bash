@@ -6,13 +6,13 @@ machine=$1
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
-source ${HOME}/miniconda3/etc/profile.d/conda.sh
+source ${HOME}/${machine}/miniconda3/etc/profile.d/conda.sh
 conda activate base
 
 branch=$(git symbolic-ref --short HEAD)
 
 conda update -y conda conda-build
-rm -rf ${HOME}/miniconda3/conda-bld
+rm -rf ${HOME}/${machine}/miniconda3/conda-bld
 conda build ci/recipe
 
 # create the test conda envs
@@ -43,9 +43,9 @@ conda activate test_mpas_analysis_py${py}
 cd docs
 make clean
 make html
-rm -rf /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/docs
-mkdir -p /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/
-cp -r _build/html /lcrc/group/acme/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/docs
+rm -rf /lcrc/group/e3sm/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/docs
+mkdir -p /lcrc/group/e3sm/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/
+cp -r _build/html /lcrc/group/e3sm/public_html/diagnostic_output/ac.xylar/analysis_testing/${machine}/${branch}/docs
 cd ..
 conda deactivate
 

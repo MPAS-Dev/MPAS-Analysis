@@ -2,7 +2,7 @@
 
 set -e
 
-machine=cori
+machine=compy
 
 branch=$(git symbolic-ref --short HEAD)
 
