@@ -1316,6 +1316,10 @@ movingAverageMonths = 1
 
 # yearStrideXTicks = 1
 
+# The number of parallel tasks occupied by each timeSeriesTransport task.
+# Analysis may run faster for large meshes when this value is set to 2 or 3
+subprocessCount = 1
+
 
 [regionalTSDiagrams]
 ## options related to plotting T/S diagrams of ocean regions

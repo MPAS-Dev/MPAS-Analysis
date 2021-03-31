@@ -170,6 +170,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             subtaskName='computeTransport_{:04d}-{:04d}'.format(startYear,
                                                                 endYear))
 
+        self.subprocessCount = self.config.getint('timeSeriesTransport',
+                                                  'subprocessCount')
         self.startYear = startYear
         self.endYear = endYear
 
@@ -297,8 +299,39 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         maskTransectNames = decode_strings(dsTransectMask.transectNames)
 
         dsMesh = xarray.open_dataset(self.restartFileName)
+        dsMesh = dsMesh[['dvEdge', 'cellsOnEdge']]
+        dsMesh.load()
         dvEdge = dsMesh.dvEdge
         cellsOnEdge = dsMesh.cellsOnEdge - 1
+
+        transectIndices = []
+        transectData = []
+        self.logger.info('  Caching transect data...')
+        for transect in self.transectsToPlot:
+            self.logger.info('    transect: {}'.format(transect))
+            try:
+                transectIndex = maskTransectNames.index(transect)
+            except ValueError:
+                self.logger.warning('      Not found in masks. Skipping.')
+                continue
+            transectIndices.append(transectIndex)
+
+            # select the current transect
+            dsMask = dsTransectMask.isel(nTransects=[transectIndex])
+            dsMask.load()
+            edgeIndices = dsMask.transectEdgeGlobalIDs - 1
+            edgeIndices = edgeIndices.where(edgeIndices >= 0,
+                                            drop=True).astype(int)
+            edgeSign = dsMask.transectEdgeMaskSigns.isel(
+                nEdges=edgeIndices)
+
+            dv = dvEdge.isel(nEdges=edgeIndices)
+            coe = cellsOnEdge.isel(nEdges=edgeIndices)
+            transectData.append({'edgeIndices': edgeIndices,
+                                 'edgeSign': edgeSign,
+                                 'dv': dv,
+                                 'coe': coe,
+                                 'transect': transect})
 
         timeDatasets = []
         self.logger.info('  Computing transport...')
@@ -310,31 +343,17 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
                 variableList=variableList,
                 startDate=startDate,
                 endDate=endDate)
+            dsTimeSlice.load()
 
             transectDatasets = []
-            transectIndices = []
-            for transect in self.transectsToPlot:
-                self.logger.info('    transect: {}'.format(transect))
-                try:
-                    transectIndex = maskTransectNames.index(transect)
-                except ValueError:
-                    self.logger.warning('      Not found in masks. '
-                                        'Skipping.')
-                    continue
-                transectIndices.append(transectIndex)
+            for data in transectData:
+                self.logger.info('    transect: {}'.format(data['transect']))
 
-                # select the current transect
-                dsMask = dsTransectMask.isel(nTransects=[transectIndex])
-                edgeIndices = dsMask.transectEdgeGlobalIDs - 1
-                edgeIndices = edgeIndices.where(edgeIndices >= 0,
-                                                drop=True).astype(int)
-                edgeSign = dsMask.transectEdgeMaskSigns.isel(
-                    nEdges=edgeIndices)
-
+                edgeIndices = data['edgeIndices']
+                coe = data['coe']
+                edgeSign = data['edgeSign']
+                dv = data['dv']
                 dsIn = dsTimeSlice.isel(nEdges=edgeIndices)
-
-                dv = dvEdge.isel(nEdges=edgeIndices)
-                coe = cellsOnEdge.isel(nEdges=edgeIndices)
 
                 # work on data from simulations
                 if 'timeMonthly_avg_normalTransportVelocity' in dsIn:
@@ -369,9 +388,9 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         dsOut = xarray.concat(timeDatasets, 'Time')
         dsOut.coords['transectNames'] = dsTransectMask.transectNames.isel(
             nTransects=transectIndices)
-        dsOut.coords['year'] = (('Time'), years)
+        dsOut.coords['year'] = (('Time',), years)
         dsOut['year'].attrs['units'] = 'years'
-        dsOut.coords['month'] = (('Time'), months)
+        dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
         write_netcdf(dsOut, outFileName)
 
