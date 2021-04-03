@@ -319,9 +319,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             # select the current transect
             dsMask = dsTransectMask.isel(nTransects=[transectIndex])
             dsMask.load()
-            edgeIndices = dsMask.transectEdgeGlobalIDs - 1
-            edgeIndices = edgeIndices.where(edgeIndices >= 0,
-                                            drop=True).astype(int)
+            edgeIndices = numpy.flatnonzero(dsMask.transectEdgeMasks.values)
+            edgeIndices = edgeIndices[edgeIndices >= 0].astype(int)
             edgeSign = dsMask.transectEdgeMaskSigns.isel(
                 nEdges=edgeIndices)
 
@@ -372,7 +371,7 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
 
                 # convert from m^3/s to Sv
                 transport = (constants.m3ps_to_Sv * edgeTransport.sum(
-                    dim=['maxEdgesInTransect', 'nVertLevels']))
+                    dim=['nEdges', 'nVertLevels']))
 
                 dsOut = xarray.Dataset()
                 dsOut['transport'] = transport
