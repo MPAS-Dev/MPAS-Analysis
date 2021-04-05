@@ -429,8 +429,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         dsMask = xr.open_dataset(self.maskSubtask.maskAndTransectFileName)
         regionIndices = {}
         for iRegion in range(dsMask.sizes['nRegions']):
-            regionInFile = dsMask.regionNames[iRegion].values.astype('U')
-            regionIndices[regionInFile] = iRegion
+            regionInFile = str(dsMask.regionNames[iRegion].values.astype('U'))
+            region = regionInFile.replace('_MOC', '')
+            regionIndices[region] = iRegion
 
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
@@ -1540,8 +1541,9 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
 
     regionIndices = {}
     for iRegion in range(dsMask.sizes['nRegions']):
-        regionInFile = dsMask.regionNames[iRegion].values.astype('U')
-        regionIndices[regionInFile] = iRegion
+        regionInFile = str(dsMask.regionNames[iRegion].values.astype('U'))
+        region = regionInFile.replace('_MOC', '')
+        regionIndices[region] = iRegion
 
     dictRegion = {}
     for region in regionNames:
@@ -1554,7 +1556,7 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
         transectEdgeGlobalIDs = \
             dsMask.transectEdgeGlobalIDs.isel(nTransects=iRegion).values
         regionCellMask = \
-            dsMask.regionCellMasks.isel(nTransects=iRegion).values
+            dsMask.regionCellMasks.isel(nRegions=iRegion).values
 
         indRegion = np.where(regionCellMask == 1)
         dictRegion[region] = {
