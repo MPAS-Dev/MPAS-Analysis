@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>oceanRegionalProfiles &mdash; MPAS-Analysis latest documentation</title>
@@ -217,7 +218,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="oceanregionalprofiles">
+  <section id="oceanregionalprofiles">
 <span id="task-oceanregionalprofiles"></span><h1>oceanRegionalProfiles<a class="headerlink" href="#oceanregionalprofiles" title="Permalink to this headline">¶</a></h1>
 <p>An analysis task for plotting depth profiles of temperature, salinity,
 potential density, etc. averaged over regions and in time. The plots also
@@ -227,7 +228,7 @@ include a measure of variability (the standard deviation in space and time).</p>
 <span class="n">tags</span><span class="p">:</span> <span class="n">profiles</span><span class="p">,</span> <span class="n">climatology</span>
 </pre></div>
 </div>
-<div class="section" id="configuration-options">
+<section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[oceanRegionalProfiles]</span>
@@ -278,7 +279,7 @@ include a measure of variability (the standard deviation in space and time).</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">[oceanRegionalProfiles]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,
 one or more of the <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> defined in
-<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.</p>
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.4.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.</p>
 <p>For each region group, there is a corresponding section
 <code class="docutils literal notranslate"><span class="pre">[profiles&lt;RegionGroup&gt;]</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;RegionGroup&gt;</span></code> is the name of the region
 group with spaces removed.  In this section, the <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used
@@ -303,12 +304,12 @@ The default is the full range.</p>
 </ul>
 </dd>
 </dl>
-</div>
-<div class="section" id="example-result">
+</section>
+<section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/ocean_profile.png"><img alt="../_images/ocean_profile.png" class="align-center" src="../_images/ocean_profile.png" style="width: 500px;" /></a>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

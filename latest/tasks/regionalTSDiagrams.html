@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>regionalTSDiagrams &mdash; MPAS-Analysis latest documentation</title>
@@ -223,7 +224,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="regionaltsdiagrams">
+  <section id="regionaltsdiagrams">
 <span id="task-regionaltsdiagrams"></span><h1>regionalTSDiagrams<a class="headerlink" href="#regionaltsdiagrams" title="Permalink to this headline">¶</a></h1>
 <p>An analysis task for plotting T-S (potential temperature vs. salinity)
 diagrams of climatologies in ocean regions.</p>
@@ -232,7 +233,7 @@ diagrams of climatologies in ocean regions.</p>
 <span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span> <span class="n">publicObs</span>
 </pre></div>
 </div>
-<div class="section" id="configuration-options">
+<section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[regionalTSDiagrams]</span>
@@ -339,8 +340,8 @@ diagrams of climatologies in ocean regions.</p>
 <span class="na">obs</span> <span class="o">=</span> <span class="s">[&#39;WOA18&#39;]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="region-groups">
+</section>
+<section id="region-groups">
 <h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
 <p>A list of groups of regions, each of which will get its own gallery on
 the resulting analysis web page.  See <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for
@@ -348,8 +349,8 @@ more information on the available region groups.  For each region group, there
 should be a corresponding <code class="docutils literal notranslate"><span class="pre">TSDiagramsFor&lt;RegionGroup&gt;</span></code> section of the config
 file, with any spaces removed from the name of the region group.  By default,
 the only region group is <code class="docutils literal notranslate"><span class="pre">'Ocean</span> <span class="pre">Basins'</span></code>.</p>
-</div>
-<div class="section" id="region-names">
+</section>
+<section id="region-names">
 <h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the
 regions in the geojson file.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these
@@ -369,8 +370,8 @@ are:</p>
  <span class="na">&quot;Global Ocean 65N to 65S&quot;, &quot;Global Ocean 15S to 15N&quot;]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="diagram-type">
+</section>
+<section id="diagram-type">
 <h2>Diagram Type<a class="headerlink" href="#diagram-type" title="Permalink to this headline">¶</a></h2>
 <p>By default, a “volumetric” diagram is produced, where the volume of ocean water
 in a region is binned in T and S space, and the volume of each bin is plotted.
@@ -387,8 +388,8 @@ colormap is is between zero and the maximum bin volume for <code class="docutils
 between the minimum non-zero bin volume and the max for <code class="docutils literal notranslate"><span class="pre">log</span></code>.  The min/max
 bin volume is taken from the first panel containing the “main” MPAS-Ocean plot,
 and the same color map range is used for all panels.</p>
-</div>
-<div class="section" id="bins-and-contour-intervals">
+</section>
+<section id="bins-and-contour-intervals">
 <h2>Bins and Contour Intervals<a class="headerlink" href="#bins-and-contour-intervals" title="Permalink to this headline">¶</a></h2>
 <p>If <code class="docutils literal notranslate"><span class="pre">diagramType</span> <span class="pre">=</span> <span class="pre">volumetric</span></code>, the number and spacing of potential
 temperature and salinity bins is set in <code class="docutils literal notranslate"><span class="pre">Tbins</span></code> and <code class="docutils literal notranslate"><span class="pre">Sbins</span></code>.  For
@@ -398,16 +399,16 @@ in T/S space.  <code class="docutils literal notranslate"><span class="pre">rhoI
 density.  <code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code> are the minimum and maximum depths (positive
 up) of the ocean region.  If available (e.g. for “Antarctic Regions”), the
 default is to read them from geojson file.</p>
-</div>
-<div class="section" id="observations">
+</section>
+<section id="observations">
 <h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">obs</span></code> option contains a list of the names of observational data sets.
 Currently, “SOSE” and “WOA18” are the only data sets available, but we
 anticipate adding several additional data sets in the near future.</p>
 <p><a class="reference internal" href="../obs/sose.html#sose"><span class="std std-ref">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</span></a>
 <a class="reference internal" href="../obs/woa18_t_s.html#woa18-t-s"><span class="std std-ref">WOA18 Temperature and Salinity Climatology</span></a></p>
-</div>
-<div class="section" id="other-config-options">
+</section>
+<section id="other-config-options">
 <h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>For more details on the remaining config options, see</dt><dd><ul class="simple">
@@ -418,12 +419,12 @@ anticipate adding several additional data sets in the near future.</p>
 </ul>
 </dd>
 </dl>
-</div>
-<div class="section" id="example-result">
+</section>
+<section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/so_ts_diag.png"><img alt="../_images/so_ts_diag.png" class="align-center" src="../_images/so_ts_diag.png" style="width: 500px;" /></a>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

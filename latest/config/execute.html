@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Execute &mdash; MPAS-Analysis latest documentation</title>
@@ -202,7 +203,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="execute">
+  <section id="execute">
 <span id="config-execute"></span><h1>Execute<a class="headerlink" href="#execute" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section of a configuration file contains options used to
 control how tasks are executed within an MPAS-Analysis run:</p>
@@ -232,7 +233,7 @@ control how tasks are executed within an MPAS-Analysis run:</p>
 <span class="n">multiprocessingMethod</span> <span class="o">=</span> <span class="n">spawn</span>
 </pre></div>
 </div>
-<div class="section" id="parallel-tasks">
+<section id="parallel-tasks">
 <h2>Parallel Tasks<a class="headerlink" href="#parallel-tasks" title="Permalink to this headline">¶</a></h2>
 <p>By default, MPAS-Analysis runs one task at a time, displaying any logging
 output directly to the screen, rather than storing it in log files.  However,
@@ -250,8 +251,8 @@ may not be desirable to launch one task per core on a node with limited memory.<
 the login nodes of supercomputing facilities.  Check with the policies of your
 center to see if this is permitted and make sure not to run with a large number
 of parallel tasks so as to overwhelm the shared resource.</p>
-</div>
-<div class="section" id="parallelism-in-nco">
+</section>
+<section id="parallelism-in-nco">
 <h2>Parallelism in NCO<a class="headerlink" href="#parallelism-in-nco" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> command from the <a class="reference external" href="http://nco.sourceforge.net/nco.html">NetCDF Operators (NCO) package</a> is used
 internally in MPAS-Analysis. This command supports three options for
@@ -272,8 +273,8 @@ threads on multiple nodes.</p>
 it is important to be aware of the policies regarding using shared resources.
 On login nodes, <code class="docutils literal notranslate"><span class="pre">bck</span></code> may only be appropriate with <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> set to a
 small number and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> mode may not work at all.</p>
-</div>
-<div class="section" id="parallel-mask-creation">
+</section>
+<section id="parallel-mask-creation">
 <h2>Parallel Mask Creation<a class="headerlink" href="#parallel-mask-creation" title="Permalink to this headline">¶</a></h2>
 <p>Tasks that involve <a class="reference internal" href="regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> can generate the masks for each
 region in the group on the fly.  This is done with the mask generation
@@ -288,8 +289,8 @@ python 3.7 and 3.8.  Any of these methods works well under python 3.8 but only
 default.</p>
 <p>As we gain more experience with this setting, we may update config files for
 specific machines to have different defaults.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
