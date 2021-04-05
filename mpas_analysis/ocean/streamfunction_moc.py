@@ -426,6 +426,12 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
              'timeMonthly_avg_mocStreamvalLatAndDepthRegion':
                  'avgMocStreamfunRegional'})
 
+        dsMask = xr.open_dataset(self.maskSubtask.maskAndTransectFileName)
+        regionIndices = {}
+        for iRegion in range(dsMask.sizes['nRegions']):
+            regionInFile = dsMask.regionNames[iRegion].values.astype('U')
+            regionIndices[regionInFile] = iRegion
+
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
         depth = refZMid
@@ -436,10 +442,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
             if region == 'Global':
                 mocTop = annualClimatology.avgMocStreamfunGlobal.values
             else:
-                # hard-wire region=0 (Atlantic) for now
-                indRegion = 0
+                indRegion = regionIndices[region]
                 mocVar = annualClimatology.avgMocStreamfunRegional
-                mocTop = mocVar[indRegion, :, :].values
+                mocTop = mocVar.isel(nRegions=indRegion).values
             # Store computed MOC to dictionary
             lat[region] = binBoundaryMocStreamfunction
             moc[region] = mocTop
