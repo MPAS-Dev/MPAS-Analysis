@@ -181,8 +181,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             for index, regionName in enumerate(regionNames):
 
-                fullSuffix = sectionSuffix + '_' + regionName[0].lower() + \
-                    regionName[1:].replace(' ', '')
+                fullSuffix = sectionSuffix + '_' + regionName.replace(' ', '')
 
                 obsSubtasks = {}
                 for obsName in obsList:
@@ -278,7 +277,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         regionGroup = self.regionGroup
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
-        timeSeriesName = sectionSuffix[0].lower() + sectionSuffix[1:]
+        timeSeriesName = sectionSuffix
         sectionName = 'timeSeries{}'.format(sectionSuffix)
 
         outputDirectory = '{}/{}/'.format(
@@ -506,7 +505,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         regionGroup = self.regionGroup
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
-        timeSeriesName = sectionSuffix[0].lower() + sectionSuffix[1:]
+        timeSeriesName = sectionSuffix
         sectionName = 'timeSeries{}'.format(sectionSuffix)
 
         outputDirectory = '{}/{}/'.format(
@@ -697,8 +696,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         regionGroup = self.regionGroup
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
 
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',
@@ -781,10 +779,9 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         self.regionGroup = regionGroup
         self.regionName = regionName
         self.obsDict = obsDict
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
 
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',
                                    'timeseriesSubdirectory'),
@@ -811,8 +808,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         config = self.config
 
         regionGroup = self.regionGroup
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
 
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
@@ -1040,7 +1036,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         self.regionIndex = regionIndex
         self.sectionName = sectionName
         self.controlConfig = controlConfig
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
         self.obsSubtasks = obsSubtasks
         self.geojsonFileName = geojsonFileName
 
@@ -1107,8 +1103,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
         regionGroup = self.regionGroup
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
 
         inFileName = '{}/{}/{}_{:04d}-{:04d}.nc'.format(
             baseDirectory, timeSeriesName, timeSeriesName, startYear, endYear)
@@ -1140,8 +1135,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         self.logger.info('  Make plots...')
 
-        groupLink = self.regionGroup[0].lower() + \
-            self.regionGroup[1:].replace(' ', '')
+        groupLink = self.regionGroup.replace(' ', '')
 
         for var in self.variables:
             varName = var['name']
