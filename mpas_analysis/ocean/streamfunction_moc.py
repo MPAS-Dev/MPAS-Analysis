@@ -1529,22 +1529,27 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
     if not os.path.exists(regionMaskFile):
         raise IOError('Regional masking file {} for MOC calculation '
                       'does not exist'.format(regionMaskFile))
-    iRegion = 0
+
+    dsMask = xr.open_dataset(regionMaskFile)
+    dsMask.load()
+
+    regionIndices = {}
+    for iRegion in range(dsMask.sizes['nRegions']):
+        regionInFile = dsMask.regionNames[iRegion].values.astype('U')
+        regionIndices[regionInFile] = iRegion
+
     dictRegion = {}
     for region in regionNames:
         logger.info('\n  Reading region and transect mask for '
                     '{}...'.format(region))
-        ncFileRegional = netCDF4.Dataset(regionMaskFile, mode='r')
-        maxEdgesInTransect = \
-            ncFileRegional.dimensions['maxEdgesInTransect'].size
+        iRegion = regionIndices[region]
+        maxEdgesInTransect = dsMask.sizes['maxEdgesInTransect']
         transectEdgeMaskSigns = \
-            ncFileRegional.variables['transectEdgeMaskSigns'][:, iRegion]
+            dsMask.transectEdgeMaskSigns.isel(nTransects=iRegion).values
         transectEdgeGlobalIDs = \
-            ncFileRegional.variables['transectEdgeGlobalIDs'][iRegion, :]
+            dsMask.transectEdgeGlobalIDs.isel(nTransects=iRegion).values
         regionCellMask = \
-            ncFileRegional.variables['regionCellMasks'][:, iRegion]
-        ncFileRegional.close()
-        iRegion += 1
+            dsMask.regionCellMasks.isel(nTransects=iRegion).values
 
         indRegion = np.where(regionCellMask == 1)
         dictRegion[region] = {
