@@ -14,7 +14,6 @@ from __future__ import absolute_import, division, print_function, \
 
 import pkg_resources
 from os import makedirs
-from shutil import copyfile
 from lxml import etree
 from collections import OrderedDict
 import subprocess
@@ -22,7 +21,7 @@ import os
 import sys
 
 import mpas_analysis
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, copyfile
 
 
 def generate_html(config, analyses, controlConfig, customConfigFiles):
