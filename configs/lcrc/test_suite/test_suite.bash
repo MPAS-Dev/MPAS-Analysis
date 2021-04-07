@@ -4,6 +4,9 @@ set -e
 
 machine=$1
 
+main_py=3.9
+alt_py=3.8
+
 export HDF5_USE_FILE_LOCKING=FALSE
 
 source ${HOME}/${machine}/miniconda3/etc/profile.d/conda.sh
@@ -16,7 +19,7 @@ rm -rf ${HOME}/${machine}/miniconda3/conda-bld
 conda build ci/recipe
 
 # create the test conda envs
-for py in 3.7 3.8
+for py in ${main_py} ${alt_py}
 do
     env=test_mpas_analysis_py${py}
     conda remove -y --all -n ${env}
@@ -28,7 +31,7 @@ do
 done
 
 # create another env for testing xarray master branch
-py=3.8
+py=${main_py}
 env=test_mpas_analysis_xarray_master
 conda create --yes --quiet --name ${env} --use-local python=${py} \
     mpas-analysis pytest
@@ -38,7 +41,7 @@ pytest
 conda deactivate
 
 # test building the docs
-py=3.8
+py=${main_py}
 conda activate test_mpas_analysis_py${py}
 cd docs
 make clean
@@ -58,7 +61,7 @@ cd ${machine}_test_suite
 template_path=../configs/lcrc/test_suite
 job_template_path=${template_path}/${machine}
 
-for py in 3.7 3.8
+for py in ${main_py} ${alt_py}
 do
     env=test_mpas_analysis_py${py}
     run=main_py${py}
@@ -71,7 +74,7 @@ do
 done
 
 
-py=3.8
+py=${main_py}
 env=test_mpas_analysis_py${py}
 
 run=wc_defaults
@@ -137,21 +140,21 @@ sed -e "s/main.cfg/${config}/g" -e "s/test_env/${env}/g" \
 
 
 # submit the jobs
-for run in main_py3.7 wc_defaults no_ncclimo no_polar_regions QU480 \
-    mesh_rename xarray_master
-do
-    cd ${run}
-    sbatch job_script.bash
-    cd ..
-done
-
-cd main_py3.8
+cd main_py${main_py}
 RES=$(sbatch job_script.bash)
 cd ..
 
 cd main_vs_ctrl
 sbatch --dependency=afterok:${RES##* } job_script.bash
 cd ..
+
+for run in main_py${alt_py} wc_defaults no_ncclimo no_polar_regions QU480 \
+    mesh_rename xarray_master
+do
+    cd ${run}
+    sbatch job_script.bash
+    cd ..
+done
 
 cd ..
 
