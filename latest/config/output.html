@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Output &mdash; MPAS-Analysis latest documentation</title>
@@ -202,7 +201,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="output">
+  <div class="section" id="output">
 <span id="config-output"></span><h1>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[output]</span></code> section of a configuration file contains options used to
 specify the location of the “main” simulation:</p>
@@ -252,7 +251,7 @@ specify the location of the “main” simulation:</p>
 <span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="output-directories">
+<div class="section" id="output-directories">
 <h2>Output Directories<a class="headerlink" href="#output-directories" title="Permalink to this headline">¶</a></h2>
 <p>The output directories are specified through a base directory and a set of
 subdirectories within that base.  You will always need to set <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code>
@@ -264,8 +263,8 @@ a public space such as a web portal for display on the web.  Note:
 MPAS-Analysis does not change the HTML output to be world readable so you
 will need to do this manually after a run has completed (or inside of a job
 script) to see the results on a public web page.</p>
-</section>
-<section id="generate-option">
+</div>
+<div class="section" id="generate-option">
 <span id="config-generate"></span><h2>Generate Option<a class="headerlink" href="#generate-option" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">generate</span></code> option is used to control which tasks run.  The simplest
 choice is:</p>
@@ -340,8 +339,8 @@ be overridden by specifying the <code class="docutils literal notranslate"><span
 <code class="docutils literal notranslate"><span class="pre">config.my_run</span></code> with a directive to generate only tasks that support the
 publicly available observations, skipping those using climate indices (e.g.
 El Niño 3.4) and also skipping <code class="docutils literal notranslate"><span class="pre">climatologyMapSST</span></code>.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
