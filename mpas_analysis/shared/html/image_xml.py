@@ -14,14 +14,13 @@ from __future__ import absolute_import, division, print_function, \
 
 import os
 import sys
-import shutil
 import socket
 import subprocess
 import datetime
 from lxml import etree
 from PIL import Image
 
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, copyfile
 
 
 def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
@@ -129,8 +128,8 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
 
         plotsDirectory = build_config_full_path(config, 'output',
                                                 'plotsSubdirectory')
-        shutil.copyfile('{}/{}'.format(plotsDirectory, imageFileName),
-                        '{}/{}'.format(componentDirectory, imageFileName))
+        copyfile('{}/{}'.format(plotsDirectory, imageFileName),
+                 '{}/{}'.format(componentDirectory, imageFileName))
 
         imageSize, thumbnailSize, orientation = _generate_thumbnails(
             imageFileName, componentDirectory)
