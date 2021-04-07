@@ -1523,7 +1523,8 @@ def _load_mesh(runStreams):  # {{{
     # }}}
 
 
-def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):  # {{{
+def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
+    # {{{
 
     if not os.path.exists(regionMaskFile):
         raise IOError('Regional masking file {} for MOC calculation '
