@@ -734,7 +734,7 @@ contourLevelsDifference = np.arange(-5., 6., 2.)
 ## options related to plotting the Global MOC
 
 # Minium value of latitudinal extent for MOC streamfunction plot
-latBinMin = -80.
+latBinMin = -35.
 # Maximum value of latitudinal extent for MOC streamfunction plot
 latBinMax = 70.
 # Size of latitude bins over which MOC streamfunction is integrated
