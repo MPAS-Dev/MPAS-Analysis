@@ -9,6 +9,8 @@
 #SBATCH --error=mpas_analysis.e%j
 #SBATCH -L cscratch1,SCRATCH,project
 
+set -e
+
 cd $SLURM_SUBMIT_DIR
 export OMP_NUM_THREADS=1
 

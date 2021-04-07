@@ -7,6 +7,8 @@
 #SBATCH --output=mpas_analysis.o%j
 #SBATCH --error=mpas_analysis.e%j
 
+set -e
+
 cd $SLURM_SUBMIT_DIR
 export OMP_NUM_THREADS=1
 
