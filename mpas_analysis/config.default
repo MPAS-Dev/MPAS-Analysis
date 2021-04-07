@@ -731,7 +731,7 @@ colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
 contourLevelsDifference = np.arange(-5., 6., 2.)
 
 [streamfunctionMOCIndoPacific]
-## options related to plotting the Global MOC
+## options related to plotting the IndoPacific MOC
 
 # Minium value of latitudinal extent for MOC streamfunction plot
 latBinMin = -35.
