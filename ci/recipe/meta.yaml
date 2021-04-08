@@ -27,11 +27,11 @@ requirements:
     - cartopy_offlinedata
     - cmocean
     - dask
-    - geometric_features >=0.3.0
+    - geometric_features >=0.4.0
     - gsw
     - lxml
     - matplotlib-base >=3.0.2
-    - mpas_tools >=0.3.0
+    - mpas_tools >=0.5.1
     - nco >=4.8.1
     - netcdf4
     - numpy
