@@ -371,6 +371,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregationFunction</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_aggregator_by_name</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span> <span class="o">=</span> \
             <span class="n">get_region_mask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
