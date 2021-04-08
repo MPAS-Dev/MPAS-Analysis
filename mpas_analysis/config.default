@@ -746,7 +746,7 @@ colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
 # contour line levels (use [] for automatic contour selection, 'none' for no
