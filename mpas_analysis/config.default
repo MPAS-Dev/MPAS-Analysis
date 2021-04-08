@@ -731,10 +731,10 @@ colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
 contourLevelsDifference = np.arange(-5., 6., 2.)
 
 [streamfunctionMOCIndoPacific]
-## options related to plotting the Global MOC
+## options related to plotting the IndoPacific MOC
 
 # Minium value of latitudinal extent for MOC streamfunction plot
-latBinMin = -80.
+latBinMin = -35.
 # Maximum value of latitudinal extent for MOC streamfunction plot
 latBinMax = 70.
 # Size of latitude bins over which MOC streamfunction is integrated
@@ -746,7 +746,7 @@ colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
 colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
 # contour line levels (use [] for automatic contour selection, 'none' for no

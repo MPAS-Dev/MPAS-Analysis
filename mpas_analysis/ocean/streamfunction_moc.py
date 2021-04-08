@@ -426,6 +426,13 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
              'timeMonthly_avg_mocStreamvalLatAndDepthRegion':
                  'avgMocStreamfunRegional'})
 
+        dsMask = xr.open_dataset(self.maskSubtask.maskAndTransectFileName)
+        regionIndices = {}
+        for iRegion in range(dsMask.sizes['nRegions']):
+            regionInFile = str(dsMask.regionNames[iRegion].values.astype('U'))
+            region = regionInFile.replace('_MOC', '')
+            regionIndices[region] = iRegion
+
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
         depth = refZMid
@@ -436,10 +443,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
             if region == 'Global':
                 mocTop = annualClimatology.avgMocStreamfunGlobal.values
             else:
-                # hard-wire region=0 (Atlantic) for now
-                indRegion = 0
+                indRegion = regionIndices[region]
                 mocVar = annualClimatology.avgMocStreamfunRegional
-                mocTop = mocVar[indRegion, :, :].values
+                mocTop = mocVar.isel(nRegions=indRegion).values
             # Store computed MOC to dictionary
             lat[region] = binBoundaryMocStreamfunction
             moc[region] = mocTop
@@ -1529,22 +1535,28 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
     if not os.path.exists(regionMaskFile):
         raise IOError('Regional masking file {} for MOC calculation '
                       'does not exist'.format(regionMaskFile))
-    iRegion = 0
+
+    dsMask = xr.open_dataset(regionMaskFile)
+    dsMask.load()
+
+    regionIndices = {}
+    for iRegion in range(dsMask.sizes['nRegions']):
+        regionInFile = str(dsMask.regionNames[iRegion].values.astype('U'))
+        region = regionInFile.replace('_MOC', '')
+        regionIndices[region] = iRegion
+
     dictRegion = {}
     for region in regionNames:
         logger.info('\n  Reading region and transect mask for '
                     '{}...'.format(region))
-        ncFileRegional = netCDF4.Dataset(regionMaskFile, mode='r')
-        maxEdgesInTransect = \
-            ncFileRegional.dimensions['maxEdgesInTransect'].size
+        iRegion = regionIndices[region]
+        maxEdgesInTransect = dsMask.sizes['maxEdgesInTransect']
         transectEdgeMaskSigns = \
-            ncFileRegional.variables['transectEdgeMaskSigns'][:, iRegion]
+            dsMask.transectEdgeMaskSigns.isel(nTransects=iRegion).values
         transectEdgeGlobalIDs = \
-            ncFileRegional.variables['transectEdgeGlobalIDs'][iRegion, :]
+            dsMask.transectEdgeGlobalIDs.isel(nTransects=iRegion).values
         regionCellMask = \
-            ncFileRegional.variables['regionCellMasks'][:, iRegion]
-        ncFileRegional.close()
-        iRegion += 1
+            dsMask.regionCellMasks.isel(nRegions=iRegion).values
 
         indRegion = np.where(regionCellMask == 1)
         dictRegion[region] = {
