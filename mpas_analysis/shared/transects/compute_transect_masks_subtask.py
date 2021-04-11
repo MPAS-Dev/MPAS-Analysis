@@ -32,7 +32,7 @@ from mpas_analysis.shared.regions import get_feature_list
 def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
                                 logger=None, processCount=1, chunkSize=1000,
                                 subdivisionThreshold=10e3,
-                                useMpasMaskCreator=True,
+                                useMpasMaskCreator=False,
                                 dir=None):
     """
     Build a transect mask file from the given MPAS mesh and geojson file \
@@ -56,10 +56,11 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
                 '-m', meshFileName,
                 '-g', geojsonFileName,
                 '-o', maskFileName,
-                '-t', 'cell',
+                '-t', 'edge',
                 '-s', '{}'.format(subdivisionThreshold),
                 '--chunk_size', '{}'.format(chunkSize),
-                '--process_count', '{}'.format(processCount)]
+                '--process_count', '{}'.format(processCount),
+                '--add_edge_sign']
         check_call(args, logger=logger)
 
 

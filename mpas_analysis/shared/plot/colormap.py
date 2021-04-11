@@ -456,8 +456,9 @@ def _read_xml_colormap(xmlFile, mapName):
 
 
 def _register_colormap_and_reverse(mapName, cmap):
-    plt.register_cmap(mapName, cmap)
-    plt.register_cmap('{}_r'.format(mapName), cmap.reversed())
+    if mapName not in plt.colormaps():
+        plt.register_cmap(mapName, cmap)
+        plt.register_cmap('{}_r'.format(mapName), cmap.reversed())
 
 
 def _plot_color_gradients():
