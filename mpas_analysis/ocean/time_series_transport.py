@@ -577,7 +577,9 @@ class PlotTransportSubtask(AnalysisTask):
                    'Fram Strait': [-4.7, 0.7],
                    'Davis Strait': [-1.6, -3.6],
                    'Barents Sea Opening': [1.4, 2.6],
-                   'Nares Strait': [-1.8, 0.2]}
+                   'Nares Strait': [-1.8, 0.2],
+                   'Denmark Strait': None,
+                   'Iceland-Faroe-Scotland': None}
 
         config = self.config
         calendar = self.calendar
