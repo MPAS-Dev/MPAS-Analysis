@@ -204,7 +204,7 @@
 <div class="viewcode-block" id="compute_mpas_transect_masks"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks">[docs]</a><span class="k">def</span> <span class="nf">compute_mpas_transect_masks</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
                                 <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">processCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">chunkSize</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
                                 <span class="n">subdivisionThreshold</span><span class="o">=</span><span class="mf">10e3</span><span class="p">,</span>
-                                <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                 <span class="nb">dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a transect mask file from the given MPAS mesh and geojson file \</span>
@@ -228,10 +228,11 @@
                 <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span>
                 <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojsonFileName</span><span class="p">,</span>
                 <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
-                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subdivisionThreshold</span><span class="p">),</span>
                 <span class="s1">&#39;--chunk_size&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunkSize</span><span class="p">),</span>
-                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">processCount</span><span class="p">)]</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">processCount</span><span class="p">),</span>
+                <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">]</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 

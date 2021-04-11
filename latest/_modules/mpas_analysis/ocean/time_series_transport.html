@@ -491,9 +491,8 @@
             <span class="c1"># select the current transect</span>
             <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="p">[</span><span class="n">transectIndex</span><span class="p">])</span>
             <span class="n">dsMask</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-            <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeGlobalIDs</span> <span class="o">-</span> <span class="mi">1</span>
-            <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgeIndices</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">edgeIndices</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
-                                            <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMasks</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgeIndices</span><span class="p">[</span><span class="n">edgeIndices</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
             <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMaskSigns</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
                 <span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
 
@@ -544,7 +543,7 @@
 
                 <span class="c1"># convert from m^3/s to Sv</span>
                 <span class="n">transport</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">m3ps_to_Sv</span> <span class="o">*</span> <span class="n">edgeTransport</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                    <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;maxEdgesInTransect&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
 
                 <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
                 <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;transport&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transport</span>

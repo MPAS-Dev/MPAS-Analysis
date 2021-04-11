@@ -628,8 +628,9 @@
 
 
 <span class="k">def</span> <span class="nf">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_r&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mapName</span><span class="p">),</span> <span class="n">cmap</span><span class="o">.</span><span class="n">reversed</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">mapName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">colormaps</span><span class="p">():</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_r&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mapName</span><span class="p">),</span> <span class="n">cmap</span><span class="o">.</span><span class="n">reversed</span><span class="p">())</span>
 
 
 <span class="k">def</span> <span class="nf">_plot_color_gradients</span><span class="p">():</span>
