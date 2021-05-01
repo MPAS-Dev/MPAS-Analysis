@@ -32,8 +32,7 @@ if [ ! -f $run_config_file ]; then
     exit 1
 fi
 
-# if using the mpas_analysis conda package instead of the git repo, remove
-# "python -m"
 
-srun -N 1 -n 1 python -m mpas_analysis $run_config_file
+
+srun -N 1 -n 1 mpas_analysis $run_config_file
 

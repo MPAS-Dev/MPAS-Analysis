@@ -40,52 +40,19 @@ conda create -n mpas-analysis mpas-analysis
 conda activate mpas-analysis
 ```
 
-To use the latest version for developers, you will need to set up a conda
-environment with the following packages:
-
- * python >= 3.7
- * numpy
- * scipy
- * matplotlib >= 3.0.2
- * netCDF4
- * xarray >= 0.14.1
- * dask
- * bottleneck
- * lxml
- * nco >= 4.8.1
- * pyproj
- * pillow
- * cmocean
- * progressbar2
- * requests
- * setuptools
- * shapely
- * cartopy >= 0.18.0
- * cartopy\_offlinedata
- * geometric\_features >= 0.4.0
- * gsw
- * pyremap < 0.1.0
- * mpas\_tools >= 0.5.1
- * pandas
- * python-dateutil
- * six
-
-
-These can be installed via the conda command:
-```
-conda config --add channels conda-forge
-conda config --set channel_priority strict
-conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib>=3.0.2" \
-    netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
-    pillow cmocean progressbar2 requests setuptools shapely "cartopy>=0.18.0" \
-    cartopy_offlinedata "geometric_features>=0.4.0" gsw "pyremap<0.1.0" \
-    "mpas_tools>=0.5.1" pandas python-dateutil six
-conda activate mpas-analysis
-```
-
-Then, get the code from:
+To use the latest version for developers, get the code from:
  [https://github.com/MPAS-Dev/MPAS-Analysis](https://github.com/MPAS-Dev/MPAS-Analysis)
 
+Then, you will need to set up a conda environment:
+
+``` bash
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda create -n mpas_dev
+conda activate mpas_dev
+conda env update -n mpas_dev -f ./dev_environment.yaml
+python -m pip install -e .
+```
 
 ## Download analysis input data
 
@@ -94,12 +61,6 @@ necessary to MPAS-Analysis by running:
 
 ```
 download_analysis_data -o /path/to/mpas_analysis/diagnostics
-```
-
-If you are using the git repository, run:
-
-```
-./download_analysis_data.py -o /path/to/mpas_analysis/diagnostics
 ```
 
 where `/path/to/mpas_analysis/diagnostics` is the main folder that will contain
@@ -124,11 +85,6 @@ by running:
 mpas_analysis --list
 ```
 
-If using a git repository, run:
-```
-python -m mpas_analysis --list
-```
-
 This lists all tasks and their tags.  These can be used in the `generate`
 command-line option or config option.  See `mpas_analysis/config.default`
 for more details.
@@ -144,8 +100,7 @@ for more details.
      from GitHub:
      [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default).
   3. If you installed the `mpas-analysis` package, run:
-     `mpas_analysis config.myrun`.  If using a git checkout, run:
-     `python -m mpas_analysis config.myrun`.  This will read the configuration
+     `mpas_analysis config.myrun`.  This will read the configuration
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
   4. If you want to run a subset of the analysis, you can either set the
@@ -210,12 +165,6 @@ a package, run:
 
 ```
 mpas_analysis --purge <config.file>
-```
-
-If you are running in the repo, use:
-
-```
-python -m mpas_analysis --purge <config.file>
 ```
 
 All of the subdirectories listed in `output` will be deleted along with the

@@ -44,7 +44,7 @@ fi
 
 # For an E3SM cryosphere run, include configs/polarRegions.conf, or exclude
 # this extra config file for defalut parameters
-srun -N 1 -n 1 python -m mpas_analysis configs/polarRegions.conf $run_config_file
+srun -N 1 -n 1 mpas_analysis configs/polarRegions.conf $run_config_file
 
 # If running from the conda package, use this instead:
 #srun -N 1 -n 1 mpas_analysis $run_config_file
