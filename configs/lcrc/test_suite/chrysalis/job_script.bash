@@ -17,9 +17,9 @@ export HDF5_USE_FILE_LOCKING=FALSE
 echo env: test_env
 echo configs: ../../configs/polarRegions.conf ../main.cfg
 
-srun -N 1 -n 1 python -m mpas_analysis --list
-srun -N 1 -n 1 python -m mpas_analysis --plot_colormaps
-srun -N 1 -n 1 python -m mpas_analysis --setup_only ../../configs/polarRegions.conf ../main.cfg
-srun -N 1 -n 1 python -m mpas_analysis --purge ../../configs/polarRegions.conf ../main.cfg --verbose
-srun -N 1 -n 1 python -m mpas_analysis --html_only ../../configs/polarRegions.conf ../main.cfg
+srun -N 1 -n 1 mpas_analysis --list
+srun -N 1 -n 1 mpas_analysis --plot_colormaps
+srun -N 1 -n 1 mpas_analysis --setup_only ../../configs/polarRegions.conf ../main.cfg
+srun -N 1 -n 1 mpas_analysis --purge ../../configs/polarRegions.conf ../main.cfg --verbose
+srun -N 1 -n 1 mpas_analysis --html_only ../../configs/polarRegions.conf ../main.cfg
 

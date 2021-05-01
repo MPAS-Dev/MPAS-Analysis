@@ -33,7 +33,7 @@ export HDF5_USE_FILE_LOCKING=FALSE
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
 # command to run a serial job on a single node on edison
-command="python -m mpas_analysis"
+command="mpas_analysis"
 # to use the verison of mpas_analysis from a conda package instead, use:
 #command="mpas_analysis"
 # one parallel task per node by default

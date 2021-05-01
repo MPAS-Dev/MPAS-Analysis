@@ -52,8 +52,5 @@ ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-# if using the mpas_analysis conda package instead of the git repo, remove
-# "python -m"
-
-python -m mpas_analysis $run_config_file $job_config_file
+mpas_analysis $run_config_file $job_config_file
 
