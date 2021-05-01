@@ -1,0 +1,40 @@
+name: mpas_analysis_dev
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Base
+  - python >=3.7
+  - bottleneck
+  - cartopy >=0.18.0
+  - cartopy_offlinedata
+  - cmocean
+  - dask
+  - geometric_features >=0.4.0
+  - gsw
+  - lxml
+  - matplotlib-base >=3.0.2
+  - mpas_tools >=0.5.1
+  - nco >=4.8.1
+  - netcdf4
+  - numpy
+  - pandas
+  - pillow
+  - progressbar2
+  - pyproj
+  - pyremap <0.1.0
+  - python-dateutil
+  - requests
+  - scipy
+  - setuptools
+  - shapely
+  - six
+  - xarray >=0.14.1
+  # Development
+  - pip
+  # Documentation
+  - mock
+  - m2r
+  - sphinx
+  - sphinx_rtd_theme
+  - tabulate
