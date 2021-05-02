@@ -206,12 +206,29 @@ used those components.</p>
 <p>Then, you will need to set up a conda environment:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
 conda config --set channel_priority strict
-conda create -n mpas_dev
+conda create -y -n mpas_dev --file dev-spec.txt
 conda activate mpas_dev
-conda env update -n mpas_dev -f ./dev_environment.yaml
 python -m pip install -e .
 </pre></div>
 </div>
+<p>If you are developing another conda package at the same time (this is common
+for MPAS-Tools or geometric_features), you should first comment out the other
+package in <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code>.  Then, you can install both packages in the same
+development environment, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt <span class="se">\</span>
+    -- analysis/MPAS-Analysis/dev-spec.txt
+conda activate mpas_dev
+<span class="nb">cd</span> tools/MPAS-Tools/conda_package
+python -m pip install -e .
+<span class="nb">cd</span> ../../../analysis/MPAS-Analysis
+python -m pip install -e .
+</pre></div>
+</div>
+<p>Obviously, the paths to the repos may be different in your local clones.  With
+the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment as defined above, you can make changes to both
+<code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> and <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> packages in their respective branches, and
+these changes will be reflected when refer to the packages or call their
+respective entry points (command-line tools).</p>
 </div>
 <div class="section" id="download-analysis-input-data">
 <h2>Download analysis input data<a class="headerlink" href="#download-analysis-input-data" title="Permalink to this headline">¶</a></h2>

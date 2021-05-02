@@ -34,10 +34,30 @@ Then, you will need to set up a conda environment:
 
    conda config --add channels conda-forge
    conda config --set channel_priority strict
-   conda create -n mpas_dev
+   conda create -y -n mpas_dev --file dev-spec.txt
    conda activate mpas_dev
-   conda env update -n mpas_dev -f ./dev_environment.yaml
    python -m pip install -e .
+
+If you are developing another conda package at the same time (this is common
+for MPAS-Tools or geometric_features), you should first comment out the other
+package in ``dev-spec.txt``.  Then, you can install both packages in the same
+development environment, e.g.:
+
+.. code-block:: bash
+
+   conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
+       -- analysis/MPAS-Analysis/dev-spec.txt
+   conda activate mpas_dev
+   cd tools/MPAS-Tools/conda_package
+   python -m pip install -e .
+   cd ../../../analysis/MPAS-Analysis
+   python -m pip install -e .
+
+Obviously, the paths to the repos may be different in your local clones.  With
+the ``mpas_dev`` environment as defined above, you can make changes to both
+``mpas_tools`` and ``mpas-analysis`` packages in their respective branches, and
+these changes will be reflected when refer to the packages or call their
+respective entry points (command-line tools).
 
 Download analysis input data
 ----------------------------
