@@ -618,7 +618,7 @@ class PlotTransportSubtask(AnalysisTask):
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [transport]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
         meanString = 'mean={:.2f} $\pm$ {:.2f}'.format(trans_mean, trans_std)
         if plotControl:
@@ -627,7 +627,7 @@ class PlotTransportSubtask(AnalysisTask):
                 self._load_transport(self.controlConfig)
             refMeanString = 'mean={:.2f} $\pm$ {:.2f}'.format(ref_mean, ref_std)
             fields.append(ref_transport)
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText = ['{} ({})'.format(mainRunName, meanString),
                           '{} ({})'.format(controlRunName, refMeanString)]

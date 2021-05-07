@@ -430,12 +430,12 @@ class TimeSeriesSeaIce(AnalysisTask):
                 key = (hemisphere, variableName)
                 dsvalues = [plotVars[key]]
                 legendText = [mainRunName]
-                lineColors = ['k']
+                lineColors = [config.get('timeSeries', 'mainColor')]
                 lineWidths = [3]
                 if compareWithObservations and key in obsLegend.keys():
                     dsvalues.append(obs[key])
                     legendText.append(obsLegend[key])
-                    lineColors.append('b')
+                    lineColors.append(config.get('timeSeries', 'obsColor1'))
                     lineWidths.append(1.2)
                 if preprocessedReferenceRunName != 'None':
                     dsvalues.append(preprocessed[key])
@@ -446,7 +446,8 @@ class TimeSeriesSeaIce(AnalysisTask):
                 if self.controlConfig is not None:
                     dsvalues.append(plotVarsRef[key])
                     legendText.append(controlRunName)
-                    lineColors.append('r')
+                    lineColors.append(config.get('timeSeries',
+                                                 'controlColor'))
                     lineWidths.append(1.2)
 
                 if config.has_option(sectionName, 'firstYearXTicks'):
