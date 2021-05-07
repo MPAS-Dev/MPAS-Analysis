@@ -316,6 +316,8 @@ threePanelAxisFontSize = 12
 # the dots per inch of output figures
 dpi = 200
 
+# Write out PDFs in addition to PNGs?
+pdf = False
 
 [polarProjection]
 ## options related to polar-projection plots

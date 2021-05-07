@@ -1140,7 +1140,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         outFileName = '{}/TS_diagram_{}_{}.png'.format(
             self.plotsDirectory, self.prefix, self.season)
-        savefig(outFileName, tight=False)
+        savefig(outFileName, config, tight=False)
 
         caption = 'Regional mean of {}'.format(suptitle)
         write_image_xml(

@@ -25,6 +25,7 @@ from __future__ import absolute_import, division, print_function, \
 import matplotlib.pyplot as plt
 
 from mpas_analysis.shared.plot.title import limit_title
+from mpas_analysis.shared.plot.save import savefig
 
 
 def plot_1D(config, xArrays, fieldArrays, errArrays,
@@ -164,7 +165,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
         plt.ylim(yLim)
 
     if fileout is not None:
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+        savefig(fileout, config)
 
     plt.close()  # }}}
 

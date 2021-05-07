@@ -31,6 +31,7 @@ from cartopy.util import add_cyclic_point
 
 from mpas_analysis.shared.plot.colormap import setup_colormap
 from mpas_analysis.shared.plot.title import limit_title
+from mpas_analysis.shared.plot.save import savefig
 
 
 def plot_polar_comparison(
@@ -231,8 +232,8 @@ def plot_polar_comparison(
     if vertical:
         plt.subplots_adjust(top=0.9)
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+    if fileout is not None:
+        savefig(fileout, config)
 
     plt.close()
 
@@ -409,8 +410,8 @@ def plot_global_comparison(
 
     _add_stats(modelArray, refArray, diffArray, Lats, axes)
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.2)
+    if fileout is not None:
+        savefig(fileout, config, pad_inches=0.2)
 
     plt.close()
 
@@ -628,7 +629,7 @@ def plot_polar_projection_comparison(
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
     if fileout is not None:
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+        savefig(fileout, config)
 
     plt.close()
 

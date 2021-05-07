@@ -282,7 +282,7 @@ class TimeSeriesSST(AnalysisTask):
                                      firstYearXTicks=firstYearXTicks,
                                      yearStrideXTicks=yearStrideXTicks)
 
-            savefig(outFileName)
+            savefig(outFileName, config)
 
             caption = 'Running Mean of {} Sea Surface Temperature'.format(
                 region)

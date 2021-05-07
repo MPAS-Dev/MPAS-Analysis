@@ -814,7 +814,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         add_inset(fig, fc, width=1.0, height=1.0)
 
-        savefig(outFileName, tight=False)
+        savefig(outFileName, config, tight=False)
 
         caption = '{} {} vs depth'.format(regionName, titleFieldName)
         write_image_xml(

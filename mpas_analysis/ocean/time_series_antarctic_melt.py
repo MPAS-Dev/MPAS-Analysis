@@ -669,7 +669,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         add_inset(fig, fc, width=2.0, height=2.0)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = 'Running Mean of Total Melt Flux  under Ice ' \
                   'Shelves in the {} Region'.format(title)
@@ -734,7 +734,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         add_inset(fig, fc, width=2.0, height=2.0)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                   'Shelves in the {} Region'.format(title)
