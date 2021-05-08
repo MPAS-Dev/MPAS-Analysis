@@ -18,6 +18,7 @@ Functions for plotting time series (and comparing with reference data sets)
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import matplotlib
 import matplotlib.pyplot as plt
 import xarray as xr
 import pandas as pd
@@ -123,6 +124,8 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Stephen Price
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
@@ -301,6 +304,8 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
     # Authors
     # -------
     # Adrian K. Turner, Xylar Asay-Davis
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')

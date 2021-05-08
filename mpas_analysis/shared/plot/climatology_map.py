@@ -175,6 +175,8 @@ def plot_polar_comparison(
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
 
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
+
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
 
@@ -360,6 +362,8 @@ def plot_global_comparison(
 
         cbar = plt.colorbar(plotHandle, cax=cax, ticks=ticks, boundaries=ticks)
         cbar.set_label(cbarlabel)
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     # set up figure
     if dpi is None:
@@ -562,6 +566,8 @@ def plot_polar_projection_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     useCartopyCoastline = config.getboolean('polarProjection',
                                             'useCartopyCoastline')

@@ -19,6 +19,7 @@ runs or with observations
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import matplotlib
 import matplotlib.pyplot as plt
 import xarray as xr
 import pandas as pd
@@ -289,6 +290,8 @@ def plot_vertical_section_comparison(
     # Authors
     # -------
     # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     if refArray is None or compareAsContours:
         singlePanel = True
@@ -751,6 +754,8 @@ def plot_vertical_section(
     # Authors
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     # compute moving averages with respect to the x dimension
     if movingAveragePoints is not None and movingAveragePoints != 1:

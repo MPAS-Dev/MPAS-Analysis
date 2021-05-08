@@ -22,6 +22,7 @@ Plotting utilities, including routines for plotting:
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import matplotlib
 import matplotlib.pyplot as plt
 
 from mpas_analysis.shared.plot.title import limit_title
@@ -94,6 +95,8 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     # Authors
     # -------
     # Mark Petersen, Milena Veneziani
+
+    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
 
     # set up figure
     if dpi is None:
