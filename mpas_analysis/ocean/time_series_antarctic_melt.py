@@ -659,6 +659,7 @@ class PlotMeltSubtask(AnalysisTask):
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
+                                       legendLocation='upper left',
                                        obsMean=obsMeltFlux,
                                        obsUncertainty=obsMeltFluxUnc,
                                        obsLegend=list(obsDict.keys()))
