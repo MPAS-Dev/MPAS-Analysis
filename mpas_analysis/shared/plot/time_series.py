@@ -194,11 +194,11 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
             if obsMean[iObs] is not None:
                 symbol = obsSymbols[np.mod(iObs, len(obsSymbols))]
                 color = obsColors[np.mod(iObs, len(obsColors))]
-                fmt = '{}{}'.format(color, symbol)
                 plt.errorbar(obsTimes[iObs],
                              obsMean[iObs],
                              yerr=obsUncertainty[iObs],
-                             fmt=fmt,
+                             fmt=symbol,
+                             color=color,
                              ecolor=color,
                              capsize=0,
                              label=obsLegend[iObs])
@@ -210,7 +210,7 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
                 boxY = obsMean[iObs] + \
                     boxHalfHeight * np.array([-1, -1, 1, 1, -1])
 
-                plt.plot(boxX, boxY, '{}-'.format(color), linewidth=3)
+                plt.plot(boxX, boxY, '-', color=color, linewidth=3)
                 labelCount += 1
 
     if labelCount > 1:
