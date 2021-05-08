@@ -150,7 +150,7 @@ def plot_polar_comparison(
             plotHandle = ax.pcolormesh(LonsPeriodic, LatsPeriodic,
                                        fieldPeriodic, cmap=colormap,
                                        norm=norm, transform=data_crs,
-                                       zorder=1)
+                                       zorder=1, rasterized=True)
         else:
             plotHandle = ax.contourf(LonsPeriodic, LatsPeriodic,
                                      fieldPeriodic, cmap=colormap,
@@ -341,7 +341,7 @@ def plot_global_comparison(
         if levels is None:
             plotHandle = ax.pcolormesh(Lons, Lats, array, cmap=colormap,
                                        norm=norm, transform=projection,
-                                       zorder=1)
+                                       zorder=1, rasterized=True)
         else:
             plotHandle = ax.contourf(Lons, Lats, array, cmap=colormap,
                                      norm=norm, levels=levels, extend='both',
@@ -531,7 +531,8 @@ def plot_polar_projection_comparison(
         gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
 
         if levels is None:
-            plotHandle = ax.pcolormesh(x, y, array, cmap=colormap, norm=norm)
+            plotHandle = ax.pcolormesh(x, y, array, cmap=colormap, norm=norm,
+                                       rasterized=True)
         else:
             plotHandle = ax.contourf(xCenter, yCenter, array, cmap=colormap,
                                      norm=norm, levels=levels, extend='both')

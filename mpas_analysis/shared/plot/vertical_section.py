@@ -910,7 +910,8 @@ def plot_vertical_section(
 
             plotHandle = plt.pcolormesh(x, y, interpFieldArray,
                                         cmap=colormapDict['colormap'],
-                                        norm=colormapDict['norm'])
+                                        norm=colormapDict['norm'],
+                                        rasterized=True)
         else:
             plotHandle = plt.contourf(x, y, fieldArray,
                                       cmap=colormapDict['colormap'],
