@@ -533,8 +533,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             defaultFontSize = None
 
         if config.has_option(configSectionName, 'axisFontSize'):
-            axisFontSize = config.getint(configSectionName,
-                                            'axisFontSize')
+            axisFontSize = config.getint(configSectionName, 'axisFontSize')
         else:
             axisFontSize = None
 
@@ -572,7 +571,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
-            titleFontSize=titleFontSize,
+            plotTitleFontSize=titleFontSize,
             defaultFontSize=defaultFontSize,
             axisFontSize=axisFontSize)
 
