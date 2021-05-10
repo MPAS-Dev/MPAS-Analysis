@@ -522,10 +522,11 @@ def plot_polar_projection_comparison(
 
         gl = ax.gridlines(crs=cartopy.crs.PlateCarree(), color='k',
                           linestyle=':', zorder=5, draw_labels=True)
-        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 60.))
+        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 30.))
         gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
         gl.n_steps = 100
         gl.right_labels = False
+        gl.left_labels = False
         gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
         gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
 
