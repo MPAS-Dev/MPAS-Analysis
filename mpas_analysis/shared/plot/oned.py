@@ -37,7 +37,10 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             xLim=None,
             yLim=None,
             invertYAxis=False,
-            maxTitleLength=80):  # {{{
+            maxTitleLength=80,
+            titleFontSize=None,
+            axisFontSize=None,
+            defaultFontSize=None):  # {{{
     """
     Plots a 1D line plot with error bars if available.
 
@@ -91,12 +94,23 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     maxTitleLength : int, optional
         the maximum number of characters in the title and legend, beyond which
         they are truncated with a trailing ellipsis
+
+    titleFontSize : int, optional
+        size of the title font
+
+    axisFontSize : int, optional
+        size of the title font
+
+    defaultFontSize : int, optional
+        the size of text other than the title
     """
     # Authors
     # -------
-    # Mark Petersen, Milena Veneziani
+    # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
-    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     # set up figure
     if dpi is None:
@@ -147,8 +161,12 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     if plotLegend and len(xArrays) > 1:
         plt.legend()
 
-    axis_font = {'size': config.get('plot', 'axisFontSize')}
-    title_font = {'size': config.get('plot', 'titleFontSize'),
+    if titleFontSize is None:
+        titleFontSize = config.get('plot', 'titleFontSize')
+    if axisFontSize is None:
+        axisFontSize = config.get('plot', 'axisFontSize')
+    axis_font = {'size': axisFontSize}
+    title_font = {'size': titleFontSize,
                   'color': config.get('plot', 'titleFontColor'),
                   'weight': config.get('plot', 'titleFontWeight')}
     if title is not None:

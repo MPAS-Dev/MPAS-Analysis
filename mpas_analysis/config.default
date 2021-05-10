@@ -321,6 +321,9 @@ titleFontColor = black
 titleFontWeight = normal
 axisFontSize = 12
 
+# font size for cartopy grid labels
+cartopyGridFontSize = 12
+
 # title and axis font properties for three-panel plots
 threePanelTitleFontSize = 16
 threePanelPlotTitleFontSize = 14

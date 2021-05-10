@@ -48,6 +48,7 @@ def plot_vertical_section_comparison(
         refTitle='Observations',
         diffTitle='Model-Observations',
         titleFontSize=None,
+        defaultFontSize=None,
         plotTitleFontSize=None,
         axisFontSize=None,
         figsize=None,
@@ -137,6 +138,9 @@ def plot_vertical_section_comparison(
 
     titleFontSize : int, optional
         size of the title font
+
+    defaultFontSize : int, optional
+        the size of text other than the title
 
     plotTitleFontSize : int, optional
         size of the title font for the individual plots
@@ -291,7 +295,9 @@ def plot_vertical_section_comparison(
     # -------
     # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
 
-    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     if refArray is None or compareAsContours:
         singlePanel = True
@@ -515,6 +521,7 @@ def plot_vertical_section(
         figsize=(10, 4),
         dpi=None,
         titleFontSize=None,
+        defaultFontSize=None,
         titleY=None,
         axisFontSize=None,
         xLim=None,
@@ -603,6 +610,9 @@ def plot_vertical_section(
 
     titleFontSize : int, optional
         size of the title font
+
+    defaultFontSize : int, optional
+        the size of text other than the title
 
     titleY : float, optional
         the y value to use for placing the plot title
@@ -755,7 +765,9 @@ def plot_vertical_section(
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
 
-    matplotlib.rc('font', size=config.getint('plot', 'defaultFontSize'))
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     # compute moving averages with respect to the x dimension
     if movingAveragePoints is not None and movingAveragePoints != 1:

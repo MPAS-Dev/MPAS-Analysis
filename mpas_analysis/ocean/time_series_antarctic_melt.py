@@ -664,6 +664,22 @@ class PlotMeltSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
+        if config.has_option('timeSeriesAntarcticMelt', 'titleFontSize'):
+            titleFontSize = config.getint('timeSeriesAntarcticMelt',
+                                          'titleFontSize')
+        else:
+            titleFontSize = None
+
+        if config.has_option('timeSeriesAntarcticMelt', 'defaultFontSize'):
+            defaultFontSize = config.getint('timeSeriesAntarcticMelt',
+                                            'defaultFontSize')
+        else:
+            defaultFontSize = None
+
+        if self.iceShelf != 'Antarctica' and self.iceShelf != 'Filchner':
+            # we only need the legend in those 2
+            legendText = None
+
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
@@ -672,6 +688,8 @@ class PlotMeltSubtask(AnalysisTask):
                                        lineWidths=lineWidths,
                                        legendText=legendText,
                                        legendLocation='upper left',
+                                       titleFontSize=titleFontSize,
+                                       defaultFontSize=defaultFontSize,
                                        obsMean=obsMeltFlux,
                                        obsUncertainty=obsMeltFluxUnc,
                                        obsLegend=list(obsDict.keys()),

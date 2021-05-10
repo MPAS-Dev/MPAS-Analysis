@@ -1203,11 +1203,23 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                     legendText[1] = '{} ({} < z < {} m)'.format(
                         legendText[1], zboundsRef[0], zboundsRef[1])
 
+            sectionName = self.sectionName
+            if config.has_option(sectionName, 'titleFontSize'):
+                titleFontSize = config.getint(sectionName, 'titleFontSize')
+            else:
+                titleFontSize = None
+
+            if config.has_option(sectionName, 'defaultFontSize'):
+                defaultFontSize = config.getint(sectionName, 'defaultFontSize')
+            else:
+                defaultFontSize = None
+
             fig = timeseries_analysis_plot(
                 config, fields, calendar=calendar, title=title, xlabel=xLabel,
                 ylabel=yLabel, movingAveragePoints=movingAverageMonths,
                 lineColors=lineColors, lineWidths=lineWidths,
-                legendText=legendText)
+                legendText=legendText, titleFontSize=titleFontSize,
+                defaultFontSize=defaultFontSize)
 
             # do this before the inset because otherwise it moves the inset
             # and cartopy doesn't play too well with tight_layout anyway
