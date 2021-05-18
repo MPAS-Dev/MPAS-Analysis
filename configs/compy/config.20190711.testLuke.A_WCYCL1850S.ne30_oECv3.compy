@@ -47,7 +47,8 @@ baseDirectory = /compyfs/diagnostics
 # directory containing model results
 baseDirectory = /compyfs/wolf966/e3sm_scratch/20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy/run
 
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+# name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+# ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
 mpasMeshName = oEC60to30v3
 
 # names of namelist and streams files, either a path relative to baseDirectory

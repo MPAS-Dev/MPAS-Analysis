@@ -47,7 +47,8 @@ baseDirectory = /gpfs/alpine/proj-shared/cli115/diagnostics/
 # directory containing model results
 baseDirectory = /lustre/atlas1/cli115/proj-shared/milena/ACME/simulations/20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
 
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+# name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+# ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
 mpasMeshName = oEC60to30v3
 
 # names of namelist and streams files, either a path relative to baseDirectory
