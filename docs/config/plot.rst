@@ -20,6 +20,9 @@ default properties for all plots produce by MPAS-Analysis::
   # the dots per inch of output figures
   dpi = 200
 
+  # Write out PDFs in addition to PNGs?
+  pdf = False
+
 The options for title fint size, color and weight as well as axis font size
 specify properties of these parts of each plot.  Sizes are given in points.
 
@@ -27,3 +30,6 @@ The value of ``dpi`` specifies the resolution of the images written out by
 MPAS-Analysis (in dots per inch).  The default produces large images that
 are appropriate for zooming in substantially and may be sufficient for
 publication.  They are large (but not entirely unmanageable) for the web.
+
+You can set ``pdf = True`` to write out PDF files in the plots subdirectory
+along with PNG files.  The PDFs are not copied to the HTML folder.
