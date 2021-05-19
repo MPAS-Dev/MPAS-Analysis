@@ -482,7 +482,7 @@
         <span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
         <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
 
-        <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
 
         <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time [years]&#39;</span>
         <span class="n">yLabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yAxisLabel</span>
@@ -618,7 +618,7 @@
                                       <span class="n">endDate</span><span class="o">=</span><span class="n">controlEndDate</span><span class="p">)</span>
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegionsTmp</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
 
-            <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">)</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
 
             <span class="k">for</span> <span class="n">rangeIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">topDepths</span><span class="p">)):</span>
                 <span class="n">top</span> <span class="o">=</span> <span class="n">topDepths</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">]</span>
