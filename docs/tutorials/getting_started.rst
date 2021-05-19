@@ -318,7 +318,8 @@ of the MPAS-Ocean and MPAS-Seaice mesh.
     seaIceNamelistFileName = run/mpassi_in
     seaIceStreamsFileName = run/streams.seaice
 
-    # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
+    # name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+    # ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
     mpasMeshName = oQU480
 
 The ``baseDirectory`` is the path where you untarred the example run.
