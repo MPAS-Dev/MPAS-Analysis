@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -232,7 +235,7 @@ This class will include methods:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: construct the task, including assigning variable and streams maps
 (optional).</p></li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code><span class="classifier">performs common tasks to all analysis, such as reading</span></dt><dd><p>namelist and streams files</p>
+<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>: performs common tasks to all analysis, such as reading</dt><dd><p>namelist and streams files</p>
 </dd>
 </dl>
 </li>
@@ -240,14 +243,14 @@ This class will include methods:</p>
 </ul>
 <p>The template will show how to set up a child class that decends from <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>.
 It will show examples of:</p>
-<ul>
-<li><dl>
-<dt><code class="docutils literal notranslate"><span class="pre">__init__</span></code><span class="classifier">construct the task, including assigning the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code></span></dt><dd><p>and <code class="docutils literal notranslate"><span class="pre">categories</span></code> of the analysis, and calling the base class’s constructor.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: construct the task, including assigning the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code></dt><dd><p>and <code class="docutils literal notranslate"><span class="pre">categories</span></code> of the analysis, and calling the base class’s constructor.</p>
 </dd>
 </dl>
 </li>
-<li><dl>
-<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code><span class="classifier">first, calls the base class’ version of <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>, then,</span></dt><dd><p>determines if the configuration is valid for running this task (e.g. if
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>: first, calls the base class’ version of <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code>, then,</dt><dd><p>determines if the configuration is valid for running this task (e.g. if
 necessary files and config options are present)</p>
 </dd>
 </dl>

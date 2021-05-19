@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -602,12 +605,12 @@
                 <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="n">variableName</span><span class="p">)</span>
                 <span class="n">dsvalues</span> <span class="o">=</span> <span class="p">[</span><span class="n">plotVars</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
                 <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainRunName</span><span class="p">]</span>
-                <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
+                <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)]</span>
                 <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">compareWithObservations</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obsLegend</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="n">dsvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                     <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obsLegend</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;obsColor1&#39;</span><span class="p">))</span>
                     <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
                     <span class="n">dsvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">preprocessed</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
@@ -618,7 +621,8 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">dsvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plotVarsRef</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                     <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
-                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;controlColor&#39;</span><span class="p">))</span>
                     <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>

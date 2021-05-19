@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -218,8 +221,8 @@
   <div class="section" id="mpas-analysis-shared-climatology-add-years-months-days-in-month">
 <h1>mpas_analysis.shared.climatology.add_years_months_days_in_month<a class="headerlink" href="#mpas-analysis-shared-climatology-add-years-months-days-in-month" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="mpas_analysis.shared.climatology.add_years_months_days_in_month">
-<code class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.climatology.</span></code><code class="sig-name descname"><span class="pre">add_years_months_days_in_month</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/climatology.html#add_years_months_days_in_month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.add_years_months_days_in_month" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="mpas_analysis.shared.climatology.add_years_months_days_in_month">
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.climatology.</span></span><span class="sig-name descname"><span class="pre">add_years_months_days_in_month</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/climatology.html#add_years_months_days_in_month"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.add_years_months_days_in_month" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code> and <code class="docutils literal notranslate"><span class="pre">daysInMonth</span></code> as data arrays in <code class="docutils literal notranslate"><span class="pre">ds</span></code>.
 The number of days in each month of <code class="docutils literal notranslate"><span class="pre">ds</span></code> is computed either using the
 <code class="docutils literal notranslate"><span class="pre">startTime</span></code> and <code class="docutils literal notranslate"><span class="pre">endTime</span></code> if available or assuming <code class="docutils literal notranslate"><span class="pre">gregorian_noleap</span></code>
