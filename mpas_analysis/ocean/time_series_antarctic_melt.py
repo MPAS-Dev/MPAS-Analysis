@@ -643,12 +643,12 @@ class PlotMeltSubtask(AnalysisTask):
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [timeSeries]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
         legendText = [mainRunName]
         if plotControl:
             fields.append(refTotalMeltFlux.isel(nRegions=self.regionIndex))
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 
@@ -694,12 +694,12 @@ class PlotMeltSubtask(AnalysisTask):
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [timeSeries]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
         legendText = [mainRunName]
         if plotControl:
             fields.append(refMeltRates.isel(nRegions=self.regionIndex))
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 

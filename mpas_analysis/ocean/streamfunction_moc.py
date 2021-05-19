@@ -1445,7 +1445,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             yearStrideXTicks = None
 
         fields = [dsMOCTimeSeries.mocAtlantic26]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
+
         lineWidths = [2]
         legendText = [mainRunName]
 
@@ -1453,7 +1454,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
             dsRefMOC = self._load_moc(self.controlConfig)
             fields.append(dsRefMOC.mocAtlantic26)
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(2)
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
             legendText.append(controlRunName)

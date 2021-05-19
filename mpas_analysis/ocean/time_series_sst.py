@@ -240,7 +240,7 @@ class TimeSeriesSST(AnalysisTask):
 
             outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
-            lineColors = ['k']
+            lineColors = [config.get('timeSeries', 'mainColor')]
             lineWidths = [3]
 
             fields = [SST]
@@ -249,7 +249,7 @@ class TimeSeriesSST(AnalysisTask):
             if dsRefSST is not None:
                 refSST = dsRefSST[varName].isel(nOceanRegions=regionIndex)
                 fields.append(refSST)
-                lineColors.append('r')
+                lineColors.append(config.get('timeSeries', 'controlColor'))
                 lineWidths.append(1.5)
                 controlRunName = self.controlConfig.get('runs', 'mainRunName')
                 legendText.append(controlRunName)

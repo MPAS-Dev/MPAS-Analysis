@@ -272,6 +272,17 @@ startYear = 1
 endYear = end
 
 
+# line colors for the main, control and obs curves
+# see https://matplotlib.org/stable/gallery/color/named_colors.html
+# and https://matplotlib.org/stable/tutorials/colors/colors.html
+mainColor = black
+controlColor = tab:red
+obsColor1 = tab:blue
+obsColor2 = tab:orange
+obsColor3 = tab:green
+obsColor4 = tab:purple
+obsColor5 = tab:cyan
+
 [index]
 ## options related to producing nino index.
 
