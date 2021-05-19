@@ -312,11 +312,17 @@ plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
 ## options related to plotting that are the defaults across all analysis
 ## modules
 
+# the default font size for axis ticks, etc.
+defaultFontSize = 10
+
 # title and axis font properties for single-panel plots
 titleFontSize = 16
 titleFontColor = black
 titleFontWeight = normal
 axisFontSize = 12
+
+# font size for cartopy grid labels
+cartopyGridFontSize = 12
 
 # title and axis font properties for three-panel plots
 threePanelTitleFontSize = 16

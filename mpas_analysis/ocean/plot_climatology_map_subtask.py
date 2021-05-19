@@ -486,6 +486,17 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
             bias = modelOutput - refOutput
 
+        if config.has_option(configSectionName, 'titleFontSize'):
+            titleFontSize = config.getint(configSectionName, 'titleFontSize')
+        else:
+            titleFontSize = None
+
+        if config.has_option(configSectionName, 'defaultFontSize'):
+            defaultFontSize = config.getint(configSectionName,
+                                            'defaultFontSize')
+        else:
+            defaultFontSize = None
+
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         title = '{} ({}, years {:04d}-{:04d})'.format(
@@ -503,7 +514,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
                                modelTitle='{}'.format(mainRunName),
                                refTitle=self.refTitleLabel,
                                diffTitle=self.diffTitleLabel,
-                               cbarlabel=self.unitsLabel)
+                               cbarlabel=self.unitsLabel,
+                               titleFontSize=titleFontSize,
+                               defaultFontSize=defaultFontSize)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
@@ -566,6 +579,23 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             # arctic
             hemisphere = 'north'
 
+        if config.has_option(configSectionName, 'titleFontSize'):
+            titleFontSize = config.getint(configSectionName, 'titleFontSize')
+        else:
+            titleFontSize = None
+
+        if config.has_option(configSectionName, 'defaultFontSize'):
+            defaultFontSize = config.getint(configSectionName,
+                                            'defaultFontSize')
+        else:
+            defaultFontSize = None
+
+        if config.has_option(configSectionName, 'cartopyGridFontSize'):
+            cartopyGridFontSize = config.getint(configSectionName,
+                                                'cartopyGridFontSize')
+        else:
+            cartopyGridFontSize = None
+
         plot_polar_projection_comparison(
             config,
             x,
@@ -581,7 +611,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel,
-            hemisphere=hemisphere)
+            hemisphere=hemisphere,
+            titleFontSize=titleFontSize,
+            cartopyGridFontSize=cartopyGridFontSize,
+            defaultFontSize=defaultFontSize)
 
         upperGridName = comparisonGridName[0].upper() + comparisonGridName[1:]
         caption = '{} {}'.format(season, self.imageCaption)

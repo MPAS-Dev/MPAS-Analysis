@@ -18,6 +18,7 @@ Functions for plotting time series (and comparing with reference data sets)
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import matplotlib
 import matplotlib.pyplot as plt
 import xarray as xr
 import pandas as pd
@@ -35,7 +36,8 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
                              movingAveragePoints=None, lineColors=None,
                              lineStyles=None, markers=None, lineWidths=None,
                              legendText=None, maxPoints=None,
-                             titleFontSize=None, figsize=(12, 6), dpi=None,
+                             titleFontSize=None, defaultFontSize=None,
+                             figsize=(12, 6), dpi=None,
                              firstYearXTicks=None, yearStrideXTicks=None,
                              maxXTicks=20, obsMean=None, obsUncertainty=None,
                              obsLegend=None, legendLocation='lower left',
@@ -80,6 +82,9 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     titleFontSize : int, optional
         the size of the title font
 
+    defaultFontSize : int, optional
+        the size of text other than the title
+
     figsize : tuple of float, optional
         the size of the figure in inches
 
@@ -123,6 +128,10 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Stephen Price
+
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
@@ -252,8 +261,9 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
                                    movingAveragePoints=None, lineColors=None,
                                    lineStyles=None, markers=None,
                                    lineWidths=None, legendText=None,
-                                   titleFontSize=None, figsize=(15, 6),
-                                   dpi=None, maxTitleLength=90):
+                                   titleFontSize=None, defaultFontSize=None,
+                                   figsize=(15, 6), dpi=None,
+                                   maxTitleLength=90):
     """
     Plots the list of time series data sets on a polar plot.
 
@@ -282,6 +292,9 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
     titleFontSize : int, optional
         the size of the title font
 
+    defaultFontSize : int, optional
+        the size of text other than the title
+
     figsize : tuple of float, optional
         the size of the figure in inches
 
@@ -301,6 +314,10 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
     # Authors
     # -------
     # Adrian K. Turner, Xylar Asay-Davis
+
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')

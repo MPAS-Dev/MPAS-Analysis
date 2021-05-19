@@ -521,6 +521,22 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         contourLabelPrecision = config.getint('transects',
                                               'contourLabelPrecision')
 
+        if config.has_option(configSectionName, 'titleFontSize'):
+            titleFontSize = config.getint(configSectionName, 'titleFontSize')
+        else:
+            titleFontSize = None
+
+        if config.has_option(configSectionName, 'defaultFontSize'):
+            defaultFontSize = config.getint(configSectionName,
+                                            'defaultFontSize')
+        else:
+            defaultFontSize = None
+
+        if config.has_option(configSectionName, 'axisFontSize'):
+            axisFontSize = config.getint(configSectionName, 'axisFontSize')
+        else:
+            axisFontSize = None
+
         # construct a three-panel comparison plot for the transect, or a
         # single-panel contour comparison plot if compareAsContours is True
 
@@ -554,7 +570,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             comparisonContourLineStyle=comparisonContourLineStyle,
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
-            contourLabelPrecision=contourLabelPrecision)
+            contourLabelPrecision=contourLabelPrecision,
+            plotTitleFontSize=titleFontSize,
+            defaultFontSize=defaultFontSize,
+            axisFontSize=axisFontSize)
 
         # shift the super-title a little to the left to make room for the inset
         pos = suptitle.get_position()
