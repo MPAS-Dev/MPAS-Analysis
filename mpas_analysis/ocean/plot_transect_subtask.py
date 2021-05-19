@@ -570,7 +570,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
 
-        savefig(outFileName, tight=False)
+        savefig(outFileName, config, tight=False)
 
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(

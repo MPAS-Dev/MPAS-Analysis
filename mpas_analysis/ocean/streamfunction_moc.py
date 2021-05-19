@@ -791,7 +791,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 movingAveragePoints=movingAveragePointsClimatological,
                 maxTitleLength=70)
 
-            savefig(outFileName)
+            savefig(outFileName, config)
 
             caption = '{} Meridional Overturning Streamfunction'.format(region)
             write_image_xml(
@@ -1468,7 +1468,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                  yearStrideXTicks=yearStrideXTicks,
                                  maxTitleLength=90)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = u'Time Series of maximum Meridional Overturning ' \
                   u'Circulation at 26.5°N'

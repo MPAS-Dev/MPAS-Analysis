@@ -358,7 +358,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                   movingAveragePoints=movingAveragePoints,
                                   maxTitleLength=maxTitleLength)
 
-            savefig(outFileName)
+            savefig(outFileName, config)
 
             self._write_xml(filePrefix)
 

@@ -1214,7 +1214,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             add_inset(fig, fc, width=2.0, height=2.0)
 
-            savefig(outFileName, tight=False)
+            savefig(outFileName, config, tight=False)
 
             caption = 'Regional mean of {}'.format(title)
             write_image_xml(

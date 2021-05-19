@@ -375,10 +375,10 @@ class PlotHovmollerSubtask(AnalysisTask):
 
             add_inset(fig, fc, width=1.0, height=1.0, xbuffer=0.1, ybuffer=0.1)
 
-            savefig(outFileName, tight=False)
+            savefig(outFileName, config, tight=False)
 
         else:
-            savefig(outFileName)
+            savefig(outFileName, config)
 
         write_image_xml(
             config=config,

@@ -672,7 +672,7 @@ class PlotTransportSubtask(AnalysisTask):
 
         add_inset(fig, fc, width=2.0, height=2.0)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = 'Transport through the {} Transect'.format(transectName)
         write_image_xml(

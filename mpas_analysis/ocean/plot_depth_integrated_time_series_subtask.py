@@ -480,7 +480,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         self.customize_fig(fig)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         write_image_xml(
             config=config,

@@ -12,27 +12,47 @@
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import os
+
 import matplotlib.pyplot as plt
 
 
-def savefig(filename, tight=True):
+def savefig(filename, config, tight=True, pad_inches=0.1):
     """
-    Waves the current plot to a file, then closes it.
+    Saves the current plot to a file, then closes it.
 
     Parameters
     ----------
     filename : str
         the file name to be written
+
+    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+        Configuration options
+
+    tight : bool, optional
+        whether to tightly crop the figure
+
+    pad_inches : float, optional
+        The boarder around the image
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     if tight:
-        plt.savefig(filename, dpi='figure', bbox_inches='tight',
-                    pad_inches=0.1)
+        bbox_inches = 'tight'
     else:
-        plt.savefig(filename, dpi='figure', pad_inches=0.1)
+        bbox_inches = None
+
+    filenames = [filename]
+
+    if config.getboolean('plot', 'pdf'):
+        pdf_filename = '{}.pdf'.format(os.path.splitext(filename)[0])
+        filenames.append(pdf_filename)
+
+    for path in filenames:
+        plt.savefig(path, dpi='figure', bbox_inches=bbox_inches,
+                    pad_inches=pad_inches)
 
     plt.close()
 

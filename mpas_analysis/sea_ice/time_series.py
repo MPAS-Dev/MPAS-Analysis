@@ -472,7 +472,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                     firstYearXTicks=firstYearXTicks,
                     yearStrideXTicks=yearStrideXTicks)
 
-                savefig(figureNameStd[key])
+                savefig(figureNameStd[key], config)
 
                 filePrefix = '{}{}_{}'.format(variableName,
                                               hemisphere,
@@ -500,7 +500,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                                                    legendText=legendText,
                                                    titleFontSize=titleFontSize)
 
-                    savefig(figureNamePolar[key])
+                    savefig(figureNamePolar[key], config)
 
                     filePrefix = '{}{}_{}_polar'.format(variableName,
                                                         hemisphere,

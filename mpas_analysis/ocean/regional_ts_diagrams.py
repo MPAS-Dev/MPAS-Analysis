@@ -1140,7 +1140,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         outFileName = '{}/TS_diagram_{}_{}.png'.format(
             self.plotsDirectory, self.prefix, self.season)
-        savefig(outFileName, tight=False)
+        savefig(outFileName, config, tight=False)
 
         caption = 'Regional mean of {}'.format(suptitle)
         write_image_xml(
@@ -1201,7 +1201,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                                      usenumpyfunc=True)
 
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
-                                       weights=volume, cmap=cmap, zorder=1)
+                                       weights=volume, cmap=cmap, zorder=1,
+                                       rasterized=True)
 
         poshist = hist[hist > 0.]
         if len(poshist) > 0:
