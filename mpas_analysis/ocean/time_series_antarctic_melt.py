@@ -652,6 +652,18 @@ class PlotMeltSubtask(AnalysisTask):
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 
+        if config.has_option('timeSeriesAntarcticMelt', 'firstYearXTicks'):
+            firstYearXTicks = config.getint('timeSeriesAntarcticMelt',
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option('timeSeriesAntarcticMelt', 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint('timeSeriesAntarcticMelt',
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
@@ -659,9 +671,12 @@ class PlotMeltSubtask(AnalysisTask):
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
+                                       legendLocation='upper left',
                                        obsMean=obsMeltFlux,
                                        obsUncertainty=obsMeltFluxUnc,
-                                       obsLegend=list(obsDict.keys()))
+                                       obsLegend=list(obsDict.keys()),
+                                       firstYearXTicks=firstYearXTicks,
+                                       yearStrideXTicks=yearStrideXTicks)
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway
