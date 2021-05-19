@@ -474,23 +474,22 @@
 
         <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>
-            <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                            <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">)</span>
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>
+            <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">):</span>
-            <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                             <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">):</span>
+            <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">movingAverageMonths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAverageMonths&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAverageMonths&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yLim&#39;</span><span class="p">):</span>
-            <span class="n">yLim</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yLim&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yLim&#39;</span><span class="p">):</span>
+            <span class="n">yLim</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yLim&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yLim</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -524,6 +523,21 @@
             <span class="n">refTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
             <span class="n">diffTitle</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">):</span>
+            <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axisFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="n">fig</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">suptitle</span> <span class="o">=</span> <span class="n">plot_vertical_section_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span> <span class="n">Time</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">refField</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
             <span class="n">colorbarLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">modelTitle</span><span class="o">=</span><span class="n">mainRunName</span><span class="p">,</span>
@@ -531,7 +545,8 @@
             <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xArrayIsTime</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span> <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
-            <span class="n">yLim</span><span class="o">=</span><span class="n">yLim</span><span class="p">,</span> <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">yLim</span><span class="o">=</span><span class="n">yLim</span><span class="p">,</span> <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+            <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span> <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionMaskFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 

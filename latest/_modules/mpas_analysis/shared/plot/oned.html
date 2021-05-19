@@ -197,6 +197,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
@@ -211,7 +212,10 @@
             <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>  <span class="c1"># {{{</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+            <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a 1D line plot with error bars if available.</span>
 
@@ -265,10 +269,23 @@
 <span class="sd">    maxTitleLength : int, optional</span>
 <span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
 <span class="sd">        they are truncated with a trailing ellipsis</span>
+
+<span class="sd">    titleFontSize : int, optional</span>
+<span class="sd">        size of the title font</span>
+
+<span class="sd">    axisFontSize : int, optional</span>
+<span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
-    <span class="c1"># Mark Petersen, Milena Veneziani</span>
+    <span class="c1"># Mark Petersen, Milena Veneziani, Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
     <span class="c1"># set up figure</span>
     <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -319,8 +336,12 @@
     <span class="k">if</span> <span class="n">plotLegend</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">xArrays</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
-    <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)}</span>
-    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">),</span>
+    <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">axisFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)</span>
+    <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">axisFontSize</span><span class="p">}</span>
+    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
                   <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
                   <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

@@ -210,10 +210,18 @@ default properties for all plots produce by MPAS-Analysis:</p>
 
 <span class="c1"># font size on axes</span>
 <span class="n">axisFontSize</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="c1"># title font properties</span>
-<span class="n">titleFontSize</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1"># the default font size for axis ticks, etc.</span>
+<span class="n">defaultFontSize</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># title and axis font properties for single-panel plots</span>
+<span class="n">titleFontSize</span> <span class="o">=</span> <span class="mi">16</span>
 <span class="n">titleFontColor</span> <span class="o">=</span> <span class="n">black</span>
 <span class="n">titleFontWeight</span> <span class="o">=</span> <span class="n">normal</span>
+<span class="n">axisFontSize</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="c1"># font size for cartopy grid labels</span>
+<span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="mi">12</span>
 
 <span class="c1"># the dots per inch of output figures</span>
 <span class="n">dpi</span> <span class="o">=</span> <span class="mi">200</span>
@@ -222,14 +230,20 @@ default properties for all plots produce by MPAS-Analysis:</p>
 <span class="n">pdf</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
-<p>The options for title fint size, color and weight as well as axis font size
-specify properties of these parts of each plot.  Sizes are given in points.</p>
+<p>The options for title font size, color and weight as well as axis font size
+specify properties of these parts of each plot.  The default font size covers
+the axis tick marks, color-bar ticks and axis labels, contour labels, etc.
+The cartopy grid font size are for the labels (either interior or along the
+plot boundary) for cartopy labels. Sizes are given in points.</p>
 <p>The value of <code class="docutils literal notranslate"><span class="pre">dpi</span></code> specifies the resolution of the images written out by
 MPAS-Analysis (in dots per inch).  The default produces large images that
 are appropriate for zooming in substantially and may be sufficient for
 publication.  They are large (but not entirely unmanageable) for the web.</p>
 <p>You can set <code class="docutils literal notranslate"><span class="pre">pdf</span> <span class="pre">=</span> <span class="pre">True</span></code> to write out PDF files in the plots subdirectory
 along with PNG files.  The PDFs are not copied to the HTML folder.</p>
+<p>Many types of individual plots, including climatologies, transects, Hovmoller
+plots, and most time series, also support setting the <code class="docutils literal notranslate"><span class="pre">defaultFontSize</span></code> and
+<code class="docutils literal notranslate"><span class="pre">titleFontSize</span></code> config options just of that type of plot.</p>
 </div>
 
 

@@ -227,6 +227,7 @@
         <span class="n">diffTitle</span><span class="o">=</span><span class="s1">&#39;Model-Observations&#39;</span><span class="p">,</span>
         <span class="n">cbarlabel</span><span class="o">=</span><span class="s1">&#39;units&#39;</span><span class="p">,</span>
         <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -275,6 +276,9 @@
 
 <span class="sd">    titleFontSize : int, optional</span>
 <span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
 
 <span class="sd">    figsize : tuple of float, optional</span>
 <span class="sd">        the size of the figure in inches.  If ``None``, the figure size is</span>
@@ -349,6 +353,10 @@
         <span class="k">if</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
             <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
@@ -428,6 +436,7 @@
         <span class="n">diffTitle</span><span class="o">=</span><span class="s1">&#39;Model-Observations&#39;</span><span class="p">,</span>
         <span class="n">cbarlabel</span><span class="o">=</span><span class="s1">&#39;units&#39;</span><span class="p">,</span>
         <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">lineWidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -474,6 +483,9 @@
 
 <span class="sd">    titleFontSize : int, optional</span>
 <span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
 
 <span class="sd">    figsize : tuple of float, optional</span>
 <span class="sd">        the size of the figure in inches</span>
@@ -535,6 +547,10 @@
 
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">ticks</span><span class="p">,</span> <span class="n">boundaries</span><span class="o">=</span><span class="n">ticks</span><span class="p">)</span>
         <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">cbarlabel</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
     <span class="c1"># set up figure</span>
     <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -607,6 +623,8 @@
         <span class="n">diffTitle</span><span class="o">=</span><span class="s1">&#39;Model-Observations&#39;</span><span class="p">,</span>
         <span class="n">cbarlabel</span><span class="o">=</span><span class="s1">&#39;units&#39;</span><span class="p">,</span>
         <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cartopyGridFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">lineWidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
@@ -659,6 +677,12 @@
 <span class="sd">    titleFontSize : int, optional</span>
 <span class="sd">        size of the title font</span>
 
+<span class="sd">    cartopyGridFontSize : int, optional</span>
+<span class="sd">        the size of text used by cartopy to label lon and lat</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
+
 <span class="sd">    figsize : tuple of float, optional</span>
 <span class="sd">        the size of the figure in inches.  If ``None``, the figure size is</span>
 <span class="sd">        ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.</span>
@@ -705,6 +729,8 @@
         <span class="n">gl</span><span class="o">.</span><span class="n">left_labels</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">gl</span><span class="o">.</span><span class="n">xformatter</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">mpl</span><span class="o">.</span><span class="n">gridliner</span><span class="o">.</span><span class="n">LONGITUDE_FORMATTER</span>
         <span class="n">gl</span><span class="o">.</span><span class="n">yformatter</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">mpl</span><span class="o">.</span><span class="n">gridliner</span><span class="o">.</span><span class="n">LATITUDE_FORMATTER</span>
+        <span class="n">gl</span><span class="o">.</span><span class="n">xlabel_style</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cartopyGridFontSize</span>
+        <span class="n">gl</span><span class="o">.</span><span class="n">ylabel_style</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cartopyGridFontSize</span>
 
         <span class="k">if</span> <span class="n">levels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
@@ -737,6 +763,13 @@
         <span class="k">if</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
             <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cartopyGridFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;cartopyGridFontSize&#39;</span><span class="p">)</span>
 
     <span class="n">useCartopyCoastline</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;polarProjection&#39;</span><span class="p">,</span>
                                             <span class="s1">&#39;useCartopyCoastline&#39;</span><span class="p">)</span>

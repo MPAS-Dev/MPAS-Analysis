@@ -661,6 +661,17 @@
 
             <span class="n">bias</span> <span class="o">=</span> <span class="n">modelOutput</span> <span class="o">-</span> <span class="n">refOutput</span>
 
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                            <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span>
         <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -678,7 +689,9 @@
                                <span class="n">modelTitle</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">),</span>
                                <span class="n">refTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span><span class="p">,</span>
                                <span class="n">diffTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                               <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">)</span>
+                               <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span>
+                               <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+                               <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
@@ -741,6 +754,23 @@
             <span class="c1"># arctic</span>
             <span class="n">hemisphere</span> <span class="o">=</span> <span class="s1">&#39;north&#39;</span>
 
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                            <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;cartopyGridFontSize&#39;</span><span class="p">):</span>
+            <span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                                <span class="s1">&#39;cartopyGridFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="n">plot_polar_projection_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
             <span class="n">x</span><span class="p">,</span>
@@ -756,7 +786,10 @@
             <span class="n">refTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span><span class="p">,</span>
             <span class="n">diffTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span><span class="p">,</span>
             <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span>
-            <span class="n">hemisphere</span><span class="o">=</span><span class="n">hemisphere</span><span class="p">)</span>
+            <span class="n">hemisphere</span><span class="o">=</span><span class="n">hemisphere</span><span class="p">,</span>
+            <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+            <span class="n">cartopyGridFontSize</span><span class="o">=</span><span class="n">cartopyGridFontSize</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
         <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
