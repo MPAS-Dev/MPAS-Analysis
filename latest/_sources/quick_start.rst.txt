@@ -28,7 +28,12 @@ MPAS-Analysis is available as an anaconda package via the ``conda-forge`` channe
 To use the latest version for developers, get the code from:
  `https://github.com/MPAS-Dev/MPAS-Analysis <https://github.com/MPAS-Dev/MPAS-Analysis>`_
 
-Then, you will need to set up a conda environment:
+Then, you will need to set up a conda environment from the MPAS-Analysis repo.
+This environment will include the required dependencies for the development
+branch from ``dev-spec.txt`` and will install the ``mpas_analysis`` package into
+the conda environment in a way that points directly to the local branch (so
+changes you make to the code directly affect ``mpas_analysis`` in the conda
+environment):
 
 .. code-block:: bash
 

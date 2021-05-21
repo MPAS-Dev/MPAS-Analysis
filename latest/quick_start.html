@@ -206,7 +206,12 @@ used those components.</p>
 <dt>To use the latest version for developers, get the code from:</dt><dd><p><a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">https://github.com/MPAS-Dev/MPAS-Analysis</a></p>
 </dd>
 </dl>
-<p>Then, you will need to set up a conda environment:</p>
+<p>Then, you will need to set up a conda environment from the MPAS-Analysis repo.
+This environment will include the required dependencies for the development
+branch from <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code> and will install the <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> package into
+the conda environment in a way that points directly to the local branch (so
+changes you make to the code directly affect <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> in the conda
+environment):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda create -y -n mpas_dev --file dev-spec.txt
