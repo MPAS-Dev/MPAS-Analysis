@@ -43,7 +43,12 @@ conda activate mpas-analysis
 To use the latest version for developers, get the code from:
  [https://github.com/MPAS-Dev/MPAS-Analysis](https://github.com/MPAS-Dev/MPAS-Analysis)
 
-Then, you will need to set up a conda environment:
+Then, you will need to set up a conda environment from the MPAS-Analysis repo.
+This environment will include the required dependencies for the development
+branch from `dev-spec.txt` and will install the `mpas_analysis` package into
+the conda environment in a way that points directly to the local branch (so
+changes you make to the code directly affect `mpas_analysis` in the conda
+environment):
 
 ``` bash
 conda config --add channels conda-forge
@@ -54,7 +59,7 @@ python -m pip install -e .
 ```
 
 If you are developing another conda package at the same time (this is common
-for MPAS-Tools or geometric_features), you should first comment out the other
+for MPAS-Tools or geometric\_features), you should first comment out the other
 package in `dev-spec.txt`.  Then, you can install both packages in the same
 development environment, e.g.:
 ``` bash
