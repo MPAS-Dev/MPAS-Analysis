@@ -462,7 +462,7 @@ def run_analysis(config, analyses):  # {{{
     mainRunName = config.get('runs', 'mainRunName')
 
     if len(mainRunName) > 55:
-        print('Warning: The main run name is quite long and will be'
+        print('Warning: The main run name is quite long and will be '
               'truncated in some plots: \n{}\n\n'.format(mainRunName))
 
     configFileName = '{}/config.{}'.format(logsDirectory, mainRunName)
