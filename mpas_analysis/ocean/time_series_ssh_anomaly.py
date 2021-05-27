@@ -10,6 +10,8 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
+import numpy
+import matplotlib.pyplot as plt
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -222,6 +224,44 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
                                  firstYearXTicks=firstYearXTicks,
                                  yearStrideXTicks=yearStrideXTicks)
 
+        if config.has_option(self.taskName, 'fitStartYear') and \
+                config.has_option(self.taskName, 'fitEndYear'):
+            fitStartYear = config.getint(self.taskName, 'fitStartYear')
+            fitEndYear = config.getint(self.taskName, 'fitEndYear')
+            fitStartDate = '{:04d}-01-01_00:00:00'.format(fitStartYear)
+            fitEndDate = '{:04d}-12-31_23:59:59'.format(fitEndYear)
+
+            dsFit = open_mpas_dataset(fileName=fileName, calendar=calendar,
+                                      variableList=variableList,
+                                      timeVariableNames=None,
+                                      startDate=fitStartDate,
+                                      endDate=fitEndDate)
+
+            time = dsFit.Time.values
+            deltaSSH = dsFit[varName].values
+
+            coeffs = numpy.polyfit(time, deltaSSH, deg=1)
+            print(coeffs)
+            line = numpy.poly1d(coeffs)
+            ylim = plt.gca().get_ylim()
+
+            # m/day --> m/yr
+            slope = coeffs[0]*365
+
+            label = r'linear fit {:04d}-{:04d}: slope = ${}$ m/yr'.format(
+                fitStartYear, fitEndYear, _as_si(slope, 2))
+
+            fitColor = config.get('timeSeries', 'fitColor1')
+            full_time = ds.Time.values
+            plt.plot(full_time, line(full_time), color=fitColor,
+                     linewidth=0.6*lineWidths[0],
+                     label=label)
+
+            plt.plot([time[0], time[-1]], line([time[0], time[-1]]), '.',
+                     color=fitColor, markersize=16)
+            plt.gca().set_ylim(ylim)
+            plt.legend(loc='best')
+
         savefig(outFileName, config)
 
         caption = title
@@ -251,3 +291,12 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
             'Global mean thickness of the water column'
 
         return ds
+
+
+def _as_si(x, ndp):
+    """
+    https://stackoverflow.com/a/31453961/7728169
+    """
+    s = '{x:0.{ndp:d}e}'.format(x=x, ndp=ndp)
+    m, e = s.split('e')
+    return r'{m:s}\times 10^{{{e:d}}}'.format(m=m, e=int(e))
