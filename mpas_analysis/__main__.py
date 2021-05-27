@@ -189,6 +189,9 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.TimeSeriesOHCAnomaly(config,
                                                oceanTimeSeriesTask,
                                                controlConfig))
+    analyses.append(ocean.TimeSeriesSSHAnomaly(config,
+                                               oceanTimeSeriesTask,
+                                               controlConfig))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
                                         controlConfig))
     analyses.append(ocean.TimeSeriesTransport(config, controlConfig))
