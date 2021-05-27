@@ -87,7 +87,7 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
     for variable in ds.data_vars:
         ds[variable] = ds[variable] - dsStart[variable]
 
-    ds = compute_moving_avg(ds)
+    ds = compute_moving_avg(ds, movingAveragePoints=movingAveragePoints)
 
     return ds
 
