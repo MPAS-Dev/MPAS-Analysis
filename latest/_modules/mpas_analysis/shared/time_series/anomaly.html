@@ -262,7 +262,7 @@
     <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
         <span class="n">ds</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">-</span> <span class="n">dsStart</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
 
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">compute_moving_avg</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">compute_moving_avg</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ds</span></div>
 
