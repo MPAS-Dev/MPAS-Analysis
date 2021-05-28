@@ -189,6 +189,9 @@ def build_analysis_list(config, controlConfig):  # {{{
     analyses.append(ocean.TimeSeriesOHCAnomaly(config,
                                                oceanTimeSeriesTask,
                                                controlConfig))
+    analyses.append(ocean.TimeSeriesSSHAnomaly(config,
+                                               oceanTimeSeriesTask,
+                                               controlConfig))
     analyses.append(ocean.TimeSeriesSST(config, oceanTimeSeriesTask,
                                         controlConfig))
     analyses.append(ocean.TimeSeriesTransport(config, controlConfig))
@@ -459,7 +462,7 @@ def run_analysis(config, analyses):  # {{{
     mainRunName = config.get('runs', 'mainRunName')
 
     if len(mainRunName) > 55:
-        print('Warning: The main run name is quite long and will be'
+        print('Warning: The main run name is quite long and will be '
               'truncated in some plots: \n{}\n\n'.format(mainRunName))
 
     configFileName = '{}/config.{}'.format(logsDirectory, mainRunName)

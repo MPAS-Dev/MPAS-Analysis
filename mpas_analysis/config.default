@@ -283,6 +283,8 @@ obsColor3 = tab:green
 obsColor4 = tab:purple
 obsColor5 = tab:cyan
 
+fitColor1 = tab:blue
+
 [index]
 ## options related to producing nino index.
 
@@ -594,6 +596,30 @@ movingAveragePoints = 12
 # commented out to determine the distance between ticks automatically.
 
 # yearStrideXTicks = 1
+
+
+[timeSeriesSSHAnomaly]
+## options related to plotting time series of sea surface height (SSH)
+## anomalies from a reference year
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+# yearStrideXTicks = 1
+
+# An optional start and end year for a linear fit.  The fit is only performed
+# between the start and end year, and these years are marked with large dots,
+# but the trend line may continue beyond these bounds in both directions.
+# fitStartYear = 1
+# fitEndYear = 100
 
 
 [indexNino34]
