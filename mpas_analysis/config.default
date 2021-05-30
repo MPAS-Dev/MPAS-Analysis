@@ -68,10 +68,18 @@ ncclimoThreads = 12
 # serial, the default)
 mapMpiTasks = 1
 
+# "None" if ESMF should perform remapping in serial without a command, or one of# "srun" or "mpirun" if it should be run in parallel  (or in serial but with a
+# command)
+mapParallelExec = None
+
 # Multiprocessing method used in python mask creation ("forkserver", "fork" or
 # "spawn").  We have found that "spawn" is the only one that works in python
 # 3.7 on Anvil so this is the default
 multiprocessingMethod = spawn
+
+
+# how many parallel tasks to use for generating mapping files with ESMF
+esmfParallelTasks = 1
 
 
 [diagnostics]
