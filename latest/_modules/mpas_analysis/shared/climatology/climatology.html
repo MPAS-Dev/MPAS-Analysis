@@ -296,6 +296,9 @@
                         <span class="n">mappingFileName</span><span class="p">)</span>
 
     <span class="n">mpiTasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;mapMpiTasks&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">esmf_parallel_exec</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;mapParallelExec&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">esmf_parallel_exec</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="n">esmf_parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">mappingSubdirectory</span> <span class="o">=</span> \
         <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
@@ -303,7 +306,8 @@
     <span class="n">make_directories</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">mappingSubdirectory</span><span class="p">)</span> <span class="k">as</span> <span class="n">tempdir</span><span class="p">:</span>
         <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                    <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpiTasks</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+                                    <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpiTasks</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">,</span>
+                                    <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">esmf_parallel_exec</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">remapper</span>  <span class="c1"># }}}</span></div>
 
