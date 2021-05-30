@@ -51,6 +51,9 @@ class TestClimatology(TestCase):
     def setup_config(self, maxChunkSize=10000):
         config = MpasAnalysisConfigParser()
 
+        config.add_section('execute')
+        config.set('execute', 'mapParallelExec', 'None')
+
         config.add_section('diagnostics')
         config.set('diagnostics', 'baseDirectory', self.test_dir)
         config.set('diagnostics', 'customDirectory', 'none')

@@ -4,6 +4,7 @@ mainRunName = runName
 [execute]
 parallelTaskCount = 1
 ncclimoParallelMode = serial
+mapParallelExec = None
 
 [diagnostics]
 baseDirectory = /dir/for/model/output
