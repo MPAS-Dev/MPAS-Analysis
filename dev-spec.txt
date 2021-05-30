@@ -20,7 +20,7 @@ pandas
 pillow
 progressbar2
 pyproj
-pyremap<0.1.0
+pyremap>=0.0.12,<0.1.0
 python-dateutil
 requests
 scipy
