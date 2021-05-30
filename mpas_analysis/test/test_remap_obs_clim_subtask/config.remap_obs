@@ -1,3 +1,6 @@
+[execute]
+mapParallelExec = None
+
 [diagnostics]
 baseDirectory = /dir/to/diagnostics
 customDirectory = none

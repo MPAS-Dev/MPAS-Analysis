@@ -121,6 +121,9 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
 
     mpiTasks = config.getWithDefault('execute', 'mapMpiTasks', 1)
+    esmf_parallel_exec = config.get('execute', 'mapParallelExec')
+    if esmf_parallel_exec == 'None':
+        esmf_parallel_exec = None
 
     mappingSubdirectory = \
         build_config_full_path(config, 'output',
@@ -128,7 +131,8 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     make_directories(mappingSubdirectory)
     with TemporaryDirectory(dir=mappingSubdirectory) as tempdir:
         remapper.build_mapping_file(method=method, logger=logger,
-                                    mpiTasks=mpiTasks, tempdir=tempdir)
+                                    mpiTasks=mpiTasks, tempdir=tempdir,
+                                    esmf_parallel_exec=esmf_parallel_exec)
 
     return remapper  # }}}
 
