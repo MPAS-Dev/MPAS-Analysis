@@ -31,6 +31,7 @@ xarray>=0.14.1
 
 # Development
 pip
+pytest
 
 # Documentation
 mock
