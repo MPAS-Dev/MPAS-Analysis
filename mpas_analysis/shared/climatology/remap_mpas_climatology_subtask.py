@@ -588,12 +588,18 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         renormalizationThreshold = self.config.getfloat(
             'climatology', 'renormalizationThreshold')
 
+        parallel_exec = self.config.get(
+            'execute', 'ncremapParallelExec')
+        if parallel_exec == 'None':
+            parallel_exec = None
+
         if self.useNcremap:
             remapper.remap_file(inFileName=inFileName,
                                 outFileName=outFileName,
                                 overwrite=True,
                                 renormalize=renormalizationThreshold,
-                                logger=self.logger)
+                                logger=self.logger,
+                                parallel_exec=parallel_exec)
 
             remappedClimatology = xr.open_dataset(outFileName)
             remappedClimatology.load()

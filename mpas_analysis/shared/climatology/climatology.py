@@ -361,6 +361,11 @@ def remap_and_write_climatology(config, climatologyDataSet,
     else:
         renormalizationThreshold = config.getfloat(
             'climatology', 'renormalizationThreshold')
+        parallel_exec = config.get(
+            'execute', 'ncremapParallelExec')
+        if parallel_exec == 'None':
+            parallel_exec = None
+
         if useNcremap:
             if not os.path.exists(climatologyFileName):
                 write_netcdf(climatologyDataSet, climatologyFileName)
@@ -368,7 +373,8 @@ def remap_and_write_climatology(config, climatologyDataSet,
                                 outFileName=remappedFileName,
                                 overwrite=True,
                                 renormalize=renormalizationThreshold,
-                                logger=logger)
+                                logger=logger,
+                                parallel_exec=parallel_exec)
             remappedClimatology = xr.open_dataset(remappedFileName)
         else:
 
