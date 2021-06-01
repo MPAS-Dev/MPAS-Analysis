@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Config File Reorganization &mdash; MPAS-Analysis 1.4.0rc3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reorganize Timekeeping" href="timekeeping_reorg.html" />
+    <link rel="prev" title="Generalized Horizontal Interpolation in MPAS-Analysis" href="generalized_horizontal_interpolation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.0rc3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../design_docs.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Config File Reorganization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timekeeping_reorg.html">Reorganize Timekeeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalize_calendar.html">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variable_mapping_reorg.html">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
+        
+      <li>Config File Reorganization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/design_docs/config_file_reorganization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="config-file-reorganization">
+<h1>Config File Reorganization<a class="headerlink" href="#config-file-reorganization" title="Permalink to this headline">¶</a></h1>
+<h2>
+Xylar Asay-Davis<br>
+date: 2017/01/29<br>
+</h2>
+<h3> Summary </h3>
+
+This document describes various efforts to clean up the structure of the MPAS-Analysis config file.  The idea is to create a template config file that will replace `config.analysis` as well as a number of example config files designed to make use of various MPAS and ACME runs on various machines.  The reorganization should make the analysis easier for users to modify and run.
+
+<h2> Requirements </h2><h3> Requirement: a simple way of turning on and off individual analysis modules <br>
+Date last modified: 2017/01/29 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>There should be a simple, intuitive method for turning on and off individual analysis modules (e.g. <code class="docutils literal notranslate"><span class="pre">ocean/ohc_timeseries</span></code>).  This should replace the current approach of having a boolean <code class="docutils literal notranslate"><span class="pre">generate</span></code> flag for each analysis module in a separate config section.  Preferably, there should be an equivalent method for turning on and off analysis modules from the command line that overrides that in the config file.</p>
+<h3> Requirement: there should be a simplified template for config files <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The current example config file should be made into a general template.  Simplifications should be made to the template so that it can more easily and intuitively be modified for several analyses.  Example config files should also be added for analyzing several existing runs on several different machines.</p>
+<h3> Requirement: removal of ACME specific config options <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>To the extent possible, ACME-specific config options such as <code class="docutils literal notranslate"><span class="pre">casename</span></code> and <code class="docutils literal notranslate"><span class="pre">ref_casename_v0</span></code> should be generalized in a way that is also appropriate not just ACME runs but also any other runs involving the MPAS components we support.</p>
+<h3> Requirement: consistent section and option names <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>A consistent convention of capitalization and underscores should be used throughout the config file.</p>
+<h2> Design and Implementation </h2><h3> Implementation: a simple way of turning on and off individual analysis modules <br>
+Date last modified: 2017/02/02 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>Implementation of the <code class="docutils literal notranslate"><span class="pre">config.template</span></code> file can be found <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">here</a>.</p>
+<p>The following comment describes the planned implementation in the config file.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># a list of analyses to generate.  Valid names are:</span>
+<span class="c1">#   &#39;timeSeriesOHC&#39;, &#39;timeSeriesSST&#39;, &#39;regriddedSST&#39;,</span>
+<span class="c1">#   &#39;regriddedSSS&#39;, &#39;regriddedMLD&#39;, &#39;timeSeriesSeaIceAreaVol&#39;,</span>
+<span class="c1">#   &#39;regriddedSeaIceConcThick&#39;</span>
+<span class="c1"># the following shortcuts exist:</span>
+<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
+<span class="c1">#   &#39;all_timeSeries&#39; -- all time-series analyses will be run</span>
+<span class="c1">#   &#39;all_regriddedHorizontal&#39; -- all analyses involving regridded horizontal</span>
+    <span class="c1">#                                fields will be run</span>
+<span class="c1">#   &#39;all_ocean&#39; -- all ocean analyses will be run</span>
+<span class="c1">#   &#39;all_seaIce&#39; -- all sea-ice analyses will be run</span>
+<span class="c1">#   &#39;no_timeSeriesOHC&#39; -- skip &#39;timeSeriesOHC&#39; (and similarly with the</span>
+<span class="c1">#                             other analyses).</span>
+<span class="c1">#   &#39;no_ocean&#39;, &#39;no_timeSeries&#39;, etc. -- in analogy to &#39;all_*&#39;, skip the</span>
+<span class="c1">#                                            given category of analysis</span>
+<span class="c1"># an equivalent syntax can be used on the command line to override this</span>
+<span class="c1"># option:</span>
+<span class="c1">#    ./run_analysis.py config.analysis --generate \</span>
+<span class="c1">#         all,no_ocean,all_timeSeries</span>
+<span class="na">generate</span> <span class="o">=</span> <span class="s">[&#39;all&#39;]</span>
+</pre></div>
+</div>
+<p>Where there are conflicts between items in the <code class="docutils literal notranslate"><span class="pre">generate</span></code> list, successive items will override earlier items.  For example, <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all',</span> <span class="pre">'no_timeSeriesOHC']</span></code> will generate all analyses except <code class="docutils literal notranslate"><span class="pre">timeSeriesOHC</span></code>.  As another example, <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all',</span> <span class="pre">'no_ocean',</span> <span class="pre">'all_timeSeries']</span></code> would generate all diagnostics except those comparing ocean model results with observations (and previous model results).  (Note that a more efficient and intuitive way to do the same would be <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all_seaIce',</span> <span class="pre">'all_timeSeries']</span></code>.)</p>
+<p>An analogous approach has also been added at the command line, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./run_analysis.py config.analysis --generate all,no_ocean,all_timeSeries
+</pre></div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">--generate</span></code> flag is used on the command line, it will replace the generate option in the config file.</p>
+<p>As an aside, I note that it is not clear if future analysis modules will fit neatly into categories like “time series” and “regridded horizontal” fields, and these categories are not meant to be all-encompassing.</p>
+<h3> Implementation: there should be a simplified template for config files <br>
+Date last modified: 2017/01/29 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The required <code class="docutils literal notranslate"><span class="pre">config.template</span></code> has been implemented in #86, specifically <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">here</a>.  A subdirectory <code class="docutils literal notranslate"><span class="pre">configs</span></code> will be added with several examples from runs on LANL IC and on Edison at NERSC.  Other examples can be added as appropriate and useful.</p>
+<h3> Implementation: removal of ACME specific config options <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p><code class="docutils literal notranslate"><span class="pre">casename</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">mainRunName</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceRunName</span></code> has been added for comparison with reference runs that have not been preprocessed (not yet supported), and <code class="docutils literal notranslate"><span class="pre">ref_casename_v0</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">preprocessedReferenceRunName</span></code>.</p>
+<p>See #86, specifically <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">config.template</a>.</p>
+<h3> Implementation: consistent section and option names <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>In <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">config.template</a> in #86, “<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a>” has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes <code class="docutils literal notranslate"><span class="pre">all_</span></code> and <code class="docutils literal notranslate"><span class="pre">no_</span></code> make splitting and comparison simpler in the implementation.</p>
+<h2> Testing </h2><h3> Testing and Validation: a simple way of turning on and off individual analysis modules <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>CI will be added to make sure that the function to parse the generate list (<code class="docutils literal notranslate"><span class="pre">run_analysis.check_generate</span></code>) behaves as expected.</p>
+<h3> Testing and Validation: there should be a simplified template for config files <br>
+Date last modified: 2017/01/29 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>There is not a way to test the template in the usual sense.  Instead, the test will be asking other developers and users to adapt the template for new runs to make sure it is intuitive.</p>
+<h3> Testing and Validation: removal of ACME specific config options <br>
+Date last modified: 2017/01/29 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>For now, the plan is just to rename the appropriate config options, so the test is simply to ensure that analysis runs correctly and produces bit-for-bit identical images to those produced by the current <code class="docutils literal notranslate"><span class="pre">MPAS-Analysis/develop</span></code>.</p>
+<h3> Testing and Validation: consistent section and option names <br>
+Date last modified: 2017/02/01 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>As above, the test is simply to ensure that analysis runs correctly and produces bit-for-bit identical images to those produced by the current <code class="docutils literal notranslate"><span class="pre">MPAS-Analysis/develop</span></code>.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="timekeeping_reorg.html" class="btn btn-neutral float-right" title="Reorganize Timekeeping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generalized_horizontal_interpolation.html" class="btn btn-neutral float-left" title="Generalized Horizontal Interpolation in MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mpas_analysis.shared.plot.oned &mdash; MPAS-Analysis 1.4.0rc3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.0rc3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.shared.plot.oned</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mpas_analysis.shared.plot.oned</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Plotting utilities, including routines for plotting:</span>
+<span class="sd">    * time series (and comparing with reference data sets)</span>
+<span class="sd">    * remapped horizontal fields (and comparing with reference data sets)</span>
+<span class="sd">    * vertical sections on native grid</span>
+<span class="sd">    * NINO34 time series and spectra</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+    <span class="n">unicode_literals</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.save</span> <span class="kn">import</span> <span class="n">savefig</span>
+
+
+<div class="viewcode-block" id="plot_1D"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.plot.plot_1D.html#mpas_analysis.shared.plot.plot_1D">[docs]</a><span class="k">def</span> <span class="nf">plot_1D</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">xArrays</span><span class="p">,</span> <span class="n">fieldArrays</span><span class="p">,</span> <span class="n">errArrays</span><span class="p">,</span>
+            <span class="n">lineColors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineStyles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineWidths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">legendText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">fileout</span><span class="o">=</span><span class="s1">&#39;plot_1D.png&#39;</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+            <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots a 1D line plot with error bars if available.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : instance of ConfigParser</span>
+<span class="sd">        the configuration, containing a [plot] section with options that</span>
+<span class="sd">        control plotting</span>
+
+<span class="sd">    xArrays : list of float arrays</span>
+<span class="sd">        x array (latitude, or any other x axis except time)</span>
+
+<span class="sd">    fieldArrays : list of float arrays</span>
+<span class="sd">        y array (any field as function of x)</span>
+
+<span class="sd">    errArrays : list of float arrays</span>
+<span class="sd">        error array (y errors)</span>
+
+<span class="sd">    lineColors, lineStyles, markers, legendText : list of str, optional</span>
+<span class="sd">        control line color, style, marker, and corresponding legend</span>
+<span class="sd">        text.  Default is black, solid line with no marker, and no legend.</span>
+
+<span class="sd">    lineWidths : list of float, optional</span>
+<span class="sd">        control line width.  Default is 1.0.</span>
+
+<span class="sd">    title : str, optional</span>
+<span class="sd">        title of plot</span>
+
+<span class="sd">    xlabel, ylabel : str, optional</span>
+<span class="sd">        label of x- and y-axis</span>
+
+<span class="sd">    fileout : str, optional</span>
+<span class="sd">        the file name to be written</span>
+
+<span class="sd">    figsize : tuple of float, optional</span>
+<span class="sd">        size of the figure in inches</span>
+
+<span class="sd">    dpi : int, optional</span>
+<span class="sd">        the number of dots per inch of the figure, taken from section ``plot``</span>
+<span class="sd">        option ``dpi`` in the config file by default</span>
+
+<span class="sd">    xLim : float array, optional</span>
+<span class="sd">        x range of plot</span>
+
+<span class="sd">    yLim : float array, optional</span>
+<span class="sd">        y range of plot</span>
+
+<span class="sd">    invertYAxis : logical, optional</span>
+<span class="sd">        if True, invert Y axis</span>
+
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
+<span class="sd">        they are truncated with a trailing ellipsis</span>
+
+<span class="sd">    titleFontSize : int, optional</span>
+<span class="sd">        size of the title font</span>
+
+<span class="sd">    axisFontSize : int, optional</span>
+<span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Mark Petersen, Milena Veneziani, Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+
+    <span class="c1"># set up figure</span>
+    <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+
+    <span class="n">plotLegend</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">dsIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xArrays</span><span class="p">)):</span>
+        <span class="n">xArray</span> <span class="o">=</span> <span class="n">xArrays</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+        <span class="n">fieldArray</span> <span class="o">=</span> <span class="n">fieldArrays</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+        <span class="n">errArray</span> <span class="o">=</span> <span class="n">errArrays</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">xArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">legendText</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">legendText</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
+            <span class="n">plotLegend</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">lineColors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">lineColors</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">markers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">marker</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">marker</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">lineStyles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linestyle</span> <span class="o">=</span> <span class="n">lineStyles</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">lineWidths</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="n">lineWidths</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xArray</span><span class="p">,</span> <span class="n">fieldArray</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+                 <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xArray</span><span class="p">,</span> <span class="n">fieldArray</span><span class="p">,</span> <span class="n">fieldArray</span> <span class="o">+</span> <span class="n">errArray</span><span class="p">,</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xArray</span><span class="p">,</span> <span class="n">fieldArray</span><span class="p">,</span> <span class="n">fieldArray</span> <span class="o">-</span> <span class="n">errArray</span><span class="p">,</span>
+                             <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>  <span class="c1"># horizontal lines</span>
+    <span class="k">if</span> <span class="n">plotLegend</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">xArrays</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">axisFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)</span>
+    <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">axisFontSize</span><span class="p">}</span>
+    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                  <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
+                  <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">max_title_length</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">invertYAxis</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">xLim</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xLim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">yLim</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">yLim</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fileout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">fileout</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># }}}</span></div>
+
+
+<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
