@@ -763,12 +763,18 @@
         <span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
             <span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;renormalizationThreshold&#39;</span><span class="p">)</span>
 
+        <span class="n">parallel_exec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;ncremapParallelExec&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parallel_exec</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span><span class="p">:</span>
             <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">inFileName</span><span class="p">,</span>
                                 <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                 <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+                                <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
 
             <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
             <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
