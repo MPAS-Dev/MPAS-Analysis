@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>timeSeriesOceanRegions &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -110,9 +115,11 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">timeSeriesOceanRegions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#region-groups">Region Groups</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#region-mask">Region Mask</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#region-names">Region Names</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#depth-bounds">Depth Bounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-config-options">Other Config Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
 </ul>
 </li>
@@ -190,6 +197,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -203,7 +212,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/tasks/timeSeriesOceanRegions.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -229,72 +238,71 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">timeSeriesOceanRegions</span><span class="p">]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span>
 <span class="c1">## options related to plotting time series of groups of ocean regions</span>
 
 <span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="n">regionGroups</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctic Regions&#39;</span><span class="p">]</span>
+<span class="na">regionGroups</span> <span class="o">=</span> <span class="s">[&#39;Antarctic Regions&#39;]</span>
 
 
-<span class="p">[</span><span class="n">timeSeriesAntarcticRegions</span><span class="p">]</span>
+<span class="k">[timeSeriesAntarcticRegions]</span>
 <span class="c1">## options related to plotting time series of Antarctic regions</span>
-
-<span class="c1"># An identifying string that is the prefix for a geojson file containing</span>
-<span class="c1"># Antarctic ocean regions.  Each region must have &#39;zmin&#39; and &#39;zmax&#39; properties</span>
-<span class="c1"># in addition to the usual properties for a region in geometric_features.  The</span>
-<span class="c1"># string is also used as the suffix for mask files generated from the geojson</span>
-<span class="n">regionMaskSuffix</span> <span class="o">=</span> <span class="s1">&#39;antarcticRegions20200621&#39;</span>
 
 <span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
 <span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span>
 <span class="c1"># regionMaskSubdirectory for details.</span>
-<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
+<span class="na">regionNames</span> <span class="o">=</span> <span class="s">[]</span>
 
 <span class="c1"># a list of variables to plot</span>
-<span class="n">variables</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;$^\circ$C&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">},</span>
-             <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">},</span>
-             <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">}]</span>
+<span class="na">variables</span> <span class="o">=</span> <span class="s">[{&#39;name&#39;: &#39;temperature&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Temperature&#39;,</span>
+              <span class="na">&#39;units&#39;: r&#39;$^\circ$C&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;},</span>
+             <span class="na">{&#39;name&#39;: &#39;salinity&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Salinity&#39;,</span>
+              <span class="na">&#39;units&#39;: &#39;PSU&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;},</span>
+             <span class="na">{&#39;name&#39;: &#39;potentialDensity&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Potential Density&#39;,</span>
+              <span class="na">&#39;units&#39;: &#39;kg m$^{-3}$&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;},</span>
+             <span class="na">{&#39;name&#39;: &#39;mixedLayerDepth&#39;,</span>
+              <span class="na">&#39;title&#39;: &#39;Mixed Layer Depth&#39;,</span>
+              <span class="na">&#39;units&#39;: &#39;m&#39;,</span>
+              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_dThreshMLD&#39;}]</span>
+
+<span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span>
+<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
+<span class="c1"># Add these to a custom config file to override the defaults.</span>
+<span class="c1"># zmin = -1000</span>
+<span class="c1"># zmax = -400</span>
+
+<span class="c1"># Observational data sets to compare against</span>
+<span class="na">obs</span> <span class="o">=</span> <span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="region-groups">
 <h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
-<p>A list of groups of regions, each of which will get its own gallery group on
-the resulting analysis webpage.  These can be any name without punctuation.
-For each region group, there should be a corresponding
+<p><code class="docutils literal notranslate"><span class="pre">regionGroup</span></code> is a list of region groups,each of which will get its own
+gallery group on the resulting analysis webpage.  See
+<a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for more information on the available region
+groups. For each region group, there should be a corresponding
 <code class="docutils literal notranslate"><span class="pre">timeSeries&lt;RegionGroup&gt;</span></code> section of the config file, with any spaces removed
-from the name of the region group.  By default, the only region group is
-“Antarctic Regions”.</p>
-</div>
-<div class="section" id="region-mask">
-<h2>Region Mask<a class="headerlink" href="#region-mask" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">regionMaskSuffix</span></code> is a prefix for a geojson file produce from the
-<code class="docutils literal notranslate"><span class="pre">geometric_features</span></code> package and documented in the <code class="docutils literal notranslate"><span class="pre">preprocess_masks</span></code>
-directory of the GitHub repo.  It should include any number of ocean regions,
-each of which includes properties <code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>.  Examples of how to
-create such a set of features can be found in <a class="reference external" href="https://github.com/MPAS-Dev/geometric_features/tree/master/feature_creation_scripts/antarctic_ocean_regions">antarctic_ocean_regions</a>.</p>
+from the name of the region group.  By default, the only region group for this
+task is <code class="docutils literal notranslate"><span class="pre">'Antarctic</span> <span class="pre">Regions'</span></code>.</p>
 </div>
 <div class="section" id="region-names">
 <h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> (the default) to plot all of the
-regions in the geojson file.  In the case of “Antarctic Regions”, these
-are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Southern Ocean&quot;</span><span class="p">,</span> <span class="s2">&quot;Southern Ocean 60S&quot;</span><span class="p">,</span> <span class="s2">&quot;Eastern Weddell Sea Shelf&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Eastern Weddell Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Western Weddell Sea Shelf&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Western Weddell Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Weddell Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Weddell Sea Deep&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Bellingshausen Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Bellingshausen Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Amundsen Sea Shelf&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Amundsen Sea Deep&quot;</span><span class="p">,</span> <span class="s2">&quot;Eastern Ross Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Eastern Ross Sea Deep&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Western Ross Sea Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;Western Ross Sea Deep&quot;</span><span class="p">,</span>
- <span class="s2">&quot;East Antarctic Seas Shelf&quot;</span><span class="p">,</span> <span class="s2">&quot;East Antarctic Seas Deep&quot;</span><span class="p">]</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the regions in the
+region group.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span>
+ <span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span>
+ <span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span>
+ <span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span>
+ <span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span>
+ <span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span>
+ <span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
 </pre></div>
 </div>
 </div>
@@ -308,6 +316,34 @@ the NetCDF files as well as the text appended to subtaks names and file names.
 It should contain no spaces.  The <code class="docutils literal notranslate"><span class="pre">&quot;mpas&quot;</span></code> entry is the name of the
 corresponding field in the MPAS-Ocean <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code> files.</p>
 </div>
+<div class="section" id="depth-bounds">
+<h2>Depth Bounds<a class="headerlink" href="#depth-bounds" title="Permalink to this headline">¶</a></h2>
+<p>Some region groups such as <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code> define default depth bounds
+(<code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>) for each region.  For <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, this was
+done so regions on the continental shelf (ending in “Shelf”) would be averaged
+over a different range (<code class="docutils literal notranslate"><span class="pre">zmax</span></code> = -200 m, <code class="docutils literal notranslate"><span class="pre">zmin</span></code> = -1000 m) than the regions
+of the deeper ocean (ending in “Deep”, with <code class="docutils literal notranslate"><span class="pre">zmax</span></code> = -400 m,
+<code class="docutils literal notranslate"><span class="pre">zmin</span></code> = -1000 m).  The user can override these defaults by defining her own
+<code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>.  Note that <code class="docutils literal notranslate"><span class="pre">zmin</span></code> is deeper and <code class="docutils literal notranslate"><span class="pre">zmax</span></code> is shallower
+since they have negative values.</p>
+</div>
+<div class="section" id="other-config-options">
+<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>For more details, see:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">obs</span></code> is a list of the observational data sets to plot as reference lines
+(constant in time).  Possible values are <code class="docutils literal notranslate"><span class="pre">'SOSE'</span></code> and <code class="docutils literal notranslate"><span class="pre">'WOA18'</span></code>.  An empty
+list can be provided if no observations should be plotted.</p>
+<p><a class="reference internal" href="../obs/sose.html#sose"><span class="std std-ref">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</span></a></p>
+<p><a class="reference internal" href="../obs/woa18_t_s.html#woa18-t-s"><span class="std std-ref">WOA18 Temperature and Salinity Climatology</span></a></p>
+</div>
 <div class="section" id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/west_ross_shelf_temp.png"><img alt="../_images/west_ross_shelf_temp.png" class="align-center" src="../_images/west_ross_shelf_temp.png" style="width: 500px;" /></a>
@@ -319,37 +355,29 @@ corresponding field in the MPAS-Ocean <code class="docutils literal notranslate"
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="timeSeriesTemperatureAnomaly.html" class="btn btn-neutral float-right" title="timeSeriesTemperatureAnomaly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="timeSeriesAntarcticMelt.html" class="btn btn-neutral float-left" title="timeSeriesAntarcticMelt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="timeSeriesTemperatureAnomaly.html" class="btn btn-neutral float-right" title="timeSeriesTemperatureAnomaly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="timeSeriesAntarcticMelt.html" class="btn btn-neutral float-left" title="timeSeriesAntarcticMelt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

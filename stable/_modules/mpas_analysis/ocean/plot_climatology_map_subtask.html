@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>mpas_analysis.ocean.plot_climatology_map_subtask &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -49,7 +54,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -127,6 +132,8 @@
         <div class="rst-content">
         
           
+
+
 
 
 
@@ -654,6 +661,17 @@
 
             <span class="n">bias</span> <span class="o">=</span> <span class="n">modelOutput</span> <span class="o">-</span> <span class="n">refOutput</span>
 
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                            <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span>
         <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -671,7 +689,9 @@
                                <span class="n">modelTitle</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">),</span>
                                <span class="n">refTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span><span class="p">,</span>
                                <span class="n">diffTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                               <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">)</span>
+                               <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span>
+                               <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+                               <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
@@ -734,6 +754,23 @@
             <span class="c1"># arctic</span>
             <span class="n">hemisphere</span> <span class="o">=</span> <span class="s1">&#39;north&#39;</span>
 
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                            <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;cartopyGridFontSize&#39;</span><span class="p">):</span>
+            <span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                                <span class="s1">&#39;cartopyGridFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="n">plot_polar_projection_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
             <span class="n">x</span><span class="p">,</span>
@@ -749,7 +786,10 @@
             <span class="n">refTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span><span class="p">,</span>
             <span class="n">diffTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span><span class="p">,</span>
             <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span>
-            <span class="n">hemisphere</span><span class="o">=</span><span class="n">hemisphere</span><span class="p">)</span>
+            <span class="n">hemisphere</span><span class="o">=</span><span class="n">hemisphere</span><span class="p">,</span>
+            <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+            <span class="n">cartopyGridFontSize</span><span class="o">=</span><span class="n">cartopyGridFontSize</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
         <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
@@ -778,28 +818,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

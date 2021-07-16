@@ -32,7 +32,8 @@ these data will be read in::
   seaIceNamelistFileName = mpassi_in
   seaIceStreamsFileName = streams.seaice
 
-  # names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
+  # name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+  # ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
   mpasMeshName = mesh
 
   # Large datasets can encounter a memory error.  Specification of a maximum
@@ -132,7 +133,7 @@ currently supported by the public release of MPAS-Analysis include:
     resolution at the equator.
 
 Mapping files (see :ref:`config_mapping_files` below) and region mask files
-(see :ref:`config_region_mask_files`) are provided from the
+(see :ref:`config_region_groups`) are provided from the
 `E3SM public data repository`_ for these meshes.  For assistance with other
 mesh resolutions, please contact the MPAS-Analysis developers.
 

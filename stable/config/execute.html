@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Execute &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -94,6 +99,8 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Execute</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#parallel-tasks">Parallel Tasks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parallelism-in-nco">Parallelism in NCO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-mapping-file-creation">Parallel Mapping File Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-mask-creation">Parallel Mask Creation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
@@ -170,6 +177,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -183,7 +192,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/config/execute.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -202,6 +211,8 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section of a configuration file contains options used to
 control how tasks are executed within an MPAS-Analysis run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">execute</span><span class="p">]</span>
+<span class="c1">## options related to executing parallel tasks</span>
+
 <span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
 <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -220,6 +231,21 @@ control how tasks are executed within an MPAS-Analysis run:</p>
 <span class="c1"># the number of MPI tasks to use in creating mapping files (1 means tasks run in</span>
 <span class="c1"># serial, the default)</span>
 <span class="n">mapMpiTasks</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># &quot;None&quot; if ESMF should perform mapping file generation in serial without a</span>
+<span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or ins</span>
+<span class="c1"># serial but with a command)</span>
+<span class="n">mapParallelExec</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># &quot;None&quot; if ncremap should perform remapping without a command, or &quot;srun&quot;</span>
+<span class="c1"># possibly with some flags if it should be run with that command</span>
+<span class="n">ncremapParallelExec</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
+<span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
+<span class="c1"># &quot;spawn&quot;).  We have found that &quot;spawn&quot; is the only one that works in python</span>
+<span class="c1"># 3.7 on Anvil so this is the default</span>
+<span class="n">multiprocessingMethod</span> <span class="o">=</span> <span class="n">spawn</span>
 </pre></div>
 </div>
 <div class="section" id="parallel-tasks">
@@ -263,6 +289,59 @@ it is important to be aware of the policies regarding using shared resources.
 On login nodes, <code class="docutils literal notranslate"><span class="pre">bck</span></code> may only be appropriate with <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> set to a
 small number and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> mode may not work at all.</p>
 </div>
+<div class="section" id="parallel-mapping-file-creation">
+<h2>Parallel Mapping File Creation<a class="headerlink" href="#parallel-mapping-file-creation" title="Permalink to this headline">¶</a></h2>
+<p>If mapping files from the MPAS mesh to the comparison grids aren’t already
+available in the diagnostics directory, they will be created before any other
+MPAS-Analysis tasks are run.  If you are running MPAS-Analysis out of
+E3SM-Unified on a compute node, on many systems (see below), ESMF has been
+built with the system version of MPI and you must run mapping-file generation
+with <code class="docutils literal notranslate"><span class="pre">srun</span></code>.  If you are running with <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, the mapping
+files will be generated in parallel.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">mapParallelExec</span> <span class="o">=</span> <span class="s">srun</span>
+</pre></div>
+</div>
+<p>Similarly, some systems (Anvil and Chrysalis) require a parallel executable
+for calls to <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> from E3SM-Unified on compute nodes:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">ncremapParallelExec</span> <span class="o">=</span> <span class="s">srun</span>
+</pre></div>
+</div>
+<p>E3SM supported machines with system MPI support in E3SM-Unified 1.5.0:</p>
+<ul class="simple">
+<li><p>Anvil</p></li>
+<li><p>Badger</p></li>
+<li><p>Chrysalis</p></li>
+<li><p>Compy</p></li>
+<li><p>Cori-Haswell</p></li>
+<li><p>Grizzly</p></li>
+</ul>
+<p>These machines do <strong>not</strong> have MPI support in E3SM-Unified:</p>
+<ul class="simple">
+<li><p>Cori-KNL</p></li>
+<li><p>Cooley</p></li>
+<li><p>Andes</p></li>
+<li><p>Acme1</p></li>
+</ul>
+<p>In the very near future, we hope to add a capability to MPAS-Analysis so that
+it will automatically recognize which machine it is on (or you can specify if
+need be), allowing these and other config options to be set automatically.</p>
+</div>
+<div class="section" id="parallel-mask-creation">
+<h2>Parallel Mask Creation<a class="headerlink" href="#parallel-mask-creation" title="Permalink to this headline">¶</a></h2>
+<p>Tasks that involve <a class="reference internal" href="regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> can generate the masks for each
+region in the group on the fly.  This is done with the mask generation
+command-line tools form MPAS-Tools (see
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#mask-creation-with-pthon-multiprocessing">Mask Creation with Python Multiprocessing</a>),
+which support 3 modes of parallelism: “spawn”, “fork” and “forkserver”. For
+technical details on these modes, see
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods">Contexts and start methods</a>.
+We have found that “spawn” seems to be the most reliable option on Anvil under
+python 3.7 and 3.8.  Any of these methods works well under python 3.8 but only
+“spawn” was reliable under python 3.7.  Therefore, we use “spawn” as the
+default.</p>
+<p>As we gain more experience with this setting, we may update config files for
+specific machines to have different defaults.</p>
+</div>
 </div>
 
 
@@ -270,37 +349,29 @@ small number and <code class="docutils literal notranslate"><span class="pre">mp
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="dask_threads.html" class="btn btn-neutral float-right" title="Dask threads and subprocess count" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="runs.html" class="btn btn-neutral float-left" title="Runs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="dask_threads.html" class="btn btn-neutral float-right" title="Dask threads and subprocess count" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="runs.html" class="btn btn-neutral float-left" title="Runs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

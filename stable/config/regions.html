@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Regions &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -170,6 +175,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -183,7 +190,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/config/regions.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -225,22 +232,24 @@ web page.</p>
 </div>
 <div class="section" id="region-groups">
 <span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
-<p>Currently, seven analysis tasks (<code class="docutils literal notranslate"><span class="pre">climatologyMapAntarcticMelt</span></code>,
-<code class="docutils literal notranslate"><span class="pre">hovmollerOceanRegions</span></code>, <code class="docutils literal notranslate"><span class="pre">oceanRegionalProfiles</span></code>, <code class="docutils literal notranslate"><span class="pre">regionalTSDiagrams</span></code>,
-<code class="docutils literal notranslate"><span class="pre">streamfunctionMOC</span></code>, <code class="docutils literal notranslate"><span class="pre">timeSeriesAntarcticMelt</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">timeSeriesOceanRegions</span></code>) use masks that define regions in an MPAS mesh as
-part of their analysis.  Most of these region group are defined in
-<a class="reference internal" href="../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()</span></code></a>.
-Several tasks (<code class="docutils literal notranslate"><span class="pre">hovmollerOceanRegions</span></code>, <code class="docutils literal notranslate"><span class="pre">oceanRegionalProfiles</span></code>,
-<code class="docutils literal notranslate"><span class="pre">regionalTSDiagrams</span></code>, and <code class="docutils literal notranslate"><span class="pre">timeSeriesOceanRegions</span></code>) can use any of the
-defined region groups.  Currently, available region groups are:
-<code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Subbasins</span></code>.</p>
+<p>Currently, seven analysis tasks (<a class="reference internal" href="../tasks/climatologyMapAntarcticMelt.html#task-climatologymapantarcticmelt"><span class="std std-ref">climatologyMapAntarcticMelt</span></a>,
+<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>,
+<a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, <a class="reference internal" href="../tasks/streamfunctionMOC.html#task-streamfunctionmoc"><span class="std std-ref">streamfunctionMOC</span></a>,
+<a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>)
+use masks that define regions in an MPAS mesh as part of their analysis.  Most
+of these region group are defined in
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.5.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
+Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>,
+<a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>, <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, and
+<a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) can use any of the defined region groups.
+Currently, available region groups are: <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>, and <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Subbasins</span></code>.</p>
 <p>The option <code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section specifies
 the path to cached mask files for these region groups, typically
 <code class="docutils literal notranslate"><span class="pre">diagnostics/mpas_analysis/region_masks</span></code>. Region masks for common MPAS Ocean
 and Seaice meshes are supplied as part of the data from the
-<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a> (see the <a class="reference internal" href="../quick_start.html#quick-start"><span class="std std-ref">Quick Start Guide</span></a>).</p>
+<a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a>
+(see the <a class="reference internal" href="../quick_start.html#quick-start"><span class="std std-ref">Quick Start Guide</span></a>).</p>
 <p>If masks for for a given grid don’t already exist in the cached mask location,
 they will be generated automatically from the aggregation function from the
 <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code> package, see
@@ -258,37 +267,29 @@ process), see the example utility script <code class="docutils literal notransla
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="plot.html" class="btn btn-neutral float-right" title="Plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="plot.html" class="btn btn-neutral float-right" title="Plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Index" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

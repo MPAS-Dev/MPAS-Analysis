@@ -14,78 +14,78 @@ Component and Tags::
 Configuration Options
 ---------------------
 
-The following configuration options are available for this task::
+The following configuration options are available for this task:
 
-  [timeSeriesOceanRegions]
-  ## options related to plotting time series of groups of ocean regions
+.. code-block:: cfg
 
-  # the names of region groups to plot, each with its own section below
-  regionGroups = ['Antarctic Regions']
+    [timeSeriesOceanRegions]
+    ## options related to plotting time series of groups of ocean regions
+
+    # the names of region groups to plot, each with its own section below
+    regionGroups = ['Antarctic Regions']
 
 
-  [timeSeriesAntarcticRegions]
-  ## options related to plotting time series of Antarctic regions
+    [timeSeriesAntarcticRegions]
+    ## options related to plotting time series of Antarctic regions
 
-  # An identifying string that is the prefix for a geojson file containing
-  # Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
-  # in addition to the usual properties for a region in geometric_features.  The
-  # string is also used as the suffix for mask files generated from the geojson
-  regionMaskSuffix = 'antarcticRegions20200621'
+    # list of regions to plot or ['all'] for all regions in the masks file.
+    # See "regionNames" in the antarcticRegions masks file in
+    # regionMaskSubdirectory for details.
+    regionNames = []
 
-  # list of regions to plot or ['all'] for all regions in the masks file.
-  # See "regionNames" in the antarcticRegions masks file in
-  # regionMaskSubdirectory for details.
-  regionNames = ['all']
+    # a list of variables to plot
+    variables = [{'name': 'temperature',
+                  'title': 'Temperature',
+                  'units': r'$^\circ$C',
+                  'mpas': 'timeMonthly_avg_activeTracers_temperature'},
+                 {'name': 'salinity',
+                  'title': 'Salinity',
+                  'units': 'PSU',
+                  'mpas': 'timeMonthly_avg_activeTracers_salinity'},
+                 {'name': 'potentialDensity',
+                  'title': 'Potential Density',
+                  'units': 'kg m$^{-3}$',
+                  'mpas': 'timeMonthly_avg_potentialDensity'},
+                 {'name': 'mixedLayerDepth',
+                  'title': 'Mixed Layer Depth',
+                  'units': 'm',
+                  'mpas': 'timeMonthly_avg_dThreshMLD'}]
 
-  # a list of variables to plot
-  variables = [{'name': 'temperature',
-                'title': 'Temperature',
-                'units': '$^\circ$C',
-                'mpas': 'timeMonthly_avg_activeTracers_temperature'},
-               {'name': 'salinity',
-                'title': 'Salinity',
-                'units': 'PSU',
-                'mpas': 'timeMonthly_avg_activeTracers_salinity'},
-               {'name': 'potentialDensity',
-                'title': 'Potential Density',
-                'units': 'kg m$^{-3}$',
-                'mpas': 'timeMonthly_avg_potentialDensity'}]
+    # The minimum and maximum depth over which fields are averaged, default is
+    # to take these values from the geojson feature's zmin and zmax properties.
+    # Add these to a custom config file to override the defaults.
+    # zmin = -1000
+    # zmax = -400
 
+    # Observational data sets to compare against
+    obs = ['SOSE', 'WOA18']
 
 Region Groups
 -------------
 
-A list of groups of regions, each of which will get its own gallery group on
-the resulting analysis webpage.  These can be any name without punctuation.
-For each region group, there should be a corresponding
+``regionGroup`` is a list of region groups,each of which will get its own
+gallery group on the resulting analysis webpage.  See
+:ref:`config_region_groups` for more information on the available region
+groups. For each region group, there should be a corresponding
 ``timeSeries<RegionGroup>`` section of the config file, with any spaces removed
-from the name of the region group.  By default, the only region group is
-"Antarctic Regions".
-
-Region Mask
------------
-
-The ``regionMaskSuffix`` is a prefix for a geojson file produce from the
-``geometric_features`` package and documented in the ``preprocess_masks``
-directory of the GitHub repo.  It should include any number of ocean regions,
-each of which includes properties ``zmin`` and ``zmax``.  Examples of how to
-create such a set of features can be found in `antarctic_ocean_regions`_.
+from the name of the region group.  By default, the only region group for this
+task is ``'Antarctic Regions'``.
 
 Region Names
 ------------
 
-The ``regionNames`` can be set to ``['all']`` (the default) to plot all of the
-regions in the geojson file.  In the case of "Antarctic Regions", these
-are::
+The ``regionNames`` can be set to ``['all']`` to plot all of the regions in the
+region group.  In the case of ``Antarctic Regions``, these are:
 
-  ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",
-   "Eastern Weddell Sea Deep", "Western Weddell Sea Shelf",
-   "Western Weddell Sea Deep", "Weddell Sea Shelf", "Weddell Sea Deep",
-   "Bellingshausen Sea Shelf", "Bellingshausen Sea Deep", "Amundsen Sea Shelf",
-   "Amundsen Sea Deep", "Eastern Ross Sea Shelf", "Eastern Ross Sea Deep",
-   "Western Ross Sea Shelf", "Western Ross Sea Deep",
-   "East Antarctic Seas Shelf", "East Antarctic Seas Deep"]
+.. code-block:: cfg
 
+    ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",
+     "Eastern Weddell Sea Deep", "Western Weddell Sea Shelf",
+     "Western Weddell Sea Deep", "Weddell Sea Shelf", "Weddell Sea Deep",
+     "Bellingshausen Sea Shelf", "Bellingshausen Sea Deep", "Amundsen Sea Shelf",
+     "Amundsen Sea Deep", "Eastern Ross Sea Shelf", "Eastern Ross Sea Deep",
+     "Western Ross Sea Shelf", "Western Ross Sea Deep",
+     "East Antarctic Seas Shelf", "East Antarctic Seas Deep"]
 
 Variables
 ---------
@@ -97,6 +97,36 @@ y-axis label of each plot.  The ``"name"`` is the name of the variable in
 the NetCDF files as well as the text appended to subtaks names and file names.
 It should contain no spaces.  The ``"mpas"`` entry is the name of the
 corresponding field in the MPAS-Ocean ``timeSeriesStatsMonthlyOutput`` files.
+
+Depth Bounds
+------------
+
+Some region groups such as ``Antarctic Regions`` define default depth bounds
+(``zmin`` and ``zmax``) for each region.  For ``Antarctic Regions``, this was
+done so regions on the continental shelf (ending in "Shelf") would be averaged
+over a different range (``zmax`` = -200 m, ``zmin`` = -1000 m) than the regions
+of the deeper ocean (ending in "Deep", with ``zmax`` = -400 m,
+``zmin`` = -1000 m).  The user can override these defaults by defining her own
+``zmin`` and ``zmax``.  Note that ``zmin`` is deeper and ``zmax`` is shallower
+since they have negative values.
+
+Other Config Options
+--------------------
+
+For more details, see:
+ * :ref:`config_regions`
+
+
+Observations
+------------
+
+``obs`` is a list of the observational data sets to plot as reference lines
+(constant in time).  Possible values are ``'SOSE'`` and ``'WOA18'``.  An empty
+list can be provided if no observations should be plotted.
+
+:ref:`sose`
+
+:ref:`woa18_t_s`
 
 Example Result
 --------------

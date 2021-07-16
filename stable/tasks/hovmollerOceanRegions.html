@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>hovmollerOceanRegions &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -186,6 +191,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -199,7 +206,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../_sources/tasks/hovmollerOceanRegions.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -214,7 +221,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="hovmolleroceanregions">
-<span id="task-oceanregionalprofiles"></span><h1>hovmollerOceanRegions<a class="headerlink" href="#hovmolleroceanregions" title="Permalink to this headline">¶</a></h1>
+<span id="task-hovmolleroceanregions"></span><h1>hovmollerOceanRegions<a class="headerlink" href="#hovmolleroceanregions" title="Permalink to this headline">¶</a></h1>
 <p>An analysis task for plotting depth profiles vs. time of temperature, salinity,
 potential density, etc. averaged over regions.</p>
 <p>Component and Tags:</p>
@@ -240,25 +247,25 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># prefix (used for file names, task names and sections) as well as the MPAS</span>
 <span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
 <span class="c1"># in figure titles and captions.</span>
-<span class="na">fields</span> <span class="o">=</span><span class="s"></span>
-<span class="s">    [{&#39;prefix&#39;: &#39;potentialTemperature&#39;,</span>
-<span class="s">      &#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
-<span class="s">      &#39;units&#39;: r&#39;$\degree$C&#39;,</span>
-<span class="s">      &#39;titleName&#39;: &#39;Potential Temperature&#39;},</span>
-<span class="s">     {&#39;prefix&#39;: &#39;salinity&#39;,</span>
-<span class="s">      &#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
-<span class="s">      &#39;units&#39;: r&#39;PSU&#39;,</span>
-<span class="s">      &#39;titleName&#39;: &#39;Salinity&#39;},</span>
-<span class="s">     {&#39;prefix&#39;: &#39;potentialDensity&#39;,</span>
-<span class="s">      &#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;,</span>
-<span class="s">      &#39;units&#39;: r&#39;kg m$^{-3}$&#39;,</span>
-<span class="s">      &#39;titleName&#39;: &#39;Potential Density&#39;}]</span>
+<span class="na">fields</span> <span class="o">=</span>
+    <span class="na">[{&#39;prefix&#39;: &#39;potentialTemperature&#39;,</span>
+      <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
+      <span class="na">&#39;units&#39;: r&#39;$\degree$C&#39;,</span>
+      <span class="na">&#39;titleName&#39;: &#39;Potential Temperature&#39;},</span>
+     <span class="na">{&#39;prefix&#39;: &#39;salinity&#39;,</span>
+      <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
+      <span class="na">&#39;units&#39;: r&#39;PSU&#39;,</span>
+      <span class="na">&#39;titleName&#39;: &#39;Salinity&#39;},</span>
+     <span class="na">{&#39;prefix&#39;: &#39;potentialDensity&#39;,</span>
+      <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;,</span>
+      <span class="na">&#39;units&#39;: r&#39;kg m$^{-3}$&#39;,</span>
+      <span class="na">&#39;titleName&#39;: &#39;Potential Density&#39;}]</span>
 
 <span class="c1"># a list of region names from the region masks file to plot</span>
 <span class="na">regionNames</span> <span class="o">=</span> <span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
-<span class="s">               &quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
-<span class="s">               &quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
-<span class="s">               &quot;Global Ocean 15S to 15N&quot;]</span>
+               <span class="na">&quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
+               <span class="na">&quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
+               <span class="na">&quot;Global Ocean 15S to 15N&quot;]</span>
 
 <span class="c1"># whether to compute an anomaly with respect to the start of the time series</span>
 <span class="na">computeAnomaly</span> <span class="o">=</span> <span class="s">False</span>
@@ -392,7 +399,7 @@ potential density, etc. averaged over regions.</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">[hovmollerOceanRegions]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,
 one or more of the <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> defined in
-<a class="reference internal" href="../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info"><code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()</span></code></a>.</p>
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.5.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.</p>
 <p>For each region group, there is a corresponding section
 <code class="docutils literal notranslate"><span class="pre">[hovmoller&lt;RegionGroup&gt;]</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;RegionGroup&gt;</span></code> is the name of the region
 group with spaces removed.  In this section, the  <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used
@@ -433,37 +440,29 @@ range.  The default is the full range.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="timeSeriesAntarcticMelt.html" class="btn btn-neutral float-right" title="timeSeriesAntarcticMelt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="climatologyMapAntarcticMelt.html" class="btn btn-neutral float-left" title="climatologyMapAntarcticMelt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="timeSeriesAntarcticMelt.html" class="btn btn-neutral float-right" title="timeSeriesAntarcticMelt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="climatologyMapAntarcticMelt.html" class="btn btn-neutral float-left" title="climatologyMapAntarcticMelt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

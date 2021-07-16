@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>mpas_analysis.shared.transects.compute_transect_masks_subtask &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -49,7 +54,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -142,6 +147,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -182,11 +189,11 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span>
-<span class="kn">import</span> <span class="nn">mpas_tools.conversion</span>
 
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">GeometricFeatures</span>
-<span class="kn">from</span> <span class="nn">geometric_features.aggregation.ocean</span> <span class="kn">import</span> <span class="n">transport</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">read_feature_collection</span><span class="p">,</span> <span class="n">GeometricFeatures</span>
+<span class="kn">from</span> <span class="nn">geometric_features.aggregation</span> <span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
+<span class="kn">import</span> <span class="nn">mpas_tools.conversion</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.logging</span> <span class="kn">import</span> <span class="n">check_call</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -197,53 +204,11 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
 
 
-<span class="k">def</span> <span class="nf">get_transect_info</span><span class="p">(</span><span class="n">transectGroup</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get a geojson mask file and the appropriate file suffix for the given</span>
-<span class="sd">    region group.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    transectGroup : str</span>
-<span class="sd">        The name of a region group to get mask features for, one of</span>
-<span class="sd">        &#39;Transport Transects&#39;</span>
-
-<span class="sd">    config :  mpas_analysis.configuration.MpasAnalysisConfigParser</span>
-<span class="sd">        Configuration options</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    transect : dict</span>
-<span class="sd">        A dictionary of information about the region</span>
-
-<span class="sd">    filename : str</span>
-<span class="sd">        The name of a geojson file with mask features</span>
-
-<span class="sd">    suffix : str</span>
-<span class="sd">        A suffix to use for mask files created with these features</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">transects</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;transportTransects&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;20200621&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">transport</span><span class="p">}}</span>
-
-    <span class="k">if</span> <span class="n">transectGroup</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">transects</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown transect group </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transectGroup</span><span class="p">))</span>
-
-    <span class="n">transect</span> <span class="o">=</span> <span class="n">transects</span><span class="p">[</span><span class="n">transectGroup</span><span class="p">]</span>
-
-    <span class="n">prefix</span> <span class="o">=</span> <span class="n">transect</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
-    <span class="n">date</span> <span class="o">=</span> <span class="n">transect</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span>
-
-    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">transect</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span>
-
-
 <div class="viewcode-block" id="compute_mpas_transect_masks"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks">[docs]</a><span class="k">def</span> <span class="nf">compute_mpas_transect_masks</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">processCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">chunkSize</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                <span class="n">subdivisionThreshold</span><span class="o">=</span><span class="mf">10e3</span><span class="p">,</span>
+                                <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="nb">dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a transect mask file from the given MPAS mesh and geojson file \</span>
 <span class="sd">    defining a set of transects.</span>
@@ -251,12 +216,27 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">maskFileName</span><span class="p">):</span>
         <span class="k">return</span>
 
-    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">)</span>
-    <span class="n">fcMask</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">)</span>
-    <span class="n">dsMask</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
-                                        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="c1"># For now, we need to use mpas_tools.conversion.mask() because</span>
+    <span class="c1"># compute_mpas_transect_masks doesn&#39;t produce edge sign, needed for</span>
+    <span class="c1"># transport transects</span>
+    <span class="k">if</span> <span class="n">useMpasMaskCreator</span><span class="p">:</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFileName</span><span class="p">)</span>
+        <span class="n">fcMask</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="n">geojsonFileName</span><span class="p">)</span>
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">mpas_tools</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">=</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">fcMask</span><span class="o">=</span><span class="n">fcMask</span><span class="p">,</span>
+                                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="nb">dir</span><span class="p">)</span>
 
-    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMask</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">)</span></div>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMask</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_mpas_transect_masks&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">meshFileName</span><span class="p">,</span>
+                <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojsonFileName</span><span class="p">,</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
+                <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subdivisionThreshold</span><span class="p">),</span>
+                <span class="s1">&#39;--chunk_size&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunkSize</span><span class="p">),</span>
+                <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">processCount</span><span class="p">),</span>
+                <span class="s1">&#39;--add_edge_sign&#39;</span><span class="p">]</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ComputeTransectMasksSubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask">[docs]</a><span class="k">class</span> <span class="nc">ComputeTransectMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -266,6 +246,10 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    aggregationFunction : callable</span>
+<span class="sd">        An aggregation function returned by</span>
+<span class="sd">        :py:func:`geometric_features.aggregation.get_region_by_name()`</span>
+
 <span class="sd">    geojsonFileName : str</span>
 <span class="sd">        A geojson file, typically from the MPAS ``geometric_features``</span>
 <span class="sd">        repository, defining the shapes to be masked</span>
@@ -280,7 +264,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="ComputeTransectMasksSubtask.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">transectGroup</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="ComputeTransectMasksSubtask.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">transectGroup</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
@@ -297,7 +281,8 @@
 <span class="sd">            :py:func:`mpas_analysis.shared.transects.get_transect_info()`</span>
 
 <span class="sd">        subprocessCount : int, optional</span>
-<span class="sd">            The number of processes that can be used to make the mask</span>
+<span class="sd">            The number of processes that can be used to make the mask, default</span>
+<span class="sd">            is as many processes as allowed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
@@ -313,14 +298,23 @@
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="p">[])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">subprocessCount</span>
+        <span class="k">if</span> <span class="n">subprocessCount</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span>
+                <span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">subprocessCount</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">obsFileName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transectGroup</span> <span class="o">=</span> <span class="n">transectGroup</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span> <span class="o">=</span> \
-            <span class="n">get_transect_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transectGroup</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aggregationFunction</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> \
+            <span class="n">get_aggregator_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transectGroup</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span> <span class="o">=</span> \
+            <span class="n">get_region_mask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.geojson&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFileSuffix</span><span class="p">))</span></div>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">make_transect_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -329,7 +323,7 @@
 <span class="sd">        or custom diagnostic directories, it will be created in the analysis</span>
 <span class="sd">        output&#39;s masks directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregationFunction</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
             <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
@@ -425,7 +419,8 @@
 
         <span class="n">compute_mpas_transect_masks</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">,</span>
-            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span> <span class="n">processCount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span><span class="p">,</span>
+            <span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maskSubdirectory</span><span class="p">)</span></div>
 
     <span class="c1"># }}}</span>
 
@@ -436,28 +431,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

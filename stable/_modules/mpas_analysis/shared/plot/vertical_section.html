@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>mpas_analysis.shared.plot.vertical_section &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -49,7 +54,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -142,6 +147,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -187,6 +194,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -215,6 +223,7 @@
         <span class="n">refTitle</span><span class="o">=</span><span class="s1">&#39;Observations&#39;</span><span class="p">,</span>
         <span class="n">diffTitle</span><span class="o">=</span><span class="s1">&#39;Model-Observations&#39;</span><span class="p">,</span>
         <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">plotTitleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -304,6 +313,9 @@
 
 <span class="sd">    titleFontSize : int, optional</span>
 <span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
 
 <span class="sd">    plotTitleFontSize : int, optional</span>
 <span class="sd">        size of the title font for the individual plots</span>
@@ -458,6 +470,10 @@
     <span class="c1"># -------</span>
     <span class="c1"># Greg Streletz, Xylar Asay-Davis, Milena Veneziani</span>
 
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">compareAsContours</span><span class="p">:</span>
         <span class="n">singlePanel</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
@@ -540,6 +556,7 @@
         <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
         <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">titleFontSize</span><span class="o">=</span><span class="n">plotTitleFontSize</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
         <span class="n">titleY</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span>
         <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span>
         <span class="n">xLim</span><span class="o">=</span><span class="n">xLim</span><span class="p">,</span>
@@ -587,6 +604,7 @@
             <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
             <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">titleFontSize</span><span class="o">=</span><span class="n">plotTitleFontSize</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
             <span class="n">titleY</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span>
             <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span>
             <span class="n">xLim</span><span class="o">=</span><span class="n">xLim</span><span class="p">,</span>
@@ -628,6 +646,7 @@
             <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
             <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">titleFontSize</span><span class="o">=</span><span class="n">plotTitleFontSize</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
             <span class="n">titleY</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span>
             <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span>
             <span class="n">xLim</span><span class="o">=</span><span class="n">xLim</span><span class="p">,</span>
@@ -680,6 +699,7 @@
         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
         <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">titleY</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -768,6 +788,9 @@
 
 <span class="sd">    titleFontSize : int, optional</span>
 <span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
 
 <span class="sd">    titleY : float, optional</span>
 <span class="sd">        the y value to use for placing the plot title</span>
@@ -919,6 +942,10 @@
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
     <span class="c1"># compute moving averages with respect to the x dimension</span>
     <span class="k">if</span> <span class="n">movingAveragePoints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">movingAveragePoints</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
@@ -1078,7 +1105,8 @@
 
             <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">interpFieldArray</span><span class="p">,</span>
                                         <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
-                                        <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">])</span>
+                                        <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                        <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fieldArray</span><span class="p">,</span>
                                       <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
@@ -1226,28 +1254,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

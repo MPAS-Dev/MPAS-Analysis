@@ -66,7 +66,7 @@ The following configuration options are available for this task:
 
 The ``[oceanRegionalProfiles]`` section contains a list of ``regionGroups``,
 one or more of the :ref:`config_region_groups` defined in
-:py:func:`mpas_analysis.shared.regions.compute_region_masks_subtask.get_region_info()`.
+:py:func:`geometric_features.aggregation.get_aggregator_by_name()`.
 
 For each region group, there is a corresponding section
 ``[profiles<RegionGroup>]``, where ``<RegionGroup>`` is the name of the region

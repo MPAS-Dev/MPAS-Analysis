@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Quick Start Guide &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -156,6 +161,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -167,7 +174,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/quick_start.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -195,61 +202,47 @@ used those components.</p>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span>
 </pre></div>
 </div>
-<p>To use the latest version for developers, you will need to set up a conda
-environment with the following packages:</p>
-<ul class="simple">
-<li><p>python &gt;= 3.6</p></li>
-<li><p>numpy</p></li>
-<li><p>scipy</p></li>
-<li><p>matplotlib &gt;= 3.0.2</p></li>
-<li><p>netCDF4</p></li>
-<li><p>xarray &gt;= 0.14.1</p></li>
-<li><p>dask</p></li>
-<li><p>bottleneck</p></li>
-<li><p>lxml</p></li>
-<li><p>nco &gt;= 4.8.1</p></li>
-<li><p>pyproj</p></li>
-<li><p>pillow</p></li>
-<li><p>cmocean</p></li>
-<li><p>progressbar2</p></li>
-<li><p>requests</p></li>
-<li><p>setuptools</p></li>
-<li><p>shapely</p></li>
-<li><p>cartopy &gt;= 0.18.0</p></li>
-<li><p>cartopy_offlinedata</p></li>
-<li><p>geometric_features &gt;= 0.1.13</p></li>
-<li><p>gsw</p></li>
-<li><p>pyremap &lt; 0.1.0</p></li>
-<li><p>mpas_tools &gt;= 0.0.15</p></li>
-<li><p>pandas</p></li>
-<li><p>python-dateutil</p></li>
-<li><p>six</p></li>
-</ul>
-<p>These can be installed via the conda command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
-<span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="nb">set</span> <span class="n">channel_priority</span> <span class="n">strict</span>
-<span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.8</span> <span class="n">numpy</span> <span class="n">scipy</span> <span class="s2">&quot;matplotlib&gt;=3.0.2&quot;</span> \
-    <span class="n">netCDF4</span> <span class="s2">&quot;xarray&gt;=0.14.1&quot;</span> <span class="n">dask</span> <span class="n">bottleneck</span> <span class="n">lxml</span> <span class="s2">&quot;nco&gt;=4.8.1&quot;</span> <span class="n">pyproj</span> \
-    <span class="n">pillow</span> <span class="n">cmocean</span> <span class="n">progressbar2</span> <span class="n">requests</span> <span class="n">setuptools</span> <span class="n">shapely</span> <span class="s2">&quot;cartopy&gt;=0.18.0&quot;</span> \
-    <span class="n">cartopy_offlinedata</span> <span class="s2">&quot;geometric_features&gt;=0.1.13&quot;</span> <span class="n">gsw</span> <span class="s2">&quot;pyremap&lt;0.1.0&quot;</span> \
-    <span class="s2">&quot;mpas_tools&gt;=0.0.15&quot;</span> <span class="n">pandas</span> <span class="n">python</span><span class="o">-</span><span class="n">dateutil</span> <span class="n">six</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span>
-</pre></div>
-</div>
 <dl class="simple">
-<dt>Then, get the code from:</dt><dd><p><a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">https://github.com/MPAS-Dev/MPAS-Analysis</a></p>
+<dt>To use the latest version for developers, get the code from:</dt><dd><p><a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">https://github.com/MPAS-Dev/MPAS-Analysis</a></p>
 </dd>
 </dl>
+<p>Then, you will need to set up a conda environment from the MPAS-Analysis repo.
+This environment will include the required dependencies for the development
+branch from <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code> and will install the <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> package into
+the conda environment in a way that points directly to the local branch (so
+changes you make to the code directly affect <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> in the conda
+environment):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda create -y -n mpas_dev --file dev-spec.txt
+conda activate mpas_dev
+python -m pip install -e .
+</pre></div>
+</div>
+<p>If you are developing another conda package at the same time (this is common
+for MPAS-Tools or geometric_features), you should first comment out the other
+package in <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code>.  Then, you can install both packages in the same
+development environment, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt <span class="se">\</span>
+    -- analysis/MPAS-Analysis/dev-spec.txt
+conda activate mpas_dev
+<span class="nb">cd</span> tools/MPAS-Tools/conda_package
+python -m pip install -e .
+<span class="nb">cd</span> ../../../analysis/MPAS-Analysis
+python -m pip install -e .
+</pre></div>
+</div>
+<p>Obviously, the paths to the repos may be different in your local clones.  With
+the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment as defined above, you can make changes to both
+<code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> and <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> packages in their respective branches, and
+these changes will be reflected when refer to the packages or call their
+respective entry points (command-line tools).</p>
 </div>
 <div class="section" id="download-analysis-input-data">
 <h2>Download analysis input data<a class="headerlink" href="#download-analysis-input-data" title="Permalink to this headline">¶</a></h2>
 <p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, download the data that is
 necessary to MPAS-Analysis by running:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">download_analysis_data</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mpas_analysis</span><span class="o">/</span><span class="n">diagnostics</span>
-</pre></div>
-</div>
-<p>If you are using the git repository, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">download_analysis_data</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mpas_analysis</span><span class="o">/</span><span class="n">diagnostics</span>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">/path/to/mpas_analysis/diagnostics</span></code> is the main folder that will contain
@@ -272,10 +265,6 @@ by running:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="nb">list</span>
 </pre></div>
 </div>
-<p>If using a git repository, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">mpas_analysis</span> <span class="o">--</span><span class="nb">list</span>
-</pre></div>
-</div>
 <p>This lists all tasks and their tags.  These can be used in the <code class="docutils literal notranslate"><span class="pre">generate</span></code>
 command-line option or config option.  See <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code>
 for more details.</p>
@@ -290,10 +279,9 @@ git repo) or download one from the
 <li><p>Either modify config options in your new file or copy and modify config
 options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> (in a git repo) or directly
 from GitHub:
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_anlysis/config.default">config.default</a>.</p></li>
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default">config.default</a>.</p></li>
 <li><p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, run:
-<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  If using a git checkout, run:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuraiton
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuration
 first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> and then replace that
 configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code></p></li>
 <li><p>If you want to run a subset of the analysis, you can either set the
@@ -369,10 +357,6 @@ a package, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="n">purge</span> <span class="o">&lt;</span><span class="n">config</span><span class="o">.</span><span class="n">file</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>If you are running in the repo, use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">mpas_analysis</span> <span class="o">--</span><span class="n">purge</span> <span class="o">&lt;</span><span class="n">config</span><span class="o">.</span><span class="n">file</span><span class="o">&gt;</span>
-</pre></div>
-</div>
 <p>All of the subdirectories listed in <code class="docutils literal notranslate"><span class="pre">output</span></code> will be deleted along with the
 climatology subdirectories in <code class="docutils literal notranslate"><span class="pre">oceanObservations</span></code> and <code class="docutils literal notranslate"><span class="pre">seaIceObservations</span></code>.</p>
 <p>It is a good policy to use the purge flag for most changes to the config file,
@@ -395,7 +379,7 @@ bounds on climatologies, see above).</p>
 <ol class="arabic simple">
 <li><p>If you are running from a git repo, copy the appropriate job script file
 from <code class="docutils literal notranslate"><span class="pre">configs/&lt;machine_name&gt;</span></code> to the root directory (or another directory
-if preferred). The default cript, <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code>, is
+if preferred). The default script, <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code>, is
 appropriate for a laptop or desktop computer with multiple cores.</p></li>
 <li><p>If using the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> conda package, download the job script and/or
 sample config file from the
@@ -492,37 +476,29 @@ to be generated and is set up properly.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

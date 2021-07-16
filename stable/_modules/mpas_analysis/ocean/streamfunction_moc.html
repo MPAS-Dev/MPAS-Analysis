@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>mpas_analysis.ocean.streamfunction_moc &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -49,7 +54,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -142,6 +147,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -186,8 +193,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">netCDF4</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">GeometricFeatures</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.ocean.moc</span> <span class="kn">import</span> <span class="n">make_moc_basins_and_transects</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.ocean.moc</span> <span class="kn">import</span> <span class="n">add_moc_southern_boundary_transects</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants.constants</span> <span class="kn">import</span> <span class="n">m3ps_to_Sv</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section_comparison</span><span class="p">,</span> \
@@ -196,7 +203,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">get_region_mask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>\
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">days_to_datetime</span>
 
@@ -205,6 +212,8 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.climatology</span> <span class="kn">import</span> \
     <span class="n">get_climatology_op_directory</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasksSubtask</span>
 
 
 <div class="viewcode-block" id="StreamfunctionMOC"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC">[docs]</a><span class="k">class</span> <span class="nc">StreamfunctionMOC</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -252,8 +261,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
 
         <span class="n">computeClimSubtask</span> <span class="o">=</span> <span class="n">ComputeMOCClimatologySubtask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">)</span>
-        <span class="n">computeClimSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">)</span>
         <span class="n">plotClimSubtask</span> <span class="o">=</span> <span class="n">PlotMOCClimatologySubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">)</span>
         <span class="n">plotClimSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeClimSubtask</span><span class="p">)</span>
 
@@ -277,10 +285,8 @@
         <span class="c1"># run one subtask per year</span>
         <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
             <span class="n">computeTimeSeriesSubtask</span> <span class="o">=</span> <span class="n">ComputeMOCTimeSeriesSubtask</span><span class="p">(</span>
-                <span class="bp">self</span><span class="p">,</span> <span class="n">startYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">endYear</span><span class="o">=</span><span class="n">year</span><span class="p">)</span>
-            <span class="n">computeTimeSeriesSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">startYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">endYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="o">=</span><span class="n">maskSubtask</span><span class="p">)</span>
             <span class="n">combineTimeSeriesSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeTimeSeriesSubtask</span><span class="p">)</span>
-
 
         <span class="n">plotTimeSeriesSubtask</span> <span class="o">=</span> <span class="n">PlotMOCTimeSeriesSubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">)</span>
         <span class="n">plotTimeSeriesSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">combineTimeSeriesSubtask</span><span class="p">)</span></div></div>
@@ -289,7 +295,7 @@
     <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeMOCMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span> <span class="nc">ComputeMOCMasksSubtask</span><span class="p">(</span><span class="n">ComputeRegionMasksSubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis subtasks for computing cell masks and southern transects for</span>
 <span class="sd">    MOC regions</span>
@@ -314,21 +320,45 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ComputeMOCMasksSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-            <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeRegionMasks&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">parentTask</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+        <span class="n">regionGroup</span> <span class="o">=</span> <span class="s1">&#39;MOC Basins&#39;</span>
 
-        <span class="n">meshName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+        <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span>
+                                                <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
-                                               <span class="s1">&#39;moc_basins.geojson&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_moc_masks.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshName</span><span class="p">))</span>
+        <span class="c1"># call the constructor from the base class (ComputeRegionMasksSubtask)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="o">=</span><span class="n">regionGroup</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">,</span>
+            <span class="n">subprocessCount</span><span class="o">=</span><span class="n">subprocessCount</span><span class="p">,</span>
+            <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IOError :</span>
+<span class="sd">            If a restart file is not available from which to read mesh</span>
+<span class="sd">            information or if no history files are available from which to</span>
+<span class="sd">            compute the climatology in the desired time range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call setup_and_check from the parent class</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_moc_masks_and_transects.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshName</span><span class="p">))</span>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
@@ -339,26 +369,22 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">):</span>
-            <span class="k">return</span>
+        <span class="c1"># call ComputeRegionMasksSubtask.run_task() first</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run_task</span><span class="p">()</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="c1"># make the geojson file</span>
-        <span class="n">gf</span> <span class="o">=</span> <span class="n">GeometricFeatures</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">):</span>
+            <span class="k">return</span>
 
-        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obsFileName</span><span class="p">)</span>
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">)</span>
 
-        <span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;maskSubdirectory&#39;</span><span class="p">)</span>
-        <span class="n">make_directories</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">)</span>
+        <span class="n">dsMasksAndTransects</span> <span class="o">=</span> <span class="n">add_moc_southern_boundary_transects</span><span class="p">(</span>
+            <span class="n">dsMask</span><span class="p">,</span> <span class="n">dsMesh</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
-        <span class="n">make_moc_basins_and_transects</span><span class="p">(</span><span class="n">gf</span><span class="p">,</span> <span class="n">mesh_filename</span><span class="p">,</span>
-                                      <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">,</span>
-                                      <span class="n">geojson_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span>
-                                      <span class="n">mask_filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">,</span>
-                                      <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                                      <span class="nb">dir</span><span class="o">=</span><span class="n">maskSubdirectory</span><span class="p">)</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMasksAndTransects</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">,</span>
+                     <span class="n">char_dim_name</span><span class="o">=</span><span class="s1">&#39;StrLen&#39;</span><span class="p">)</span>
         <span class="c1"># }}}</span>
 <span class="c1"># }}}</span>
 
@@ -379,7 +405,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -390,6 +416,10 @@
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        maskSubtask : mpas_analysis.ocean.streamfunction_moc.ComputeMOCMasksSubtask</span>
+<span class="sd">            The subtask for computing MOC region masks that runs before this</span>
+<span class="sd">            subtask</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
@@ -405,6 +435,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maskSubtask</span> <span class="o">=</span> <span class="n">maskSubtask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
 
         <span class="n">parentTask</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># }}}</span>
@@ -569,6 +601,13 @@
              <span class="s1">&#39;timeMonthly_avg_mocStreamvalLatAndDepthRegion&#39;</span><span class="p">:</span>
                  <span class="s1">&#39;avgMocStreamfunRegional&#39;</span><span class="p">})</span>
 
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskSubtask</span><span class="o">.</span><span class="n">maskAndTransectFileName</span><span class="p">)</span>
+        <span class="n">regionIndices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">iRegion</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMask</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nRegions&#39;</span><span class="p">]):</span>
+            <span class="n">regionInFile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">dsMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">iRegion</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">))</span>
+            <span class="n">region</span> <span class="o">=</span> <span class="n">regionInFile</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_MOC&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">regionIndices</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">iRegion</span>
+
         <span class="c1"># Create dictionary for MOC climatology (NB: need this form</span>
         <span class="c1"># in order to convert it to xarray dataset later in the script)</span>
         <span class="n">depth</span> <span class="o">=</span> <span class="n">refZMid</span>
@@ -579,10 +618,9 @@
             <span class="k">if</span> <span class="n">region</span> <span class="o">==</span> <span class="s1">&#39;Global&#39;</span><span class="p">:</span>
                 <span class="n">mocTop</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">avgMocStreamfunGlobal</span><span class="o">.</span><span class="n">values</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># hard-wire region=0 (Atlantic) for now</span>
-                <span class="n">indRegion</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">indRegion</span> <span class="o">=</span> <span class="n">regionIndices</span><span class="p">[</span><span class="n">region</span><span class="p">]</span>
                 <span class="n">mocVar</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">avgMocStreamfunRegional</span>
-                <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocVar</span><span class="p">[</span><span class="n">indRegion</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocVar</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">indRegion</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
             <span class="c1"># Store computed MOC to dictionary</span>
             <span class="n">lat</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">binBoundaryMocStreamfunction</span>
             <span class="n">moc</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocTop</span>
@@ -640,8 +678,9 @@
         <span class="c1"># Load basin region related variables and save them to dictionary</span>
         <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
 
-        <span class="n">dictRegion</span> <span class="o">=</span> <span class="n">_build_region_mask_dict</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="n">masksFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskSubtask</span><span class="o">.</span><span class="n">maskAndTransectFileName</span>
+        <span class="n">dictRegion</span> <span class="o">=</span> <span class="n">_build_region_mask_dict</span><span class="p">(</span>
+            <span class="n">masksFileName</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Add Global regionCellMask=1 everywhere to make the algorithm</span>
         <span class="c1"># for the global moc similar to that of the regional moc</span>
@@ -927,7 +966,7 @@
                 <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePointsClimatological</span><span class="p">,</span>
                 <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
 
-            <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
             <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> Meridional Overturning Streamfunction&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
             <span class="n">write_image_xml</span><span class="p">(</span>
@@ -978,14 +1017,24 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        parentTask : ``StreamfunctionMOC``</span>
+<span class="sd">        parentTask : mpas_analysis.ocean.streamfunction_moc.StreamfunctionMOC</span>
 <span class="sd">            The main task of which this is a subtask</span>
+
+<span class="sd">        startYear : int</span>
+<span class="sd">            The start year of the time series</span>
+
+<span class="sd">        endYear : int</span>
+<span class="sd">            The end year of the time series</span>
+
+<span class="sd">        maskSubtask : mpas_analysis.ocean.streamfunction_moc.ComputeMOCMasksSubtask</span>
+<span class="sd">            The subtask for computing MOC region masks that runs before this</span>
+<span class="sd">            subtask</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
@@ -999,6 +1048,9 @@
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
             <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeMOCTimeSeries_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">maskSubtask</span> <span class="o">=</span> <span class="n">maskSubtask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">maskSubtask</span><span class="p">)</span>
 
         <span class="n">parentTask</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">=</span> <span class="n">startYear</span>
@@ -1243,8 +1295,10 @@
             <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
 
         <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
-        <span class="n">dictRegion</span> <span class="o">=</span> <span class="n">_build_region_mask_dict</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Atlantic&#39;</span><span class="p">],</span>
-                                             <span class="n">mpasMeshName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="n">masksFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskSubtask</span><span class="o">.</span><span class="n">maskAndTransectFileName</span>
+        <span class="n">dictRegion</span> <span class="o">=</span> <span class="n">_build_region_mask_dict</span><span class="p">(</span>
+            <span class="n">masksFileName</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Atlantic&#39;</span><span class="p">],</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">dictRegion</span> <span class="o">=</span> <span class="n">dictRegion</span><span class="p">[</span><span class="s1">&#39;Atlantic&#39;</span><span class="p">]</span>
 
         <span class="n">latBinSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOCAtlantic&#39;</span><span class="p">,</span>
@@ -1566,7 +1620,8 @@
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">dsMOCTimeSeries</span><span class="o">.</span><span class="n">mocAtlantic26</span><span class="p">]</span>
-        <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
+        <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)]</span>
+
         <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainRunName</span><span class="p">]</span>
 
@@ -1574,7 +1629,7 @@
 
             <span class="n">dsRefMOC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">)</span>
             <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsRefMOC</span><span class="o">.</span><span class="n">mocAtlantic26</span><span class="p">)</span>
-            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">))</span>
             <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
             <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
@@ -1588,7 +1643,7 @@
                                  <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
                                  <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
 
-        <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
         <span class="n">caption</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;Time Series of maximum Meridional Overturning &#39;</span> \
                   <span class="sa">u</span><span class="s1">&#39;Circulation at 26.5°N&#39;</span>
@@ -1650,30 +1705,34 @@
     <span class="c1"># }}}</span>
 
 
-<span class="k">def</span> <span class="nf">_build_region_mask_dict</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>  <span class="c1"># {{{</span>
-
-    <span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">get_region_mask</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_moc_masks_and_transects.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpasMeshName</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">_build_region_mask_dict</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+    <span class="c1"># {{{</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Regional masking file </span><span class="si">{}</span><span class="s1"> for MOC calculation &#39;</span>
                       <span class="s1">&#39;does not exist&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">))</span>
-    <span class="n">iRegion</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">)</span>
+    <span class="n">dsMask</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+    <span class="n">regionIndices</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">iRegion</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMask</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nRegions&#39;</span><span class="p">]):</span>
+        <span class="n">regionInFile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">dsMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">iRegion</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">))</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">regionInFile</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_MOC&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">regionIndices</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">iRegion</span>
+
     <span class="n">dictRegion</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  Reading region and transect mask for &#39;</span>
                     <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">))</span>
-        <span class="n">ncFileRegional</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">maxEdgesInTransect</span> <span class="o">=</span> \
-            <span class="n">ncFileRegional</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;maxEdgesInTransect&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">iRegion</span> <span class="o">=</span> <span class="n">regionIndices</span><span class="p">[</span><span class="n">region</span><span class="p">]</span>
+        <span class="n">maxEdgesInTransect</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;maxEdgesInTransect&#39;</span><span class="p">]</span>
         <span class="n">transectEdgeMaskSigns</span> <span class="o">=</span> \
-            <span class="n">ncFileRegional</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;transectEdgeMaskSigns&#39;</span><span class="p">][:,</span> <span class="n">iRegion</span><span class="p">]</span>
+            <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeMaskSigns</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="n">iRegion</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
         <span class="n">transectEdgeGlobalIDs</span> <span class="o">=</span> \
-            <span class="n">ncFileRegional</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;transectEdgeGlobalIDs&#39;</span><span class="p">][</span><span class="n">iRegion</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">dsMask</span><span class="o">.</span><span class="n">transectEdgeGlobalIDs</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="n">iRegion</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
         <span class="n">regionCellMask</span> <span class="o">=</span> \
-            <span class="n">ncFileRegional</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">][:,</span> <span class="n">iRegion</span><span class="p">]</span>
-        <span class="n">ncFileRegional</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">iRegion</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">dsMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">iRegion</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
 
         <span class="n">indRegion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">regionCellMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">dictRegion</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1729,28 +1788,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

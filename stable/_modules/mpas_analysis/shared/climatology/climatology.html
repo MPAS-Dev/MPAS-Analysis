@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>mpas_analysis.shared.climatology.climatology &mdash; MPAS-Analysis stable documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -49,7 +54,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> MPAS-Analysis
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
           
 
           
@@ -127,6 +132,8 @@
         <div class="rst-content">
         
           
+
+
 
 
 
@@ -289,6 +296,9 @@
                         <span class="n">mappingFileName</span><span class="p">)</span>
 
     <span class="n">mpiTasks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;mapMpiTasks&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">esmf_parallel_exec</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;mapParallelExec&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">esmf_parallel_exec</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="n">esmf_parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">mappingSubdirectory</span> <span class="o">=</span> \
         <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
@@ -296,7 +306,8 @@
     <span class="n">make_directories</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">mappingSubdirectory</span><span class="p">)</span> <span class="k">as</span> <span class="n">tempdir</span><span class="p">:</span>
         <span class="n">remapper</span><span class="o">.</span><span class="n">build_mapping_file</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
-                                    <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpiTasks</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">)</span>
+                                    <span class="n">mpiTasks</span><span class="o">=</span><span class="n">mpiTasks</span><span class="p">,</span> <span class="n">tempdir</span><span class="o">=</span><span class="n">tempdir</span><span class="p">,</span>
+                                    <span class="n">esmf_parallel_exec</span><span class="o">=</span><span class="n">esmf_parallel_exec</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">remapper</span>  <span class="c1"># }}}</span></div>
 
@@ -525,6 +536,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
             <span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;renormalizationThreshold&#39;</span><span class="p">)</span>
+        <span class="n">parallel_exec</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;ncremapParallelExec&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parallel_exec</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="n">useNcremap</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">climatologyFileName</span><span class="p">):</span>
                 <span class="n">write_netcdf</span><span class="p">(</span><span class="n">climatologyDataSet</span><span class="p">,</span> <span class="n">climatologyFileName</span><span class="p">)</span>
@@ -532,7 +548,8 @@
                                 <span class="n">outFileName</span><span class="o">=</span><span class="n">remappedFileName</span><span class="p">,</span>
                                 <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                                <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
             <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">remappedFileName</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
 
@@ -1053,28 +1070,25 @@
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved.
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
