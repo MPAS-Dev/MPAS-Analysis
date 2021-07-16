@@ -99,6 +99,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Execute</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#parallel-tasks">Parallel Tasks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parallelism-in-nco">Parallelism in NCO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-mapping-file-creation">Parallel Mapping File Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parallel-mask-creation">Parallel Mask Creation</a></li>
 </ul>
 </li>
@@ -210,6 +211,8 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section of a configuration file contains options used to
 control how tasks are executed within an MPAS-Analysis run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">execute</span><span class="p">]</span>
+<span class="c1">## options related to executing parallel tasks</span>
+
 <span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
 <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -229,6 +232,16 @@ control how tasks are executed within an MPAS-Analysis run:</p>
 <span class="c1"># serial, the default)</span>
 <span class="n">mapMpiTasks</span> <span class="o">=</span> <span class="mi">1</span>
 
+<span class="c1"># &quot;None&quot; if ESMF should perform mapping file generation in serial without a</span>
+<span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or ins</span>
+<span class="c1"># serial but with a command)</span>
+<span class="n">mapParallelExec</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># &quot;None&quot; if ncremap should perform remapping without a command, or &quot;srun&quot;</span>
+<span class="c1"># possibly with some flags if it should be run with that command</span>
+<span class="n">ncremapParallelExec</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
 <span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
 <span class="c1"># &quot;spawn&quot;).  We have found that &quot;spawn&quot; is the only one that works in python</span>
 <span class="c1"># 3.7 on Anvil so this is the default</span>
@@ -275,6 +288,43 @@ threads on multiple nodes.</p>
 it is important to be aware of the policies regarding using shared resources.
 On login nodes, <code class="docutils literal notranslate"><span class="pre">bck</span></code> may only be appropriate with <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> set to a
 small number and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> mode may not work at all.</p>
+</div>
+<div class="section" id="parallel-mapping-file-creation">
+<h2>Parallel Mapping File Creation<a class="headerlink" href="#parallel-mapping-file-creation" title="Permalink to this headline">¶</a></h2>
+<p>If mapping files from the MPAS mesh to the comparison grids aren’t already
+available in the diagnostics directory, they will be created before any other
+MPAS-Analysis tasks are run.  If you are running MPAS-Analysis out of
+E3SM-Unified on a compute node, on many systems (see below), ESMF has been
+built with the system version of MPI and you must run mapping-file generation
+with <code class="docutils literal notranslate"><span class="pre">srun</span></code>.  If you are running with <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, the mapping
+files will be generated in parallel.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">mapParallelExec</span> <span class="o">=</span> <span class="s">srun</span>
+</pre></div>
+</div>
+<p>Similarly, some systems (Anvil and Chrysalis) require a parallel executable
+for calls to <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> from E3SM-Unified on compute nodes:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">ncremapParallelExec</span> <span class="o">=</span> <span class="s">srun</span>
+</pre></div>
+</div>
+<p>E3SM supported machines with system MPI support in E3SM-Unified 1.5.0:</p>
+<ul class="simple">
+<li><p>Anvil</p></li>
+<li><p>Badger</p></li>
+<li><p>Chrysalis</p></li>
+<li><p>Compy</p></li>
+<li><p>Cori-Haswell</p></li>
+<li><p>Grizzly</p></li>
+</ul>
+<p>These machines do <strong>not</strong> have MPI support in E3SM-Unified:</p>
+<ul class="simple">
+<li><p>Cori-KNL</p></li>
+<li><p>Cooley</p></li>
+<li><p>Andes</p></li>
+<li><p>Acme1</p></li>
+</ul>
+<p>In the very near future, we hope to add a capability to MPAS-Analysis so that
+it will automatically recognize which machine it is on (or you can specify if
+need be), allowing these and other config options to be set automatically.</p>
 </div>
 <div class="section" id="parallel-mask-creation">
 <h2>Parallel Mask Creation<a class="headerlink" href="#parallel-mask-creation" title="Permalink to this headline">¶</a></h2>
