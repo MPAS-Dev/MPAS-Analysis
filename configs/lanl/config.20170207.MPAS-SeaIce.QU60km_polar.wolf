@@ -30,6 +30,11 @@ parallelTaskCount = 6
 # handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = bck
 
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+# serial but with a command)
+mapParallelExec = srun
+
 [diagnostics]
 ## config options related to observations, mapping files and region files used
 ## by MPAS-Analysis in diagnostics computations.
