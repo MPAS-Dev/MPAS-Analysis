@@ -25,8 +25,7 @@
 
 cd $PBS_O_WORKDIR
 
-source /ccs/proj/cli900/sw/rhea/e3sm-unified/load_latest_e3sm_unified.csh
-export HDF5_USE_FILE_LOCKING=FALSE
+source /ccs/proj/cli900/sw/andes/e3sm-unified/load_latest_e3sm_unified_andes.csh
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed

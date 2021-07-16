@@ -30,8 +30,7 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-source /global/cfs/cdirs/e3sm/software/anaconda_envs/load_latest_e3sm_unified.sh
-export HDF5_USE_FILE_LOCKING=FALSE
+source /global/common/software/e3sm/anaconda_envs/load_latest_e3sm_unified_cori-knl.sh
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
@@ -43,9 +42,6 @@ if [ ! -f $run_config_file ]; then
 fi
 
 # For an E3SM cryosphere run, include configs/polarRegions.conf, or exclude
-# this extra config file for defalut parameters
+# this extra config file for default parameters
 srun -N 1 -n 1 mpas_analysis configs/polarRegions.conf $run_config_file
-
-# if using the mpas_analysis conda package instead of the git repo
-# srun -N 1 -n 1 mpas_analysis $run_config_file
 

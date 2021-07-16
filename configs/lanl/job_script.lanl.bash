@@ -24,18 +24,11 @@ cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 
 export OMP_NUM_THREADS=1
 
-module unload python e3sm-unified
-module use /usr/projects/climate/SHARED_CLIMATE/modulefiles/all
-module load e3sm-unified/1.2.0
-export HDF5_USE_FILE_LOCKING=FALSE
+source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_e3sm_unified_grizzly.sh
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
-# command to run a serial job on a single node on edison
-command="mpas_analysis"
-# to use the verison of mpas_analysis from a conda package instead, use:
-#command="mpas_analysis"
 # one parallel task per node by default
 parallel_task_count=12
 # ncclimo can run with 1 (serial) or 12 (bck) threads
@@ -66,5 +59,5 @@ ncclimoParallelMode = $ncclimo_mode
 
 EOF
 
-$command $run_config_file $job_config_file
+mpas_analysis $run_config_file $job_config_file
 

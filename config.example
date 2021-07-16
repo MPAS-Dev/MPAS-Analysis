@@ -68,6 +68,19 @@ ncclimoParallelMode = serial
 # serial, the default)
 mapMpiTasks = 1
 
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or in
+# serial but with a command).
+mapParallelExec = None
+# Typically, use this instead if running E3SM-Unified on a compute node
+# mapParallelExec = srun
+
+# "None" if ncremap should perform remapping without a command, or "srun"
+# possibly with some flags if it should be run with that command
+ncremapParallelExec = None
+# Use this if running E3SM-Unified on a compute node on Chrysalis or Anvil
+# ncremapParallelExec = srun
+
 
 [diagnostics]
 ## config options related to observations, mapping files and region files used

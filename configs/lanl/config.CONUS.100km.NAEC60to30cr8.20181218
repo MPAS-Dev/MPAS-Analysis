@@ -23,6 +23,11 @@ mainRunName = CONUS.100km.NAEC60to30cr8.20181218
 parallelTaskCount = 6
 ncclimoParallelMode = serial
 
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+# serial but with a command)
+mapParallelExec = srun
+
 [input]
 ## options related to reading in the results to be analyzed
 

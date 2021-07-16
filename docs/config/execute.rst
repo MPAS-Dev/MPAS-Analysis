@@ -6,30 +6,42 @@ Execute
 The ``[execute]`` section of a configuration file contains options used to
 control how tasks are executed within an MPAS-Analysis run::
 
-  [execute]
-  # the number of parallel tasks (1 means tasks run in serial, the default)
-  parallelTaskCount = 1
+    [execute]
+    ## options related to executing parallel tasks
 
-  # the parallelism mode in ncclimo ("serial", "bck" or "mpi")
-  # Set this to "bck" (background parallelism) in most cases.  The default number
-  # of threads (see below) is 12, one for each monthly climatology. Set to "mpi"
-  # to run one MPI task on each node and however many threads per node to reach
-  # 12 total threads.
-  ncclimoParallelMode = serial
+    # the number of parallel tasks (1 means tasks run in serial, the default)
+    parallelTaskCount = 1
 
-  # the number of total threads to use when ncclimo runs in "bck" or "mpi" mode.
-  # Reduce this number if ncclimo is crashing (maybe because it is out of memory).
-  # The number of threads must be a factor of 12 (1, 2, 3, 4, 6 or 12).
-  ncclimoThreads = 12
+    # the parallelism mode in ncclimo ("serial", "bck" or "mpi")
+    # Set this to "bck" (background parallelism) in most cases.  The default number
+    # of threads (see below) is 12, one for each monthly climatology. Set to "mpi"
+    # to run one MPI task on each node and however many threads per node to reach
+    # 12 total threads.
+    ncclimoParallelMode = serial
 
-  # the number of MPI tasks to use in creating mapping files (1 means tasks run in
-  # serial, the default)
-  mapMpiTasks = 1
+    # the number of total threads to use when ncclimo runs in "bck" or "mpi" mode.
+    # Reduce this number if ncclimo is crashing (maybe because it is out of memory).
+    # The number of threads must be a factor of 12 (1, 2, 3, 4, 6 or 12).
+    ncclimoThreads = 12
 
-  # Multiprocessing method used in python mask creation ("forkserver", "fork" or
-  # "spawn").  We have found that "spawn" is the only one that works in python
-  # 3.7 on Anvil so this is the default
-  multiprocessingMethod = spawn
+    # the number of MPI tasks to use in creating mapping files (1 means tasks run in
+    # serial, the default)
+    mapMpiTasks = 1
+
+    # "None" if ESMF should perform mapping file generation in serial without a
+    # command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+    # serial but with a command)
+    mapParallelExec = None
+
+    # "None" if ncremap should perform remapping without a command, or "srun"
+    # possibly with some flags if it should be run with that command
+    ncremapParallelExec = None
+
+    # Multiprocessing method used in python mask creation ("forkserver", "fork" or
+    # Multiprocessing method used in python mask creation ("forkserver", "fork" or
+    # "spawn").  We have found that "spawn" is the only one that works in python
+    # 3.7 on Anvil so this is the default
+    multiprocessingMethod = spawn
 
 Parallel Tasks
 --------------
@@ -75,6 +87,56 @@ Again, when running MPAS-Analysis on login nodes of supercomputing facilities,
 it is important to be aware of the policies regarding using shared resources.
 On login nodes, ``bck`` may only be appropriate with ``ncclimoThreads`` set to a
 small number and ``mpi`` mode may not work at all.
+
+Parallel Mapping File Creation
+------------------------------
+
+If mapping files from the MPAS mesh to the comparison grids aren't already
+available in the diagnostics directory, they will be created before any other
+MPAS-Analysis tasks are run.  If you are running MPAS-Analysis out of
+E3SM-Unified on a compute node, on many systems (see below), ESMF has been
+built with the system version of MPI and you must run mapping-file generation
+with ``srun``.  If you are running with ``parallelTaskCount > 1``, the mapping
+files will be generated in parallel.
+
+.. code-block:: cfg
+
+    mapParallelExec = srun
+
+Similarly, some systems (Anvil and Chrysalis) require a parallel executable
+for calls to ``ncremap`` from E3SM-Unified on compute nodes:
+
+.. code-block:: cfg
+
+    ncremapParallelExec = srun
+
+E3SM supported machines with system MPI support in E3SM-Unified 1.5.0:
+
+* Anvil
+
+* Badger
+
+* Chrysalis
+
+* Compy
+
+* Cori-Haswell
+
+* Grizzly
+
+These machines do **not** have MPI support in E3SM-Unified:
+
+* Cori-KNL
+
+* Cooley
+
+* Andes
+
+* Acme1
+
+In the very near future, we hope to add a capability to MPAS-Analysis so that
+it will automatically recognize which machine it is on (or you can specify if
+need be), allowing these and other config options to be set automatically.
 
 Parallel Mask Creation
 ----------------------
