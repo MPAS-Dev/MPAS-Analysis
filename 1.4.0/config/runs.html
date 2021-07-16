@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Runs &mdash; MPAS-Analysis 1.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Execute" href="execute.html" />
+    <link rel="prev" title="Configuration" href="../configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../configuration.html">Configuration</a> &raquo;</li>
+        
+      <li>Runs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/config/runs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="runs">
+<span id="config-runs"></span><h1>Runs<a class="headerlink" href="#runs" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section of a configuration file contains options used to name
+the “main” run, a preprocessed E3SM v0 run (if any) and to point to analysis
+of a control E3SM v1 or standalone MPAS run (if any):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">runs</span><span class="p">]</span>
+<span class="c1">## options related to the run to be analyzed and control runs to be</span>
+<span class="c1">## compared against</span>
+
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
+<span class="n">mainRunName</span> <span class="o">=</span> <span class="n">runName</span>
+
+<span class="c1"># preprocessedReferenceRunName is the name of a control run that has been</span>
+<span class="c1"># preprocessed to compare against (or None to turn off comparison).  Reference</span>
+<span class="c1"># runs of this type would have preprocessed results because they were not</span>
+<span class="c1"># performed with MPAS components (so they cannot be easily ingested by</span>
+<span class="c1"># MPAS-Analysis)</span>
+<span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># config file for a control run to which this run will be compared.  The</span>
+<span class="c1"># analysis should have already been run to completion once with this config</span>
+<span class="c1"># file, so that the relevant MPAS climatologies already exist and have been</span>
+<span class="c1"># remapped to the comparison grid.  Leave this option commented out if no</span>
+<span class="c1"># control run is desired.</span>
+<span class="c1"># controlRunConfigFile = /path/to/config/file</span>
+
+<span class="c1"># config file for a main run on which the analysis was already run to</span>
+<span class="c1"># completion.  The relevant MPAS climatologies already exist and have been</span>
+<span class="c1"># remapped to the comparison grid and time series have been extracted.</span>
+<span class="c1"># Leave this option commented out if the analysis for the main run should be</span>
+<span class="c1"># performed.</span>
+<span class="c1"># mainRunConfigFile = /path/to/config/file</span>
+</pre></div>
+</div>
+<p>The name of the “main” run (as opposed to a control run, if any) can be any
+identifier that will be used in figure titles, legends, web pages and file
+names to identify this run.  It does not need to be the name of the simulation
+as specified in E3SM:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mainRunName</span> <span class="o">=</span> <span class="n">runName</span>
+</pre></div>
+</div>
+<p>A few of the time series plots in MPAS-Analysis can be compared against a
+preprocessed control run from E3SM v0 (which was similar to the CESM, the
+Community Earth System Model).  If these data are available and the comparison
+to these runs is desired, the name of the control run should be specified
+here and the paths to the data set should be specified (see
+<a class="reference internal" href="preprocessed.html#config-preprocessed"><span class="std std-ref">Preprocessed Reference Runs</span></a>).  If not this name should be left as <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>MPAS-Analysis supports comparison between the “main” run and a control run
+from either E3SM or a standalone MPAS component.  By default, this feature is
+disabled by commenting out the configuration option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># controlRunConfigFile = /path/to/config/file</span>
+</pre></div>
+</div>
+<p>To specify a control run, first run MPAS analysis on the control run.  Be
+sure that:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the start and end year for climatologies, time series and climate indices
+is covered by the simulation output.</p></li>
+<li><p>most configuration options for the control run are the same as for the
+main run.  The exceptions are contents of the <code class="docutils literal notranslate"><span class="pre">[run]</span></code>, <code class="docutils literal notranslate"><span class="pre">[input]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">[output]</span></code> sections.  The range of years for climatologies can be
+different, but this is discouraged.</p></li>
+</ul>
+</div></blockquote>
+<p>Once the analysis has been run on the control run, a comparison is made by
+uncommenting <code class="docutils literal notranslate"><span class="pre">controlRunConfigFile</span></code> and specifying the path to the
+configuration file use in this analysis, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">controlRunConfigFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">control_run</span>
+</pre></div>
+</div>
+<p>If analysis has already been run on the “main” run in a “main vs ref”
+comparison, some time can be saved in performing the comparison
+(particularly for higher resolution output, for which a lot of the
+computation time goes into computing climatologies and extracting time
+series).  By default, this feature is disabled by commenting out the
+configuration option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># mainRunConfigFile = /path/to/config/file</span>
+</pre></div>
+</div>
+<p>To specify a main run, first run MPAS analysis on the main run.  The
+“comparison” config file should be nearly identical to the “main” config
+file except that:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The output <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> should be different.</p></li>
+<li><p>the start and end year for climatologies, time series and climate indices
+must be the actual range used if output data was not available to span
+the requested range in the “main” run.</p></li>
+</ul>
+</div></blockquote>
+<p>All configuration information for the “main” run in the “main vs ref”
+comparison is taken from the “comparsion” config file, not the “main” config.
+Only the output directories and subdirectories for climatologies, time series,
+mapping files and mask files (if these latter 2 were generated on the fly)
+will be taken from the “main” config file.  Symbolic links will be made to
+these directories so the comparison analysis run can reuse this data.
+Specify the path to the configuration file use in “main” analysis by
+uncommenting the option and providing a relative or absolute path to the
+config file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mainRunConfigFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">main_run</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="execute.html" class="btn btn-neutral float-right" title="Execute" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

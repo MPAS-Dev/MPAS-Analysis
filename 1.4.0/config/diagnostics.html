@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Diagnostics &mdash; MPAS-Analysis 1.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Input" href="input.html" />
+    <link rel="prev" title="Dask threads and subprocess count" href="dask_threads.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="runs.html">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#diagnostics-directories">Diagnostics Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapping-files">Mapping Files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../configuration.html">Configuration</a> &raquo;</li>
+        
+      <li>Diagnostics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/config/diagnostics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="diagnostics">
+<span id="config-diagnostics"></span><h1>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section of a configuration file contains options related
+to paths containing observations, region-mask files and mapping files used to
+interpolate MPAS data and observations to common reference grids:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">diagnostics</span><span class="p">]</span>
+<span class="c1">## config options related to observations, mapping files and region files used</span>
+<span class="c1">## by MPAS-Analysis in diagnostics computations.</span>
+
+<span class="c1"># The base path to the diagnostics directory.  Typically, this will be a shared</span>
+<span class="c1"># directory on each E3SM supported machine (see the example config files for</span>
+<span class="c1"># its location).  For other machines, this would be the directory pointed to</span>
+<span class="c1"># when running &quot;download_analysis_data.py&quot; to get the public observations,</span>
+<span class="c1"># mapping files and region files.</span>
+<span class="n">baseDirectory</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">diagnostics</span>
+
+<span class="c1"># A second directory where custom diagonstics data such as mapping files and</span>
+<span class="c1"># regions masks for unsupported grids can be found.  The structure of</span>
+<span class="c1"># subdirectories in this directory must be the same as baseDirectory</span>
+<span class="n">customDirectory</span> <span class="o">=</span> <span class="n">none</span>
+
+<span class="c1"># Directory for mapping files (if they have been generated already). If mapping</span>
+<span class="c1"># files needed by the analysis are not found here, they will be generated and</span>
+<span class="c1"># placed in the output mappingSubdirectory.  The user can supply an absolute</span>
+<span class="c1"># path here to point to a path that is not within the baseDirectory above.</span>
+<span class="n">mappingSubdirectory</span> <span class="o">=</span> <span class="n">mpas_analysis</span><span class="o">/</span><span class="n">maps</span>
+
+<span class="c1"># Directory for region mask files. The user can supply an absolute path here to</span>
+<span class="c1"># point to a path that is not within the baseDirectory above.</span>
+<span class="n">regionMaskSubdirectory</span> <span class="o">=</span> <span class="n">mpas_analysis</span><span class="o">/</span><span class="n">region_masks</span>
+</pre></div>
+</div>
+<div class="section" id="diagnostics-directories">
+<h2>Diagnostics Directories<a class="headerlink" href="#diagnostics-directories" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is the location where files were downloaded with the
+<code class="docutils literal notranslate"><span class="pre">download_analysis_data.py</span></code>.  If the user is on an E3SM supported machine,
+this data has already been downloaded to a shared location (see example config
+files in the subdirectories of the <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory in the MPAS-Analysis
+repository).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">customDirectory</span></code>, if it is not <code class="docutils literal notranslate"><span class="pre">none</span></code> is another directory where
+observations, mapping files and region masks may be stored.  This is useful for
+runs on non-standard grids or for testing out new observations.</p>
+<p>The remaining options point to the subdirectories for mapping files (see
+below) and region masks (see <a class="reference internal" href="colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a>), respectively.
+Typically, there is no reason to change <code class="docutils literal notranslate"><span class="pre">mappingSubdirectory</span></code> or
+<code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code>, as these are the standard subdirectories created
+when these files are downloaded from the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a>.</p>
+</div>
+<div class="section" id="mapping-files">
+<span id="config-mapping-files"></span><h2>Mapping Files<a class="headerlink" href="#mapping-files" title="Permalink to this headline">¶</a></h2>
+<p>Mapping files are used in many MPAS-Analysis tasks to remap from either the
+native MPAS mesh or an observations grid to a comparison grid (see
+<a class="reference internal" href="comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a>).  By default, these mapping files are generated
+on the fly as they are needed.  This can be a time-consuming process,
+especially for high resolution meshes, so it is useful to store a cache of
+these mapping files for reuse.  Mapping files at three standard resolutions
+are avaliable on the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a>.  The mapping files for
+the two coarser resolution meshes will be downloaded automatically along with
+the publicly available observations. (See the <a class="reference internal" href="../quick_start.html#quick-start"><span class="std std-ref">Quick Start Guide</span></a> for details
+on downloading this data.)</p>
+<p>If you notice that MPAS-Analysis is generating mapping files on the fly each
+time you run, you may wish to copy them from the mapping files output
+directory (the subdirectory <code class="docutils literal notranslate"><span class="pre">mapping/</span></code> inside the output base directory) to
+your mapping files cache directory.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="input.html" class="btn btn-neutral float-right" title="Input" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dask_threads.html" class="btn btn-neutral float-left" title="Dask threads and subprocess count" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
