@@ -23,6 +23,8 @@ import random
 import string
 from datetime import datetime
 import numpy
+import shutil
+import warnings
 
 
 def paths(*args):  # {{{
@@ -361,5 +363,16 @@ def decode_strings(da):
 
     return strings
 
+
+def copyfile(src, dst):
+    """ Copy a file, retrying if temporarily unavailable """
+
+    try:
+        shutil.copyfile(src, dst)
+    except BlockingIOError:
+        # this is an occasional problem on Chrysalis.  Try a slow copy
+        warnings.warn('Making a slow copy from {} to {}'.format(src, dst))
+        with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
+            shutil.copyfileobj(fsrc, fdst)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

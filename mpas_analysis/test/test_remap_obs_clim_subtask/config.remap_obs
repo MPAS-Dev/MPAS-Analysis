@@ -1,3 +1,7 @@
+[execute]
+mapParallelExec = None
+ncremapParallelExec = None
+
 [diagnostics]
 baseDirectory = /dir/to/diagnostics
 customDirectory = none

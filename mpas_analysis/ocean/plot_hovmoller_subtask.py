@@ -299,23 +299,22 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         outFileName = '{}/{}.png'.format(self.plotsDirectory, self.filePrefix)
 
-        if config.has_option(self.sectionName, 'firstYearXTicks'):
-            firstYearXTicks = config.getint(self.sectionName,
-                                            'firstYearXTicks')
+        sectionName = self.sectionName
+        if config.has_option(sectionName, 'firstYearXTicks'):
+            firstYearXTicks = config.getint(sectionName, 'firstYearXTicks')
         else:
             firstYearXTicks = None
 
-        if config.has_option(self.sectionName, 'yearStrideXTicks'):
-            yearStrideXTicks = config.getint(self.sectionName,
-                                             'yearStrideXTicks')
+        if config.has_option(sectionName, 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint(sectionName, 'yearStrideXTicks')
         else:
             yearStrideXTicks = None
 
         movingAverageMonths = config.getWithDefault(
-            self.sectionName, 'movingAverageMonths', 1)
+            sectionName, 'movingAverageMonths', 1)
 
-        if config.has_option(self.sectionName, 'yLim'):
-            yLim = config.getExpression(self.sectionName, 'yLim')
+        if config.has_option(sectionName, 'yLim'):
+            yLim = config.getExpression(sectionName, 'yLim')
         else:
             yLim = None
 
@@ -349,6 +348,21 @@ class PlotHovmollerSubtask(AnalysisTask):
             refTitle = self.controlConfig.get('runs', 'mainRunName')
             diffTitle = 'Main - Control'
 
+        if config.has_option(sectionName, 'titleFontSize'):
+            titleFontSize = config.getint(sectionName, 'titleFontSize')
+        else:
+            titleFontSize = None
+
+        if config.has_option(sectionName, 'axisFontSize'):
+            axisFontSize = config.getint(sectionName, 'axisFontSize')
+        else:
+            axisFontSize = None
+
+        if config.has_option(sectionName, 'defaultFontSize'):
+            defaultFontSize = config.getint(sectionName, 'defaultFontSize')
+        else:
+            defaultFontSize = None
+
         fig, _, suptitle = plot_vertical_section_comparison(
             config, Time, z, field, refField, diff, self.sectionName,
             colorbarLabel=self.unitsLabel, title=title, modelTitle=mainRunName,
@@ -356,7 +370,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             ylabel=yLabel, lineWidth=1, xArrayIsTime=True,
             movingAveragePoints=movingAverageMonths, calendar=self.calendar,
             firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
-            yLim=yLim, invertYAxis=False)
+            yLim=yLim, invertYAxis=False, titleFontSize=titleFontSize,
+            axisFontSize=axisFontSize, defaultFontSize=defaultFontSize)
 
         if self.regionMaskFile is not None:
 
@@ -375,10 +390,10 @@ class PlotHovmollerSubtask(AnalysisTask):
 
             add_inset(fig, fc, width=1.0, height=1.0, xbuffer=0.1, ybuffer=0.1)
 
-            savefig(outFileName, tight=False)
+            savefig(outFileName, config, tight=False)
 
         else:
-            savefig(outFileName)
+            savefig(outFileName, config)
 
         write_image_xml(
             config=config,

@@ -35,6 +35,7 @@ from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
 from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.plot.ticks import plot_xtick_format
+from mpas_analysis.shared.plot.save import savefig
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
@@ -606,8 +607,7 @@ class IndexNino34(AnalysisTask):  # {{{
         plt.tight_layout(rect=[0, 0.03, 1, 0.90])
 
         if outFileName is not None:
-            fig.savefig(outFileName, dpi=dpi, bbox_inches='tight',
-                        pad_inches=0.1)
+            savefig(outFileName, config)
 
         plt.close()
         # }}}
@@ -687,8 +687,7 @@ class IndexNino34(AnalysisTask):  # {{{
         plt.tight_layout(rect=[0, 0.03, 1, 0.90])
 
         if outFileName is not None:
-            plt.savefig(outFileName, dpi=dpi, bbox_inches='tight',
-                        pad_inches=0.1)
+            savefig(outFileName, config)
 
         plt.close()
         # }}}

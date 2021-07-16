@@ -31,6 +31,7 @@ from cartopy.util import add_cyclic_point
 
 from mpas_analysis.shared.plot.colormap import setup_colormap
 from mpas_analysis.shared.plot.title import limit_title
+from mpas_analysis.shared.plot.save import savefig
 
 
 def plot_polar_comparison(
@@ -51,6 +52,7 @@ def plot_polar_comparison(
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
+        defaultFontSize=None,
         figsize=None,
         dpi=None,
         vertical=False,
@@ -99,6 +101,9 @@ def plot_polar_comparison(
 
     titleFontSize : int, optional
         size of the title font
+
+    defaultFontSize : int, optional
+        the size of text other than the title
 
     figsize : tuple of float, optional
         the size of the figure in inches.  If ``None``, the figure size is
@@ -149,7 +154,7 @@ def plot_polar_comparison(
             plotHandle = ax.pcolormesh(LonsPeriodic, LatsPeriodic,
                                        fieldPeriodic, cmap=colormap,
                                        norm=norm, transform=data_crs,
-                                       zorder=1)
+                                       zorder=1, rasterized=True)
         else:
             plotHandle = ax.contourf(LonsPeriodic, LatsPeriodic,
                                      fieldPeriodic, cmap=colormap,
@@ -173,6 +178,10 @@ def plot_polar_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     if dpi is None:
         dpi = config.getint('plot', 'dpi')
@@ -231,8 +240,8 @@ def plot_polar_comparison(
     if vertical:
         plt.subplots_adjust(top=0.9)
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+    if fileout is not None:
+        savefig(fileout, config)
 
     plt.close()
 
@@ -252,6 +261,7 @@ def plot_global_comparison(
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
+        defaultFontSize=None,
         figsize=None,
         dpi=None,
         lineWidth=1,
@@ -299,6 +309,9 @@ def plot_global_comparison(
     titleFontSize : int, optional
         size of the title font
 
+    defaultFontSize : int, optional
+        the size of text other than the title
+
     figsize : tuple of float, optional
         the size of the figure in inches
 
@@ -340,7 +353,7 @@ def plot_global_comparison(
         if levels is None:
             plotHandle = ax.pcolormesh(Lons, Lats, array, cmap=colormap,
                                        norm=norm, transform=projection,
-                                       zorder=1)
+                                       zorder=1, rasterized=True)
         else:
             plotHandle = ax.contourf(Lons, Lats, array, cmap=colormap,
                                      norm=norm, levels=levels, extend='both',
@@ -359,6 +372,10 @@ def plot_global_comparison(
 
         cbar = plt.colorbar(plotHandle, cax=cax, ticks=ticks, boundaries=ticks)
         cbar.set_label(cbarlabel)
+
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     # set up figure
     if dpi is None:
@@ -409,8 +426,8 @@ def plot_global_comparison(
 
     _add_stats(modelArray, refArray, diffArray, Lats, axes)
 
-    if (fileout is not None):
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.2)
+    if fileout is not None:
+        savefig(fileout, config, pad_inches=0.2)
 
     plt.close()
 
@@ -431,6 +448,8 @@ def plot_polar_projection_comparison(
         diffTitle='Model-Observations',
         cbarlabel='units',
         titleFontSize=None,
+        cartopyGridFontSize=None,
+        defaultFontSize=None,
         figsize=None,
         dpi=None,
         lineWidth=0.5,
@@ -483,6 +502,12 @@ def plot_polar_projection_comparison(
     titleFontSize : int, optional
         size of the title font
 
+    cartopyGridFontSize : int, optional
+        the size of text used by cartopy to label lon and lat
+
+    defaultFontSize : int, optional
+        the size of text other than the title
+
     figsize : tuple of float, optional
         the size of the figure in inches.  If ``None``, the figure size is
         ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.
@@ -522,15 +547,19 @@ def plot_polar_projection_comparison(
 
         gl = ax.gridlines(crs=cartopy.crs.PlateCarree(), color='k',
                           linestyle=':', zorder=5, draw_labels=True)
-        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 60.))
+        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 30.))
         gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
         gl.n_steps = 100
         gl.right_labels = False
+        gl.left_labels = False
         gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
         gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
+        gl.xlabel_style['size'] = cartopyGridFontSize
+        gl.ylabel_style['size'] = cartopyGridFontSize
 
         if levels is None:
-            plotHandle = ax.pcolormesh(x, y, array, cmap=colormap, norm=norm)
+            plotHandle = ax.pcolormesh(x, y, array, cmap=colormap, norm=norm,
+                                       rasterized=True)
         else:
             plotHandle = ax.contourf(xCenter, yCenter, array, cmap=colormap,
                                      norm=norm, levels=levels, extend='both')
@@ -559,6 +588,13 @@ def plot_polar_projection_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
+
+    if cartopyGridFontSize is None:
+        cartopyGridFontSize = config.getint('plot', 'cartopyGridFontSize')
 
     useCartopyCoastline = config.getboolean('polarProjection',
                                             'useCartopyCoastline')
@@ -628,7 +664,7 @@ def plot_polar_projection_comparison(
         plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
     if fileout is not None:
-        plt.savefig(fileout, dpi=dpi, bbox_inches='tight', pad_inches=0.1)
+        savefig(fileout, config)
 
     plt.close()
 

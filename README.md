@@ -40,52 +40,42 @@ conda create -n mpas-analysis mpas-analysis
 conda activate mpas-analysis
 ```
 
-To use the latest version for developers, you will need to set up a conda
-environment with the following packages:
-
- * python >= 3.6
- * numpy
- * scipy
- * matplotlib >= 3.0.2
- * netCDF4
- * xarray >= 0.14.1
- * dask
- * bottleneck
- * lxml
- * nco >= 4.8.1
- * pyproj
- * pillow
- * cmocean
- * progressbar2
- * requests
- * setuptools
- * shapely
- * cartopy >= 0.18.0
- * cartopy\_offlinedata
- * geometric\_features >= 0.1.13
- * gsw
- * pyremap < 0.1.0
- * mpas\_tools >= 0.0.15
- * pandas
- * python-dateutil
- * six
-
-
-These can be installed via the conda command:
-```
-conda config --add channels conda-forge
-conda config --set channel_priority strict
-conda create -n mpas-analysis python=3.8 numpy scipy "matplotlib>=3.0.2" \
-    netCDF4 "xarray>=0.14.1" dask bottleneck lxml "nco>=4.8.1" pyproj \
-    pillow cmocean progressbar2 requests setuptools shapely "cartopy>=0.18.0" \
-    cartopy_offlinedata "geometric_features>=0.1.13" gsw "pyremap<0.1.0" \
-    "mpas_tools>=0.0.15" pandas python-dateutil six
-conda activate mpas-analysis
-```
-
-Then, get the code from:
+To use the latest version for developers, get the code from:
  [https://github.com/MPAS-Dev/MPAS-Analysis](https://github.com/MPAS-Dev/MPAS-Analysis)
 
+Then, you will need to set up a conda environment from the MPAS-Analysis repo.
+This environment will include the required dependencies for the development
+branch from `dev-spec.txt` and will install the `mpas_analysis` package into
+the conda environment in a way that points directly to the local branch (so
+changes you make to the code directly affect `mpas_analysis` in the conda
+environment):
+
+``` bash
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda create -y -n mpas_dev --file dev-spec.txt
+conda activate mpas_dev
+python -m pip install -e .
+```
+
+If you are developing another conda package at the same time (this is common
+for MPAS-Tools or geometric\_features), you should first comment out the other
+package in `dev-spec.txt`.  Then, you can install both packages in the same
+development environment, e.g.:
+``` bash
+conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
+    -- analysis/MPAS-Analysis/dev-spec.txt
+conda activate mpas_dev
+cd tools/MPAS-Tools/conda_package
+python -m pip install -e .
+cd ../../../analysis/MPAS-Analysis
+python -m pip install -e .
+```
+Obviously, the paths to the repos may be different in your local clones.  With
+the `mpas_dev` environment as defined above, you can make changes to both
+`mpas_tools` and `mpas-analysis` packages in their respective branches, and
+these changes will be reflected when refer to the packages or call their
+respective entry points (command-line tools).
 
 ## Download analysis input data
 
@@ -94,12 +84,6 @@ necessary to MPAS-Analysis by running:
 
 ```
 download_analysis_data -o /path/to/mpas_analysis/diagnostics
-```
-
-If you are using the git repository, run:
-
-```
-./download_analysis_data.py -o /path/to/mpas_analysis/diagnostics
 ```
 
 where `/path/to/mpas_analysis/diagnostics` is the main folder that will contain
@@ -124,11 +108,6 @@ by running:
 mpas_analysis --list
 ```
 
-If using a git repository, run:
-```
-python -m mpas_analysis --list
-```
-
 This lists all tasks and their tags.  These can be used in the `generate`
 command-line option or config option.  See `mpas_analysis/config.default`
 for more details.
@@ -142,10 +121,9 @@ for more details.
   2. Either modify config options in your new file or copy and modify config
      options from `mpas_analysis/config.default` (in a git repo) or directly
      from GitHub:
-     [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_anlysis/config.default).
+     [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default).
   3. If you installed the `mpas-analysis` package, run:
-     `mpas_analysis config.myrun`.  If using a git checkout, run:
-     `python -m mpas_analysis config.myrun`.  This will read the configuraiton
+     `mpas_analysis config.myrun`.  This will read the configuration
      first from `mpas_analysis/config.default` and then replace that
      configuraiton with any changes from from `config.myrun`
   4. If you want to run a subset of the analysis, you can either set the
@@ -212,12 +190,6 @@ a package, run:
 mpas_analysis --purge <config.file>
 ```
 
-If you are running in the repo, use:
-
-```
-python -m mpas_analysis --purge <config.file>
-```
-
 All of the subdirectories listed in `output` will be deleted along with the
 climatology subdirectories in `oceanObservations` and `seaIceObservations`.
 
@@ -242,7 +214,7 @@ If you are running from a git repo:
 
   1. If you are running from a git repo, copy the appropriate job script file
      from `configs/<machine_name>` to the root directory (or another directory
-     if preferred). The default cript, `configs/job_script.default.bash`, is
+     if preferred). The default script, `configs/job_script.default.bash`, is
      appropriate for a laptop or desktop computer with multiple cores.
   2. If using the `mpas-analysis` conda package, download the job script and/or
      sample config file from the

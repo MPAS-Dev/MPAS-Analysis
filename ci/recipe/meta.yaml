@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.3.0" %}
+{% set version = "1.4.0" %}
 
 package:
   name: {{ name|lower }}
@@ -18,43 +18,45 @@ build:
 
 requirements:
   host:
-    - python
+    - python >=3.7
     - pip
   run:
-    - python
-    - numpy
-    - scipy
-    - matplotlib-base >=3.0.2
-    - netcdf4
-    - xarray >=0.14.1
-    - dask
+    - python >=3.7
     - bottleneck
-    - lxml
-    - nco >=4.8.1
-    - pillow
-    - cmocean
-    - progressbar2
-    - requests
-    - pyproj
-    - setuptools
-    - shapely
     - cartopy >=0.18.0
     - cartopy_offlinedata
-    - geometric_features >=0.1.13
+    - cmocean
+    - dask
+    - geometric_features >=0.5.0
     - gsw
-    - pyremap <0.1.0
-    - mpas_tools >=0.0.15
+    - lxml
+    - matplotlib-base >=3.0.2
+    - mpas_tools >=0.5.1
+    - nco >=4.8.1
+    - netcdf4
+    - numpy
     - pandas
+    - pillow
+    - progressbar2
+    - pyproj
+    - pyremap >=0.0.13,<0.1.0
     - python-dateutil
+    - requests
+    - scipy
+    - setuptools
+    - shapely
     - six
+    - xarray >=0.14.1
 
 test:
   requires:
     - pytest
+    - pip
   imports:
     - mpas_analysis
     - pytest
   commands:
+    - pip check
     - pytest --pyargs mpas_analysis
     - mpas_analysis --help
     - download_analysis_data --help

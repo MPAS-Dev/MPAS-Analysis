@@ -284,7 +284,6 @@ Regions
    compute_region_masks.ComputeRegionMasks
    compute_region_masks_subtask.ComputeRegionMasksSubtask
    compute_region_masks_subtask.get_feature_list
-   compute_region_masks_subtask.get_region_info
 
 Timekeeping
 -----------

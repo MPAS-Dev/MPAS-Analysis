@@ -170,6 +170,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             subtaskName='computeTransport_{:04d}-{:04d}'.format(startYear,
                                                                 endYear))
 
+        self.subprocessCount = self.config.getint('timeSeriesTransport',
+                                                  'subprocessCount')
         self.startYear = startYear
         self.endYear = endYear
 
@@ -297,8 +299,38 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         maskTransectNames = decode_strings(dsTransectMask.transectNames)
 
         dsMesh = xarray.open_dataset(self.restartFileName)
+        dsMesh = dsMesh[['dvEdge', 'cellsOnEdge']]
+        dsMesh.load()
         dvEdge = dsMesh.dvEdge
         cellsOnEdge = dsMesh.cellsOnEdge - 1
+
+        transectIndices = []
+        transectData = []
+        self.logger.info('  Caching transect data...')
+        for transect in self.transectsToPlot:
+            self.logger.info('    transect: {}'.format(transect))
+            try:
+                transectIndex = maskTransectNames.index(transect)
+            except ValueError:
+                self.logger.warning('      Not found in masks. Skipping.')
+                continue
+            transectIndices.append(transectIndex)
+
+            # select the current transect
+            dsMask = dsTransectMask.isel(nTransects=[transectIndex])
+            dsMask.load()
+            edgeIndices = numpy.flatnonzero(dsMask.transectEdgeMasks.values)
+            edgeIndices = edgeIndices[edgeIndices >= 0].astype(int)
+            edgeSign = dsMask.transectEdgeMaskSigns.isel(
+                nEdges=edgeIndices)
+
+            dv = dvEdge.isel(nEdges=edgeIndices)
+            coe = cellsOnEdge.isel(nEdges=edgeIndices)
+            transectData.append({'edgeIndices': edgeIndices,
+                                 'edgeSign': edgeSign,
+                                 'dv': dv,
+                                 'coe': coe,
+                                 'transect': transect})
 
         timeDatasets = []
         self.logger.info('  Computing transport...')
@@ -310,31 +342,17 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
                 variableList=variableList,
                 startDate=startDate,
                 endDate=endDate)
+            dsTimeSlice.load()
 
             transectDatasets = []
-            transectIndices = []
-            for transect in self.transectsToPlot:
-                self.logger.info('    transect: {}'.format(transect))
-                try:
-                    transectIndex = maskTransectNames.index(transect)
-                except ValueError:
-                    self.logger.warning('      Not found in masks. '
-                                        'Skipping.')
-                    continue
-                transectIndices.append(transectIndex)
+            for data in transectData:
+                self.logger.info('    transect: {}'.format(data['transect']))
 
-                # select the current transect
-                dsMask = dsTransectMask.isel(nTransects=[transectIndex])
-                edgeIndices = dsMask.transectEdgeGlobalIDs - 1
-                edgeIndices = edgeIndices.where(edgeIndices >= 0,
-                                                drop=True).astype(int)
-                edgeSign = dsMask.transectEdgeMaskSigns.isel(
-                    nEdges=edgeIndices)
-
+                edgeIndices = data['edgeIndices']
+                coe = data['coe']
+                edgeSign = data['edgeSign']
+                dv = data['dv']
                 dsIn = dsTimeSlice.isel(nEdges=edgeIndices)
-
-                dv = dvEdge.isel(nEdges=edgeIndices)
-                coe = cellsOnEdge.isel(nEdges=edgeIndices)
 
                 # work on data from simulations
                 if 'timeMonthly_avg_normalTransportVelocity' in dsIn:
@@ -353,7 +371,7 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
 
                 # convert from m^3/s to Sv
                 transport = (constants.m3ps_to_Sv * edgeTransport.sum(
-                    dim=['maxEdgesInTransect', 'nVertLevels']))
+                    dim=['nEdges', 'nVertLevels']))
 
                 dsOut = xarray.Dataset()
                 dsOut['transport'] = transport
@@ -369,9 +387,9 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         dsOut = xarray.concat(timeDatasets, 'Time')
         dsOut.coords['transectNames'] = dsTransectMask.transectNames.isel(
             nTransects=transectIndices)
-        dsOut.coords['year'] = (('Time'), years)
+        dsOut.coords['year'] = (('Time',), years)
         dsOut['year'].attrs['units'] = 'years'
-        dsOut.coords['month'] = (('Time'), months)
+        dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
         write_netcdf(dsOut, outFileName)
 
@@ -559,7 +577,9 @@ class PlotTransportSubtask(AnalysisTask):
                    'Fram Strait': [-4.7, 0.7],
                    'Davis Strait': [-1.6, -3.6],
                    'Barents Sea Opening': [1.4, 2.6],
-                   'Nares Strait': [-1.8, 0.2]}
+                   'Nares Strait': [-1.8, 0.2],
+                   'Denmark Strait': None,
+                   'Iceland-Faroe-Scotland': None}
 
         config = self.config
         calendar = self.calendar
@@ -598,7 +618,7 @@ class PlotTransportSubtask(AnalysisTask):
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [transport]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
         meanString = 'mean={:.2f} $\pm$ {:.2f}'.format(trans_mean, trans_std)
         if plotControl:
@@ -607,7 +627,7 @@ class PlotTransportSubtask(AnalysisTask):
                 self._load_transport(self.controlConfig)
             refMeanString = 'mean={:.2f} $\pm$ {:.2f}'.format(ref_mean, ref_std)
             fields.append(ref_transport)
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText = ['{} ({})'.format(mainRunName, meanString),
                           '{} ({})'.format(controlRunName, refMeanString)]
@@ -652,7 +672,7 @@ class PlotTransportSubtask(AnalysisTask):
 
         add_inset(fig, fc, width=2.0, height=2.0)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = 'Transport through the {} Transect'.format(transectName)
         write_image_xml(

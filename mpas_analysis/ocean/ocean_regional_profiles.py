@@ -358,7 +358,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         cellMasks = dsRegionMask.regionCellMasks
         regionNamesVar = dsRegionMask.regionNames
 
-        totalArea = (cellMasks * areaCell * vertMask).sum('nCells')
+        totalArea = self._masked_area_sum(cellMasks, areaCell, vertMask)
 
         datasets = []
         for timeIndex, fileName in enumerate(inputFiles):
@@ -387,11 +387,12 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
                 meanName = '{}_mean'.format(prefix)
                 dsLocal[meanName] = \
-                    (cellMasks * areaCell * var).sum('nCells') / totalArea
+                    self._masked_area_sum(cellMasks, areaCell, var) / totalArea
 
                 meanSquaredName = '{}_meanSquared'.format(prefix)
                 dsLocal[meanSquaredName] = \
-                    (cellMasks * areaCell * var**2).sum('nCells') / totalArea
+                    self._masked_area_sum(cellMasks, areaCell, var**2) / \
+                    totalArea
 
             # drop the original variables
             dsLocal = dsLocal.drop_vars(variableList)
@@ -427,6 +428,19 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         write_netcdf(dsOut, outputFileName)
         # }}}
+
+    @staticmethod
+    def _masked_area_sum(cellMasks, areaCell, var):
+        """sum a variable over the masked areas"""
+        nRegions = cellMasks.sizes['nRegions']
+        totals = []
+        for index in range(nRegions):
+            mask = cellMasks.isel(nRegions=slice(index, index+1))
+            totals.append((mask * areaCell * var).sum('nCells'))
+
+        total = xr.concat(totals, 'nRegions')
+        return total
+
     # }}}
 
 
@@ -800,7 +814,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
         add_inset(fig, fc, width=1.0, height=1.0)
 
-        savefig(outFileName, tight=False)
+        savefig(outFileName, config, tight=False)
 
         caption = '{} {} vs depth'.format(regionName, titleFieldName)
         write_image_xml(

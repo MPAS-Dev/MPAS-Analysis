@@ -643,14 +643,42 @@ class PlotMeltSubtask(AnalysisTask):
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [timeSeries]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
         legendText = [mainRunName]
         if plotControl:
             fields.append(refTotalMeltFlux.isel(nRegions=self.regionIndex))
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText.append(controlRunName)
+
+        if config.has_option('timeSeriesAntarcticMelt', 'firstYearXTicks'):
+            firstYearXTicks = config.getint('timeSeriesAntarcticMelt',
+                                            'firstYearXTicks')
+        else:
+            firstYearXTicks = None
+
+        if config.has_option('timeSeriesAntarcticMelt', 'yearStrideXTicks'):
+            yearStrideXTicks = config.getint('timeSeriesAntarcticMelt',
+                                             'yearStrideXTicks')
+        else:
+            yearStrideXTicks = None
+
+        if config.has_option('timeSeriesAntarcticMelt', 'titleFontSize'):
+            titleFontSize = config.getint('timeSeriesAntarcticMelt',
+                                          'titleFontSize')
+        else:
+            titleFontSize = None
+
+        if config.has_option('timeSeriesAntarcticMelt', 'defaultFontSize'):
+            defaultFontSize = config.getint('timeSeriesAntarcticMelt',
+                                            'defaultFontSize')
+        else:
+            defaultFontSize = None
+
+        if self.iceShelf != 'Antarctica' and self.iceShelf != 'Filchner':
+            # we only need the legend in those 2
+            legendText = None
 
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
@@ -659,9 +687,14 @@ class PlotMeltSubtask(AnalysisTask):
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
+                                       legendLocation='upper left',
+                                       titleFontSize=titleFontSize,
+                                       defaultFontSize=defaultFontSize,
                                        obsMean=obsMeltFlux,
                                        obsUncertainty=obsMeltFluxUnc,
-                                       obsLegend=list(obsDict.keys()))
+                                       obsLegend=list(obsDict.keys()),
+                                       firstYearXTicks=firstYearXTicks,
+                                       yearStrideXTicks=yearStrideXTicks)
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway
@@ -669,7 +702,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         add_inset(fig, fc, width=2.0, height=2.0)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = 'Running Mean of Total Melt Flux  under Ice ' \
                   'Shelves in the {} Region'.format(title)
@@ -694,12 +727,12 @@ class PlotMeltSubtask(AnalysisTask):
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
         fields = [timeSeries]
-        lineColors = ['k']
+        lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
         legendText = [mainRunName]
         if plotControl:
             fields.append(refMeltRates.isel(nRegions=self.regionIndex))
-            lineColors.append('r')
+            lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText.append(controlRunName)
 
@@ -734,7 +767,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         add_inset(fig, fc, width=2.0, height=2.0)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
                   'Shelves in the {} Region'.format(title)

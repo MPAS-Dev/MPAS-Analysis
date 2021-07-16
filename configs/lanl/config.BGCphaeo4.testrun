@@ -30,6 +30,11 @@ preprocessedReferenceRunName = B1850C5_ne30_v0.4
 parallelTaskCount = 6
 ncclimoParallelMode = bck
 
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+# serial but with a command)
+mapParallelExec = srun
+
 [diagnostics]
 ## config options related to observations, mapping files and region files used
 ## by MPAS-Analysis in diagnostics computations.
@@ -48,7 +53,8 @@ baseDirectory = /turquoise/usr/projects/climate/SHARED_CLIMATE/diagnostics
 # baseDirectory = /lustre/scratch3/turquoise/lvanroekel/ACME/cases/MatchBoth_orig/run
 baseDirectory = /lustre/scratch3/turquoise/shanlinw/ACME/cases/BGCacme.phaeo4/run
 
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+# name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+# ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
 mpasMeshName = oEC60to30v3
 
 # names of namelist and streams files, either a path relative to baseDirectory

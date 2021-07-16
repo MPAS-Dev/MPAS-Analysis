@@ -14,7 +14,9 @@ Component and Tags::
 Configuration Options
 ---------------------
 
-The following configuration options are available for this task::
+The following configuration options are available for this task:
+
+.. code-block:: cfg
 
     [regionalTSDiagrams]
     ## options related to plotting T/S diagrams of ocean regions
@@ -40,16 +42,10 @@ The following configuration options are available for this task::
     [TSDiagramsForAntarcticRegions]
     ## options related to plotting T/S diagrams of Antarctic regions
 
-    # An identifying string that is the prefix for a geojson file containing
-    # Antarctic ocean regions.  Each region must have 'zmin' and 'zmax' properties
-    # in addition to the usual properties for a region in geometric_features.  The
-    # string is also used as the suffix for mask files generated from the geojson
-    regionMaskSuffix = 'antarcticRegions20200621'
-
     # list of regions to plot or ['all'] for all regions in the masks file.
     # See "regionNames" in the antarcticRegions masks file in
     # regionMaskSubdirectory for details.
-    regionNames = ['all']
+    regionNames = []
 
     # diagram type, either 'volumetric' or 'scatter', depending on if the points
     # should be binned the plot should show the volume fraction in each bin or
@@ -59,14 +55,14 @@ The following configuration options are available for this task::
     # if diagramType == 'volumetric', the bin boundaries for T and S
     # if diagramType == 'scatter', only the min and max are important (and the
     #   bins are only used for computing neutral density contours)
-    Tbins = numpy.linspace(-2.5, 4, 66)
-    Sbins = numpy.linspace(33.8, 34.8, 51)
+    Tbins = numpy.linspace(-2.5, 4, 131)
+    Sbins = numpy.linspace(33.8, 34.8, 201)
 
     # density contour interval
     rhoInterval = 0.1
 
     # The color map for depth or volume
-    colormap = white_cmo_deep
+    colormap = cmo.deep
     # The following is more appropriate if diagramType == 'scatter'
     # colormap = cmo.deep_r
     # the type of norm used in the colormap {'linear', 'log'}
@@ -78,22 +74,24 @@ The following configuration options are available for this task::
     # zmin = -1000
     # zmax = -400
 
+    # the minimum and maximum volume for the colorbar, default is the minimum and
+    # maximum over the mode output
+    # volMin = 3e9
+    # volMax = 1e12
+
     # Obserational data sets to compare against
     obs = ['SOSE', 'WOA18']
 
     [TSDiagramsForOceanBasins]
     ## options related to plotting T/S diagrams of major ocean basins
 
-    # An identifying string that is the prefix for a geojson file containing
-    # ocean basins.  Each region must have 'zmin' and 'zmax' properties in addition
-    # to the usual properties for a region in geometric_features.  The string is
-    # also used as the suffix for mask files generated from the geojson file
-    regionMaskSuffix = 'oceanBasins20200621'
-
     # list of regions to plot or ['all'] for all regions in the masks file.
     # See "regionNames" in the oceanBasins masks file in
     # regionMaskSubdirectory for details.
-    regionNames = ['all']
+    regionNames = ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",
+                   "Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",
+                   "Global Ocean", "Global Ocean 65N to 65S",
+                   "Global Ocean 15S to 15N"]
 
     # diagram type, either 'volumetric' or 'scatter', depending on if the points
     # should be binned the plot should show the volume fraction in each bin or
@@ -103,8 +101,8 @@ The following configuration options are available for this task::
     # if diagramType == 'volumetric', the bin boundaries for T and S
     # if diagramType == 'scatter', only the min and max are important (and the
     #   bins are only used for computing neutral density contours)
-    Tbins = numpy.linspace(-2.5, 16, 75)
-    Sbins = numpy.linspace(33.8, 35.8, 101)
+    Tbins = numpy.linspace(-2.5, 16, 926)
+    Sbins = numpy.linspace(33.8, 35.8, 1001)
 
     # density contour interval
     rhoInterval = 0.2
@@ -127,41 +125,36 @@ Region Groups
 -------------
 
 A list of groups of regions, each of which will get its own gallery on
-the resulting analysis web page.  These can be any name without punctuation.
-For each region group, there should be a corresponding
-``TSDiagramsFor<RegionGroup>`` section of the config file, with any spaces
-removed from the name of the region group.  By default, the only region group
-is "Ocean Basins".
-
-Region Mask
------------
-
-The ``regionMaskSuffix`` is a prefix for a geojson file produce from the
-``geometric_features`` package and documented in the ``preprocess_masks``
-directory of the GitHub repo.  It should include any number of ocean regions,
-each of which includes properties ``zmin`` and ``zmax``.  Examples of how to
-create such a set of features can be found in `antarctic_ocean_regions`_.
+the resulting analysis web page.  See :ref:`config_region_groups` for
+more information on the available region groups.  For each region group, there
+should be a corresponding ``TSDiagramsFor<RegionGroup>`` section of the config
+file, with any spaces removed from the name of the region group.  By default,
+the only region group is ``'Ocean Basins'``.
 
 Region Names
 ------------
 
-The ``regionNames`` can be set to ``['all']`` (the default) to plot all of the
-regions in the geojson file.  In the case of "Antarctic Regions", these
-are::
+The ``regionNames`` can be set to ``['all']`` to plot all of the
+regions in the geojson file.  In the case of ``Antarctic Regions``, these
+are:
 
-  ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",
-   "Eastern Weddell Sea Deep", "Western Weddell Sea Shelf",
-   "Western Weddell Sea Deep", "Weddell Sea Shelf", "Weddell Sea Deep",
-   "Bellingshausen Sea Shelf", "Bellingshausen Sea Deep", "Amundsen Sea Shelf",
-   "Amundsen Sea Deep", "Eastern Ross Sea Shelf", "Eastern Ross Sea Deep",
-   "Western Ross Sea Shelf", "Western Ross Sea Deep",
-   "East Antarctic Seas Shelf", "East Antarctic Seas Deep"]
+.. code-block:: cfg
 
-For "Ocean Basins", they are::
+    ["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",
+     "Eastern Weddell Sea Deep", "Western Weddell Sea Shelf",
+     "Western Weddell Sea Deep", "Weddell Sea Shelf", "Weddell Sea Deep",
+     "Bellingshausen Sea Shelf", "Bellingshausen Sea Deep", "Amundsen Sea Shelf",
+     "Amundsen Sea Deep", "Eastern Ross Sea Shelf", "Eastern Ross Sea Deep",
+     "Western Ross Sea Shelf", "Western Ross Sea Deep",
+     "East Antarctic Seas Shelf", "East Antarctic Seas Deep"]
 
-  ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin", "Arctic_Basin",
-   "Southern_Ocean_Basin", "Mediterranean_Basin", "Global Ocean",
-   "Global Ocean 65N to 65S", "Global Ocean 15S to 15N"]
+For ``Ocean Basins``, they are:
+
+.. code-block:: cfg
+
+    ["Atlantic_Basin", "Pacific_Basin", "Indian_Basin", "Arctic_Basin",
+     "Southern_Ocean_Basin", "Mediterranean_Basin", "Global Ocean",
+     "Global Ocean 65N to 65S", "Global Ocean 15S to 15N"]
 
 Diagram Type
 ------------

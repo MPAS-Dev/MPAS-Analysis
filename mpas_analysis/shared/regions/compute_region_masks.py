@@ -51,7 +51,7 @@ class ComputeRegionMasks(AnalysisTask):
         self.regionMaskSubtasks = {}
 
     def add_mask_subtask(self, regionGroup, obsFileName=None, lonVar='lon',
-                         latVar='lat', meshName=None, useMpasMaskCreator=True):
+                         latVar='lat', meshName=None, useMpasMaskCreator=False):
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.

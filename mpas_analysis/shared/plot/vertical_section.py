@@ -19,6 +19,7 @@ runs or with observations
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
+import matplotlib
 import matplotlib.pyplot as plt
 import xarray as xr
 import pandas as pd
@@ -47,6 +48,7 @@ def plot_vertical_section_comparison(
         refTitle='Observations',
         diffTitle='Model-Observations',
         titleFontSize=None,
+        defaultFontSize=None,
         plotTitleFontSize=None,
         axisFontSize=None,
         figsize=None,
@@ -136,6 +138,9 @@ def plot_vertical_section_comparison(
 
     titleFontSize : int, optional
         size of the title font
+
+    defaultFontSize : int, optional
+        the size of text other than the title
 
     plotTitleFontSize : int, optional
         size of the title font for the individual plots
@@ -290,6 +295,10 @@ def plot_vertical_section_comparison(
     # -------
     # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
 
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
+
     if refArray is None or compareAsContours:
         singlePanel = True
     else:
@@ -372,6 +381,7 @@ def plot_vertical_section_comparison(
         ylabel=ylabel,
         figsize=None,
         titleFontSize=plotTitleFontSize,
+        defaultFontSize=defaultFontSize,
         titleY=titleY,
         axisFontSize=axisFontSize,
         xLim=xLim,
@@ -419,6 +429,7 @@ def plot_vertical_section_comparison(
             ylabel=ylabel,
             figsize=None,
             titleFontSize=plotTitleFontSize,
+            defaultFontSize=defaultFontSize,
             titleY=titleY,
             axisFontSize=axisFontSize,
             xLim=xLim,
@@ -460,6 +471,7 @@ def plot_vertical_section_comparison(
             ylabel=ylabel,
             figsize=None,
             titleFontSize=plotTitleFontSize,
+            defaultFontSize=defaultFontSize,
             titleY=titleY,
             axisFontSize=axisFontSize,
             xLim=xLim,
@@ -512,6 +524,7 @@ def plot_vertical_section(
         figsize=(10, 4),
         dpi=None,
         titleFontSize=None,
+        defaultFontSize=None,
         titleY=None,
         axisFontSize=None,
         xLim=None,
@@ -600,6 +613,9 @@ def plot_vertical_section(
 
     titleFontSize : int, optional
         size of the title font
+
+    defaultFontSize : int, optional
+        the size of text other than the title
 
     titleY : float, optional
         the y value to use for placing the plot title
@@ -751,6 +767,10 @@ def plot_vertical_section(
     # Authors
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
+
+    if defaultFontSize is None:
+        defaultFontSize = config.getint('plot', 'defaultFontSize')
+    matplotlib.rc('font', size=defaultFontSize)
 
     # compute moving averages with respect to the x dimension
     if movingAveragePoints is not None and movingAveragePoints != 1:
@@ -910,7 +930,8 @@ def plot_vertical_section(
 
             plotHandle = plt.pcolormesh(x, y, interpFieldArray,
                                         cmap=colormapDict['colormap'],
-                                        norm=colormapDict['norm'])
+                                        norm=colormapDict['norm'],
+                                        rasterized=True)
         else:
             plotHandle = plt.contourf(x, y, fieldArray,
                                       cmap=colormapDict['colormap'],

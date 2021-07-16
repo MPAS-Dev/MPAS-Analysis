@@ -17,6 +17,6 @@ command line.
 
 Example:
 ```
-python -m mpas_analysis configs/polarRegions.conf my_favorite.conf --generate=climatologyMapSSH --purge
+mpas_analysis configs/polarRegions.conf my_favorite.conf --generate=climatologyMapSSH --purge
 ```
 

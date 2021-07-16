@@ -68,6 +68,25 @@ ncclimoThreads = 12
 # serial, the default)
 mapMpiTasks = 1
 
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+# serial but with a command)
+mapParallelExec = None
+
+# "None" if ncremap should perform remapping without a command, or "srun"
+# possibly with some flags if it should be run with that command
+ncremapParallelExec = None
+
+# Multiprocessing method used in python mask creation ("forkserver", "fork" or
+# Multiprocessing method used in python mask creation ("forkserver", "fork" or
+# "spawn").  We have found that "spawn" is the only one that works in python
+# 3.7 on Anvil so this is the default
+multiprocessingMethod = spawn
+
+
+# how many parallel tasks to use for generating mapping files with ESMF
+esmfParallelTasks = 1
+
 
 [diagnostics]
 ## config options related to observations, mapping files and region files used
@@ -121,7 +140,8 @@ oceanStreamsFileName = streams.ocean
 seaIceNamelistFileName = mpassi_in
 seaIceStreamsFileName = streams.seaice
 
-# names of ocean and sea ice meshes (e.g. oEC60to30, oQU240, oRRS30to10, etc.)
+# name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+# ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
 mpasMeshName = mesh
 
 # maximum number of open files to hold in xarray’s global least-recently-usage
@@ -266,6 +286,19 @@ startYear = 1
 endYear = end
 
 
+# line colors for the main, control and obs curves
+# see https://matplotlib.org/stable/gallery/color/named_colors.html
+# and https://matplotlib.org/stable/tutorials/colors/colors.html
+mainColor = black
+controlColor = tab:red
+obsColor1 = tab:blue
+obsColor2 = tab:orange
+obsColor3 = tab:green
+obsColor4 = tab:purple
+obsColor5 = tab:cyan
+
+fitColor1 = tab:blue
+
 [index]
 ## options related to producing nino index.
 
@@ -295,11 +328,17 @@ plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
 ## options related to plotting that are the defaults across all analysis
 ## modules
 
+# the default font size for axis ticks, etc.
+defaultFontSize = 10
+
 # title and axis font properties for single-panel plots
 titleFontSize = 16
 titleFontColor = black
 titleFontWeight = normal
 axisFontSize = 12
+
+# font size for cartopy grid labels
+cartopyGridFontSize = 12
 
 # title and axis font properties for three-panel plots
 threePanelTitleFontSize = 16
@@ -311,6 +350,8 @@ threePanelAxisFontSize = 12
 # the dots per inch of output figures
 dpi = 200
 
+# Write out PDFs in addition to PNGs?
+pdf = False
 
 [polarProjection]
 ## options related to polar-projection plots
@@ -571,6 +612,30 @@ movingAveragePoints = 12
 # yearStrideXTicks = 1
 
 
+[timeSeriesSSHAnomaly]
+## options related to plotting time series of sea surface height (SSH)
+## anomalies from a reference year
+
+# Number of points over which to compute moving average(e.g., for monthly
+# output, movingAveragePoints=12 corresponds to a 12-month moving average
+# window)
+movingAveragePoints = 12
+
+# An optional first year for the tick marks on the x axis. Leave commented out
+# to start at the beginning of the time series.
+# firstYearXTicks = 1
+
+# An optional number of years between tick marks on the x axis.  Leave
+# commented out to determine the distance between ticks automatically.
+# yearStrideXTicks = 1
+
+# An optional start and end year for a linear fit.  The fit is only performed
+# between the start and end year, and these years are marked with large dots,
+# but the trend line may continue beyond these bounds in both directions.
+# fitStartYear = 1
+# fitEndYear = 100
+
+
 [indexNino34]
 ## options related to plotting time series of the El Nino 3.4 index (or
 ## optionally El Nino 3 or 4 index)
@@ -631,8 +696,8 @@ movingAveragePoints = 1
 usePostprocessingScript = False
 
 # Region names for basin MOC calculation.
-# Supported options are Atlantic and IndoPacific
-regionNames = ['Atlantic']
+# Supported options are Atlantic, AtlanticMed, Indian, Pacific and IndoPacific
+regionNames = ['Atlantic', 'AtlanticMed', 'IndoPacific']
 
 # Number of points over which to compute moving average for
 # MOC timeseries (e.g., for monthly output, movingAveragePoints=12
@@ -671,10 +736,10 @@ colormapTypeResult = indexed
 # colormap indices for contour color
 colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsResult = [-20, -10, -5, -2, 2, 5, 10, 20, 30, 40]
+colorbarLevelsResult = [-20, -15, -10, -5, 0, 5, 10, 15, 20, 40]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
-contourLevelsResult = np.arange(-25.1, 35.1, 10)
+contourLevelsResult = np.arange(-30.1, 50.1, 10)
 
 # colormap for differences
 colormapNameDifference = balance
@@ -690,7 +755,7 @@ colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
 contourLevelsDifference = np.arange(-5., 6., 2.)
 
 [streamfunctionMOCAtlantic]
-## options related to plotting the Global MOC
+## options related to plotting the Atlantic MOC without the Mediterranean
 
 # Minium value of latitudinal extent for MOC streamfunction plot
 latBinMin = -35.
@@ -725,11 +790,12 @@ colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
 # contour lines)
 contourLevelsDifference = np.arange(-5., 6., 2.)
 
-[streamfunctionMOCIndoPacific]
-## options related to plotting the Global MOC
+
+[streamfunctionMOCAtlanticMed]
+## options related to plotting the Atlantic and Mediterranean MOC
 
 # Minium value of latitudinal extent for MOC streamfunction plot
-latBinMin = -80.
+latBinMin = -35.
 # Maximum value of latitudinal extent for MOC streamfunction plot
 latBinMax = 70.
 # Size of latitude bins over which MOC streamfunction is integrated
@@ -741,9 +807,119 @@ colormapNameResult = RdYlBu_r
 # whether the colormap is indexed or continuous
 colormapTypeResult = indexed
 # colormap indices for contour color
-colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
 # colorbar levels/values for contour boundaries
-colorbarLevelsResult = [-10, -5, -2, 0, 5, 8, 10, 14, 18, 22]
+colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsResult = np.arange(-8, 20.1, 2)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# colormap indices for contour color
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsDifference = np.arange(-5., 6., 2.)
+
+
+[streamfunctionMOCIndoPacific]
+## options related to plotting the IndoPacific MOC
+
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMin = -35.
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMax = 70.
+# Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
+latBinSize = 0.5
+
+# colormap for model results
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# colormap indices for contour color
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsResult = np.arange(-8, 20.1, 2)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# colormap indices for contour color
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsDifference = np.arange(-5., 6., 2.)
+
+[streamfunctionMOCIndian]
+## options related to plotting the Indian Ocean MOC
+
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMin = -35.
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMax = 70.
+# Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
+latBinSize = 0.5
+
+# colormap for model results
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# colormap indices for contour color
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsResult = np.arange(-8, 20.1, 2)
+
+# colormap for differences
+colormapNameDifference = balance
+# whether the colormap is indexed or continuous
+colormapTypeDifference = indexed
+# colormap indices for contour color
+# color indices into colormapName for filled contours
+colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]
+# colormap levels/values for contour boundaries
+colorbarLevelsDifference = [-5, -3, -2, -1, -0.1, 0, 0.1, 1, 2, 3, 5]
+# contour line levels (use [] for automatic contour selection, 'none' for no
+# contour lines)
+contourLevelsDifference = np.arange(-5., 6., 2.)
+
+
+[streamfunctionMOCPacific]
+## options related to plotting the Pacific MOC
+
+# Minium value of latitudinal extent for MOC streamfunction plot
+latBinMin = -35.
+# Maximum value of latitudinal extent for MOC streamfunction plot
+latBinMax = 70.
+# Size of latitude bins over which MOC streamfunction is integrated
+# (this is only relevant for the postprocessing MOC script)
+latBinSize = 0.5
+
+# colormap for model results
+colormapNameResult = RdYlBu_r
+# whether the colormap is indexed or continuous
+colormapTypeResult = indexed
+# colormap indices for contour color
+colormapIndicesResult = [0, 20, 40, 80, 110, 140, 170, 200, 230, 242, 255]
+# colorbar levels/values for contour boundaries
+colorbarLevelsResult = [-5, -2, 0, 2, 5, 8, 10, 12, 14, 18]
 # contour line levels (use [] for automatic contour selection, 'none' for no
 # contour lines)
 contourLevelsResult = np.arange(-8, 20.1, 2)
@@ -1298,10 +1474,12 @@ obs = ['SOSE', 'WOA18']
 
 # list of ocean transects from geometric_features to plot or ['all'] for all
 # available transects.
-transectsToPlot = ['Drake Passage', 'Tasmania-Ant', 'Africa-Ant', 'Antilles Inflow',
-                   'Mona Passage', 'Windward Passage', 'Florida-Cuba', 'Florida-Bahamas',
-                   'Indonesian Throughflow', 'Agulhas', 'Mozambique Channel', 'Bering Strait',
-                   'Lancaster Sound', 'Fram Strait', 'Nares Strait']
+transectsToPlot = ['Drake Passage', 'Tasmania-Ant', 'Africa-Ant',
+                   'Antilles Inflow', 'Mona Passage', 'Windward Passage',
+                   'Florida-Cuba', 'Florida-Bahamas', 'Indonesian Throughflow',
+                   'Agulhas', 'Mozambique Channel', 'Bering Strait',
+                   'Lancaster Sound', 'Fram Strait', 'Nares Strait',
+                   'Denmark Strait', 'Iceland-Faroe-Scotland']
 
 # Number of months over which to compute moving average
 movingAverageMonths = 1
@@ -1315,6 +1493,10 @@ movingAverageMonths = 1
 # commented out to determine the distance between ticks automatically.
 
 # yearStrideXTicks = 1
+
+# The number of parallel tasks occupied by each timeSeriesTransport task.
+# Analysis may run faster for large meshes when this value is set to 2 or 3
+subprocessCount = 1
 
 
 [regionalTSDiagrams]

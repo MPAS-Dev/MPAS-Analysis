@@ -25,15 +25,13 @@
 
 cd $PBS_O_WORKDIR
 
-source /ccs/proj/cli900/sw/rhea/e3sm-unified/load_latest_e3sm_unified.csh
-export HDF5_USE_FILE_LOCKING=FALSE
+source /ccs/proj/cli900/sw/andes/e3sm-unified/load_latest_e3sm_unified_andes.csh
 
 # MPAS/ACME job to be analyzed, including paths to simulation data and
 # observations. Change this name and path as needed
 run_config_file="config.run_name_here"
-# command to run a serial job on a single node on olcf machines.  Remove
-# "python -m" is using the conda package instead of a git repo
-command="aprun -b -N 1 -n 1 python -m mpas_analysis"
+# command to run a serial job on a single node on olcf machines.
+command="aprun -b -N 1 -n 1 mpas_analysis"
 # one parallel task per node by default
 parallel_task_count=12
 # ncclimo can run with 1 (serial) or 12 (bck) threads

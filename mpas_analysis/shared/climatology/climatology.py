@@ -121,6 +121,9 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
 
     mpiTasks = config.getWithDefault('execute', 'mapMpiTasks', 1)
+    esmf_parallel_exec = config.get('execute', 'mapParallelExec')
+    if esmf_parallel_exec == 'None':
+        esmf_parallel_exec = None
 
     mappingSubdirectory = \
         build_config_full_path(config, 'output',
@@ -128,7 +131,8 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     make_directories(mappingSubdirectory)
     with TemporaryDirectory(dir=mappingSubdirectory) as tempdir:
         remapper.build_mapping_file(method=method, logger=logger,
-                                    mpiTasks=mpiTasks, tempdir=tempdir)
+                                    mpiTasks=mpiTasks, tempdir=tempdir,
+                                    esmf_parallel_exec=esmf_parallel_exec)
 
     return remapper  # }}}
 
@@ -357,6 +361,11 @@ def remap_and_write_climatology(config, climatologyDataSet,
     else:
         renormalizationThreshold = config.getfloat(
             'climatology', 'renormalizationThreshold')
+        parallel_exec = config.get(
+            'execute', 'ncremapParallelExec')
+        if parallel_exec == 'None':
+            parallel_exec = None
+
         if useNcremap:
             if not os.path.exists(climatologyFileName):
                 write_netcdf(climatologyDataSet, climatologyFileName)
@@ -364,7 +373,8 @@ def remap_and_write_climatology(config, climatologyDataSet,
                                 outFileName=remappedFileName,
                                 overwrite=True,
                                 renormalize=renormalizationThreshold,
-                                logger=logger)
+                                logger=logger,
+                                parallel_exec=parallel_exec)
             remappedClimatology = xr.open_dataset(remappedFileName)
         else:
 

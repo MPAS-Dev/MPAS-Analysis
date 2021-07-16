@@ -307,7 +307,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         widths = [5, 3, 3, 3, 3, 3, 3]
         points = [None, None, None, 300, 300, 300, 300]
 
-        color = 'k'
+        color = config.get('timeSeries', 'mainColor')
 
         xLabel = 'Time [years]'
         yLabel = self.yAxisLabel
@@ -443,7 +443,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                       endDate=controlEndDate)
             dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
 
-            color = 'r'
+            color = config.get('timeSeries', 'controlColor')
 
             for rangeIndex in range(len(topDepths)):
                 top = topDepths[rangeIndex]
@@ -480,7 +480,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         self.customize_fig(fig)
 
-        savefig(outFileName)
+        savefig(outFileName, config)
 
         write_image_xml(
             config=config,

@@ -181,8 +181,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             for index, regionName in enumerate(regionNames):
 
-                fullSuffix = sectionSuffix + '_' + regionName[0].lower() + \
-                    regionName[1:].replace(' ', '')
+                fullSuffix = sectionSuffix + '_' + regionName.replace(' ', '')
 
                 obsSubtasks = {}
                 for obsName in obsList:
@@ -278,7 +277,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         regionGroup = self.regionGroup
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
-        timeSeriesName = sectionSuffix[0].lower() + sectionSuffix[1:]
+        timeSeriesName = sectionSuffix
         sectionName = 'timeSeries{}'.format(sectionSuffix)
 
         outputDirectory = '{}/{}/'.format(
@@ -506,7 +505,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         regionGroup = self.regionGroup
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
-        timeSeriesName = sectionSuffix[0].lower() + sectionSuffix[1:]
+        timeSeriesName = sectionSuffix
         sectionName = 'timeSeries{}'.format(sectionSuffix)
 
         outputDirectory = '{}/{}/'.format(
@@ -627,16 +626,17 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             datasets.append(innerDatasets)
 
         # combine data sets into a single data set
-        dsOut = xarray.combine_nested(datasets, ['Time', 'nRegions'])
+        dsOut = xarray.combine_nested(datasets, ['Time', 'nRegions'],
+                                      combine_attrs='identical')
 
         dsOut['totalArea'] = dsRegionMask.totalArea
         dsOut.totalArea.attrs['units'] = 'm^2'
         dsOut['zbounds'] = dsRegionMask.zbounds
         dsOut.zbounds.attrs['units'] = 'm'
         dsOut.coords['regionNames'] = dsRegionMask.regionNames
-        dsOut.coords['year'] = (('Time'), years)
+        dsOut.coords['year'] = (('Time',), years)
         dsOut['year'].attrs['units'] = 'years'
-        dsOut.coords['month'] = (('Time'), months)
+        dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
 
         write_netcdf(dsOut, outFileName)  # }}}
@@ -697,8 +697,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         # Xylar Asay-Davis
 
         regionGroup = self.regionGroup
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
 
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',
@@ -781,10 +780,9 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         self.regionGroup = regionGroup
         self.regionName = regionName
         self.obsDict = obsDict
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
 
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
         outputDirectory = '{}/{}/'.format(
             build_config_full_path(self.config, 'output',
                                    'timeseriesSubdirectory'),
@@ -811,8 +809,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         config = self.config
 
         regionGroup = self.regionGroup
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
 
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
@@ -1040,7 +1037,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         self.regionIndex = regionIndex
         self.sectionName = sectionName
         self.controlConfig = controlConfig
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
         self.obsSubtasks = obsSubtasks
         self.geojsonFileName = geojsonFileName
 
@@ -1107,8 +1104,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
         regionGroup = self.regionGroup
-        timeSeriesName = regionGroup[0].lower() + \
-            regionGroup[1:].replace(' ', '')
+        timeSeriesName = regionGroup.replace(' ', '')
 
         inFileName = '{}/{}/{}_{:04d}-{:04d}.nc'.format(
             baseDirectory, timeSeriesName, timeSeriesName, startYear, endYear)
@@ -1140,8 +1136,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
         self.logger.info('  Make plots...')
 
-        groupLink = self.regionGroup[0].lower() + \
-            self.regionGroup[1:].replace(' ', '')
+        groupLink = self.regionGroup.replace(' ', '')
 
         for var in self.variables:
             varName = var['name']
@@ -1163,17 +1158,19 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
             fields = [mainArray]
-            lineColors = ['k']
+            lineColors = [config.get('timeSeries', 'mainColor')]
             lineWidths = [2.5]
             legendText = [mainRunName]
             if plotControl:
                 fields.append(refArray)
-                lineColors.append('r')
+                lineColors.append(config.get('timeSeries', 'controlColor'))
                 lineWidths.append(1.2)
                 legendText.append(controlRunName)
 
             if varName in ['temperature', 'salinity']:
-                obsColors = ['b', 'g', 'm']
+                obsColors = [
+                    config.get('timeSeries', 'obsColor{}'.format(index + 1))
+                    for index in range(5)]
                 daysInMonth = constants.daysInMonth
                 for obsName in self.obsSubtasks:
                     obsFileName = self.obsSubtasks[obsName].outFileName
@@ -1206,11 +1203,23 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                     legendText[1] = '{} ({} < z < {} m)'.format(
                         legendText[1], zboundsRef[0], zboundsRef[1])
 
+            sectionName = self.sectionName
+            if config.has_option(sectionName, 'titleFontSize'):
+                titleFontSize = config.getint(sectionName, 'titleFontSize')
+            else:
+                titleFontSize = None
+
+            if config.has_option(sectionName, 'defaultFontSize'):
+                defaultFontSize = config.getint(sectionName, 'defaultFontSize')
+            else:
+                defaultFontSize = None
+
             fig = timeseries_analysis_plot(
                 config, fields, calendar=calendar, title=title, xlabel=xLabel,
                 ylabel=yLabel, movingAveragePoints=movingAverageMonths,
                 lineColors=lineColors, lineWidths=lineWidths,
-                legendText=legendText)
+                legendText=legendText, titleFontSize=titleFontSize,
+                defaultFontSize=defaultFontSize)
 
             # do this before the inset because otherwise it moves the inset
             # and cartopy doesn't play too well with tight_layout anyway
@@ -1218,7 +1227,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             add_inset(fig, fc, width=2.0, height=2.0)
 
-            savefig(outFileName, tight=False)
+            savefig(outFileName, config, tight=False)
 
             caption = 'Regional mean of {}'.format(title)
             write_image_xml(

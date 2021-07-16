@@ -30,6 +30,19 @@ parallelTaskCount = 6
 # handle 12 simultaneous processes, one for each monthly climatology.
 ncclimoParallelMode = bck
 
+# the number of MPI tasks to use in creating mapping files (1 means tasks run in
+# serial, the default)
+mapMpiTasks = 6
+
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+# serial but with a command)
+mapParallelExec = srun --mpi=pmi2
+
+# "None" if ncremap should perform remapping without a command, or "srun"
+# possibly with some flags if it should be run with that command
+ncremapParallelExec = srun --mpi=pmi2
+
 [diagnostics]
 ## config options related to observations, mapping files and region files used
 ## by MPAS-Analysis in diagnostics computations.
@@ -47,7 +60,8 @@ baseDirectory = /compyfs/diagnostics
 # directory containing model results
 baseDirectory = /compyfs/wolf966/e3sm_scratch/20190711.testLuke.A_WCYCL1850S.ne30_oECv3.compy/run
 
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+# name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+# ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
 mpasMeshName = oEC60to30v3
 
 # names of namelist and streams files, either a path relative to baseDirectory
@@ -64,9 +78,9 @@ mpasMeshName = oEC60to30v3
 # directory where analysis should be written
 baseDirectory = /path/to/output/directory
 
-# Anvil doesn't have direct access to a web portal, so output will need
-# to be copied elsewhere (e.g. NERSC web portal)
-htmlSubdirectory = html
+# Modify this path so your output ends up at the Compy web portal:
+# https://compy-dtn.pnl.gov/<username>/output/directory
+htmlSubdirectory = /compyfs/www/<username>/output/directory
 
 # a list of analyses to generate.  Valid names can be seen by running:
 #   mpas_analysis --list

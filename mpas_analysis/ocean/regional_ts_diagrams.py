@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function, \
 import os
 import xarray
 import numpy
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import gsw
@@ -196,8 +197,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             for regionName in regionNames:
 
                 fullSuffix = sectionSuffix + '_' + \
-                    regionName[0].lower() + \
-                    regionName[1:].replace(' ', '')
+                    regionName.replace(' ', '')
 
                 for season in self.seasons:
                     computeRegionSubtask = ComputeRegionTSSubtask(
@@ -559,7 +559,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
         self.mpasMasksSubtask = mpasMasksSubtask
         self.obsDicts = obsDicts
         self.season = season
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
 
         parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
         self.subprocessCount = min(parallelTaskCount,
@@ -879,7 +879,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         self.mpasMasksSubtask = mpasMasksSubtask
         self.obsDicts = obsDicts
         self.season = season
-        self.prefix = fullSuffix[0].lower() + fullSuffix[1:]
+        self.prefix = fullSuffix
 
         parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
         self.subprocessCount = min(parallelTaskCount,
@@ -944,8 +944,28 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         self.logger.info('  Make plots...')
 
-        groupLink = 'tsDiag' + self.regionGroup[0].lower() + \
-            self.regionGroup[1:].replace(' ', '')
+        groupLink = 'tsDiag' + self.regionGroup.replace(' ', '')
+
+        if config.has_option(sectionName, 'titleFontSize'):
+            titleFontSize = config.getint(sectionName, 'titleFontSize')
+        else:
+            titleFontSize = config.getint('plot', 'titleFontSize')
+
+        if config.has_option(sectionName, 'axisFontSize'):
+            axisFontSize = config.getint(sectionName, 'axisFontSize')
+        else:
+            axisFontSize = config.getint('plot', 'axisFontSize')
+
+        if config.has_option(sectionName, 'defaultFontSize'):
+            defaultFontSize = config.getint(sectionName, 'defaultFontSize')
+        else:
+            defaultFontSize = config.getint('plot', 'defaultFontSize')
+        matplotlib.rc('font', size=defaultFontSize)
+
+        axis_font = {'size': axisFontSize}
+        title_font = {'size': titleFontSize,
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
 
         nSubplots = 1 + len(self.obsDicts)
         if self.controlConfig is not None:
@@ -960,12 +980,6 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         axisIndices = numpy.reshape(numpy.arange(nRows*nCols),
                                     (nRows, nCols))[::-1, :].ravel()
-
-        titleFontSize = config.get('plot', 'titleFontSize')
-        axis_font = {'size': config.get('plot', 'axisFontSize')}
-        title_font = {'size': titleFontSize,
-                      'color': config.get('plot', 'titleFontColor'),
-                      'weight': config.get('plot', 'titleFontWeight')}
 
         width = 3 + 4.5*nCols
         height = 2 + 4*nRows
@@ -1081,7 +1095,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             plt.xlabel('Salinity (PSU)', **axis_font)
             if col == 0:
                 plt.ylabel(r'Potential temperature ($^\circ$C)', **axis_font)
-            plt.title(title)
+            plt.title(title, **title_font)
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway
@@ -1136,13 +1150,13 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         if diagramType == 'volumetric':
             cbar.ax.get_yaxis().labelpad = 15
-            cbar.ax.set_ylabel(r'volume (m$^3$)', rotation=270)
+            cbar.ax.set_ylabel(r'volume (m$^3$)', rotation=270, **axis_font)
         else:
-            cbar.ax.set_ylabel('depth (m)', rotation=270)
+            cbar.ax.set_ylabel('depth (m)', rotation=270, **axis_font)
 
         outFileName = '{}/TS_diagram_{}_{}.png'.format(
             self.plotsDirectory, self.prefix, self.season)
-        savefig(outFileName, tight=False)
+        savefig(outFileName, config, tight=False)
 
         caption = 'Regional mean of {}'.format(suptitle)
         write_image_xml(
@@ -1203,7 +1217,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                                      usenumpyfunc=True)
 
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
-                                       weights=volume, cmap=cmap, zorder=1)
+                                       weights=volume, cmap=cmap, zorder=1,
+                                       rasterized=True)
 
         poshist = hist[hist > 0.]
         if len(poshist) > 0:

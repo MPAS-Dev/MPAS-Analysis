@@ -23,6 +23,11 @@ mainRunName = CONUS.100km.NAEC60to30cr8.20181218
 parallelTaskCount = 6
 ncclimoParallelMode = serial
 
+# "None" if ESMF should perform mapping file generation in serial without a
+# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins
+# serial but with a command)
+mapParallelExec = srun
+
 [input]
 ## options related to reading in the results to be analyzed
 
@@ -31,7 +36,8 @@ baseDirectory = /lustre/scratch4/turquoise/.mdt2/kehoch/e3sm/mesh_project/transi
 
 #runSubdirectory = /lustre/scratch4/turquoise/.mdt2/kehoch/e3sm/mesh_project/transition/CONUS.100km.NAEC60to30cr8.20181218/ocean/global_ocean/NAEC60to30cr8/spin_up/spin_up1/restarts
 #oceanHistorySubdirectory = analysis_members
-# names of ocean and sea ice meshes (e.g. oEC60to30v3, oQU240v3, oRRS30to10v3, etc.)
+# name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,
+# ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)
 mpasMeshName = NAEC60to30cr8
 
 oceanNamelistFileName = namelist.ocean
