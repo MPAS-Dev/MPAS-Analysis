@@ -734,7 +734,19 @@ class ComputeRegionTSSubtask(AnalysisTask):
 
             dsMask = dsRegionMask.isel(nRegions=regionIndex)
 
-            cellMask = dsMask.regionCellMasks == 1
+            if 'regionMasks' in dsMask:
+                # this is the name used by the mask creation tool in mpas_tools
+                maskVar = 'regionMasks'
+            elif 'regionCellMasks' in dsMask:
+                # this is the name used in the old mask creation tool in
+                # mpas-analysis
+                maskVar = 'regionCellMasks'
+            else:
+                raise ValueError(f'The file {regionMaskFileName} doesn\'t '
+                                 f'contain a mask variable: regionMasks or '
+                                 f'regionCellMasks')
+
+            cellMask = dsMask[maskVar] == 1
 
             TVarName = obsDict['TVar']
             SVarName = obsDict['SVar']
@@ -1119,7 +1131,6 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         pos0 = axarray[0, 0].get_position()
         pos1 = axarray[-1, -1].get_position()
         pos_common = [pos0.x0, pos1.y0, pos1.x1-pos0.x0, pos0.y1-pos1.y0]
-        print(pos_common)
         common_ax = fig.add_axes(pos_common, zorder=-2)
         common_ax.spines['top'].set_color('none')
         common_ax.spines['bottom'].set_color('none')
