@@ -14,6 +14,7 @@ export OMP_NUM_THREADS=1
 source ${HOME}/miniconda3/etc/profile.d/conda.sh
 conda activate test_env
 export HDF5_USE_FILE_LOCKING=FALSE
+export E3SMU_MACHINE=compy
 
 echo env: test_env
 echo configs: ../../configs/polar_regions.cfg ../main.cfg

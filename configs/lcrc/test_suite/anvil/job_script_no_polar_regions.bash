@@ -15,6 +15,7 @@ export OMP_NUM_THREADS=1
 source /home/ac.xylar/anvil/miniconda3/etc/profile.d/conda.sh
 conda activate test_env
 export HDF5_USE_FILE_LOCKING=FALSE
+export E3SMU_MACHINE=anvil
 
 echo env: test_env
 echo configs: ../no_polar_regions.cfg
