@@ -110,7 +110,7 @@ class TestRemapObsClimSubtask(TestCase):
         config = MpasAnalysisConfigParser()
         config.read(str(configPath))
         config.set('input', 'baseDirectory', str(self.datadir))
-        config.set('diagnostics', 'baseDirectory', str(self.datadir))
+        config.set('diagnostics', 'base_path', str(self.datadir))
         config.set('oceanObservations', 'obsSubdirectory', '.')
         config.set('output', 'baseDirectory', str(self.test_dir))
         return config

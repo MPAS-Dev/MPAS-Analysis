@@ -102,7 +102,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
             mappingSubdirectory = build_config_full_path(
                 config, 'diagnostics', 'mappingSubdirectory',
-                baseDirectoryOption='baseDirectory')
+                baseDirectoryOption='base_path')
 
             mappingFileName = '{}/{}'.format(mappingSubdirectory,
                                              mappingBaseName)

@@ -11,7 +11,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 """
-Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
+Runs MPAS-Analysis via a configuration file (e.g. `analysis.cfg`)
 specifying analysis options.
 """
 # Authors
@@ -26,7 +26,7 @@ import mpas_analysis
 import argparse
 import traceback
 import sys
-import pkg_resources
+from importlib.resources import path
 import shutil
 import os
 from collections import OrderedDict
@@ -34,6 +34,9 @@ import progressbar
 import logging
 import xarray
 import time
+import configparser
+
+from mache import discover_machine
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -773,6 +776,9 @@ def main():
     parser.add_argument("--verbose", dest="verbose", action='store_true',
                         help="Verbose error reporting during setup-and-check "
                              "phase")
+    parser.add_argument("-m", "--machine", dest="machine",
+                        help="The name of the machine for loading machine-"
+                             "related config options", metavar="MACH")
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
@@ -783,20 +789,40 @@ def main():
         if not os.path.exists(configFile):
             raise OSError('Config file {} not found.'.format(configFile))
 
-    # add config.default to cover default not included in the config files
-    # provided on the command line
-    if pkg_resources.resource_exists('mpas_analysis', 'config.default'):
-        defaultConfig = pkg_resources.resource_filename('mpas_analysis',
-                                                        'config.default')
-        configFiles = [defaultConfig] + args.configFiles
-    else:
-        print('WARNING: Did not find config.default.  Assuming other config '
-              'file(s) contain a\n'
-              'full set of configuration options.')
-        defaultConfig = None
-        configFiles = args.configFiles
+    configFiles = list()
 
-    config = MpasAnalysisConfigParser()
+    # add default.cfg to cover default not included in the config files
+    # provided on the command line
+    with path('mpas_analysis', 'default.cfg') as defaultConfig:
+        configFiles.append(str(defaultConfig))
+
+    # Add config options for E3SM supported machines from the mache package
+    machine = args.machine
+
+    if machine is None and 'E3SMU_MACHINE' in os.environ:
+        machine = os.environ['E3SMU_MACHINE']
+
+    if machine is None:
+        machine = discover_machine()
+
+    machineConfigs = list()
+    if machine is not None:
+        with path('mache.machines', f'{machine}.cfg') as machineConfig:
+            machineConfigs.append(str(machineConfig))
+        try:
+            with path('mpas_analysis.configuration', f'{machine}.cfg') \
+                    as machineConfig:
+                machineConfigs.append(str(machineConfig))
+        except FileNotFoundError:
+            # we don't have a config file for this machine, so we'll just
+            # skip it.
+            pass
+        configFiles.extend(machineConfigs)
+
+    configFiles.extend(args.configFiles)
+
+    config = MpasAnalysisConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
     config.read(configFiles)
 
     if args.list:
@@ -817,9 +843,9 @@ def main():
         if not os.path.exists(controlConfigFile):
             raise OSError('A control config file {} was specified but the '
                           'file does not exist'.format(controlConfigFile))
-        controlConfigFiles = [controlConfigFile]
-        if defaultConfig is not None:
-            controlConfigFiles = [defaultConfig] + controlConfigFiles
+        controlConfigFiles = [defaultConfig] + machineConfigs + \
+                             [controlConfigFile]
+
         controlConfig = MpasAnalysisConfigParser()
         controlConfig.read(controlConfigFiles)
 
