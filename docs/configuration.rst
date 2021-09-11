@@ -8,7 +8,7 @@ across a number of analysis tasks.
 
 Examples of configuration files for various E3SM supported machines can be
 found in the ``configs/`` folder or can be browsed on `GitHub`_.  The file
-``config.example`` provides a list of the default values for the configuration
+``example.cfg`` provides a list of the default values for the configuration
 options that are most commonly modified.
 
 .. toctree::
