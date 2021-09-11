@@ -64,7 +64,7 @@ package in `dev-spec.txt`.  Then, you can install both packages in the same
 development environment, e.g.:
 ``` bash
 conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
-    -- analysis/MPAS-Analysis/dev-spec.txt
+    --file analysis/MPAS-Analysis/dev-spec.txt
 conda activate mpas_dev
 cd tools/MPAS-Tools/conda_package
 python -m pip install -e .
