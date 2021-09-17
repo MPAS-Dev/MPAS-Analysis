@@ -12,11 +12,10 @@ job script or the default job script.
 ## Analysis focused on polar regions
 
 For analysis such as E3SM cryosphere simulations that is focused on polar
-regions, include `polar_regions.cfg` *before* your custom config file on the
-command line.
+regions, include the `--polar_regions` flag on the command line.
 
 Example:
 ```
-mpas_analysis configs/polar_regions.cfg my_favorite.cfg --generate=climatologyMapSSH --purge
+mpas_analysis --polar_regions --generate=climatologyMapSSH --purge my_favorite.cfg 
 ```
 

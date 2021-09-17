@@ -20,12 +20,12 @@ export HDF5_USE_FILE_LOCKING=FALSE
 export E3SMU_MACHINE=cori-haswell
 
 echo env: test_env
-echo configs: ../../configs/polar_regions.cfg ../main.cfg
+echo configs: --polar_regions ../main.cfg
 
 srun -N 1 -n 1 mpas_analysis --list
 srun -N 1 -n 1 mpas_analysis --plot_colormaps
-srun -N 1 -n 1 mpas_analysis --setup_only ../../configs/polar_regions.cfg ../main.cfg
-srun -N 1 -n 1 mpas_analysis --purge ../../configs/polar_regions.cfg ../main.cfg --verbose
-srun -N 1 -n 1 mpas_analysis --html_only ../../configs/polar_regions.cfg ../main.cfg
+srun -N 1 -n 1 mpas_analysis --setup_only --polar_regions ../main.cfg
+srun -N 1 -n 1 mpas_analysis --purge --polar_regions ../main.cfg --verbose
+srun -N 1 -n 1 mpas_analysis --html_only --polar_regions ../main.cfg
 
 chmod -R ugo+rX /global/cfs/cdirs/e3sm/www/xylar/analysis_testing/
