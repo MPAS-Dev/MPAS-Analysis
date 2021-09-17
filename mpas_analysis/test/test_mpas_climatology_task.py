@@ -45,7 +45,7 @@ class TestMpasClimatologyTask(TestCase):
         shutil.rmtree(self.test_dir)
 
     def setup_config(self):
-        configPath = self.datadir.join('config.QU240')
+        configPath = self.datadir.join('QU240.cfg')
         config = MpasAnalysisConfigParser()
         config.read(str(configPath))
         config.set('input', 'baseDirectory', str(self.datadir))
