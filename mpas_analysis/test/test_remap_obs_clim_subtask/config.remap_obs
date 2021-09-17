@@ -3,7 +3,7 @@ mapParallelExec = None
 ncremapParallelExec = None
 
 [diagnostics]
-baseDirectory = /dir/to/diagnostics
+base_path = /dir/to/diagnostics
 customDirectory = none
 mappingSubdirectory = .
 

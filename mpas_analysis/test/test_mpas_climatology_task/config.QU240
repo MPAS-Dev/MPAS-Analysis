@@ -8,7 +8,7 @@ mapParallelExec = None
 ncremapParallelExec = None
 
 [diagnostics]
-baseDirectory = /dir/for/model/output
+base_path = /dir/for/model/output
 customDirectory = none
 mappingSubdirectory = .
 
