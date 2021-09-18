@@ -178,7 +178,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                 galleryName = None
                 refTitleLabel = 'Control: {}'.format(controlRunName)
 
-                refFieldName = mpasFieldName
+                refFieldName = plotField
                 outFileLabel = fieldName
                 diffTitleLabel = 'Main - Control'
 
