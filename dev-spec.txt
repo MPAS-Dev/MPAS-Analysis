@@ -11,6 +11,7 @@ dask
 geometric_features>=0.5.0
 gsw
 lxml
+mache
 matplotlib-base>=3.0.2
 mpas_tools>=0.5.1
 nco>=4.8.1

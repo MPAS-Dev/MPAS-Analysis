@@ -23,7 +23,7 @@ Instructions for creating a new analysis task:
    sea_ice, etc.) and modifying it as described below.  Take a look at
    mpas_analysis/shared/analysis_task.py for additional guidance.
 2. note, no changes need to be made to mpas_analysis/shared/analysis_task.py
-3. modify config.default (and possibly any machine-specific config files in
+3. modify default.cfg (and possibly any machine-specific config files in
    configs/<machine>)
 4. import new analysis task in mpas_analysis/<component>/__init__.py
 5. add new analysis task to mpas_analysis/__main__.py under
@@ -87,7 +87,7 @@ class MyTask(AnalysisTask):  # {{{
     #    the list of arguments when you call a method of an object (because it
     #    is always included automatically).
     # config is an MpasAnalysisConfigParser object that can be used to get
-    #    configuration options stored in config.default or a custom config
+    #    configuration options stored in default.cfg or a custom config
     #    file specific to a given simulation.  See examples below or in
     #    existing analysis tasks.
     # myArg should either be modified or removed. An example might be if you
