@@ -398,7 +398,7 @@ location, and a list of analysis to be generated (or explicitly skipped).
     #                                   to list all task names and their tags
     # an equivalent syntax can be used on the command line to override this
     # option:
-    #    mpas_analysis config.analysis --generate \
+    #    mpas_analysis analysis.cfg --generate \
     #         only_ocean,no_timeSeries,timeSeriesSST
     generate = ['all_publicObs']
 
@@ -627,8 +627,8 @@ determine the cause of the error.  If not, please include them if you are
 .. _`Ultra-low-res ocean and sea-ice dataset`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/test_output/20200305.A_WCYCL1850.ne4_oQU480.anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil.ocean_seaice.tar.gz
 .. _`full list of files`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/obs/analysis_input_files
 .. _`diagnostics web server`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/
-.. _`default config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/config.default
-.. _`example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/config.example
+.. _`default config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg
+.. _`example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg
 .. _`ncclimo`: http://nco.sourceforge.net/nco.html#ncclimo-netCDF-Climatology-Generator
 .. _`this example output`: https://mpas-dev.github.io/MPAS-Analysis/examples/QU480
 .. _`posting an issue`: https://github.com/MPAS-Dev/MPAS-Analysis/issues

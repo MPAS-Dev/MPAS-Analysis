@@ -132,7 +132,7 @@ for MPAS-Tools or geometric_features), you should first comment out the other
 package in <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code>.  Then, you can install both packages in the same
 development environment, e.g.:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt <span class="se">\</span>
-    -- analysis/MPAS-Analysis/dev-spec.txt
+    --file analysis/MPAS-Analysis/dev-spec.txt
 conda activate mpas_dev
 <span class="nb">cd</span> tools/MPAS-Tools/conda_package
 python -m pip install -e .
@@ -174,7 +174,7 @@ by running:</p>
 </pre></div>
 </div>
 <p>This lists all tasks and their tags.  These can be used in the <code class="docutils literal notranslate"><span class="pre">generate</span></code>
-command-line option or config option.  See <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code>
+command-line option or config option.  See <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code>
 for more details.</p>
 </section>
 <section id="running-the-analysis">
@@ -185,17 +185,17 @@ or copy one of the example files in the <code class="docutils literal notranslat
 git repo) or download one from the
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs">example configs directory</a>.</p></li>
 <li><p>Either modify config options in your new file or copy and modify config
-options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> (in a git repo) or directly
+options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> (in a git repo) or directly
 from GitHub:
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default">config.default</a>.</p></li>
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg">default.cfg</a>.</p></li>
 <li><p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, run:
 <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuration
-first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> and then replace that
+first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> and then replace that
 configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code></p></li>
 <li><p>If you want to run a subset of the analysis, you can either set the
 <code class="docutils literal notranslate"><span class="pre">generate</span></code> option under <code class="docutils literal notranslate"><span class="pre">[output]</span></code> in your config file or use the
 <code class="docutils literal notranslate"><span class="pre">--generate</span></code> flag on the command line.  See the comments in
-<code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> for more details on this option.</p>
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> for more details on this option.</p>
 <p><strong>Requirements for custom config files:</strong></p>
 </li>
 </ol>
@@ -207,10 +207,10 @@ the same directory, cached results from a previous analysis will not be
 updated correctly.</p></li>
 <li><p>Any options you copy into the config file <strong>must</strong> include the
 appropriate section header (e.g. ‘[run]’ or ‘[output]’)</p></li>
-<li><p>You do not need to copy all options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code>.
+<li><p>You do not need to copy all options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code>.
 This file will automatically be used for any options you do not include
 in your custom config file.</p></li>
-<li><p>You should <strong>not</strong> modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> directly.</p></li>
+<li><p>You should <strong>not</strong> modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> directly.</p></li>
 </ul>
 </section>
 <section id="list-of-mpas-output-files-that-are-needed-by-mpas-analysis">
@@ -311,7 +311,7 @@ already makes or creating new ones:</p>
 <ol class="arabic simple">
 <li><p>customize the config file. Some features, such as colormaps and colorbar
 limits for color shaded plot or depth ranges for ocean region time series,
-can be customized: look at <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> for available
+can be customized: look at <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> for available
 customization for each analysis task.</p></li>
 <li><p>read in the analysis data computed by MPAS-Analysis into custom scripts. When
 running MPAS-Analysis with the purpose of generating both climatologies
@@ -343,7 +343,7 @@ the appropriate folder (<code class="docutils literal notranslate"><span class="
 described in the template.  Take a look at
 <code class="docutils literal notranslate"><span class="pre">mpas_analysis/shared/analysis_task.py</span></code> for additional guidance.</p></li>
 <li><p>note, no changes need to be made to <code class="docutils literal notranslate"><span class="pre">mpas_analysis/shared/analysis_task.py</span></code></p></li>
-<li><p>modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code> (and possibly any machine-specific
+<li><p>modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> (and possibly any machine-specific
 config files in <code class="docutils literal notranslate"><span class="pre">configs/&lt;machine&gt;</span></code>)</p></li>
 <li><p>import new analysis task in <code class="docutils literal notranslate"><span class="pre">mpas_analysis/&lt;component&gt;/__init__.py</span></code></p></li>
 <li><p>add new analysis task to <code class="docutils literal notranslate"><span class="pre">mpas_analysis/__main__.py</span></code> under

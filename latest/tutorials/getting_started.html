@@ -261,13 +261,13 @@ $ <span class="nb">cd</span> ..
 <span class="na">...</span>
 </pre></div>
 </div>
-<p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/config.default">default config file</a> contains over 1,000 config options, which gives a lot
+<p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg">default config file</a> contains over 1,000 config options, which gives a lot
 of flexibility to MPAS-Analysis but can be more than bit overwhelming to new
 users.</p>
 <p>You can modify the default options with one or more custom config files.  We
-provide an <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/config.example">example config file</a> as a starting point. This file contains the
+provide an <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg">example config file</a> as a starting point. This file contains the
 most common config options that a user might want to customize.  The values are
-mostly the same as in the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/config.default">default config file</a>.</p>
+mostly the same as in the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg">default config file</a>.</p>
 <p>First, you should copy this file to a new name for a specific run (say
 <code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code>).  Then, you should modify any config options you want to change
 in your new config file. At a minimum, you need to specify:</p>
@@ -412,7 +412,7 @@ and about the output files, respectively.  These are typically also found in
 the <code class="docutils literal notranslate"><span class="pre">run</span></code> directory.</p>
 <p>For the example data, only <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> and <code class="docutils literal notranslate"><span class="pre">mpasMeshName</span></code> need to be
 set, the other options can be left as the defaults from the
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/config.example">example config file</a>.</p>
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg">example config file</a>.</p>
 <p>For this tutorial, you just need to set <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> to the place where
 you untarred the simulation results.  The other config options should be as
 they are in the code block above.</p>
@@ -457,7 +457,7 @@ location, and a list of analysis to be generated (or explicitly skipped).</p>
 <span class="c1">#                                   to list all task names and their tags</span>
 <span class="c1"># an equivalent syntax can be used on the command line to override this</span>
 <span class="c1"># option:</span>
-<span class="c1">#    mpas_analysis config.analysis --generate \</span>
+<span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
 <span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
 <span class="na">generate</span> <span class="o">=</span> <span class="s">[&#39;all_publicObs&#39;]</span>
 </pre></div>
