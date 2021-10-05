@@ -832,6 +832,8 @@ def main():
     config.read(main_configs)
 
     if args.list:
+        # set this config option so we don't have issues
+        config.set('diagnostics', 'baseDirectory', '')
         analyses = build_analysis_list(config, controlConfig=None)
         for analysisTask in analyses:
             print('task: {}'.format(analysisTask.taskName))
