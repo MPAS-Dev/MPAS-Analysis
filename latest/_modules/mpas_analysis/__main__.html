@@ -916,6 +916,8 @@
     <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">main_configs</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+        <span class="c1"># set this config option so we don&#39;t have issues</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;baseDirectory&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="n">analyses</span> <span class="o">=</span> <span class="n">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">analysisTask</span> <span class="ow">in</span> <span class="n">analyses</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;task: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">analysisTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">))</span>
