@@ -126,11 +126,11 @@
 <li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
 <li><p><strong>dsvalues</strong> (<em>list of xarray DataSets</em>) – the data set(s) to be plotted</p></li>
-<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the title of the plot</p></li>
-<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – axis labels</p></li>
-<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – axis labels</p></li>
-<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the calendar to use for formatting the time axis</p></li>
-<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the number of time points over which to perform a moving average</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the title of the plot</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – axis labels</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – axis labels</p></li>
+<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the calendar to use for formatting the time axis</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of time points over which to perform a moving average</p></li>
 <li><p><strong>lineColors</strong> (<em>list of str</em><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
 text.  Default is black, solid line with no marker, and no legend.</p></li>
 <li><p><strong>lineStyles</strong> (<em>list of str</em><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
@@ -144,16 +144,16 @@ text.  Default is black, solid line with no marker, and no legend.</p></li>
 This can be helpful for reducing the number of symbols plotted if
 plotting with markers.  Otherwise the markers become indistinguishable
 from each other.</p></li>
-<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the size of the title font</p></li>
-<li><p><strong>defaultFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the size of text other than the title</p></li>
+<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the size of the title font</p></li>
+<li><p><strong>defaultFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the size of text other than the title</p></li>
 <li><p><strong>figsize</strong> (<em>tuple of float</em><em>, </em><em>optional</em>) – the size of the figure in inches</p></li>
-<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
 option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p></li>
-<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
+<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
 entry is the first tick.</p></li>
-<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
+<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
 automatically to have <code class="docutils literal notranslate"><span class="pre">maxXTicks</span></code> tick marks or fewer.</p></li>
-<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the x axis.
+<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the x axis.
 This may need to be adjusted depending on the figure size and aspect
 ratio.</p></li>
 <li><p><strong>obsMean</strong> (<em>list of float</em><em>, </em><em>optional</em>) – Mean values and uncertainties for observations to be plotted as error
@@ -162,8 +162,8 @@ bars. The two lists must have the same number of elements.</p></li>
 bars. The two lists must have the same number of elements.</p></li>
 <li><p><strong>obsLegend</strong> (<em>list of str</em><em>, </em><em>optional</em>) – The label in the legend for each element in <code class="docutils literal notranslate"><span class="pre">obsMean</span></code> (and
 <code class="docutils literal notranslate"><span class="pre">obsUncertainty</span></code>)</p></li>
-<li><p><strong>legendLocation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The location of the legend (see <code class="docutils literal notranslate"><span class="pre">pyplot.legend()</span></code> for details)</p></li>
-<li><p><strong>maxTitleLength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of characters in the title and legend, beyond which
+<li><p><strong>legendLocation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – The location of the legend (see <code class="docutils literal notranslate"><span class="pre">pyplot.legend()</span></code> for details)</p></li>
+<li><p><strong>maxTitleLength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of characters in the title and legend, beyond which
 they are truncated with a trailing ellipsis</p></li>
 </ul>
 </dd>

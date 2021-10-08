@@ -129,11 +129,11 @@ will be extracted or computed.</p></li>
 <code class="docutils literal notranslate"><span class="pre">timesInDataSet</span></code> to be computed, and <code class="docutils literal notranslate"><span class="pre">firstCall</span></code>, indicating
 whether this is the first call to the funciton (useful for printing
 progress information).</p></li>
-<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
+<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
 stored</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
-<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
+<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
 progresses.  If the computation is expensive, it may be useful to
 output the file frequently.  If not, there will be needless overhead
 in caching the file too frequently.</p></li>

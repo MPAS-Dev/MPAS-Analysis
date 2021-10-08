@@ -134,7 +134,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A season (key in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>) to be
+<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A season (key in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>) to be
 plotted.</p></li>
 <li><p><strong>comparisonGridName</strong> (<em>{'latlon'</em><em>, </em><em>'antarctic'</em><em>, </em><em>'arctic'}</em>) – The name of the comparison grid to plot.</p></li>
 <li><p><strong>remapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – The subtask for remapping the MPAS climatology that this subtask
@@ -143,28 +143,28 @@ will plot</p></li>
 subtask will plot</p></li>
 <li><p><strong>secondRemapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – A second subtask for remapping another MPAS climatology to plot
 in the second panel and compare with in the third panel</p></li>
-<li><p><strong>removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
+<li><p><strong>removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
 computed (where both are valid) and the mean over that mask is
 subtracted from both the model and reference results.  This is
 useful for data sets where the desire is to compare the spatial
 pattern but the mean offset is not meaningful (e.g. SSH)</p></li>
-<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
-<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
-<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
-<li><p><strong>obsFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the variable to use from the observations file</p></li>
-<li><p><strong>observationTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the title of the observations subplot</p></li>
-<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
-<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
-<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>obsFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable to use from the observations file</p></li>
+<li><p><strong>observationTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the title of the observations subplot</p></li>
+<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
 screen</p></li>
-<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
-<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
 if none)</p></li>
-<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
-<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
-<li><p><strong>depth</strong> (<em>{None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>'top'</em><em>, </em><em>'bot'}</em>) – Depth at which to perform the comparison, ‘top’ for the sea surface
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
+<li><p><strong>depth</strong> (<em>{None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>'top'</em><em>, </em><em>'bot'}</em>) – Depth at which to perform the comparison, ‘top’ for the sea surface
 ‘bot’ for the sea floor</p></li>
-<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the section where the color map and range is defined</p></li>
+<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the section where the color map and range is defined</p></li>
 </ul>
 </dd>
 </dl>
@@ -177,7 +177,7 @@ comparison grid) and a subtask for computing climatologies.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent (master) task for this subtask</p></li>
-<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A season (key in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>) to be
+<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A season (key in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>) to be
 plotted.</p></li>
 <li><p><strong>comparisonGridName</strong> (<em>{'latlon'</em><em>, </em><em>'antarctic'</em><em>, </em><em>'arctic'}</em>) – The name of the comparison grid to plot.</p></li>
 <li><p><strong>remapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – The subtask for remapping the MPAS climatology that this subtask
@@ -189,12 +189,12 @@ in the second panel and compare with in the third panel</p></li>
 <li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – Configuration options for a control run (if any)</p></li>
 <li><p><strong>depth</strong> (<em>{float</em><em>, </em><em>'top'</em><em>, </em><em>'bot'}</em><em>, </em><em>optional</em>) – Depth the data is being plotted, ‘top’ for the sea surface
 ‘bot’ for the sea floor</p></li>
-<li><p><strong>removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
+<li><p><strong>removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
 computed (where both are valid) and the mean over that mask is
 subtracted from both the model and reference results.  This is
 useful for data sets where the desire is to compare the spatial
 pattern but the mean offset is not meaningful (e.g. SSH)</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optinal</em>) – The name of the subtask.  If not specified, it is
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optinal</em>) – The name of the subtask.  If not specified, it is
 <code class="docutils literal notranslate"><span class="pre">plot&lt;season&gt;_&lt;comparisonGridName&gt;</span></code> with a suffix indicating the
 depth being sliced (if any)</p></li>
 </ul>
