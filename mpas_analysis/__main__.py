@@ -810,6 +810,7 @@ def main():
         machine = discover_machine()
 
     if machine is not None:
+        print(f'Detected E3SM supported machine: {machine}')
         with path('mache.machines', f'{machine}.cfg') as machine_config:
             shared_configs.append(str(machine_config))
         try:
@@ -819,6 +820,8 @@ def main():
         except FileNotFoundError:
             # we don't have a config file for this machine, so we'll just
             # skip it.
+            print(f'Warning: no MPAS-Analysis config file found for machine:'
+                  f' {machine}')
             pass
 
     if args.polar_regions:
@@ -826,6 +829,11 @@ def main():
             shared_configs.append(str(polar_config))
 
     main_configs = shared_configs + args.config_files
+    print('Using the following config files:')
+    for config_file in main_configs:
+        if not os.path.exists(config_file):
+            raise OSError('Config file {config_file} not found.')
+        print(f'   {config_file}')
 
     config = MpasAnalysisConfigParser(
         interpolation=configparser.ExtendedInterpolation())
@@ -853,7 +861,8 @@ def main():
                           'file does not exist'.format(control_config_file))
         control_configs = shared_configs + [control_config_file]
 
-        control_config = MpasAnalysisConfigParser()
+        control_config = MpasAnalysisConfigParser(
+            interpolation=configparser.ExtendedInterpolation())
         control_config.read(control_configs)
 
         # replace the log directory so log files get written to this run's
