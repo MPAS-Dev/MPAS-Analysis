@@ -524,15 +524,16 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
                 <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-                <span class="n">areaCell</span> <span class="o">=</span> \
-                    <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
+                <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
 
                 <span class="c1"># convert from kg/s to kg/yr</span>
                 <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">*</span> \
                     <span class="p">(</span><span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span> <span class="o">*</span> <span class="n">freshwaterFlux</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
                 <span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
-                <span class="n">totalArea</span> <span class="o">=</span> <span class="p">(</span><span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+                <span class="n">totalArea</span> <span class="o">=</span> \
+                    <span class="p">(</span><span class="n">landIceFraction</span> <span class="o">*</span> <span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
 
                 <span class="c1"># from kg/m^2/yr to m/yr</span>
                 <span class="n">meltRates</span> <span class="o">=</span> <span class="p">((</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span><span class="p">)</span> <span class="o">*</span>
