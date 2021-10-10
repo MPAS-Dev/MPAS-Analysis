@@ -70,6 +70,7 @@ setup(name='mpas_analysis',
                                       'obs/analysis_input_files',
                                       'obs/sose_10000km_input_files',
                                       'obs/observational_datasets.xml'],
+                    'mpas_analysis.configuration': ['*.cfg'],
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
                     'mpas_analysis.shared.plot':
