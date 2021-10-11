@@ -16,9 +16,10 @@ export E3SMU_MACHINE={{ machine }}
 echo env: {{ conda_env }}
 echo configs: {{ flags }} {{ config }}
 
-srun -N 1 -n 1 mpas_analysis --list
-srun -N 1 -n 1 mpas_analysis --plot_colormaps
-srun -N 1 -n 1 mpas_analysis --setup_only {{ flags }} {{ config }}
-srun -N 1 -n 1 mpas_analysis --purge {{ flags }} {{ config }} --verbose
-srun -N 1 -n 1 mpas_analysis --html_only {{ flags }} {{ config }}
+{{ parallel_exec }} mpas_analysis --list
+{{ parallel_exec }} mpas_analysis --plot_colormaps
+{{ parallel_exec }} mpas_analysis --setup_only {{ flags }} {{ config }}
+{{ parallel_exec }} mpas_analysis --purge {{ flags }} {{ config }} --verbose
+{{ parallel_exec }} mpas_analysis --html_only {{ flags }} {{ config }}
 
+chmod -R ugo+rX {{ html_base }}
