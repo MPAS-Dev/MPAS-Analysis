@@ -130,13 +130,27 @@ def main():
     else:
         out_subdir = os.path.join(machine, args.branch, args.run)
 
+    if machine == 'cori-haswell':
+        execute_options = \
+            '# the number of MPI tasks to use in creating mapping files (1 means tasks run in\n' \
+            '# serial, the default)\n' \
+            'mapMpiTasks = 1\n' \
+            '\n' \
+            '# "None" if ESMF should perform mapping file generation in serial without a\n' \
+            '# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins\n' \
+            '# serial but with a command)\n' \
+            'mapParallelExec = None'
+    else:
+        execute_options = ''
+
     with open(os.path.join('suite', 'template.cfg')) as template_file:
         template_data = template_file.read()
     template = Template(template_data)
     config_text = template.render(
         run_name=args.run, input_base=input_base, simulation=simulation,
         mesh=mesh, output_base=output_base, html_base=html_base,
-        out_subdir=out_subdir, generate=generate, end_year=end_year)
+        out_subdir=out_subdir, generate=generate, end_year=end_year,
+        execute_options=execute_options)
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
@@ -158,12 +172,18 @@ def main():
         else:
             flags = ''
 
+        if machine == 'cori-haswell':
+            parallel_exec = ''
+        else:
+            prallel_exec = 'srun -N 1 -n 1'
+
         with open(os.path.join('suite', 'job_script.bash')) as template_file:
             template_data = template_file.read()
         template = Template(template_data)
         job_text = template.render(
             sbatch=sbatch, conda_base=conda_base, conda_env=conda_env,
-            machine=machine, flags=flags, config=config_from_job)
+            machine=machine, flags=flags, config=config_from_job,
+            parallel_exec=parallel_exec, html_base=html_base)
         with open(job, 'w') as job_file:
             job_file.write(job_text)
 
