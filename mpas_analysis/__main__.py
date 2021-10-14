@@ -840,6 +840,7 @@ def main():
     if machine is not None:
         # set the username so we can use it in the htmlSubdirectory
         machine_info = MachineInfo(machine=machine)
+        config.add_section('web_portal')
         config.set('web_portal', 'username', machine_info.username)
     config.read(main_configs)
 
