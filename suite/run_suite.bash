@@ -20,7 +20,8 @@ for py in ${main_py} ${alt_py}
 do
     env=test_mpas_analysis_py${py}
     mamba create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
-        mock sphinx_rtd_theme "tabulate>=0.8.2" m2r pytest mache jinja2
+        mock sphinx_rtd_theme "tabulate>=0.8.2" m2r pytest "mache>=1.1.2" \
+        jinja2
     conda activate ${env}
     pytest
     conda deactivate
