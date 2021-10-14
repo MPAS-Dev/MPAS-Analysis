@@ -176,7 +176,7 @@ def main():
         if machine == 'cori-haswell':
             parallel_exec = ''
         else:
-            prallel_exec = 'srun -N 1 -n 1'
+            parallel_exec = 'srun -N 1 -n 1'
 
         with open(os.path.join('suite', 'job_script.bash')) as template_file:
             template_data = template_file.read()
