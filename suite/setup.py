@@ -38,10 +38,13 @@ def main():
         # we don't want the default, which is 'debug'
         partition = 'compute'
 
+    username = machine_info.username
+    web_section = machine_info.config['web_portal']
+    web_base = os.path.join(web_section['base_path'], web_section['username'])
+    html_base = f'{web_base}/analysis_testing'
     if machine in ['anvil', 'chrysalis']:
         input_base = '/lcrc/group/e3sm/ac.xylar/acme_scratch/anvil'
-        output_base = '/lcrc/group/e3sm/ac.xylar/analysis_testing'
-        html_base = '/lcrc/group/e3sm/public_html/diagnostic_output/ac.xylar/analysis_testing'
+        output_base = f'/lcrc/group/e3sm/{username}/analysis_testing'
         if args.run == 'QU480':
             simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
             mesh = 'QU480'
@@ -50,14 +53,13 @@ def main():
             mesh = 'oQU240wLI'
     elif machine == 'cori-haswell':
         input_base = '/global/cfs/cdirs/e3sm/xylar'
-        output_base = '/global/cscratch1/sd/xylar/analysis_testing'
-        html_base = '/global/cfs/cdirs/e3sm/www/xylar/analysis_testing'
+        scratch = os.environ['CSCRATCH']
+        output_base = f'{scratch}/analysis_testing'
         simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
         mesh = 'QU480'
     elif machine == 'compy':
         input_base = '/compyfs/asay932/analysis_testing/test_output'
-        output_base = '/compyfs/asay932/analysis_testing'
-        html_base = '/compyfs/www/asay932/analysis_testing'
+        output_base = f'/compyfs/{username}/analysis_testing'
         simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
         mesh = 'QU480'
     else:
