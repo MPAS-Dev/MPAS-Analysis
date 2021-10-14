@@ -31,7 +31,8 @@ def main():
     machine = discover_machine()
 
     machine_info = MachineInfo(machine=machine)
-    account, partition, qos = machine_info.get_account_defaults()
+    account, partition, configuration, qos = \
+        machine_info.get_account_defaults()
 
     if machine == 'chrysalis':
         # we don't want the default, which is 'debug'
@@ -103,14 +104,12 @@ def main():
     sbatch = list()
     if account is not None:
         sbatch.append(f'#SBATCH -A {account}')
+    if configuration is not None:
+        sbatch.append(f'#SBATCH -C {configuration}')
     if partition is not None:
-        if machine == 'cori-haswell':
-            sbatch.append(f'#SBATCH -C {partition}')
-        else:
-            sbatch.append(f'#SBATCH -p {partition}')
+        sbatch.append(f'#SBATCH -p {partition}')
     if qos is not None:
         sbatch.append(f'#SBATCH --qos {qos}')
-
 
     sbatch = '\n'.join(sbatch)
 
