@@ -7,9 +7,10 @@ computed and displayed.  Several groups of configuration options are found
 across a number of analysis tasks.
 
 Examples of configuration files for various E3SM supported machines can be
-found in the ``configs/`` folder or can be browsed on `GitHub`_.  The file
-``example.cfg`` provides a list of the default values for the configuration
-options that are most commonly modified.
+found in the ``configs/`` folder or can be browsed on `GitHub`_.  The files
+``example.cfg`` and ``example_e3sm.cfg`` provide a list of the default values
+for the configuration options that are most commonly modified on unknown and
+E3SM-supported machines, repsectively.
 
 .. toctree::
    :maxdepth: 1

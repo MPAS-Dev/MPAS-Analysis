@@ -120,7 +120,7 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
 
-<span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span>
+<span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span><span class="p">,</span> <span class="n">MachineInfo</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisFormatter</span>
 
@@ -921,6 +921,11 @@
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">MpasAnalysisConfigParser</span><span class="p">(</span>
         <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># set the username so we can use it in the htmlSubdirectory</span>
+        <span class="n">machine_info</span> <span class="o">=</span> <span class="n">MachineInfo</span><span class="p">(</span><span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;web_portal&#39;</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;web_portal&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="n">machine_info</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">main_configs</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
