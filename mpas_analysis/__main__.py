@@ -11,7 +11,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 """
-Runs MPAS-Analysis via a configuration file (e.g. `config.analysis`)
+Runs MPAS-Analysis via a configuration file (e.g. `analysis.cfg`)
 specifying analysis options.
 """
 # Authors
@@ -26,7 +26,7 @@ import mpas_analysis
 import argparse
 import traceback
 import sys
-import pkg_resources
+from importlib.resources import path
 import shutil
 import os
 from collections import OrderedDict
@@ -34,6 +34,9 @@ import progressbar
 import logging
 import xarray
 import time
+import configparser
+
+from mache import discover_machine, MachineInfo
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -765,7 +768,7 @@ def main():
     parser.add_argument("-p", "--purge", dest="purge", action='store_true',
                         help="Purge the analysis by deleting the output"
                         "directory before running")
-    parser.add_argument('configFiles', metavar='CONFIG',
+    parser.add_argument('config_files', metavar='CONFIG',
                         type=str, nargs='*', help='config file')
     parser.add_argument("--plot_colormaps", dest="plot_colormaps",
                         action='store_true',
@@ -773,33 +776,77 @@ def main():
     parser.add_argument("--verbose", dest="verbose", action='store_true',
                         help="Verbose error reporting during setup-and-check "
                              "phase")
+    parser.add_argument("-m", "--machine", dest="machine",
+                        help="The name of the machine for loading machine-"
+                             "related config options", metavar="MACH")
+    parser.add_argument("--polar_regions", dest="polar_regions",
+                        action='store_true',
+                        help="Include config options for analysis focused on "
+                             "polar regions")
     args = parser.parse_args()
 
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(0)
 
-    for configFile in args.configFiles:
-        if not os.path.exists(configFile):
-            raise OSError('Config file {} not found.'.format(configFile))
+    for config_file in args.config_files:
+        if not os.path.exists(config_file):
+            raise OSError(f'Config file {config_file} not found.')
 
-    # add config.default to cover default not included in the config files
+    shared_configs = list()
+
+    # add default.cfg to cover default not included in the config files
     # provided on the command line
-    if pkg_resources.resource_exists('mpas_analysis', 'config.default'):
-        defaultConfig = pkg_resources.resource_filename('mpas_analysis',
-                                                        'config.default')
-        configFiles = [defaultConfig] + args.configFiles
-    else:
-        print('WARNING: Did not find config.default.  Assuming other config '
-              'file(s) contain a\n'
-              'full set of configuration options.')
-        defaultConfig = None
-        configFiles = args.configFiles
+    with path('mpas_analysis', 'default.cfg') as default_config:
+        shared_configs.append(str(default_config))
 
-    config = MpasAnalysisConfigParser()
-    config.read(configFiles)
+    # Add config options for E3SM supported machines from the mache package
+    machine = args.machine
+
+    if machine is None and 'E3SMU_MACHINE' in os.environ:
+        machine = os.environ['E3SMU_MACHINE']
+
+    if machine is None:
+        machine = discover_machine()
+
+    if machine is not None:
+        print(f'Detected E3SM supported machine: {machine}')
+        with path('mache.machines', f'{machine}.cfg') as machine_config:
+            shared_configs.append(str(machine_config))
+        try:
+            with path('mpas_analysis.configuration', f'{machine}.cfg') \
+                    as machine_config:
+                shared_configs.append(str(machine_config))
+        except FileNotFoundError:
+            # we don't have a config file for this machine, so we'll just
+            # skip it.
+            print(f'Warning: no MPAS-Analysis config file found for machine:'
+                  f' {machine}')
+            pass
+
+    if args.polar_regions:
+        with path('mpas_analysis', 'polar_regions.cfg') as polar_config:
+            shared_configs.append(str(polar_config))
+
+    main_configs = shared_configs + args.config_files
+    print('Using the following config files:')
+    for config_file in main_configs:
+        if not os.path.exists(config_file):
+            raise OSError('Config file {config_file} not found.')
+        print(f'   {config_file}')
+
+    config = MpasAnalysisConfigParser(
+        interpolation=configparser.ExtendedInterpolation())
+    if machine is not None:
+        # set the username so we can use it in the htmlSubdirectory
+        machine_info = MachineInfo(machine=machine)
+        config.add_section('web_portal')
+        config.set('web_portal', 'username', machine_info.username)
+    config.read(main_configs)
 
     if args.list:
+        # set this config option so we don't have issues
+        config.set('diagnostics', 'baseDirectory', '')
         analyses = build_analysis_list(config, controlConfig=None)
         for analysisTask in analyses:
             print('task: {}'.format(analysisTask.taskName))
@@ -813,48 +860,46 @@ def main():
         sys.exit(0)
 
     if config.has_option('runs', 'controlRunConfigFile'):
-        controlConfigFile = config.get('runs', 'controlRunConfigFile')
-        if not os.path.exists(controlConfigFile):
+        control_config_file = config.get('runs', 'controlRunConfigFile')
+        if not os.path.exists(control_config_file):
             raise OSError('A control config file {} was specified but the '
-                          'file does not exist'.format(controlConfigFile))
-        controlConfigFiles = [controlConfigFile]
-        if defaultConfig is not None:
-            controlConfigFiles = [defaultConfig] + controlConfigFiles
-        controlConfig = MpasAnalysisConfigParser()
-        controlConfig.read(controlConfigFiles)
+                          'file does not exist'.format(control_config_file))
+        control_configs = shared_configs + [control_config_file]
+
+        control_config = MpasAnalysisConfigParser(
+            interpolation=configparser.ExtendedInterpolation())
+        control_config.read(control_configs)
 
         # replace the log directory so log files get written to this run's
         # log directory, not the control run's
-        logsDirectory = build_config_full_path(config, 'output',
-                                               'logsSubdirectory')
+        logs_dir = build_config_full_path(config, 'output', 'logsSubdirectory')
 
-        controlConfig.set('output', 'logsSubdirectory', logsDirectory)
+        control_config.set('output', 'logsSubdirectory', logs_dir)
 
         print('Comparing to control run {} rather than observations. \n'
               'Make sure that MPAS-Analysis has been run previously with the '
-              'control config file.'.format(controlConfig.get('runs',
-                                                              'mainRunName')))
+              'control config file.'.format(control_config.get('runs',
+                                                               'mainRunName')))
     else:
-        controlConfig = None
+        control_config = None
 
     if args.purge:
         purge_output(config)
 
     if config.has_option('runs', 'mainRunConfigFile'):
-        symlink_main_run(config, defaultConfig)
+        symlink_main_run(config, default_config)
 
     if args.generate:
         update_generate(config, args.generate)
 
-    if controlConfig is not None:
+    if control_config is not None:
         # we want to use the "generate" option from the current run, not
         # the control config file
-        controlConfig.set('output', 'generate', config.get('output',
-                                                           'generate'))
+        control_config.set('output', 'generate', config.get('output',
+                                                            'generate'))
 
-    logsDirectory = build_config_full_path(config, 'output',
-                                           'logsSubdirectory')
-    make_directories(logsDirectory)
+    log_dir = build_config_full_path(config, 'output', 'logsSubdirectory')
+    make_directories(log_dir)
 
     update_time_bounds_in_config(config)
 
@@ -865,25 +910,25 @@ def main():
         # xarray version doesn't support file_cache_maxsize yet...
         pass
 
-    startTime = time.time()
+    start_time = time.time()
 
-    analyses = build_analysis_list(config, controlConfig)
+    analyses = build_analysis_list(config, control_config)
     analyses = determine_analyses_to_generate(analyses, args.verbose)
 
-    setupDuration = time.time() - startTime
+    setup_duration = time.time() - start_time
 
     if not args.setup_only and not args.html_only:
         run_analysis(config, analyses)
-        runDuration = time.time() - startTime
-        m, s = divmod(setupDuration, 60)
+        run_duration = time.time() - start_time
+        m, s = divmod(setup_duration, 60)
         h, m = divmod(int(m), 60)
         print('Total setup time: {}:{:02d}:{:05.2f}'.format(h, m, s))
-        m, s = divmod(runDuration, 60)
+        m, s = divmod(run_duration, 60)
         h, m = divmod(int(m), 60)
         print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
-        generate_html(config, analyses, controlConfig, args.configFiles)
+        generate_html(config, analyses, control_config, args.config_files)
 
 
 if __name__ == "__main__":

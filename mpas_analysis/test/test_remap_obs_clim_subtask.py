@@ -106,11 +106,11 @@ class TestRemapObsClimSubtask(TestCase):
         shutil.rmtree(self.test_dir)
 
     def setup_config(self):
-        configPath = self.datadir.join('config.remap_obs')
+        configPath = self.datadir.join('remap_obs.cfg')
         config = MpasAnalysisConfigParser()
         config.read(str(configPath))
         config.set('input', 'baseDirectory', str(self.datadir))
-        config.set('diagnostics', 'baseDirectory', str(self.datadir))
+        config.set('diagnostics', 'base_path', str(self.datadir))
         config.set('oceanObservations', 'obsSubdirectory', '.')
         config.set('output', 'baseDirectory', str(self.test_dir))
         return config

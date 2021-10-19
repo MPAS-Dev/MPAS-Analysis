@@ -64,7 +64,7 @@ package in `dev-spec.txt`.  Then, you can install both packages in the same
 development environment, e.g.:
 ``` bash
 conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
-    -- analysis/MPAS-Analysis/dev-spec.txt
+    --file analysis/MPAS-Analysis/dev-spec.txt
 conda activate mpas_dev
 cd tools/MPAS-Tools/conda_package
 python -m pip install -e .
@@ -109,7 +109,7 @@ mpas_analysis --list
 ```
 
 This lists all tasks and their tags.  These can be used in the `generate`
-command-line option or config option.  See `mpas_analysis/config.default`
+command-line option or config option.  See `mpas_analysis/default.cfg`
 for more details.
 
 ## Running the analysis
@@ -119,17 +119,17 @@ for more details.
      git repo) or download one from the
      [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
   2. Either modify config options in your new file or copy and modify config
-     options from `mpas_analysis/config.default` (in a git repo) or directly
+     options from `mpas_analysis/default.cfg` (in a git repo) or directly
      from GitHub:
-     [config.default](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/config.default).
+     [default.cfg](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg).
   3. If you installed the `mpas-analysis` package, run:
      `mpas_analysis config.myrun`.  This will read the configuration
-     first from `mpas_analysis/config.default` and then replace that
+     first from `mpas_analysis/default.cfg` and then replace that
      configuraiton with any changes from from `config.myrun`
   4. If you want to run a subset of the analysis, you can either set the
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
-     `mpas_analysis/config.default` for more details on this option.
+     `mpas_analysis/default.cfg` for more details on this option.
 
   **Requirements for custom config files:**
   * At minimum you should set `baseDirectory` under `[output]` to the folder
@@ -139,10 +139,10 @@ for more details.
     updated correctly.
   * Any options you copy into the config file **must** include the
     appropriate section header (e.g. '[run]' or '[output]')
-  * You do not need to copy all options from `mpas_analysis/config.default`.
+  * You do not need to copy all options from `mpas_analysis/default.cfg`.
     This file will automatically be used for any options you do not include
     in your custom config file.
-  * You should **not** modify `mpas_analysis/config.default` directly.
+  * You should **not** modify `mpas_analysis/default.cfg` directly.
 
 ## List of MPAS output files that are needed by MPAS-Analysis:
 
@@ -240,7 +240,7 @@ already makes or creating new ones:
 
 1. customize the config file. Some features, such as colormaps and colorbar
    limits for color shaded plot or depth ranges for ocean region time series,
-   can be customized: look at `mpas_analysis/config.default` for available
+   can be customized: look at `mpas_analysis/default.cfg` for available
    customization for each analysis task.
 2. read in the analysis data computed by MPAS-Analysis into custom scripts. When
    running MPAS-Analysis with the purpose of generating both climatologies
@@ -268,7 +268,7 @@ within the `mpas_analysis/shared` directory.
    described in the template.  Take a look at
    `mpas_analysis/shared/analysis_task.py` for additional guidance.
 2. note, no changes need to be made to `mpas_analysis/shared/analysis_task.py`
-3. modify `mpas_analysis/config.default` (and possibly any machine-specific
+3. modify `mpas_analysis/default.cfg` (and possibly any machine-specific
    config files in `configs/<machine>`)
 4. import new analysis task in `mpas_analysis/<component>/__init__.py`
 5. add new analysis task to `mpas_analysis/__main__.py` under

@@ -202,7 +202,7 @@ def get_region_mask(config, regionMaskFile):  # {{{
             # no, so second see if mapping files are in the base directory
             regionMaskDirectory = build_config_full_path(
                 config, 'diagnostics', 'regionMaskSubdirectory',
-                baseDirectoryOption='baseDirectory')
+                baseDirectoryOption='base_path')
 
             fullFileName = '{}/{}'.format(regionMaskDirectory,
                                           regionMaskFile)
@@ -273,7 +273,7 @@ def build_obs_path(config, component, relativePathOption=None,
             fullPath = '{}/{}/{}'.format(basePath, obsSubdirectory,
                                          relativePath)
             if basePath == 'none' or not os.path.exists(fullPath):
-                basePath = config.get('diagnostics', 'baseDirectory')
+                basePath = config.get('diagnostics', 'base_path')
                 fullPath = '{}/{}/{}'.format(basePath, obsSubdirectory,
                                              relativePath)
 

@@ -440,15 +440,16 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                     self.runStreams.readpath('restart')[0]
 
                 dsRestart = xr.open_dataset(restartFileName)
-                areaCell = \
-                    dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
+                landIceFraction = dsRestart.landIceFraction.isel(Time=0)
+                areaCell = dsRestart.areaCell
 
                 # convert from kg/s to kg/yr
                 totalMeltFlux = constants.sec_per_year * \
                     (cellMasks * areaCell * freshwaterFlux).sum(dim='nCells')
                 totalMeltFlux.compute()
 
-                totalArea = (cellMasks * areaCell).sum(dim='nCells')
+                totalArea = \
+                    (landIceFraction * cellMasks * areaCell).sum(dim='nCells')
 
                 # from kg/m^2/yr to m/yr
                 meltRates = ((1. / constants.rho_fw) *

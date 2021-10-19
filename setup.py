@@ -41,8 +41,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'mpas_analysis', '__init__.py')) as f:
     init_file = f.read()
 
-version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
-                    init_file).group(1).replace(', ', '.')
+#version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
+#                    init_file).group(1).replace(', ', '.')
+version = '1.5.1rc1'
 
 setup(name='mpas_analysis',
       version=version,
@@ -66,10 +67,11 @@ setup(name='mpas_analysis',
           'Topic :: Scientific/Engineering',
       ],
       packages=find_packages(),
-      package_data={'mpas_analysis': ['config.default',
+      package_data={'mpas_analysis': ['*.cfg',
                                       'obs/analysis_input_files',
                                       'obs/sose_10000km_input_files',
                                       'obs/observational_datasets.xml'],
+                    'mpas_analysis.configuration': ['*.cfg'],
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
                     'mpas_analysis.shared.plot':
