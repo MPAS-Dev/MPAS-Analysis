@@ -31,16 +31,20 @@ def main():
     machine = discover_machine()
 
     machine_info = MachineInfo(machine=machine)
-    account, partition, qos = machine_info.get_account_defaults()
+    account, partition, configuration, qos = \
+        machine_info.get_account_defaults()
 
     if machine == 'chrysalis':
         # we don't want the default, which is 'debug'
         partition = 'compute'
 
+    username = machine_info.username
+    web_section = machine_info.config['web_portal']
+    web_base = os.path.join(web_section['base_path'], web_section['username'])
+    html_base = f'{web_base}/analysis_testing'
     if machine in ['anvil', 'chrysalis']:
         input_base = '/lcrc/group/e3sm/ac.xylar/acme_scratch/anvil'
-        output_base = '/lcrc/group/e3sm/ac.xylar/analysis_testing'
-        html_base = '/lcrc/group/e3sm/public_html/diagnostic_output/ac.xylar/analysis_testing'
+        output_base = f'/lcrc/group/e3sm/{username}/analysis_testing'
         if args.run == 'QU480':
             simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
             mesh = 'QU480'
@@ -49,14 +53,13 @@ def main():
             mesh = 'oQU240wLI'
     elif machine == 'cori-haswell':
         input_base = '/global/cfs/cdirs/e3sm/xylar'
-        output_base = '/global/cscratch1/sd/xylar/analysis_testing'
-        html_base = '/global/cfs/cdirs/e3sm/www/xylar/analysis_testing'
+        scratch = os.environ['CSCRATCH']
+        output_base = f'{scratch}/analysis_testing'
         simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
         mesh = 'QU480'
     elif machine == 'compy':
         input_base = '/compyfs/asay932/analysis_testing/test_output'
-        output_base = '/compyfs/asay932/analysis_testing'
-        html_base = '/compyfs/www/asay932/analysis_testing'
+        output_base = f'/compyfs/{username}/analysis_testing'
         simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
         mesh = 'QU480'
     else:
@@ -103,14 +106,12 @@ def main():
     sbatch = list()
     if account is not None:
         sbatch.append(f'#SBATCH -A {account}')
+    if configuration is not None:
+        sbatch.append(f'#SBATCH -C {configuration}')
     if partition is not None:
-        if machine == 'cori-haswell':
-            sbatch.append(f'#SBATCH -C {partition}')
-        else:
-            sbatch.append(f'#SBATCH -p {partition}')
+        sbatch.append(f'#SBATCH -p {partition}')
     if qos is not None:
         sbatch.append(f'#SBATCH --qos {qos}')
-
 
     sbatch = '\n'.join(sbatch)
 
@@ -175,7 +176,7 @@ def main():
         if machine == 'cori-haswell':
             parallel_exec = ''
         else:
-            prallel_exec = 'srun -N 1 -n 1'
+            parallel_exec = 'srun -N 1 -n 1'
 
         with open(os.path.join('suite', 'job_script.bash')) as template_file:
             template_data = template_file.read()
@@ -183,7 +184,8 @@ def main():
         job_text = template.render(
             sbatch=sbatch, conda_base=conda_base, conda_env=conda_env,
             machine=machine, flags=flags, config=config_from_job,
-            parallel_exec=parallel_exec, html_base=html_base)
+            parallel_exec=parallel_exec, html_base=html_base,
+            out_subdir=out_subdir)
         with open(job, 'w') as job_file:
             job_file.write(job_text)
 

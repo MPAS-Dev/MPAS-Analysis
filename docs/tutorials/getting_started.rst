@@ -185,13 +185,20 @@ provide an `example config file`_ as a starting point. This file contains the
 most common config options that a user might want to customize.  The values are
 mostly the same as in the `default config file`_.
 
+If you are on an E3SM supported machine, you can use the `E3SM example config file`_ instead.  If you specify the name of the supported machine with the
+``--machine`` flag when you call ``mpas_analysis``, there are several config
+options that will be set for you automatically.  E3SM supported machines aren't
+the primary focus of this tutorial, the following will assume you're working
+on an unknown machine (or simply not taking advantage of known paths on a
+supported machine).
+
 First, you should copy this file to a new name for a specific run (say
 ``myrun.cfg``).  Then, you should modify any config options you want to change
 in your new config file. At a minimum, you need to specify:
 
 * ``[runs]/mainRunName``:  A name for the run to be included plot titles
   and legends
-* ``[diagnostics]/baseDirectory``: The base directory for observations,
+* ``[diagnostics]/base_path``: The base directory for observations,
   mapping files and region masks
 * ``[input]/baseDirectory``: The directory for the simulation results
   to analyze
@@ -281,9 +288,9 @@ observations in Section 2.
     # its location).  For other machines, this would be the directory pointed to
     # when running "download_analysis_data.py" to get the public observations,
     # mapping files and region files.
-    baseDirectory = /path/to/diagnostics
+    base_path = /path/to/diagnostics
 
-For ``baseDirectory``, supply the path where you downloaded the data
+For ``base_path``, supply the path where you downloaded the data
 ``</path/to/mpas_analysis/diagnostics>``.
 
 4.4 [input]
@@ -629,6 +636,7 @@ determine the cause of the error.  If not, please include them if you are
 .. _`diagnostics web server`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/
 .. _`default config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg
 .. _`example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg
+.. _`E3SM example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example_e3sm.cfg
 .. _`ncclimo`: http://nco.sourceforge.net/nco.html#ncclimo-netCDF-Climatology-Generator
 .. _`this example output`: https://mpas-dev.github.io/MPAS-Analysis/examples/QU480
 .. _`posting an issue`: https://github.com/MPAS-Dev/MPAS-Analysis/issues

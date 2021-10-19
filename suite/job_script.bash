@@ -22,4 +22,4 @@ echo configs: {{ flags }} {{ config }}
 {{ parallel_exec }} mpas_analysis --purge {{ flags }} {{ config }} --verbose
 {{ parallel_exec }} mpas_analysis --html_only {{ flags }} {{ config }}
 
-chmod -R ugo+rX {{ html_base }}
+chmod -R ugo+rX {{ html_base }}/{{ out_subdir }}

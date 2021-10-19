@@ -36,7 +36,7 @@ import xarray
 import time
 import configparser
 
-from mache import discover_machine
+from mache import discover_machine, MachineInfo
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -837,6 +837,11 @@ def main():
 
     config = MpasAnalysisConfigParser(
         interpolation=configparser.ExtendedInterpolation())
+    if machine is not None:
+        # set the username so we can use it in the htmlSubdirectory
+        machine_info = MachineInfo(machine=machine)
+        config.add_section('web_portal')
+        config.set('web_portal', 'username', machine_info.username)
     config.read(main_configs)
 
     if args.list:
