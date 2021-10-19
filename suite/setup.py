@@ -184,7 +184,8 @@ def main():
         job_text = template.render(
             sbatch=sbatch, conda_base=conda_base, conda_env=conda_env,
             machine=machine, flags=flags, config=config_from_job,
-            parallel_exec=parallel_exec, html_base=html_base)
+            parallel_exec=parallel_exec, html_base=html_base,
+            out_subdir=out_subdir)
         with open(job, 'w') as job_file:
             job_file.write(job_text)
 
