@@ -145,6 +145,7 @@ def plot_polar_comparison(
         gl.right_labels = False
         gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
         gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
+        gl.rotate_labels = False
 
         fieldPeriodic, lonPeriodic = add_cyclic_point(field, lon)
 
@@ -556,6 +557,7 @@ def plot_polar_projection_comparison(
         gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
         gl.xlabel_style['size'] = cartopyGridFontSize
         gl.ylabel_style['size'] = cartopyGridFontSize
+        gl.rotate_labels = False
 
         if levels is None:
             plotHandle = ax.pcolormesh(x, y, array, cmap=colormap, norm=norm,
