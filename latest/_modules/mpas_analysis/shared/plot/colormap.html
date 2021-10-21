@@ -111,7 +111,6 @@
 <span class="kn">import</span> <span class="nn">cmocean</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">string_types</span>
-<span class="kn">import</span> <span class="nn">mpas_analysis.shared.plot.ScientificColourMaps5</span>
 
 
 <div class="viewcode-block" id="setup_colormap"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap">[docs]</a><span class="k">def</span> <span class="nf">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -340,26 +339,38 @@
     <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">colorMap</span><span class="p">)</span>
 
     <span class="c1"># add the cmocean color maps</span>
-    <span class="n">mapNames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cmapnames</span><span class="p">)</span>
+    <span class="n">map_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cmapnames</span><span class="p">)</span>
     <span class="c1"># don&#39;t bother with gray (already exists, I think)</span>
-    <span class="n">mapNames</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">mapNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">mapName</span> <span class="ow">in</span> <span class="n">mapNames</span><span class="p">:</span>
-        <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">mapName</span><span class="p">))</span>
+    <span class="n">map_names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">map_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">map_name</span> <span class="ow">in</span> <span class="n">map_names</span><span class="p">:</span>
+        <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">map_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="p">,</span> <span class="n">map_name</span><span class="p">))</span>
+
+    <span class="c1"># add ScientificColourMaps7 from</span>
+    <span class="c1"># http://www.fabiocrameri.ch/colourmaps.php</span>
+    <span class="c1"># https://doi.org/10.5281/zenodo.5501399</span>
+    <span class="k">for</span> <span class="n">map_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;acton&#39;</span><span class="p">,</span> <span class="s1">&#39;bam&#39;</span><span class="p">,</span> <span class="s1">&#39;bamako&#39;</span><span class="p">,</span> <span class="s1">&#39;bamO&#39;</span><span class="p">,</span> <span class="s1">&#39;batlow&#39;</span><span class="p">,</span> <span class="s1">&#39;batlowK&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;batlowW&#39;</span><span class="p">,</span> <span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;bilbao&#39;</span><span class="p">,</span> <span class="s1">&#39;broc&#39;</span><span class="p">,</span> <span class="s1">&#39;brocO&#39;</span><span class="p">,</span> <span class="s1">&#39;buda&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;bukavu&#39;</span><span class="p">,</span> <span class="s1">&#39;cork&#39;</span><span class="p">,</span> <span class="s1">&#39;corkO&#39;</span><span class="p">,</span> <span class="s1">&#39;davos&#39;</span><span class="p">,</span> <span class="s1">&#39;devon&#39;</span><span class="p">,</span> <span class="s1">&#39;fes&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;grayC&#39;</span><span class="p">,</span> <span class="s1">&#39;hawaii&#39;</span><span class="p">,</span> <span class="s1">&#39;imola&#39;</span><span class="p">,</span> <span class="s1">&#39;lajolla&#39;</span><span class="p">,</span> <span class="s1">&#39;lapaz&#39;</span><span class="p">,</span> <span class="s1">&#39;lisbon&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;nuuk&#39;</span><span class="p">,</span> <span class="s1">&#39;oleron&#39;</span><span class="p">,</span> <span class="s1">&#39;oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;roma&#39;</span><span class="p">,</span> <span class="s1">&#39;romaO&#39;</span><span class="p">,</span> <span class="s1">&#39;tofino&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;tokyo&#39;</span><span class="p">,</span> <span class="s1">&#39;turku&#39;</span><span class="p">,</span> <span class="s1">&#39;vanimo&#39;</span><span class="p">,</span> <span class="s1">&#39;vik&#39;</span><span class="p">,</span> <span class="s1">&#39;vikO&#39;</span><span class="p">]:</span>
+        <span class="n">xml_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ScientificColourMaps7/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">_PARAVIEW.xml&#39;</span>
+        <span class="n">xml_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">xml_file</span><span class="p">)</span>
+        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
 
     <span class="c1"># add SciVisColor colormaps from</span>
     <span class="c1"># https://sciviscolor.org/home/colormaps/</span>
+    <span class="k">for</span> <span class="n">map_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;3wave-yellow-grey-blue&#39;</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;4wave-grey-red-green-mgreen&#39;</span><span class="p">,</span> <span class="s1">&#39;5wave-yellow-brown-blue&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;blue-1&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-3&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-6&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-8&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-orange-div&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;brown-2&#39;</span><span class="p">,</span> <span class="s1">&#39;brown-5&#39;</span><span class="p">,</span> <span class="s1">&#39;brown-8&#39;</span><span class="p">,</span> <span class="s1">&#39;green-1&#39;</span><span class="p">,</span> <span class="s1">&#39;green-4&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;green-7&#39;</span><span class="p">,</span> <span class="s1">&#39;green-8&#39;</span><span class="p">,</span> <span class="s1">&#39;orange-5&#39;</span><span class="p">,</span> <span class="s1">&#39;orange-6&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;orange-green-blue-gray&#39;</span><span class="p">,</span> <span class="s1">&#39;purple-7&#39;</span><span class="p">,</span> <span class="s1">&#39;purple-8&#39;</span><span class="p">,</span> <span class="s1">&#39;red-1&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;red-3&#39;</span><span class="p">,</span> <span class="s1">&#39;red-4&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow-1&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow-7&#39;</span><span class="p">]:</span>
 
-    <span class="k">for</span> <span class="n">mapName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;3wave-yellow-grey-blue&#39;</span><span class="p">,</span> <span class="s1">&#39;3Wbgy5&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;4wave-grey-red-green-mgreen&#39;</span><span class="p">,</span> <span class="s1">&#39;5wave-yellow-brown-blue&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;blue-1&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-3&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-6&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-8&#39;</span><span class="p">,</span> <span class="s1">&#39;blue-orange-div&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;brown-2&#39;</span><span class="p">,</span> <span class="s1">&#39;brown-5&#39;</span><span class="p">,</span> <span class="s1">&#39;brown-8&#39;</span><span class="p">,</span> <span class="s1">&#39;green-1&#39;</span><span class="p">,</span> <span class="s1">&#39;green-4&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;green-7&#39;</span><span class="p">,</span> <span class="s1">&#39;green-8&#39;</span><span class="p">,</span> <span class="s1">&#39;orange-5&#39;</span><span class="p">,</span> <span class="s1">&#39;orange-6&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;orange-green-blue-gray&#39;</span><span class="p">,</span> <span class="s1">&#39;purple-7&#39;</span><span class="p">,</span> <span class="s1">&#39;purple-8&#39;</span><span class="p">,</span> <span class="s1">&#39;red-1&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;red-3&#39;</span><span class="p">,</span> <span class="s1">&#39;red-4&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow-1&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow-7&#39;</span><span class="p">]:</span>
-
-        <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span>
-            <span class="vm">__name__</span><span class="p">,</span> <span class="s1">&#39;SciVisColorColormaps/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mapName</span><span class="p">))</span>
-        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="n">mapName</span><span class="p">)</span>
+        <span class="n">xml_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;SciVisColorColormaps/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">.xml&#39;</span>
+        <span class="n">xml_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">xml_file</span><span class="p">)</span>
+        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;white_cmo_deep&#39;</span>
     <span class="c1"># modify cmo.deep to start at white</span>
@@ -517,7 +528,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_read_xml_colormap</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="n">mapName</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_read_xml_colormap</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="n">map_name</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Read in an XML colormap&#39;&#39;&#39;</span>
 
     <span class="n">xml</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">)</span>
@@ -534,15 +545,15 @@
             <span class="n">colorDict</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
             <span class="n">colorDict</span><span class="p">[</span><span class="s1">&#39;green&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
             <span class="n">colorDict</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-        <span class="n">cmap</span> <span class="o">=</span> <span class="n">LinearSegmentedColormap</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">colorDict</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">LinearSegmentedColormap</span><span class="p">(</span><span class="n">map_name</span><span class="p">,</span> <span class="n">colorDict</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
 
-        <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
+        <span class="n">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">map_name</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">mapName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">colormaps</span><span class="p">():</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">mapName</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_r&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mapName</span><span class="p">),</span> <span class="n">cmap</span><span class="o">.</span><span class="n">reversed</span><span class="p">())</span>
+<span class="k">def</span> <span class="nf">_register_colormap_and_reverse</span><span class="p">(</span><span class="n">map_name</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">map_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">colormaps</span><span class="p">():</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="n">map_name</span><span class="p">,</span> <span class="n">cmap</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">register_cmap</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_r&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">map_name</span><span class="p">),</span> <span class="n">cmap</span><span class="o">.</span><span class="n">reversed</span><span class="p">())</span>
 
 
 <span class="k">def</span> <span class="nf">_plot_color_gradients</span><span class="p">():</span>
