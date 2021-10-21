@@ -27,7 +27,6 @@ from six.moves import configparser
 import cmocean
 import pkg_resources
 from six import string_types
-import mpas_analysis.shared.plot.ScientificColourMaps5
 
 
 def setup_colormap(config, configSectionName, suffix=''):
@@ -256,26 +255,38 @@ def register_custom_colormaps():
     _register_colormap_and_reverse(name, colorMap)
 
     # add the cmocean color maps
-    mapNames = list(cmocean.cm.cmapnames)
+    map_names = list(cmocean.cm.cmapnames)
     # don't bother with gray (already exists, I think)
-    mapNames.pop(mapNames.index('gray'))
-    for mapName in mapNames:
-        _register_colormap_and_reverse(mapName, getattr(cmocean.cm, mapName))
+    map_names.pop(map_names.index('gray'))
+    for map_name in map_names:
+        _register_colormap_and_reverse(map_name, getattr(cmocean.cm, map_name))
+
+    # add ScientificColourMaps7 from
+    # http://www.fabiocrameri.ch/colourmaps.php
+    # https://doi.org/10.5281/zenodo.5501399
+    for map_name in ['acton', 'bam', 'bamako', 'bamO', 'batlow', 'batlowK',
+                     'batlowW', 'berlin', 'bilbao', 'broc', 'brocO', 'buda',
+                     'bukavu', 'cork', 'corkO', 'davos', 'devon', 'fes',
+                     'grayC', 'hawaii', 'imola', 'lajolla', 'lapaz', 'lisbon',
+                     'nuuk', 'oleron', 'oslo', 'roma', 'romaO', 'tofino',
+                     'tokyo', 'turku', 'vanimo', 'vik', 'vikO']:
+        xml_file = f'ScientificColourMaps7/{map_name}/{map_name}_PARAVIEW.xml'
+        xml_file = pkg_resources.resource_filename(__name__, xml_file)
+        _read_xml_colormap(xml_file, map_name)
 
     # add SciVisColor colormaps from
     # https://sciviscolor.org/home/colormaps/
+    for map_name in ['3wave-yellow-grey-blue', '3Wbgy5',
+                     '4wave-grey-red-green-mgreen', '5wave-yellow-brown-blue',
+                     'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
+                     'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
+                     'green-7', 'green-8', 'orange-5', 'orange-6',
+                     'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
+                     'red-3', 'red-4', 'yellow-1', 'yellow-7']:
 
-    for mapName in ['3wave-yellow-grey-blue', '3Wbgy5',
-                    '4wave-grey-red-green-mgreen', '5wave-yellow-brown-blue',
-                    'blue-1', 'blue-3', 'blue-6', 'blue-8', 'blue-orange-div',
-                    'brown-2', 'brown-5', 'brown-8', 'green-1', 'green-4',
-                    'green-7', 'green-8', 'orange-5', 'orange-6',
-                    'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
-                    'red-3', 'red-4', 'yellow-1', 'yellow-7']:
-
-        xmlFile = pkg_resources.resource_filename(
-            __name__, 'SciVisColorColormaps/{}.xml'.format(mapName))
-        _read_xml_colormap(xmlFile, mapName)
+        xml_file = f'SciVisColorColormaps/{map_name}.xml'
+        xml_file = pkg_resources.resource_filename(__name__, xml_file)
+        _read_xml_colormap(xml_file, map_name)
 
     name = 'white_cmo_deep'
     # modify cmo.deep to start at white
@@ -433,7 +444,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     return (colormap, norm, levels, ticks)
 
 
-def _read_xml_colormap(xmlFile, mapName):
+def _read_xml_colormap(xmlFile, map_name):
     '''Read in an XML colormap'''
 
     xml = ET.parse(xmlFile)
@@ -450,15 +461,15 @@ def _read_xml_colormap(xmlFile, mapName):
             colorDict['red'].append((x, color[0], color[0]))
             colorDict['green'].append((x, color[1], color[1]))
             colorDict['blue'].append((x, color[2], color[2]))
-        cmap = LinearSegmentedColormap(mapName, colorDict, 256)
+        cmap = LinearSegmentedColormap(map_name, colorDict, 256)
 
-        _register_colormap_and_reverse(mapName, cmap)
+        _register_colormap_and_reverse(map_name, cmap)
 
 
-def _register_colormap_and_reverse(mapName, cmap):
-    if mapName not in plt.colormaps():
-        plt.register_cmap(mapName, cmap)
-        plt.register_cmap('{}_r'.format(mapName), cmap.reversed())
+def _register_colormap_and_reverse(map_name, cmap):
+    if map_name not in plt.colormaps():
+        plt.register_cmap(map_name, cmap)
+        plt.register_cmap('{}_r'.format(map_name), cmap.reversed())
 
 
 def _plot_color_gradients():

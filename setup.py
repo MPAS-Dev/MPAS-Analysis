@@ -75,7 +75,7 @@ setup(name='mpas_analysis',
                     'mpas_analysis.shared.html': ['templates/*'],
                     'mpas_analysis.test': ['test*/*', 'test*/*/*'],
                     'mpas_analysis.shared.plot':
-                        ['ScientificColourMaps5/*/*.txt',
+                        ['ScientificColourMaps7/*/*.xml',
                          'SciVisColorColormaps/*.xml']},
       install_requires=install_requires,
       entry_points={'console_scripts':
