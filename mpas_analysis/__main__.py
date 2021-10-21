@@ -43,7 +43,7 @@ from mpas_analysis.shared.analysis_task import AnalysisFormatter
 from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    make_directories
+    make_directories, copyfile
 
 from mpas_analysis.shared.html import generate_html
 
@@ -911,6 +911,15 @@ def main():
         pass
 
     start_time = time.time()
+
+    html_base_directory = build_config_full_path(config, 'output',
+                                                 'htmlSubdirectory')
+    make_directories(html_base_directory)
+    for config_filename in args.config_files:
+        config_filename = os.path.abspath(config_filename)
+        print(f'copying {config_filename} to HTML dir.')
+        basename = os.path.basename(config_filename)
+        copyfile(config_filename, f'{html_base_directory}/{basename}')
 
     analyses = build_analysis_list(config, control_config)
     analyses = determine_analyses_to_generate(analyses, args.verbose)
