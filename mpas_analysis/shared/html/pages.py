@@ -300,10 +300,6 @@ class MainPage(object):
                                                  runName), 'w') as configFile:
             self.config.write(configFile)
 
-        for configFileName in self.customConfigFiles:
-            copyfile(configFileName, '{}/{}'.format(
-                htmlBaseDirectory, os.path.basename(configFileName)))
-
 
 class ComponentPage(object):
     """
