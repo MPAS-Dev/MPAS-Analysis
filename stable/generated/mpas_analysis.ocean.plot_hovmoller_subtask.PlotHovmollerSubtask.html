@@ -1,77 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask &mdash; MPAS-Analysis stable documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html" />
     <link rel="prev" title="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask" href="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> MPAS-Analysis
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 stable
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -151,73 +99,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">MPAS-Analysis</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../api.html">API reference</a> &raquo;</li>
-        
       <li>mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="mpas-analysis-ocean-plot-hovmoller-subtask-plothovmollersubtask">
 <h1>mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask<a class="headerlink" href="#mpas-analysis-ocean-plot-hovmoller-subtask-plothovmollersubtask" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
@@ -228,25 +134,25 @@
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options for a control run (if any)</p></li>
-<li><p><strong>regionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the region to plot</p></li>
-<li><p><strong>inFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The file containing the time-depth data set to plot</p></li>
-<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
-<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
-<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
-<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The units of the plotted field, to be displayed on color bars</p></li>
-<li><p><strong>sectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A section in the config file where the colormap and contour values
+<li><p><strong>regionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the region to plot</p></li>
+<li><p><strong>inFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file containing the time-depth data set to plot</p></li>
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>sectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A section in the config file where the colormap and contour values
 are defined</p></li>
-<li><p><strong>regionMaskFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A geojson file with regions (including one corresponding to
+<li><p><strong>regionMaskFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A geojson file with regions (including one corresponding to
 <code class="docutils literal notranslate"><span class="pre">regionName</span></code>) that will be used to make an inset</p></li>
-<li><p><strong>thumbnailSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The text to be displayed under the thumbnail image, to which the
+<li><p><strong>thumbnailSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text to be displayed under the thumbnail image, to which the
 region name will be prepended</p></li>
-<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The caption when mousing over the plot or displaying it full
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The caption when mousing over the plot or displaying it full
 screen</p></li>
-<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the group of galleries in which this plot belongs</p></li>
-<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The subtitle of the group in which this plot belongs (or blank
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The subtitle of the group in which this plot belongs (or blank
 if none)</p></li>
-<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A short name (with no spaces) for the link to the gallery group</p></li>
-<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the gallery in which this plot belongs</p></li>
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the gallery in which this plot belongs</p></li>
 </ul>
 </dd>
 </dl>
@@ -258,26 +164,26 @@ if none)</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task of which this is a subtask</p></li>
-<li><p><strong>regionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the region to plot</p></li>
-<li><p><strong>inFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The file containing the time-depth data set to plot</p></li>
-<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
-<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
-<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
-<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
-<li><p><strong>sectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – a section in the config file where the colormap and contour values
+<li><p><strong>regionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the region to plot</p></li>
+<li><p><strong>inFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file containing the time-depth data set to plot</p></li>
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>sectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a section in the config file where the colormap and contour values
 are defined</p></li>
-<li><p><strong>thumbnailSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The text to be displayed under the thumbnail image, to which the
+<li><p><strong>thumbnailSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text to be displayed under the thumbnail image, to which the
 region name will be prepended</p></li>
-<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
 screen</p></li>
-<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
-<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
 if none)</p></li>
-<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
-<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask (<code class="docutils literal notranslate"><span class="pre">plotHovmoller&lt;RegionName&gt;</span></code> by default)</p></li>
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask (<code class="docutils literal notranslate"><span class="pre">plotHovmoller&lt;RegionName&gt;</span></code> by default)</p></li>
 <li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – Configuration options for a control run (if any)</p></li>
-<li><p><strong>regionMaskFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – A geojson file with regions (including one corresponding to
+<li><p><strong>regionMaskFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – A geojson file with regions (including one corresponding to
 <code class="docutils literal notranslate"><span class="pre">regionName</span></code>) that will be used to make an inset</p></li>
 </ul>
 </dd>
@@ -291,13 +197,13 @@ if none)</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__" title="mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, regionName, inFileName, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__" title="mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, regionName, inFileName, ...)</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
 <td><p>Add a subtask to this tasks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, …])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, ...])</p></td>
 <td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>()</p></td>
@@ -392,50 +298,33 @@ if none)</p></li>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html" class="btn btn-neutral float-right" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html" class="btn btn-neutral float-right" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
-
-    </p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

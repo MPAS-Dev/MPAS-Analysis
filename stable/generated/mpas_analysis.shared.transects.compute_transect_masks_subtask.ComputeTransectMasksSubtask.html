@@ -1,77 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask &mdash; MPAS-Analysis stable documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Design Documents" href="../design_docs.html" />
     <link rel="prev" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks" href="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> MPAS-Analysis
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 stable
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -133,73 +81,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">MPAS-Analysis</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../api.html">API reference</a> &raquo;</li>
-        
       <li>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="mpas-analysis-shared-transects-compute-transect-masks-subtask-computetransectmaskssubtask">
 <h1>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask<a class="headerlink" href="#mpas-analysis-shared-transects-compute-transect-masks-subtask-computetransectmaskssubtask" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
@@ -212,10 +118,10 @@ features</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>aggregationFunction</strong> (<em>callable</em>) – An aggregation function returned by
 <code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code></p></li>
-<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
+<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
 repository, defining the shapes to be masked</p></li>
-<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
-<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the output mask file</p></li>
+<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
+<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the output mask file</p></li>
 </ul>
 </dd>
 </dl>
@@ -229,9 +135,9 @@ repository, defining the shapes to be masked</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>transectGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of a transect group, see
+<li><p><strong>transectGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of a transect group, see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.transects.get_transect_info()</span></code></p></li>
-<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask, default
+<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask, default
 is as many processes as allowed</p></li>
 </ul>
 </dd>
@@ -245,13 +151,13 @@ is as many processes as allowed</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, transectGroup[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, transectGroup[, ...])</p></td>
 <td><p>Construct the analysis task and adds it as a subtask of the <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
 <td><p>Add a subtask to this tasks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, …])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, ...])</p></td>
 <td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>()</p></td>
@@ -273,7 +179,7 @@ is as many processes as allowed</p></li>
 <td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_transect_mask</span></code>()</p></td>
-<td><p>If the geojson mask file has not already been cached in the diagnostics or custom diagnostic directories, it will be created in the analysis output’s masks directory.</p></td>
+<td><p>If the geojson mask file has not already been cached in the diagnostics or custom diagnostic directories, it will be created in the analysis output's masks directory.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
 <td><p>Sets up logging and then runs the analysis task.</p></td>
@@ -352,50 +258,33 @@ is as many processes as allowed</p></li>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../design_docs.html" class="btn btn-neutral float-right" title="Design Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../design_docs.html" class="btn btn-neutral float-right" title="Design Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
-
-    </p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

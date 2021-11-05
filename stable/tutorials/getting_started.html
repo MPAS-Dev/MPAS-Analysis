@@ -1,77 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Getting Started with MPAS-Analysis &mdash; MPAS-Analysis stable documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Configuration" href="../configuration.html" />
     <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> MPAS-Analysis
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 stable
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
@@ -141,73 +89,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">MPAS-Analysis</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-        
       <li>Getting Started with MPAS-Analysis</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/tutorials/getting_started.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="getting-started-with-mpas-analysis">
 <span id="tutorial-getting-started"></span><h1>Getting Started with MPAS-Analysis<a class="headerlink" href="#getting-started-with-mpas-analysis" title="Permalink to this headline">¶</a></h1>
 <p>This tutorial walks a new user through the basics of using MPAS-Analysis.</p>
@@ -354,20 +260,26 @@ $ <span class="nb">cd</span> ..
 <span class="na">...</span>
 </pre></div>
 </div>
-<p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/config.default">default config file</a> contains over 1,000 config options, which gives a lot
+<p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg">default config file</a> contains over 1,000 config options, which gives a lot
 of flexibility to MPAS-Analysis but can be more than bit overwhelming to new
 users.</p>
 <p>You can modify the default options with one or more custom config files.  We
-provide an <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/config.example">example config file</a> as a starting point. This file contains the
+provide an <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg">example config file</a> as a starting point. This file contains the
 most common config options that a user might want to customize.  The values are
-mostly the same as in the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/config.default">default config file</a>.</p>
+mostly the same as in the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg">default config file</a>.</p>
+<p>If you are on an E3SM supported machine, you can use the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example_e3sm.cfg">E3SM example config file</a> instead.  If you specify the name of the supported machine with the
+<code class="docutils literal notranslate"><span class="pre">--machine</span></code> flag when you call <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code>, there are several config
+options that will be set for you automatically.  E3SM supported machines aren’t
+the primary focus of this tutorial, the following will assume you’re working
+on an unknown machine (or simply not taking advantage of known paths on a
+supported machine).</p>
 <p>First, you should copy this file to a new name for a specific run (say
 <code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code>).  Then, you should modify any config options you want to change
 in your new config file. At a minimum, you need to specify:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[runs]/mainRunName</span></code>:  A name for the run to be included plot titles
 and legends</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[diagnostics]/baseDirectory</span></code>: The base directory for observations,
+<li><p><code class="docutils literal notranslate"><span class="pre">[diagnostics]/base_path</span></code>: The base directory for observations,
 mapping files and region masks</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[input]/baseDirectory</span></code>: The directory for the simulation results
 to analyze</p></li>
@@ -444,10 +356,10 @@ observations in Section 2.</p>
 <span class="c1"># its location).  For other machines, this would be the directory pointed to</span>
 <span class="c1"># when running &quot;download_analysis_data.py&quot; to get the public observations,</span>
 <span class="c1"># mapping files and region files.</span>
-<span class="na">baseDirectory</span> <span class="o">=</span> <span class="s">/path/to/diagnostics</span>
+<span class="na">base_path</span> <span class="o">=</span> <span class="s">/path/to/diagnostics</span>
 </pre></div>
 </div>
-<p>For <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code>, supply the path where you downloaded the data
+<p>For <code class="docutils literal notranslate"><span class="pre">base_path</span></code>, supply the path where you downloaded the data
 <code class="docutils literal notranslate"><span class="pre">&lt;/path/to/mpas_analysis/diagnostics&gt;</span></code>.</p>
 </div>
 <div class="section" id="input">
@@ -505,7 +417,7 @@ and about the output files, respectively.  These are typically also found in
 the <code class="docutils literal notranslate"><span class="pre">run</span></code> directory.</p>
 <p>For the example data, only <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> and <code class="docutils literal notranslate"><span class="pre">mpasMeshName</span></code> need to be
 set, the other options can be left as the defaults from the
-<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/config.example">example config file</a>.</p>
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg">example config file</a>.</p>
 <p>For this tutorial, you just need to set <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> to the place where
 you untarred the simulation results.  The other config options should be as
 they are in the code block above.</p>
@@ -550,7 +462,7 @@ location, and a list of analysis to be generated (or explicitly skipped).</p>
 <span class="c1">#                                   to list all task names and their tags</span>
 <span class="c1"># an equivalent syntax can be used on the command line to override this</span>
 <span class="c1"># option:</span>
-<span class="c1">#    mpas_analysis config.analysis --generate \</span>
+<span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
 <span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
 <span class="na">generate</span> <span class="o">=</span> <span class="s">[&#39;all_publicObs&#39;]</span>
 </pre></div>
@@ -747,50 +659,33 @@ determine the cause of the error.  If not, please include them if you are
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
-
-    </p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

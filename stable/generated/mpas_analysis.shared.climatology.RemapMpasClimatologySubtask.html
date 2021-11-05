@@ -1,77 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask &mdash; MPAS-Analysis stable documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html" />
     <link rel="prev" title="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name" href="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> MPAS-Analysis
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 stable
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -151,73 +99,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">MPAS-Analysis</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../api.html">API reference</a> &raquo;</li>
-        
       <li>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="mpas-analysis-shared-climatology-remapmpasclimatologysubtask">
 <h1>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask<a class="headerlink" href="#mpas-analysis-shared-climatology-remapmpasclimatologysubtask" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
@@ -228,21 +134,21 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
+<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
 the important field(s) in the climatology) used to name the
 subdirectories for each stage of the climatology</p></li>
 <li><p><strong>variableList</strong> (<em>list of str</em>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
 included in the climatologies</p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to extract
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to extract
 a slice of the MPAS field.</p></li>
 <li><p><strong>seasons</strong> (<em>list of str</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 over which the climatology should be computed or [‘none’] if only
 monthly climatologies are needed.</p></li>
 <li><p><strong>comparisonDescriptors</strong> (dict of <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code>) – Descriptors of the comparison grids to use for remapping, with
 grid names as the keys.</p></li>
-<li><p><strong>restartFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">comparisonGridName</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the name of a restart
+<li><p><strong>restartFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">comparisonGridName</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the name of a restart
 file from which the MPAS mesh can be read.</p></li>
-<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
+<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
 an internal python code that handles more grid types and extra
 dimensions)</p></li>
 <li><p><strong>op</strong> (<em>{'avg'</em><em>, </em><em>'min'</em><em>, </em><em>'max'}</em>) – operator for monthly stats</p></li>
@@ -260,7 +166,7 @@ dimensions)</p></li>
 <li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped</p></li>
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
+<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
 the important field(s) in the climatology) used to name the
 subdirectories for each stage of the climatology</p></li>
 <li><p><strong>variableList</strong> (<em>list of str</em>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
@@ -272,10 +178,10 @@ climatologies are needed.</p></li>
 The name(s) of the comparison grid to use for remapping.  If none
 is supplied, <cite>add_comparison_descriptor()</cite> must be called to add
 one or more comparison grids.</p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to
 extract a slice of the MPAS field(s).</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
-<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
+<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
 an internal python code that handles more grid types and extra
 dimensions).  This defaults to the config option <code class="docutils literal notranslate"><span class="pre">useNcremap</span></code>
 if it is not explicitly given.  If a comparison grid other than
@@ -293,16 +199,16 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.__init__" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(mpasClimatologyTask, parentTask, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.__init__" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(mpasClimatologyTask, parentTask, ...)</p></td>
 <td><p>Construct the analysis task and adds it as a subtask of the <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_comparison_grid_descriptor</span></code>(…)</p></td>
-<td><p>Add a custom grid descriptor (something other than ‘latlon’ or ‘antarctic’ or ‘arctic’).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_comparison_grid_descriptor</span></code>(...)</p></td>
+<td><p>Add a custom grid descriptor (something other than 'latlon' or 'antarctic' or 'arctic').</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
 <td><p>Add a subtask to this tasks.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, …])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, ...])</p></td>
 <td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>()</p></td>
@@ -314,13 +220,13 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">customize_masked_climatology</span></code>(climatology, season)</p></td>
 <td><p>Override this function to customize the climatology during the masking phase (before remapping)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">customize_remapped_climatology</span></code>(climatology, …)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">customize_remapped_climatology</span></code>(climatology, ...)</p></td>
 <td><p>Override this function to customize the climatology after remapping</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masked_file_name</span></code></a>(season)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_file_name</span></code></a>(season, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_file_name</span></code></a>(season, ...)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
@@ -409,50 +315,33 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
-
-    </p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
