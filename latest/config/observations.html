@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocean, Sea Ice and Iceberg Observations &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -111,7 +110,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ocean-sea-ice-and-iceberg-observations">
+  <div class="section" id="ocean-sea-ice-and-iceberg-observations">
 <span id="config-observations"></span><h1>Ocean, Sea Ice and Iceberg Observations<a class="headerlink" href="#ocean-sea-ice-and-iceberg-observations" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[oceanObservations]</span></code>, <code class="docutils literal notranslate"><span class="pre">[seaIceObservations]</span></code> and
 <code class="docutils literal notranslate"><span class="pre">[icebergObservations]</span></code> sections of a configuration file contain options used
@@ -178,7 +177,7 @@ to point to the observations files and folders:</p>
 <span class="n">concentrationAltibergSH</span> <span class="o">=</span> <span class="n">Altiberg</span><span class="o">/</span><span class="n">Altiberg_1991</span><span class="o">-</span><span class="mf">2017_20180308.</span><span class="n">nc</span>
 </pre></div>
 </div>
-<section id="files-and-directories">
+<div class="section" id="files-and-directories">
 <h2>Files and Directories<a class="headerlink" href="#files-and-directories" title="Permalink to this headline">¶</a></h2>
 <p>The input directories are specified through a “base” subdirectory
 <code class="docutils literal notranslate"><span class="pre">obsSubdirectory</span></code> and either subdirectories or file names for each set of
@@ -191,8 +190,8 @@ of these paths, since they are structured in a standard way following the
 (specified in <code class="docutils literal notranslate"><span class="pre">climatologySubdirectory</span></code> and <code class="docutils literal notranslate"><span class="pre">remappedClimSubdirectory</span></code>)
 may be given any relative or absoltue path, but should typically be left as the
 default values.</p>
-</section>
-<section id="remapping">
+</div>
+<div class="section" id="remapping">
 <h2>Remapping<a class="headerlink" href="#remapping" title="Permalink to this headline">¶</a></h2>
 <p>Observational climatologies are remapped from the native grid (typically
 global latitude/longitude or Antarctic stereographic) to common
@@ -203,8 +202,8 @@ is <code class="docutils literal notranslate"><span class="pre">bilinear</span><
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a>.  The <code class="docutils literal notranslate"><span class="pre">conseve</span></code> method is know to be <em>much</em>
 slower to compute and should only be used if it is necessary (e.g. because
 remapped data will be checked for conservation).</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
