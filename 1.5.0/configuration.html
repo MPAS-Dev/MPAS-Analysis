@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; MPAS-Analysis 1.5.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Runs" href="config/runs.html" />
+    <link rel="prev" title="Getting Started with MPAS-Analysis" href="tutorials/getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config/runs.html">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config/transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<p>MPAS-Analysis is controlled through configuration files, which are customized
+to point to different simulation results and to control how the output is
+computed and displayed.  Several groups of configuration options are found
+across a number of analysis tasks.</p>
+<p>Examples of configuration files for various E3SM supported machines can be
+found in the <code class="docutils literal notranslate"><span class="pre">configs/</span></code> folder or can be browsed on <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs">GitHub</a>.  The files
+<code class="docutils literal notranslate"><span class="pre">example.cfg</span></code> and <code class="docutils literal notranslate"><span class="pre">example_e3sm.cfg</span></code> provide a list of the default values
+for the configuration options that are most commonly modified on unknown and
+E3SM-supported machines, repsectively.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="config/runs.html">Runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/execute.html">Execute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/input.html">Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/climatology.html">Climatology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/timeSeries.html">Time Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/regions.html">Regions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/plot.html">Plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/html.html">HTML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/colormaps.html">Colormaps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/seasons.html">Seasons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/moving_average.html">Moving Average</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/transects.html">Output Grids for Transects</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorials/getting_started.html" class="btn btn-neutral float-left" title="Getting Started with MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config/runs.html" class="btn btn-neutral float-right" title="Runs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soseTransects &mdash; MPAS-Analysis 1.5.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="geojsonTransects" href="geojsonTransects.html" />
+    <link rel="prev" title="woceTransects" href="woceTransects.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.5.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">soseTransects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../analysis_tasks.html">Analysis Tasks</a> &raquo;</li>
+      <li>soseTransects</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tasks/soseTransects.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="sosetransects">
+<span id="task-sosetransects"></span><h1>soseTransects<a class="headerlink" href="#sosetransects" title="Permalink to this headline">¶</a></h1>
+<p>An analysis task for computing meridional transects of MPAS fields at evenly
+spaced latitudes around Antarctica and comparing them with results from the
+<a class="reference external" href="http://sose.ucsd.edu/sose_stateestimation_data_05to10.html">Southern Ocean State Estimate (SOSE)</a>.</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">sose</span><span class="p">,</span> <span class="n">publicObs</span>
+</pre></div>
+</div>
+<div class="section" id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">soseTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting model vs. Southern Ocean State Estimate (SOSE)</span>
+<span class="c1">## transects.</span>
+
+<span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
+<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+
+<span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
+<span class="c1"># longitude between observation points will be subsampled at this interval.</span>
+<span class="c1"># Use &#39;obs&#39; to indicate no subsampling.</span>
+<span class="c1"># horizontalResolution = obs</span>
+<span class="n">horizontalResolution</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
+<span class="c1"># MPAS vertical grid, &#39;obs&#39; to use the locations of observations or</span>
+<span class="c1"># any other name if the vertical grid is defined by &#39;verticalComparisonGrid&#39;</span>
+<span class="c1"># verticalComparisonGridName = mpas</span>
+<span class="c1"># verticalComparisonGridName = obs</span>
+<span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
+
+<span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39; or</span>
+<span class="c1"># &#39;obs&#39;.  This should be numpy array of (typically negative) elevations (in m).</span>
+<span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+<span class="c1"># The minimum weight of a destination cell after remapping. Any cell with</span>
+<span class="c1"># weights lower than this threshold will therefore be masked out.</span>
+<span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="c1"># min and max latitude of transects</span>
+<span class="n">minLat</span> <span class="o">=</span> <span class="o">-</span><span class="mi">80</span>
+<span class="n">maxLat</span> <span class="o">=</span> <span class="o">-</span><span class="mi">60</span>
+
+<span class="c1"># longitudes of transects</span>
+<span class="n">longitudes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">330</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># a list of fields top plot for each transect.  All supported fields are listed</span>
+<span class="c1"># below.  Note that &#39;velocityMagnitude&#39; cannot be plotted without</span>
+<span class="c1"># &#39;zonalVelocity&#39; and &#39;meridionalVelocity&#39; because the components are needed</span>
+<span class="c1"># to compute the magnitude.</span>
+<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span> <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;velocityMagnitude&#39;</span><span class="p">]</span>
+
+
+<span class="p">[</span><span class="n">soseTemperatureTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting SOSE transects of potential temperature</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsResult = [0, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(0.0, 6.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+
+
+<span class="p">[</span><span class="n">soseSalinityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting SOSE transects of salinity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">haline</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">34.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">35.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsResult = [34, 34.3, 34.5, 34.65, 34.675, 34.7, 34.725, 34.75, 34.8, 35]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(34.0, 35.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">34.1</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsDifference = [-0.5, -0.2, -0.1, -0.05, -0.02, 0,  0.02, 0.05, 0.1, 0.2, 0.5]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+
+<span class="p">[</span><span class="n">sosePotentialDensityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting SOSE transects of potential density</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">Spectral_r</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(1026., 1028., 9)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1026.5</span><span class="p">,</span> <span class="mf">1028.</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+
+<span class="p">[</span><span class="n">soseZonalVelocityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting SOSE transects of zonal velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+
+<span class="p">[</span><span class="n">soseMeridionalVelocityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting SOSE transects of meridional velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+
+<span class="p">[</span><span class="n">soseVelocityMagnitudeTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting SOSE transects of velocity magnitude</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">ice</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(0, 0.2, 9)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The options <code class="docutils literal notranslate"><span class="pre">minLat</span></code> and <code class="docutils literal notranslate"><span class="pre">maxLat</span></code> determine the start and end of each
+meridional transect (in degrees).  The option <code class="docutils literal notranslate"><span class="pre">longitudes</span></code> is a list or
+numpy array of longitudes for each transect, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">longitudes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">330</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>produces 12 transects spaced every 30°.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SOSE’s domain extends only to 25°S, so <code class="docutils literal notranslate"><span class="pre">maxLat</span></code> should typically be
+less than -25.</p>
+</div>
+<p>The user can select only to plot a subset of the supported fields by adding
+only the desired field names to <code class="docutils literal notranslate"><span class="pre">fieldList</span></code>.  The default value shows the
+list of all available fields.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because <code class="docutils literal notranslate"><span class="pre">velocityMagnitude</span></code> is computed internally rather than being stored
+as a separate field with the other SOSE output, it is not possible to plot
+<code class="docutils literal notranslate"><span class="pre">velocityMagnitude</span></code> without also plotting <code class="docutils literal notranslate"><span class="pre">zonalVelocity</span></code> and
+<code class="docutils literal notranslate"><span class="pre">meridionalVelocity</span></code>.</p>
+</div>
+<p>Ater the <code class="docutils literal notranslate"><span class="pre">soseTransects</span></code> section, there is a section for each supported field
+specifying the information related to the colormap.</p>
+<dl class="simple">
+<dt>For details on remaining configuration options, see:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="../config/transects.html#config-transects"><span class="std std-ref">Output Grids for Transects</span></a></p></li>
+<li><p><a class="reference internal" href="../config/climatology.html#config-remapping"><span class="std std-ref">Remapping Options</span></a></p></li>
+<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
+<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../obs/sose.html#sose"><span class="std std-ref">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</span></a></p>
+</div>
+<div class="section" id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/sose_transect.png"><img alt="../_images/sose_transect.png" class="align-center" src="../_images/sose_transect.png" style="width: 500px;" /></a>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="woceTransects.html" class="btn btn-neutral float-left" title="woceTransects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="geojsonTransects.html" class="btn btn-neutral float-right" title="geojsonTransects" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
