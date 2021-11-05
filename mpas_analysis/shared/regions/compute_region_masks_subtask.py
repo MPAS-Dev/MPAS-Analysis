@@ -82,12 +82,11 @@ def compute_lon_lat_region_masks(gridFileName, lonVar, latVar, geojsonFileName,
         return
 
     args = ['compute_lon_lat_region_masks',
-            '-m', gridFileName,
+            '-i', gridFileName,
             '--lon', lonVar,
             '--lat', latVar,
             '-g', geojsonFileName,
             '-o', maskFileName,
-            '-t', 'cell',
             '--chunk_size', '{}'.format(chunkSize),
             '--process_count', '{}'.format(processCount),
             '--multiprocessing_method', '{}'.format(multiprocessingMethod)]

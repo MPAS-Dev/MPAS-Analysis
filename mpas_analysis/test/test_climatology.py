@@ -55,7 +55,7 @@ class TestClimatology(TestCase):
         config.set('execute', 'mapParallelExec', 'None')
 
         config.add_section('diagnostics')
-        config.set('diagnostics', 'baseDirectory', self.test_dir)
+        config.set('diagnostics', 'base_path', self.test_dir)
         config.set('diagnostics', 'customDirectory', 'none')
         config.set('diagnostics', 'mappingSubdirectory', 'maps')
 

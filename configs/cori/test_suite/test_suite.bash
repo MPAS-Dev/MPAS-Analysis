@@ -14,16 +14,16 @@ conda activate base
 
 branch=$(git symbolic-ref --short HEAD)
 
-conda update -y conda conda-build
+conda update -y conda conda-build mamba boa
 rm -rf ${HOME}/miniconda3/conda-bld
-conda build ci/recipe
+conda mambabuild ci/recipe
 
 # create the test conda envs
 for py in ${main_py} ${alt_py}
 do
     env=test_mpas_analysis_py${py}
     conda remove -y --all -n ${env}
-    conda create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
+    mamba create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
         mock sphinx_rtd_theme "tabulate>=0.8.2" m2r pytest
     conda activate ${env}
     pytest
@@ -33,7 +33,7 @@ done
 # create another env for testing xarray master branch
 py=${main_py}
 env=test_mpas_analysis_xarray_master
-conda create --yes --quiet --name ${env} --use-local python=${py} \
+mamba create --yes --quiet --name ${env} --use-local python=${py} \
     mpas-analysis pytest
 conda activate ${env}
 pip install git+https://github.com/pydata/xarray.git

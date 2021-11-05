@@ -293,8 +293,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
             mpasTimeSeriesTask.runStreams.readpath('restart')[0]
 
         dsRestart = xarray.open_dataset(restartFileName)
-        areaCell = \
-            dsRestart.landIceFraction.isel(Time=0) * dsRestart.areaCell
+        landIceFraction = dsRestart.landIceFraction.isel(Time=0)
+        areaCell = dsRestart.areaCell
 
         regionMaskFileName = self.masksSubtask.maskFileName
 
@@ -336,7 +336,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
                 totalMeltFlux = constants.sec_per_year * \
                     (cellMask * areaCell * freshwaterFlux).sum(dim='nCells')
 
-                totalArea = (cellMask * areaCell).sum(dim='nCells')
+                totalArea = \
+                    (landIceFraction * cellMask * areaCell).sum(dim='nCells')
 
                 # from kg/m^2/yr to m/yr
                 meltRates[regionIndex] = ((1. / constants.rho_fw) *

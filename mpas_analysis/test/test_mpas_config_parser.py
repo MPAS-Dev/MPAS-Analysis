@@ -29,7 +29,7 @@ from mpas_analysis.test import requires_numpy
 @pytest.mark.usefixtures("loaddatadir")
 class TestMPASAnalysisConfigParser(TestCase):
     def setup_config(self):
-        configPath = self.datadir.join('config.analysis')
+        configPath = self.datadir.join('analysis.cfg')
         self.config = MpasAnalysisConfigParser()
         self.config.read(str(configPath))
 
