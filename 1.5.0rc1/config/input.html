@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Input &mdash; MPAS-Analysis 1.5.0rc1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -115,7 +114,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="input">
+  <div class="section" id="input">
 <span id="config-input"></span><h1>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[input]</span></code> section of a configuration file contains options used to
 specify the location of the “main” simulation and some settings for how
@@ -162,7 +161,7 @@ these data will be read in:</p>
 <span class="n">errorOnMissing</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
-<section id="input-directories">
+<div class="section" id="input-directories">
 <h2>Input Directories<a class="headerlink" href="#input-directories" title="Permalink to this headline">¶</a></h2>
 <p>The input directories are specified through a base directory and optionally
 separate subdirectories for the run (continaing namelist, streams and and one
@@ -181,8 +180,8 @@ configuration should be:</p>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">/dir/for/model/output</span></code> is replaced with the directory containing
 the <code class="docutils literal notranslate"><span class="pre">run</span></code> and <code class="docutils literal notranslate"><span class="pre">archive</span></code> directories.</p>
-</section>
-<section id="namelist-files">
+</div>
+<div class="section" id="namelist-files">
 <h2>Namelist Files<a class="headerlink" href="#namelist-files" title="Permalink to this headline">¶</a></h2>
 <p>MPAS components are configured with a namelist file containing a very large
 number of parameters and other configuration settings.  Part of the strength
@@ -206,8 +205,8 @@ instead be specified as:</p>
 <span class="n">seaIceNamelistFileName</span> <span class="o">=</span> <span class="n">run</span><span class="o">/</span><span class="n">mpassi_in</span>
 </pre></div>
 </div>
-</section>
-<section id="streams-files">
+</div>
+<div class="section" id="streams-files">
 <h2>Streams Files<a class="headerlink" href="#streams-files" title="Permalink to this headline">¶</a></h2>
 <p>Streams files are used to configure input and output from MPAS components.
 MPAS-Analysis can parse these files to determine the locations of output files
@@ -228,8 +227,8 @@ short-term archiving:</p>
 <span class="n">seaIceStreamsFileName</span> <span class="o">=</span> <span class="n">run</span><span class="o">/</span><span class="n">streams</span><span class="o">.</span><span class="n">seaice</span>
 </pre></div>
 </div>
-</section>
-<section id="mesh-name">
+</div>
+<div class="section" id="mesh-name">
 <h2>Mesh Name<a class="headerlink" href="#mesh-name" title="Permalink to this headline">¶</a></h2>
 <p>The MPAS-Ocean and MPAS-Seaice run on the same mesh.  There are a number of
 standard E3SM ocean/sea ice meshes at various resolutions.  The meshes
@@ -248,8 +247,8 @@ resolution at the equator.</p></li>
 (see <a class="reference internal" href="regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a>) are provided from the
 <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a> for these meshes.  For assistance with other
 mesh resolutions, please contact the MPAS-Analysis developers.</p>
-</section>
-<section id="xarray-and-dask">
+</div>
+<div class="section" id="xarray-and-dask">
 <h2>Xarray and Dask<a class="headerlink" href="#xarray-and-dask" title="Permalink to this headline">¶</a></h2>
 <p>MPAS-Analysis makes extensive use of the <a class="reference external" href="https://xarray.pydata.org/en/stable/">xarray package</a>, which uses the
 <a class="reference external" href="https://dask.pydata.org/en/latest/">dask package</a> internally to perform operations that are too large to fit
@@ -266,16 +265,16 @@ clearly related to dask (which might be the case, for example, if the error
 occrus in the <code class="docutils literal notranslate"><span class="pre">streamfunctionMOC</span></code> task), you may wish to reduce the
 <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>.  This will make tasks using dask slower but will reduce their
 memory usage.</p>
-</section>
-<section id="errors-on-missing-data">
+</div>
+<div class="section" id="errors-on-missing-data">
 <h2>Errors on Missing Data<a class="headerlink" href="#errors-on-missing-data" title="Permalink to this headline">¶</a></h2>
 <p>if <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">False</span></code>, the time ranges (<code class="docutils literal notranslate"><span class="pre">startYear</span></code> and <code class="docutils literal notranslate"><span class="pre">endYear</span></code>)
 in <code class="docutils literal notranslate"><span class="pre">climatology</span></code>, <code class="docutils literal notranslate"><span class="pre">timeSeries</span></code>, and <code class="docutils literal notranslate"><span class="pre">index</span></code> will be clipped to the range
 of the available data.  If this option is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, an error will be
 produced.  A value of <code class="docutils literal notranslate"><span class="pre">end</span></code> can be used for <code class="docutils literal notranslate"><span class="pre">endYear</span></code> to indicate that the
 full range of the available data should be used.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

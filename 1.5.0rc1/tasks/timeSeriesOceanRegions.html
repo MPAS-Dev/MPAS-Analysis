@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>timeSeriesOceanRegions &mdash; MPAS-Analysis 1.5.0rc1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -133,7 +132,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="timeseriesoceanregions">
+  <div class="section" id="timeseriesoceanregions">
 <span id="task-timeseriesoceanregions"></span><h1>timeSeriesOceanRegions<a class="headerlink" href="#timeseriesoceanregions" title="Permalink to this headline">¶</a></h1>
 <p>An analysis task for plotting time series of of temperature, salinity,
 potential density and other fields of interest averaged over ocean regions.</p>
@@ -142,7 +141,7 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <span class="n">tags</span><span class="p">:</span> <span class="n">timeSeries</span><span class="p">,</span> <span class="n">regions</span>
 </pre></div>
 </div>
-<section id="configuration-options">
+<div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span>
@@ -188,8 +187,8 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <span class="na">obs</span> <span class="o">=</span> <span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span>
 </pre></div>
 </div>
-</section>
-<section id="region-groups">
+</div>
+<div class="section" id="region-groups">
 <h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">regionGroup</span></code> is a list of region groups,each of which will get its own
 gallery group on the resulting analysis webpage.  See
@@ -198,8 +197,8 @@ groups. For each region group, there should be a corresponding
 <code class="docutils literal notranslate"><span class="pre">timeSeries&lt;RegionGroup&gt;</span></code> section of the config file, with any spaces removed
 from the name of the region group.  By default, the only region group for this
 task is <code class="docutils literal notranslate"><span class="pre">'Antarctic</span> <span class="pre">Regions'</span></code>.</p>
-</section>
-<section id="region-names">
+</div>
+<div class="section" id="region-names">
 <h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the regions in the
 region group.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these are:</p>
@@ -212,8 +211,8 @@ region group.  In the case of <code class="docutils literal notranslate"><span c
  <span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
 </pre></div>
 </div>
-</section>
-<section id="variables">
+</div>
+<div class="section" id="variables">
 <h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">variables</span></code> list has a python dictionary for each variable to be plotted.
 A separate gallery will be produced for each variable with a title given by
@@ -222,8 +221,8 @@ y-axis label of each plot.  The <code class="docutils literal notranslate"><span
 the NetCDF files as well as the text appended to subtaks names and file names.
 It should contain no spaces.  The <code class="docutils literal notranslate"><span class="pre">&quot;mpas&quot;</span></code> entry is the name of the
 corresponding field in the MPAS-Ocean <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code> files.</p>
-</section>
-<section id="depth-bounds">
+</div>
+<div class="section" id="depth-bounds">
 <h2>Depth Bounds<a class="headerlink" href="#depth-bounds" title="Permalink to this headline">¶</a></h2>
 <p>Some region groups such as <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code> define default depth bounds
 (<code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>) for each region.  For <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, this was
@@ -233,8 +232,8 @@ of the deeper ocean (ending in “Deep”, with <code class="docutils literal no
 <code class="docutils literal notranslate"><span class="pre">zmin</span></code> = -1000 m).  The user can override these defaults by defining her own
 <code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>.  Note that <code class="docutils literal notranslate"><span class="pre">zmin</span></code> is deeper and <code class="docutils literal notranslate"><span class="pre">zmax</span></code> is shallower
 since they have negative values.</p>
-</section>
-<section id="other-config-options">
+</div>
+<div class="section" id="other-config-options">
 <h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>For more details, see:</dt><dd><ul class="simple">
@@ -242,20 +241,20 @@ since they have negative values.</p>
 </ul>
 </dd>
 </dl>
-</section>
-<section id="observations">
+</div>
+<div class="section" id="observations">
 <h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">obs</span></code> is a list of the observational data sets to plot as reference lines
 (constant in time).  Possible values are <code class="docutils literal notranslate"><span class="pre">'SOSE'</span></code> and <code class="docutils literal notranslate"><span class="pre">'WOA18'</span></code>.  An empty
 list can be provided if no observations should be plotted.</p>
 <p><a class="reference internal" href="../obs/sose.html#sose"><span class="std std-ref">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</span></a></p>
 <p><a class="reference internal" href="../obs/woa18_t_s.html#woa18-t-s"><span class="std std-ref">WOA18 Temperature and Salinity Climatology</span></a></p>
-</section>
-<section id="example-result">
+</div>
+<div class="section" id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/west_ross_shelf_temp.png"><img alt="../_images/west_ross_shelf_temp.png" class="align-center" src="../_images/west_ross_shelf_temp.png" style="width: 500px;" /></a>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

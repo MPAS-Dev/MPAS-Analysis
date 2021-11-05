@@ -50,7 +50,7 @@ specify the location of the "main" simulation::
   #                                   to list all task names and their tags
   # an equivalent syntax can be used on the command line to override this
   # option:
-  #    mpas_analysis analysis.cfg --generate \
+  #    mpas_analysis config.analysis --generate \
   #         only_ocean,no_timeSeries,timeSeriesSST
   generate = ['all_publicObs']
 

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diagnostics &mdash; MPAS-Analysis 1.5.0rc1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -111,7 +110,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="diagnostics">
+  <div class="section" id="diagnostics">
 <span id="config-diagnostics"></span><h1>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section of a configuration file contains options related
 to paths containing observations, region-mask files and mapping files used to
@@ -143,7 +142,7 @@ interpolate MPAS data and observations to common reference grids:</p>
 <span class="n">regionMaskSubdirectory</span> <span class="o">=</span> <span class="n">mpas_analysis</span><span class="o">/</span><span class="n">region_masks</span>
 </pre></div>
 </div>
-<section id="diagnostics-directories">
+<div class="section" id="diagnostics-directories">
 <h2>Diagnostics Directories<a class="headerlink" href="#diagnostics-directories" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is the location where files were downloaded with the
 <code class="docutils literal notranslate"><span class="pre">download_analysis_data.py</span></code>.  If the user is on an E3SM supported machine,
@@ -158,8 +157,8 @@ below) and region masks (see <a class="reference internal" href="colormaps.html#
 Typically, there is no reason to change <code class="docutils literal notranslate"><span class="pre">mappingSubdirectory</span></code> or
 <code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code>, as these are the standard subdirectories created
 when these files are downloaded from the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a>.</p>
-</section>
-<section id="mapping-files">
+</div>
+<div class="section" id="mapping-files">
 <span id="config-mapping-files"></span><h2>Mapping Files<a class="headerlink" href="#mapping-files" title="Permalink to this headline">¶</a></h2>
 <p>Mapping files are used in many MPAS-Analysis tasks to remap from either the
 native MPAS mesh or an observations grid to a comparison grid (see
@@ -175,8 +174,8 @@ on downloading this data.)</p>
 time you run, you may wish to copy them from the mapping files output
 directory (the subdirectory <code class="docutils literal notranslate"><span class="pre">mapping/</span></code> inside the output base directory) to
 your mapping files cache directory.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

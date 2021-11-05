@@ -166,11 +166,12 @@
         <span class="k">return</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;compute_lon_lat_region_masks&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">gridFileName</span><span class="p">,</span>
+            <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">gridFileName</span><span class="p">,</span>
             <span class="s1">&#39;--lon&#39;</span><span class="p">,</span> <span class="n">lonVar</span><span class="p">,</span>
             <span class="s1">&#39;--lat&#39;</span><span class="p">,</span> <span class="n">latVar</span><span class="p">,</span>
             <span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">geojsonFileName</span><span class="p">,</span>
             <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">maskFileName</span><span class="p">,</span>
+            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
             <span class="s1">&#39;--chunk_size&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunkSize</span><span class="p">),</span>
             <span class="s1">&#39;--process_count&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">processCount</span><span class="p">),</span>
             <span class="s1">&#39;--multiprocessing_method&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">multiprocessingMethod</span><span class="p">)]</span>

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Time Series &mdash; MPAS-Analysis 1.5.0rc1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -111,7 +110,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="time-series">
+  <div class="section" id="time-series">
 <span id="config-time-series"></span><h1>Time Series<a class="headerlink" href="#time-series" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[timeSeries]</span></code> section of a configuration file contains options used to
 determine the start and end years of time series plots and the reference years
@@ -135,15 +134,15 @@ for anomalies:</p>
 <span class="n">endYear</span> <span class="o">=</span> <span class="n">end</span>
 </pre></div>
 </div>
-<section id="start-and-end-year">
+<div class="section" id="start-and-end-year">
 <h2>Start and End Year<a class="headerlink" href="#start-and-end-year" title="Permalink to this headline">¶</a></h2>
 <p>A custom config file should specify a start and end year for time series.
 If <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">False</span></code> in the <code class="docutils literal notranslate"><span class="pre">input</span></code> section and the start or end
 year is beyond the range of the simulation, the range will be reduced to those
 dates with available data and a warning message will be displayed.  If
 <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">True</span></code>, out of range year will produce an error.</p>
-</section>
-<section id="anomaly-reference-year">
+</div>
+<div class="section" id="anomaly-reference-year">
 <h2>Anomaly Reference Year<a class="headerlink" href="#anomaly-reference-year" title="Permalink to this headline">¶</a></h2>
 <p>Anomalies between a moving average of a time series and the average over a
 reference year are used in several analysis tasks.  By default, the reference
@@ -155,8 +154,8 @@ specify a different year to use for computing anomalies:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anomalyRefYear</span> <span class="o">=</span> <span class="mi">249</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
