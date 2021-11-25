@@ -5,42 +5,6 @@
 # mainRunName is a name that identifies the simulation being analyzed.
 mainRunName = 20180514.G.oQU240wLI.edison
 
-# config file for a control run to which this run will be compared.  The
-# analysis should have already been run to completion once with this config
-# file, so that the relevant MPAS climatologies already exist and have been
-# remapped to the comparison grid.  Leave this option commented out if no
-# control run is desired.
-# controlRunConfigFile = /path/to/config/file
-
-# config file for a main run on which the analysis was already run to
-# completion.  The relevant MPAS climatologies already exist and have been
-# remapped to the comparison grid and time series have been extracted.
-# Leave this option commented out if the analysis for the main run should be
-# performed.
-# mainRunConfigFile = /path/to/config/file
-
-[execute]
-## options related to executing parallel tasks
-
-# the number of parallel tasks (1 means tasks run in serial, the default)
-parallelTaskCount = 8
-
-# the parallelism mode in ncclimo ("serial" or "bck")
-# Set this to "bck" (background parallelism) if running on a machine that can
-# handle 12 simultaneous processes, one for each monthly climatology.
-ncclimoParallelMode = bck
-
-[diagnostics]
-## config options related to observations, mapping files and region files used
-## by MPAS-Analysis in diagnostics computations.
-
-# The base path to the diagnostics directory.  Typically, this will be a shared
-# directory on each E3SM supported machine (see the example config files for
-# its location).  For other machines, this would be the directory pointed to
-# when running "download_analysis_data.py" to get the public observations,
-# mapping files and region files.
-baseDirectory = /global/cfs/cdirs/e3sm/diagnostics
-
 [input]
 ## options related to reading in the results to be analyzed
 
@@ -77,31 +41,7 @@ baseDirectory = /dir/to/analysis/output
 # htmlSubdirectory = /global/cfs/cdirs/e3sm/www/USERNAME/RUNNAME
 htmlSubdirectory = html
 
-# a list of analyses to generate.  Valid names can be seen by running:
-#   mpas_analysis --list
-# This command also lists tags for each analysis.
-# Shortcuts exist to generate (or not generate) several types of analysis.
-# These include:
-#   'all' -- all analyses will be run
-#   'all_<tag>' -- all analysis with a particular tag will be run
-#   'all_<component>' -- all analyses from a given component (either 'ocean'
-#                        or 'seaIce') will be run
-#   'only_<component>', 'only_<tag>' -- all analysis from this component or
-#                                       with this tag will be run, and all
-#                                       analysis for other components or
-#                                       without the tag will be skipped
-#   'no_<task_name>' -- skip the given task
-#   'no_<component>', 'no_<tag>' -- in analogy to 'all_*', skip all analysis
-#                                   tasks from the given compoonent or with
-#                                   the given tag.  Do
-#                                      mpas_analysis --list
-#                                   to list all task names and their tags
-# an equivalent syntax can be used on the command line to override this
-# option:
-#    mpas_analysis config.analysis --generate \
-#         all,no_ocean,all_timeSeries
-# All tasks with tag "landIceCavities" are disabled because this run did not
-# include land-ice cavities.
+# a list of analyses to generate.
 generate = ['all_woce']
 
 [climatology]
