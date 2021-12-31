@@ -19,6 +19,7 @@ from distutils.spawn import find_executable
 import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
+import glob
 
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
@@ -501,20 +502,24 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         if len(seasons) == 0:
             seasons = ['none']
 
+        workDir = os.getcwd()
+        os.chdir(inDirectory)
+
+        inFiles = sorted(glob.glob(f'{self.ncclimoModel}*'))
+
         args = ['ncclimo',
                 '--no_stdin',
                 '-4',
                 '--clm_md=mth',
                 '-a', 'sdd',
-                '-m', self.ncclimoModel,
+                '-P', self.ncclimoModel,
                 '-p', parallelMode,
                 '-j', '{}'.format(self.subprocessCount),
                 '-v', ','.join(variableList),
                 '--seasons={}'.format(','.join(seasons)),
                 '-s', '{:04d}'.format(self.startYear),
                 '-e', '{:04d}'.format(self.endYear),
-                '-i', inDirectory,
-                '-o', outDirectory]
+                '-o', outDirectory] + inFiles
 
         if remapper is not None:
             args.extend(['-r', remapper.mappingFileName])
@@ -546,6 +551,8 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         if process.returncode != 0:
             raise subprocess.CalledProcessError(process.returncode,
                                                 ' '.join(args))
+
+        os.chdir(workDir)
 
         # }}}
     # }}}
