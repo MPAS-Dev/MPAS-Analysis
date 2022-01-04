@@ -30,7 +30,7 @@ used those components.
 
 [https://mpas-dev.github.io/MPAS-Analysis/stable/](https://mpas-dev.github.io/MPAS-Analysis/stable/)
 
-## Installation
+## Installation for users
 
 MPAS-Analysis is available as an anaconda package via the `conda-forge` channel:
 
@@ -39,6 +39,8 @@ conda config --add channels conda-forge
 conda create -n mpas-analysis mpas-analysis
 conda activate mpas-analysis
 ```
+
+## Installation for developers
 
 To use the latest version for developers, get the code from:
  [https://github.com/MPAS-Dev/MPAS-Analysis](https://github.com/MPAS-Dev/MPAS-Analysis)
