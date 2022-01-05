@@ -77,6 +77,8 @@ class WoceTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = config.getExpression(
                 sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
+        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+
         horizontalBounds = config.getExpression(
             sectionName, 'horizontalBounds')
 
@@ -115,7 +117,7 @@ class WoceTransects(AnalysisTask):  # {{{
                  'units': r'kg m$^{-3}$'}}
 
         transectCollectionName = 'WOCE_transects'
-        if horizontalResolution != 'obs':
+        if horizontalResolution not in ['obs', 'mpas']:
             transectCollectionName = '{}_{}km'.format(transectCollectionName,
                                                       horizontalResolution)
 
@@ -187,7 +189,8 @@ class WoceTransects(AnalysisTask):  # {{{
                         groupLink='woce',
                         galleryName=titleName,
                         configSectionName='woce{}Transects'.format(
-                            fieldNameUpper))
+                            fieldNameUpper),
+                        verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
         # }}}

@@ -86,6 +86,8 @@ class SoseTransects(AnalysisTask):  # {{{
             verticalComparisonGrid = config.getExpression(
                 sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
 
+        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+
         longitudes = sorted(config.getExpression(sectionName, 'longitudes',
                                                  usenumpyfunc=True))
 
@@ -134,7 +136,7 @@ class SoseTransects(AnalysisTask):  # {{{
                         if field['mpas'] != 'velMag']
 
         transectCollectionName = 'SOSE_transects'
-        if horizontalResolution != 'obs':
+        if horizontalResolution not in ['obs', 'mpas']:
             transectCollectionName = '{}_{}km'.format(transectCollectionName,
                                                       horizontalResolution)
 
@@ -203,7 +205,8 @@ class SoseTransects(AnalysisTask):  # {{{
                         groupLink='sose_transects',
                         galleryName=field['titleName'],
                         configSectionName='sose{}Transects'.format(
-                            fieldPrefixUpper))
+                            fieldPrefixUpper),
+                        verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
         # }}}
@@ -378,6 +381,11 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
             dsObs.velMag.attrs['description'] = description
 
+        # make a copy of the top set of data at z=0
+        dsObs = xr.concat((dsObs.isel(z=0), dsObs), dim='z')
+        z = dsObs.z.values
+        z[0] = 0.
+        dsObs['z'] = ('z', z)
         write_netcdf(dsObs, combinedFileName)
 
         print('  Done.')
@@ -413,7 +421,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         dsObs = dsObs.sel(method=str('nearest'), lon=lon)
         lon = dsObs.lon.values
 
-        # do some dropping and renaming so we end up wiht the right coordinates
+        # do some dropping and renaming so we end up with the right coordinates
         # and dimensions
         dsObs = dsObs.rename({'lat': 'nPoints', 'z': 'nz'})
         dsObs['lat'] = dsObs.nPoints

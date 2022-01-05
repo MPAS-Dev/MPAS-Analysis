@@ -268,6 +268,7 @@ Plotting
    plot_polar_comparison
    plot_global_comparison
    plot_1D
+   plot_vertical_section_comparison
    plot_vertical_section
    colormap.setup_colormap
    ticks.plot_xtick_format

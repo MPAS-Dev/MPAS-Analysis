@@ -349,7 +349,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         nVertLevels = dsRestart.sizes['nVertLevels']
 
-        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell,
+        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell-1,
                             dsRestart.layerThickness)
 
         vertIndex = xarray.DataArray.from_dict(

@@ -8,9 +8,9 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Functions for plotting inset maps in plots (e.g. for transects)
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
@@ -31,7 +31,7 @@ from geometric_features.plot import subdivide_geom
 def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
               height=1.0, lowerleft=None, xbuffer=None, ybuffer=None,
               maxlength=1.):
-    '''
+    """
     Plots an inset map showing the location of a transect or polygon.  Shapes
     are plotted on a polar grid if they are entirely poleward of +/-50 deg.
     latitude and with a lat/lon grid if not.
@@ -71,7 +71,7 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
     -------
     inset : ``matplotlib.axes.Axes``
         The new inset axis
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -170,13 +170,14 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
 
 
 def _set_circular_boundary(ax):
-    '''Set the boundary of the given axis to be circular (for a polar plot)'''
+    """Set the boundary of the given axis to be circular (for a polar plot)"""
 
     # Compute a circle in axes coordinates, which we can use as a boundary
     # for the map. We can pan/zoom as much as we like - the boundary will be
     # permanently circular.
     theta = numpy.linspace(0, 2*numpy.pi, 100)
-    center, radius = [0.5, 0.5], 0.5
+    center = numpy.array([0.5, 0.5])
+    radius = 0.5
     verts = numpy.vstack([numpy.sin(theta), numpy.cos(theta)]).T
     circle = matplotlib.path.Path(verts * radius + center)
 
@@ -184,12 +185,12 @@ def _set_circular_boundary(ax):
 
 
 def _get_bounds(fc):
-    '''Compute the lon/lat bounding box for all transects and regions'''
+    """Compute the lon/lat bounding box for all transects and regions"""
 
     bounds = shapely.geometry.GeometryCollection()
     for feature in fc.features:
         shape = shapely.geometry.shape(feature['geometry'])
         shape_bounds = shapely.geometry.box(*shape.bounds)
-        bounds = shapely.geometry.box(*(bounds.union(shape_bounds).bounds))
+        bounds = shapely.geometry.box(*bounds.union(shape_bounds).bounds)
 
     return bounds.bounds

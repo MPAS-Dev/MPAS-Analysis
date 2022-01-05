@@ -288,9 +288,15 @@ class PlotHovmollerSubtask(AnalysisTask):
             z = np.zeros(depths.shape)
             z[0] = -0.5 * depths[0]
             z[1:] = -0.5 * (depths[0:-1] + depths[1:])
+            z = xr.DataArray(dims='nVertLevels', data=z)
 
-        Time = ds.Time.values
-        field = ds[self.mpasFieldName].values.transpose()
+        Time = ds.Time
+        field = ds[self.mpasFieldName]
+
+        # drop any NaN values, because this causes issues with rolling averages
+        mask = field.notnull().all(dim='Time')
+        field = field.where(mask, drop=True)
+        z = z.where(mask, drop=True)
 
         xLabel = 'Time (years)'
         yLabel = 'Depth (m)'
@@ -342,7 +348,12 @@ class PlotHovmollerSubtask(AnalysisTask):
                 regionDim = 'nOceanRegionsTmp'
 
             dsRef = dsRef.isel(**{regionDim: regionIndex})
-            refField = dsRef[self.mpasFieldName].values.transpose()
+            refField = dsRef[self.mpasFieldName]
+            # drop any NaN values, because this causes issues with rolling
+            # averages
+            refMask = refField.notnull().all(dim='Time')
+            assert(np.all(refMask.values == mask.values))
+            refField = refField.where(mask, drop=True)
             assert(field.shape == refField.shape)
             diff = field - refField
             refTitle = self.controlConfig.get('runs', 'mainRunName')
@@ -364,10 +375,10 @@ class PlotHovmollerSubtask(AnalysisTask):
             defaultFontSize = None
 
         fig, _, suptitle = plot_vertical_section_comparison(
-            config, Time, z, field, refField, diff, self.sectionName,
-            colorbarLabel=self.unitsLabel, title=title, modelTitle=mainRunName,
-            refTitle=refTitle, diffTitle=diffTitle, xlabel=xLabel,
-            ylabel=yLabel, lineWidth=1, xArrayIsTime=True,
+            config, field, refField, diff, self.sectionName, xCoords=Time,
+            zCoord=z, colorbarLabel=self.unitsLabel, title=title,
+            modelTitle=mainRunName, refTitle=refTitle, diffTitle=diffTitle,
+            xlabels=xLabel, ylabel=yLabel, lineWidth=1, xCoordIsTime=True,
             movingAveragePoints=movingAverageMonths, calendar=self.calendar,
             firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
             yLim=yLim, invertYAxis=False, titleFontSize=titleFontSize,
