@@ -57,3 +57,6 @@ from mpas_analysis.ocean.ocean_regional_profiles import \
 
 from mpas_analysis.ocean.hovmoller_ocean_regions import \
     HovmollerOceanRegions
+
+from mpas_analysis.ocean.climatology_map_waves import \
+    ClimatologyMapWaves
