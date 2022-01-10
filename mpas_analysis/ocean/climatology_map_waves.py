@@ -109,18 +109,17 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
         
         print(variableList)
 
-        #if makeTables:
-        #    for regionGroup in regionGroups:
-        #        for season in seasons:
-        #            tableSubtask = WavesTableSubtask(
-        #                parentTask=self,
-        #                mpasClimatologyTask=mpasClimatologyTask,
-        #                controlConfig=controlConfig,
-        #                regionMasksTask=regionMasksTask,
-        #                regionGroup=regionGroup,
-        #                fields=fields,
-        #                season=season) 
-        #            self.add_subtask(tableSubtask)
+        if makeTables:
+            #for regionGroup in regionGroups:
+            for season in seasons:
+                tableSubtask = WavesTableSubtask(
+                    parentTask=self,
+                    mpasClimatologyTask=mpasClimatologyTask,
+                    controlConfig=controlConfig,
+                    regionMasksTask=regionMasksTask,
+                    fields=fields,
+                    season=season) 
+                self.add_subtask(tableSubtask)
 
 
         # the variableList variables  will be added to
@@ -219,212 +218,199 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
 
 
-#class WavesTableSubtask(AnalysisTask):
-#    def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
-#                 regionMasksTask, regionGroup, season, fields, subtaskName=None):  # {{{
-#        """
-#        Construct the analysis task.
-#
-#        Parameters
-#        ----------
-#        parentTask :  ClimatologyMapWaves
-#            The parent task, used to get the ``taskName``, ``config`` and
-#            ``componentName``
-#
-#        mpasClimatologyTask : MpasClimatologyTask
-#            The task that produced the climatology to be remapped and plotted
-#
-#        controlConfig :  MpasAnalysisConfigParser
-#            Configuration options for a control run (if any)
-#
-#        regionMasksTask : ComputeRegionMasks
-#            A task for computing region masks
-#
-#        regionGroup : str 
-#            Region group name where each region is a row of the table
-#
-#        fields : list of dict
-#            Field information 
-#
-#        season : str
-#            One of the seasons in ``constants.monthDictionary``
-#
-#        subtaskName : str, optional
-#            The name of the subtask
-#        """
-#        # Authors
-#        # -------
-#        # Steven Brus
-#        # Xylar Asay-Davis
-#        tags = ['climatology', 'table']
-#
-#        if subtaskName is None:
-#            subtaskName = f'table{season}{regionGroup.replace(" ","")}'
-#
-#        # call the constructor from the base class (AnalysisTask)
-#        super().__init__(
-#            config=parentTask.config,
-#            taskName=parentTask.taskName,
-#            subtaskName=subtaskName,
-#            componentName=parentTask.componentName,
-#            tags=tags)
-#
-#        config = parentTask.config
-#        self.season = season
-#        self.mpasClimatologyTask = mpasClimatologyTask
-#        self.controlConfig = controlConfig
-#        self.fields = fields
-#
-#        self.masksSubtask = regionMasksTask.add_mask_subtask(
-#             regionGroup=regionGroup)
-#        self.iceShelfMasksFile = self.masksSubtask.geojsonFileName
-#
-#        self.run_after(self.masksSubtask)
-#        self.run_after(mpasClimatologyTask)
-#        # }}}
-#
-#    def run_task(self):  # {{{
-#        """
-#        Computes and plots table of wave climatologies 
-#        """
-#        # Authors
-#        # -------
-#        # Steven Brus
-#        # Xylar Asay-Davis
-#
-#        self.logger.info("Computing wave climatology table...")
-#        config = self.config
-#
-#        sectionName = self.taskName
-#        regionsInTable = config.getExpression(sectionName,
-#                                                 'regionsInTable')
-#        if len(regionsInTable) == 0:
-#            return
-#
-#        regionsInTable = self.masksSubtask.expand_region_names(
-#            regionsInTable)
-#
-#        waveFileName = get_masked_mpas_climatology_file_name(
-#            config, self.season, self.componentName,
-#            climatologyName='waveClimatologyTable')
-#
-#        if not os.path.exists(waveFileName):
-#            with dask.config.set(schedular='threads',
-#                                 pool=ThreadPool(1)):
-#
-#                # Load data:
-#                inFileName = self.mpasClimatologyTask.get_file_name(self.season)
-#                dsIn = xr.open_dataset(inFileName)
-#
-#                ds = xr.Dataset()
-#                for field in self.fields:
-#                    mpasFieldName = field['mpas']
-#                    var = dsIn[mpasFieldName]
-#                    if 'Time' in var.dims:
-#                        var = var.isel(Time=0)
-#
-#                    regionMaskFileName = self.masksSubtask.maskFileName
-#                    dsRegionMask = xr.open_dataset(regionMaskFileName)
-#
-#                    # figure out the indices of the regions to plot
-#                    regionNames = decode_strings(dsRegionMask.regionNames)
-#
-#                    regionIndices = []
-#                    for region in regionsInTable:
-#                        for index, regionName in enumerate(regionNames):
-#                            if region == regionName:
-#                                regionIndices.append(index)
-#                                break
-#
-#                    # select only those regions we want to plot
-#                    dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-#                    cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
-#
-#                    restartFileName = \
-#                        self.runStreams.readpath('restart')[0]
-#
-#                    dsRestart = xr.open_dataset(restartFileName)
-#                    areaCell = dsRestart.areaCell
-#
-#                    regionAverage = (areaCell * field).sum(dim='nCells')
-#                    regionAverage.compute()
-#                    regionAverage = regionAverage/totalArea
-#
-#                    ds[mpasFieldName] = var
-#                    ds[mpasFieldName].attrs['units'] = field['units']
-#                    ds[mpasFieldName].attrs['description'] = field['titleName']
-#
-#               ds['area'] = 1e-6*totalArea
-#               ds.area.attrs['units'] = 'km$^2$'
-#               ds.area.attrs['description'] = \
-#                   'Region or ice shelf area'
-#
-#
-#               ds['regionNames'] = dsRegionMask.regionNames
-#
-#               write_netcdf(ds, meltRateFileName)
-#        else:
-#            ds = xr.open_dataset(meltRateFileName)
-#
-#        mainRunName = config.get('runs', 'mainRunName')
-#        fieldNames = ['Region', 'Area', mainRunName]
-#
-#        controlConfig = self.controlConfig
-#        if controlConfig is not None:
-#            controlFileName = get_masked_mpas_climatology_file_name(
-#                controlConfig, self.season, self.componentName,
-#                climatologyName='antarcticMeltTable')
-#            dsControl = xr.open_dataset(controlFileName)
-#            controlRunName = controlConfig.get('runs', 'mainRunName')
-#            fieldNames.append(controlRunName)
-#        else:
-#            dsControl = None
-#            controlRunName = None
-#
-#        regionNames = decode_strings(ds.regionNames)
-#
-#        outDirectory = '{}/antarcticMelt/'.format(
-#            build_config_full_path(config, 'output', 'tablesSubdirectory'))
-#
-#        try:
-#            os.makedirs(outDirectory)
-#        except OSError:
-#            pass
-#
-#        tableFileName = '{}/antarcticMeltRateTable_{}.csv'.format(outDirectory,
-#                                                                  self.season)
-#
-#        with open(tableFileName, 'w', newline='') as csvfile:
-#            writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
-#
-#            writer.writeheader()
-#            for index, regionName in enumerate(regionNames):
-#                row = {'Region': regionName,
-#                       'Area': '{}'.format(ds.area[index].values),
-#                       mainRunName: '{}'.format(ds.meltRates[index].values)}
-#                if dsControl is not None:
-#                    row[controlRunName] = \
-#                        '{}'.format(dsControl.meltRates[index].values)
-#                writer.writerow(row)
-#
-#        tableFileName = '{}/antarcticMeltFluxTable_{}.csv'.format(outDirectory,
-#                                                                  self.season)
-#
-#        with open(tableFileName, 'w', newline='') as csvfile:
-#            writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
-#
-#            writer.writeheader()
-#            for index, regionName in enumerate(regionNames):
-#                row = {'Region': regionName,
-#                       'Area': '{}'.format(ds.area[index].values),
-#                       mainRunName: '{}'.format(ds.totalMeltFlux[index].values)}
-#                if dsControl is not None:
-#                    row[controlRunName] = \
-#                        '{}'.format(dsControl.totalMeltFlux[index].values)
-#                writer.writerow(row)
-#
-#        # }}}
-#    # }}}
+class WavesTableSubtask(AnalysisTask):
+    def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
+                 regionMasksTask, season, fields, subtaskName=None):  # {{{
+        """
+        Construct the analysis task.
+
+        Parameters
+        ----------
+        parentTask :  ClimatologyMapWaves
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        mpasClimatologyTask : MpasClimatologyTask
+            The task that produced the climatology to be remapped and plotted
+
+        controlConfig :  MpasAnalysisConfigParser
+            Configuration options for a control run (if any)
+
+        regionMasksTask : ComputeRegionMasks
+            A task for computing region masks
+
+        fields : list of dict
+            Field information 
+
+        season : str
+            One of the seasons in ``constants.monthDictionary``
+
+        subtaskName : str, optional
+            The name of the subtask
+        """
+        # Authors
+        # -------
+        # Steven Brus
+        # Xylar Asay-Davis
+        tags = ['climatology', 'table']
+
+        if subtaskName is None:
+            subtaskName = f'table{season}'
+
+        # call the constructor from the base class (AnalysisTask)
+        super().__init__(
+            config=parentTask.config,
+            taskName=parentTask.taskName,
+            subtaskName=subtaskName,
+            componentName=parentTask.componentName,
+            tags=tags)
+
+        config = parentTask.config
+        self.season = season
+        self.mpasClimatologyTask = mpasClimatologyTask
+        self.controlConfig = controlConfig
+        self.fields = fields
+
+        self.masksSubtask = regionMasksTask.add_mask_subtask(
+            regionGroup='Arctic Sea Ice Regions')
+        #self.iceShelfMasksFile = self.masksSubtask.geojsonFileName
+
+        self.run_after(self.masksSubtask)
+        self.run_after(mpasClimatologyTask)
+        # }}}
+
+    def run_task(self):  # {{{
+        """
+        Computes and plots table of wave climatologies 
+        """
+        # Authors
+        # -------
+        # Steven Brus
+        # Xylar Asay-Davis
+
+        self.logger.info("Computing wave climatology table...")
+        config = self.config
+
+        sectionName = self.taskName
+        regionsInTable = config.getExpression(sectionName,
+                                              'regionsInTable')
+        if len(regionsInTable) == 0:
+            return
+
+        regionsInTable = self.masksSubtask.expand_region_names(
+            regionsInTable)
+
+        waveFileName = get_masked_mpas_climatology_file_name(
+            config, self.season, self.componentName,
+            climatologyName='waveClimatologyTable')
+
+        if not os.path.exists(waveFileName):
+            with dask.config.set(schedular='threads',
+                                 pool=ThreadPool(1)):
+
+                # Load data:
+                inFileName = self.mpasClimatologyTask.get_file_name(self.season)
+                dsIn = xr.open_dataset(inFileName)
+
+                ds = xr.Dataset()
+                for field in self.fields:
+                    mpasFieldName = field['mpas']
+                    var = dsIn[mpasFieldName]
+                    if 'Time' in var.dims:
+                        var = var.isel(Time=0)
+
+                    regionMaskFileName = self.masksSubtask.maskFileName
+                    dsRegionMask = xr.open_dataset(regionMaskFileName)
+
+                    # figure out the indices of the regions to plot
+                    regionNames = decode_strings(dsRegionMask.regionNames)
+
+                    regionIndices = []
+                    for region in regionsInTable:
+                        for index, regionName in enumerate(regionNames):
+                            if region == regionName:
+                                regionIndices.append(index)
+                                break
+
+                    # select only those regions we want to plot
+                    dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+                    cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
+
+                    restartFileName = \
+                        self.runStreams.readpath('restart')[0]
+
+                    dsRestart = xr.open_dataset(restartFileName)
+                    areaCell = dsRestart.areaCell
+
+                    regionAverage = (cellMasks * areaCell * var).sum(dim='nCells')
+                    regionAverage.compute()
+
+                    totalArea = (cellMasks * areaCell).sum(dim='nCells')
+                    regionAverage = regionAverage/totalArea
+                    regionAverage.compute()
+
+                    ds[mpasFieldName] = regionAverage
+                    ds[mpasFieldName].attrs['units'] = field['units']
+                    ds[mpasFieldName].attrs['description'] = field['titleName']
+
+                ds['area'] = 1e-6*totalArea
+                ds.area.attrs['units'] = 'km$^2$'
+                ds.area.attrs['description'] = \
+                    'Region area'
+
+
+                ds['regionNames'] = dsRegionMask.regionNames
+
+                write_netcdf(ds, waveFileName)
+        else:
+            ds = xr.open_dataset(waveFileName)
+
+        mainRunName = config.get('runs', 'mainRunName')
+        fieldNames = ['Region', 'Area', mainRunName]
+
+        controlConfig = self.controlConfig
+        if controlConfig is not None:
+            controlFileName = get_masked_mpas_climatology_file_name(
+                controlConfig, self.season, self.componentName,
+                climatologyName='wavesTable')
+            dsControl = xr.open_dataset(controlFileName)
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            fieldNames.append(controlRunName)
+        else:
+            dsControl = None
+            controlRunName = None
+
+        regionNames = decode_strings(ds.regionNames)
+
+        outDirectory = '{}/waves/'.format(
+            build_config_full_path(config, 'output', 'tablesSubdirectory'))
+
+        try:
+            os.makedirs(outDirectory)
+        except OSError:
+            pass
+
+        for field in self.fields:
+
+            tableFileName = '{}/wavesTable_{}_{}.csv'.format(outDirectory,
+                                                             field['prefix'],
+                                                             self.season)
+
+            with open(tableFileName, 'w', newline='') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+  
+                writer.writeheader()
+                for index, regionName in enumerate(regionNames):
+                    row = {'Region': regionName,
+                           'Area': '{}'.format(ds.area[index].values),
+                           mainRunName: '{}'.format(ds[field['mpas']][index].values)}
+                    if dsControl is not None:
+                        row[controlRunName] = \
+                            '{}'.format(dsControl[field['mpas']][index].values)
+                    writer.writerow(row)
+
+        # }}}
+    # }}}
 
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
