@@ -33,6 +33,9 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.constants import constants
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 class ClimatologyMapWaves(AnalysisTask):  # {{{
     """
@@ -107,7 +110,6 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         makeTables = config.getboolean(sectionName, 'makeTables')
         
-        print(variableList)
 
         if makeTables:
             #for regionGroup in regionGroups:
@@ -136,7 +138,6 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         for field in fields:
 
-            print(field)
             fieldPrefix = field['prefix']
             refFieldName = field['mpas']
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
@@ -408,6 +409,132 @@ class WavesTableSubtask(AnalysisTask):
                         row[controlRunName] = \
                             '{}'.format(dsControl[field['mpas']][index].values)
                     writer.writerow(row)
+
+        ##### Histograms ##### 
+
+        baseDirectory = config.get('input','baseDirectory')
+        runSubdirectory = config.get('input','runSubdirectory')
+        startYear = int(config.get('climatology','startYear'))
+        #endYear = int(config.get('climatology','endYear'))
+        endYear = 2090
+
+        seasonMonths = {'ANN':[1,2,3,4,5,6,7,8,9,10,11,12], 
+                        'JFM':[1,2,3],
+                        'JAS':[7,8,9]}
+
+        months = seasonMonths[self.season]
+
+        filePrefix = baseDirectory+'/'+runSubdirectory+'/'+mainRunName+'.mpaso.waveOutput.'
+        files = []
+        for year in range(startYear,endYear+1):
+            for month in months:
+                
+                files.append(filePrefix+str(year)+'-'+"{:02d}".format(month)+'-01_00.00.00.nc')
+          
+
+        ds = xr.open_mfdataset(files,
+                               combine='nested',
+                               concat_dim='Time')
+
+        regionMaskFileName = self.masksSubtask.maskFileName
+        dsRegionMask = xr.open_mfdataset(regionMaskFileName, parallel=True)
+   
+        # figure out the indices of the regions to plot
+        regionNames = decode_strings(dsRegionMask.regionNames)
+   
+        regionIndices = []
+        for region in regionsInTable:
+            for index, regionName in enumerate(regionNames):
+                if region == regionName:
+                    regionIndices.append(index)
+                    break
+   
+        # select only those regions we want to plot
+        dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
+        cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
+        cellMasks = cellMasks.where(cellMasks > 0)
+
+        maskedVar = (cellMasks*ds['significantWaveHeight']).compute()
+
+        for index, regionName in enumerate(regionNames):
+
+            fig = plt.figure()
+            ax = fig.add_subplot(1,1,1)        
+            values = maskedVar.isel(nRegions=index).values.ravel()
+            ax.hist(values)
+            ax.set_title(regionName+' '+str(np.nanmean(values)))
+            plt.savefig('significantWaveHeight_'+self.season+'_'+regionName.replace(' ','_')+'.png')
+
+#class WavesRegionalDistributionsSubtask(AnalysisTask):
+#    def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
+#                 regionMasksTask, season, fields, subtaskName=None):  # {{{
+#        """
+#        Construct the analysis task.
+#
+#        Parameters
+#        ----------
+#        parentTask :  ClimatologyMapWaves
+#            The parent task, used to get the ``taskName``, ``config`` and
+#            ``componentName``
+#
+#        mpasClimatologyTask : MpasClimatologyTask
+#            The task that produced the climatology to be remapped and plotted
+#
+#        controlConfig :  MpasAnalysisConfigParser
+#            Configuration options for a control run (if any)
+#
+#        regionMasksTask : ComputeRegionMasks
+#            A task for computing region masks
+#
+#        fields : list of dict
+#            Field information 
+#
+#        season : str
+#            One of the seasons in ``constants.monthDictionary``
+#
+#        subtaskName : str, optional
+#            The name of the subtask
+#        """
+#        # Authors
+#        # -------
+#        # Steven Brus
+#        # Xylar Asay-Davis
+#        tags = ['climatology', 'distributions']
+#
+#        if subtaskName is None:
+#            subtaskName = f'table{season}'
+#
+#        # call the constructor from the base class (AnalysisTask)
+#        super().__init__(
+#            config=parentTask.config,
+#            taskName=parentTask.taskName,
+#            subtaskName=subtaskName,
+#            componentName=parentTask.componentName,
+#            tags=tags)
+#
+#        config = parentTask.config
+#        self.season = season
+#        self.mpasClimatologyTask = mpasClimatologyTask
+#        self.controlConfig = controlConfig
+#        self.fields = fields
+#        self.masksSubtask = regionMasksTask
+#
+#        self.run_after(mpasClimatologyTask)
+#        # }}}
+#
+#    def run_task(self):  # {{{
+#        """
+#        Computes and plots table of wave climatologies 
+#        """
+#        # Authors
+#        # -------
+#        # Steven Brus
+#        # Xylar Asay-Davis
+#
+#        self.logger.info("Computing wave climatology table...")
+#        config = self.config
+#
+#        sectionName = self.taskName
 
         # }}}
     # }}}
