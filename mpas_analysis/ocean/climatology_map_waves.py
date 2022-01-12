@@ -76,8 +76,13 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                    'titleName': 'Significant Wave Height'},
                   {'prefix': 'peakWaveFrequency',
                    'mpas': 'timeMonthly_avg_peakWaveFrequency',
-                   'units': r's$^{-1}$',
-                   'titleName': 'Peak Wave Frequency'}]
+                   'units': r's',
+                   'titleName': 'Peak Wave Period'},
+                  #{'prefix': 'peakWavePeriod',
+                  # 'mpas': 'timeMonthly_avg_peakWavePeriod',
+                  # 'units': r's',
+                  # 'titleName': 'Peak Wave Period'},
+                   ]
 
         # call the constructor from the base class (AnalysisTask)
         super().__init__(
@@ -126,7 +131,8 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         # the variableList variables  will be added to
         # mpasClimatologyTask along with the seasons.
-        remapClimatologySubtask = RemapMpasClimatologySubtask(
+        #remapClimatologySubtask = RemapMpasClimatologySubtask(
+        remapClimatologySubtask = RemapMpasWavesClimatology(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
             climatologyName='wave',
@@ -213,6 +219,19 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                             '    to be .true.  Otherwise, no '
                             'wave data is available \n'
                             '    for plotting.')
+        # }}}
+    # }}}
+
+
+class RemapMpasWavesClimatology(RemapMpasClimatologySubtask): # {{{
+
+
+    def customize_masked_climatology(self, climatology, season):  # {{{
+
+        climatology['timeMonthly_avg_peakWaveFrequency'] = 1.0/climatology['timeMonthly_avg_peakWaveFrequency']
+
+        return climatology
+
         # }}}
     # }}}
 
@@ -402,9 +421,13 @@ class WavesTableSubtask(AnalysisTask):
   
                 writer.writeheader()
                 for index, regionName in enumerate(regionNames):
+                    if field['mpas'] == 'timeMonthly_avg_peakWaveFrequency':
+                        var = 1.0/ds[field['mpas']][index].values
+                    else:
+                        var = ds[field['mpas']][index].values
                     row = {'Region': regionName,
                            'Area': '{}'.format(ds.area[index].values),
-                           mainRunName: '{}'.format(ds[field['mpas']][index].values)}
+                           mainRunName: '{}'.format(var)}
                     if dsControl is not None:
                         row[controlRunName] = \
                             '{}'.format(dsControl[field['mpas']][index].values)
@@ -415,8 +438,7 @@ class WavesTableSubtask(AnalysisTask):
         baseDirectory = config.get('input','baseDirectory')
         runSubdirectory = config.get('input','runSubdirectory')
         startYear = int(config.get('climatology','startYear'))
-        #endYear = int(config.get('climatology','endYear'))
-        endYear = 2090
+        endYear = int(config.get('climatology','endYear'))
 
         seasonMonths = {'ANN':[1,2,3,4,5,6,7,8,9,10,11,12], 
                         'JFM':[1,2,3],
@@ -428,16 +450,17 @@ class WavesTableSubtask(AnalysisTask):
         files = []
         for year in range(startYear,endYear+1):
             for month in months:
-                
                 files.append(filePrefix+str(year)+'-'+"{:02d}".format(month)+'-01_00.00.00.nc')
           
 
         ds = xr.open_mfdataset(files,
+                               chunks={'Time': 100},
                                combine='nested',
-                               concat_dim='Time')
+                               concat_dim='Time',
+                               parallel=True)
 
         regionMaskFileName = self.masksSubtask.maskFileName
-        dsRegionMask = xr.open_mfdataset(regionMaskFileName, parallel=True)
+        dsRegionMask = xr.open_dataset(regionMaskFileName)
    
         # figure out the indices of the regions to plot
         regionNames = decode_strings(dsRegionMask.regionNames)
@@ -454,90 +477,37 @@ class WavesTableSubtask(AnalysisTask):
         cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
         cellMasks = cellMasks.where(cellMasks > 0)
 
-        maskedVar = (cellMasks*ds['significantWaveHeight']).compute()
 
-        for index, regionName in enumerate(regionNames):
+        for field in self.fields:
+            print('computing historgram: '+field['prefix']+'_'+self.season)
+            with dask.config.set(schedular='threads',
+                                 pool=ThreadPool(1)):
+                if field['mpas'] == 'timeMonthly_avg_peakWaveFrequency':
+                    maskedVar = (cellMasks*(1.0/ds[field['prefix']])).compute()
+                    varRange=(0.0,15.0)
+                else: 
+                    maskedVar = (cellMasks*ds[field['prefix']]).compute()
+                    varRange=(0.0,10.0)
 
-            fig = plt.figure()
-            ax = fig.add_subplot(1,1,1)        
-            values = maskedVar.isel(nRegions=index).values.ravel()
-            ax.hist(values)
-            ax.set_title(regionName+' '+str(np.nanmean(values)))
-            plt.savefig('significantWaveHeight_'+self.season+'_'+regionName.replace(' ','_')+'.png')
-
-#class WavesRegionalDistributionsSubtask(AnalysisTask):
-#    def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
-#                 regionMasksTask, season, fields, subtaskName=None):  # {{{
-#        """
-#        Construct the analysis task.
-#
-#        Parameters
-#        ----------
-#        parentTask :  ClimatologyMapWaves
-#            The parent task, used to get the ``taskName``, ``config`` and
-#            ``componentName``
-#
-#        mpasClimatologyTask : MpasClimatologyTask
-#            The task that produced the climatology to be remapped and plotted
-#
-#        controlConfig :  MpasAnalysisConfigParser
-#            Configuration options for a control run (if any)
-#
-#        regionMasksTask : ComputeRegionMasks
-#            A task for computing region masks
-#
-#        fields : list of dict
-#            Field information 
-#
-#        season : str
-#            One of the seasons in ``constants.monthDictionary``
-#
-#        subtaskName : str, optional
-#            The name of the subtask
-#        """
-#        # Authors
-#        # -------
-#        # Steven Brus
-#        # Xylar Asay-Davis
-#        tags = ['climatology', 'distributions']
-#
-#        if subtaskName is None:
-#            subtaskName = f'table{season}'
-#
-#        # call the constructor from the base class (AnalysisTask)
-#        super().__init__(
-#            config=parentTask.config,
-#            taskName=parentTask.taskName,
-#            subtaskName=subtaskName,
-#            componentName=parentTask.componentName,
-#            tags=tags)
-#
-#        config = parentTask.config
-#        self.season = season
-#        self.mpasClimatologyTask = mpasClimatologyTask
-#        self.controlConfig = controlConfig
-#        self.fields = fields
-#        self.masksSubtask = regionMasksTask
-#
-#        self.run_after(mpasClimatologyTask)
-#        # }}}
-#
-#    def run_task(self):  # {{{
-#        """
-#        Computes and plots table of wave climatologies 
-#        """
-#        # Authors
-#        # -------
-#        # Steven Brus
-#        # Xylar Asay-Davis
-#
-#        self.logger.info("Computing wave climatology table...")
-#        config = self.config
-#
-#        sectionName = self.taskName
-
-        # }}}
-    # }}}
+            for index, regionName in enumerate(regionNames):
+                print('   '+regionName)
+    
+                fig = plt.figure()
+                ax = fig.add_subplot(1,1,1)        
+                values = maskedVar.isel(nRegions=index).values.ravel()
+                ax.hist(values,range=varRange,bins=20,density=True)
+                ax.set_title(regionName+' mean:'+'{:4.2f}'.format(np.nanmean(values)))
+                ax.set_ylabel('Probability density')
+                ax.set_xlabel(field['units'])
+                plt.savefig(outDirectory+'/'+field['prefix']+'_'+self.season+'_'+regionName.replace(' ','_')+'.png')
+                f = open(outDirectory+'/'+field['prefix']+'_'+self.season+'_'+regionName.replace(' ','_')+'.txt','w')
+                heights = [patch.get_height() for patch in ax.patches]
+                for h in heights:
+                   f.write(str(h)+'\n')
+                f.close()
+                plt.close()
+        ds.close()        
 
 
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+
+ # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
