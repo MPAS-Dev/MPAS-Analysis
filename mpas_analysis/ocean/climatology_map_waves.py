@@ -312,13 +312,26 @@ class WavesTableSubtask(AnalysisTask):
         config = self.config
 
         sectionName = self.taskName
-        regionsInTable = config.getExpression(sectionName,
-                                              'regionsInTable')
-        if len(regionsInTable) == 0:
-            return
+        #regionsInTable = config.getExpression(sectionName,
+        #                                      'regionsInTable')
+        #if len(regionsInTable) == 0:
+        #    return
 
-        regionsInTable = self.masksSubtask.expand_region_names(
-            regionsInTable)
+        #regionsInTable = self.masksSubtask.expand_region_names(
+        #    regionsInTable)
+
+        regionsInTable = ['Baffin Bay NSIDC',
+                          'Greenland Sea',
+                          'Bering Sea',
+                          'Barents Sea',
+                          'Beaufort Sea NSIDC',
+                          'Canadian Archipelago NSIDC',
+                          'Central Arctic NSIDC',
+                          'Chukchi Sea NSIDC',
+                          'East Siberian Sea NSIDC',
+                          'Hudson Bay NSIDC',
+                          'Kara Sea',
+                          'Laptev Sea NSIDC']
 
         waveFileName = get_masked_mpas_climatology_file_name(
             config, self.season, self.componentName,
@@ -474,9 +487,8 @@ class WavesTableSubtask(AnalysisTask):
    
         # select only those regions we want to plot
         dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-        cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
+        cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 12})
         cellMasks = cellMasks.where(cellMasks > 0)
-
 
         for field in self.fields:
             print('computing historgram: '+field['prefix']+'_'+self.season)
