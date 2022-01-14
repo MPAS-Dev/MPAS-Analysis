@@ -33,7 +33,7 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):  # {{{
         the depth of the ocean bottom (positive)
 
     maxLevelCell : ``xarray.DataArray``
-        the 1-based vertical index of the bottom of the ocean
+        the 0-based vertical index of the bottom of the ocean
 
     layerThickness : ``xarray.DataArray``
         the thickness of MPAS-Ocean layers (possibly as a function of time)
@@ -54,7 +54,7 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):  # {{{
         xarray.DataArray.from_dict({'dims': ('nVertLevels',),
                                     'data': numpy.arange(nVertLevels)})
 
-    layerThickness = layerThickness.where(vertIndex < maxLevelCell)
+    layerThickness = layerThickness.where(vertIndex <= maxLevelCell)
 
     thicknessSum = layerThickness.sum(dim='nVertLevels')
     thicknessCumSum = layerThickness.cumsum(dim='nVertLevels')

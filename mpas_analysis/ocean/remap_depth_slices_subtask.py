@@ -117,7 +117,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
         depthNames = [str(depth) for depth in self.depths]
 
-        zMid = compute_zmid(ds.bottomDepth, ds.maxLevelCell,
+        zMid = compute_zmid(ds.bottomDepth, ds.maxLevelCell-1,
                             ds.layerThickness)
 
         nVertLevels = zMid.shape[1]

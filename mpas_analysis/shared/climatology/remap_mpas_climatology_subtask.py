@@ -537,7 +537,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
 
             # add valid mask as a variable, useful for remapping later
             climatology['validMask'] = \
-                xr.DataArray(numpy.ones(climatology.dims['nCells']),
+                xr.DataArray(numpy.ones(climatology.sizes['nCells']),
                              dims=['nCells'])
             # mask the data set
             for variableName in self.variableList:
