@@ -502,8 +502,10 @@ class WavesTableSubtask(AnalysisTask):
                 plt.savefig(outDirectory+'/'+field['prefix']+'_'+self.season+'_'+regionName.replace(' ','_')+'.png')
                 f = open(outDirectory+'/'+field['prefix']+'_'+self.season+'_'+regionName.replace(' ','_')+'.txt','w')
                 heights = [patch.get_height() for patch in ax.patches]
-                for h in heights:
-                   f.write(str(h)+'\n')
+                widths = [patch.get_width() for patch in ax.patches]
+                xloc = [patch.get_xy()[0] for patch in ax.patches]
+                for h,w,x in zip(heights,widths,xloc):
+                   f.write('{} {} {}\n'.format(x,w,h))
                 f.close()
                 plt.close()
         ds.close()        
