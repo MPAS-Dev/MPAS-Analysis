@@ -41,8 +41,12 @@ def plot_vertical_section_comparison(
         xCoords=None,
         zCoord=None,
         triangulation_args=None,
-        xOutline=None,
-        zOutline=None,
+        xOutlineModel=None,
+        zOutlineModel=None,
+        xOutlineRef=None,
+        zOutlineRef=None,
+        xOutlineDiff=None,
+        zOutlineDiff=None,
         colorbarLabel=None,
         xlabels=None,
         ylabel=None,
@@ -122,10 +126,18 @@ def plot_vertical_section_comparison(
         If this option is provided, ``xCoords`` is only used for tick marks if
         more than one x axis is requested, and ``zCoord`` will be ignored.
 
-    xOutline, zOutline : numpy.ndarray, optional
+    xOutlineModel, zOutlineModel : numpy.ndarray, optional
         pairs of points defining line segments that are used to outline the
-        valid region of the mesh if ``outlineValid = True`` and
-        ``triangulation_args`` is not ``None``
+        valid region of the mesh for the model panel if ``outlineValid = True``
+        and ``triangulation_args`` is not ``None``
+
+    xOutlineRef, zOutlineRef : numpy.ndarray, optional
+        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the reference
+        panel
+
+    xOutlineDiff, zOutlineDiff : numpy.ndarray, optional
+        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the difference
+        panel
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -383,8 +395,8 @@ def plot_vertical_section_comparison(
         xCoords=xCoords,
         zCoord=zCoord,
         triangulation_args=triangulation_args,
-        xOutline=xOutline,
-        zOutline=zOutline,
+        xOutline=xOutlineModel,
+        zOutline=zOutlineModel,
         suffix=resultSuffix,
         colorbarLabel=colorbarLabel,
         title=title,
@@ -431,8 +443,8 @@ def plot_vertical_section_comparison(
             xCoords=xCoords,
             zCoord=zCoord,
             triangulation_args=triangulation_args,
-            xOutline=xOutline,
-            zOutline=zOutline,
+            xOutline=xOutlineRef,
+            zOutline=zOutlineRef,
             suffix=resultSuffix,
             colorbarLabel=colorbarLabel,
             title=refTitle,
@@ -473,8 +485,8 @@ def plot_vertical_section_comparison(
             xCoords=xCoords,
             zCoord=zCoord,
             triangulation_args=triangulation_args,
-            xOutline=xOutline,
-            zOutline=zOutline,
+            xOutline=xOutlineDiff,
+            zOutline=zOutlineDiff,
             suffix=diffSuffix,
             colorbarLabel=colorbarLabel,
             title=diffTitle,
@@ -857,7 +869,7 @@ def plot_vertical_section(
     colormapDict = setup_colormap(config, colorMapSectionName,
                                   suffix=suffix)
 
-    if outlineValid and xOutline is not None or zOutline is not None:
+    if outlineValid and xOutline is not None and zOutline is not None:
         # we might have some invalid cells that are inside the outline.  Let's
         # make them white
         zeroArray = xr.zeros_like(field)
@@ -902,7 +914,7 @@ def plot_vertical_section(
         if xOutline is None or zOutline is None:
             # set the color for NaN or masked regions, and draw a black
             # outline around them; technically, the contour level used should
-            # be 1.0, but the contours don't show up when using 1.0, so 0.999
+            # be 0.0, but the contours don't show up when using 0.0, so 0.0001
             # is used instead
             landMask = np.isnan(field.values).ravel()
             plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],

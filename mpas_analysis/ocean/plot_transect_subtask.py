@@ -445,19 +445,36 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if remap:
             triangulation_args = None
-            dOutline = None
-            zOutline = None
+            dOutlineModel = None
+            zOutlineModel = None
         else:
             triangulation_args = self._get_ds_triangulation(
                 remappedModelClimatology)
-            dOutline, zOutline = get_outline_segments(remappedModelClimatology)
+            dOutlineModel, zOutlineModel = \
+                get_outline_segments(remappedModelClimatology)
 
         if remappedRefClimatology is None:
             refOutput = None
             bias = None
         else:
+            # todo: add a check to make sure the reference is on the same MPAS
+            #   mesh
             refOutput = remappedRefClimatology[self.refFieldName]
             bias = modelOutput - refOutput
+
+        if remappedRefClimatology is None or self.controlConfig is None:
+            # we don't want to use the same outline as the model for obs
+            dOutlineRef = None
+            zOutlineRef = None
+            dOutlineDiff = None
+            zOutlineDiff = None
+        else:
+            # we *do* want to use the same outline if we're comparing with
+            # another model run
+            dOutlineRef = dOutlineModel
+            zOutlineRef = zOutlineModel
+            dOutlineDiff = dOutlineModel
+            zOutlineDiff = zOutlineModel
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -574,8 +591,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             xCoords=xs,
             zCoord=z,
             triangulation_args=triangulation_args,
-            xOutline=dOutline,
-            zOutline=zOutline,
+            xOutlineModel=dOutlineModel,
+            zOutlineModel=zOutlineModel,
+            xOutlineRef=dOutlineRef,
+            zOutlineRef=zOutlineRef,
+            xOutlineDiff=dOutlineDiff,
+            zOutlineDiff=zOutlineDiff,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
