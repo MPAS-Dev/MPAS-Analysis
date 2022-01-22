@@ -445,31 +445,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if remap:
             triangulation_args = None
-            dOutlineModel = None
-            zOutlineModel = None
         else:
             triangulation_args = self._get_ds_triangulation(
                 remappedModelClimatology)
-            dOutlineModel, zOutlineModel = \
-                get_outline_segments(remappedModelClimatology)
-
-        if self.controlConfig is None:
-            dOutlineRef = None
-            zOutlineRef = None
-            dOutlineDiff = None
-            zOutlineDiff = None
-        else:
-            dOutlineRef = dOutlineModel
-            zOutlineRef = zOutlineModel
-            dOutlineDiff = dOutlineModel
-            zOutlineDiff = zOutlineModel
 
         if remappedRefClimatology is None:
             refOutput = None
             bias = None
         else:
-            # todo: add a check to make sure the reference is on the same MPAS
-            #   mesh
             refOutput = remappedRefClimatology[self.refFieldName]
             bias = modelOutput - refOutput
 
@@ -588,12 +571,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             xCoords=xs,
             zCoord=z,
             triangulation_args=triangulation_args,
-            xOutlineModel=dOutlineModel,
-            zOutlineModel=zOutlineModel,
-            xOutlineRef=dOutlineRef,
-            zOutlineRef=zOutlineRef,
-            xOutlineDiff=dOutlineDiff,
-            zOutlineDiff=zOutlineDiff,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
@@ -606,6 +583,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             invertYAxis=False,
             backgroundColor='#d9bf96',
             invalidColor='#d9bf96',
+            outlineValid=False,
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
@@ -636,8 +614,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             mask = ssh < 0.
             for ax in axes:
                 ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
-                                interpolate=True, color=color,
-                                edgecolor='black', linewidth=1.)
+                                interpolate=True, color=color)
 
         # make a red start axis and green end axis to correspond to the dots
         # in the inset

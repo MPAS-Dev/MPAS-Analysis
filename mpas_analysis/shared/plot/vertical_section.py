@@ -928,7 +928,8 @@ def plot_vertical_section(
             # also outline the domain if provided
             plt.plot(xOutline, zOutline, color='black', linewidth=1)
         else:
-            # do a contour to outline the boundary between valid and invalid values
+            # do a contour to outline the boundary between valid and invalid
+            # values
             landMask = np.isnan(field.values).ravel()
             plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
                            colors='black', linewidths=1)
