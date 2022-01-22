@@ -445,13 +445,24 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if remap:
             triangulation_args = None
-            dOutline = None
-            zOutline = None
+            dOutlineModel = None
+            zOutlineModel = None
         else:
             triangulation_args = self._get_ds_triangulation(
                 remappedModelClimatology)
-            dOutline, zOutline = \
+            dOutlineModel, zOutlineModel = \
                 get_outline_segments(remappedModelClimatology)
+
+        if self.controlConfig is None:
+            dOutlineRef = None
+            zOutlineRef = None
+            dOutlineDiff = None
+            zOutlineDiff = None
+        else:
+            dOutlineRef = dOutlineModel
+            zOutlineRef = zOutlineModel
+            dOutlineDiff = dOutlineModel
+            zOutlineDiff = zOutlineModel
 
         if remappedRefClimatology is None:
             refOutput = None
@@ -577,12 +588,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             xCoords=xs,
             zCoord=z,
             triangulation_args=triangulation_args,
-            xOutlineModel=dOutline,
-            zOutlineModel=zOutline,
-            xOutlineRef=dOutline,
-            zOutlineRef=zOutline,
-            xOutlineDiff=dOutline,
-            zOutlineDiff=zOutline,
+            xOutlineModel=dOutlineModel,
+            zOutlineModel=zOutlineModel,
+            xOutlineRef=dOutlineRef,
+            zOutlineRef=zOutlineRef,
+            xOutlineDiff=dOutlineDiff,
+            zOutlineDiff=zOutlineDiff,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
@@ -594,7 +605,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             invertYAxis=False,
             backgroundColor='#d9bf96',
-            invalidColor='#eddabb',
+            invalidColor='#d9bf96',
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
