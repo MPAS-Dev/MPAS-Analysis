@@ -613,22 +613,20 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         suptitle.set_position((pos[0] - 0.05, pos[1]))
 
         if not remap:
-            # add open air and ice shelves
+            # add open ocean or ice shelves
             d = remappedModelClimatology.dNode.values.ravel()
             ssh = remappedModelClimatology.ssh.values.ravel()
+            if 'landIceFraction' in remappedModelClimatology:
+                # plot ice in light blue
+                color = '#e1eaf7'
+            else:
+                # plot open ocean in white
+                color = 'white'
             mask = ssh < 0.
             for ax in axes:
                 ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
-                                interpolate=True, color='white',
+                                interpolate=True, color=color,
                                 edgecolor='black', linewidth=1.)
-            if 'landIceFraction' in remappedModelClimatology:
-                landIceFraction = remappedModelClimatology.landIceFraction
-                landIceMask = landIceFraction.values.ravel() > 0.25
-                mask = numpy.logical_and(landIceMask, ssh < 0.)
-                for ax in axes:
-                    ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
-                                    interpolate=False, color='#e1eaf7',
-                                    edgecolor='black', linewidth=1.)
 
         # make a red start axis and green end axis to correspond to the dots
         # in the inset
