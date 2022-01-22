@@ -13,7 +13,7 @@
 # serve to show the default.
 
 import os
-import m2r
+import m2r2
 from glob import glob
 import mpas_analysis
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
@@ -211,7 +211,7 @@ build_obs_pages_from_xml(xmlFileName)
 build_quick_start()
 
 for mdFileName in glob('design_docs/*.md'):
-    output = m2r.parse_from_file(mdFileName)
+    output = m2r2.parse_from_file(mdFileName)
     rstFileName = os.path.splitext(mdFileName)[0]+'.rst'
     outFile = open(rstFileName, 'w')
     outFile.write(output)

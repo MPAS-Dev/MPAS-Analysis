@@ -4,7 +4,7 @@ A script for converting the README.md to a quick-start guide for inclusion
 in the documentation
 """
 
-from m2r import convert
+from m2r2 import convert
 
 
 def build_quick_start():
