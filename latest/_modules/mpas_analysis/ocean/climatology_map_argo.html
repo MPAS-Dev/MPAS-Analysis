@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.climatology_map_argo &mdash; MPAS-Analysis latest documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.ocean.climatology_map_argo</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.climatology_map_argo</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Analysis tasks for comparing Global climatology maps against Argo data.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Luke Van Roekel</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_depth_slices_subtask</span> <span class="kn">import</span> \
+    <span class="n">RemapDepthSlicesSubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapObservedClimatologySubtask</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapArgoTemperature"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoTemperature</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of potential temperature against Argo</span>
+<span class="sd">    observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="ClimatologyMapArgoTemperature.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;temperatureArgo&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapArgoTemperature</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapArgoTemperature&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;argo&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">depths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">depths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid &#39;</span>
+                             <span class="s1">&#39;list of depths&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="c1"># the variable &#39;timeMonthly_avg_landIceFreshwaterFlux&#39; will be added to</span>
+        <span class="c1"># mpasClimatologyTask along with the seasons.</span>
+        <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapDepthSlicesSubtask</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="n">fieldName</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+            <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
+            <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+            <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Roemmich-Gilson Argo Climatology: Potential &#39;</span> \
+                            <span class="s1">&#39;Temperature&#39;</span>
+
+            <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;argoSubdirectory&#39;</span><span class="p">)</span>
+
+            <span class="n">obsFileName</span> <span class="o">=</span> \
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/ArgoClimatology_TS_20180710.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">observationsDirectory</span><span class="p">)</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;theta&#39;</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;tempArgo&#39;</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Roemmich-Gilson Climatology: Argo&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Argo&#39;</span>
+
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapArgoClimatology</span><span class="p">(</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
+                <span class="n">outFilePrefix</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Argo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refFieldName</span><span class="p">),</span>
+                <span class="n">fieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="n">galleryName</span>
+
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;temp&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="n">depths</span><span class="p">:</span>
+                    <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                        <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
+                        <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
+                        <span class="n">remapMpasClimatologySubtask</span><span class="o">=</span><span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                        <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="n">remapObservationsSubtask</span><span class="p">,</span>
+                        <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span>
+
+                    <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                        <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Potential Temperature&#39;</span><span class="p">,</span>
+                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                        <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                        <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                        <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Model potential temperature compared &#39;</span>
+                                     <span class="s1">&#39;with Argo observations&#39;</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Argo Potential Temperature&#39;</span><span class="p">,</span>
+                        <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;tempArgo&#39;</span><span class="p">,</span>
+                        <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
+        <span class="c1"># }}}</span>
+
+    <span class="c1"># }}}</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapArgoSalinity"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoSalinity</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of global salinity against Argo</span>
+<span class="sd">    observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
+
+<div class="viewcode-block" id="ClimatologyMapArgoSalinity.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;salinityArgo&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapArgoSalinity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapArgoSalinity&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;argo&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">])</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">depths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">depths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid &#39;</span>
+                             <span class="s1">&#39;list of depths&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="c1"># the variable &#39;timeMonthly_avg_landIceFreshwaterFlux&#39; will be added to</span>
+        <span class="c1"># mpasClimatologyTask along with the seasons.</span>
+        <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapDepthSlicesSubtask</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="n">fieldName</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+            <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
+            <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+            <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Roemmich-Gilson Argo Climatology: Salinity&#39;</span>
+
+            <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;argoSubdirectory&#39;</span><span class="p">)</span>
+
+            <span class="n">obsFileName</span> <span class="o">=</span> \
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/ArgoClimatology_TS_20180710.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">observationsDirectory</span><span class="p">)</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;salinity&#39;</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;salinArgo&#39;</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Roemmich-Gilson Climatology: Argo&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Argo&#39;</span>
+
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapArgoClimatology</span><span class="p">(</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
+                <span class="n">outFilePrefix</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Argo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">refFieldName</span><span class="p">),</span>
+                <span class="n">fieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;salin&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="n">depths</span><span class="p">:</span>
+                    <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                        <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
+                        <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
+                        <span class="n">remapMpasClimatologySubtask</span><span class="o">=</span><span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                        <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="n">remapObservationsSubtask</span><span class="p">,</span>
+                        <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span>
+
+                    <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                        <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
+                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                        <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                        <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                        <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Model Salinity compared with Argo &#39;</span>
+                                     <span class="s1">&#39;observations&#39;</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Argo Salinity&#39;</span><span class="p">,</span>
+                        <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;salinArgo&#39;</span><span class="p">,</span>
+                        <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
+        <span class="c1"># }}}</span>
+
+    <span class="c1"># }}}</span>
+
+
+<span class="k">class</span> <span class="nc">RemapArgoClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
+    <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for reading and remapping SOSE fields to the comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
+                 <span class="n">fieldName</span><span class="p">,</span> <span class="n">depths</span><span class="p">,</span>
+                 <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">],</span>
+                 <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapObservations&#39;</span><span class="p">):</span>
+        <span class="c1"># {{{</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Construct one analysis subtask for each plot (i.e. each season and</span>
+<span class="sd">        comparison grid) and a subtask for computing climatologies.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">            The parent (master) task for this subtask</span>
+
+<span class="sd">        seasons : list of str</span>
+<span class="sd">           A list of seasons (keys in ``constants.monthDictionary``) over</span>
+<span class="sd">           which the climatology should be computed.</span>
+
+<span class="sd">        fileName : str</span>
+<span class="sd">            The name of the observation file</span>
+
+<span class="sd">        outFilePrefix : str</span>
+<span class="sd">            The prefix in front of output files and mapping files, typically</span>
+<span class="sd">            the name of the field being remapped</span>
+
+<span class="sd">        fieldName : str</span>
+<span class="sd">            The name of the 3D field to remap</span>
+
+<span class="sd">        depths : list of {None, float, &#39;top&#39;}</span>
+<span class="sd">            A list of depths at which the climatology will be sliced in the</span>
+<span class="sd">            vertical.</span>
+
+<span class="sd">        comparisonGridNames : list of {&#39;latlon&#39;, &#39;antarctic&#39;}, optional</span>
+<span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
+
+<span class="sd">        subtaskName : str, optional</span>
+<span class="sd">            The name of the subtask</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fieldName</span> <span class="o">=</span> <span class="n">fieldName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depths</span> <span class="o">=</span> <span class="n">depths</span>
+
+        <span class="c1"># call the constructor from the base class</span>
+        <span class="c1"># (RemapObservedClimatologySubtask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemapArgoClimatology</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
+            <span class="n">comparisonGridNames</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
+        <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        get a MeshDescriptor for the observation grid</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            observation file name describing the source grid</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
+<span class="sd">            The descriptor for the observation grid</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
+
+        <span class="c1"># Load Argo observational Data</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_observational_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+
+        <span class="c1"># create a descriptor of the observation grid using Lat/Lon</span>
+        <span class="c1"># coordinates</span>
+        <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ds</span><span class="o">=</span><span class="n">dsObs</span><span class="p">,</span>
+                                                  <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;latCoord&#39;</span><span class="p">,</span>
+                                                  <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lonCoord&#39;</span><span class="p">)</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">obsDescriptor</span>  <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        read in the data sets for observations, and possibly rename some</span>
+<span class="sd">        variables and dimensions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            observation file name</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dsObs : ``xarray.Dataset``</span>
+<span class="sd">            The observational dataset</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
+
+        <span class="c1"># Load Argo observational data</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+
+        <span class="c1"># Rename coordinates to be consistent with other datasets</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="s1">&#39;calmonth&#39;</span><span class="p">,</span> <span class="s1">&#39;LATITUDE&#39;</span><span class="p">:</span> <span class="s1">&#39;latCoord&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;LONGITUDE&#39;</span><span class="p">:</span> <span class="s1">&#39;lonCoord&#39;</span><span class="p">,</span> <span class="s1">&#39;DEPTH&#39;</span><span class="p">:</span> <span class="s1">&#39;depth&#39;</span><span class="p">})</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;LATITUDE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;latCoord&#39;</span><span class="p">]</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;LONGITUDE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;lonCoord&#39;</span><span class="p">]</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;DEPTH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;calmonth&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
+
+        <span class="c1"># no meaningful year since this is already a climatology</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldName</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">]]</span>
+
+        <span class="n">slices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldName</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">depths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
+                <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span>
+                    <span class="s1">&#39;depth&#39;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;depth&#39;</span><span class="p">))</span>
+
+        <span class="n">depthNames</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">depths</span><span class="p">]</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">slices</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;depthSlice&#39;</span><span class="p">)</span>
+
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldName</span><span class="p">:</span> <span class="n">field</span><span class="p">},</span>
+                           <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;depthSlice&#39;</span><span class="p">:</span> <span class="n">depthNames</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">dsObs</span>  <span class="c1"># }}}</span>
+
+    <span class="c1"># }}}</span>
+
+<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

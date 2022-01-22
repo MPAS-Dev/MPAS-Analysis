@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.plot.plot_vertical_section &mdash; MPAS-Analysis latest documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mpas_analysis.shared.plot.colormap.setup_colormap" href="mpas_analysis.shared.plot.colormap.setup_colormap.html" />
+    <link rel="prev" title="mpas_analysis.shared.plot.plot_vertical_section_comparison" href="mpas_analysis.shared.plot.plot_vertical_section_comparison.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#climatology">Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#time-series">Time Series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#namelist-and-streams-files">Namelist and Streams Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#i-o-utilities">I/O Utilities</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#plotting">Plotting</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.timeseries_analysis_plot.html">mpas_analysis.shared.plot.timeseries_analysis_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.timeseries_analysis_plot_polar.html">mpas_analysis.shared.plot.timeseries_analysis_plot_polar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.plot_polar_comparison.html">mpas_analysis.shared.plot.plot_polar_comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.plot_global_comparison.html">mpas_analysis.shared.plot.plot_global_comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.plot_1D.html">mpas_analysis.shared.plot.plot_1D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.plot_vertical_section_comparison.html">mpas_analysis.shared.plot.plot_vertical_section_comparison</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.plot.plot_vertical_section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.colormap.setup_colormap.html">mpas_analysis.shared.plot.colormap.setup_colormap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.ticks.plot_xtick_format.html">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../api.html">API reference</a> &raquo;</li>
+      <li>mpas_analysis.shared.plot.plot_vertical_section</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/mpas_analysis.shared.plot.plot_vertical_section.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="mpas-analysis-shared-plot-plot-vertical-section">
+<h1>mpas_analysis.shared.plot.plot_vertical_section<a class="headerlink" href="#mpas-analysis-shared-plot-plot-vertical-section" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="mpas_analysis.shared.plot.plot_vertical_section">
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.plot.</span></span><span class="sig-name descname"><span class="pre">plot_vertical_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorMapSectionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xCoords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zCoord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangulation_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xOutline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zOutline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbarLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titleFontSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultFontSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titleY</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axisFontSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xLim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yLim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineWidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineStyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'solid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'black'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backgroundColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grey'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlineValid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numUpperTicks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upperXAxisTickLabelPrecision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invertYAxis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xCoordIsTime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">movingAveragePoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstYearXTicks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yearStrideXTicks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxXTicks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gregorian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotAsContours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contourComparisonField</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonFieldName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">originalFieldName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonContourLineStyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonContourLineColor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labelContours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contourLabelPrecision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxTitleLength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">70</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/plot/vertical_section.html#plot_vertical_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.plot.plot_vertical_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a data set as a x distance (latitude, longitude,
+or spherical distance) vs depth map (vertical section).</p>
+<p>Or, if xCoordIsTime is True, plots data set on a vertical
+Hovmoller plot (depth vs. time).</p>
+<p>Typically, the <code class="docutils literal notranslate"><span class="pre">field</span></code> data are plotted using a heatmap, but if
+<code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> is not None, then contours of both
+<code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> are plotted instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
+control plotting</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.20.2.dev0)"><em>xarray.DataArray</em></a>) – field array to plot.  For contour plots, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code>
+should broadcast to the same shape as <code class="docutils literal notranslate"><span class="pre">field</span></code>.  For heatmap plots,
+<code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code> are the corners of the plot.  If they
+broadcast to the same shape as <code class="docutils literal notranslate"><span class="pre">field</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> will be bilinearly
+interpolated to center values for each plot cell.  If the coordinates
+have one extra element in each direction than <code class="docutils literal notranslate"><span class="pre">field</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> is
+assumed to contain cell values and no interpolation is performed.</p></li>
+<li><p><strong>colorMapSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p></li>
+<li><p><strong>xCoords</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.20.2.dev0)"><em>xarray.DataArray</em></a><em> or </em><em>list of xarray.DataArray</em><em>, </em><em>optional</em>) – The x coordinate(s) for the <code class="docutils literal notranslate"><span class="pre">field</span></code>.  Optional second
+and third entries will be used for a second and third x axis above the
+plot.  The typical use for the second and third axis is for transects,
+for which the primary x axis represents distance along a transect, and
+the second and third x axes are used to display the corresponding
+latitudes and longitudes.</p></li>
+<li><p><strong>zCoord</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.20.2.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the <code class="docutils literal notranslate"><span class="pre">field</span></code></p></li>
+<li><p><strong>triangulation_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>, </em><em>optional</em>) – A dict of arguments to create a matplotlib.tri.Triangulation of the
+transect that does not rely on it being on a logically rectangular grid.
+The arguments rather than the triangulation itself are passed because
+multiple triangulations with different masks are needed internally and
+there is not an obvious mechanism for copying an existing triangulation.
+If this option is provided, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> is only used for tick marks if
+more than one x axis is requested, and <code class="docutils literal notranslate"><span class="pre">zCoord</span></code> will be ignored.</p></li>
+<li><p><strong>xOutline</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) – pairs of points defining line segments that are used to outline the
+valid region of the mesh if <code class="docutils literal notranslate"><span class="pre">outlineValid</span> <span class="pre">=</span> <span class="pre">True</span></code> and
+<code class="docutils literal notranslate"><span class="pre">triangulation_args</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>zOutline</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) – pairs of points defining line segments that are used to outline the
+valid region of the mesh if <code class="docutils literal notranslate"><span class="pre">outlineValid</span> <span class="pre">=</span> <span class="pre">True</span></code> and
+<code class="docutils literal notranslate"><span class="pre">triangulation_args</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>suffix<span class="classifier">str, optional</span></dt><dd><p>the suffix used for colorbar config options</p>
+</dd>
+<dt>colorbarLabel<span class="classifier">str, optional</span></dt><dd><p>the label for the colorbar.  If plotAsContours and labelContours are
+both True, colorbarLabel is used as follows (typically in order to
+indicate the units that are associated with the contour labels):
+if <code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> is None, the <code class="docutils literal notranslate"><span class="pre">colorbarLabel</span></code> string is
+parenthetically appended to the plot title;  if
+<code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> is not None, it is parenthetically appended
+to the legend entries of the contour comparison plot.</p>
+</dd>
+<dt>title<span class="classifier">str, optional</span></dt><dd><p>title of plot</p>
+</dd>
+<dt>xlabels<span class="classifier">str or list of str, optional</span></dt><dd><p>labels of x-axes.  Labels correspond to entries in <code class="docutils literal notranslate"><span class="pre">xCoords</span></code>.</p>
+</dd>
+<dt>ylabel<span class="classifier">str, optional</span></dt><dd><p>label of y-axis</p>
+</dd>
+<dt>figsize<span class="classifier">tuple of float, optional</span></dt><dd><p>size of the figure in inches, or None if the current figure should
+be used (e.g. if this is a subplot)</p>
+</dd>
+<dt>dpi<span class="classifier">int, optional</span></dt><dd><p>the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p>
+</dd>
+<dt>titleFontSize<span class="classifier">int, optional</span></dt><dd><p>size of the title font</p>
+</dd>
+<dt>defaultFontSize<span class="classifier">int, optional</span></dt><dd><p>the size of text other than the title</p>
+</dd>
+<dt>titleY<span class="classifier">float, optional</span></dt><dd><p>the y value to use for placing the plot title</p>
+</dd>
+<dt>axisFontSize<span class="classifier">int, optional</span></dt><dd><p>size of the axis font</p>
+</dd>
+<dt>xLim<span class="classifier">float array, optional</span></dt><dd><p>x range of plot</p>
+</dd>
+<dt>yLim<span class="classifier">float array, optional</span></dt><dd><p>y range of plot</p>
+</dd>
+<dt>lineWidth<span class="classifier">int, optional</span></dt><dd><p>the line width of contour lines (if specified)</p>
+</dd>
+<dt>lineStyle<span class="classifier">str, optional</span></dt><dd><p>the line style of contour lines (if specified); this applies to the
+style of contour lines of fieldArray (the style of the contour lines
+of contourComparisonField is set using
+contourComparisonLineStyle).</p>
+</dd>
+<dt>lineColor<span class="classifier">str, optional</span></dt><dd><p>the color of contour lines (if specified); this applies to the
+contour lines of fieldArray (the color of the contour lines of
+contourComparisonField is set using contourComparisonLineColor</p>
+</dd>
+<dt>backgroundColor<span class="classifier">str, optional</span></dt><dd><p>the background color for the plot (NaNs will be shown in this color)</p>
+</dd>
+<dt>outlineValid<span class="classifier">bool, optional</span></dt><dd><p>whether to outline the boundary between the valid an invalid regions
+with a black contour</p>
+</dd>
+<dt>numUpperTicks<span class="classifier">int, optional</span></dt><dd><p>the approximate number of ticks to use on the upper x axis
+or axes (these are the second and third x axes, which are placed above
+the plot if they have been requested by specifying the secondXAxisData
+or thirdXAxisData arrays above)</p>
+</dd>
+<dt>upperXAxisTickLabelPrecision<span class="classifier">int, optional</span></dt><dd><p>the number of decimal places (to the right
+of the decimal point) to use for values at upper axis ticks.  This
+value can be adjusted (in concert with numUpperTicks) to avoid problems
+with overlapping numbers along the upper axis.</p>
+</dd>
+<dt>invertYAxis<span class="classifier">logical, optional</span></dt><dd><p>if True, invert Y axis</p>
+</dd>
+<dt>xCoordIsTime<span class="classifier">logical, optional</span></dt><dd><p>if True, format the x axis for time (this applies only to the primary
+x axis, not to the optional second or third x axes)</p>
+</dd>
+<dt>movingAveragePoints<span class="classifier">int, optional</span></dt><dd><p>the number of points over which to perform a moving average
+NOTE: this option is mostly intended for use when <code class="docutils literal notranslate"><span class="pre">xCoordIsTime</span></code> is
+True, although it will work with other data as well.  Also, the moving
+average calculation is based on number of points, not actual x axis
+values, so for best results, the values in the first entry in
+<code class="docutils literal notranslate"><span class="pre">xCoords</span></code> should be equally spaced.</p>
+</dd>
+<dt>firstYearXTicks<span class="classifier">int, optional</span></dt><dd><p>The year of the first tick on the x axis.  By default, the first time
+entry is the first tick.</p>
+</dd>
+<dt>yearStrideXTicks<span class="classifier">int, optional</span></dt><dd><p>The number of years between x ticks. By default, the stride is chosen
+automatically to have <code class="docutils literal notranslate"><span class="pre">maxXTicks</span></code> tick marks or fewer.</p>
+</dd>
+<dt>maxXTicks<span class="classifier">int, optional</span></dt><dd><p>the maximum number of tick marks that will be allowed along the primary
+x axis.  This may need to be adjusted depending on the figure size and
+aspect ratio.  NOTE:  maxXTicks is only used if xCoordIsTime is True</p>
+</dd>
+<dt>calendar<span class="classifier">str, optional</span></dt><dd><p>the calendar to use for formatting the time axis
+NOTE:  calendar is only used if xCoordIsTime is True</p>
+</dd>
+<dt>plotAsContours<span class="classifier">bool, optional</span></dt><dd><p>if plotAsContours is True, instead of plotting <code class="docutils literal notranslate"><span class="pre">field</span></code> as a
+heatmap, the function will plot only the contours of <code class="docutils literal notranslate"><span class="pre">field</span></code>.  In
+addition, if contourComparisonField is not None, the contours
+of this field will be plotted on the same plot.  The selection of
+contour levels is still determined as for the contours on the heatmap
+plots, via the ‘contours’ entry in <code class="docutils literal notranslate"><span class="pre">colorMapSectionName</span></code>.</p>
+</dd>
+<dt>contourComparisonField<span class="classifier">float array, optional</span></dt><dd><p>a comparison <code class="docutils literal notranslate"><span class="pre">field</span></code> array (typically observational data or results
+from another simulation run), assumed to be of the same shape as
+<code class="docutils literal notranslate"><span class="pre">field</span></code>. If <code class="docutils literal notranslate"><span class="pre">plotAsContours</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> and
+<code class="docutils literal notranslate"><span class="pre">countourComparisonFieldArray</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, then contours of both
+<code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> will be plotted in order to
+enable a comparison of the two fields on the same plot.</p>
+</dd>
+<dt>comparisonFieldName<span class="classifier">str, optional</span></dt><dd><p>the name for the comparison field.  If contourComparisonField is
+None, this parameter is ignored.</p>
+</dd>
+<dt>originalFieldName<span class="classifier">str, optional</span></dt><dd><p>the name for the <code class="docutils literal notranslate"><span class="pre">field</span></code> field (for the purposes of labeling the
+contours on a contour comparison plot).  If contourComparisonField
+is None, this parameter is ignored.</p>
+</dd>
+<dt>comparisonContourLineStyle<span class="classifier">str, optional</span></dt><dd><p>the line style of contour lines of the comparisonFieldName field on
+a contour comparison plot</p>
+</dd>
+<dt>comparisonContourLineColor<span class="classifier">str, optional</span></dt><dd><p>the line color of contour lines of the comparisonFieldName field on
+a contour comparison plot</p>
+</dd>
+<dt>labelContours<span class="classifier">bool, optional</span></dt><dd><p>whether or not to label contour lines (if specified) with their values</p>
+</dd>
+<dt>contourLabelPrecision<span class="classifier">int, optional</span></dt><dd><p>the precision (in terms of number of figures to the right of the
+decimal point) of contour labels</p>
+</dd>
+<dt>maxTitleLength<span class="classifier">int, optional</span></dt><dd><p>the maximum number of characters in the title, beyond which it is
+truncated with a trailing ellipsis</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code>) – The figure that was plotted</p></li>
+<li><p><strong>ax</strong> (<code class="docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code>) – The subplot</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mpas_analysis.shared.plot.plot_vertical_section_comparison.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.plot.plot_vertical_section_comparison" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.shared.plot.colormap.setup_colormap.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.plot.colormap.setup_colormap" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
