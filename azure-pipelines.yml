@@ -62,7 +62,7 @@ jobs:
       conda activate build
       conda create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis sphinx mock sphinx_rtd_theme \
-          tabulate m2r
+          tabulate m2r2 "mistune<2"
     condition: eq(variables['python.version'], '3.9')
     displayName: Create Anaconda docs environment
 
