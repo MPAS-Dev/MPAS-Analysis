@@ -445,12 +445,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if remap:
             triangulation_args = None
-            dOutlineModel = None
-            zOutlineModel = None
+            dOutline = None
+            zOutline = None
         else:
             triangulation_args = self._get_ds_triangulation(
                 remappedModelClimatology)
-            dOutlineModel, zOutlineModel = \
+            dOutline, zOutline = \
                 get_outline_segments(remappedModelClimatology)
 
         if remappedRefClimatology is None:
@@ -461,20 +461,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             #   mesh
             refOutput = remappedRefClimatology[self.refFieldName]
             bias = modelOutput - refOutput
-
-        if remappedRefClimatology is None or self.controlConfig is None:
-            # we don't want to use the same outline as the model for obs
-            dOutlineRef = None
-            zOutlineRef = None
-            dOutlineDiff = None
-            zOutlineDiff = None
-        else:
-            # we *do* want to use the same outline if we're comparing with
-            # another model run
-            dOutlineRef = dOutlineModel
-            zOutlineRef = zOutlineModel
-            dOutlineDiff = dOutlineModel
-            zOutlineDiff = zOutlineModel
 
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
@@ -591,12 +577,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             xCoords=xs,
             zCoord=z,
             triangulation_args=triangulation_args,
-            xOutlineModel=dOutlineModel,
-            zOutlineModel=zOutlineModel,
-            xOutlineRef=dOutlineRef,
-            zOutlineRef=zOutlineRef,
-            xOutlineDiff=dOutlineDiff,
-            zOutlineDiff=zOutlineDiff,
+            xOutlineModel=dOutline,
+            zOutlineModel=zOutline,
+            xOutlineRef=dOutline,
+            zOutlineRef=zOutline,
+            xOutlineDiff=dOutline,
+            zOutlineDiff=zOutline,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
@@ -608,6 +594,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             invertYAxis=False,
             backgroundColor='#d9bf96',
+            invalidColor='#eddabb',
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
@@ -626,7 +613,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         suptitle.set_position((pos[0] - 0.05, pos[1]))
 
         if not remap:
-            # add open air ice shelves
+            # add open air and ice shelves
             d = remappedModelClimatology.dNode.values.ravel()
             ssh = remappedModelClimatology.ssh.values.ravel()
             mask = ssh < 0.
