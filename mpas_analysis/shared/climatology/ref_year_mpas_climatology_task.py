@@ -75,6 +75,8 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
             config=new_config,
             componentName=componentName,
             taskName=taskName)
+
+        self.tags.append('anomaly')
         # }}}
 
     def get_start_and_end(self):  # {{{
