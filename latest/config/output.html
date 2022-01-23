@@ -228,6 +228,12 @@ specify:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;no_seaIce&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>If an appropriate reference year isn’t available for computing  anomalies,
+include ‘no_anomaly’ in the generate list to skip all tasks that require the
+reference year for computing anomalies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;no_anomaly&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
 <p>To specify that you wanted to plot climatologies from the ocean component, you
 could use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;only_climatologies&#39;</span><span class="p">,</span> <span class="s1">&#39;only_ocean&#39;</span><span class="p">]</span>
