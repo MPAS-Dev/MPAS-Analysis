@@ -131,6 +131,12 @@ specify::
 
   generate = ['all_publicObs', 'no_seaIce']
 
+If an appropriate reference year isn't available for computing  anomalies,
+include 'no_anomaly' in the generate list to skip all tasks that require the
+reference year for computing anomalies::
+
+  generate = ['all_publicObs', 'no_anomaly']
+
 To specify that you wanted to plot climatologies from the ocean component, you
 could use::
 
