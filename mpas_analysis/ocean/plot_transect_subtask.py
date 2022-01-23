@@ -21,7 +21,6 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy
-from matplotlib.tri import Triangulation
 
 from geometric_features import FeatureCollection
 
@@ -53,8 +52,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     transectName : str
         The name of the transect to plot
 
-    remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
-        The subtask for remapping the MPAS climatology that this subtask
+    computeTransectsSubtask : ``ComputeTransectsSubtask``
+        The subtask for computing the MPAS climatology that this subtask
         will plot
 
     plotObs : bool, optional
@@ -76,12 +75,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
     mpasFieldName : str
         The name of the variable in the MPAS timeSeriesStatsMonthly output
-
-    obsFieldName : str
-        The name of the variable to use from the observations file
-
-    observationTitleLabel : str
-        the title of the observations subplot
 
     diffTitleLabel : str, optional
         the title of the difference subplot
@@ -114,7 +107,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis, Greg Streletz
 
     def __init__(self, parentTask, season, transectName, fieldName,
-                 remapMpasClimatologySubtask, plotObs=True,
+                 computeTransectsSubtask, plotObs=True,
                  controlConfig=None, horizontalBounds=None):
         # {{{
         '''
@@ -136,8 +129,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         fieldName : str
             The name of the field to plot (for use in the subtask name only)
 
-        remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
-            The subtask for remapping the MPAS climatology that this subtask
+        computeTransectsSubtask : ``ComputeTransectsSubtask``
+            The subtask for computing the MPAS climatology that this subtask
             will plot
 
         plotObs : bool, optional
@@ -157,7 +150,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         self.season = season
         self.transectName = transectName
-        self.remapMpasClimatologySubtask = remapMpasClimatologySubtask
+        self.computeTransectsSubtask = computeTransectsSubtask
         self.plotObs = plotObs
         self.controlConfig = controlConfig
         if horizontalBounds is not None and len(horizontalBounds) == 2:
@@ -179,7 +172,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
-        self.run_after(remapMpasClimatologySubtask)
+        self.run_after(computeTransectsSubtask)
         # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
@@ -325,7 +318,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         # first read the model climatology
         remappedFileName = \
-            self.remapMpasClimatologySubtask.get_remapped_file_name(
+            self.computeTransectsSubtask.get_remapped_file_name(
                 season=season, comparisonGridName=transectName)
 
         remappedModelClimatology = xr.open_dataset(remappedFileName)
@@ -333,9 +326,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # now the observations or control run
         if self.plotObs:
             verticalComparisonGridName = \
-                self.remapMpasClimatologySubtask.verticalComparisonGridName
+                self.computeTransectsSubtask.verticalComparisonGridName
             remappedFileName = \
-                self.remapMpasClimatologySubtask.obsDatasets.get_out_file_name(
+                self.computeTransectsSubtask.obsDatasets.get_out_file_name(
                     transectName,
                     verticalComparisonGridName)
             remappedRefClimatology = xr.open_dataset(remappedFileName)
@@ -348,7 +341,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
                     remappedRefClimatology, monthValues, maskVaries=True)
 
         elif self.controlConfig is not None:
-            climatologyName = self.remapMpasClimatologySubtask.climatologyName
+            climatologyName = self.computeTransectsSubtask.climatologyName
             remappedFileName = \
                 get_remapped_mpas_climatology_file_name(
                     self.controlConfig, season=season,
@@ -387,7 +380,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        remap = self.remapMpasClimatologySubtask.remap
+        remap = self.computeTransectsSubtask.remap
 
         if remap:
             x = 1e-3*remappedModelClimatology.x
@@ -452,12 +445,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         if remap:
             triangulation_args = None
-            dOutline = None
-            zOutline = None
         else:
             triangulation_args = self._get_ds_triangulation(
                 remappedModelClimatology)
-            dOutline, zOutline = get_outline_segments(remappedModelClimatology)
 
         if remappedRefClimatology is None:
             refOutput = None
@@ -581,8 +571,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             xCoords=xs,
             zCoord=z,
             triangulation_args=triangulation_args,
-            xOutline=dOutline,
-            zOutline=zOutline,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
@@ -594,6 +582,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             invertYAxis=False,
             backgroundColor='#d9bf96',
+            invalidColor='#d9bf96',
+            outlineValid=False,
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
@@ -612,22 +602,19 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         suptitle.set_position((pos[0] - 0.05, pos[1]))
 
         if not remap:
-            # add open air ice shelves
+            # add open ocean or ice shelves
             d = remappedModelClimatology.dNode.values.ravel()
             ssh = remappedModelClimatology.ssh.values.ravel()
+            if 'landIceFraction' in remappedModelClimatology:
+                # plot ice in light blue
+                color = '#e1eaf7'
+            else:
+                # plot open ocean in white
+                color = 'white'
             mask = ssh < 0.
             for ax in axes:
                 ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
-                                interpolate=True, color='white',
-                                edgecolor='black', linewidth=1.)
-            if 'landIceFraction' in remappedModelClimatology:
-                landIceFraction = remappedModelClimatology.landIceFraction
-                landIceMask = landIceFraction.values.ravel() > 0.25
-                mask = numpy.logical_and(landIceMask, ssh < 0.)
-                for ax in axes:
-                    ax.fill_between(d, ssh, numpy.zeros(ssh.shape), where=mask,
-                                    interpolate=False, color='#e1eaf7',
-                                    edgecolor='black', linewidth=1.)
+                                interpolate=True, color=color)
 
         # make a red start axis and green end axis to correspond to the dots
         # in the inset

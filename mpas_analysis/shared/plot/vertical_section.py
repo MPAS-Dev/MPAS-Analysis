@@ -41,8 +41,12 @@ def plot_vertical_section_comparison(
         xCoords=None,
         zCoord=None,
         triangulation_args=None,
-        xOutline=None,
-        zOutline=None,
+        xOutlineModel=None,
+        zOutlineModel=None,
+        xOutlineRef=None,
+        zOutlineRef=None,
+        xOutlineDiff=None,
+        zOutlineDiff=None,
         colorbarLabel=None,
         xlabels=None,
         ylabel=None,
@@ -60,6 +64,7 @@ def plot_vertical_section_comparison(
         lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
+        invalidColor='white',
         outlineValid=True,
         xLim=None,
         yLim=None,
@@ -122,10 +127,18 @@ def plot_vertical_section_comparison(
         If this option is provided, ``xCoords`` is only used for tick marks if
         more than one x axis is requested, and ``zCoord`` will be ignored.
 
-    xOutline, zOutline : numpy.ndarray, optional
+    xOutlineModel, zOutlineModel : numpy.ndarray, optional
         pairs of points defining line segments that are used to outline the
-        valid region of the mesh if ``outlineValid = True`` and
-        ``triangulation_args`` is not ``None``
+        valid region of the mesh for the model panel if ``outlineValid = True``
+        and ``triangulation_args`` is not ``None``
+
+    xOutlineRef, zOutlineRef : numpy.ndarray, optional
+        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the reference
+        panel
+
+    xOutlineDiff, zOutlineDiff : numpy.ndarray, optional
+        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the difference
+        panel
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -194,7 +207,11 @@ def plot_vertical_section_comparison(
         contourComparisonLineColor argument).
 
     backgroundColor : str, optional
-        the background color for the plot (NaNs and masked areas will be
+        the background color for the plot outside the limits of ``xCoord`` and
+        ``zCoord``.
+
+    invalidColor : str, optional
+        the color for invalid values (NaNs and masked areas will be
         shown in this color)
 
     outlineValid : bool, optional
@@ -383,8 +400,8 @@ def plot_vertical_section_comparison(
         xCoords=xCoords,
         zCoord=zCoord,
         triangulation_args=triangulation_args,
-        xOutline=xOutline,
-        zOutline=zOutline,
+        xOutline=xOutlineModel,
+        zOutline=zOutlineModel,
         suffix=resultSuffix,
         colorbarLabel=colorbarLabel,
         title=title,
@@ -409,6 +426,7 @@ def plot_vertical_section_comparison(
         yearStrideXTicks=yearStrideXTicks,
         maxXTicks=maxXTicks, calendar=calendar,
         backgroundColor=backgroundColor,
+        invalidColor=invalidColor,
         outlineValid=outlineValid,
         plotAsContours=compareAsContours,
         contourComparisonField=contourComparisonField,
@@ -431,8 +449,8 @@ def plot_vertical_section_comparison(
             xCoords=xCoords,
             zCoord=zCoord,
             triangulation_args=triangulation_args,
-            xOutline=xOutline,
-            zOutline=zOutline,
+            xOutline=xOutlineRef,
+            zOutline=zOutlineRef,
             suffix=resultSuffix,
             colorbarLabel=colorbarLabel,
             title=refTitle,
@@ -458,6 +476,7 @@ def plot_vertical_section_comparison(
             maxXTicks=maxXTicks,
             calendar=calendar,
             backgroundColor=backgroundColor,
+            invalidColor=invalidColor,
             outlineValid=outlineValid,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
@@ -473,8 +492,8 @@ def plot_vertical_section_comparison(
             xCoords=xCoords,
             zCoord=zCoord,
             triangulation_args=triangulation_args,
-            xOutline=xOutline,
-            zOutline=zOutline,
+            xOutline=xOutlineDiff,
+            zOutline=zOutlineDiff,
             suffix=diffSuffix,
             colorbarLabel=colorbarLabel,
             title=diffTitle,
@@ -500,6 +519,7 @@ def plot_vertical_section_comparison(
             maxXTicks=maxXTicks,
             calendar=calendar,
             backgroundColor=backgroundColor,
+            invalidColor=invalidColor,
             outlineValid=outlineValid,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
@@ -544,6 +564,7 @@ def plot_vertical_section(
         lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
+        invalidColor='white',
         outlineValid=True,
         numUpperTicks=None,
         upperXAxisTickLabelPrecision=None,
@@ -681,7 +702,12 @@ def plot_vertical_section(
         contourComparisonField is set using contourComparisonLineColor
 
     backgroundColor : str, optional
-        the background color for the plot (NaNs will be shown in this color)
+        the background color for the plot outside the limits of ``xCoord`` and
+        ``zCoord``.
+
+    invalidColor : str, optional
+        the color for invalid values (NaNs and masked areas will be
+        shown in this color)
 
     outlineValid : bool, optional
         whether to outline the boundary between the valid an invalid regions
@@ -857,12 +883,11 @@ def plot_vertical_section(
     colormapDict = setup_colormap(config, colorMapSectionName,
                                   suffix=suffix)
 
-    if outlineValid and xOutline is not None or zOutline is not None:
-        # we might have some invalid cells that are inside the outline.  Let's
-        # make them white
-        zeroArray = xr.zeros_like(field)
-        plt.tricontourf(unmaskedTriangulation, zeroArray.values.ravel(),
-                        colors='white')
+    # fill the unmasked region with the invalid color so it will show through
+    # any masked regions
+    zeroArray = xr.zeros_like(field)
+    plt.tricontourf(unmaskedTriangulation, zeroArray.values.ravel(),
+                    colors=invalidColor)
 
     if not plotAsContours:
         # display a heatmap of fieldArray
@@ -899,16 +924,16 @@ def plot_vertical_section(
     ax = plt.gca()
     ax.set_facecolor(backgroundColor)
     if outlineValid:
-        if xOutline is None or zOutline is None:
-            # set the color for NaN or masked regions, and draw a black
-            # outline around them; technically, the contour level used should
-            # be 1.0, but the contours don't show up when using 1.0, so 0.999
-            # is used instead
+        if xOutline is not None and zOutline is not None:
+            # also outline the domain if provided
+            plt.plot(xOutline, zOutline, color='black', linewidth=1)
+        else:
+            # do a contour to outline the boundary between valid and invalid
+            # values
             landMask = np.isnan(field.values).ravel()
             plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
                            colors='black', linewidths=1)
-        else:
-            plt.plot(xOutline, zOutline, color='black', linewidth=1)
+
 
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
