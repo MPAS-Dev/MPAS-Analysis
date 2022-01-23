@@ -87,7 +87,17 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
 
     page.generate()
 
-    print("Done.")
+    url = None
+    if config.has_section('web_portal'):
+        section = config['web_portal']
+        base_path = section.get('base_path')
+        base_url = section.get('base_url')
+        html_dir = config.get('output', 'htmlSubdirectory')
+        if html_dir.startswith(base_path):
+            url = base_url + html_dir[len(base_path):]
+            print(f'Web page: {url}')
+    if url is None:
+        print("Done.")
 
     # }}}
 
