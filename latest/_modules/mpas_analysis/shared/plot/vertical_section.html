@@ -125,8 +125,12 @@
         <span class="n">xCoords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">zCoord</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">triangulation_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">xOutline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">zOutline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutlineModel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutlineModel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutlineRef</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutlineRef</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutlineDiff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutlineDiff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">colorbarLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">xlabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -144,6 +148,7 @@
         <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>
         <span class="n">lineColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
         <span class="n">backgroundColor</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span>
+        <span class="n">invalidColor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
         <span class="n">outlineValid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -206,10 +211,18 @@
 <span class="sd">        If this option is provided, ``xCoords`` is only used for tick marks if</span>
 <span class="sd">        more than one x axis is requested, and ``zCoord`` will be ignored.</span>
 
-<span class="sd">    xOutline, zOutline : numpy.ndarray, optional</span>
+<span class="sd">    xOutlineModel, zOutlineModel : numpy.ndarray, optional</span>
 <span class="sd">        pairs of points defining line segments that are used to outline the</span>
-<span class="sd">        valid region of the mesh if ``outlineValid = True`` and</span>
-<span class="sd">        ``triangulation_args`` is not ``None``</span>
+<span class="sd">        valid region of the mesh for the model panel if ``outlineValid = True``</span>
+<span class="sd">        and ``triangulation_args`` is not ``None``</span>
+
+<span class="sd">    xOutlineRef, zOutlineRef : numpy.ndarray, optional</span>
+<span class="sd">        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the reference</span>
+<span class="sd">        panel</span>
+
+<span class="sd">    xOutlineDiff, zOutlineDiff : numpy.ndarray, optional</span>
+<span class="sd">        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the difference</span>
+<span class="sd">        panel</span>
 
 <span class="sd">    colorMapSectionName : str</span>
 <span class="sd">        section name in ``config`` where color map info can be found.</span>
@@ -278,7 +291,11 @@
 <span class="sd">        contourComparisonLineColor argument).</span>
 
 <span class="sd">    backgroundColor : str, optional</span>
-<span class="sd">        the background color for the plot (NaNs and masked areas will be</span>
+<span class="sd">        the background color for the plot outside the limits of ``xCoord`` and</span>
+<span class="sd">        ``zCoord``.</span>
+
+<span class="sd">    invalidColor : str, optional</span>
+<span class="sd">        the color for invalid values (NaNs and masked areas will be</span>
 <span class="sd">        shown in this color)</span>
 
 <span class="sd">    outlineValid : bool, optional</span>
@@ -467,8 +484,8 @@
         <span class="n">xCoords</span><span class="o">=</span><span class="n">xCoords</span><span class="p">,</span>
         <span class="n">zCoord</span><span class="o">=</span><span class="n">zCoord</span><span class="p">,</span>
         <span class="n">triangulation_args</span><span class="o">=</span><span class="n">triangulation_args</span><span class="p">,</span>
-        <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutline</span><span class="p">,</span>
-        <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutline</span><span class="p">,</span>
+        <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutlineModel</span><span class="p">,</span>
+        <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutlineModel</span><span class="p">,</span>
         <span class="n">suffix</span><span class="o">=</span><span class="n">resultSuffix</span><span class="p">,</span>
         <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
         <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
@@ -493,6 +510,7 @@
         <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
         <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
         <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
+        <span class="n">invalidColor</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">,</span>
         <span class="n">outlineValid</span><span class="o">=</span><span class="n">outlineValid</span><span class="p">,</span>
         <span class="n">plotAsContours</span><span class="o">=</span><span class="n">compareAsContours</span><span class="p">,</span>
         <span class="n">contourComparisonField</span><span class="o">=</span><span class="n">contourComparisonField</span><span class="p">,</span>
@@ -515,8 +533,8 @@
             <span class="n">xCoords</span><span class="o">=</span><span class="n">xCoords</span><span class="p">,</span>
             <span class="n">zCoord</span><span class="o">=</span><span class="n">zCoord</span><span class="p">,</span>
             <span class="n">triangulation_args</span><span class="o">=</span><span class="n">triangulation_args</span><span class="p">,</span>
-            <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutline</span><span class="p">,</span>
-            <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutline</span><span class="p">,</span>
+            <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutlineRef</span><span class="p">,</span>
+            <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutlineRef</span><span class="p">,</span>
             <span class="n">suffix</span><span class="o">=</span><span class="n">resultSuffix</span><span class="p">,</span>
             <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
             <span class="n">title</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span>
@@ -542,6 +560,7 @@
             <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span>
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
+            <span class="n">invalidColor</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">,</span>
             <span class="n">outlineValid</span><span class="o">=</span><span class="n">outlineValid</span><span class="p">,</span>
             <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
             <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
@@ -557,8 +576,8 @@
             <span class="n">xCoords</span><span class="o">=</span><span class="n">xCoords</span><span class="p">,</span>
             <span class="n">zCoord</span><span class="o">=</span><span class="n">zCoord</span><span class="p">,</span>
             <span class="n">triangulation_args</span><span class="o">=</span><span class="n">triangulation_args</span><span class="p">,</span>
-            <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutline</span><span class="p">,</span>
-            <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutline</span><span class="p">,</span>
+            <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutlineDiff</span><span class="p">,</span>
+            <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutlineDiff</span><span class="p">,</span>
             <span class="n">suffix</span><span class="o">=</span><span class="n">diffSuffix</span><span class="p">,</span>
             <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
             <span class="n">title</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span>
@@ -584,6 +603,7 @@
             <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span>
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
+            <span class="n">invalidColor</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">,</span>
             <span class="n">outlineValid</span><span class="o">=</span><span class="n">outlineValid</span><span class="p">,</span>
             <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
             <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
@@ -628,6 +648,7 @@
         <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>
         <span class="n">lineColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
         <span class="n">backgroundColor</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span>
+        <span class="n">invalidColor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
         <span class="n">outlineValid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">numUpperTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -765,7 +786,12 @@
 <span class="sd">        contourComparisonField is set using contourComparisonLineColor</span>
 
 <span class="sd">    backgroundColor : str, optional</span>
-<span class="sd">        the background color for the plot (NaNs will be shown in this color)</span>
+<span class="sd">        the background color for the plot outside the limits of ``xCoord`` and</span>
+<span class="sd">        ``zCoord``.</span>
+
+<span class="sd">    invalidColor : str, optional</span>
+<span class="sd">        the color for invalid values (NaNs and masked areas will be</span>
+<span class="sd">        shown in this color)</span>
 
 <span class="sd">    outlineValid : bool, optional</span>
 <span class="sd">        whether to outline the boundary between the valid an invalid regions</span>
@@ -941,12 +967,11 @@
     <span class="n">colormapDict</span> <span class="o">=</span> <span class="n">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">colorMapSectionName</span><span class="p">,</span>
                                   <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">outlineValid</span> <span class="ow">and</span> <span class="n">xOutline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">zOutline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># we might have some invalid cells that are inside the outline.  Let&#39;s</span>
-        <span class="c1"># make them white</span>
-        <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">unmaskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
-                        <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="c1"># fill the unmasked region with the invalid color so it will show through</span>
+    <span class="c1"># any masked regions</span>
+    <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">unmaskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+                    <span class="n">colors</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">plotAsContours</span><span class="p">:</span>
         <span class="c1"># display a heatmap of fieldArray</span>
@@ -983,16 +1008,16 @@
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">backgroundColor</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">outlineValid</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">xOutline</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">zOutline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># set the color for NaN or masked regions, and draw a black</span>
-            <span class="c1"># outline around them; technically, the contour level used should</span>
-            <span class="c1"># be 1.0, but the contours don&#39;t show up when using 1.0, so 0.999</span>
-            <span class="c1"># is used instead</span>
+        <span class="k">if</span> <span class="n">xOutline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">zOutline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># also outline the domain if provided</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xOutline</span><span class="p">,</span> <span class="n">zOutline</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># do a contour to outline the boundary between valid and invalid</span>
+            <span class="c1"># values</span>
             <span class="n">landMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">unmaskedTriangulation</span><span class="p">,</span> <span class="n">landMask</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0001</span><span class="p">],</span>
                            <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xOutline</span><span class="p">,</span> <span class="n">zOutline</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
 
     <span class="c1"># plot contours, if they were requested</span>
     <span class="n">contourLevels</span> <span class="o">=</span> <span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;contours&#39;</span><span class="p">]</span>
