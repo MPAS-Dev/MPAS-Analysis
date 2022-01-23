@@ -71,7 +71,7 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
             config=config,
             taskName='timeSeriesSSHAnomaly',
             componentName='ocean',
-            tags=['timeSeries', 'ssh', 'publicObs'])
+            tags=['timeSeries', 'ssh', 'publicObs', 'anomaly'])
 
         self.controlConfig = controlConfig
         self.filePrefix = None

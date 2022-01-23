@@ -50,7 +50,7 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
             config=config,
             taskName='timeSeriesSalinityAnomaly',
             componentName='ocean',
-            tags=['timeSeries', 'salinity', 'publicObs'])
+            tags=['timeSeries', 'salinity', 'publicObs', 'anomaly'])
 
         sectionName = 'hovmollerSalinityAnomaly'
         regionNames = config.getExpression(sectionName, 'regions')
