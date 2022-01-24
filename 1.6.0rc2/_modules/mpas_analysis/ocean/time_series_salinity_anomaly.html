@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.time_series_salinity_anomaly &mdash; MPAS-Analysis 1.6.0rc2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.6.0rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.ocean.time_series_salinity_anomaly</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.time_series_salinity_anomaly</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+    <span class="n">unicode_literals</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span> <span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span> <span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
+
+
+<div class="viewcode-block" id="TimeSeriesSalinityAnomaly"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesSalinityAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs analysis of time series of salinity anomalies from the first</span>
+<span class="sd">    simulation year as a function of depth.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="TimeSeriesSalinityAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config :  instance of MpasAnalysisConfigParser</span>
+<span class="sd">            Contains configuration options</span>
+
+<span class="sd">        mpasTimeSeriesTask : ``MpasTimeSeriesTask``</span>
+<span class="sd">            The task that extracts the time series from MPAS monthly output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeSeriesSalinityAnomaly</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;timeSeriesSalinityAnomaly&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;hovmollerSalinityAnomaly&#39;</span>
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_avgValueWithinOceanLayerRegion_&#39;</span> \
+            <span class="s1">&#39;avgLayerSalinity&#39;</span>
+
+        <span class="n">timeSeriesFileName</span> <span class="o">=</span> <span class="s1">&#39;regionAveragedSalinityAnomaly.nc&#39;</span>
+
+        <span class="n">anomalyTask</span> <span class="o">=</span> <span class="n">ComputeAnomalySubtask</span><span class="p">(</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">mpasTimeSeriesTask</span><span class="o">=</span><span class="n">mpasTimeSeriesTask</span><span class="p">,</span>
+            <span class="n">outFileName</span><span class="o">=</span><span class="n">timeSeriesFileName</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
+            <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Trend of </span><span class="si">{}</span><span class="s1"> Salinity Anomaly vs depth&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">regionName</span><span class="p">)</span>
+            <span class="n">plotTask</span> <span class="o">=</span> <span class="n">PlotHovmollerSubtask</span><span class="p">(</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">regionName</span><span class="o">=</span><span class="n">regionName</span><span class="p">,</span>
+                <span class="n">inFileName</span><span class="o">=</span><span class="n">timeSeriesFileName</span><span class="p">,</span>
+                <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;SAnomalyZ&#39;</span><span class="p">,</span>
+                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Salinity Anomaly&#39;</span><span class="p">,</span>
+                <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                <span class="n">unitsLabel</span><span class="o">=</span><span class="s1">&#39;[PSU]&#39;</span><span class="p">,</span>
+                <span class="n">sectionName</span><span class="o">=</span><span class="n">sectionName</span><span class="p">,</span>
+                <span class="n">thumbnailSuffix</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;ΔS&#39;</span><span class="p">,</span>
+                <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
+                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Trends vs Depth&#39;</span><span class="p">,</span>
+                <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;trendsvsdepth&#39;</span><span class="p">,</span>
+                <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="n">plotTask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div></div>
+
+        <span class="c1"># }}}</span>
+
+    <span class="c1"># }}}</span>
+
+<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
